@@ -1,0 +1,82 @@
+body,html { color:#000; box-sizing:border-box; padding:0; margin:0; width:100%; height:100%; font-family:sans-serif; font-size:1rem; line-height:1.6rem; }
+body * { box-sizing:border-box; }
+body img { max-width:100%; height:auto; }
+body { padding:0 30px; max-width:800px; margin:0 auto; }
+body a { color:inherit; text-decoration:none; }
+body h1 { font-size:1.75rem; line-height:1.5; margin:0 0 1rem; padding:0; }
+body p { font-size:1rem; line-height:1.6; margin:0 0 1rem; padding:0; }
+.cooked-clearfix:after { content: ""; display: table; clear: both; }
+.cooked-button, button.cooked-button { cursor:pointer; border:none; display:inline-block; padding:8px 10px; line-height:1; font-size:13px; font-weight:600; color:#fff; background:#666; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; }
+.cooked-button:hover, button.cooked-button:hover { background:#333; }
+.cooked-servings-switcher { display:block; }
+.cooked-servings-switcher .cooked-button:first-child { margin-right:1rem; }
+.cooked-servings-switcher .cooked-button:last-child { margin-left:1rem; }
+.cooked-post-featured-image { width:100%; max-width:100%; height:auto; border:none; display:block; margin:0 0 2rem; padding:0; }
+.cooked-post-featured-image img { width:100%; max-width:100%; }
+.cooked-recipe-ingredients { display:block; padding:0; margin:0 0 2rem; }
+.cooked-recipe-ingredients .cooked-heading { margin:1rem 0 .3rem; display:block; font-weight:600; font-size:1.25rem; line-height:1.5; }
+.cooked-recipe-ingredients .cooked-heading:first-child { margin:0; }
+.cooked-recipe-ingredients .cooked-ingredient { position:relative; padding:0.5rem 0 0 2rem; margin:0; font-size:inherit; }
+.cooked-recipe-ingredients .cooked-ingredient .cooked-ing-name { line-height:1.4rem; padding:1px 0; }
+.cooked-recipe-ingredients .cooked-ingredient-checkbox { transform:scale(1); position:absolute; top:0.5rem; left:0; display:inline-block; width:1rem; height:1rem; line-height:1rem; border:1px solid #ddd; border-color:rgba(0,0,0,0.2); margin:0.20rem 0.8rem 0 0; }
+.cooked-recipe-ingredients .cooked-ingredient-checkbox.cooked-checked:after { font-family:'CookedIcons'; content:'\f01d'; position:absolute; top:0; left:0; font-size:0.6rem; line-height:1.8rem; width:100%; height:100%; text-align:center; }
+.cooked-recipe-ingredients .cooked-ingredient.cooked-checked { text-decoration:line-through; opacity:0.5; }
+.cooked-recipe-directions { display:block; padding:0; margin:0 0 2rem; }
+.cooked-recipe-directions .cooked-heading { margin:0 0 1rem; display:block; font-weight:600; font-size:1.25rem; line-height:1.5; }
+.cooked-recipe-directions .cooked-direction { position:relative; padding:0; margin:0; font-size:inherit; }
+.cooked-recipe-directions .cooked-direction img { max-width:100%; height:auto; display:block; margin:0 0 2rem; padding:0; border:none; }
+.cooked-recipe-directions .cooked-direction.cooked-direction-has-number .cooked-dir-content { padding-left:2rem; }
+.cooked-recipe-directions .cooked-direction.cooked-direction-has-number-wide .cooked-dir-content { padding-left:2.75rem; }
+.cooked-recipe-directions .cooked-direction-number { opacity:0.35; position:absolute; display:inline-block; width:auto; height:1rem; line-height:1rem; font-weight:800; top:0; left:0; font-size:1.5rem; }
+.cooked-recipe-excerpt { display:block; padding:0; margin:0 0 1rem; }
+.cooked-recipe-info { display:block; padding:0; margin:0 0 1rem; line-height:2.25rem; }
+.cooked-recipe-info > span, .cooked-recipe-info > section.cooked-left > span { line-height:1.3rem; position:relative; box-sizing:border-box; vertical-align:top; margin:0 2rem 1rem 0; font-size:0.85rem; display:inline-block; width:auto; }
+.cooked-recipe-info > section.cooked-right > span { line-height:1.4rem; position:relative; box-sizing:border-box; vertical-align:top; margin:0 0 1rem 2rem; font-size:0.85rem; display:inline-block; width:auto; }
+.cooked-recipe-info > span:last-child, .cooked-recipe-info > section.cooked-left > span:last-child { margin-right:0; }
+.cooked-recipe-info > section.cooked-right > span:first-child { margin-left:0; }
+.cooked-recipe-info strong { font-size:0.75rem; font-weight:800; text-transform:uppercase; display:block; }
+.cooked-recipe-info span.cooked-time { padding-left:3rem; }
+.cooked-recipe-info span.cooked-time-icon { opacity:0.5; width:1rem; height:1rem; font-size:2.2rem; display:block; position:absolute; top:50%; left:0; margin:-1.1rem 0 0 0; }
+.cooked-recipe-info span.cooked-time-icon i.cooked-icon { display:block; }
+.cooked-recipe-info span.cooked-servings { padding-left:3rem; }
+.cooked-recipe-info span.cooked-servings select.cooked-servings-changer { opacity:0; position:absolute; bottom:3px; left:0; -webkit-appearance:none; cursor:pointer; border:none; background:none; width:100%; padding:0; margin:0; }
+.cooked-recipe-info span.cooked-servings-icon { opacity:0.5; width:1rem; height:1rem; font-size:2.2rem; display:block; position:absolute; top:50%; left:0; margin:-1.1rem 0 0 0; }
+.cooked-recipe-info span.cooked-servings-icon i.cooked-icon { display:block; }
+.cooked-left { float:left; display:inline-block; width:auto; }
+.cooked-right { float:right; display:inline-block; width:auto; }
+.cooked-nutrition-label { width:100%; max-width:400px; margin:0 auto 2rem; background:#fff; font-size:0.9rem; border:1px solid #aaa; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; padding:15px; }
+.cooked-nutrition-label .cooked-nutrition-title { font-size:2rem; line-height:1; letter-spacing:0; font-weight:800; padding:0; margin:0 0 0.4rem; color:#333; }
+.cooked-nutrition-label.cooked-float-right { max-width:45%; margin:0 0 3rem 3rem; float:right; }
+.cooked-nutrition-label.cooked-float-left { max-width:45%; margin:0 3rem 3rem 0; float:left; }
+body .cooked-nutrition-label p { margin:0 !important; padding:0 !important; }
+body .cooked-nutrition-label p.cooked-daily-value-text { padding:0.5rem 0 0 0 !important; margin:0 !important; font-size:0.9rem; }
+body .cooked-nutrition-label dl { margin:0 !important; padding:0 !important; }
+body .cooked-nutrition-label dt { position:relative; margin:0; padding:2px 0; border-top:1px solid #aaa; }
+body .cooked-nutrition-label dt dt { padding:2px 0 0; margin:2px 0 0; }
+body .cooked-nutrition-label dt:after { content: ""; display: table; clear: both; }
+body .cooked-nutrition-label dt.cooked-nut-spacer { border:none; height:0.5rem; padding:0; background:#333; }
+body .cooked-nutrition-label > dl > dt:first-child,
+body .cooked-nutrition-label dl dt.cooked-nut-no-border { border:none; }
+body .cooked-nutrition-label dt dl { padding:0; margin:0 0 0 1.5rem; }
+body .cooked-nutrition-label .cooked-nut-hr { border:none; border-top:1rem solid #333; margin:1rem 0 0; padding:0; }
+body .cooked-nutrition-label strong { font-weight:800; }
+body .cooked-nutrition-label strong.cooked-nut-heading { font-size:0.75rem; }
+body .cooked-nutrition-label strong.cooked-nut-label,
+body .cooked-nutrition-label span.cooked-calories-fat { font-weight:400; }
+body .cooked-nutrition-label .cooked-nut-right { float:right; }
+body .cooked-nutrition-label dl.cooked-nut-bottom dt { border-top:none; border-bottom:1px solid #aaa; float:left; width:50%; box-sizing:border-box; }
+body .cooked-nutrition-label dl.cooked-nut-bottom dt strong { font-weight:400; }
+body .cooked-nutrition-label dl.cooked-nut-bottom dt:last-child, body .cooked-nutrition-label dl.cooked-nut-bottom dt:nth-last-child(2) { border:none; }
+body .cooked-nutrition-label dl.cooked-nut-bottom dt:nth-last-child(2):nth-child(even) { border-bottom:1px solid #aaa; }
+
+#cooked-print-options { margin:0 0 2rem; background:transparent; padding:2.2rem 0 2.5rem; border-bottom:1px dashed rgba(0,0,0,0.25); }
+#cooked-print-options h3 { margin:0 0 0.25rem; font-size:0.75rem; text-transform:uppercase; font-weight:800; }
+#cooked-print-options label { font-size:0.9rem; cursor:pointer; position:relative; display:inline-block; top:1px; margin-right:1rem; }
+#cooked-print-options .cooked-button { float:right; margin-top:1.45rem; }
+
+.cooked-button {-webkit-transition:all 200ms cubic-bezier(0.420,0.000,0.150,1.000);-moz-transition:all 200ms cubic-bezier(0.420,0.000,0.150,1.000);-o-transition:all 200ms cubic-bezier(0.420,0.000,0.150,1.000);transition:all 200ms cubic-bezier(0.420,0.000,0.150,1.000);-webkit-transition-timing-function:cubic-bezier(0.420,0.000,0.150,1.000);-moz-transition-timing-function:cubic-bezier(0.420,0.000,0.150,1.000);-o-transition-timing-function:cubic-bezier(0.420,0.000,0.150,1.000);transition-timing-function:cubic-bezier(0.420,0.000,0.150,1.000);}
+
+@media print {
+	body { padding:20px 30px; font-size:0.9rem; }
+	#cooked-print-options { display:none; }
+}

@@ -1,0 +1,29 @@
+/* Cooked Admin Menu / Admin Bar
+ * @since 1.0.0
+ */
+
+/* Admin Menu Icon */
+#toplevel_page_cooked_recipes_menu .dashicons-before:before {
+	font-family:'CookedIcons';
+	content: '\f035';
+	font-size: 17px;
+    line-height: 20px;
+}
+
+#available-widgets .cooked_widget-3 .widget-title:before {
+	font-family:'CookedIcons';
+	content: '\f035';
+	font-size: 17px;
+    line-height: 20px;
+}
+
+/* Admin Menu Cooked Upgrade */
+body #adminmenu .wp-submenu a > .admin-menu-cooked-upgrade,
+body #adminmenu .wp-not-current-submenu li > a > .admin-menu-cooked-upgrade,
+body .folded #adminmenu .wp-has-current-submenu li > a > .admin-menu-cooked-upgrade { color:#ffad10; }
+body #adminmenu .wp-submenu a:hover > .admin-menu-cooked-upgrade,
+body #adminmenu .wp-submenu li.current a:hover > .admin-menu-cooked-upgrade,
+body #adminmenu .wp-not-current-submenu li > a:hover > .admin-menu-cooked-upgrade,
+body .folded #adminmenu .wp-has-current-submenu li > a:hover > .admin-menu-cooked-upgrade { color:#FDD27C; }
+
+select.cooked-recipe-finder { display:none; }

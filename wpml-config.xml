@@ -1,0 +1,20 @@
+<wpml-config>
+    <custom-fields>
+        <custom-field action="copy-once">_recipe_settings</custom-field>
+    </custom-fields>
+    <custom-types>
+        <custom-type translate="1">cp_recipe</custom-type>
+    </custom-types>
+    <taxonomies>
+        <taxonomy translate="1">cp_recipe_category</taxonomy>
+    </taxonomies>
+    <admin-texts>
+        <key name="cooked_settings">
+            <key name="permalinks">
+                <key name="recipe_permalink" />
+                <key name="recipe_author_permalink" />
+                <key name="recipe_category_permalink" />
+            </key>
+        </key>
+    </admin-texts>
+</wpml-config>

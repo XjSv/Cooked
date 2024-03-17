@@ -1,0 +1,41 @@
+.tooltipster-light {
+	border-radius: 3px;
+	background: #fff;
+	color: #555;
+	box-shadow:0 1px 35px rgba(0,0,0,0.20);
+}
+.tooltipster-light .tooltipster-content {
+	font-size: 12px;
+	line-height: 1.6;
+	padding: 15px 18px;
+}
+
+.tooltipster-light .tooltipster-content strong {
+	color:#07a780;
+	display:block;
+	margin:0 0 2px;
+}
+
+.tooltipster-light .tooltipster-content strong.cooked-tooltip-heading {
+	display:block;
+	font-size:15px;
+	margin:0 0 5px;
+}
+
+.tooltipster-light .tooltipster-content .cooked-tooltip-buttons {
+	display:block;
+	padding:12px 0 5px;
+}
+
+.tooltipster-light .tooltipster-content pre {
+	padding:5px;
+	background:#f5f5f5;
+	color:#888;
+}
+
+.tooltipster-light .tooltipster-content input[type="text"] {
+	display:block;
+	width:100%;
+	margin:5px 0 20px;
+	font-size:12px;
+}

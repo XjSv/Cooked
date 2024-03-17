@@ -1,0 +1,5 @@
+
+.selectize-input { overflow:visible !important; }
+.selectize-control.multi .selectize-input [data-value] { text-shadow:none; background:#eee; color:#333; border:none; }
+.selectize-control.multi .selectize-input [data-value].active { text-shadow:none; background:#f5f5f5; color:#666; border:none; }
+.selectize-control.multi .selectize-input > div { padding:3px 7px 4px; margin:0; width:100%; box-sizing:border-box; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }

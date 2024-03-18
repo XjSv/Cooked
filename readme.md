@@ -2,27 +2,54 @@
 
 Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Now open source!
 
+## Description
+
+Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Check out the full list below.
+
+Be sure to check out the **[online demo](https://demos.boxystudio.com/cooked/)** as well as the **[Cooked Documentation](http://docs.cooked.pro/)** if you need some help!
+
+#### Quality design & usability
+
+Using the drag & drop recipe builder, you can create your recipes quickly and without limitations. Add ingredients, directions—and then add a gallery, nutrition facts, cooking times and much more.
+
+#### Google-friendly
+
+Cooked automatically includes semantic structure and schema.org microdata into each and every recipe you publish. This allows Google to display your recipes across a variety of device sizes and platforms.
+
+#### Many premium features already included
+
+Most recipe plugins require that you purchase a PRO version for features like nutrition facts, galleries, powerful searching, timers, etc. The standard version of Cooked includes all of these. Here's what you get out of the box:
+
 ## Features
 
-- **Responsive Design:** Basil is built with a mobile-first approach, ensuring your site looks great on devices of all sizes.
-- **Customization Options:** Easily customize the theme's colors, typography, and layout settings through the user-friendly Customizer.
-- **Featured Images:** Showcase your featured images in a beautiful and prominent way on your posts and pages.
-- **Social Media Integration:** Connect with your audience by seamlessly integrating your social media profiles.
-- **Gutenberg-Ready:** Basil is fully compatible with the new Gutenberg editor, giving you a modern and intuitive writing experience.
-- **Translation-Ready:** Prepare your site for a global audience with full translation and localization support.
+* Drag & drop ingredients and directions.
+* SEO Optimized - Google Structured Data and Schema.org support.
+* Beautiful grid-based masonry recipe lists.
+* Prep & Cooking Times
+* Photo Galleries
+* Nutrition Facts
+* Difficulty Levels
+* Powerful recipe search with a text search, categories & sorting options.
+* Author template to list recipes by a single author.
+* Cooking times with clickable, interactive timers.
+* Very developer-friendly with loads of hooks & filters.
+* Servings switcher to adjust ingredient amounts.
+* And more to come...
+
+Of course, if you want even more, you can always check out the [PRO](https://cooked.pro) version of Cooked. It adds features like ratings & favorites, recipe submissions, and so much more.
+
+## Installation/Update - WordPress.org (Recommended)
+
+Cooked is available for automatic updates through the WordPress Admin Dashboard. You can install it from the [WordPress.org Plugin Directory](https://wordpress.org/plugins/cooked/).
+
+1. Search for "Cooked" in the WordPress Admin Dashboard under `Plugins > Add New`.
+2. Install and activate the Cooked plugin.
 
 ## Installation/Update (Manual)
 
 1. Download the latest release from the [Cooked repository](https://github.com/XjSv/Cooked) on GitHub.
 2. Navigate to your WordPress installation's `wp-content/plugins` directory and extract the downloaded ZIP file there.
 3. Activate the Cooked plugin through the WordPress Admin Dashboard by navigating to `Appearance > Plugins`.
-
-## Installation/Update (WordPress.org)
-
-Cooked is available for automatic updates through the WordPress Admin Dashboard. You can install it from the [WordPress.org Plugin Directory](https://wordpress.org/plugins/cooked/).
-
-1. Search for "Cooked" in the WordPress Admin Dashboard under `Plugins > Add New`.
-2. Install and activate the Cooked plugin.
 
 ## Contributing
 
@@ -37,6 +64,7 @@ We welcome contributions from the community! If you'd like to contribute to Cook
 ## Documentation
 
 Detailed documentation for Cooked can be found in the [wiki](https://github.com/XjSv/Cooked/wiki).
+Cooked has a whole bunch of actions and filters to customize Cooked as much as you need to. Be sure to check out the [Developer Documentation](https://github.com/XjSv/Cooked/wiki).
 
 ## Support
 

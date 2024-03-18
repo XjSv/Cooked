@@ -2,7 +2,7 @@
 Contributors: boxystudio
 Tags: recipe, recipes, food, cooking, chef, culinary, nutrition, seo
 Requires at least: 4.7
-Tested up to: 6.1.1
+Tested up to: 6.4.3
 Stable tag: 1.7.14
 Requires PHP: 7.4
 License: GPLv2 or later
@@ -62,10 +62,6 @@ Cooked has a whole bunch of actions and filters to customize Cooked as much as y
 
 Be sure to check the [Cooked Documentation](http://docs.cooked.pro/collection/1-cooked) for guides and documentation. If you're still having issues, create a new support topic and let me know what's going on. I'm happy to help! Please don't post a bad review without discussing here first, I really appreciate it!
 
-= I purchased Cooked on CodeCanyon.net, is this the same thing? =
-
-This version is **not** the same plugin. It has been completely rebuilt from the ground up and has now completely replaced the original plugin. For more information on Cooked and Cooked Pro, check out [https://cooked.pro](https://cooked.pro). There is a migration assistant as well for those using the original plugin. See the documentation here: [http://docs.cooked.pro/migration/](http://docs.cooked.pro/migration/)
-
 == Screenshots ==
 
 1. Recipe Display
@@ -79,9 +75,12 @@ This version is **not** the same plugin. It has been completely rebuilt from the
 
 == Upgrade Notice ==
 
-Version 1.7.13 fixes an XSS vulnerability within the recipe search box.
+Version 1.7.14 fixes an XSS vulnerability within the recipe search box.
 
 == Changelog ==
+
+= 1.7.14 =
+* **FIX:** Fixes an XSS vulnerability within the recipe search box.
 
 = 1.7.13 =
 * **FIX:** Fixes an XSS vulnerability within the recipe search box.

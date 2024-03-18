@@ -2,11 +2,11 @@
 
 /*
 Plugin Name: 	Cooked
-Plugin URI: 	https://cooked.pro
+Plugin URI: 	https://github.com/XjSv/Cooked
 Description: 	A recipe plugin for WordPress.
 Author: 		Boxy Studio
 Author URI: 	https://boxystudio.com
-Version: 		1.7.13
+Version: 		1.7.14
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2

@@ -75,12 +75,14 @@ Be sure to check the [Cooked Documentation](http://docs.cooked.pro/collection/1-
 
 == Upgrade Notice ==
 
-Version 1.7.14 fixes an XSS vulnerability within the recipe search box.
+Version 1.7.14 fixes the CVE-2023-44477 Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability.
 
 == Changelog ==
 
 = 1.7.14 =
-* **FIX:** Fixes an XSS vulnerability within the recipe search box.
+* **FIX:** Addressed the CVE-2023-44477 security vulnerability.
+* **FIX:** Added html lang attribute to html tag in print view.
+* **FIX:** Added alt text to gallery images.
 
 = 1.7.13 =
 * **FIX:** Fixes an XSS vulnerability within the recipe search box.

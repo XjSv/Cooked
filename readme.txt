@@ -1,6 +1,6 @@
 === Cooked - Recipe Plugin ===
 Contributors: boxystudio
-Tags: recipe, recipes, food, cooking, chef, culinary, nutrition, seo
+Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.4.3
 Stable tag: 1.7.14
@@ -8,11 +8,11 @@ Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.
+Cooked is the best way to create & display recipes with WordPress. SEO optimized, nutrition, galleries, cooking timers, printable recipes and more.
 
 == Description ==
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Check out the full list below.
+Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), nutrition, galleries, cooking timers, printable recipes and much more. Check out the full list below.
 
 Be sure to check out the **[online demo](https://demos.boxystudio.com/cooked/)** as well as the **[Cooked Documentation](http://docs.cooked.pro/)** if you need some help!
 

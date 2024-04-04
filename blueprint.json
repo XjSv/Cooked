@@ -15,7 +15,7 @@
             "step": "installPlugin",
             "pluginZipFile": {
                 "resource": "url",
-                "url": "https:\/\/downloads.wordpress.org\/plugin\/cooked.1.7.15.1.zip"
+                "url": "https:\/\/downloads.wordpress.org\/plugin\/cooked.1.7.16.zip"
             },
             "options": {
                 "activate": true

@@ -710,32 +710,32 @@ function cooked_updateTotalTimeValue( prepTime, cookTime ){
 // Reset the Gallery Builder
 // Assign a value to the hidden input field.
 // Init the jQuery UI Sort
-function cooked_init_gallery_sorting(){
+function cooked_init_gallery_sorting() {
 	jQuery('#cooked-recipe-image-gallery').sortable();
 }
 
-function init_nutrition_facts( nutritionTab ){
-	nutritionTab.find('input').each(function(){
+function init_nutrition_facts( nutritionTab ) {
+	nutritionTab.find('input').each(function() {
 		var thisInput = jQuery(this),
 			thisID = thisInput.attr('id'),
 			thisVal = thisInput.val(),
 			hasPercent = jQuery('.cooked-nut-percent[data-labeltype="' + thisID + '"]').length;
 
-		if ( jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').length ){
-			if ( thisVal ){
-				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').html( thisVal );
+		if ( jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').length ) {
+			if ( thisVal ) {
+				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').text( thisVal );
 				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('li').eq(0).show();
 				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('p').eq(0).show();
-				if ( hasPercent ){
+				if ( hasPercent ) {
 					var thisPercentElem = jQuery('.cooked-nut-percent[data-labeltype="' + thisID + '"]'),
 						pvd = thisPercentElem.data('pdv');
-					if ( pvd ){
+					if ( pvd ) {
 						thisPercent = Math.ceil( ( thisVal / pvd ) * 100 );
 						thisPercentElem.text( thisPercent );
 					}
 				}
 			} else {
-				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').html( '___ ' );
+				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').text( '___ ' );
 				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('li').eq(0).hide();
 				jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('p').eq(0).hide();
 			}
@@ -744,7 +744,7 @@ function init_nutrition_facts( nutritionTab ){
 }
 
 // Reset Time Picker Settings & Names
-function cooked_reset_ingredient_builder(){
+function cooked_reset_ingredient_builder() {
 
 	var ingredientBlocks = jQuery('.cooked-ingredient-block'),
 		total_ingredients = 0,

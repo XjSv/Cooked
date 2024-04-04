@@ -68,18 +68,20 @@ var cooked_loading = false;
 
         /****   4. Servings Switcher   ****/
 
-    	if ( $('.cooked-servings').length ){
+    	if ( $('.cooked-servings').length ) {
     		var servingsSelectField = $('.cooked-servings').find('select');
-    		servingsSelectField.on('change',function(e){
+    		servingsSelectField.on('change', function(e) {
     			e.preventDefault();
-    			var thisVal = $(this).children("option:selected").val();
-    			window.location = thisVal;
+    			var servings = $(this).children("option:selected").val();
+    			const url = new URL(window.location.href);
+                url.searchParams.set('servings', servings);
+                window.location.href = url.toString();
     		});
     	}
 
        /****   5. Browse Search Button   ****/
 
-        if ( $_Cooked_Recipe_Search.length ){
+        if ( $_Cooked_Recipe_Search.length ) {
 
            $('body').on( 'click',function(e) {
 
@@ -93,7 +95,7 @@ var cooked_loading = false;
                 }
 
                 // Yep, they clicked the button!
-                if (thisButton){
+                if (thisButton) {
                     if ( thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-browse-select') || thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-field-title') ){
                         thisButton.removeClass('cooked-active');
                     } else {

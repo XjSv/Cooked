@@ -5,8 +5,13 @@
 			<img src="<?php echo apply_filters( 'cooked_welcome_banner_img', COOKED_URL . '/assets/admin/images/welcome-banner.png' ); ?>" class="cooked-welcome-banner">
 
 			<div class="cooked-welcome-panel-intro">
-				<h1><?php echo sprintf( __( 'Thanks for using %s!', 'cooked'), 'Cooked' ); ?></h1>
-                <?php echo wpautop( sprintf(__('If this is your first time using %s, head over to the %s page for some initial configuration. You can also check out the %s if you get stuck. If you just recently updated, you can find out what\'s new below.','cooked'),'Cooked','<a href="' . untrailingslashit( admin_url() ) . '/admin.php?page=cooked_settings">' . esc_html__( 'Settings', 'cooked' ) . '</a>', '<a href="http://docs.cooked.pro/collection/1-cooked" target="_blank">' . esc_html__( 'documentation','cooked' ) . '</a>' ) ); ?>
+				<h1><?php
+					/* translators: referring to "Cooked" */
+					echo sprintf( __( 'Thanks for using %s!', 'cooked'), 'Cooked' );
+				?></h1>
+                <?php
+					/* translators: referring to "Cooked", "Settings" and "Documentation" */
+					echo wpautop( sprintf(__('If this is your first time using %1$s, head over to the %2$s page for some initial configuration. You can also check out the %3$s if you get stuck. If you just recently updated, you can find out what\'s new below.','cooked'),'Cooked','<a href="' . untrailingslashit( admin_url() ) . '/admin.php?page=cooked_settings">' . esc_html__( 'Settings', 'cooked' ) . '</a>', '<a href="http://docs.cooked.pro/collection/1-cooked" target="_blank">' . esc_html__( 'documentation','cooked' ) . '</a>' ) ); ?>
             </div>
 
 			<div class="cooked-welcome-panel-content">

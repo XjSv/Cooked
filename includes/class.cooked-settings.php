@@ -108,6 +108,7 @@ class Cooked_Settings {
 			'fields' => array(
 				'browse_page' => array(
 					'title' => esc_html__('Browse/Search Recipes Page', 'cooked'),
+					/* translators: a description on how to add the [cooked-browse] shortcode to a page */
 					'desc' => sprintf( esc_html__('Create a page with the %s shortcode on it, then choose it from this dropdown.','cooked'), '[cooked-browse]' ),
 					'type' => 'select',
 					'default' => 0,
@@ -115,6 +116,7 @@ class Cooked_Settings {
 				),
 				'recipes_per_page' => array(
 					'title' => esc_html__('Recipes Per Page', 'cooked'),
+					/* translators: a description on how to choose the default number of recipes per page. */
 					'desc' => sprintf( esc_html__('Choose the default (set via the %s panel) or choose a different number here.','cooked'), '<a href="' . trailingslashit( get_admin_url() ) . 'options-reading.php">' . esc_html__( 'Settings > Reading', 'cooked' ) . '</a>' ),
 					'type' => 'select',
 					'default' => 9,
@@ -179,6 +181,7 @@ class Cooked_Settings {
 				),
 				'browse_default_cp_recipe_category' => array(
 					'title' => esc_html__('Default Category', 'cooked'),
+					/* translators: a description on how to set the default recipe category for the [cooked-browse] shortcode. */
 					'desc' => sprintf( esc_html__('Optionally set the default recipe category for your %s shortcode display.','cooked'), '[cooked-browse]' ),
 					'type' => 'select',
 					'default' => 0,
@@ -186,6 +189,7 @@ class Cooked_Settings {
 				),
 				'browse_default_sort' => array(
 					'title' => esc_html__('Default Sort Order', 'cooked'),
+					/* translators: a description on how to set the default sort order for the [cooked-browse] shortcode. */
 					'desc' => sprintf( esc_html__('Set the default sort order for your %s shortcode display.','cooked'), '[cooked-browse]' ),
 					'type' => 'select',
 					'default' => 'date_desc',
@@ -204,7 +208,9 @@ class Cooked_Settings {
 					'class' => 'cooked-danger',
 					'default' => array(),
 					'options' => apply_filters( 'cooked_advanced_options', array(
+						/* translators: an option to only show recipes with the [cooked-recipe] shortcode. */
 						'disable_public_recipes' => '<strong>' . esc_html__('Disable Public Recipes','cooked') . '</strong> &mdash; ' . sprintf( esc_html__('Only show recipes using the %s shortcode.','cooked'), '<code>[cooked-recipe]</code>' ),
+						/* translators: an option to disable "meta" tags. */
 						'disable_meta_tags' => '<strong>' . sprintf( esc_html__('Disable %s Tags','cooked'), 'Cooked <code>&lt;meta&gt;</code>' ) . '</strong> &mdash; ' . esc_html__('Prevents duplicates when tags already exist.','cooked'),
 						'disable_servings_switcher' => '<strong>' . esc_html__('Disable "Servings Switcher"','cooked') . '</strong> &mdash; ' . esc_html__( 'Removes the servings dropdown on recipes.', 'cooked' ),
 						'disable_schema_output' => '<strong>' . esc_html__('Disable Recipe Schema Output','cooked') . '</strong> &mdash; ' . esc_html__( 'You should only do this if you\'re using something else to output schema information.', 'cooked' )
@@ -307,6 +313,7 @@ class Cooked_Settings {
 	public static function per_page_array(){
 
 		$counter = 0;
+		/* translators: posts_per_page default */
 		$per_page_array[] = sprintf( esc_html__('WordPress Default %s','cooked'), '(' . get_option( 'posts_per_page' ) . ')' );
 		do {
 			$counter++;
@@ -341,6 +348,7 @@ class Cooked_Settings {
 		$terms_array = array();
 
 		$args = array(
+			'taxonomy' => $term,
 			'hide_empty' => $hide_empty
 		);
 
@@ -352,7 +360,7 @@ class Cooked_Settings {
 			$args['parent'] = $term_id;
 		endif;
 
-		$terms = get_terms( $term, $args );
+		$terms = get_terms( $args );
 
 		if( !empty($terms) ) :
 			if ($choose_text): $terms_array[0] = $choose_text; endif;

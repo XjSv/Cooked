@@ -33,7 +33,8 @@ else:
         $hide_avatars = ( isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false );
         echo '<div class="cooked-author-list-heading' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
             echo ( isset($author['profile_photo']) && $author['profile_photo'] ? ( !$hide_avatars ? '<span class="cooked-author-avatar">' . esc_html( $author['profile_photo'] ) . '</span>' : '' ) : '' );
-            echo '<strong class="cooked-meta-title">' . sprintf( esc_html__('Recipes by %s','cooked'), $author['name'] ) . '</strong>';
+            /* translators: referring to the author (ex: Recipes by John Smith) */
+			echo '<strong class="cooked-meta-title">' . sprintf( esc_html__('Recipes by %s','cooked'), $author['name'] ) . '</strong>';
             echo ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? '<br><a href="' . get_permalink($_cooked_settings['browse_page']) . '">' . esc_html__( 'View all recipes','cooked' ) . '</a>' : '' );
         echo '</div>';
 

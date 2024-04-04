@@ -39,8 +39,8 @@ class Cooked_Admin_Enqueues {
 		wp_enqueue_script( 'jquery' );
 
 		// Selectize (searchable select fields)
-		wp_enqueue_style( 'cooked-selectize', COOKED_URL . '/assets/admin/css/selectize/selectize.css' );
-    	wp_enqueue_style( 'cooked-selectize-custom', COOKED_URL . '/assets/admin/css/selectize/cooked-selectize.css' );
+		wp_enqueue_style( 'cooked-selectize', COOKED_URL . '/assets/admin/css/selectize/selectize.css', [], COOKED_VERSION );
+    	wp_enqueue_style( 'cooked-selectize-custom', COOKED_URL . '/assets/admin/css/selectize/cooked-selectize.css', [], COOKED_VERSION );
     	wp_enqueue_script( 'cooked-selectize', COOKED_URL . '/assets/admin/js/selectize/selectize.min.js', array('jquery'), '0.12.6', true );
         wp_enqueue_script( 'cooked-microplugin', COOKED_URL . '/assets/admin/js/selectize/microplugin.min.js', array('jquery'), '0.0.3', true );
 
@@ -75,8 +75,8 @@ class Cooked_Admin_Enqueues {
 		$min = COOKED_DEV ? '' : '.min';
 
 		// Required Assets for Entire Admin (icons, etc.)
-		wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/admin/css/essentials'.$min.'.css', array(), COOKED_VERSION );
-		wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons'.$min.'.css', array(), COOKED_VERSION );
+		wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/admin/css/essentials'.$min.'.css', [], COOKED_VERSION );
+		wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons'.$min.'.css', [], COOKED_VERSION );
 
 		$load_cooked_admin_assets = false;
 
@@ -122,9 +122,9 @@ class Cooked_Admin_Enqueues {
 				wp_enqueue_script( 'jquery-ui-sortable' );
 				wp_enqueue_script( 'jquery-ui-slider' );
 
-				wp_enqueue_style( 'cooked-switchery', COOKED_URL . 'assets/admin/css/switchery/switchery.min.css', array(), COOKED_VERSION );
-	    		wp_enqueue_script( 'cooked-switchery', COOKED_URL . 'assets/admin/js/switchery/switchery.min.js', array(), COOKED_VERSION, true );
-	    		wp_enqueue_script( 'cooked-vue', COOKED_URL . 'assets/admin/js/vue/vue'.$min.'.js', array(), null, false );
+				wp_enqueue_style( 'cooked-switchery', COOKED_URL . 'assets/admin/css/switchery/switchery.min.css', [], COOKED_VERSION );
+	    		wp_enqueue_script( 'cooked-switchery', COOKED_URL . 'assets/admin/js/switchery/switchery.min.js', [], COOKED_VERSION, true );
+	    		wp_enqueue_script( 'cooked-vue', COOKED_URL . 'assets/admin/js/vue/vue'.$min.'.js', [], COOKED_VERSION, false );
 
 		        $cooked_js_vars = array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
@@ -141,19 +141,20 @@ class Cooked_Admin_Enqueues {
 	                'i18n_applied' => esc_html__('Applied','cooked'),
 					'i18n_confirm_save_default_all' => esc_html__('Are you sure you want to apply this new template to all of your recipes?','cooked'),
 					'i18n_confirm_load_default' => esc_html__('Are you sure you want to reset this recipe template to the Cooked plugin default?','cooked'),
+					/* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
 					'i18n_confirm_migrate_recipes' => sprintf( esc_html__('Please confirm that you are ready to migrate all %s recipes.','cooked'), number_format($total_old_recipes) ),
 				);
 
 				// Cooked Admin Style Assets
 		    	wp_register_script( 'cooked-functions', COOKED_URL . 'assets/admin/js/cooked-functions'.$min.'.js', array('jquery'), COOKED_VERSION, true );
 		    	wp_register_script( 'cooked-migration', COOKED_URL . 'assets/admin/js/cooked-migration'.$min.'.js', array('jquery'), COOKED_VERSION, true );
-				wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/admin/css/style'.$min.'.css', array(), COOKED_VERSION );
+				wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/admin/css/style'.$min.'.css', [], COOKED_VERSION );
 				wp_enqueue_style( 'wp-color-picker' );
 
 				// Tooltipster
 				wp_enqueue_script('cooked-tooltipster', COOKED_URL . 'assets/admin/js/tooltipster/jquery.tooltipster.min.js', array('jquery'), COOKED_VERSION, true );
-				wp_enqueue_style('cooked-tooltipster-core', COOKED_URL . 'assets/admin/css/tooltipster/tooltipster.min.css', array(), COOKED_VERSION, 'screen' );
-				wp_enqueue_style('cooked-tooltipster-theme', COOKED_URL . 'assets/admin/css/tooltipster/themes/tooltipster-light.min.css', array(), COOKED_VERSION, 'screen' );
+				wp_enqueue_style('cooked-tooltipster-core', COOKED_URL . 'assets/admin/css/tooltipster/tooltipster.min.css', [], COOKED_VERSION, 'screen' );
+				wp_enqueue_style('cooked-tooltipster-theme', COOKED_URL . 'assets/admin/css/tooltipster/themes/tooltipster-light.min.css', [], COOKED_VERSION, 'screen' );
 
 				// Cooked Admin Script
 				wp_localize_script('cooked-functions', 'cooked_js_vars', $cooked_js_vars );

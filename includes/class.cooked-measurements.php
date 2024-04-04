@@ -637,6 +637,7 @@ class Cooked_Measurements {
 			if ( $format === 'iso' ):
 				return 'PT0H'.intval( $minutes ).'M';
 			else:
+				/* translators: singular and plural number of minutes (shorthand) */
 				echo self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes) ), $minutes );
 			endif;
 		elseif ( $minutes < 1440 ):
@@ -645,7 +646,9 @@ class Cooked_Measurements {
 			if ( $format === 'iso' ):
 				return 'PT'.intval( $hours ).'H'.( $minutes_left ? intval( $minutes_left ) : 0 ).'M';
 			else:
+				/* translators: singular and plural number of hours (shorthand) */
 				echo self::singular_plural( sprintf( esc_html__( '%d hr','cooked' ), number_format_i18n($hours) ), sprintf( esc_html__( '%d hrs','cooked' ), number_format_i18n($hours) ), $hours );
+				/* translators: singular and plural number of minutes (shorthand) */
 				echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
 			endif;
 		else:
@@ -658,8 +661,11 @@ class Cooked_Measurements {
 			if ( $format === 'iso' ):
 				return 'P'.intval( $days ).'DT'.( $hours_left ? intval( $hours_left ) : 0 ).'H'.( $minutes_left ? intval( $minutes_left ) : 0 ).'M';
 			else:
+				/* translators: singular and plural number of days */
 				echo self::singular_plural( sprintf( esc_html__( '%d day','cooked' ), number_format_i18n($days) ), sprintf( esc_html__( '%d days','cooked' ), number_format_i18n($days) ), $days );
+				/* translators: singular and plural number of hours (shorthand) */
 				echo ( $hours_left ? '&nbsp;' . self::singular_plural( sprintf( esc_html__( '%d hr','cooked' ), number_format_i18n($hours_left) ), sprintf( esc_html__( '%d hrs','cooked' ), number_format_i18n($hours_left) ), $hours_left ) : '' );
+				/* translators: singular and plural number of minutes (shorthand) */
 				echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
 			endif;
 		endif;

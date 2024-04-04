@@ -1,18 +1,18 @@
-=== Cooked - Recipe Plugin ===
-Contributors: boxystudio
+=== Cooked - Recipe Management ===
+Contributors: boxystudio, xjsv
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.4.3
-Stable tag: 1.7.14
+Tested up to: 6.5
+Stable tag: 1.7.15.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Cooked is the best way to create & display recipes with WordPress. SEO optimized, nutrition, galleries, cooking timers, printable recipes and more.
+Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized, galleries, timers, and much more.
 
 == Description ==
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), nutrition, galleries, cooking timers, printable recipes and much more. Check out the full list below.
+Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Check out the full list below.
 
 Be sure to check out the **[online demo](https://demos.boxystudio.com/cooked/)** as well as the **[Cooked Documentation](http://docs.cooked.pro/)** if you need some help!
 
@@ -75,11 +75,14 @@ Be sure to check the [Cooked Documentation](http://docs.cooked.pro/collection/1-
 
 == Upgrade Notice ==
 
-Version 1.7.14 fixes the CVE-2023-44477 Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability.
+Version 1.7.15.1 fixes the CVE-2023-44477 Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability.
 
 == Changelog ==
 
-= 1.7.14 =
+= 1.7.16 =
+* Security improvements.
+
+= 1.7.15.1 =
 * **FIX:** Addressed the CVE-2023-44477 security vulnerability.
 * **FIX:** Added html lang attribute to html tag in print view.
 * **FIX:** Added alt text to gallery images.

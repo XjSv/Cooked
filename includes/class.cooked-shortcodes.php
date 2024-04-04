@@ -106,9 +106,11 @@ class Cooked_Shortcodes {
 
 		global $_cooked_settings;
 
-		if ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) )
+		if ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ){
+			/* translators: referring to the bottom of the Settings page. */
 			return ( current_user_can( 'edit_cooked_settings' ) ? wpautop( sprintf( esc_html__('Public recipes are currently disabled. You can change this at the bottom of the %s page.','cooked'), '<a href="' . trailingslashit( admin_url() ) . 'admin.php?page=cooked_settings" target="_blank">' . esc_html__( 'Settings', 'cooked' ) . '</a>' ) ) : false );
-
+		}
+		
 		if ( is_admin() )
 			return false;
 

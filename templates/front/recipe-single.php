@@ -43,6 +43,7 @@ echo '<article class="' . implode( ' ', $recipe_classes ) . ' cooked-recipe-card
         if ( in_array('author',$_cooked_settings['recipe_info_display_options']) ):
             echo '<span class="cooked-recipe-card-author">';
                 $author = $recipe['author'];
+                /* translators: referring to the author (ex: By John Smith) */
                 echo sprintf( esc_html__( 'By %s', 'cooked' ), '<strong>' . esc_html( $author['name'] ) . '</strong>' );
             echo '</span>';
         endif;

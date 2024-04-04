@@ -78,8 +78,11 @@ class Cooked_Functions {
 	}
 
 	public static function parse_readme_changelog( $readme_url = false, $title = false ){
-
-		$readme = ( !$readme_url ? file_get_contents( COOKED_DIR . 'readme.txt') : file_get_contents( $readme_url ) );
+		
+		ob_start();
+		include ( !$readme_url ? COOKED_DIR . 'readme.txt' : $readme_url );
+		$readme = ob_get_clean();
+		
 		$readme = make_clickable(esc_html($readme));
 		$readme = preg_replace('/`(.*?)`/', '<code>\\1</code>', $readme);
 		//$readme = preg_replace( '/[\040]\*\*\NEW:\*\*/', '<strong class="new">' . esc_html__( 'New', 'cooked' ) . '</strong>', $readme);
@@ -92,6 +95,7 @@ class Cooked_Functions {
 		$readme = preg_replace( '/\*(.*?)\*/', '<em>\\1</em>', $readme);
 		$readme = explode( '== Changelog ==', $readme );
 		$readme = $readme[1];
+		/* translators: a title for the "What's new in Cooked?" section. */
 		$whats_new_title = '<h4>' . ( $title ? esc_html( $title ) : apply_filters( 'cooked_whats_new_title', sprintf( esc_html__( "What's new in %s?", "cooked" ), 'Cooked ' . COOKED_VERSION ) ) ) . '</h4>';
 		$readme = preg_replace('/= (.*?) =/', $whats_new_title, $readme);
 		$readme = preg_replace("/\*+(.*)?/i","<ul class='cooked-whatsnew-list'><li>$1</li></ul>",$readme);

@@ -141,6 +141,7 @@ class Cooked_Taxonomies {
 					echo '<span class="cooked-recipe-card-sep"></span>';
 
 					echo '<span class="cooked-recipe-card-author">';
+						/* translators: for displaying singular or plural versions depending on the number. */
 						echo esc_html( sprintf( _n( '%s Recipe', '%s Recipes', $total_recipes, 'cooked' ), number_format( $total_recipes, 0 ) ) );
 					echo '</span>';
 

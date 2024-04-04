@@ -17,7 +17,7 @@ class Cooked_SEO {
         global $_cooked_settings;
         if ( !in_array( 'disable_schema_output', $_cooked_settings['advanced'] ) ):
 
-            $schema_values_json = json_encode( self::schema_values( $recipe ) );
+            $schema_values_json = wp_json_encode( self::schema_values( $recipe ) );
 
             $schema_html = '<script type="application/ld+json">';
                 $schema_html .= $schema_values_json;
@@ -54,7 +54,7 @@ class Cooked_SEO {
             foreach ( $recipe['ingredients'] as $ing ):
                 if ( isset( $ing['section_heading_name'] ) ): continue; endif;
                 $ingredient = Cooked_Recipes::single_ingredient( $ing, false, true );
-                $ingredient_cleaned = strip_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $ingredient) );
+                $ingredient_cleaned = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $ingredient) );
                 $ingredients[] = $ingredient_cleaned;
             endforeach;
         endif;
@@ -62,7 +62,7 @@ class Cooked_SEO {
         if ( isset($recipe['directions']) && !empty($recipe['directions']) ):
             foreach ( $recipe['directions'] as $dir ):
                 $direction = Cooked_Recipes::single_direction( $dir, false, true );
-                $direction_cleaned = strip_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $direction) );
+                $direction_cleaned = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $direction) );
                 $directions[] = $direction_cleaned;
             endforeach;
         endif;

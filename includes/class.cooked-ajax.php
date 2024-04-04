@@ -55,7 +55,7 @@ class Cooked_Ajax {
 		if ( $old_recipes != 'complete' ):
 			$total = count($old_recipes);
 			if ( $total > 0 ):
-				echo json_encode( $old_recipes );
+				echo wp_json_encode( $old_recipes );
 			else:
 				echo 'false';
 			endif;
@@ -117,7 +117,7 @@ class Cooked_Ajax {
 			 	endforeach;
 
 				if ( !empty( $leftover_recipe_ids ) ):
-					echo json_encode( $leftover_recipe_ids );
+					echo wp_json_encode( $leftover_recipe_ids );
 					wp_die();
 				endif;
 
@@ -147,7 +147,7 @@ class Cooked_Ajax {
 		);
 
 		$_recipe_ids = Cooked_Recipes::get( $args, false, true );
-		echo json_encode( $_recipe_ids );
+		echo wp_json_encode( $_recipe_ids );
 		wp_die();
 
 	}
@@ -194,7 +194,7 @@ class Cooked_Ajax {
 			 	endforeach;
 
 				if ( !empty( $leftover_recipe_ids ) ):
-					echo json_encode( $leftover_recipe_ids );
+					echo wp_json_encode( $leftover_recipe_ids );
 					wp_die();
 				else:
 					echo 'false';

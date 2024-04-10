@@ -653,6 +653,7 @@ class Cooked_Measurements {
 			endif;
 		else:
 			$days = floor( $minutes / 24 / 60 );
+			$hours_left = 0;
 			$minutes_left = $minutes - ( $days * 24 * 60 );
 			if ( $minutes_left > 60 ):
 				$hours_left = floor( $minutes_left / 60 );

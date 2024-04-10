@@ -64,9 +64,9 @@ class Cooked_Widget_Recipe_Categories extends WP_Widget {
     public function update( $new_instance, $old_instance ) {
 
         $instance = array();
-        $instance['title'] = ( !empty( $new_instance['title'] ) ? strip_tags( $new_instance['title'] ) : '' );
-        $instance['child_of'] = ( !empty( $new_instance['child_of'] ) ? strip_tags( $new_instance['child_of'] ) : false );
-        $instance['hide_empty'] = ( !empty( $new_instance['hide_image'] ) ? strip_tags( $new_instance['hide_image'] ) : false );
+        $instance['title'] = ( !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '' );
+        $instance['child_of'] = ( !empty( $new_instance['child_of'] ) ? wp_strip_all_tags( $new_instance['child_of'] ) : false );
+        $instance['hide_empty'] = ( !empty( $new_instance['hide_image'] ) ? wp_strip_all_tags( $new_instance['hide_image'] ) : false );
         return $instance;
     }
 

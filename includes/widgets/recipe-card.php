@@ -133,14 +133,14 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
 
     public function update( $new_instance, $old_instance ) {
         $instance = array();
-        $instance['title'] = ( !empty( $new_instance['title'] ) ? strip_tags( $new_instance['title'] ) : '' );
-        $instance['recipe_id'] = ( !empty( $new_instance['recipe_id'] ) ? strip_tags( $new_instance['recipe_id'] ) : false );
-        $instance['width'] = ( !empty( $new_instance['width'] ) ? strip_tags( $new_instance['width'] ) : '100%' );
-        $instance['style'] = ( !empty( $new_instance['style'] ) ? strip_tags( $new_instance['style'] ) : false );
-        $instance['hide_image'] = ( !empty( $new_instance['hide_image'] ) ? strip_tags( $new_instance['hide_image'] ) : false );
-        $instance['hide_title'] = ( !empty( $new_instance['hide_title'] ) ? strip_tags( $new_instance['hide_title'] ) : false );
-        $instance['hide_excerpt'] = ( !empty( $new_instance['hide_excerpt'] ) ? strip_tags( $new_instance['hide_excerpt'] ) : false );
-        $instance['hide_author'] = ( !empty( $new_instance['hide_author'] ) ? strip_tags( $new_instance['hide_author'] ) : false );
+        $instance['title'] = ( !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '' );
+        $instance['recipe_id'] = ( !empty( $new_instance['recipe_id'] ) ? wp_strip_all_tags( $new_instance['recipe_id'] ) : false );
+        $instance['width'] = ( !empty( $new_instance['width'] ) ? wp_strip_all_tags( $new_instance['width'] ) : '100%' );
+        $instance['style'] = ( !empty( $new_instance['style'] ) ? wp_strip_all_tags( $new_instance['style'] ) : false );
+        $instance['hide_image'] = ( !empty( $new_instance['hide_image'] ) ? wp_strip_all_tags( $new_instance['hide_image'] ) : false );
+        $instance['hide_title'] = ( !empty( $new_instance['hide_title'] ) ? wp_strip_all_tags( $new_instance['hide_title'] ) : false );
+        $instance['hide_excerpt'] = ( !empty( $new_instance['hide_excerpt'] ) ? wp_strip_all_tags( $new_instance['hide_excerpt'] ) : false );
+        $instance['hide_author'] = ( !empty( $new_instance['hide_author'] ) ? wp_strip_all_tags( $new_instance['hide_author'] ) : false );
         return $instance;
     }
 

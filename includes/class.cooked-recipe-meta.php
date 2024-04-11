@@ -298,7 +298,10 @@ function cooked_render_recipe_fields( $post_id ) {
 				<section class="cooked-alert-block" id="cooked-recipe-tab-content-migration">
 					<div class="recipe-setting-block">
 						<h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Review Required', 'cooked' ); ?></h3>
-						<p><?php echo sprintf( esc_html__( "It looks like this recipe is from a different version of %s. Please review and click \"Update\" to save it.","cooked"), "Cooked" ); ?></p>
+						<p><?php
+							/* translators: for displaying singular or plural versions depending on the number of recipes. */
+							echo sprintf( esc_html__( "It looks like this recipe is from a different version of %s. Please review and click \"Update\" to save it.","cooked"), "Cooked" );
+						?></p>
 					</div>
 				</section>
 			<?php endif; ?>
@@ -326,12 +329,12 @@ function cooked_render_recipe_fields( $post_id ) {
 
 				<div class="recipe-setting-block">
 					<h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( esc_html__( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
-					<p><textarea name="_recipe_settings[excerpt]"><?php echo ( isset($recipe_settings['excerpt']) ? $recipe_settings['excerpt'] : '' ); ?></textarea></p>
+					<p><textarea name="_recipe_settings[excerpt]"><?php echo ( isset($recipe_settings['excerpt']) ? esc_textarea( $recipe_settings['excerpt'] ) : '' ); ?></textarea></p>
 				</div>
 
                 <div class="recipe-setting-block">
                     <h3 class="cooked-settings-title"><?php esc_html_e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( esc_html__( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
-                    <p><textarea name="_recipe_settings[seo_description]"><?php echo ( isset($recipe_settings['seo_description']) ? $recipe_settings['seo_description'] : '' ); ?></textarea></p>
+                    <p><textarea name="_recipe_settings[seo_description]"><?php echo ( isset($recipe_settings['seo_description']) ? esc_textarea( $recipe_settings['seo_description'] ) : '' ); ?></textarea></p>
                 </div>
 
 				<div class="recipe-setting-block">
@@ -350,17 +353,17 @@ function cooked_render_recipe_fields( $post_id ) {
 						</div>
 						<div class="cooked-setting-column-14">
 							<h3 class="cooked-settings-title"><?php esc_html_e( 'Prep Time', 'cooked' ); ?></h3>
-							<input id="cooked-prep-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[prep_time]" value="<?php echo ( isset($recipe_settings['prep_time']) && $recipe_settings['prep_time'] ? $recipe_settings['prep_time'] : '' ); ?>" placeholder="--">
+							<input id="cooked-prep-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[prep_time]" value="<?php echo ( isset($recipe_settings['prep_time']) && $recipe_settings['prep_time'] ? esc_attr( $recipe_settings['prep_time'] ) : '' ); ?>" placeholder="--">
 							<span class="cooked-time-picker-text"><?php esc_html_e('minutes','cooked'); ?></span>
 						</div>
 						<div class="cooked-setting-column-14">
 							<h3 class="cooked-settings-title"><?php esc_html_e( 'Cook Time', 'cooked' ); ?></h3>
-							<input id="cooked-cook-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[cook_time]" value="<?php echo ( isset($recipe_settings['cook_time']) && $recipe_settings['cook_time'] ? $recipe_settings['cook_time'] : '' ); ?>" placeholder="--">
+							<input id="cooked-cook-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[cook_time]" value="<?php echo ( isset($recipe_settings['cook_time']) && $recipe_settings['cook_time'] ? esc_attr( $recipe_settings['cook_time'] ) : '' ); ?>" placeholder="--">
 							<span class="cooked-time-picker-text"><?php esc_html_e('minutes','cooked'); ?></span>
 						</div>
                         <div class="cooked-setting-column-14">
                             <h3 class="cooked-settings-title"><?php esc_html_e( 'Total Time', 'cooked' ); ?></h3>
-                            <input id="cooked-total-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[total_time]" value="<?php echo ( isset($recipe_settings['total_time']) && $recipe_settings['total_time'] ? $recipe_settings['total_time'] : '' ); ?>" placeholder="--">
+                            <input id="cooked-total-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[total_time]" value="<?php echo ( isset($recipe_settings['total_time']) && $recipe_settings['total_time'] ? esc_attr( $recipe_settings['total_time'] ) : '' ); ?>" placeholder="--">
                             <span class="cooked-time-picker-text"><?php esc_html_e('minutes','cooked'); ?></span>
                         </div>
 					</div>
@@ -437,7 +440,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
 				<?php else:
 
-					$random_key = rand( 1000000,9999999 ); ?>
+					$random_key = wp_rand( 1000000,9999999 ); ?>
 
 					<div class="recipe-setting-block cooked-ingredient-block cooked-clearfix">
 
@@ -586,7 +589,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
 				<?php else:
 
-					$random_key = rand( 1000000,9999999 ); ?>
+					$random_key = wp_rand( 1000000,9999999 ); ?>
 
 					<div class="recipe-setting-block cooked-direction-block cooked-clearfix">
 						<i class="cooked-icon cooked-icon-drag"></i>
@@ -779,9 +782,15 @@ function cooked_render_recipe_fields( $post_id ) {
 			<div class="recipe-setting-block cooked-conditional-hidden" data-condition="cooked_gallery_type" data-value="cooked">
 
 				<div class="recipe-setting-block cooked-bm-15">
-					<h3 class="cooked-settings-title"><?php echo sprintf( esc_html__( '%s or %s Video', 'cooked' ),'YouTube','Vimeo' ); ?></h3>
-					<p><?php echo sprintf( esc_html__( "If you would like to display a video as the first item in your gallery, you can paste a valid %s or %s URL below.","cooked"),'YouTube','Vimeo' ); ?></p>
-					<input type="text" name="_recipe_settings[gallery][video_url]" value="<?php echo ( isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ? $recipe_settings['gallery']['video_url'] : '' ); ?>" placeholder="ex. https://www.youtube.com/watch?v=abc123">
+					<h3 class="cooked-settings-title"><?php
+						/* translators: a title for the video section of the recipe editor, where users can paste a YouToub or Vimeo URL into the field below. */
+						echo sprintf( esc_html__( '%1$s or %2$s Video', 'cooked' ),'YouTube','Vimeo' );
+					?></h3>
+					<p><?php
+						/* translators: a message describing how to display a video from YouTube or Vimeo. */
+						echo sprintf( esc_html__( 'If you would like to display a video as the first item in your gallery, you can paste a valid %1$s or %2$s URL below.','cooked'),'YouTube','Vimeo' );
+					?></p>
+					<input type="text" name="_recipe_settings[gallery][video_url]" value="<?php echo ( isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ? esc_attr( $recipe_settings['gallery']['video_url'] ) : '' ); ?>" placeholder="ex. https://www.youtube.com/watch?v=abc123">
 				</div>
 
 				<h3 class="cooked-settings-title"><?php esc_html_e( 'Gallery Items', 'cooked' ); ?></h3>
@@ -823,14 +832,19 @@ function cooked_render_recipe_fields( $post_id ) {
 
 						<div class="cooked-clearfix">
 							<div class="cooked-setting-column-12">
-								<p class="cooked-bm-5"><strong><?php echo sprintf( esc_html__( '"%s" and "%s"','cooked' ), 'include','exclude' ); ?></strong></p>
+								<p class="cooked-bm-5"><strong><?php
+									/* translators: "include and exclude" section title */
+									echo sprintf( esc_html__( '"%1$s" and "%2$s"','cooked' ), 'include','exclude' );
+								?></strong></p>
 								<p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to include or exclude content from the shortcode output.','cooked'); ?></p>
 								<div class="cooked-bm-20 cooked-block">
 									<input class='cooked-shortcode-field' type='text' readonly value='include="author,total_time"' />
 								</div>
 							</div>
 							<div class="cooked-setting-column-12">
-								<p class="cooked-bm-5"><strong><?php echo sprintf( esc_html__( '"%s" and "%s"','cooked' ), 'left','right' ); ?></strong></p>
+								<p class="cooked-bm-5"><strong><?php
+									/* translators: "left and right" section title */
+									echo sprintf( esc_html__( '"%1$s" and "%2$s"','cooked' ), 'left','right' ); ?></strong></p>
 								<p class="cooked-bm-10"><?php esc_html_e( 'Used like "include", but will position the content to the left or right.','cooked'); ?></p>
 								<div class="cooked-bm-20 cooked-block">
 									<input class='cooked-shortcode-field' type='text' readonly value='left="author" right="total_time"' />
@@ -1030,13 +1044,25 @@ function cooked_render_recipe_fields( $post_id ) {
 							<p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
 							<p class="cooked-bm-10">
 								<strong>width</strong><br>
-								<?php echo sprintf( esc_html__( 'ex: "%s" or "%s"', 'cooked'), '80%','300px' ); ?><br><br>
+								<?php
+									/* translators: related to the width of  slideshows: "80% or 300px" section title */
+									echo sprintf( esc_html__( 'ex: "%1$s" or "%2$s"', 'cooked'), '80%','300px' );
+								?><br><br>
 								<strong>ratio</strong><br>
-								<?php echo sprintf( esc_html__( 'ex: "%s"', 'cooked'), '800/600' ); ?><br><br>
+								<?php
+									/* translators: related to the image ratio for slideshows: "ex: 800/600" section title */
+									echo sprintf( esc_html__( 'ex: "%s"', 'cooked'), '800/600' );
+								?><br><br>
 								<strong>nav</strong><br>
-								<?php echo sprintf( esc_html__( '"%s", "%s", or "%s"', 'cooked'), 'dots','thumbs','false' ); ?><br><br>
+								<?php
+									/* translators: related to the navigation style for slideshows: "dots, thumbs or false" section title */
+									echo sprintf( esc_html__( '"%1$s", "%2$s", or "%3$s"', 'cooked'), 'dots','thumbs','false' );
+								?><br><br>
 								<strong>allowfullscreen</strong><br>
-								<?php echo sprintf( esc_html__( '"%s" or "%s"', 'cooked'), 'true','false' ); ?>
+								<?php
+									/* translators: related to allowing full screen for slideshows: "true or false" section title */
+									echo sprintf( esc_html__( '"%1$s" or "%2$s"', 'cooked'), 'true','false' );
+								?>
 							</p>
 						</div>
 
@@ -1083,7 +1109,10 @@ function cooked_render_recipe_fields( $post_id ) {
 
 						<div class="cooked-clearfix">
 							<div class="cooked-setting-column-12">
-								<p class="cooked-bm-5"><strong><?php echo sprintf( esc_html__( '"%s", "%s" and "%s"','cooked' ), 'seconds','minutes','hours' ); ?></strong></p>
+								<p class="cooked-bm-5"><strong><?php
+									/* translators: "seconds, minutes and hours" section title */
+									echo sprintf( esc_html__( '"%1$s", "%2$s" and "%3$s"','cooked' ), 'seconds','minutes','hours' );
+								?></strong></p>
 								<p class="cooked-bm-10"><?php esc_html_e( 'Use just one or a combination of all three to set the timer length','cooked'); ?></p>
 								<div class="cooked-bm-20 cooked-block">
 									<input class='cooked-shortcode-field' type='text' readonly value='minutes="5" seconds="30"' />

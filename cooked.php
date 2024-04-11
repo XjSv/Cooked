@@ -1,12 +1,12 @@
 <?php
 
 /*
-Plugin Name: 	Cooked
-Plugin URI: 	https://github.com/XjSv/Cooked
+Plugin Name: 	Cooked - Recipe Management
+Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author: 		Boxy Studio
 Author URI: 	https://boxystudio.com
-Version: 		1.7.14
+Version: 		1.7.16
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,8 +30,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.7.14' );
-define( 'COOKED_DEV', false );
+define( 'COOKED_VERSION', '1.7.16' );
+define( 'COOKED_DEV', true );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
 

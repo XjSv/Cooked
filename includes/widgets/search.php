@@ -61,8 +61,8 @@ class Cooked_Widget_Search extends WP_Widget {
 
     public function update( $new_instance, $old_instance ) {
         $instance = array();
-        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? strip_tags( $new_instance['title'] ) : '';
-        $instance['size'] = ( ! empty( $new_instance['size'] ) ) ? strip_tags( $new_instance['size'] ) : 'compact';
+        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+        $instance['size'] = ( ! empty( $new_instance['size'] ) ) ? wp_strip_all_tags( $new_instance['size'] ) : 'compact';
         $instance['hide_browse'] = ( !isset( $new_instance['hide_browse'] ) ? 0 : 1 );
         $instance['hide_sorting'] = ( !isset( $new_instance['hide_sorting'] ) ? 0 : 1 );
         return $instance;

@@ -99,13 +99,13 @@ class Cooked_Widget_Recipe_List extends WP_Widget {
     public function update( $new_instance, $old_instance ) {
 
         $instance = array();
-        $instance['title'] = ( !empty( $new_instance['title'] ) ? strip_tags( $new_instance['title'] ) : '' );
-        $instance['orderby'] = ( !empty( $new_instance['orderby'] ) ? strip_tags( $new_instance['orderby'] ) : 'date' );
-        $instance['width'] = ( !empty( $new_instance['width'] ) ? strip_tags( $new_instance['width'] ) : '100%' );
-        $instance['show'] = ( !empty( $new_instance['show'] ) ? strip_tags( $new_instance['show'] ) : 5 );
+        $instance['title'] = ( !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '' );
+        $instance['orderby'] = ( !empty( $new_instance['orderby'] ) ? wp_strip_all_tags( $new_instance['orderby'] ) : 'date' );
+        $instance['width'] = ( !empty( $new_instance['width'] ) ? wp_strip_all_tags( $new_instance['width'] ) : '100%' );
+        $instance['show'] = ( !empty( $new_instance['show'] ) ? wp_strip_all_tags( $new_instance['show'] ) : 5 );
         $instance['recipes'] = ( !empty( $new_instance['recipes'] ) ? $new_instance['recipes'] : '' );
-        $instance['hide_image'] = ( !empty( $new_instance['hide_image'] ) ? strip_tags( $new_instance['hide_image'] ) : false );
-        $instance['hide_author'] = ( !empty( $new_instance['hide_author'] ) ? strip_tags( $new_instance['hide_author'] ) : false );
+        $instance['hide_image'] = ( !empty( $new_instance['hide_image'] ) ? wp_strip_all_tags( $new_instance['hide_image'] ) : false );
+        $instance['hide_author'] = ( !empty( $new_instance['hide_author'] ) ? wp_strip_all_tags( $new_instance['hide_author'] ) : false );
         return $instance;
     }
 

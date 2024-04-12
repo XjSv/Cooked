@@ -28,12 +28,11 @@
 
   },
   "require": {
-    "php": ">=8.0 <8.4"
+    "php": ">=7.4"
   },
   "require-dev": {
     "phpunit/phpunit": ">=9.0",
-    "friendsofphp/php-cs-fixer": "^3.8",
-    "phpstan/phpstan": "^1.9"
+    "friendsofphp/php-cs-fixer": "^3.8"
   },
   "autoload": {
     "psr-4": {

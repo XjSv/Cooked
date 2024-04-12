@@ -385,10 +385,10 @@ class Cooked_Recipes {
 					$selected      = isset($_GET[$taxonomy]) ? sanitize_title($_GET[$taxonomy]) : '';
 					$info_taxonomy = get_taxonomy($taxonomy);
 					$taxonomy_label = $info_taxonomy->label;
-					
+
 					/* translators: For showing "All" of a taxonomy (ex: "All Burgers")  */
 					$all_string = sprintf( esc_html__( "All %s", "cooked" ), $taxonomy_label );
-					
+
 					wp_dropdown_categories(array(
 						'show_option_all' => $all_string,
 						'taxonomy'        => $taxonomy,
@@ -750,19 +750,19 @@ class Cooked_Recipes {
 			$half = $default / 2;
 			$double = $default * 2;
 			$triple = $default * 3;
-			
+
 			/* translators: singular and plural quarter "serving" size */
 			$quarter_string = sprintf( esc_html( _n('Quarter (%s Serving)','Quarter (%s Servings)',$quarter,'cooked')),$quarter );
-			
+
 			/* translators: singular and plural quarter "serving" size */
 			$half_string = sprintf( esc_html( _n('Half (%s Serving)','Half (%s Servings)',$half,'cooked')),$half );
-			
+
 			/* translators: singular and plural quarter "serving" size */
 			$default_string = sprintf( esc_html( _n('Default (%s Serving)','Default (%s Servings)',$default,'cooked')),$default );
-			
+
 			/* translators: singular and plural quarter "serving" size */
 			$double_string = sprintf( esc_html__( 'Double (%s Servings)','cooked'),$double );
-			
+
 			/* translators: singular and plural quarter "serving" size */
 			$triple_string = sprintf( esc_html__( 'Triple (%s Servings)','cooked'),$triple );
 
@@ -780,14 +780,14 @@ class Cooked_Recipes {
 		echo '<span class="cooked-servings"><span class="cooked-servings-icon"><i class="cooked-icon cooked-icon-recipe-icon"></i></span>';
 		echo '<strong class="cooked-meta-title">' . esc_html__('Yields','cooked') . '</strong>';
 			if ( !$printing && !$switcher_disabled ):
-				
+
 				/* translators: singular and plural "serving" sizes */
 				$servings_string = sprintf( esc_html( _n( '%s Serving', '%s Servings', $servings, 'cooked' ) ), $servings );
-				
+
 				echo '<a href="#">' . $servings_string . '</a>';
 				echo '<select name="servings" class="cooked-servings-changer">';
 					foreach ( $servings_array as $stype ):
-						echo '<option value="' . ( $default == $stype['value'] ? remove_query_arg( 'servings', get_permalink() ) : add_query_arg( 'servings', $stype['value'], get_permalink() ) ) . '"' . ( $stype['value'] == $servings ? ' selected' : '' ) . '>' . esc_attr( $stype['name'] ) . '</option>';
+						echo '<option value="' . $stype['value'] . '"' . ( $stype['value'] == $servings ? ' selected' : '' ) . '>' . esc_attr( $stype['name'] ) . '</option>';
 					endforeach;
 				echo '</select>';
 			else:
@@ -892,10 +892,10 @@ class Cooked_Recipes {
 			if ( $plain_text ):
 				return $content;
 			else:
-				
+
 				/* translators: singular and plural "steps" */
 				$step_string = sprintf( esc_html__( 'Step %d', 'cooked' ), $step );
-				
+
 				echo '<div class="cooked-single-direction cooked-direction' . ( $image ? ' cooked-direction-has-image' : '' ) . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . $step_string . '"' : '' ) . '>';
 					echo ( $number ? '<span class="cooked-direction-number">' . esc_html($number) . '</span>' : '' );
 					echo '<div class="cooked-dir-content">' . do_shortcode( $content ) . ( $image ? wpautop( $image ) : '' ) . '</div>';

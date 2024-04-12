@@ -31,13 +31,12 @@ class MathTest extends TestCase
         $calculator = new MathExecutor();
 
         /** @var float $phpResult */
-        $phpResult = 0.0;
         eval('$phpResult = ' . $expression . ';');
 
         try {
             $result = $calculator->execute($expression);
         } catch (Exception $e) {
-            $this->fail(\sprintf('Exception: %s (%s:%d), expression was: %s', $e::class, $e->getFile(), $e->getLine(), $expression));
+            $this->fail(\sprintf('Exception: %s (%s:%d), expression was: %s', \get_class($e), $e->getFile(), $e->getLine(), $expression));
         }
         $this->assertEquals($phpResult, $result, "Expression was: {$expression}");
     }
@@ -48,10 +47,8 @@ class MathTest extends TestCase
      * Most tests can go in here.  The idea is that each expression will be evaluated by MathExecutor and by PHP with eval.
      * The results should be the same.  If they are not, then the test fails.  No need to add extra test unless you are doing
      * something more complex and not a simple mathmatical expression.
-     *
-     * @return array<array<string>>
      */
-    public static function providerExpressions()
+    public function providerExpressions()
     {
         return [
           ['-5'],
@@ -97,7 +94,6 @@ class MathTest extends TestCase
           ['hypot(1.5, 3.5)'],
           ['intdiv(10, 2)'],
           ['log(1.5)'],
-          ['log(1.5, 3)'],
           ['log10(1.5)'],
           ['log1p(1.5)'],
           ['max(1.5, 3.5)'],
@@ -257,15 +253,6 @@ class MathTest extends TestCase
           ['7 % 4'],
           ['99 % 4'],
           ['123 % 7'],
-
-          ['!(1||0)'],
-          ['!(1&&0)'],
-          ['!(1)'],
-          ['!(0)'],
-          ['! 1'],
-          ['! 0'],
-          ['!1'],
-          ['!0'],
         ];
     }
 
@@ -283,13 +270,12 @@ class MathTest extends TestCase
         }
 
         /** @var float $phpResult */
-        $phpResult = 0.0;
         eval('$phpResult = ' . $expected . ';');
 
         try {
             $result = $calculator->execute($expression);
         } catch (Exception $e) {
-            $this->fail(\sprintf('Exception: %s (%s:%d), expression was: %s', $e::class, $e->getFile(), $e->getLine(), $expression));
+            $this->fail(\sprintf('Exception: %s (%s:%d), expression was: %s', \get_class($e), $e->getFile(), $e->getLine(), $expression));
         }
         $this->assertEquals($phpResult, $result, "Expression was: {$expression}");
     }
@@ -300,10 +286,8 @@ class MathTest extends TestCase
      * Most tests can go in here.  The idea is that each expression will be evaluated by MathExecutor and by PHP with eval.
      * The results should be the same.  If they are not, then the test fails.  No need to add extra test unless you are doing
      * something more complex and not a simple mathmatical expression.
-     *
-     * @return array<array<string>>
      */
-    public static function bcMathExpressions()
+    public function bcMathExpressions()
     {
         return [
           ['-5'],
@@ -503,15 +487,6 @@ class MathTest extends TestCase
           ['7 % 4'],
           ['99 % 4'],
           ['123 % 7'],
-
-          ['!(1||0)'],
-          ['!(1&&0)'],
-          ['!(1)'],
-          ['!(0)'],
-          ['! 1'],
-          ['! 0'],
-          ['!1'],
-          ['!0'],
         ];
     }
 
@@ -530,10 +505,8 @@ class MathTest extends TestCase
      * Incorrect Expressions data provider
      *
      * These expressions should not pass validation
-     *
-     * @return array<array<string>>
      */
-    public static function incorrectExpressions()
+    public function incorrectExpressions()
     {
         return [
           ['1 * + '],
@@ -597,21 +570,6 @@ class MathTest extends TestCase
         $this->assertEquals(0.0, $calculator->execute('$ + $four'));
     }
 
-    public function testNotVariableOperator() : void
-    {
-        $calculator = new MathExecutor();
-        $calculator->setVar('one', 1);
-        $calculator->setVar('zero', 0);
-        $this->assertEquals(false, $calculator->execute('! $one'));
-        $this->assertEquals(false, $calculator->execute('!$one'));
-        $this->assertEquals(false, $calculator->execute('! ($one)'));
-        $this->assertEquals(false, $calculator->execute('!($one)'));
-        $this->assertEquals(true, $calculator->execute('! $zero'));
-        $this->assertEquals(true, $calculator->execute('!$zero'));
-        $this->assertEquals(true, $calculator->execute('! ($zero)'));
-        $this->assertEquals(true, $calculator->execute('!($zero)'));
-    }
-
     public function testExponentiation() : void
     {
         $calculator = new MathExecutor();
@@ -634,7 +592,9 @@ class MathTest extends TestCase
         $this->assertEquals("'teststring", $calculator->execute("'\'teststring'"));
         $this->assertEquals("teststring'", $calculator->execute("'teststring\''"));
 
-        $calculator->addFunction('concat', static fn($arg1, $arg2) => $arg1 . $arg2);
+        $calculator->addFunction('concat', static function($arg1, $arg2) {
+            return $arg1 . $arg2;
+        });
         $this->assertEquals('test"ing', $calculator->execute('concat("test\"","ing")'));
         $this->assertEquals("test'ing", $calculator->execute("concat('test\'','ing')"));
     }
@@ -648,7 +608,7 @@ class MathTest extends TestCase
         $this->assertEquals(\max([1, 5, 2]), $calculator->execute('max(array(1, 5, 2))'));
         $calculator->addFunction('arr_with_max_elements', static function($arg1, ...$args) {
             $args = \is_array($arg1) ? $arg1 : [$arg1, ...$args];
-            \usort($args, static fn($arr1, $arr2) => (\is_countable($arr2) ? \count($arr2) : 0) <=> \count($arr1));
+            \usort($args, static fn ($arr1, $arr2) => \count($arr2) <=> \count($arr1));
 
             return $args[0];
         });
@@ -659,7 +619,9 @@ class MathTest extends TestCase
     {
         $calculator = new MathExecutor();
 
-        $calculator->addFunction('concat', static fn($arg1, $arg2) => $arg1 . $arg2);
+        $calculator->addFunction('concat', static function($arg1, $arg2) {
+            return $arg1 . $arg2;
+        });
         $this->assertEquals('testing', $calculator->execute('concat("test","ing")'));
         $this->assertEquals('testing', $calculator->execute("concat('test','ing')"));
     }
@@ -667,34 +629,37 @@ class MathTest extends TestCase
     public function testFunction() : void
     {
         $calculator = new MathExecutor();
-        $calculator->addFunction('round', static fn($arg) => \round($arg));
+        $calculator->addFunction('round', static function($arg) {
+            return \round($arg);
+        });
         $this->assertEquals(\round(100 / 30), $calculator->execute('round(100/30)'));
     }
 
     public function testFunctionUnlimitedParameters() : void
     {
         $calculator = new MathExecutor();
-        $calculator->addFunction('give_me_an_array', static fn() => [5, 3, 7, 9, 8]);
+        $calculator->addFunction('give_me_an_array', static function() {
+            return [5, 3, 7, 9, 8];
+        });
         $this->assertEquals(6.4, $calculator->execute('avg(give_me_an_array())'));
         $this->assertEquals(10, $calculator->execute('avg(12,8,15,5)'));
         $this->assertEquals(3, $calculator->execute('min(give_me_an_array())'));
         $this->assertEquals(1, $calculator->execute('min(1,2,3)'));
         $this->assertEquals(9, $calculator->execute('max(give_me_an_array())'));
         $this->assertEquals(3, $calculator->execute('max(1,2,3)'));
-        $this->assertEquals(7, $calculator->execute('median(give_me_an_array())'));
-        $this->assertEquals(4, $calculator->execute('median(1,3,5,7)'));
         $calculator->setVar('monthly_salaries', [100, 200, 300]);
         $this->assertEquals([100, 200, 300], $calculator->execute('$monthly_salaries'));
         $this->assertEquals(200, $calculator->execute('avg($monthly_salaries)'));
         $this->assertEquals(\min([100, 200, 300]), $calculator->execute('min($monthly_salaries)'));
         $this->assertEquals(\max([100, 200, 300]), $calculator->execute('max($monthly_salaries)'));
-        $this->assertEquals(200, $calculator->execute('median($monthly_salaries)'));
     }
 
     public function testFunctionOptionalParameters() : void
     {
         $calculator = new MathExecutor();
-        $calculator->addFunction('round', static fn($num, $precision = 0) => \round($num, $precision));
+        $calculator->addFunction('round', static function($num, $precision = 0) {
+            return \round($num, $precision);
+        });
         $this->assertEquals(\round(11.176), $calculator->execute('round(11.176)'));
         $this->assertEquals(\round(11.176, 2), $calculator->execute('round(11.176,2)'));
     }
@@ -703,7 +668,9 @@ class MathTest extends TestCase
     {
         $calculator = new MathExecutor();
         $this->expectException(IncorrectNumberOfFunctionParametersException::class);
-        $calculator->addFunction('myfunc', static fn($arg1, $arg2) => $arg1 + $arg2);
+        $calculator->addFunction('myfunc', static function($arg1, $arg2) {
+            return $arg1 + $arg2;
+        });
         $calculator->execute('myfunc(1)');
     }
 
@@ -711,7 +678,9 @@ class MathTest extends TestCase
     {
         $calculator = new MathExecutor();
         $this->expectException(IncorrectNumberOfFunctionParametersException::class);
-        $calculator->addFunction('myfunc', static fn($arg1, $arg2) => $arg1 + $arg2);
+        $calculator->addFunction('myfunc', static function($arg1, $arg2) {
+            return $arg1 + $arg2;
+        });
         $calculator->execute('myfunc(1,2,3)');
     }
 
@@ -721,57 +690,57 @@ class MathTest extends TestCase
         $this->assertEquals(
           30,
           $calculator->execute(
-            'if(100 > 99, 30, 0)'
-          ),
+          'if(100 > 99, 30, 0)'
+        ),
           'Expression failed: if(100 > 99, 30, 0)'
         );
         $this->assertEquals(
           0,
           $calculator->execute(
-            'if(100 < 99, 30, 0)'
-          ),
+          'if(100 < 99, 30, 0)'
+        ),
           'Expression failed: if(100 < 99, 30, 0)'
         );
         $this->assertEquals(
           30,
           $calculator->execute(
-            'if(98 < 99 && sin(1) < 1, 30, 0)'
-          ),
+          'if(98 < 99 && sin(1) < 1, 30, 0)'
+        ),
           'Expression failed: if(98 < 99 && sin(1) < 1, 30, 0)'
         );
         $this->assertEquals(
           40,
           $calculator->execute(
-            'if(98 < 99 && sin(1) < 1, max(30, 40), 0)'
-          ),
+          'if(98 < 99 && sin(1) < 1, max(30, 40), 0)'
+        ),
           'Expression failed: if(98 < 99 && sin(1) < 1, max(30, 40), 0)'
         );
         $this->assertEquals(
           40,
           $calculator->execute(
-            'if(98 < 99 && sin(1) < 1, if(10 > 5, max(30, 40), 1), 0)'
-          ),
+          'if(98 < 99 && sin(1) < 1, if(10 > 5, max(30, 40), 1), 0)'
+        ),
           'Expression failed: if(98 < 99 && sin(1) < 1, if(10 > 5, max(30, 40), 1), 0)'
         );
         $this->assertEquals(
           20,
           $calculator->execute(
-            'if(98 < 99 && sin(1) > 1, if(10 > 5, max(30, 40), 1), if(4 <= 4, 20, 21))'
-          ),
+          'if(98 < 99 && sin(1) > 1, if(10 > 5, max(30, 40), 1), if(4 <= 4, 20, 21))'
+        ),
           'Expression failed: if(98 < 99 && sin(1) > 1, if(10 > 5, max(30, 40), 1), if(4 <= 4, 20, 21))'
         );
         $this->assertEquals(
           \cos(2),
           $calculator->execute(
-            'if(98 < 99 && sin(1) >= 1, max(30, 40), cos(2))'
-          ),
+          'if(98 < 99 && sin(1) >= 1, max(30, 40), cos(2))'
+        ),
           'Expression failed: if(98 < 99 && sin(1) >= 1, max(30, 40), cos(2))'
         );
         $this->assertEquals(
           \cos(2),
           $calculator->execute(
-            'if(cos(2), cos(2), 0)'
-          ),
+          'if(cos(2), cos(2), 0)'
+        ),
           'Expression failed: if(cos(2), cos(2), 0)'
         );
         $trx_amount = 100000;
@@ -780,15 +749,15 @@ class MathTest extends TestCase
         $this->assertEquals(
           $trx_amount * 0.03,
           $calculator->execute(
-            'if($trx_amount < 40000, $trx_amount * 0.06, $trx_amount * 0.03)'
-          ),
+          'if($trx_amount < 40000, $trx_amount * 0.06, $trx_amount * 0.03)'
+        ),
           'Expression failed: if($trx_amount < 40000, $trx_amount * 0.06, $trx_amount * 0.03)'
         );
         $this->assertEquals(
           $trx_amount * 0.03,
           $calculator->execute(
-            'if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
-          ),
+          'if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
+        ),
           'Expression failed: if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
         );
         $trx_amount = 39000;
@@ -796,8 +765,8 @@ class MathTest extends TestCase
         $this->assertEquals(
           $trx_amount * 0.06,
           $calculator->execute(
-            'if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
-          ),
+          'if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
+        ),
           'Expression failed: if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
         );
         $trx_amount = 59000;
@@ -805,16 +774,16 @@ class MathTest extends TestCase
         $this->assertEquals(
           $trx_amount * 0.05,
           $calculator->execute(
-            'if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
-          ),
+          'if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
+        ),
           'Expression failed: if($trx_amount < 40000, $trx_amount * 0.06, if($trx_amount < 60000, $trx_amount * 0.05, $trx_amount * 0.03))'
         );
         $this->expectException(IncorrectNumberOfFunctionParametersException::class);
         $this->assertEquals(
           0.0,
           $calculator->execute(
-            'if($trx_amount < 40000, $trx_amount * 0.06)'
-          ),
+          'if($trx_amount < 40000, $trx_amount * 0.06)'
+        ),
           'Expression failed: if($trx_amount < 40000, $trx_amount * 0.06)'
         );
     }
@@ -863,7 +832,9 @@ class MathTest extends TestCase
         $calculator = new MathExecutor();
         $calculator->addFunction(
           'round',
-          static fn($value, $decimals) => \round($value, $decimals)
+          static function($value, $decimals) {
+                return \round($value, $decimals);
+            }
         );
         $expression = 'round(100 * 1.111111, 2)';
         $phpResult = 0;
@@ -877,7 +848,9 @@ class MathTest extends TestCase
     public function testFunctionsWithQuotes() : void
     {
         $calculator = new MathExecutor();
-        $calculator->addFunction('concat', static fn($first, $second) => $first . $second);
+        $calculator->addFunction('concat', static function($first, $second) {
+            return $first . $second;
+        });
         $this->assertEquals('testing', $calculator->execute('concat("test", "ing")'));
         $this->assertEquals('testing', $calculator->execute("concat('test', 'ing')"));
     }
@@ -1048,7 +1021,6 @@ class MathTest extends TestCase
             if (\is_scalar($variable) || null === $variable) {
                 return;
             }
-
             // Allow variables of type DateTime, but not others
             if (! $variable instanceof \DateTime) {
                 throw new MathExecutorException('Invalid variable type');
@@ -1101,14 +1073,14 @@ class MathTest extends TestCase
     /**
      * @dataProvider providerExpressionValues
      */
-    public function testCalculatingValues(string $expression, mixed $value) : void
+    public function testCalculatingValues($expression, $value) : void
     {
         $calculator = new MathExecutor();
 
         try {
             $result = $calculator->execute($expression);
         } catch (Exception $e) {
-            $this->fail(\sprintf('Exception: %s (%s:%d), expression was: %s', $e::class, $e->getFile(), $e->getLine(), $expression));
+            $this->fail(\sprintf('Exception: %s (%s:%d), expression was: %s', \get_class($e), $e->getFile(), $e->getLine(), $expression));
         }
         $this->assertEquals($value, $result, "{$expression} did not evaluate to {$value}");
     }
@@ -1119,10 +1091,8 @@ class MathTest extends TestCase
      * Most tests can go in here.  The idea is that each expression will be evaluated by MathExecutor and by PHP directly.
      * The results should be the same.  If they are not, then the test fails.  No need to add extra test unless you are doing
      * something more complex and not a simple mathmatical expression.
-     *
-     * @return array<array<mixed>>
      */
-    public static function providerExpressionValues()
+    public function providerExpressionValues()
     {
         return [
           ['arccos(0.5)', \acos(0.5)],
@@ -1149,7 +1119,6 @@ class MathTest extends TestCase
           ['decbin(10)', \decbin(10)],
           ['lg(2)', \log10(2)],
           ['ln(2)', \log(2)],
-          ['ln(2, 5)', \log(2, 5)],
           ['sec(4)', 1 / \cos(4)],
           ['tg(4)', \tan(4)],
         ];

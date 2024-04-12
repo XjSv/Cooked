@@ -2,8 +2,8 @@
 Contributors: boxystudio, xjsv
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.5
-Stable tag: 1.7.16
+Tested up to: 6.5.2
+Stable tag: 1.7.15.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -75,12 +75,14 @@ Be sure to check the [Cooked Documentation](http://docs.cooked.pro/collection/1-
 
 == Upgrade Notice ==
 
-Version 1.7.15.1 fixes the CVE-2023-44477 Auth. (contributor+) Stored Cross-Site Scripting (XSS) vulnerability.
+Version 1.7.15.2 is a hotfix to correct the composer platform error issue.
 
 == Changelog ==
 
-= 1.7.16 =
-* Security improvements.
+= 1.7.15.2 =
+* **FIX:** Composer detected issues in your platform error discovered by @ianrlp.
+* **FIX:** PHP undefined variable $hours_left discovered and fixed by @addyh.
+* **TWEAK:** Security improvements thanks to @addyh.
 
 = 1.7.15.1 =
 * **FIX:** Addressed the CVE-2023-44477 security vulnerability.

@@ -1,11 +1,11 @@
-# MathExecutor [![Tests](https://github.com/neonxp/MathExecutor/workflows/Tests/badge.svg)](https://github.com/neonxp/MathExecutor/actions?query=workflow%3ATests) ![](https://img.shields.io/badge/PHPStan-level%206-brightgreen.svg?style=flat)
+# MathExecutor [![Tests](https://github.com/neonxp/MathExecutor/workflows/Tests/badge.svg)](https://github.com/neonxp/MathExecutor/actions?query=workflow%3ATests)
 
 # A simple and extensible math expressions calculator
 
 ## Features:
 * Built in support for +, -, *, /, % and power (^) operators
-* Parentheses () and arrays [] are fully supported
-* Logical operators (==, !=, <, <, >=, <=, &&, ||, !)
+* Paratheses () and arrays [] are fully supported
+* Logical operators (==, !=, <, <, >=, <=, &&, ||)
 * Built in support for most PHP math functions
 * Support for BCMath Arbitrary Precision Math
 * Support for variable number of function parameters and optional function parameters
@@ -40,35 +40,21 @@ Default functions:
 * abs
 * acos (arccos)
 * acosh
-* arccos
-* arccosec
-* arccot
-* arccotan
-* arccsc (arccosec)
 * arcctg (arccot, arccotan)
 * arcsec
-* arcsin
-* arctan
-* arctg
+* arccsc (arccosec)
 * array
 * asin (arcsin)
 * atan (atn, arctan, arctg)
 * atan2
 * atanh
-* atn
 * avg
 * bindec
 * ceil
 * cos
-* cosec
 * cosec (csc)
 * cosh
-* cot
-* cotan
-* cotg
-* csc
 * ctg (cot, cotan, cotg, ctn)
-* ctn
 * decbin
 * dechex
 * decoct
@@ -81,13 +67,10 @@ Default functions:
 * hypot
 * if
 * intdiv
-* lg
-* ln
 * log (ln)
 * log10 (lg)
 * log1p
 * max
-* median
 * min
 * octdec
 * pi
@@ -100,8 +83,6 @@ Default functions:
 * sqrt
 * tan (tn, tg)
 * tanh
-* tg
-* tn
 
 Add custom function to executor:
 ```php
@@ -115,9 +96,9 @@ $executor->calculate('round(17.119, 2)'); // 17.12
 ```
 Variable number of parameters:
 ```php
-$executor->addFunction('average', function(...$args) {return array_sum($args) / count($args);});
-$executor->calculate('average(1,3)'); // 2
-$executor->calculate('average(1, 3, 4, 8)'); // 4
+$executor->addFunction('avarage', function(...$args) {return array_sum($args) / count($args);});
+$executor->calculate('avarage(1,3)'); // 2
+$executor->calculate('avarage(1, 3, 4, 8)'); // 4
 ```
 
 ## Operators:
@@ -144,7 +125,7 @@ $executor->addOperator(new Operator(
 ```
 
 ## Logical operators:
-Logical operators (==, !=, <, <, >=, <=, &&, ||, !) are supported, but logically they can only return true (1) or false (0).  In order to leverage them, use the built in **if** function:
+Logical operators (==, !=, <, <, >=, <=, &&, ||) are supported, but logically they can only return true (1) or false (0).  In order to leverage them, use the built in **if** function:
 
 ```
 if($a > $b, $a - $b, $b - $a)

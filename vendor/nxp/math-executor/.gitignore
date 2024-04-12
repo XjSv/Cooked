@@ -1,7 +1,6 @@
 vendor/
 .idea/
 composer.lock
-.phpunit.cache
 .phpunit.result.cache
 .vscode
 .php-cs-fixer.cache

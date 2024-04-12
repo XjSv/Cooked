@@ -4,28 +4,27 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e3ee5ad1b602664668a28615cdc4d69c",
+    "content-hash": "7ff1f391379b9a05f016928ce4c93286",
     "packages": [
         {
             "name": "nxp/math-executor",
-            "version": "v2.3.6",
+            "version": "v2.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "dca855e25f8ba6ab019c2fe9bd8065d4713d00de"
+                "reference": "c59f4cd15317754d2b50bd4bff2243012e815790"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/dca855e25f8ba6ab019c2fe9bd8065d4713d00de",
-                "reference": "dca855e25f8ba6ab019c2fe9bd8065d4713d00de",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/c59f4cd15317754d2b50bd4bff2243012e815790",
+                "reference": "c59f4cd15317754d2b50bd4bff2243012e815790",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0 <8.4"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.8",
-                "phpstan/phpstan": "^1.9",
                 "phpunit/phpunit": ">=9.0"
             },
             "type": "library",
@@ -60,9 +59,9 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.6"
+                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.2"
             },
-            "time": "2024-02-15T22:51:27+00:00"
+            "time": "2022-12-08T16:15:34+00:00"
         }
     ],
     "packages-dev": [],
@@ -71,7 +70,9 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.4.0"
+    },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }

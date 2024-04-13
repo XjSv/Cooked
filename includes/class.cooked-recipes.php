@@ -967,7 +967,7 @@ class Cooked_Recipes {
 					$view_all_recipes_url = false;
 				endif;
 
-				if ( in_array( 'cp_recipe_category',$_cooked_settings['recipe_taxonomies']) ):
+				if ( in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies']) ):
 					$terms_array = Cooked_Settings::terms_array( 'cp_recipe_category', false, esc_html__('No categories','cooked'), true, true, false );
 					if ( !empty($terms_array) ):
 						echo '<span class="cooked-tax-column">';
@@ -1037,7 +1037,7 @@ class Cooked_Recipes {
 
 				echo '<div class="cooked-fields-wrap cooked-' . esc_attr( $tax_col_count ) . '-search-fields">';
 
-					echo ( !$options['hide_browse'] && $taxonomy_search_fields ? esc_html( $taxonomy_search_fields ) : '' );
+					echo ( !$options['hide_browse'] && $taxonomy_search_fields ? $taxonomy_search_fields : '' );
 
 					echo '<input class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( isset($_GET['cooked_search_s']) && $_GET['cooked_search_s'] ? Cooked_Functions::sanitize_text_field( $_GET['cooked_search_s'] ) : '' ) . '" placeholder="' . esc_attr__('Find a recipe...','cooked') . '" />';
 

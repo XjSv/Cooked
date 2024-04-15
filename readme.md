@@ -83,3 +83,7 @@ To generate language files for the Cooked plugin, you can use the following comm
 ```bash
 ddev wp i18n make-pot /var/www/html/wp-content/themes/cooked/ /var/www/html/wp-content/themes/cooked/languages/cooked.pot
 ```
+
+```bash
+ddev exec -d /var/www/html/wp-content/plugins/cooked gulp build
+```

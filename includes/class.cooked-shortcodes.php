@@ -110,7 +110,7 @@ class Cooked_Shortcodes {
 			/* translators: referring to the bottom of the Settings page. */
 			return ( current_user_can( 'edit_cooked_settings' ) ? wpautop( sprintf( esc_html__('Public recipes are currently disabled. You can change this at the bottom of the %s page.','cooked'), '<a href="' . trailingslashit( admin_url() ) . 'admin.php?page=cooked_settings" target="_blank">' . esc_html__( 'Settings', 'cooked' ) . '</a>' ) ) : false );
 		}
-		
+
 		if ( is_admin() )
 			return false;
 
@@ -340,7 +340,7 @@ class Cooked_Shortcodes {
 				case 'cooked':
 
 					if ( isset($recipe_settings['gallery']['items']) && !empty($recipe_settings['gallery']['items']) || isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ):
-					
+
 						// Gallery Options
 						// Developers: Filter these to change!
 						// Full list here: http://fotorama.io/customize/options/
@@ -376,8 +376,8 @@ class Cooked_Shortcodes {
 							endif;
 
 						// Enqueue Gallery Styles & Scripts
-						wp_enqueue_style( 'cooked-fotorama-style' );
-						wp_enqueue_script( 'cooked-fotorama-js' );
+						wp_enqueue_style( 'cooked-fotorama' );
+						wp_enqueue_script( 'cooked-fotorama' );
 
 						$gallery_html .= '</div>';
 						return wp_kses_post( $gallery_html );
@@ -548,7 +548,7 @@ class Cooked_Shortcodes {
 		endif;
 
 		$cooked_info_html = ob_get_clean();
-		
+
 		if ( $cooked_info_html ):
 			add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
 			return '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
@@ -607,7 +607,7 @@ class Cooked_Shortcodes {
 		endif;
 	}
 
-	public static function cooked_info_servings( $recipe ){
+	public static function cooked_info_servings( $recipe ) {
 		global $_cooked_settings;
 		if (in_array('servings',$_cooked_settings['recipe_info_display_options'])):
 			$servings = ( isset($recipe['nutrition']['servings']) && $recipe['nutrition']['servings'] ? $recipe['nutrition']['servings'] : 1 );
@@ -615,7 +615,7 @@ class Cooked_Shortcodes {
 		endif;
 	}
 
-	public static function cooked_info_print(){
+	public static function cooked_info_print() {
 		global $recipe_settings,$_cooked_settings;
 		$recipe_post_url = get_permalink( $recipe_settings['id'] );
 		$query_args['print'] = 1;
@@ -623,12 +623,13 @@ class Cooked_Shortcodes {
 		echo '<span class="cooked-print"><a target="_blank" rel="nofollow" href="' . add_query_arg( $query_args, $recipe_post_url ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
 	}
 
-	public static function cooked_info_fullscreen(){
-		global $recipe_settings,$_cooked_settings;
+	public static function cooked_info_fullscreen() {
+		global $recipe_settings, $_cooked_settings;
 		echo '<span class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen"></i></span>';
+		wp_enqueue_script('cooked-nosleep');
 	}
 
-	public static function cooked_info_prep_time( $recipe ){
+	public static function cooked_info_prep_time( $recipe ) {
 		global $_cooked_settings;
 		if (in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])):
 			$prep_time = ( isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0 );
@@ -636,7 +637,7 @@ class Cooked_Shortcodes {
 		endif;
 	}
 
-	public static function cooked_info_cook_time( $recipe ){
+	public static function cooked_info_cook_time( $recipe ) {
 		global $_cooked_settings;
 		if (in_array('timing_cook',$_cooked_settings['recipe_info_display_options'])):
 			$cook_time = ( isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0 );

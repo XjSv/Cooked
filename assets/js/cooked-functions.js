@@ -1,5 +1,4 @@
 /*
-
 Cooked Javascript Functions
 
 Contents:
@@ -11,15 +10,13 @@ Contents:
 5. Browse Search Button
 6. Timers
 7. Full-Screen Mode
-
 */
 
 var cooked_loading = false;
 
-(function( $ ) {
+(function($) {
 
     /****   1. Variables   ****/
-
     $_Cooked_Ingredient_Boxes = $('.cooked-ingredient-checkbox');
     $_Cooked_Fotorama = $('.cooked-recipe-gallery');
     $_Cooked_Ajax_List = $('.cooked-recipe-loader');
@@ -29,7 +26,7 @@ var cooked_loading = false;
 
     /****   2a. Cooked Gallery   ****/
 
-    if ( $_Cooked_Fotorama.length ){
+    if ( $_Cooked_Fotorama.length ) {
         $_Cooked_Fotorama.on('fotorama:ready', function(e, fotorama){
             setTimeout(function(){
                 $_Cooked_Fotorama.addClass('cooked-gallery-loaded');
@@ -41,13 +38,13 @@ var cooked_loading = false;
 
         /****   2b. Cooked Gallery   ****/
 
-        if ( $_Cooked_Fotorama.length ){
+        if ( $_Cooked_Fotorama.length ) {
             $_Cooked_Fotorama.fotorama();
         }
 
         /****   3. Ingredients   ****/
 
-        if ( $_Cooked_Ingredient_Boxes.length ){
+        if ( $_Cooked_Ingredient_Boxes.length ) {
 
             init_cooked_ingredients($_Cooked_Ingredient_Boxes);
 
@@ -307,70 +304,71 @@ var cooked_loading = false;
             }
         }
 
-        if ( $_Cooked_Timers.length ){
-
+        if ($_Cooked_Timers.length){
             // How many timers to show before it moves to the right side of the screen?
             var multiplesTrigger = 1;
-
             init_cooked_timers($_Cooked_Timers);
-
         }
 
         /****   7. Full-Screen Mode   ****/
 
-        if ($_Cooked_FSM_Button.length){
+        if ($_Cooked_FSM_Button.length) {
+            var noSleep = new NoSleep();
 
-            $_Cooked_FSM_Button.on('click',function(e){
-
+            $_Cooked_FSM_Button.on('click', function(e) {
                 e.preventDefault();
+
                 var recipe_id = $(this).data('recipe-id'),
                     FSM_Container = $('.cooked-fsm[data-recipe-id="' + recipe_id + '"]');
 
                 $('body').addClass('cooked-noscroll cooked-fsm-active');
+
                 var New_FSM_Container = FSM_Container.clone().appendTo('body');
-                setTimeout(function(){
+
+                setTimeout(function() {
                     New_FSM_Container.addClass('cooked-visible');
-                },10);
-                setTimeout(function(){
+                }, 10);
+
+                setTimeout(function() {
                     New_FSM_Container.addClass('cooked-active');
-                },50);
+                }, 50);
 
                 var Cooked_Timers = New_FSM_Container.find('.cooked-timer > a');
                 var Cooked_Ingredient_Boxes = New_FSM_Container.find('.cooked-ingredient-checkbox');
-                init_cooked_timers( Cooked_Timers );
-                init_cooked_ingredients( Cooked_Ingredient_Boxes );
+                init_cooked_timers(Cooked_Timers);
+                init_cooked_ingredients(Cooked_Ingredient_Boxes);
 
-                New_FSM_Container.on('click','.cooked-close-fsm',function(e){
+                // Enable wake lock aka "Hands Free Cooking Mode" (Keeps the screen from going dark).
+                noSleep.enable();
+
+                New_FSM_Container.on('click','.cooked-close-fsm', function(e) {
                     e.preventDefault();
                     New_FSM_Container.removeClass('cooked-active');
                     $('body').removeClass('cooked-noscroll cooked-fsm-active');
 
-                    setTimeout(function(){
+                    // Disable wake lock aka "Hands Free Cooking Mode".
+                    noSleep.disable();
+
+                    setTimeout(function() {
                         New_FSM_Container.remove();
-                    },350);
-
+                    }, 350);
                 });
-
             });
 
-            $('body').on( 'click', '.cooked-fsm-mobile-nav > a', function(e){
-
+            $('body').on('click', '.cooked-fsm-mobile-nav > a', function(e) {
                 e.preventDefault();
 
                 var thisButton = $(this),
                     nav_id = thisButton.data('nav-id'),
                     FSM_Container = thisButton.parents('.cooked-fsm');
 
-                FSM_Container.find( '.cooked-fsm-mobile-nav > a' ).removeClass( 'cooked-active' );
-                FSM_Container.find( '.cooked-fsm-content' ).removeClass( 'cooked-active' );
+                FSM_Container.find('.cooked-fsm-mobile-nav > a').removeClass('cooked-active');
+                FSM_Container.find('.cooked-fsm-content').removeClass('cooked-active');
 
-                thisButton.addClass( 'cooked-active' );
-                FSM_Container.find( '.cooked-fsm-content.cooked-fsm-' + nav_id ).addClass( 'cooked-active' );
-
+                thisButton.addClass('cooked-active');
+                FSM_Container.find('.cooked-fsm-content.cooked-fsm-' + nav_id).addClass('cooked-active');
             });
-
         }
-
 	});
 
 })( jQuery );

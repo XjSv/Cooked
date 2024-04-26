@@ -101,7 +101,7 @@ else:
 			echo Cooked_Recipes::pagination( $recipes['raw'], $recipe_args );
 		endif;
 
-		wp_enqueue_script( 'cooked-appear-js' );
+		wp_enqueue_script( 'cooked-appear' );
 
 	else:
 		$post_type_obj = get_post_type_object('cp_recipe');

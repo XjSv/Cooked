@@ -604,8 +604,9 @@ class Cooked_Recipes {
 	}
 
 	public static function numbered_pagination( $current_recipe_page, $total_recipe_pages ){
+		$big = 999999999; // need an unlikely integer
 		$recipe_pagination = apply_filters( 'cooked_pagination_args', array(
-	        'base' => @add_query_arg('paged','%#%'),
+	        'base' => str_replace( $big, '%#%', esc_url( get_pagenum_link( $big ) ) ),
 	        'format' => '?paged=%#%',
 	        'mid-size' => 1,
 	        'current' => $current_recipe_page,

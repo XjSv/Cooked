@@ -5,8 +5,8 @@ Versions that are currently being supported with security updates.
 
 | Version     | Supported          |
 | -------     | ------------------ |
-| 1.7.15.4    | :white_check_mark: |
-| <= 1.7.15.3 | :x:                |
+| 1.8.0       | :white_check_mark: |
+| <= 1.7.15.4 | :x:                |
 
 ## Reporting a Vulnerability
 

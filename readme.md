@@ -59,6 +59,16 @@ We welcome contributions from the community! If you'd like to contribute to Cook
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a Pull Request describing your changes.
 
+### Development
+#### Generateing language files
+``` bash
+wp i18n make-pot /wp-content/themes/cooked/ /wp-content/themes/cooked/languages/cooked.pot
+```
+#### Compiling assets (JS/CSS)
+``` bash
+gulp build
+```
+
 ## Documentation
 
 Detailed documentation for Cooked can be found in the [wiki](https://github.com/XjSv/Cooked/wiki).
@@ -75,15 +85,3 @@ Cooked is released under the [GPL-3.0 License](https://github.com/XjSv/Cooked/bl
 ## Credits
 
 Cooked was created by [Boxy Studio](https://www.boxystudio.com) and is now maintained by a team of contributors.
-
-## Generating Language Files
-
-To generate language files for the Cooked plugin, you can use the following command:
-
-```bash
-ddev wp i18n make-pot /var/www/html/wp-content/themes/cooked/ /var/www/html/wp-content/themes/cooked/languages/cooked.pot
-```
-
-```bash
-ddev exec -d /var/www/html/wp-content/plugins/cooked gulp build
-```

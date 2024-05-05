@@ -1,10 +1,12 @@
 cff-version: 1.2.0
-message: "If you use environment-marker, please cite it using the following metadata"
-title: environment-marker
+message: "If you use cooked, please cite it using the following metadata"
+title: cooked
 authors:
+  - family-names: Scheetz
+    given-names: Justin
   - family-names: Tresova
     given-names: Armand
-version: 3.0.0
+version: 1.8.0
 doi: 10.5281/zenodo.1171250
-date-released: 2023-06-06
-url: "https://github.com/XjSv/environment-marker"
+date-released: 2017-05-08
+url: "https://github.com/XjSv/cooked"

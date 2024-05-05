@@ -3,7 +3,7 @@ Contributors: boxystudio, xjsv
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.5.2
-Stable tag: 1.7.15.4
+Stable tag: 1.8.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ Cooked is the absolute best way to create & display recipes with WordPress. SEO 
 
 Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Check out the full list below.
 
-Be sure to check out the **[online demo](https://demos.boxystudio.com/cooked/)** as well as the **[Cooked Documentation](http://docs.cooked.pro/)** if you need some help!
+Be sure to check out the **[Live Preview](https://wordpress.org/plugins/cooked/?preview=1)** as well as the **[Cooked Wiki](https://github.com/XjSv/Cooked/wiki)** if you need some help!
 
 = Quality design & usability =
 
@@ -46,7 +46,7 @@ Of course, if you want even more, you can always check out the [PRO](https://coo
 
 = Developers love it =
 
-Cooked has a whole bunch of actions and filters to customize Cooked as much as you need to. Be sure to check out the [Developer Documentation](http://docs.cooked.pro/collection/31-developers).
+Cooked has a whole bunch of actions and filters to customize Cooked as much as you need to. Be sure to check out the [Developer Documentation](https://github.com/XjSv/Cooked/wiki).
 
 == Installation ==
 
@@ -54,13 +54,13 @@ Cooked has a whole bunch of actions and filters to customize Cooked as much as y
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Use the Recipes > Settings screen to configure the plugin.
 4. Go to Recipes > Add New to start adding your recipes!
-5. Head over to the [Cooked Documentation](http://docs.cooked.pro/collection/1-cooked) for more help.
+5. Head over to the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki) for more help.
 
 == Frequently Asked Questions ==
 
 = Having issues with the plugin? =
 
-Be sure to check the [Cooked Documentation](http://docs.cooked.pro/collection/1-cooked) for guides and documentation. If you're still having issues, create a new support topic and let me know what's going on. I'm happy to help! Please don't post a bad review without discussing here first, I really appreciate it!
+Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki) for guides and documentation. If you're still having issues, create a new support topic and let me know what's going on. I'm happy to help! Please don't post a bad review without discussing here first, I really appreciate it!
 
 == Screenshots ==
 
@@ -75,9 +75,13 @@ Be sure to check the [Cooked Documentation](http://docs.cooked.pro/collection/1-
 
 == Upgrade Notice ==
 
-Version 1.7.15.4 is a hotfix to fix the Serving Size Not Changing Ingredients issue.
+Version 1.8.0 is a hotfix to fix the Serving Size Not Changing Ingredients issue.
 
 == Changelog ==
+
+= 1.8.0 =
+* **NEW:** Added Hands Free Cooking Mode.
+* **TWEAK:** Pretty URLs for pagination links thanks to @morvy.
 
 = 1.7.15.4 =
 * **FIX:** Serving Size Not Changing Ingredients.

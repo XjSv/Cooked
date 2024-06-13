@@ -75,13 +75,14 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.0 is a hotfix to fix the Serving Size Not Changing Ingredients issue.
+Version 1.8.0 is a hotfix to fix the CVE-2024-37308 security vulnerability.
 
 == Changelog ==
 
 = 1.8.0 =
 * **NEW:** Added Hands Free Cooking Mode.
 * **TWEAK:** Pretty URLs for pagination links thanks to @morvy.
+* **FIX:** Addressed the CVE-2024-37308 security vulnerability thanks to [re-alter](https://github.com/re-alter).
 
 = 1.7.15.4 =
 * **FIX:** Serving Size Not Changing Ingredients.

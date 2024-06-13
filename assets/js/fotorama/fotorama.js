@@ -1410,6 +1410,13 @@ function div (classes, child) {
   return '<div class="' + classes + '">' + (child || '') + '</div>';
 }
 
+function safeDiv (classes, child) {
+  var div = document.createElement('div');
+  div.textContent = child || '';
+  div.className = classes;
+  return div.outerHTML;
+}
+
 // Fisher–Yates Shuffle
 // http://bost.ocks.org/mike/shuffle/
 function shuffle (array) {
@@ -2578,7 +2585,7 @@ jQuery.Fotorama = function ($fotorama, opts) {
               .appendTo($frame);
         }
 
-        dataFrame.caption && $(div(captionClass, div(captionWrapClass, dataFrame.caption))).appendTo($frame);
+        dataFrame.caption && $(div(captionClass, safeDiv(captionWrapClass, dataFrame.caption))).appendTo($frame);
 
         dataFrame.video && $frame
           .addClass(stageFrameVideoClass)

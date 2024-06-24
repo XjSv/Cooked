@@ -3,7 +3,7 @@
 	<form action="options.php" method="post">
 
 	<div class="cooked-settings-update-button">
-		<?php submit_button( esc_html__( 'Update Settings','cooked' ), 'primary', 'submit', false ); ?>
+		<?php submit_button( __( 'Update Settings','cooked' ), 'primary', 'submit', false ); ?>
 	</div>
 
 	<div class="cooked-settings-header">

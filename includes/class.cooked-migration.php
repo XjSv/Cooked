@@ -52,23 +52,23 @@ class Cooked_Migration {
 			/* translators: for displaying singular or plural versions depending on the number of recipes. */
 			$html_desc = sprintf( esc_html( _n( 'There is %1$s recipe that should be migrated from %2$s to take advantage of new features and reliability.', 'There are %1$s recipes that should be migrated from %2$s to take advantage of new features and reliability.', $total, 'cooked' ) ), '<strong>' . number_format( $total ) . '</strong>', '<strong>Cooked Classic</strong>' );
 			$html_desc .= '<br>';
-			$html_desc .= esc_html__( 'Please click the button below to migrate these recipes. Here is what will happen to your recipes:', 'cooked' );
+			$html_desc .= __( 'Please click the button below to migrate these recipes. Here is what will happen to your recipes:', 'cooked' );
 			$html_desc .= '<ul class="cooked-admin-ul">';
-				$html_desc .= '<li>' . esc_html__( 'NO DATA LOSS, all fields will be remapped.', 'cooked' ) . '</li>';
-				$html_desc .= '<li>' . esc_html__( 'Remapped fields will greatly speed up recipe loading times.', 'cooked' ) . '</li>';
-				$html_desc .= '<li>' . esc_html__( 'If recipe excerpt exists, the short description will be moved to the top of the recipe template.', 'cooked' ) . '</li>';
-				$html_desc .= '<li>' . esc_html__( 'If no recipe excerpt exists, the short description will be used instead.', 'cooked' ) . '</li>';
-				$html_desc .= '<li>' . esc_html__( 'Version number will be applied to each recipe.', 'cooked' ) . '</li>';
+				$html_desc .= '<li>' . __( 'NO DATA LOSS, all fields will be remapped.', 'cooked' ) . '</li>';
+				$html_desc .= '<li>' . __( 'Remapped fields will greatly speed up recipe loading times.', 'cooked' ) . '</li>';
+				$html_desc .= '<li>' . __( 'If recipe excerpt exists, the short description will be moved to the top of the recipe template.', 'cooked' ) . '</li>';
+				$html_desc .= '<li>' . __( 'If no recipe excerpt exists, the short description will be used instead.', 'cooked' ) . '</li>';
+				$html_desc .= '<li>' . __( 'Version number will be applied to each recipe.', 'cooked' ) . '</li>';
 			$html_desc .= '</ul>';
 			if ( $total > 2000 ):
-				$html_desc .= '<p><strong>' . esc_html__( 'Wow, you have a lot of recipes!', 'cooked' ) . '</strong><br><em style="color:#333;">' . esc_html__( 'It is definitely recommended that you get yourself a cup of coffee or tea after clicking this button.', 'cooked' ) . '</em></p>';
+				$html_desc .= '<p><strong>' . __( 'Wow, you have a lot of recipes!', 'cooked' ) . '</strong><br><em style="color:#333;">' . __( 'It is definitely recommended that you get yourself a cup of coffee or tea after clicking this button.', 'cooked' ) . '</em></p>';
 			else:
-				$html_desc .= '<p><strong>' . esc_html__( 'Note:', 'cooked' ) . '</strong> ' . esc_html__( 'The more recipes you have, the longer this will take.', 'cooked' ) . '</p>';
+				$html_desc .= '<p><strong>' . __( 'Note:', 'cooked' ) . '</strong> ' . __( 'The more recipes you have, the longer this will take.', 'cooked' ) . '</p>';
 			endif;
 
 			if ( $total > 0 ):
 				$settings['migration'] = array(
-					'name' => esc_html__('Migration','cooked'),
+					'name' => __('Migration','cooked'),
 					'icon' => 'migrate',
 					'fields' => array(
 						'cooked_migrate_button' => array(

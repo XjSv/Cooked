@@ -11,7 +11,7 @@
 				?></h1>
                 <?php
 					/* translators: referring to "Cooked", "Settings" and "Documentation" */
-					echo wpautop( sprintf(__('If this is your first time using %1$s, head over to the %2$s page for some initial configuration. You can also check out the %3$s if you get stuck. If you just recently updated, you can find out what\'s new below.','cooked'),'Cooked','<a href="' . untrailingslashit( admin_url() ) . '/admin.php?page=cooked_settings">' . esc_html__( 'Settings', 'cooked' ) . '</a>', '<a href="https://github.com/XjSv/Cooked/wiki" target="_blank">' . esc_html__( 'documentation','cooked' ) . '</a>' ) ); ?>
+					echo wpautop( sprintf(__('If this is your first time using %1$s, head over to the %2$s page for some initial configuration. You can also check out the %3$s if you get stuck. If you just recently updated, you can find out what\'s new below.','cooked'),'Cooked','<a href="' . untrailingslashit( admin_url() ) . '/admin.php?page=cooked_settings">' . __( 'Settings', 'cooked' ) . '</a>', '<a href="https://github.com/XjSv/Cooked/wiki" target="_blank">' . __( 'documentation','cooked' ) . '</a>' ) ); ?>
             </div>
 
 			<div class="cooked-welcome-panel-content">

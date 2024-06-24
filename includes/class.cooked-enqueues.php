@@ -32,7 +32,7 @@ class Cooked_Enqueues {
 		$cooked_js_vars = [
 			'ajax_url' => admin_url('admin-ajax.php'),
 			'timer_sound' => apply_filters('cooked_timer_sound_mp3', COOKED_URL . 'assets/audio/ding.mp3'),
-			'i18n_timer' => esc_html__('Timer', 'cooked'),
+			'i18n_timer' => __('Timer', 'cooked'),
 		];
 
 		$min = (COOKED_DEV ? '' : '.min');

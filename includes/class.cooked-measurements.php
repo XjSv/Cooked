@@ -28,127 +28,127 @@ class Cooked_Measurements {
 			'g' => array(
 				'singular_abbr' => _x('g','Grams Abbreviation (Singular)','cooked'),
 				'plural_abbr' => _x('g','Grams Abbreviation (Plural)','cooked'),
-				'singular' => esc_html__('gram','cooked'),
-				'plural' => esc_html__('grams','cooked'),
+				'singular' => __('gram','cooked'),
+				'plural' => __('grams','cooked'),
 				'variations' => array( 'g', 'g.', 'gram', 'grams' ),
 			),
 			'kg' => array(
 				'singular_abbr' => _x('kg','Kilograms Abbreviation (Singular)','cooked'),
 				'plural_abbr' => _x('kg','Kilograms Abbreviation (Plural)','cooked'),
-				'singular' => esc_html__('kilogram','cooked'),
-				'plural' => esc_html__('kilograms','cooked'),
+				'singular' => __('kilogram','cooked'),
+				'plural' => __('kilograms','cooked'),
 				'variations' => array( 'kg', 'kg.', 'kilogram', 'kilograms' ),
 			),
 			'mg' => array(
-				'singular_abbr' => esc_html__('mg','cooked'),
-				'plural_abbr' => esc_html__('mg','cooked'),
-				'singular' => esc_html__('milligram','cooked'),
-				'plural' => esc_html__('milligrams','cooked'),
+				'singular_abbr' => __('mg','cooked'),
+				'plural_abbr' => __('mg','cooked'),
+				'singular' => __('milligram','cooked'),
+				'plural' => __('milligrams','cooked'),
 				'variations' => array( 'mg', 'mg.', 'milligram', 'milligrams' ),
 			),
 			'oz' => array(
-				'singular_abbr' => esc_html__('oz','cooked'),
-				'plural_abbr' => esc_html__('oz','cooked'),
-				'singular' => esc_html__('ounce','cooked'),
-				'plural' => esc_html__('ounces','cooked'),
+				'singular_abbr' => __('oz','cooked'),
+				'plural_abbr' => __('oz','cooked'),
+				'singular' => __('ounce','cooked'),
+				'plural' => __('ounces','cooked'),
 				'variations' => array( 'oz', 'oz.', 'ounce', 'ounces' ),
 			),
 			'floz' => array(
-				'singular_abbr' => esc_html__('fl oz','cooked'),
-				'plural_abbr' => esc_html__('fl oz','cooked'),
-				'singular' => esc_html__('fluid ounce','cooked'),
-				'plural' => esc_html__('fluid ounces','cooked'),
+				'singular_abbr' => __('fl oz','cooked'),
+				'plural_abbr' => __('fl oz','cooked'),
+				'singular' => __('fluid ounce','cooked'),
+				'plural' => __('fluid ounces','cooked'),
 				'variations' => array( 'fl oz', 'fl oz.', 'fl. oz.', 'fluid ounce', 'fluid ounces' ),
 			),
 			'cup' => array(
-				'singular_abbr' => esc_html__('cup','cooked'),
-				'plural_abbr' => esc_html__('cups','cooked'),
-				'singular' => esc_html__('cup','cooked'),
-				'plural' => esc_html__('cups','cooked'),
+				'singular_abbr' => __('cup','cooked'),
+				'plural_abbr' => __('cups','cooked'),
+				'singular' => __('cup','cooked'),
+				'plural' => __('cups','cooked'),
 				'variations' => array( 'c', 'c.', 'cup', 'cups' ),
 			),
 			'tsp' => array(
-				'singular_abbr' => esc_html__('tsp','cooked'),
-				'plural_abbr' => esc_html__('tsp','cooked'),
-				'singular' => esc_html__('teaspoon','cooked'),
-				'plural' => esc_html__('teaspoons','cooked'),
+				'singular_abbr' => __('tsp','cooked'),
+				'plural_abbr' => __('tsp','cooked'),
+				'singular' => __('teaspoon','cooked'),
+				'plural' => __('teaspoons','cooked'),
 				'variations' => array( 't', 'tsp.', 'tsp', 'teaspoon', 'teaspoons' ),
 			),
 			'tbsp' => array(
-				'singular_abbr' => esc_html__('tbsp','cooked'),
-				'plural_abbr' => esc_html__('tbsp','cooked'),
-				'singular' => esc_html__('tablespoon','cooked'),
-				'plural' => esc_html__('tablespoons','cooked'),
+				'singular_abbr' => __('tbsp','cooked'),
+				'plural_abbr' => __('tbsp','cooked'),
+				'singular' => __('tablespoon','cooked'),
+				'plural' => __('tablespoons','cooked'),
 				'variations' => array( 'T', 'tbl.', 'tbl', 'tbs.', 'tbs', 'tbsp.', 'tbsp', 'tablespoon', 'tablespoons' ),
 			),
 			'ml' => array(
-				'singular_abbr' => esc_html__('ml','cooked'),
-				'plural_abbr' => esc_html__('ml','cooked'),
-				'singular' => esc_html__('milliliter','cooked'),
-				'plural' => esc_html__('milliliters','cooked'),
+				'singular_abbr' => __('ml','cooked'),
+				'plural_abbr' => __('ml','cooked'),
+				'singular' => __('milliliter','cooked'),
+				'plural' => __('milliliters','cooked'),
 				'variations' => array( 'ml', 'ml.', 'mL', 'mL.', 'cc', 'milliliter', 'milliliters', 'millilitre', 'millilitres' ),
 			),
 			'l' => array(
-				'singular_abbr' => esc_html__('l','cooked'),
-				'plural_abbr' => esc_html__('l','cooked'),
-				'singular' => esc_html__('liter','cooked'),
-				'plural' => esc_html__('liters','cooked'),
+				'singular_abbr' => __('l','cooked'),
+				'plural_abbr' => __('l','cooked'),
+				'singular' => __('liter','cooked'),
+				'plural' => __('liters','cooked'),
 				'variations' => array( 'l', 'l.', 'L', 'L.', 'liter', 'liters', 'litre', 'litres' ),
 			),
 			'stick' => array(
-				'singular_abbr' => esc_html__('stick','cooked'),
-				'plural_abbr' => esc_html__('sticks','cooked'),
-				'singular' => esc_html__('stick','cooked'),
-				'plural' => esc_html__('sticks','cooked'),
+				'singular_abbr' => __('stick','cooked'),
+				'plural_abbr' => __('sticks','cooked'),
+				'singular' => __('stick','cooked'),
+				'plural' => __('sticks','cooked'),
 				'variations' => array( 'stick', 'sticks' ),
 			),
 			'lb' => array(
-				'singular_abbr' => esc_html__('lb','cooked'),
-				'plural_abbr' => esc_html__('lbs','cooked'),
-				'singular' => esc_html__('pound','cooked'),
-				'plural' => esc_html__('pounds','cooked'),
+				'singular_abbr' => __('lb','cooked'),
+				'plural_abbr' => __('lbs','cooked'),
+				'singular' => __('pound','cooked'),
+				'plural' => __('pounds','cooked'),
 				'variations' => array( 'lb', 'lbs', 'lb.', 'lbs.', 'pound', 'pounds' ),
 			),
 			'dash' => array(
-				'singular_abbr' => esc_html__('dash','cooked'),
-				'plural_abbr' => esc_html__('dashes','cooked'),
-				'singular' => esc_html__('dash','cooked'),
-				'plural' => esc_html__('dashes','cooked'),
+				'singular_abbr' => __('dash','cooked'),
+				'plural_abbr' => __('dashes','cooked'),
+				'singular' => __('dash','cooked'),
+				'plural' => __('dashes','cooked'),
 				'variations' => array( 'dash', 'dashes' ),
 			),
 			'drop' => array(
-				'singular_abbr' => esc_html__('drop','cooked'),
-				'plural_abbr' => esc_html__('drops','cooked'),
-				'singular' => esc_html__('drop','cooked'),
-				'plural' => esc_html__('drops','cooked'),
+				'singular_abbr' => __('drop','cooked'),
+				'plural_abbr' => __('drops','cooked'),
+				'singular' => __('drop','cooked'),
+				'plural' => __('drops','cooked'),
 				'variations' => array( 'drop', 'drops' ),
 			),
 			'gal' => array(
-				'singular_abbr' => esc_html__('gal','cooked'),
-				'plural_abbr' => esc_html__('gals','cooked'),
-				'singular' => esc_html__('gallon','cooked'),
-				'plural' => esc_html__('gallons','cooked'),
+				'singular_abbr' => __('gal','cooked'),
+				'plural_abbr' => __('gals','cooked'),
+				'singular' => __('gallon','cooked'),
+				'plural' => __('gallons','cooked'),
 				'variations' => array( 'G', 'G.', 'gal', 'gal.', 'gallon', 'gallons' ),
 			),
 			'pinch' => array(
-				'singular_abbr' => esc_html__('pinch','cooked'),
-				'plural_abbr' => esc_html__('pinches','cooked'),
-				'singular' => esc_html__('pinch','cooked'),
-				'plural' => esc_html__('pinches','cooked'),
+				'singular_abbr' => __('pinch','cooked'),
+				'plural_abbr' => __('pinches','cooked'),
+				'singular' => __('pinch','cooked'),
+				'plural' => __('pinches','cooked'),
 				'variations' => array( 'pinch', 'pinches' ),
 			),
 			'pt' => array(
-				'singular_abbr' => esc_html__('pt','cooked'),
-				'plural_abbr' => esc_html__('pt','cooked'),
-				'singular' => esc_html__('pint','cooked'),
-				'plural' => esc_html__('pints','cooked'),
+				'singular_abbr' => __('pt','cooked'),
+				'plural_abbr' => __('pt','cooked'),
+				'singular' => __('pint','cooked'),
+				'plural' => __('pints','cooked'),
 				'variations' => array( 'p', 'p.', 'pt', 'pt.', 'pts', 'pts.', 'fl pt', 'fl. pt.', 'pint', 'pints' ),
 			),
 			'qt' => array(
-				'singular_abbr' => esc_html__('qt','cooked'),
-				'plural_abbr' => esc_html__('qts','cooked'),
-				'singular' => esc_html__('quart','cooked'),
-				'plural' => esc_html__('quarts','cooked'),
+				'singular_abbr' => __('qt','cooked'),
+				'plural_abbr' => __('qts','cooked'),
+				'singular' => __('quart','cooked'),
+				'plural' => __('quarts','cooked'),
 				'variations' => array( 'q', 'q.', 'qt', 'qt.', 'qts', 'qts.', 'fl qt', 'fl. qt.', 'quart', 'quarts' ),
 			),
 		));
@@ -166,85 +166,85 @@ class Cooked_Measurements {
 
 			'top' => array(
 				'serving_size' => array(
-					'name' => esc_html__('Serving Size','cooked'),
+					'name' => __('Serving Size','cooked'),
 					'type' => 'text'
 				),
 				'servings' => array(
-					'name' => esc_html__('Servings','cooked'),
+					'name' => __('Servings','cooked'),
 					'type' => 'number'
 				)
 			),
 
 			'mid' => array(
 				'calories' => array(
-					'name' => esc_html__('Calories','cooked'),
+					'name' => __('Calories','cooked'),
 					'type' => 'number'
 				),
 				'calories_fat' => array(
-					'name' => esc_html__('Calories from Fat','cooked'),
+					'name' => __('Calories from Fat','cooked'),
 					'type' => 'number'
 				)
 			),
 
 			'main' => array(
 				'fat' => array(
-					'name' => esc_html__('Total Fat','cooked'),
+					'name' => __('Total Fat','cooked'),
 					'type' => 'number',
 					'measurement' => 'g',
 					'pdv' => apply_filters( 'cooked_pdv_fat', 65 ),
 					'subs' => array(
 						'sat_fat' => array(
-							'name' => esc_html__('Saturated Fat','cooked'),
+							'name' => __('Saturated Fat','cooked'),
 							'type' => 'number',
 							'measurement' => 'g',
 							'pdv' => apply_filters( 'cooked_pdv_satfat', 20 )
 						),
 						'trans_fat' => array(
-							'name' => esc_html__('Trans Fat','cooked'),
+							'name' => __('Trans Fat','cooked'),
 							'type' => 'number',
 							'measurement' => 'g'
 						)
 					)
 				),
 				'cholesterol' => array(
-					'name' => esc_html__('Cholesterol','cooked'),
+					'name' => __('Cholesterol','cooked'),
 					'type' => 'number',
 					'measurement' => 'mg',
 					'pdv' => apply_filters( 'cooked_pdv_cholesterol', 300 )
 				),
 				'sodium' => array(
-					'name' => esc_html__('Sodium','cooked'),
+					'name' => __('Sodium','cooked'),
 					'type' => 'number',
 					'measurement' => 'mg',
 					'pdv' => apply_filters( 'cooked_pdv_sodium', 2400 )
 				),
 				'potassium' => array(
-					'name' => esc_html__('Potassium','cooked'),
+					'name' => __('Potassium','cooked'),
 					'type' => 'number',
 					'measurement' => 'mg',
 					'pdv' => apply_filters( 'cooked_pdv_potassium', 3500 )
 				),
 				'carbs' => array(
-					'name' => ( isset( $_cooked_settings['carb_format'] ) && $_cooked_settings['carb_format'] == 'total' ? esc_html__('Total Carbohydrate','cooked') : esc_html__('Net Carbohydrate','cooked') ),
+					'name' => ( isset( $_cooked_settings['carb_format'] ) && $_cooked_settings['carb_format'] == 'total' ? __('Total Carbohydrate','cooked') : __('Net Carbohydrate','cooked') ),
 					'type' => 'number',
 					'measurement' => 'g',
 					'pdv' => apply_filters( 'cooked_pdv_carbs', 300 ),
 					'subs' => array(
 						'fiber' => array(
-							'name' => esc_html__('Dietary Fiber','cooked'),
+							'name' => __('Dietary Fiber','cooked'),
 							'type' => 'number',
 							'measurement' => 'g',
 							'pdv' => apply_filters( 'cooked_pdv_fiber', 25 )
 						),
 						'sugars' => array(
-							'name' => esc_html__('Sugars','cooked'),
+							'name' => __('Sugars','cooked'),
 							'type' => 'number',
 							'measurement' => 'g'
 						)
 					)
 				),
 				'protein' => array(
-					'name' => esc_html__('Protein','cooked'),
+					'name' => __('Protein','cooked'),
 					'type' => 'number',
 					'measurement' => 'g',
 					'pdv' => apply_filters( 'cooked_pdv_protein', 50 )
@@ -253,127 +253,127 @@ class Cooked_Measurements {
 
 			'bottom' => array(
 				'vitamin_a' => array(
-					'name' => esc_html__('Vitamin A','cooked'),
+					'name' => __('Vitamin A','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'vitamin_c' => array(
-					'name' => esc_html__('Vitamin C','cooked'),
+					'name' => __('Vitamin C','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'calcium' => array(
-					'name' => esc_html__('Calcium','cooked'),
+					'name' => __('Calcium','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'iron' => array(
-					'name' => esc_html__('Iron','cooked'),
+					'name' => __('Iron','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'vitamin_d' => array(
-					'name' => esc_html__('Vitamin D','cooked'),
+					'name' => __('Vitamin D','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'vitamin_e' => array(
-					'name' => esc_html__('Vitamin E','cooked'),
+					'name' => __('Vitamin E','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'vitamin_k' => array(
-					'name' => esc_html__('Vitamin K','cooked'),
+					'name' => __('Vitamin K','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'thiamin' => array(
-					'name' => esc_html__('Thiamin','cooked'),
+					'name' => __('Thiamin','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'riboflavin' => array(
-					'name' => esc_html__('Riboflavin','cooked'),
+					'name' => __('Riboflavin','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'niacin' => array(
-					'name' => esc_html__('Niacin','cooked'),
+					'name' => __('Niacin','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'vitamin_b6' => array(
-					'name' => esc_html__('Vitamin B6','cooked'),
+					'name' => __('Vitamin B6','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'folate' => array(
-					'name' => esc_html__('Folate','cooked'),
+					'name' => __('Folate','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'vitamin_b12' => array(
-					'name' => esc_html__('Vitamin B12','cooked'),
+					'name' => __('Vitamin B12','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'biotin' => array(
-					'name' => esc_html__('Biotin','cooked'),
+					'name' => __('Biotin','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'pantothenic_acid' => array(
-					'name' => esc_html__('Pantothenic Acid','cooked'),
+					'name' => __('Pantothenic Acid','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'phosphorus' => array(
-					'name' => esc_html__('Phosphorus','cooked'),
+					'name' => __('Phosphorus','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'iodine' => array(
-					'name' => esc_html__('Iodine','cooked'),
+					'name' => __('Iodine','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'magnesium' => array(
-					'name' => esc_html__('Magnesium','cooked'),
+					'name' => __('Magnesium','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'zinc' => array(
-					'name' => esc_html__('Zinc','cooked'),
+					'name' => __('Zinc','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'selenium' => array(
-					'name' => esc_html__('Selenium','cooked'),
+					'name' => __('Selenium','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'copper' => array(
-					'name' => esc_html__('Copper','cooked'),
+					'name' => __('Copper','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'manganese' => array(
-					'name' => esc_html__('Manganese','cooked'),
+					'name' => __('Manganese','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'chromium' => array(
-					'name' => esc_html__('Chromium','cooked'),
+					'name' => __('Chromium','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'molybdenum' => array(
-					'name' => esc_html__('Molybdenum','cooked'),
+					'name' => __('Molybdenum','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				),
 				'chloride' => array(
-					'name' => esc_html__('Chloride','cooked'),
+					'name' => __('Chloride','cooked'),
 					'type' => 'number',
 					'measurement' => '%'
 				)
@@ -638,7 +638,7 @@ class Cooked_Measurements {
 				return 'PT0H'.intval( $minutes ).'M';
 			else:
 				/* translators: singular and plural number of minutes (shorthand) */
-				echo self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes) ), $minutes );
+				echo self::singular_plural( sprintf( __( '%d min','cooked' ), number_format_i18n($minutes) ), sprintf( __( '%d mins','cooked' ), number_format_i18n($minutes) ), $minutes );
 			endif;
 		elseif ( $minutes < 1440 ):
 			$hours = floor( $minutes / 60 );
@@ -647,9 +647,9 @@ class Cooked_Measurements {
 				return 'PT'.intval( $hours ).'H'.( $minutes_left ? intval( $minutes_left ) : 0 ).'M';
 			else:
 				/* translators: singular and plural number of hours (shorthand) */
-				echo self::singular_plural( sprintf( esc_html__( '%d hr','cooked' ), number_format_i18n($hours) ), sprintf( esc_html__( '%d hrs','cooked' ), number_format_i18n($hours) ), $hours );
+				echo self::singular_plural( sprintf( __( '%d hr','cooked' ), number_format_i18n($hours) ), sprintf( __( '%d hrs','cooked' ), number_format_i18n($hours) ), $hours );
 				/* translators: singular and plural number of minutes (shorthand) */
-				echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
+				echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( __( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( __( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
 			endif;
 		else:
 			$days = floor( $minutes / 24 / 60 );
@@ -663,11 +663,11 @@ class Cooked_Measurements {
 				return 'P'.intval( $days ).'DT'.( $hours_left ? intval( $hours_left ) : 0 ).'H'.( $minutes_left ? intval( $minutes_left ) : 0 ).'M';
 			else:
 				/* translators: singular and plural number of days */
-				echo self::singular_plural( sprintf( esc_html__( '%d day','cooked' ), number_format_i18n($days) ), sprintf( esc_html__( '%d days','cooked' ), number_format_i18n($days) ), $days );
+				echo self::singular_plural( sprintf( __( '%d day','cooked' ), number_format_i18n($days) ), sprintf( __( '%d days','cooked' ), number_format_i18n($days) ), $days );
 				/* translators: singular and plural number of hours (shorthand) */
-				echo ( $hours_left ? '&nbsp;' . self::singular_plural( sprintf( esc_html__( '%d hr','cooked' ), number_format_i18n($hours_left) ), sprintf( esc_html__( '%d hrs','cooked' ), number_format_i18n($hours_left) ), $hours_left ) : '' );
+				echo ( $hours_left ? '&nbsp;' . self::singular_plural( sprintf( __( '%d hr','cooked' ), number_format_i18n($hours_left) ), sprintf( __( '%d hrs','cooked' ), number_format_i18n($hours_left) ), $hours_left ) : '' );
 				/* translators: singular and plural number of minutes (shorthand) */
-				echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
+				echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( __( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( __( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
 			endif;
 		endif;
 

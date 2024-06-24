@@ -44,7 +44,7 @@ echo '<article class="' . implode( ' ', $recipe_classes ) . ' cooked-recipe-card
             echo '<span class="cooked-recipe-card-author">';
                 $author = $recipe['author'];
                 /* translators: referring to the author (ex: By John Smith) */
-                echo sprintf( esc_html__( 'By %s', 'cooked' ), '<strong>' . esc_html( $author['name'] ) . '</strong>' );
+                echo sprintf( __( 'By %s', 'cooked' ), '<strong>' . esc_html( $author['name'] ) . '</strong>' );
             echo '</span>';
         endif;
 

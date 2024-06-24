@@ -33,7 +33,7 @@ class Cooked_SEO {
 
     }
 
-    public static function schema_values( $recipe = false ){
+    public static function schema_values( $recipe = false ) {
 
         global $_cooked_settings;
 
@@ -50,6 +50,7 @@ class Cooked_SEO {
             $recipe_author = '';
         endif;
 
+        $ingredients = [];
         if ( isset($recipe['ingredients']) && !empty($recipe['ingredients']) ):
             foreach ( $recipe['ingredients'] as $ing ):
                 if ( isset( $ing['section_heading_name'] ) ): continue; endif;
@@ -59,6 +60,7 @@ class Cooked_SEO {
             endforeach;
         endif;
 
+        $directions = [];
         if ( isset($recipe['directions']) && !empty($recipe['directions']) ):
             foreach ( $recipe['directions'] as $dir ):
                 $direction = Cooked_Recipes::single_direction( $dir, false, true );
@@ -68,7 +70,6 @@ class Cooked_SEO {
         endif;
 
         $category_name = '';
-
         if (in_array('cp_recipe_category',$_cooked_settings['recipe_taxonomies'])):
             $categories = get_the_terms( $rpost->ID, 'cp_recipe_category' );
             if (!empty($categories)):
@@ -82,7 +83,6 @@ class Cooked_SEO {
         $total_time = $cook_time + $prep_time;
 
         $schema_array = false;
-
         $schema_array = apply_filters( 'cooked_schema_array', array(
             '@context' => 'http://schema.org',
             '@type' => 'Recipe',

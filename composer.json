@@ -1,6 +1,35 @@
 {
+    "name": "xjsv/cooked",
+    "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Now open source!",
+	"keywords": [
+		"wordpress",
+		"recipe"
+	],
+	"homepage": "https://wordpress.org/plugins/cooked/",
+	"version": "1.8.0",
+	"type": "wordpress-plugin",
+	"license": "GPL-3.0-or-later",
+	"prefer-stable": true,
+	"minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Armand Tresova",
+            "email": "atresova@gmail.com"
+        }
+    ],
+    "support": {
+		"issues": "https://github.com/XjSv/Cooked/issues",
+		"forum": "https://github.com/XjSv/Cooked/discussions",
+		"wiki": "https://github.com/XjSv/Cooked/wiki",
+		"source": "https://github.com/XjSv/Cooked",
+		"security": "https://github.com/XjSv/Cooked?tab=security-ov-file"
+	},
+    "optimize-autoloader": true,
     "require": {
         "php": ">=7.4.0",
         "nxp/math-executor": "^2.3"
+    },
+    "require-dev": {
+		"php": "^7 || ^8"
     }
 }

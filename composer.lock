@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7ff1f391379b9a05f016928ce4c93286",
+    "content-hash": "cb6f62f5cc20806a6d124d80d8ef1b2b",
     "packages": [
         {
             "name": "nxp/math-executor",
@@ -66,13 +66,15 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "stability-flags": [],
-    "prefer-stable": false,
+    "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.4.0"
     },
-    "platform-dev": [],
+    "platform-dev": {
+        "php": "^7 || ^8"
+    },
     "plugin-api-version": "2.6.0"
 }

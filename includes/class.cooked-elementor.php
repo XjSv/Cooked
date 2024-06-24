@@ -33,18 +33,17 @@ class Cooked_Elementor {
     }
 
     // Load the recipe_settings when needed so we can display shortcode content in the editor.
-    public function elementor_is_editing( $element, $section_id, $args ){
+    public function elementor_is_editing( $element, $section_id, $args ) {
         $post_id = get_the_ID();
         if ( !isset($recipe_settings) || isset($recipe_settings) && !isset($recipe_settings['author'])):
-            if ( get_post_type( $post_id ) == 'cp_recipe' ):
+            if ( get_post_type( $post_id ) === 'cp_recipe' ):
                 global $recipe_settings;
                 $recipe_settings = Cooked_Recipes::get_settings( $post_id );
             endif;
         endif;
     }
 
-    public function elementor_filter( $recipe_content, $og_content, $recipe_id ){
-
+    public function elementor_filter( $recipe_content, $og_content, $recipe_id ) {
         $elementor_page = get_post_meta( $recipe_id, '_elementor_edit_mode', true );
 
         if ( $elementor_page ) {
@@ -52,10 +51,9 @@ class Cooked_Elementor {
         }
 
         return $recipe_content;
-
     }
 
-    public function should_update_content( $should_update, $recipe_id ){
+    public function should_update_content( $should_update, $recipe_id ) {
         $elementor_page = get_post_meta( $recipe_id, '_elementor_edit_mode', true );
         if ( $elementor_page ){
             return false;

@@ -240,7 +240,7 @@ final class Cooked_Plugin {
 		// Look for Cooked Modules
 		$modules = file_exists( COOKED_DIR . 'modules' ) ? scandir( COOKED_DIR . 'modules' ) : false;
 		if ($modules):
-			foreach($modules as $module_name):
+			foreach ($modules as $module_name):
 				if ($module_name !== '.' && $module_name !== '..'):
 					if ( file_exists( COOKED_DIR . 'modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php' ) ):
 						require_once COOKED_DIR . 'modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php';
@@ -253,7 +253,7 @@ final class Cooked_Plugin {
 		$parent_theme_folder = trailingslashit( get_template_directory() );
 		$modules = file_exists( $parent_theme_folder . 'cooked-modules' ) ? scandir( $parent_theme_folder . 'cooked-modules' ) : false;
 		if ($modules):
-			foreach($modules as $module_name):
+			foreach ($modules as $module_name):
 				if ($module_name !== '.' && $module_name !== '..'):
 					if ( file_exists( $parent_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php' ) ):
 						require_once $parent_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php';
@@ -267,7 +267,7 @@ final class Cooked_Plugin {
 		if ($child_theme_folder != $parent_theme_folder):
 			$modules = file_exists( $child_theme_folder . 'cooked-modules' ) ? scandir( $child_theme_folder . 'cooked-modules' ) : false;
 			if ($modules):
-				foreach($modules as $module_name):
+				foreach ($modules as $module_name):
 					if ($module_name !== '.' && $module_name !== '..'):
 						if ( file_exists( $child_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php' ) ):
 							require_once $child_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php';
@@ -426,7 +426,7 @@ endif; // End if class_exists check.
 
 // Uninstall Hook
 register_uninstall_hook( __FILE__, 'cooked_uninstall' );
-function cooked_uninstall(){
+function cooked_uninstall() {
 	Cooked_Roles::remove_caps();
 	Cooked_Roles::remove_roles();
 	flush_rewrite_rules();

@@ -21,40 +21,34 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Cooked_Admin_Menus {
 
 	function __construct() {
-
 		add_action( 'admin_menu', array( &$this, 'add_menu') );
 		if ( !is_admin() ): add_action( 'admin_bar_menu', array( &$this, 'add_admin_bar_menu' ), 100 ); endif;
-
 	}
 
 	public function add_menu() {
-
 		global $cooked_taxonomies_for_menu;
 
-		add_menu_page( esc_html__( 'Recipes', 'cooked' ), esc_html__( 'Recipes', 'cooked' ), 'edit_cooked_recipes', 'cooked_recipes_menu', '', 'none', 58 );
-		add_submenu_page('cooked_recipes_menu', esc_html__('Add New','cooked'), esc_html__('Add New','cooked'), 'edit_cooked_recipes', 'post-new.php?post_type=cp_recipe', '' );
+		add_menu_page( __( 'Recipes', 'cooked' ), __( 'Recipes', 'cooked' ), 'edit_cp_recipes', 'cooked_recipes_menu', '', 'none', 58 );
+		add_submenu_page('cooked_recipes_menu', __('Add New','cooked'), __('Add New','cooked'), 'edit_cp_recipes', 'post-new.php?post_type=cp_recipe', '' );
 		if ( isset($cooked_taxonomies_for_menu) && !empty($cooked_taxonomies_for_menu) ):
 			foreach ( $cooked_taxonomies_for_menu as $menu_item ):
 				add_submenu_page( $menu_item['menu'], $menu_item['name'], $menu_item['name'], $menu_item['capability'], $menu_item['url'], '' );
 			endforeach;
 		endif;
-		add_submenu_page('cooked_recipes_menu', esc_html__('Settings','cooked'), esc_html__('Settings','cooked'), 'edit_cooked_settings', 'cooked_settings', array(&$this, 'cooked_settings_page') );
-		add_submenu_page('cooked_recipes_menu', esc_html__('What\'s New?','cooked'), esc_html__('What\'s New?','cooked'), 'edit_cooked_settings', 'cooked_welcome', array(&$this, 'cooked_welcome_content') );
+		add_submenu_page('cooked_recipes_menu', __('Settings', 'cooked'), __('Settings','cooked'), 'edit_cooked_settings', 'cooked_settings', array(&$this, 'cooked_settings_page') );
+		add_submenu_page('cooked_recipes_menu', __('What\'s New?','cooked'), __('What\'s New?','cooked'), 'edit_cooked_settings', 'cooked_welcome', array(&$this, 'cooked_welcome_content') );
 		if ( !class_exists( 'Cooked_Pro_Plugin' ) ):
-			add_submenu_page('cooked_recipes_menu', esc_html__('Upgrade to Pro','cooked'), '<span class="admin-menu-cooked-upgrade">' . esc_html__('Upgrade to Pro','cooked') . '</span>', 'edit_cooked_settings', 'cooked_pro', array(&$this, 'cooked_pro') );
+			add_submenu_page('cooked_recipes_menu', __('Upgrade to Pro','cooked'), '<span class="admin-menu-cooked-upgrade">' . __('Upgrade to Pro','cooked') . '</span>', 'edit_cooked_settings', 'cooked_pro', array(&$this, 'cooked_pro') );
 		endif;
-
 	}
 
 	public function add_admin_bar_menu() {
-
 		global $wp_admin_bar;
 
-		$wp_admin_bar->add_menu( array( 'id' => 'cooked-ab', 'title' => '<span class="ab-icon"></span>'.esc_html__('Recipes','cooked'), 'href' => get_admin_url() . 'edit.php?post_type=cp_recipe' ) );
-		$wp_admin_bar->add_menu( array( 'parent' => 'cooked-ab', 'title' => esc_html__('All Recipes','cooked'), 'id' => 'cooked-recipes-ab', 'href' => get_admin_url() . 'edit.php?post_type=cp_recipe' ) );
-		$wp_admin_bar->add_menu( array( 'parent' => 'cooked-ab', 'title' => esc_html__('Add New','cooked'), 'id' => 'cooked-add-new-ab', 'href' => get_admin_url() . 'post-new.php?post_type=cp_recipe' ) );
-		$wp_admin_bar->add_menu( array( 'parent' => 'cooked-ab', 'title' => esc_html__('Settings','cooked'), 'id' => 'cooked-settings-ab', 'href' => get_admin_url() . 'admin.php?page=cooked_settings' ) );
-
+		$wp_admin_bar->add_menu( array( 'id' => 'cooked-ab', 'title' => '<span class="ab-icon"></span>'.__('Recipes','cooked'), 'href' => get_admin_url() . 'edit.php?post_type=cp_recipe' ) );
+		$wp_admin_bar->add_menu( array( 'parent' => 'cooked-ab', 'title' => __('All Recipes','cooked'), 'id' => 'cooked-recipes-ab', 'href' => get_admin_url() . 'edit.php?post_type=cp_recipe' ) );
+		$wp_admin_bar->add_menu( array( 'parent' => 'cooked-ab', 'title' => __('Add New','cooked'), 'id' => 'cooked-add-new-ab', 'href' => get_admin_url() . 'post-new.php?post_type=cp_recipe' ) );
+		$wp_admin_bar->add_menu( array( 'parent' => 'cooked-ab', 'title' => __('Settings','cooked'), 'id' => 'cooked-settings-ab', 'href' => get_admin_url() . 'admin.php?page=cooked_settings' ) );
 	}
 
 	// Settings Panel

@@ -461,20 +461,28 @@ class Cooked_Measurements {
 
 	}
 
-	public function math( $expression = false ) {
-		if ($expression):
+	public function math($expression = false) {
+		if ($expression) {
 			$expression = preg_replace( '/[^0-9\+\-\*\/\(\)\.\,]/', '', esc_html($expression) );
-			$invalid = ( '/' == substr($expression, -1) ? true : false ); // More checks can be done here if needed.
-			if ( !$invalid ):
-				$mathExecutor = new MathExecutor();
-				$o = $mathExecutor->execute($expression);
-				return $o;
-			else:
+
+			$invalid = '/' == substr($expression, -1) ? true : false; // More checks can be done here if needed.
+
+			try {
+				if (!$invalid) {
+					$mathExecutor = new MathExecutor();
+					$o = $mathExecutor->execute($expression);
+					return $o;
+				} else {
+					return 0;
+				}
+			} catch (Exception $e) {
 				return 0;
-			endif;
-		else:
+			}
+
+
+		} else {
 			return 0;
-		endif;
+		}
 	}
 
 	public function calculate($amount, $type = 'decimal') {

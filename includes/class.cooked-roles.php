@@ -94,6 +94,7 @@ class Cooked_Roles {
             $wp_roles->add_cap('editor', "edit_private_{$plural}");
             $wp_roles->add_cap('editor', "delete_published_{$plural}");
 
+            $wp_roles->add_cap('administrator', 'edit_cooked_settings' ); // Cooked Settings
             $wp_roles->add_cap('administrator', 'approve_cooked_recipes'); // Approve Recipes
             $wp_roles->add_cap('administrator', "edit_{$singular}");
             $wp_roles->add_cap('administrator', "edit_{$plural}");

@@ -20,25 +20,25 @@
 					<div class="cooked-welcome-panel-column cooked-welcome-panel-full">
 						<div class="cooked-pro-features">
 							<ul class="cooked-whatsnew-list cooked-whatsnew-pro">
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Premium Support","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "User Profiles","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "User Ratings","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "User Favorites","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Ingredient Links","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Premium Support","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "User Profiles","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "User Ratings","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "User Favorites","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Ingredient Links","cooked" ); ?></li>
 							</ul>
 							<ul class="cooked-whatsnew-list cooked-whatsnew-pro">
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Social Sharing","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Recipe Submissions","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Modern Grid Layout","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Full-Width Layout","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Pagination Options","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Social Sharing","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Recipe Submissions","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Modern Grid Layout","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Full-Width Layout","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Pagination Options","cooked" ); ?></li>
 							</ul>
 							<ul class="cooked-whatsnew-list cooked-whatsnew-pro">
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Compact List Layout","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Fitness Layout","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Cuisines","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Cooking Methods","cooked" ); ?></li>
-								<li><i class="cooked-icon cooked-icon-star"></i> <?php esc_html_e( "Tags","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Compact List Layout","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Fitness Layout","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Cuisines","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Cooking Methods","cooked" ); ?></li>
+								<li><i class="cooked-icon cooked-icon-star"></i> <?php _e( "Tags","cooked" ); ?></li>
 							</ul>
 						</div>
 						<div class="cooked-welcome-bottom">

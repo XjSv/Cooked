@@ -494,6 +494,10 @@ class Cooked_Settings {
         $browse_page_id = $_cooked_settings['browse_page'];
         $browse_page_url = get_permalink( $browse_page_id );
 
+        if ( empty($browse_page_url) ) {
+            $browse_page_url = get_home_url();
+        }
+
         echo '<p class="cooked-permalink-field-wrapper">';
             echo '<span>' . $browse_page_url . '/</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
         echo '</p>';

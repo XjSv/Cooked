@@ -802,7 +802,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             $image_thumb = wp_get_attachment_image( $g_item, 'thumbnail' );
                             $image_title = get_the_title( $g_item );
 
-                            echo '<div data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-recipe-gallery-item">' . $image_thumb . '<span class="cooked-gallery-item-title">' . ( $image_title ) . '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' . esc_attr( $g_item ) . '" /><a href="#" data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>';
+                            echo '<div data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-recipe-gallery-item">' . $image_thumb . '<span class="cooked-gallery-item-title">' . esc_html($image_title) . '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' . esc_attr( $g_item ) . '" /><a href="#" data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>';
 
                         endforeach;
                     endif;

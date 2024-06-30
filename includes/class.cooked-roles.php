@@ -39,21 +39,6 @@ class Cooked_Roles {
         }
 
         if (is_object($wp_roles)) {
-            // Edit Recipes
-            $wp_roles->add_cap('cooked_recipe_editor', 'approve_cooked_recipes'); // Approve Recipes
-            $wp_roles->add_cap('cooked_recipe_editor', "edit_{$singular}");
-            $wp_roles->add_cap('cooked_recipe_editor', "edit_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "edit_others_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "publish_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "read_{$singular}");
-            $wp_roles->add_cap('cooked_recipe_editor', "read_private_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "delete_{$singular}");
-            $wp_roles->add_cap('cooked_recipe_editor', "delete_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "delete_private_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "delete_others_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "edit_published_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "edit_private_{$plural}");
-            $wp_roles->add_cap('cooked_recipe_editor', "delete_published_{$plural}");
 
             $wp_roles->add_cap('subscriber', "edit_{$singular}");
             $wp_roles->add_cap('subscriber', "edit_{$plural}");
@@ -94,8 +79,27 @@ class Cooked_Roles {
             $wp_roles->add_cap('editor', "edit_private_{$plural}");
             $wp_roles->add_cap('editor', "delete_published_{$plural}");
 
+            // Recipe Editor
+            $wp_roles->add_cap('cooked_recipe_editor', 'approve_cooked_recipes'); // Approve Recipes
+            $wp_roles->add_cap('cooked_recipe_editor', 'edit_cooked_default_template'); // Edit Default Template
+            $wp_roles->add_cap('cooked_recipe_editor', "edit_{$singular}");
+            $wp_roles->add_cap('cooked_recipe_editor', "edit_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "edit_others_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "publish_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "read_{$singular}");
+            $wp_roles->add_cap('cooked_recipe_editor', "read_private_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "delete_{$singular}");
+            $wp_roles->add_cap('cooked_recipe_editor', "delete_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "delete_private_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "delete_others_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "edit_published_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "edit_private_{$plural}");
+            $wp_roles->add_cap('cooked_recipe_editor', "delete_published_{$plural}");
+
+            // Administrator
             $wp_roles->add_cap('administrator', 'edit_cooked_settings' ); // Cooked Settings
             $wp_roles->add_cap('administrator', 'approve_cooked_recipes'); // Approve Recipes
+            $wp_roles->add_cap('administrator', 'edit_cooked_default_template'); // Edit Default Template
             $wp_roles->add_cap('administrator', "edit_{$singular}");
             $wp_roles->add_cap('administrator', "edit_{$plural}");
             $wp_roles->add_cap('administrator', "edit_others_{$plural}");
@@ -125,22 +129,6 @@ class Cooked_Roles {
         }
 
         if (is_object($wp_roles)) {
-            // Edit Recipes
-            $wp_roles->remove_cap('cooked_recipe_editor', 'approve_cooked_recipes'); // Approve Recipes
-            $wp_roles->remove_cap('cooked_recipe_editor', "edit_{$singular}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "edit_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "edit_others_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "publish_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "read_{$singular}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "read_private_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "delete_{$singular}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "delete_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "delete_private_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "delete_others_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "edit_published_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "edit_private_{$plural}");
-            $wp_roles->remove_cap('cooked_recipe_editor', "delete_published_{$plural}");
-
             $wp_roles->remove_cap('subscriber', "edit_{$singular}");
             $wp_roles->remove_cap('subscriber', "edit_{$plural}");
             $wp_roles->remove_cap('subscriber', "read_{$singular}");
@@ -180,8 +168,27 @@ class Cooked_Roles {
             $wp_roles->remove_cap('editor', "edit_private_{$plural}");
             $wp_roles->remove_cap('editor', "delete_published_{$plural}");
 
+            // Edit Recipes
+            $wp_roles->remove_cap('cooked_recipe_editor', 'approve_cooked_recipes'); // Approve Recipes
+            $wp_roles->remove_cap('cooked_recipe_editor', 'edit_cooked_default_template'); // Edit Default Template
+            $wp_roles->remove_cap('cooked_recipe_editor', "edit_{$singular}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "edit_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "edit_others_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "publish_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "read_{$singular}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "read_private_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "delete_{$singular}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "delete_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "delete_private_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "delete_others_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "edit_published_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "edit_private_{$plural}");
+            $wp_roles->remove_cap('cooked_recipe_editor', "delete_published_{$plural}");
+
+            // Administrator
             $wp_roles->remove_cap('administrator', 'edit_cooked_settings'); // Recipe Settings
             $wp_roles->remove_cap('administrator', 'approve_cooked_recipes'); // Approve Recipes
+            $wp_roles->remove_cap('administrator', 'edit_cooked_default_template'); // Edit Default Template
             $wp_roles->remove_cap('administrator', "edit_{$singular}");
             $wp_roles->remove_cap('administrator', "edit_{$plural}");
             $wp_roles->remove_cap('administrator', "edit_others_{$plural}");

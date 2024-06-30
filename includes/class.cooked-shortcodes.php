@@ -713,7 +713,7 @@ class Cooked_Shortcodes {
             ob_start();
 
             if ( isset($recipe_settings['excerpt']) && $recipe_settings['excerpt'] ) :
-                   echo '<div class="cooked-recipe-excerpt cooked-clearfix">' . wpautop( do_shortcode( $recipe_settings['excerpt'] ) ) . '</div>';
+                   echo '<div class="cooked-recipe-excerpt cooked-clearfix">' . wpautop( do_shortcode( esc_textarea($recipe_settings['excerpt']) ) ) . '</div>';
             endif;
 
             return ob_get_clean();

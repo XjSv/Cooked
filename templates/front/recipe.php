@@ -36,7 +36,7 @@ if ( is_feed() && !is_admin() || is_singular() && !is_admin() ):
 		$recipe_content .=  '</div>';
 	$recipe_content .=  '</div>';
 
-	$recipe_content .= ( isset($recipe_seo_content) ? $recipe_seo_content : '' );
+	$recipe_content .= isset($recipe_seo_content) ? $recipe_seo_content : '';
 
 else:
 

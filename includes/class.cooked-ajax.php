@@ -128,7 +128,7 @@ class Cooked_Ajax {
     }
 
     public function get_recipe_ids() {
-        if ( !current_user_can('read_cp_recipe') ):
+        if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default_bulk') && !current_user_can('read_cp_recipe') ):
             wp_die();
         endif;
 
@@ -147,7 +147,7 @@ class Cooked_Ajax {
     public function save_default_bulk() {
         $bulk_amount = 5;
 
-        if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default_bulk') || !current_user_can('edit_cp_recipes') ):
+        if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default_bulk') && !current_user_can('edit_cp_recipes') ):
             wp_die();
         endif;
 
@@ -200,34 +200,34 @@ class Cooked_Ajax {
     }
 
     public function save_default() {
-        if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default') || !current_user_can('edit_cp_recipes') ):
-            wp_die();
-        endif;
-
         global $_cooked_settings;
 
-        if ( isset($_POST['default_content']) ):
+        if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default') && !current_user_can('edit_cooked_default_template') ) {
+            wp_die();
+        }
+
+        if ( isset($_POST['default_content']) ) {
             $_cooked_settings['default_content'] = wp_kses_post( $_POST['default_content'] );
             update_option('cooked_settings', $_cooked_settings);
-        else:
+        } else {
             echo 'No default content provided.';
-        endif;
+        }
 
         wp_die();
     }
 
     public function load_default() {
 
-        if ( !current_user_can('edit_cp_recipes') ):
+        if ( !current_user_can('edit_cp_recipes') ) {
             wp_die();
-        endif;
+        }
 
         global $_cooked_settings;
-        if ( isset($_cooked_settings['default_content']) ):
+        if ( isset($_cooked_settings['default_content']) ) {
             $default_content = stripslashes( $_cooked_settings['default_content'] );
-        else:
+        } else {
             $default_content = Cooked_Recipes::default_content();
-        endif;
+        }
 
         echo wp_kses_post( $default_content );
 

@@ -82,7 +82,8 @@ var $_CookedConditionalTimeout  = false;
                                     var ajax__save_default_all = $.post(
                                         cooked_js_vars.ajax_url,
                                         {
-                                            action: 'cooked_get_recipe_ids'
+                                            action: 'cooked_get_recipe_ids',
+                                            nonce: cooked_save_default_bulk_nonce
                                         },
                                         function(json_recipe_ids) {
                                             thisButton.removeClass("button-primary").addClass("button");

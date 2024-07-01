@@ -31,12 +31,12 @@ if ( is_feed() && !is_admin() || is_singular() && !is_admin() ):
 		$recipe_content .=  do_shortcode( Cooked_Recipes::fsm_content() );
 		$recipe_content .=  '<div class="cooked-fsm-top">' . wp_kses_post( $recipe_settings['title'] ) . '<a href="#" class="cooked-close-fsm"><i class="cooked-icon cooked-icon-close"></i></a></div>';
 		$recipe_content .=  '<div class="cooked-fsm-mobile-nav">';
-			$recipe_content .=  '<a href="#ingredients" data-nav-id="ingredients" class="cooked-fsm-nav-ingredients cooked-active">' . esc_html__( 'Ingredients', 'cooked' ) . '</a>';
-			$recipe_content .=  '<a href="#directions" data-nav-id="directions" class="cooked-fsm-nav-directions">' . esc_html__( 'Directions', 'cooked' ) . '</a>';
+			$recipe_content .=  '<a href="#ingredients" data-nav-id="ingredients" class="cooked-fsm-nav-ingredients cooked-active">' . __( 'Ingredients', 'cooked' ) . '</a>';
+			$recipe_content .=  '<a href="#directions" data-nav-id="directions" class="cooked-fsm-nav-directions">' . __( 'Directions', 'cooked' ) . '</a>';
 		$recipe_content .=  '</div>';
 	$recipe_content .=  '</div>';
 
-	$recipe_content .= ( isset($recipe_seo_content) ? $recipe_seo_content : '' );
+	$recipe_content .= isset($recipe_seo_content) ? $recipe_seo_content : '';
 
 else:
 

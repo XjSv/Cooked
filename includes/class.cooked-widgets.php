@@ -34,9 +34,9 @@ class Cooked_Widgets {
 	}
 
 	public static function recipe_finder( $field_id = '', $field_name = '', $included = '' ) {
-		$button_title = ( !empty( $included ) ? esc_html__( 'Edit Recipe(s)...', 'cooked' ) : esc_html__( 'Choose recipe(s)...', 'cooked' ) );
+		$button_title = ( !empty( $included ) ? __( 'Edit Recipe(s)...', 'cooked' ) : __( 'Choose recipe(s)...', 'cooked' ) );
 	    echo '<div style="margin:-10px 0 0 0;"><a href="#" class="button cooked-recipe-finder-show" id="' . esc_attr( $field_id ) . '-SHOW">' . esc_html( $button_title ) . '</a></div>';
-	    echo '<select multiple class="widefat cooked-recipe-finder" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" placeholder="' . esc_attr__( 'Choose recipe(s)...', 'cooked' ) . '">';
+	    echo '<select multiple class="widefat cooked-recipe-finder" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" placeholder="' . __( 'Choose recipe(s)...', 'cooked' ) . '">';
 	    if ( !empty( $included ) ):
 	        foreach( $included as $recipe ):
 	            $_recipe = Cooked_Recipes::get( $recipe, true );

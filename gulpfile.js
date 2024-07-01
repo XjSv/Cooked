@@ -56,4 +56,3 @@ exports.build = build;
 
 // Export the default Gulp task.
 exports.default = series(css, cssAdmin, js, jsFotorama, jsAdmin, watchFiles);
-

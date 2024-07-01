@@ -20,13 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Cooked_Post_Types {
 
 	function __construct() {
-
 		register_activation_hook( COOKED_PLUGIN_FILE, array( &$this, 'activation' ) );
 
 		add_action( 'init', array( &$this, 'init' ) );
 		add_filter( 'admin_init', array( &$this, 'init_roles' ) );
 		add_action( 'after_setup_theme', array( &$this, 'image_sizes' ) );
-		add_action( 'template_redirect', array( &$this, 'redirects' ) );
+		//add_action( 'template_redirect', array( &$this, 'redirects' ) );
 		add_action( 'wp_head', array( &$this, 'cooked_meta_tags' ), 5 );
 		add_action( 'manage_cp_recipe_posts_custom_column', array( &$this, 'custom_columns_data' ), 10, 2 );
 
@@ -34,55 +33,50 @@ class Cooked_Post_Types {
 		add_filter( 'query_vars', array( &$this, 'add_query_vars_filter' ) );
 		add_filter( 'manage_cp_recipe_posts_columns', array( &$this, 'custom_columns' ) );
 		add_filter( 'nav_menu_css_class', array( &$this, 'cooked_nav_classes' ), 10, 2 );
-		
+
 		// Taxonomy Titles
 		add_action( 'template_redirect', array( &$this, 'remove_default_title_tag' ) );
 		add_filter( 'the_title', array( &$this, 'taxonomy_page_title' ), 10, 2 );
 		add_filter( 'pre_wp_nav_menu', array( &$this, 'disable_taxonomy_page_title' ), 10, 2 );
 		add_filter( 'wp_nav_menu_items', array( &$this, 'enable_taxonomy_page_title' ), 10, 2 );
 		add_filter( 'wp_title', array( &$this, 'taxonomy_meta_title' ), 10 );
-
 	}
-	
+
 	function disable_taxonomy_page_title( $nav_menu, $args ) {
 		remove_filter( 'the_title', array( &$this, 'taxonomy_page_title' ), 10, 2 );
 		return $nav_menu;
 	}
-	
+
 	function enable_taxonomy_page_title( $items, $args ) {
 		add_filter( 'the_title', array( &$this, 'taxonomy_page_title' ), 10, 2 );
 		return $items;
 	}
-	
-	function taxonomy_page_title( $title = '', $id = 0 ){
-		
+
+	function taxonomy_page_title( $title = '', $id = 0 ) {
 		if ( is_admin() )
 			return $title;
-		
+
 		global $wp_query, $post, $_cooked_settings;
 		$browse_page_id = $_cooked_settings['browse_page'];
-		
+
 		if ( is_page( $browse_page_id ) && $id == $browse_page_id && isset($wp_query->query['cp_recipe_category']) && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ):
 			$cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
 			return $cooked_term->name;
 		endif;
-		
+
 		return $title;
-		
 	}
-	
-	function taxonomy_meta_title( $title = '' ){
-		
+
+	function taxonomy_meta_title( $title = '' ) {
 		global $wp_query, $post, $_cooked_settings;
 		$browse_page_id = $_cooked_settings['browse_page'];
-		
+
 		if ( is_page( $browse_page_id ) && $post->ID == $browse_page_id && isset($wp_query->query['cp_recipe_category']) && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ):
 			$cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
 			return $cooked_term->name;
 		endif;
-		
+
 		return $title;
-		
 	}
 
 	function custom_columns( $columns ) {
@@ -90,7 +84,7 @@ class Cooked_Post_Types {
 		foreach( $columns as $key => $val ):
 			$new_columns[$key] = $val;
 			if ( $key == 'cb' ):
-				$new_columns['featured_image'] = esc_html__( 'Photo', 'cooked' );
+				$new_columns['featured_image'] = __( 'Photo', 'cooked' );
 			endif;
 		endforeach;
 		return $new_columns;
@@ -119,17 +113,16 @@ class Cooked_Post_Types {
 	    return $classes;
 	}
 
-	public static function cooked_meta_tags(){
-
+	public static function cooked_meta_tags() {
 		global $_cooked_settings,$post,$wp_query;
-	
+
 		if ( isset($wp_query->query['cp_recipe_category']) && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ):
 			$cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
 		endif;
-		
+
 		if ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) )
 			return false;
-			
+
 		if ( isset( $cooked_term ) && $cooked_term->name ):
 			?><title><?php echo esc_html($cooked_term->name) . ' / ' . esc_html(get_bloginfo('name')); ?></title>
 			<meta property="og:title" content="<?php echo esc_attr( $cooked_term->name ); ?>">
@@ -145,7 +138,7 @@ class Cooked_Post_Types {
 			$image_url = false;
 
 			if ( has_post_thumbnail($recipe) ) :
-	   			$image_url = get_the_post_thumbnail_url( $recipe,'cooked-large' );
+	   			$image_url = get_the_post_thumbnail_url( $recipe, 'cooked-large' );
 			endif; ?>
 
 			<meta property="og:type" content="website">
@@ -158,23 +151,21 @@ class Cooked_Post_Types {
 			echo ob_get_clean();
 
 		endif;
-
 	}
 
-	public static function add_query_vars_filter( $vars ){
+	public static function add_query_vars_filter( $vars ) {
 		$vars[] = "servings";
 		return $vars;
 	}
-	
-	public function remove_default_title_tag(){
+
+	public function remove_default_title_tag() {
 		global $wp_query;
 		if ( isset($wp_query->query['cp_recipe_category']) && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ):
 			remove_action( 'wp_head', '_wp_render_title_tag', 1 );
 		endif;
 	}
 
-	public function redirects(){
-
+	public function redirects() {
 		$_cooked_settings = Cooked_Settings::get();
 		$parent_page = ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false );
 		$front_page = get_option( 'page_on_front' );
@@ -206,29 +197,26 @@ class Cooked_Post_Types {
 				do_action( 'cooked_redirects' );
 			endif;
 		endif;
-
 	}
 
-	public static function activation(){
+	public static function activation() {
 		self::init();
 		self::init_roles();
 		flush_rewrite_rules();
 	}
 
-	public static function init_roles(){
+	public static function init_roles() {
 		Cooked_Roles::add_roles();
 		Cooked_Roles::add_caps();
 	}
 
-	public static function init(){
-
-		global $_cooked_settings,$wpdb;
+	public static function init() {
 		$_cooked_settings = Cooked_Settings::get();
 		$_cooked_taxonomies = Cooked_Taxonomies::get();
 
 		$parent_page_slug = ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? ltrim( untrailingslashit( str_replace( home_url(), '', get_permalink( $_cooked_settings['browse_page'] ) ) ), '/' ) : false );
 
-		if(!empty($_GET['settings-updated'])) {
+		if (!empty($_GET['settings-updated'])) {
 
 			// Recipe Permalink
 			$permalink_parts = explode( '/', $_cooked_settings['recipe_permalink'] );
@@ -277,18 +265,17 @@ class Cooked_Post_Types {
 				$_cooked_settings[ $setting_key ] = $setting_value;
 			endforeach;
 
-			update_option( 'cooked_settings',$_cooked_settings );
-			update_option( 'cooked_settings_saved',true );
+			update_option( 'cooked_settings', $_cooked_settings );
+			update_option( 'cooked_settings_saved', true );
 
 			flush_rewrite_rules();
-
 		}
 
 		global $cooked_taxonomies_for_menu;
 
 		if ( !empty($_cooked_taxonomies) ):
-			foreach( $_cooked_taxonomies as $slug => $args ):
-				register_taxonomy( $slug, array('cp_recipe'), $args );
+			foreach ( $_cooked_taxonomies as $slug => $args ):
+				register_taxonomy( $slug, ['cp_recipe'], $args );
 				if ( $parent_page_slug ):
 					add_rewrite_rule('^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/page/([^/]*)/?', 'index.php?page_id='.$_cooked_settings['browse_page'].'&paged=$matches[2]&'.$slug.'=$matches[1]', 'top');
 					add_rewrite_rule('^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/?', 'index.php?page_id='.$_cooked_settings['browse_page'].'&'.$slug.'=$matches[1]', 'top');
@@ -308,7 +295,6 @@ class Cooked_Post_Types {
 				register_post_type( $slug, $args );
 			endforeach;
 		endif;
-
 	}
 
 	public static function image_sizes(){
@@ -318,9 +304,9 @@ class Cooked_Post_Types {
 	}
 
 	public static function get() {
-
 		global $_cooked_settings;
-		$recipe_permalink = ( isset($_cooked_settings['recipe_permalink']) && $_cooked_settings['recipe_permalink'] ? $_cooked_settings['recipe_permalink'] : 'recipes' );
+
+		$recipe_permalink = isset($_cooked_settings['recipe_permalink']) && $_cooked_settings['recipe_permalink'] ? $_cooked_settings['recipe_permalink'] : 'recipes';
 		$public_recipes = true;
 		$has_archive_slug = sanitize_title_with_dashes( __('Recipe Archive','cooked') );
 		$exclude_from_search = false;
@@ -334,21 +320,21 @@ class Cooked_Post_Types {
 		$post_types = apply_filters( 'cooked_post_types', array(
 			'cp_recipe' => array(
 				'labels' => array(
-					'name'               => esc_html__( 'Recipes', 'cooked' ),
-					'singular_name'      => esc_html__( 'Recipe', 'cooked' ),
-					'menu_name'          => esc_html__( 'Recipes', 'cooked' ),
-					'name_admin_bar'     => esc_html__( 'Recipe', 'cooked' ),
-					'add_new'            => esc_html__( 'Add New', 'cooked' ),
-					'add_new_item'       => esc_html__( 'Add New Recipe', 'cooked' ),
-					'new_item'           => esc_html__( 'New Recipe', 'cooked' ),
-					'edit_item'          => esc_html__( 'Edit Recipe', 'cooked' ),
-					'view_item'          => esc_html__( 'View Recipe', 'cooked' ),
-					'all_items'          => esc_html__( 'All Recipes', 'cooked' ),
-					'search_items'       => esc_html__( 'Search Recipes', 'cooked' ),
-					'not_found'          => esc_html__( 'No recipes found.', 'cooked' ),
-					'not_found_in_trash' => esc_html__( 'No recipes found in trash.', 'cooked' )
+					'name'               => _x( 'Recipes', 'cooked' ),
+					'singular_name'      => _x( 'Recipe', 'cooked' ),
+					'menu_name'          => __( 'Recipes', 'cooked' ),
+					'name_admin_bar'     => __( 'Recipe', 'cooked' ),
+					'add_new'            => __( 'Add New', 'cooked' ),
+					'add_new_item'       => __( 'Add New Recipe', 'cooked' ),
+					'new_item'           => __( 'New Recipe', 'cooked' ),
+					'edit_item'          => __( 'Edit Recipe', 'cooked' ),
+					'view_item'          => __( 'View Recipe', 'cooked' ),
+					'all_items'          => __( 'All Recipes', 'cooked' ),
+					'search_items'       => __( 'Search Recipes', 'cooked' ),
+					'not_found'          => __( 'No recipes found.', 'cooked' ),
+					'not_found_in_trash' => __( 'No recipes found in trash.', 'cooked' )
 				),
-				'description' => esc_html__('Recipes','cooked'),
+				'description' => __('Recipes', 'cooked'),
 				'public' => $public_recipes,
 				'show_ui' => true,
 				'show_in_admin_bar' => true,
@@ -363,23 +349,22 @@ class Cooked_Post_Types {
 				'rewrite' => array(
 					'with_front' => false,
 					'slug' => $recipe_permalink
-				)
+				),
+				'capability_type' => array('cp_recipe', 'cp_recipes'), // custom capability type
+        		'map_meta_cap' => true, // map_meta_cap must be true
 			))
 		);
 
 		return $post_types;
-
 	}
 
 	public function change_new_recipe_title( $title ) {
-
 		$screen = get_current_screen();
 		if  ( 'cp_recipe' == $screen->post_type ) {
-			$title = esc_html__('Recipe title ...','cooked');
+			$title = __('Recipe title ...', 'cooked');
 		}
 
 		return $title;
-
 	}
 
 }

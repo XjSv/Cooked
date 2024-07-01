@@ -3,7 +3,7 @@
 	<form action="options.php" method="post">
 
 	<div class="cooked-settings-update-button">
-		<?php submit_button( esc_html__( 'Update Settings','cooked' ), 'primary', 'submit', false ); ?>
+		<?php submit_button( __( 'Update Settings','cooked' ), 'primary', 'submit', false ); ?>
 	</div>
 
 	<div class="cooked-settings-header">
@@ -39,8 +39,8 @@
 					<?php
 
 					global $conditions;
-					$conditions = array();
-					$conditional_requirements_js = array();
+					$conditions = [];
+					$conditional_requirements_js = [];
 					$tab_counter = 1;
 
 					foreach( $cooked_settings_tabs_fields as $tab_slug => $tab ):
@@ -75,11 +75,12 @@
 										endif;
 									endif;
 
+
 									echo ( $conditional_requirement ? '<transition name="fade">' : '' );
 									echo '<div' . $conditional_requirement . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
 										echo ( !$notitle ? '<h3 class="cooked-settings-title">' . wp_kses_post( $field['title'] ) . '</h3>' : '' );
 										echo ( isset($field['desc']) && $field['desc'] ? '<p>' . wp_kses_post( $field['desc'] ). '</p>' : '' );
-										$Cooked_Settings->$field_type( $name, $field_options, $color );
+										$Cooked_Settings->$field_type( $name, $field_options, $color, $field );
 									echo '</div>';
 									echo ( $conditional_requirement ? '</transition>' : '' );
 

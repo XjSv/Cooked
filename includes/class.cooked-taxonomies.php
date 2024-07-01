@@ -19,40 +19,39 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Cooked_Taxonomies {
 
-	public static function get(){
+	public static function get() {
 
 		global $query_var;
 
 		$_cooked_settings = Cooked_Settings::get();
 
 		$front_page_id = get_option( 'page_on_front' );
-		if ( $_cooked_settings['browse_page'] == $front_page_id ):
+		if ( $_cooked_settings['browse_page'] == $front_page_id ) {
 			$query_var = false;
-		else:
+		} else {
 			$query_var = true;
-		endif;
+		}
 
 		$taxonomy_permalinks = apply_filters( 'cooked_taxonomy_settings', array(
 			'cp_recipe_category' => ( isset($_cooked_settings['recipe_category_permalink']) && $_cooked_settings['recipe_category_permalink'] ? $_cooked_settings['recipe_category_permalink'] : 'recipe-category' )
 		));
 
 		$taxonomies = apply_filters( 'cooked_taxonomies', array(
-
 			'cp_recipe_category' => array(
 				'hierarchical'        => true,
 				'labels'              => array(
-					'name'                => esc_html__('Categories', 'cooked'),
-					'singular_name'       => esc_html__('Category', 'cooked'),
-					'search_items'        => esc_html__('Search Categories', 'cooked'),
-					'all_items'           => esc_html__('All Categories', 'cooked'),
-					'parent_item'         => esc_html__('Parent Category', 'cooked'),
-					'parent_item_colon'   => esc_html__('Parent Category:', 'cooked'),
-					'edit_item'           => esc_html__('Edit Category', 'cooked'),
-					'update_item'         => esc_html__('Update Category', 'cooked'),
-					'add_new_item'        => esc_html__('Add New Category', 'cooked'),
-					'new_item_name'       => esc_html__('New Category Name', 'cooked'),
-					'menu_name'           => esc_html__('Categories', 'cooked'),
-					'not_found'           => esc_html__('No Categories', 'cooked')
+					'name'                => __('Categories', 'cooked'),
+					'singular_name'       => __('Category', 'cooked'),
+					'search_items'        => __('Search Categories', 'cooked'),
+					'all_items'           => __('All Categories', 'cooked'),
+					'parent_item'         => __('Parent Category', 'cooked'),
+					'parent_item_colon'   => __('Parent Category:', 'cooked'),
+					'edit_item'           => __('Edit Category', 'cooked'),
+					'update_item'         => __('Update Category', 'cooked'),
+					'add_new_item'        => __('Add New Category', 'cooked'),
+					'new_item_name'       => __('New Category Name', 'cooked'),
+					'menu_name'           => __('Categories', 'cooked'),
+					'not_found'           => __('No Categories', 'cooked')
 				),
 				'show_ui'             => true,
 				'show_admin_column'   => true,
@@ -67,11 +66,14 @@ class Cooked_Taxonomies {
 
 		if ( !in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ): unset( $taxonomies['cp_recipe_category'] ); endif;
 
+		// Filters
+		add_filter( 'term_link', ['Cooked_Taxonomies', 'term_link_filter'], 10, 3);
+
 		return $taxonomies;
 
 	}
 
-	public static function single_taxonomy_block( $term_id = false, $style = "block", $taxonomy = "cp_recipe_category" ){
+	public static function single_taxonomy_block( $term_id = false, $style = "block", $taxonomy = "cp_recipe_category" ) {
 
 		if ( !$term_id )
 			return;
@@ -94,10 +96,7 @@ class Cooked_Taxonomies {
 
 	}
 
-	public static function card( $term_id = false, $width = false, $hide_image = false, $hide_total = false, $style = false ){
-
-		global $_cooked_settings;
-
+	public static function card( $term_id = false, $width = false, $hide_image = false, $hide_total = false, $style = false ) {
 		if ( !$term_id )
 			return false;
 
@@ -155,6 +154,34 @@ class Cooked_Taxonomies {
 
 		return false;
 
+	}
+
+	public static function term_link_filter( $url, $term, $taxonomy ) {
+		$_cooked_settings = Cooked_Settings::get();
+
+		$parent_page_browse_page = ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false );
+		$front_page = get_option( 'page_on_front' );
+		$cooked_taxonomies = ['cp_recipe_category'];
+
+		if ( $parent_page_browse_page && in_array($taxonomy, $cooked_taxonomies) ) {
+			if ( $taxonomy === 'cp_recipe_category' ) {
+				$custom_cooked_tax_setting = 'recipe_category_permalink';
+			}
+
+			// $browse_page_id = $_cooked_settings['browse_page'];
+			// $browse_page_link = get_permalink($browse_page_id);
+			// $url_test = $browse_page_link . '?taxonomy=' . $taxonomy . '&term=' . $term->slug;
+
+			if ( $parent_page_browse_page != $front_page && get_option('permalink_structure') ) {
+				$url = esc_url_raw( untrailingslashit( get_permalink( $parent_page_browse_page ) ) . '/' . $_cooked_settings[$custom_cooked_tax_setting] . '/' . $term->slug );
+			} elseif ( $parent_page_browse_page == $front_page ) {
+				$url = esc_url_raw( get_home_url() . '?' . $taxonomy . '=' . ( isset( $term->slug ) ? $term->slug : $taxonomy ) );
+			} else {
+				$url = esc_url_raw( get_permalink( $parent_page_browse_page ) . '&' . $taxonomy . '=' . ( isset( $term->slug ) ? $term->slug : $taxonomy ) );
+			}
+		}
+
+		return $url;
 	}
 
 }

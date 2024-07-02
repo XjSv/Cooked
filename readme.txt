@@ -75,14 +75,22 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.0 is a hotfix to fix the CVE-2024-37308 security vulnerability.
+Version 1.8.0 contains a lot of new features, improvements, bug fixes and security enhancements. It is highly recommended that you update to this version.
 
 == Changelog ==
 
 = 1.8.0 =
-* **NEW:** Added Hands Free Cooking Mode.
-* **TWEAK:** Pretty URLs for pagination links thanks to @morvy.
-* **FIX:** Addressed the CVE-2024-37308 security vulnerability thanks to [re-alter](https://github.com/re-alter).
+* **NEW:** Added Hands Free Cooking Mode for a more convenient cooking experience.
+* **TWEAK:** Improved pretty URLs for pagination links thanks to [morvy](https://github.com/morvy).
+* **TWEAK:** Improved the way recipe categories and tags are handled for better site performance.
+* **TWEAK:** Optimized the plugin's performance by streamlining code and improving how external libraries are loaded.
+* **TWEAK:** Updated language files for better international support.
+* **FIX:** Implemented several security enhancements to keep your site safe and secure.
+* **FIX:** Fixed an issue with the recipe gallery editing feature.
+* **FIX:** Improved user permissions system for better control over who can edit recipes and templates.
+* **FIX:** Resolved various bugs related to recipe display and functionality.
+* **FIX:** Fixed an issue with the full-screen mode of the image viewer.
+* **FIX:** Corrected the display of recipe nutrition information.
 
 = 1.7.15.4 =
 * **FIX:** Serving Size Not Changing Ingredients.

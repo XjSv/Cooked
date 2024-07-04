@@ -43,12 +43,14 @@ class Cooked_Roles {
             $wp_roles->add_cap('subscriber', "edit_{$plural}");
             $wp_roles->add_cap('subscriber', "read_{$singular}");
 
+            $wp_roles->add_cap('contributor', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->add_cap('contributor', "edit_{$singular}");
             $wp_roles->add_cap('contributor', "edit_{$plural}");
             $wp_roles->add_cap('contributor', "read_{$singular}");
             $wp_roles->add_cap('contributor', "delete_{$singular}");
             $wp_roles->add_cap('contributor', "delete_{$plural}");
 
+            $wp_roles->add_cap('author', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->add_cap('author', "edit_{$singular}");
             $wp_roles->add_cap('author', "edit_{$plural}");
             $wp_roles->add_cap('author', "publish_{$plural}");
@@ -58,6 +60,7 @@ class Cooked_Roles {
             $wp_roles->add_cap('author', "edit_published_{$plural}");
             $wp_roles->add_cap('author', "delete_published_{$plural}");
 
+            $wp_roles->add_cap('editor', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->add_cap('editor', "edit_{$singular}");
             $wp_roles->add_cap('editor', "edit_{$plural}");
             $wp_roles->add_cap('editor', "edit_others_{$plural}");
@@ -73,6 +76,7 @@ class Cooked_Roles {
             $wp_roles->add_cap('editor', "delete_published_{$plural}");
 
             // Recipe Editor
+            $wp_roles->add_cap('cooked_recipe_editor', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->add_cap('cooked_recipe_editor', 'approve_cooked_recipes'); // Approve Recipes
             $wp_roles->add_cap('cooked_recipe_editor', 'edit_cooked_default_template'); // Edit Default Template
             $wp_roles->add_cap('cooked_recipe_editor', "edit_{$singular}");
@@ -90,6 +94,7 @@ class Cooked_Roles {
             $wp_roles->add_cap('cooked_recipe_editor', "delete_published_{$plural}");
 
             // Administrator
+            $wp_roles->add_cap('administrator', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->add_cap('administrator', 'edit_cooked_settings' ); // Cooked Settings
             $wp_roles->add_cap('administrator', 'approve_cooked_recipes'); // Approve Recipes
             $wp_roles->add_cap('administrator', 'edit_cooked_default_template'); // Edit Default Template
@@ -126,12 +131,14 @@ class Cooked_Roles {
             $wp_roles->remove_cap('subscriber', "edit_{$plural}");
             $wp_roles->remove_cap('subscriber', "read_{$singular}");
 
+            $wp_roles->remove_cap('contributor', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->remove_cap('contributor', "edit_{$singular}");
             $wp_roles->remove_cap('contributor', "edit_{$plural}");
             $wp_roles->remove_cap('contributor', "read_{$singular}");
             $wp_roles->remove_cap('contributor', "delete_{$singular}");
             $wp_roles->remove_cap('contributor', "delete_{$plural}");
 
+            $wp_roles->remove_cap('author', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->remove_cap('author', "edit_{$singular}");
             $wp_roles->remove_cap('author', "edit_{$plural}");
             $wp_roles->remove_cap('author', "publish_{$plural}");
@@ -141,6 +148,7 @@ class Cooked_Roles {
             $wp_roles->remove_cap('author', "edit_published_{$plural}");
             $wp_roles->remove_cap('author', "delete_published_{$plural}");
 
+            $wp_roles->remove_cap('editor', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->remove_cap('editor', "edit_{$singular}");
             $wp_roles->remove_cap('editor', "edit_{$plural}");
             $wp_roles->remove_cap('editor', "edit_others_{$plural}");
@@ -156,6 +164,7 @@ class Cooked_Roles {
             $wp_roles->remove_cap('editor', "delete_published_{$plural}");
 
             // Edit Recipes
+            $wp_roles->remove_cap('cooked_recipe_editor', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->remove_cap('cooked_recipe_editor', 'approve_cooked_recipes'); // Approve Recipes
             $wp_roles->remove_cap('cooked_recipe_editor', 'edit_cooked_default_template'); // Edit Default Template
             $wp_roles->remove_cap('cooked_recipe_editor', "edit_{$singular}");
@@ -173,6 +182,7 @@ class Cooked_Roles {
             $wp_roles->remove_cap('cooked_recipe_editor', "delete_published_{$plural}");
 
             // Administrator
+            $wp_roles->remove_cap('administrator', 'edit_cooked_recipes' ); // DEPRECATED: Edit Cooked Recipes @TODO: Remove this in a future version
             $wp_roles->remove_cap('administrator', 'edit_cooked_settings'); // Recipe Settings
             $wp_roles->remove_cap('administrator', 'approve_cooked_recipes'); // Approve Recipes
             $wp_roles->remove_cap('administrator', 'edit_cooked_default_template'); // Edit Default Template

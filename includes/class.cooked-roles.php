@@ -16,7 +16,7 @@ class Cooked_Roles {
         $caps = apply_filters('cooked_recipe_editor_caps', [
             'manage_categories' => 1,
             'upload_files' => 1,
-            'unfiltered_html' => 0,
+            'unfiltered_html' => 1,
         ]);
 
         add_role('cooked_recipe_editor', __('Recipe Editor', 'cooked'), $caps);
@@ -39,30 +39,23 @@ class Cooked_Roles {
         }
 
         if (is_object($wp_roles)) {
-
             $wp_roles->add_cap('subscriber', "edit_{$singular}");
             $wp_roles->add_cap('subscriber', "edit_{$plural}");
             $wp_roles->add_cap('subscriber', "read_{$singular}");
-            $wp_roles->add_cap('subscriber', "read_private_{$plural}");
-            $wp_roles->add_cap('subscriber', "edit_private_{$plural}");
 
             $wp_roles->add_cap('contributor', "edit_{$singular}");
             $wp_roles->add_cap('contributor', "edit_{$plural}");
             $wp_roles->add_cap('contributor', "read_{$singular}");
-            $wp_roles->add_cap('contributor', "read_private_{$plural}");
             $wp_roles->add_cap('contributor', "delete_{$singular}");
             $wp_roles->add_cap('contributor', "delete_{$plural}");
-            $wp_roles->add_cap('contributor', "delete_private_{$plural}");
-            $wp_roles->add_cap('contributor', "edit_private_{$plural}");
 
             $wp_roles->add_cap('author', "edit_{$singular}");
             $wp_roles->add_cap('author', "edit_{$plural}");
+            $wp_roles->add_cap('author', "publish_{$plural}");
             $wp_roles->add_cap('author', "read_{$singular}");
-            $wp_roles->add_cap('author', "read_private_{$plural}");
             $wp_roles->add_cap('author', "delete_{$singular}");
             $wp_roles->add_cap('author', "delete_{$plural}");
-            $wp_roles->add_cap('author', "delete_private_{$plural}");
-            $wp_roles->add_cap('author', "edit_private_{$plural}");
+            $wp_roles->add_cap('author', "edit_published_{$plural}");
             $wp_roles->add_cap('author', "delete_published_{$plural}");
 
             $wp_roles->add_cap('editor', "edit_{$singular}");
@@ -132,26 +125,20 @@ class Cooked_Roles {
             $wp_roles->remove_cap('subscriber', "edit_{$singular}");
             $wp_roles->remove_cap('subscriber', "edit_{$plural}");
             $wp_roles->remove_cap('subscriber', "read_{$singular}");
-            $wp_roles->remove_cap('subscriber', "read_private_{$plural}");
-            $wp_roles->remove_cap('subscriber', "edit_private_{$plural}");
 
             $wp_roles->remove_cap('contributor', "edit_{$singular}");
             $wp_roles->remove_cap('contributor', "edit_{$plural}");
             $wp_roles->remove_cap('contributor', "read_{$singular}");
-            $wp_roles->remove_cap('contributor', "read_private_{$plural}");
             $wp_roles->remove_cap('contributor', "delete_{$singular}");
             $wp_roles->remove_cap('contributor', "delete_{$plural}");
-            $wp_roles->remove_cap('contributor', "delete_private_{$plural}");
-            $wp_roles->remove_cap('contributor', "edit_private_{$plural}");
 
             $wp_roles->remove_cap('author', "edit_{$singular}");
             $wp_roles->remove_cap('author', "edit_{$plural}");
+            $wp_roles->remove_cap('author', "publish_{$plural}");
             $wp_roles->remove_cap('author', "read_{$singular}");
-            $wp_roles->remove_cap('author', "read_private_{$plural}");
             $wp_roles->remove_cap('author', "delete_{$singular}");
             $wp_roles->remove_cap('author', "delete_{$plural}");
-            $wp_roles->remove_cap('author', "delete_private_{$plural}");
-            $wp_roles->remove_cap('author', "edit_private_{$plural}");
+            $wp_roles->remove_cap('author', "edit_published_{$plural}");
             $wp_roles->remove_cap('author', "delete_published_{$plural}");
 
             $wp_roles->remove_cap('editor', "edit_{$singular}");

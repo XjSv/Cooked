@@ -392,13 +392,13 @@ class Cooked_Recipes {
 	}
 
 	public function filter_recipes_by_taxonomy() {
-		global $typenow,$cooked_taxonomies_shown;
-		$taxonomies = apply_filters( 'cooked_active_taxonomies', array( 'cp_recipe_category', 'cp_recipe_cooking_method', 'cp_recipe_cuisine', 'cp_recipe_tags', 'cp_recipe_diet'  ) ); // @todo Check this
+		global $typenow, $cooked_taxonomies_shown;
+		$taxonomies = apply_filters( 'cooked_active_taxonomies', ['cp_recipe_category'] ); // @todo Check this
 		if ( $typenow == 'cp_recipe' ):
 			foreach( $taxonomies as $taxonomy ):
 				if ( is_array($cooked_taxonomies_shown) && !in_array( $taxonomy, $cooked_taxonomies_shown ) || !is_array($cooked_taxonomies_shown) ):
 					$cooked_taxonomies_shown[] = $taxonomy;
-					$selected      = isset($_GET[$taxonomy]) ? sanitize_title($_GET[$taxonomy]) : '';
+					$selected = isset($_GET[$taxonomy]) ? sanitize_title($_GET[$taxonomy]) : '';
 					$info_taxonomy = get_taxonomy($taxonomy);
 					$taxonomy_label = $info_taxonomy->label;
 
@@ -421,8 +421,8 @@ class Cooked_Recipes {
 
 	public function custom_taxonomy_in_query($query) {
 		global $pagenow;
-		$taxonomies = apply_filters( 'cooked_active_taxonomies', array( 'cp_recipe_category', 'cp_recipe_cooking_method', 'cp_recipe_cuisine', 'cp_recipe_tags', 'cp_recipe_diet' ) ); // @todo Check this
-		$q_vars    = &$query->query_vars;
+		$taxonomies = apply_filters( 'cooked_active_taxonomies', array( 'cp_recipe_category'/*, 'cp_recipe_cooking_method', 'cp_recipe_cuisine', 'cp_recipe_tags', 'cp_recipe_diet' */ ) ); // @todo Check this
+		$q_vars = &$query->query_vars;
 		foreach( $taxonomies as $taxonomy ):
 			if ( $pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == 'cp_recipe' && isset($q_vars[$taxonomy]) && is_numeric($q_vars[$taxonomy]) && $q_vars[$taxonomy] != 0 ):
 				$term = get_term_by('id', $q_vars[$taxonomy], $taxonomy);
@@ -431,8 +431,7 @@ class Cooked_Recipes {
 		endforeach;
 	}
 
-	public static function list_view( $list_atts = false ){
-
+	public static function list_view( $list_atts = false ) {
 		global $wp_query,$recipe_query,$atts,$_cooked_settings,$recipes,$recipe_query,$recipe_args,$current_recipe_page;
 
 		// Get the attributes for this view

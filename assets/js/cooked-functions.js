@@ -116,32 +116,28 @@ var cooked_loading = false;
         }
 
         /****   6. Timers   ****/
-
-        function init_cooked_timers( Cooked_Timers ){
-
-            Cooked_Timers.on( 'click', function(e) {
-
+        function init_cooked_timers(Cooked_Timers) {
+            Cooked_Timers.on('click', function(e) {
                 e.preventDefault();
+
                 var thisTimer = $(this),
                     timerID = 'cookedTimer-' + thisTimer.data('timer-id'),
                     totalTimers = $('#cooked-timers-wrap').find('.cooked-timer-block').length,
                     visibleClass, newHeight;
 
                 // This timer is already here, let's just flash it.
-                if ( $( 'div#' + timerID ).length ){
+                if ($('div#' + timerID).length) {
+                    $('div#' + timerID).css({ 'background' : '#eeeeee' });
+                    setTimeout(function() {
+                        $('div#' + timerID).css({ 'background' : '' });
+                    }, 200);
 
-                    $( 'div#' + timerID ).css({ 'background' : '#eeeeee' });
-                    setTimeout(function(){
-                        $( 'div#' + timerID ).css({ 'background' : '' });
-                    },200);
                     return;
-
                 } else {
-
                     // Only 4 timers allowed at a time.
-                    if ( totalTimers == 4 ){
+                    if (totalTimers == 4) {
                         $('#cooked-timers-wrap').css({ 'transform' : 'translate3d(0,0.5em,0)' });
-                        setTimeout(function(){
+                        setTimeout(function() {
                             $('#cooked-timers-wrap').css({ 'transform' : '' });
                         },200);
                         return;
@@ -150,59 +146,103 @@ var cooked_loading = false;
                     // Okay we're good to go, let's add this timer!
                     totalTimers = totalTimers + 1;
                     newHeight = totalTimers * 7.5;
-                    if ( thisTimer.parents('.cooked-single-direction').length ){
+                    if (thisTimer.parents('.cooked-single-direction').length) {
                         var thisStep = thisTimer.parents('.cooked-single-direction').data('step');
                     } else {
                         var thisStep = cooked_js_vars.i18n_timer;
                     }
-                    var Timer = { id:timerID, seconds:thisTimer.data('seconds'), step:thisStep, desc:thisTimer.data('desc') };
+
+                    var Timer = {
+                        id: timerID,
+                        seconds: thisTimer.data('seconds'),
+                        step: thisStep,
+                        desc: thisTimer.data('desc')
+                    };
 
                     // Timers wrap already there?
-                    if ( $( '#cooked-timers-wrap' ).length ){
-
-                        if ( totalTimers == 1 ){
+                    if ($('#cooked-timers-wrap').length) {
+                        if (totalTimers == 1) {
                             visibleClass = ' cooked-visible';
                         } else {
                             visibleClass = '';
                         }
 
-                        if ( totalTimers > multiplesTrigger ){
+                        if (totalTimers > multiplesTrigger) {
                             $('#cooked-timers-wrap').addClass('cooked-multiples');
                         } else {
                             $('#cooked-timers-wrap').removeClass('cooked-multiples');
                         }
 
                         $('#cooked-timers-wrap').addClass('cooked-visible');
-                        $( '#cooked-timers-wrap' ).append('<div id="' + Timer.id + '" class="cooked-timer-block' + visibleClass + '"><span class="cooked-timer-step">' + Timer.step + '</span><span class="cooked-timer-desc">' + Timer.desc + '</span><div class="cooked-timer-obj" data-seconds-left="' + Timer.seconds + '"></div><i class="cooked-icon cooked-icon-times"></i><div class="cooked-progress"><span></span></div></div>');
-                        var thisTimerObj = $( '#' + Timer.id ).find('.cooked-timer-obj');
-                        cookedTimer( thisTimerObj, false );
-                        setTimeout( function(){
+                        let timerBlock = cookedTimerBlock(Timer, visibleClass);
+                        $('#cooked-timers-wrap').append(timerBlock);
+
+                        var thisTimerObj = $('#' + Timer.id).find('.cooked-timer-obj');
+
+                        cookedTimer(thisTimerObj, false);
+
+                        setTimeout(function() {
                             $('#cooked-timers-wrap').css({ 'height' : newHeight + 'em' });
                             $('.cooked-timer-block').addClass('cooked-visible');
-                        },50);
-
+                        }, 50);
                     } else {
+                        let timerWrap = $('<div>', { id: 'cooked-timers-wrap' });
+                        let timerBlock = cookedTimerBlock(Timer);
+                        timerWrap.append(timerBlock);
 
-                        $('body').append('<div id="cooked-timers-wrap"><div id="' + Timer.id + '" class="cooked-timer-block cooked-visible"><span class="cooked-timer-step">' + Timer.step + '</span><span class="cooked-timer-desc">' + Timer.desc + '</span><div class="cooked-timer-obj" data-seconds-left="' + Timer.seconds + '"></div><i class="cooked-icon cooked-icon-times"></i><div class="cooked-progress"><span></span></div></div></div>');
-                        var thisTimerObj = $( '#' + Timer.id ).find('.cooked-timer-obj');
-                        cookedTimer( thisTimerObj, false );
-                        setTimeout( function(){
+                        $('body').append(timerWrap);
+                        var thisTimerObj = $('#' + Timer.id).find('.cooked-timer-obj');
+                        cookedTimer(thisTimerObj, false);
+
+                        setTimeout(function() {
                             $('#cooked-timers-wrap').addClass('cooked-visible');
-                        },50);
-
+                        }, 50);
                     }
-
-
                 }
-
             });
-
         }
 
-        function cookedTimer( timerObj, startPaused ){
+        function cookedTimerBlock(Timer, visibleClass = 'cooked-visible') {
+            // Create the second div with dynamic id and classes
+            let timerBlock = $('<div>', {
+                id: Timer.id,
+                class: 'cooked-timer-block ' + visibleClass
+            });
 
+            // Create and append the step span
+            $('<span>', {
+                class: 'cooked-timer-step',
+                text: Timer.step
+            }).appendTo(timerBlock);
+
+            // Create and append the description span
+            $('<span>', {
+                class: 'cooked-timer-desc',
+                text: Timer.desc
+            }).appendTo(timerBlock);
+
+            // Create and append the timer object div
+            $('<div>', {
+                class: 'cooked-timer-obj',
+                'data-seconds-left': Timer.seconds
+            }).appendTo(timerBlock);
+
+            // Create and append the icon
+            $('<i>', {
+                class: 'cooked-icon cooked-icon-times'
+            }).appendTo(timerBlock);
+
+            // Create and append the progress bar
+            let progress = $('<div>', { class: 'cooked-progress' });
+            $('<span>').appendTo(progress);
+            progress.appendTo(timerBlock);
+
+            return timerBlock;
+        }
+
+        function cookedTimer(timerObj, startPaused) {
             var timer_sound = cooked_js_vars.timer_sound;
-            var audio = new Audio( timer_sound );
+            var audio = new Audio(timer_sound);
 
             var thisTimerID = timerObj.parents('.cooked-timer-block').attr('id'),
                 secondsLeft = timerObj.data('seconds-left'),
@@ -216,9 +256,9 @@ var cooked_loading = false;
                     clearDiv: 'cooked-timer-clearDiv',
                     timeout: 'cooked-timer-timeout'
                 },
-                onComplete: function(){
+                onComplete: function() {
                     audio.play();
-                    timerObj.addClass( 'cooked-timer-complete' );
+                    timerObj.addClass('cooked-timer-complete');
                 }
             });
 

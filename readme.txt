@@ -84,6 +84,8 @@ Version 1.8.1 contains a lot of new features, improvements, bug fixes and securi
 * **FIX:** Fixed text formatting being removed from recipe excerpt.
 * **NEW:** Added TinyMCE WYWIWYG editor to the recipe excerpt and directions fields.
 * **FIX:** Enabled REST API for recipe categories.
+* **FIX:** Fixed permission bug with saving the recipe default template.
+* **FIX:** Fixed bug where in the recipe creation page the author field was previously showing all users.
 
 = 1.8.0 =
 * **NEW:** Added Hands Free Cooking Mode for a more convenient cooking experience.
@@ -91,9 +93,9 @@ Version 1.8.1 contains a lot of new features, improvements, bug fixes and securi
 * **TWEAK:** Improved the way recipe categories and tags are handled for better site performance.
 * **TWEAK:** Optimized the plugin's performance by streamlining code and improving how external libraries are loaded.
 * **TWEAK:** Updated language files for better international support.
-* **FIX:** Implemented several security enhancements to keep your site safe and secure.
-* **FIX:** Fixed an issue with the recipe gallery editing feature.
-* **FIX:** Improved user permissions system for better control over who can edit recipes and templates.
+* **FIX:** Implemented several security enhancements to keep your site safe and secure thanks to [re-alter](https://github.com/re-alter).
+* **FIX:** Fixed an issue with the recipe gallery editing feature thanks to [re-alter](https://github.com/re-alter).
+* **FIX:** Improved user permissions system for better control over who can edit recipes and templates thanks to [re-alter](https://github.com/re-alter).
 * **FIX:** Resolved various bugs related to recipe display and functionality.
 * **FIX:** Fixed an issue with the full-screen mode of the image viewer.
 * **FIX:** Corrected the display of recipe nutrition information.

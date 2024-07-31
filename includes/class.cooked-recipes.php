@@ -28,7 +28,6 @@ class Cooked_Recipes {
 		add_action( 'cooked_check_recipe_query', [&$this, 'check_recipe_query'], 10 );
 		add_action( 'pre_get_posts', [&$this, 'cooked_pre_get_posts'], 10, 1 );
 		add_action( 'restrict_manage_posts', [&$this, 'filter_recipes_by_taxonomy'], 10 );
-
 	}
 
 	public static function get( $args = false, $single = false, $ids_only = false ) {

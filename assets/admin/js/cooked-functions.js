@@ -424,31 +424,31 @@ var $_CookedConditionalTimeout  = false;
 
         }
 
-        if ($_CookedDirectionBuilder.length){
+        if ($_CookedDirectionBuilder.length) {
 
             cooked_reset_direction_builder();
 
-            $_CookedDirectionBuilder.parent().on('click','.cooked-add-direction-button',function(e){
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-add-direction-button',function(e) {
                 e.preventDefault();
                 var clonedDirectionTemplate = $_CookedDirectionBuilder.parent().find('.cooked-direction-template').clone().removeClass('cooked-template cooked-direction-template').addClass('cooked-direction-block');
                 $_CookedDirectionBuilder.append(clonedDirectionTemplate);
                 cooked_reset_direction_builder();
             });
 
-            $_CookedDirectionBuilder.parent().on('click','.cooked-add-heading-button',function(e){
+            $_CookedDirectionBuilder.parent().on('click','.cooked-add-heading-button',function(e) {
                 e.preventDefault();
                 var clonedHeadingTemplate = $_CookedDirectionBuilder.parent().find('.cooked-heading-template').clone().removeClass('cooked-template cooked-heading-template').addClass('cooked-direction-block cooked-direction-heading');
                 $_CookedDirectionBuilder.append(clonedHeadingTemplate);
                 cooked_reset_direction_builder();
             });
 
-            $_CookedDirectionBuilder.parent().on('click','.cooked-delete-direction',function(e){
+            $_CookedDirectionBuilder.parent().on('click','.cooked-delete-direction',function(e) {
                 e.preventDefault();
                 $(this).parent().remove();
                 cooked_reset_direction_builder();
             });
 
-            $_CookedDirectionBuilder.parent().on('click','.remove-image-button',function(e){
+            $_CookedDirectionBuilder.parent().on('click', '.remove-image-button',function(e) {
                 e.preventDefault();
                 $(this).parent().removeClass('cooked-has-image');
                 $(this).parent().find('img').remove();
@@ -459,14 +459,14 @@ var $_CookedConditionalTimeout  = false;
             // Instantiates the variable that holds the media library frame.
             var direction_image_frame,directionID;
 
-            $('body').on('click','.cooked-direction-img-placeholder, .cooked-direction-img',function(e){
+            $('body').on('click','.cooked-direction-img-placeholder, .cooked-direction-img',function(e) {
                 e.preventDefault();
                 var thisButton = $(this).parent().find('.direction-image-button');
                 thisButton.trigger('click');
             });
 
             // Runs when the image button is clicked.
-            $('body').on('click','.direction-image-button',function(e){
+            $('body').on('click', '.direction-image-button',function(e) {
 
                 var thisButton = $(this);
                 directionID = thisButton.data('id');
@@ -487,7 +487,7 @@ var $_CookedConditionalTimeout  = false;
                 });
 
                 // Runs when an image is selected.
-                direction_image_frame.on('select', function(){
+                direction_image_frame.on('select', function() {
 
                     // Grabs the attachment selection and creates a JSON representation of the model.
                     var media_attachment = direction_image_frame.state().get('selection').first().toJSON();
@@ -495,13 +495,17 @@ var $_CookedConditionalTimeout  = false;
                     // Sends the attachment URL to our custom image input field.
                     $('#direction-'+directionID+'-image-src').attr('src',media_attachment.sizes.thumbnail.url).parent().addClass('cooked-has-image');
                     $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val( media_attachment.id );
-                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value',cooked_js_vars.i18n_image_change );
+                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value', cooked_js_vars.i18n_image_change );
 
                 });
 
                 // Opens the media library frame.
                 direction_image_frame.open();
             });
+
+            if ($(".cooked-wysiwyg-editor").length) {
+                $(".cooked-wysiwyg-editor").attr('data-direction-part', 'content');
+            }
 
         }
 
@@ -788,45 +792,43 @@ function cooked_reset_ingredient_builder() {
 }
 
 // Reset Time Picker Settings & Names
-function cooked_reset_direction_builder(){
+function cooked_reset_direction_builder() {
 
     var directionBlocks = jQuery('.cooked-direction-block'),
         total_blocks = 0;
 
-    directionBlocks.each(function(){
-
+    directionBlocks.each(function() {
         var randomKeyForInterval = cooked_get_random_int(10000000,99999999);
         total_blocks++;
 
         // Set the input "name" values.
         var $_this = jQuery(this);
 
-        $_this.find("[data-direction-part]").each(function(){
-
+        $_this.find("[data-direction-part]").each(function() {
             var thisField = jQuery(this);
-            if ( thisField.attr('name') == ''){
+
+            if ( thisField.attr('name') == '') {
                 var directionPartName = thisField.data('direction-part');
                 thisField.attr( 'name','_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']' );
             }
-            if ( thisField.attr('data-id') == ''){
+
+            if ( thisField.attr('data-id') == '') {
                 thisField.attr( 'data-id',randomKeyForInterval );
             }
-            if ( thisField.attr('id') == ''){
+
+            if ( thisField.attr('id') == '') {
                 var directionPartName = thisField.data( 'direction-part' );
                 directionPartName = directionPartName.replace( '_', '-' );
                 thisField.attr( 'id','direction-'+randomKeyForInterval+'-'+directionPartName);
             }
-
         });
-
     });
 
-    if ( total_blocks ){
-        jQuery('#cooked-directions-builder').css( { 'margin-bottom':'20px' } );
+    if ( total_blocks ) {
+        jQuery('#cooked-directions-builder').css( { 'margin-bottom': '20px' } );
     } else {
-        jQuery('#cooked-directions-builder').css( { 'margin-bottom':'12px' } );
+        jQuery('#cooked-directions-builder').css( { 'margin-bottom': '12px' } );
     }
-
 }
 
 // Get random integer for sortable lists (ingredients and directions)

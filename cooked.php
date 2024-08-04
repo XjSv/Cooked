@@ -4,8 +4,8 @@
 Plugin Name: 	Cooked - Recipe Management
 Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
-Author: 		Boxy Studio
-Author URI: 	https://boxystudio.com
+Author: 		Gora Tech
+Author URI: 	https://goratech.dev
 Version: 		1.8.1
 Text Domain: 	cooked
 Domain Path: 	languages

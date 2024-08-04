@@ -1169,7 +1169,7 @@ class Cooked_Recipes {
 	}
 
 	// Sync up the Cooked 2.x Classic recipe meta fields to the new Cooked 3.x meta fields
-	public static function sync_c2_recipe_settings( $c2_recipe_settings, $recipe_id ){
+	public static function sync_c2_recipe_settings( $c2_recipe_settings, $recipe_id ) {
 		$recipe_settings = [];
 		$ingredients = [];
 		$directions = [];

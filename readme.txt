@@ -1,5 +1,5 @@
 === Cooked - Recipe Management ===
-Contributors: boxystudio, xjsv
+Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.6.1

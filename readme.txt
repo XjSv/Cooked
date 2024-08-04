@@ -75,7 +75,7 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.1 contains a lot of new features, improvements, bug fixes and security enhancements. It is highly recommended that you update to this version.
+Version 1.8.1 includes a fix for a persistent cross-site scripting vulnerability via the Cooked Timer. Please update immediately.
 
 == Changelog ==
 

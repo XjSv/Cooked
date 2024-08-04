@@ -22,18 +22,15 @@ class Cooked_Admin_Enqueues {
 	public static $admin_colors;
 
 	function __construct() {
-
-		add_action( 'admin_enqueue_scripts', array(&$this, 'admin_enqueues'), 10, 1 );
-		add_action( 'admin_enqueue_scripts', array(&$this, 'widget_enqueues'), 11, 1 );
-		add_action( 'customize_controls_enqueue_scripts', array(&$this, 'enqueue_widgets'), 10, 1 );
-
+		add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueues'], 10, 1 );
+		add_action( 'admin_enqueue_scripts', [&$this, 'widget_enqueues'], 11, 1 );
+		add_action( 'customize_controls_enqueue_scripts', [&$this, 'enqueue_widgets'], 10, 1 );
 	}
 
-	public static function enqueue_widgets(){
-
-		$cooked_js_vars = array(
-			'rest_url' => esc_url( get_rest_url() ),
-		);
+	public static function enqueue_widgets() {
+		$cooked_js_vars = [
+			'rest_url' => esc_url(get_rest_url()),
+		];
 
 		// Gonna need jQuery
 		wp_enqueue_script( 'jquery' );
@@ -41,14 +38,13 @@ class Cooked_Admin_Enqueues {
 		// Selectize (searchable select fields)
 		wp_enqueue_style( 'cooked-selectize', COOKED_URL . '/assets/admin/css/selectize/selectize.css', [], COOKED_VERSION );
     	wp_enqueue_style( 'cooked-selectize-custom', COOKED_URL . '/assets/admin/css/selectize/cooked-selectize.css', [], COOKED_VERSION );
-    	wp_enqueue_script( 'cooked-selectize', COOKED_URL . '/assets/admin/js/selectize/selectize.min.js', array('jquery'), '0.12.6', true );
-        wp_enqueue_script( 'cooked-microplugin', COOKED_URL . '/assets/admin/js/selectize/microplugin.min.js', array('jquery'), '0.0.3', true );
+    	wp_enqueue_script( 'cooked-selectize', COOKED_URL . '/assets/admin/js/selectize/selectize.min.js', ['jquery'], '0.12.6', true );
+        wp_enqueue_script( 'cooked-microplugin', COOKED_URL . '/assets/admin/js/selectize/microplugin.min.js', ['jquery'], '0.0.3', true );
 
         // Cooked Widgets JS
-    	wp_register_script( 'cooked-widgets', COOKED_URL . '/assets/admin/js/cooked-widgets.js', array('jquery'), COOKED_VERSION, true );
+    	wp_register_script( 'cooked-widgets', COOKED_URL . '/assets/admin/js/cooked-widgets.js', ['jquery'], COOKED_VERSION, true );
         wp_localize_script( 'cooked-widgets', 'cooked_js_vars', $cooked_js_vars );
 		wp_enqueue_script( 'cooked-widgets');
-
 	}
 
 	public function widget_enqueues( $hook ) {
@@ -58,10 +54,9 @@ class Cooked_Admin_Enqueues {
 	}
 
 	public function admin_enqueues( $hook ) {
+		global $post, $typenow, $pagenow;
 
-		global $post,$typenow,$pagenow;
-
-		$cooked_admin_hooks = array(
+		$cooked_admin_hooks = [
 			'index.php',
 			'post-new.php',
 			'post.php',
@@ -70,7 +65,7 @@ class Cooked_Admin_Enqueues {
 			'cooked_welcome',
 			'cooked_pending',
 			'cooked_pro'
-		);
+		];
 
 		$min = COOKED_DEV ? '' : '.min';
 
@@ -126,33 +121,33 @@ class Cooked_Admin_Enqueues {
 	    		wp_enqueue_script( 'cooked-switchery', COOKED_URL . 'assets/admin/js/switchery/switchery.min.js', [], COOKED_VERSION, true );
 	    		wp_enqueue_script( 'cooked-vue', COOKED_URL . 'assets/admin/js/vue/vue'.$min.'.js', [], COOKED_VERSION, false );
 
-		        $cooked_js_vars = array(
-					'ajax_url' => admin_url( 'admin-ajax.php' ),
+		        $cooked_js_vars = [
+					'ajax_url' => admin_url('admin-ajax.php'),
 					'cooked_plugin_url' => COOKED_URL,
-					'time_format' => get_option('time_format','g:ia'),
-					'i18n_remaining' => __( 'remaining', 'cooked' ),
-					'i18n_image_title' => __( 'Add Image', 'cooked' ),
-					'i18n_image_change' => __( 'Change Image', 'cooked' ),
-	                'i18n_image_button' => __( 'Use this Image', 'cooked' ),
-	                'i18n_gallery_image_title' => __( 'Add to Gallery', 'cooked' ),
-	                'i18n_edit_image_title' => __( 'Edit Gallery Item', 'cooked' ),
-	                'i18n_edit_image_button' => __( 'Update Gallery Item', 'cooked' ),
-	                'i18n_saved' => __('Saved','cooked'),
-	                'i18n_applied' => __('Applied','cooked'),
-					'i18n_confirm_save_default_all' => __('Are you sure you want to apply this new template to all of your recipes?','cooked'),
-					'i18n_confirm_load_default' => __('Are you sure you want to reset this recipe template to the Cooked plugin default?','cooked'),
+					'time_format' => get_option('time_format', 'g:ia'),
+					'i18n_remaining' => __('remaining', 'cooked'),
+					'i18n_image_title' => __('Add Image', 'cooked'),
+					'i18n_image_change' => __('Change Image', 'cooked'),
+					'i18n_image_button' => __('Use this Image', 'cooked'),
+					'i18n_gallery_image_title' => __('Add to Gallery', 'cooked'),
+					'i18n_edit_image_title' => __('Edit Gallery Item', 'cooked'),
+					'i18n_edit_image_button' => __('Update Gallery Item', 'cooked'),
+					'i18n_saved' => __('Saved', 'cooked'),
+					'i18n_applied' => __('Applied', 'cooked'),
+					'i18n_confirm_save_default_all' => __('Are you sure you want to apply this new template to all of your recipes?', 'cooked'),
+					'i18n_confirm_load_default' => __('Are you sure you want to reset this recipe template to the Cooked plugin default?', 'cooked'),
 					/* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
-					'i18n_confirm_migrate_recipes' => sprintf( __('Please confirm that you are ready to migrate all %s recipes.','cooked'), number_format($total_old_recipes) ),
-				);
+					'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
+				];
 
 				// Cooked Admin Style Assets
-		    	wp_register_script( 'cooked-functions', COOKED_URL . 'assets/admin/js/cooked-functions'.$min.'.js', array('jquery'), COOKED_VERSION, true );
-		    	wp_register_script( 'cooked-migration', COOKED_URL . 'assets/admin/js/cooked-migration'.$min.'.js', array('jquery'), COOKED_VERSION, true );
+		    	wp_register_script( 'cooked-functions', COOKED_URL . 'assets/admin/js/cooked-functions'.$min.'.js', ['jquery'], COOKED_VERSION, true );
+		    	wp_register_script( 'cooked-migration', COOKED_URL . 'assets/admin/js/cooked-migration'.$min.'.js', ['jquery'], COOKED_VERSION, true );
 				wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/admin/css/style'.$min.'.css', [], COOKED_VERSION );
 				wp_enqueue_style( 'wp-color-picker' );
 
 				// Tooltipster
-				wp_enqueue_script('cooked-tooltipster', COOKED_URL . 'assets/admin/js/tooltipster/jquery.tooltipster.min.js', array('jquery'), COOKED_VERSION, true );
+				wp_enqueue_script('cooked-tooltipster', COOKED_URL . 'assets/admin/js/tooltipster/jquery.tooltipster.min.js', ['jquery'], COOKED_VERSION, true );
 				wp_enqueue_style('cooked-tooltipster-core', COOKED_URL . 'assets/admin/css/tooltipster/tooltipster.min.css', [], COOKED_VERSION, 'screen' );
 				wp_enqueue_style('cooked-tooltipster-theme', COOKED_URL . 'assets/admin/css/tooltipster/themes/tooltipster-light.min.css', [], COOKED_VERSION, 'screen' );
 
@@ -163,9 +158,7 @@ class Cooked_Admin_Enqueues {
 				wp_enqueue_script('cooked-migration');
 
 			endif;
-
 	    }
-
 	}
 
 }

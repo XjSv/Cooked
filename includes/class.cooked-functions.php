@@ -12,13 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Cooked_Functions {
 
-	public static function sanitize_text_field( $text ){
+	public static function sanitize_text_field( $text ) {
 		$text = htmlentities( stripslashes( $text ) );
 		$text = sanitize_text_field( $text );
 		return $text;
 	}
 
-	public static function array_splice_assoc( &$input, $offset, $length, $replacement = array() ) {
+	public static function array_splice_assoc( &$input, $offset, $length, $replacement = [] ) {
 
 	    $replacement = (array) $replacement;
 
@@ -71,13 +71,13 @@ class Cooked_Functions {
 		echo '</div>';
 	}
 
-	public static function hex2rgb( $hex ){
+	public static function hex2rgb( $hex ) {
 		list( $r,$g,$b ) = sscanf( $hex, "#%02x%02x%02x" );
-		$rgb_array = array( $r, $g, $b );
+		$rgb_array = [$r, $g, $b];
 		return implode( ',',$rgb_array );
 	}
 
-	public static function parse_readme_changelog( $readme_url = false, $title = false ){
+	public static function parse_readme_changelog( $readme_url = false, $title = false ) {
 
 		ob_start();
 		include ( !$readme_url ? COOKED_DIR . 'readme.txt' : $readme_url );
@@ -135,7 +135,7 @@ class Cooked_Functions {
 
 	}
 
-	public static function print_options_js(){
+	public static function print_options_js() {
 
 		?><script type="text/javascript">
 
@@ -150,7 +150,7 @@ class Cooked_Functions {
 				update_print_options( e.target );
 			});
 
-			function update_print_options( printOpt ){
+			function update_print_options( printOpt ) {
 
 	    		if (printOpt.id == "print_options_title" && typeof document.getElementById('printTitle') != 'undefined') {
 			        if ( printOpt.checked ){

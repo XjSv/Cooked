@@ -19,10 +19,10 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 class Cooked_Settings {
 
-    public function __construct(){
-        add_filter( 'admin_init', array( &$this, 'init' ) );
-        add_filter( 'init', array( &$this, 'init' ) );
-        add_action( 'save_post', array(&$this, 'browse_page_saved'), 10, 1 );
+    public function __construct() {
+        add_filter( 'admin_init', [&$this, 'init'] );
+        add_filter( 'init', [&$this, 'init'] );
+        add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -39,13 +39,11 @@ class Cooked_Settings {
     }
 
     public static function init() {
-
         global $_cooked_settings,$list_id_counter;
         $list_id_counter = 0;
         $_cooked_settings = Cooked_Settings::get();
         register_setting( 'cooked_settings_group','cooked_settings' );
         register_setting( 'cooked_settings_group','cooked_settings_saved' );
-
     }
 
     public static function reset() {
@@ -66,15 +64,15 @@ class Cooked_Settings {
         // Get defaults for fields that are not set yet.
         $cooked_tabs_fields = self::tabs_fields();
         if ( isset($cooked_tabs_fields) && !empty($cooked_tabs_fields) ):
-            foreach( $cooked_tabs_fields as $tab ):
+            foreach ( $cooked_tabs_fields as $tab ):
                 if ( isset($tab['fields']) && !empty($tab['fields']) ):
-                    foreach( $tab['fields'] as $name => $field ):
+                    foreach ( $tab['fields'] as $name => $field ):
 
                         if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' )
                             continue;
 
                         if ( $field['type'] == 'checkboxes' && $cooked_settings_saved && $version_compare >= 0 ):
-                            $_cooked_settings[$name] = ( isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : array() );
+                            $_cooked_settings[$name] = ( isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : [] );
                         else:
                             $_cooked_settings[$name] = ( isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false ) );
                             $update_settings = true;
@@ -91,11 +89,9 @@ class Cooked_Settings {
         endif;
 
         return apply_filters( 'cooked_get_settings', $_cooked_settings );
-
     }
 
     public static function tabs_fields() {
-
         $pages_array = self::pages_array( __('Choose a page...','cooked'), __('No pages','cooked') );
         $categories_array = self::terms_array( 'cp_recipe_category', __('No default','cooked'), __('No categories','cooked') );
         $recipes_per_page_array = self::per_page_array();
@@ -307,11 +303,9 @@ class Cooked_Settings {
         )
 
         ), $pages_array, $categories_array );
-
     }
 
-    public static function per_page_array(){
-
+    public static function per_page_array() {
         $counter = 0;
         /* translators: posts_per_page default */
         $per_page_array[] = sprintf( __('WordPress Default %s','cooked'), '(' . get_option( 'posts_per_page' ) . ')' );
@@ -322,13 +316,12 @@ class Cooked_Settings {
         $per_page_array['-1'] = __('Show All (no pagination)','cooked');
 
         return apply_filters( 'cooked_per_page_options', $per_page_array );
-
     }
 
-    public static function pages_array( $choose_text,$none_text = false ){
+    public static function pages_array( $choose_text,$none_text = false ) {
 
-        $page_array = array();
-        $pages = get_posts( array( 'post_type' => 'page', 'posts_per_page' => -1 ) );
+        $page_array = [];
+        $pages = get_posts(['post_type' => 'page', 'posts_per_page' => -1] );
 
         if( !empty($pages) ) :
             $page_array[0] = $choose_text;

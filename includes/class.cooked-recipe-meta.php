@@ -165,7 +165,6 @@ class Cooked_Recipe_Meta {
 }
 
 function cooked_recipe_shortcodes_content() {
-
     global $post_id;
 
     ?><div class="recipe-setting-block">
@@ -179,7 +178,6 @@ function cooked_recipe_shortcodes_content() {
         </div>
 
     </div><?php
-
 }
 
 /**
@@ -206,64 +204,62 @@ function cooked_render_recipe_fields( $post_id ) {
         $recipe_settings = Cooked_Recipes::sync_c2_recipe_settings($c2_recipe_settings,$post_id);
     endif;
 
-    $recipe_tabs = apply_filters( 'cooked_recipe_admin_tabs', array(
-        'content' => array(
+    $recipe_tabs = apply_filters( 'cooked_recipe_admin_tabs', [
+        'content' => [
             'icon' => 'desktop',
-            'name' => __('Layout','cooked'),
+            'name' => __('Layout', 'cooked'),
             'conditional' => false,
             'value' => false
-        ),
-        'ingredients' => array(
+        ],
+        'ingredients' => [
             'icon' => 'list',
-            'name' => __('Ingredients','cooked'),
+            'name' => __('Ingredients', 'cooked'),
             'conditional' => false,
             'value' => false
-        ),
-        'directions' => array(
+        ],
+        'directions' => [
             'icon' => 'directions',
-            'name' => __('Directions','cooked'),
+            'name' => __('Directions', 'cooked'),
             'conditional' => false,
             'value' => false
-        ),
-        'nutrition' => array(
+        ],
+        'nutrition' => [
             'icon' => 'heart',
-            'name' => __('Nutrition','cooked'),
+            'name' => __('Nutrition', 'cooked'),
             'conditional' => false,
             'value' => false
-        ),
-        'gallery' => array(
+        ],
+        'gallery' => [
             'icon' => 'image',
-            'name' => __('Gallery','cooked'),
+            'name' => __('Gallery', 'cooked'),
             'conditional' => false,
             'value' => false
-        ),
-        'shortcodes' => array(
+        ],
+        'shortcodes' => [
             'icon' => 'code',
-            'name' => __('Shortcodes','cooked'),
+            'name' => __('Shortcodes', 'cooked'),
             'conditional' => false,
             'value' => false
-        ),
-    ));
+        ],
+    ]);
 
     $measurements = Cooked_Measurements::get();
 
-    $cooked_page_args = array(
+    $cooked_page_args = [
         'sort_order' => 'asc',
         'sort_column' => 'post_title',
         'hierarchical' => false,
         'post_type' => 'page',
         'post_status' => 'publish'
-    );
+    ];
     $cooked_page_array = get_pages($cooked_page_args);
 
     if (!empty($recipe_tabs)):
-
         echo '<ul id="cooked-recipe-tabs">';
         $first_tab = true;
 
-        foreach($recipe_tabs as $slug => $tab):
-
-            $classes = array();
+        foreach ($recipe_tabs as $slug => $tab):
+            $classes = [];
             if ($first_tab): $classes[] = 'active'; endif;
             if ($tab['conditional']): $classes[] = 'cooked-conditional-hidden'; endif;
 
@@ -629,7 +625,17 @@ function cooked_render_recipe_fields( $post_id ) {
                             <a href="#" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                         </div>
                         <div class="cooked-direction-content">
-                            <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr( $random_key ); ?>][content]"></textarea>
+                            <?php
+                            wp_editor('', 'recipe_settings_directions_'. $random_key, [
+                                'editor_class' => 'cooked-wysiwyg-editor',
+                                'teeny' => true,
+                                'media_buttons' => false,
+                                'wpautop' => false,
+                                'editor_height' => 100,
+                                'textarea_name' => '_recipe_settings[directions][' . $random_key . '][content]',
+                                'quicktags' => true
+                            ]);
+                            ?>
                         </div>
                         <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                     </div>
@@ -663,7 +669,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             'media_buttons' => false,
                             'wpautop' => false,
                             'editor_height' => 100,
-                            'textarea_name' => 'recipe_settings_direction_template',
+                            'textarea_name' => '',
                             'quicktags' => true
                         ]);
                         ?>

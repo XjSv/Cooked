@@ -39,7 +39,7 @@ class Cooked_Functions {
 
 	}
 
-	public static function wpml_xml( $cooked_settings_tabs_fields ) {
+	public static function wpml_xml( $cooked_tabs_fields ) {
 		echo '<div style="margin:30px 0 0 17px;">';
 			echo '<h3 style="width:70%;position:relative;z-index:2;padding:10px 0 12px;margin:0;font-size:1.2em;line-height:1.6;font-weight:600;color:#07a780">WPML Config XML</h3>';
 			echo '<pre style="color:#888;">';
@@ -56,7 +56,7 @@ class Cooked_Functions {
 &nbsp;&nbsp;&nbsp;&nbsp;<admin-texts>
 ');
 				echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<key name=\"cooked_settings\">" ) . "<br>";
-				foreach ( $cooked_settings_tabs_fields as $key => $val ):
+				foreach ( $cooked_tabs_fields as $key => $val ):
 					echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<key name=\"" . esc_attr( $key ) . "\">" ) . "<br>";
 						foreach ( $val['fields'] as $sub_key => $sub_val ):
 							echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<key name=\"" . esc_attr( $sub_key ) . "\" />" ) . "<br>";

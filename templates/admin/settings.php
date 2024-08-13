@@ -7,7 +7,7 @@
 	</div>
 
 	<div class="cooked-settings-header">
-		<i class="cooked-icon cooked-icon-cooked-icon"></i>&nbsp;&nbsp;<?php esc_html_e('Cooked Settings','cooked'); ?>
+		<i class="cooked-icon cooked-icon-cooked-icon"></i>&nbsp;&nbsp;<?php _e('Cooked Settings','cooked'); ?>
 	</div>
 	<div id="cooked-settings-panel" class="wrap"><?php
 

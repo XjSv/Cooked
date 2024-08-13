@@ -40,7 +40,6 @@ var $_CookedConditionalTimeout  = false;
 
         // Save as Default
         if ($_CookedRecipeSaveDefault.length) {
-
             var saveDefaultTooltip = $_CookedRecipeSaveDefault.tooltipster({
                 theme			: 'tooltipster-light',
                 trigger			: 'click',
@@ -138,7 +137,7 @@ var $_CookedConditionalTimeout  = false;
                 }
             });
 
-            $('.cooked-layout-load-default').on('click',function(e){
+            $('.cooked-layout-load-default').on('click',function(e) {
                 e.preventDefault();
                 var thisButton = $(this),
                     thisContainer = thisButton.parent(),
@@ -146,13 +145,12 @@ var $_CookedConditionalTimeout  = false;
                     recipe_editor_textarea = $( "#_recipe_settings_content" ),
                     recipe_editor = tinymce.get('_recipe_settings_content');
 
-                if ( confirm_load && !thisButton.hasClass('disabled') ){
+                if (confirm_load && !thisButton.hasClass('disabled')) {
                     thisContainer.find('.button, .button-primary').addClass('disabled');
                     var ajax__save_default_all = $.post(
                         cooked_js_vars.ajax_url,
                         { action:'cooked_load_default' },
-                        function( result ) {
-
+                        function (result) {
                             if ( recipe_editor === null ) {
                                 recipe_editor_textarea.val( result );
                             } else {
@@ -163,16 +161,14 @@ var $_CookedConditionalTimeout  = false;
                             thisContainer.find('.button, .button-primary').removeClass('disabled');
                             //console.log( 'SUCCESS' );
                             //console.log( result );
-                        })
-                        .fail(function( result ) {
+                        }).fail(function(result) {
                             thisContainer.find('.button, .button-primary').removeClass('disabled');
                             //console.log( 'ERROR' );
                             //console.log( result );
                         });
                 }
             });
-
-           }
+        }
 
         // Cooked Select Wrappers
         if ($_CookedSelectFields.length){
@@ -425,30 +421,29 @@ var $_CookedConditionalTimeout  = false;
         }
 
         if ($_CookedDirectionBuilder.length) {
-
             cooked_reset_direction_builder();
 
-            $_CookedDirectionBuilder.parent().on('click', '.cooked-add-direction-button',function(e) {
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-add-direction-button', function(e) {
                 e.preventDefault();
                 var clonedDirectionTemplate = $_CookedDirectionBuilder.parent().find('.cooked-direction-template').clone().removeClass('cooked-template cooked-direction-template').addClass('cooked-direction-block');
                 $_CookedDirectionBuilder.append(clonedDirectionTemplate);
                 cooked_reset_direction_builder();
             });
 
-            $_CookedDirectionBuilder.parent().on('click','.cooked-add-heading-button',function(e) {
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-add-heading-button', function(e) {
                 e.preventDefault();
                 var clonedHeadingTemplate = $_CookedDirectionBuilder.parent().find('.cooked-heading-template').clone().removeClass('cooked-template cooked-heading-template').addClass('cooked-direction-block cooked-direction-heading');
                 $_CookedDirectionBuilder.append(clonedHeadingTemplate);
                 cooked_reset_direction_builder();
             });
 
-            $_CookedDirectionBuilder.parent().on('click','.cooked-delete-direction',function(e) {
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-delete-direction', function(e) {
                 e.preventDefault();
                 $(this).parent().remove();
                 cooked_reset_direction_builder();
             });
 
-            $_CookedDirectionBuilder.parent().on('click', '.remove-image-button',function(e) {
+            $_CookedDirectionBuilder.parent().on('click', '.remove-image-button', function(e) {
                 e.preventDefault();
                 $(this).parent().removeClass('cooked-has-image');
                 $(this).parent().find('img').remove();
@@ -488,7 +483,6 @@ var $_CookedConditionalTimeout  = false;
 
                 // Runs when an image is selected.
                 direction_image_frame.on('select', function() {
-
                     // Grabs the attachment selection and creates a JSON representation of the model.
                     var media_attachment = direction_image_frame.state().get('selection').first().toJSON();
 
@@ -496,7 +490,6 @@ var $_CookedConditionalTimeout  = false;
                     $('#direction-'+directionID+'-image-src').attr('src',media_attachment.sizes.thumbnail.url).parent().addClass('cooked-has-image');
                     $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val( media_attachment.id );
                     $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value', cooked_js_vars.i18n_image_change );
-
                 });
 
                 // Opens the media library frame.
@@ -509,7 +502,7 @@ var $_CookedConditionalTimeout  = false;
 
         }
 
-        if ( $_CookedRecipeGallery.length ){
+        if ( $_CookedRecipeGallery.length ) {
 
             var gallery_images_frame;
             cooked_init_gallery_sorting();

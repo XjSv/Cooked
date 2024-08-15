@@ -138,6 +138,7 @@ class Cooked_Settings {
                                 'taxonomies' => __('Category', 'cooked'),
                                 'difficulty_level' => __('Difficulty Level', 'cooked'),
                                 'excerpt' => __('Excerpt', 'cooked'),
+                                'notes' => __('Notes', 'cooked'),
                                 'timing_prep' => __('Prep Time', 'cooked'),
                                 'timing_cook' => __('Cook Time', 'cooked'),
                                 'timing_total' => __('Total Time', 'cooked'),

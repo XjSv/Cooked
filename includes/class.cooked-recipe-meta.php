@@ -386,6 +386,22 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
                 </div>
 
+                <div class="recipe-setting-block cooked-bm-30">
+                <h3 class="cooked-settings-title"><?php _e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo __( 'The notes are displayed in the recipe.','cooked'); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                    <?php $recipe_notes = isset($recipe_settings['notes']) ? stripslashes(wp_specialchars_decode($recipe_settings['notes'])) : ''; ?>
+                    <?php
+                        wp_editor($recipe_notes, '_recipe_settings_notes', [
+                            'teeny' => false,
+                            'media_buttons' => false,
+                            'wpautop' => false,
+                            'editor_height' => 100,
+                            'textarea_name' => '_recipe_settings[notes]',
+                            'quicktags' => true
+                            ]
+                        );
+                    ?>
+                </div>
+
             </div>
 
         </section>
@@ -987,6 +1003,8 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <hr class="cooked-hr">
 
+
+
                 <!-- [cooked-image] -->
                 <div class="cooked-clearfix">
 
@@ -1125,6 +1143,30 @@ function cooked_render_recipe_fields( $post_id ) {
                         <p class="cooked-bm-10"><?php _e( 'This will display the excerpt, if one is available from the "Layout & Content" tab.', 'cooked' ); ?></p>
                         <div class="cooked-bm-20 cooked-block">
                             <input class='cooked-shortcode-field' type='text' readonly value='[cooked-excerpt]' />
+                        </div>
+
+                    </div>
+
+                    <div class="cooked-setting-column-13">
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10">
+                            <em><?php _e( 'None', 'cooked'); ?></em>
+                        </p>
+                    </div>
+
+                </div>
+
+                <hr class="cooked-hr">
+
+                <!-- [cooked-notes] -->
+                <div class="cooked-clearfix">
+
+                    <div class="cooked-setting-column-23">
+
+                        <h3 class="cooked-settings-title cooked-bm-0"><?php _e( 'Notes', 'cooked' ); ?></h3>
+                        <p class="cooked-bm-10"><?php _e( 'This will display the notes, if one is available from the "Layout & Content" tab.', 'cooked' ); ?></p>
+                        <div class="cooked-bm-20 cooked-block">
+                            <input class='cooked-shortcode-field' type='text' readonly value='[cooked-notes]' />
                         </div>
 
                     </div>

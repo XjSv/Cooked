@@ -618,15 +618,15 @@ class Cooked_Recipes {
 	}
 
 	public static function default_content() {
-		return apply_filters( 'cooked_default_content', '<p>[cooked-info left="author,taxonomies,difficulty" right="print,fullscreen"]</p><p>[cooked-excerpt]</p><p>[cooked-image]</p><p>[cooked-info left="servings" right="prep_time,cook_time,total_time"]</p><p>[cooked-ingredients]</p><p>[cooked-directions]</p><p>[cooked-gallery]</p>' );
+		return apply_filters( 'cooked_default_content', '<p>[cooked-info left="author,taxonomies,difficulty" right="print,fullscreen"]</p><p>[cooked-excerpt]</p><p>[cooked-image]</p><p>[cooked-info left="servings" right="prep_time,cook_time,total_time"]</p><p>[cooked-ingredients]</p><p>[cooked-directions]</p><h4>Note</h4><p>[cooked-notes]</p><p>[cooked-gallery]</p>' );
 	}
 
 	public static function print_content() {
-		return apply_filters( 'cooked_print_content', '<p>[cooked-info include="servings,prep_time,cook_time,total_time"]</p><p>[cooked-excerpt]</p><p>[cooked-image]</p><p>[cooked-ingredients]</p><p>[cooked-directions]</p><p>[cooked-nutrition]</p>' );
+		return apply_filters( 'cooked_print_content', '<p>[cooked-info include="servings,prep_time,cook_time,total_time"]</p><p>[cooked-excerpt]</p><p>[cooked-image]</p><p>[cooked-ingredients]</p><p>[cooked-directions]</p><p>[cooked-notes]</p><p>[cooked-nutrition]</p>' );
 	}
 
 	public static function fsm_content() {
-		return apply_filters( 'cooked_fsm_content', '<div class="cooked-fsm-ingredients cooked-fsm-content cooked-active"><div class="cooked-panel"><h2>' . __('Ingredients','cooked') . '</h2>[cooked-ingredients]</div></div><div class="cooked-fsm-directions cooked-fsm-content"><div class="cooked-panel"><h2>' . __('Directions','cooked') . '</h2>[cooked-directions]</div></div>' );
+		return apply_filters( 'cooked_fsm_content', '<div class="cooked-fsm-ingredients cooked-fsm-content cooked-active"><div class="cooked-panel"><h2>' . __('Ingredients','cooked') . '</h2>[cooked-ingredients]</div></div><div class="cooked-fsm-directions cooked-fsm-content"><div class="cooked-panel"><h2>' . __('Directions','cooked') . '</h2>[cooked-directions]</div></div><div class="cooked-fsm-notes cooked-fsm-content"><div class="cooked-panel"><h2>' . __('Notes','cooked') . '</h2>[cooked-notes]</div></div>' );
 	}
 
 	public static function difficulty_levels() {
@@ -1115,7 +1115,7 @@ class Cooked_Recipes {
 	 */
 
 	// Get and return the Cooked 2.x Classic recipe meta information
-	public static function get_c2_recipe_meta( $post_id ){
+	public static function get_c2_recipe_meta( $post_id ) {
 
 		$recipe_meta = [];
 		$revised_array = [];
@@ -1174,12 +1174,12 @@ class Cooked_Recipes {
 		$ingredients = [];
 		$directions = [];
 
-		$recipe_settings['title'] = $c2_recipe_settings['_cp_recipe_title'];
-		$recipe_settings['content'] = wpautop( $c2_recipe_settings['_cp_recipe_short_description'] . ($c2_recipe_settings['_cp_recipe_short_description'] ? '<br><br>' : '') . Cooked_Recipes::default_content() . ($c2_recipe_settings['_cp_recipe_additional_notes'] ? '<br><br>' : '') . $c2_recipe_settings['_cp_recipe_additional_notes'] );
-		$recipe_settings['excerpt'] = $c2_recipe_settings['_cp_recipe_excerpt'];
-		$recipe_settings['difficulty_level'] = $c2_recipe_settings['_cp_recipe_difficulty_level'];
-		$recipe_settings['prep_time'] = $c2_recipe_settings['_cp_recipe_prep_time'];
-		$recipe_settings['cook_time'] = $c2_recipe_settings['_cp_recipe_cook_time'];
+		$recipe_settings['title'] = isset($c2_recipe_settings['_cp_recipe_title']) ? $c2_recipe_settings['_cp_recipe_title'] : '';
+		$recipe_settings['content'] = isset($c2_recipe_settings['_cp_recipe_short_description']) ? wpautop( $c2_recipe_settings['_cp_recipe_short_description'] . ($c2_recipe_settings['_cp_recipe_short_description'] ? '<br><br>' : '') . Cooked_Recipes::default_content() . ($c2_recipe_settings['_cp_recipe_additional_notes'] ? '<br><br>' : '') . $c2_recipe_settings['_cp_recipe_additional_notes'] ) : '';
+		$recipe_settings['excerpt'] = isset($c2_recipe_settings['_cp_recipe_excerpt']) ? $c2_recipe_settings['_cp_recipe_excerpt'] : '';
+		$recipe_settings['difficulty_level'] = isset($c2_recipe_settings['_cp_recipe_difficulty_level']) ? $c2_recipe_settings['_cp_recipe_difficulty_level'] : '';
+		$recipe_settings['prep_time'] = isset($c2_recipe_settings['_cp_recipe_prep_time']) ? $c2_recipe_settings['_cp_recipe_prep_time'] : '';
+		$recipe_settings['cook_time'] = isset($c2_recipe_settings['_cp_recipe_cook_time']) ? $c2_recipe_settings['_cp_recipe_cook_time'] : '';
 
 		// Ingredients
 		if ( !empty($c2_recipe_settings['_cp_recipe_ingredients']) && empty($c2_recipe_settings['_cp_recipe_detailed_ingredients']) ):

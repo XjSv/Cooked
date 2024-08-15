@@ -54,8 +54,6 @@ class Cooked_Admin_Enqueues {
     }
 
     public function admin_enqueues( $hook ) {
-        global $post, $typenow, $pagenow;
-
         $cooked_admin_hooks = [
             'index.php',
             'post-new.php',
@@ -71,8 +69,8 @@ class Cooked_Admin_Enqueues {
         $min = COOKED_DEV ? '' : '.min';
 
         // Required Assets for Entire Admin (icons, etc.)
-        wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/admin/css/essentials'.$min.'.css', [], COOKED_VERSION );
-        wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons'.$min.'.css', [], COOKED_VERSION );
+        wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/admin/css/essentials' . $min . '.css', [], COOKED_VERSION );
+        wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION );
 
         $load_cooked_admin_assets = false;
 
@@ -108,31 +106,6 @@ class Cooked_Admin_Enqueues {
                     $total_old_recipes = 0;
                 endif;
 
-                $delicious_recipes = [];
-
-                $args = [
-                    'post_type' => 'recipe',
-                    'posts_per_page' => -1,
-                    'post_status' => 'any',
-                    'fields' => 'ids',
-                    'meta_query' => [
-                        [
-                            'key' => 'delicious_recipes_metadata',
-                            'compare' => 'EXISTS',
-                        ],
-                    ],
-                ];
-
-                $_recipes = new WP_Query( $args );
-
-                if (!empty($_recipes->posts)) {
-                    foreach ($_recipes->posts as $rid) {
-                        $delicious_recipes[] = $rid;
-                    }
-                }
-
-                $total_delicious_recipes = count($delicious_recipes);
-
                 // Gonna need jQuery
                 wp_enqueue_media();
                 wp_enqueue_script( 'jquery' );
@@ -164,7 +137,7 @@ class Cooked_Admin_Enqueues {
                     'i18n_confirm_load_default' => __('Are you sure you want to reset this recipe template to the Cooked plugin default?', 'cooked'),
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
-                    'i18n_confirm_import_recipes' => sprintf(__('Please confirm that you are ready to import all %s recipes.', 'cooked'), number_format($total_delicious_recipes)),
+                    'i18n_confirm_import_recipes' => __('Please confirm that you are ready to import all recipes.', 'cooked'),
                 ];
 
                 // Cooked Admin Style Assets

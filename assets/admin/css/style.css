@@ -31,11 +31,19 @@ body.post-type-cp_recipe #titlediv #title { box-shadow:none; -moz-border-radius:
 body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#888; font-weight:400; letter-spacing:0; padding:12px 15px; }
 
 #cooked-settings-prewrap { display:flex; justify-content:center; }
-#cooked-settings-wrap { position:relative; border-radius:10px; margin:40px 40px 40px 20px; max-width:1000px; min-width:1000px; background:#fff;
-  box-shadow: 0 4px 4px rgba(0,0,0,0.05),
-        0 8px 8px rgba(0,0,0,0.05),
-        0 32px 32px rgba(0,0,0,0.05),
-        0 64px 64px rgba(0,0,0,0.05) }
+#cooked-settings-wrap {
+  position: relative;
+  border-radius: 10px;
+  margin: 40px 40px 40px 20px;
+  /* max-width:1000px; */
+  min-width: 1000px;
+  background: #fff;
+  box-shadow:
+    0 4px 4px rgba(0,0,0,0.05),
+    0 8px 8px rgba(0,0,0,0.05),
+    0 32px 32px rgba(0,0,0,0.05),
+    0 64px 64px rgba(0,0,0,0.05)
+}
 
 #cooked-settings-wrap.is-stuck { position:static !important; }
 #cooked-settings-wrap .cooked-settings-update-button { position:absolute; top:30px; right:30px; }
@@ -164,11 +172,11 @@ body.post-type-cp_recipe .switchery-small > small,
 .cooked-progress.cooked-active, .cooked-progress-text.cooked-active { display:block; }
 .cooked-progress .cooked-progress-bar { display:block; position:absolute; background:#0085ba; width:0%; height:6px; top:0; left:0; border-radius:3px; }
 
-#cooked-migration-progress.cooked-progress { background:#ccc; margin:25px 0 0 0; border-radius:6px; height:12px; max-width:600px; }
-#cooked-migration-progress.cooked-progress .cooked-progress-bar { border-radius:6px; height:12px; }
-#cooked-migration-progress-text.cooked-progress-text { font-size:11px; color:#888; max-width:600px; }
-#cooked-migration-completed { display:none; }
-#cooked-migration-completed.cooked-active { display:block; }
+#cooked-migration-progress.cooked-progress, #cooked-import-progress.cooked-progress { background:#ccc; margin:25px 0 0 0; border-radius:6px; height:12px; max-width:600px; }
+#cooked-migration-progress.cooked-progress .cooked-progress-bar, #cooked-import-progress.cooked-progress .cooked-progress-bar { border-radius:6px; height:12px; }
+#cooked-migration-progress-text.cooked-progress-text, #cooked-import-progress-text.cooked-progress-text { font-size:11px; color:#888; max-width:600px; }
+#cooked-migration-completed, #cooked-import-completed { display:none; }
+#cooked-migration-completed.cooked-active, #cooked-import-completed.cooked-active { display:block; }
 
 /* Save as Default */
 #cooked_recipe_settings .cooked-layout-save-default { position:relative; top:-2px; z-index:10; margin:0 0 0 15px; padding:0 8px 1px; }

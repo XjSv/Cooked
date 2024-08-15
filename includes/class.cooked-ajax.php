@@ -39,26 +39,94 @@ class Cooked_Ajax {
         // Get JSON list of Recipe IDs, ready for Migration
         add_action( 'wp_ajax_cooked_get_migrate_ids', [&$this, 'get_migrate_ids'] );
 
+        // Get JSON list of Recipe IDs, ready for Import
+        add_action( 'wp_ajax_cooked_get_import_ids', [&$this, 'get_import_ids']);
+
         // Migrate Recipes
         add_action( 'wp_ajax_cooked_migrate_recipes', [&$this, 'migrate_recipes'] );
+
+        // Import Recipes
+        add_action( 'wp_ajax_cooked_import_recipes', [&$this, 'import_recipes']);
     }
 
     public function get_migrate_ids() {
-        if ( !current_user_can('read_cp_recipe') ):
+        if (!current_user_can('read_cp_recipe')):
             wp_die();
         endif;
 
-        $old_recipes = get_transient( 'cooked_classic_recipes' );
-        if ( $old_recipes != 'complete' ):
+        $old_recipes = get_transient('cooked_classic_recipes');
+        if ($old_recipes != 'complete'):
             $total = count($old_recipes);
-            if ( $total > 0 ):
-                echo wp_json_encode( $old_recipes );
+
+            if ($total > 0):
+                echo wp_json_encode($old_recipes);
             else:
                 echo 'false';
             endif;
         else:
             echo 'false';
         endif;
+
+        wp_die();
+    }
+
+    public function get_import_ids() {
+        if (!current_user_can('read_cp_recipe')):
+            wp_die();
+        endif;
+
+        $import_type = $_POST['import_type'];
+
+        $recipes = [];
+
+        if ($import_type === 'delicious_recipes') {
+            $args = [
+                'post_type' => 'recipe',
+                'posts_per_page' => -1,
+                'post_status' => 'any',
+                'fields' => 'ids',
+                'meta_query' => [
+                    [
+                        'key' => 'delicious_recipes_metadata',
+                        'compare' => 'EXISTS',
+                    ],
+                ],
+            ];
+        } elseif ($import_type === 'wp_recipe_maker') {
+            $args = [
+                'post_type' => 'recipe',
+                'posts_per_page' => -1,
+                'post_status' => 'any',
+                'fields' => 'ids',
+                'meta_query' => [
+                    [
+                        'key' => 'recipe_maker_metadata',
+                        'compare' => 'EXISTS',
+                    ],
+                ],
+            ];
+        }
+
+        $_recipes = new WP_Query( $args );
+
+        if (!empty($_recipes->posts)) {
+            foreach ($_recipes->posts as $rid) {
+                $recipes[] = $rid;
+            }
+        }
+
+        if (!empty($recipes)) {
+            $total = count($recipes);
+
+            if ($total > 0) {
+                echo wp_json_encode($recipes);
+            } else {
+                echo 'false';
+            }
+        } else {
+            echo 'false';
+        }
+
         wp_die();
     }
 
@@ -69,33 +137,32 @@ class Cooked_Ajax {
             wp_die();
         }
 
-        if ( isset($_POST['recipe_ids']) ):
-
+        if ( isset($_POST['recipe_ids']) ) {
             // Sanitize Recipe IDs
             $recipe_ids = json_decode( $_POST['recipe_ids'], true );
-            if ( is_array( $recipe_ids ) && !empty( $recipe_ids ) ):
+
+            if ( is_array( $recipe_ids ) && !empty( $recipe_ids ) ) {
                 $_recipe_ids = [];
-                foreach( $recipe_ids as $_rid ):
+                foreach ( $recipe_ids as $_rid ) {
                     $safe_id = intval( $_rid );
-                    if ( $safe_id ):
+                    if ( $safe_id ) {
                         $_recipe_ids[] = $_rid;
-                    endif;
-                endforeach;
+                    }
+                }
                 $recipe_ids = $_recipe_ids;
-            else:
+            } else {
                 return false;
-            endif;
+            }
 
             $leftover_recipe_ids = array_slice( $recipe_ids, $bulk_amount );
             $recipe_ids = array_slice( $recipe_ids, 0, $bulk_amount );
 
-            if ( !empty($recipe_ids) ):
-
-                foreach( $recipe_ids as $rid ):
+            if ( !empty($recipe_ids) ) {
+                foreach( $recipe_ids as $rid ) {
 
                     $recipe_settings = Cooked_Recipes::get_settings( $rid );
 
-                    if ( !empty( $recipe_settings ) && !isset( $recipe_settings['cooked_version'] ) || !empty( $recipe_settings ) && isset( $recipe_settings['cooked_version'] ) && !$recipe_settings['cooked_version'] ):
+                    if ( !empty( $recipe_settings ) && !isset( $recipe_settings['cooked_version'] ) || !empty( $recipe_settings ) && isset( $recipe_settings['cooked_version'] ) && !$recipe_settings['cooked_version'] ) {
 
                         $recipe_settings['cooked_version'] = COOKED_VERSION;
 
@@ -112,21 +179,80 @@ class Cooked_Ajax {
                             'post_content' => $seo_content
                         ]);
 
-                     endif;
-                 endforeach;
+                    }
+                }
 
-                if ( !empty( $leftover_recipe_ids ) ):
+                if ( !empty( $leftover_recipe_ids ) ) {
                     echo wp_json_encode( $leftover_recipe_ids );
                     wp_die();
-                endif;
+                }
 
-            endif;
+            }
 
             set_transient( 'cooked_classic_recipes', 'complete', 60 * 60 * 24 * 7 );
             echo 'false';
             wp_die();
 
-        endif;
+        }
+
+        wp_die();
+    }
+
+    public function import_recipes() {
+        if (!current_user_can('edit_others_cp_recipes')) {
+            wp_die();
+        }
+
+        require_once COOKED_DIR . 'includes/class.cooked-delicious-recipes.php';
+
+        $bulk_amount = 10;
+
+        if ( isset($_POST['recipe_ids']) ) {
+            // Sanitize Recipe IDs
+            $recipe_ids = json_decode( $_POST['recipe_ids'], true );
+
+            if ( is_array( $recipe_ids ) && !empty( $recipe_ids ) ) {
+                $_recipe_ids = [];
+                foreach ( $recipe_ids as $_rid ) {
+                    $safe_id = intval( $_rid );
+                    if ( $safe_id ) {
+                        $_recipe_ids[] = $_rid;
+                    }
+                }
+                $recipe_ids = $_recipe_ids;
+            } else {
+                return false;
+            }
+
+            $leftover_recipe_ids = array_slice( $recipe_ids, $bulk_amount );
+            $recipe_ids = array_slice( $recipe_ids, 0, $bulk_amount );
+
+            $import_type = $_POST['import_type'];
+
+            if ( !empty($recipe_ids) ) {
+                foreach ( $recipe_ids as $rid ) {
+                    if ($import_type === 'delicious_recipes') {
+                        Cooked_Delicious_Recipes::import_recipe( $rid );
+                    } /* elseif ($import_type === 'wp_recipe_maker') {
+                        Cooked_Recipe_Maker_Recipes::import_recipe( $rid );
+                    } */
+                }
+
+                if ( !empty( $leftover_recipe_ids ) ) {
+                    echo wp_json_encode( $leftover_recipe_ids );
+                    wp_die();
+                } else {
+                    if ($import_type === 'delicious_recipes') {
+                        update_option( 'cooked_delicious_recipes_imported', true );
+                    } /* elseif ($import_type === 'wp_recipe_maker') {
+                        update_option( 'cooked_wp_recipe_maker_imported', true );
+                    } */
+                }
+            }
+
+            echo 'false';
+            wp_die();
+        }
 
         wp_die();
     }

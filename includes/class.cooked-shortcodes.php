@@ -45,6 +45,7 @@ class Cooked_Shortcodes {
         add_shortcode('cooked-image', [$this, 'cooked_image_shortcode'] );
         add_shortcode('cooked-info', [$this, 'cooked_info_shortcode'] );
         add_shortcode('cooked-excerpt', [$this, 'cooked_excerpt_shortcode'] );
+        add_shortcode('cooked-notes', [$this, 'cooked_notes_shortcode'] );
         add_shortcode('cooked-ingredients', [$this, 'cooked_ingredients_shortcode'] );
         add_shortcode('cooked-directions', [$this, 'cooked_directions_shortcode'] );
         add_shortcode('cooked-nutrition', [$this, 'cooked_nutrition_shortcode'] );
@@ -702,6 +703,21 @@ class Cooked_Shortcodes {
             if (isset($recipe_settings['excerpt']) && $recipe_settings['excerpt']) {
                 $excerpt = Cooked_Recipes::format_content($recipe_settings['excerpt']);
                 echo '<div class="cooked-recipe-excerpt cooked-clearfix">' . wpautop(do_shortcode($excerpt)) . '</div>';
+            }
+
+            return ob_get_clean();
+        }
+    }
+
+    public function cooked_notes_shortcode($atts, $content = null) {
+        global $_cooked_settings, $recipe_settings;
+
+        if (isset($_cooked_settings['recipe_info_display_options']) && is_array($_cooked_settings['recipe_info_display_options']) && in_array('notes', $_cooked_settings['recipe_info_display_options'])) {
+            ob_start();
+
+            if (isset($recipe_settings['notes']) && $recipe_settings['notes']) {
+                $notes = Cooked_Recipes::format_content($recipe_settings['notes']);
+                echo '<div class="cooked-recipe-notes cooked-clearfix">' . wpautop(do_shortcode($notes)) . '</div>';
             }
 
             return ob_get_clean();

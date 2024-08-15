@@ -20,17 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Cooked_Gutenberg {
 
     public function __construct(){
-        add_filter( 'use_block_editor_for_post_type', array( &$this, 'gutenberg_support' ), 10, 2 );
-        add_filter( 'gutenberg_can_edit_post_type', array( &$this, 'gutenberg_support' ), 10, 2 );
+        add_filter( 'use_block_editor_for_post_type', [&$this, 'gutenberg_support'], 10, 2 );
+        add_filter( 'gutenberg_can_edit_post_type', [&$this, 'gutenberg_support'], 10, 2 );
     }
 
-    public function gutenberg_support( $can_edit, $post_type ){
-
+    public function gutenberg_support( $can_edit, $post_type ) {
         if ( $post_type == 'cp_recipe' )
             return false;
 
         return $can_edit;
-
     }
 
 }

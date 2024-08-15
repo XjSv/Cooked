@@ -229,7 +229,6 @@ final class Cooked_Plugin {
 			self::$instance->widget = new Cooked_Widgets();
 			self::$instance->gutenberg = new Cooked_Gutenberg();
 			self::$instance->elementor = new Cooked_Elementor();
-			//self::$instance->delicious_recipes = new Delicious_Recipes();
 
 			self::$instance->module_setup();
 		}
@@ -453,6 +452,15 @@ function Cooked() {
 // Let's get cooking!
 $CookedPlugin = Cooked();
 
+/**
+ * Plugin Action Links Filter
+ *
+ * Adds a "Upgrade to Pro" link to the plugin list page.
+ *
+ * @since 1.0.0
+ * @param array $links
+ * @return array
+ */
 add_filter('plugin_action_links_' . plugin_basename(__FILE__), function($links) {
 	if (!class_exists( 'Cooked_Pro_Plugin')) {
 		return array_merge(['<a href="https://cooked.pro/get-cooked/" target="_blank">Upgrade to Pro</a>'], $links);

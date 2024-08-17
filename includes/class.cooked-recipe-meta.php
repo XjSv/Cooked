@@ -1003,8 +1003,6 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <hr class="cooked-hr">
 
-
-
                 <!-- [cooked-image] -->
                 <div class="cooked-clearfix">
 
@@ -1161,22 +1159,29 @@ function cooked_render_recipe_fields( $post_id ) {
                 <!-- [cooked-notes] -->
                 <div class="cooked-clearfix">
 
-                    <div class="cooked-setting-column-23">
+                <div class="cooked-setting-column-23">
 
-                        <h3 class="cooked-settings-title cooked-bm-0"><?php _e( 'Notes', 'cooked' ); ?></h3>
-                        <p class="cooked-bm-10"><?php _e( 'This will display the notes, if one is available from the "Layout & Content" tab.', 'cooked' ); ?></p>
-                        <div class="cooked-bm-20 cooked-block">
-                            <input class='cooked-shortcode-field' type='text' readonly value='[cooked-notes]' />
-                        </div>
-
+                    <h3 class="cooked-settings-title cooked-bm-0"><?php _e( 'Notes', 'cooked' ); ?></h3>
+                    <p class="cooked-bm-10"><?php _e( 'This will display the notes, if one is available from the "Layout & Content" tab.', 'cooked'); ?></p>
+                    <div class="cooked-bm-20 cooked-block">
+                        <input class='cooked-shortcode-field' type='text' readonly value='[cooked-notes]' />
                     </div>
 
-                    <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Available Variables','cooked' ); ?></strong></p>
-                        <p class="cooked-bm-10">
-                            <em><?php _e( 'None', 'cooked'); ?></em>
-                        </p>
+                    <p class="cooked-bm-5"><strong>"show_header"</strong></p>
+                    <p class="cooked-bm-10"><?php _e( 'This will allow you to hide or show the header for the notes section:', 'cooked'); ?></p>
+                    <div class="cooked-bm-20 cooked-block">
+                        <input class='cooked-shortcode-field' type='text' readonly value='show_header=true' />
                     </div>
+
+                </div>
+
+                <div class="cooked-setting-column-13">
+                    <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Available Variables','cooked' ); ?></strong></p>
+                    <p class="cooked-bm-10">
+                        <strong>true</strong> (<?php _e( 'Show header', 'cooked' ); ?>)<br>
+                        <strong>false</strong> (<?php _e( 'Hide header', 'cooked' ); ?>)
+                    </p>
+                </div>
 
                 </div>
 

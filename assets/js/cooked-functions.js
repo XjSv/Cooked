@@ -79,21 +79,19 @@ var cooked_loading = false;
        /****   5. Browse Search Button   ****/
 
         if ( $_Cooked_Recipe_Search.length ) {
-
            $('body').on( 'click',function(e) {
-
                 var thisButton = false;
 
                 // Did someone click the Browse Button in one way or another?
-                if ( $('.cooked-browse-select').has(e.target).length > 0 ){
+                if ( $('.cooked-browse-select').has(e.target).length > 0 ) {
                     thisButton = $(e.target).parents('.cooked-browse-select');
-                } else if ( $(e.target).hasClass('cooked-browse-select') ){
+                } else if ( $(e.target).hasClass('cooked-browse-select') ) {
                     thisButton = $(e.target);
                 }
 
                 // Yep, they clicked the button!
                 if (thisButton) {
-                    if ( thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-browse-select') || thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-field-title') ){
+                    if (thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-browse-select') || thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-field-title')) {
                         thisButton.removeClass('cooked-active');
                     } else {
                         thisButton.addClass('cooked-active');
@@ -103,16 +101,14 @@ var cooked_loading = false;
                 } else {
                     $('.cooked-browse-select').removeClass('cooked-active');
                 }
-
             });
 
             var browseSearchButton = $('.cooked-browse-search-button');
-            browseSearchButton.on('click',function(e){
+            browseSearchButton.on('click', function(e) {
                 e.preventDefault();
                 var thisButton = $(this);
                 thisButton.parents('form').trigger('submit');
             });
-
         }
 
         /****   6. Timers   ****/
@@ -381,7 +377,7 @@ var cooked_loading = false;
                 // Enable wake lock aka "Hands Free Cooking Mode" (Keeps the screen from going dark).
                 noSleep.enable();
 
-                New_FSM_Container.on('click','.cooked-close-fsm', function(e) {
+                New_FSM_Container.on('click', '.cooked-close-fsm', function(e) {
                     e.preventDefault();
                     New_FSM_Container.removeClass('cooked-active');
                     $('body').removeClass('cooked-noscroll cooked-fsm-active');
@@ -406,7 +402,14 @@ var cooked_loading = false;
                 FSM_Container.find('.cooked-fsm-content').removeClass('cooked-active');
 
                 thisButton.addClass('cooked-active');
-                FSM_Container.find('.cooked-fsm-content.cooked-fsm-' + nav_id).addClass('cooked-active');
+
+                if (nav_id == 'ingredients') {
+                    FSM_Container.find('.cooked-fsm-content.cooked-fsm-ingredients').addClass('cooked-active');
+                } else {
+                    FSM_Container.find('.cooked-fsm-content.cooked-fsm-directions-wrap').addClass('cooked-active');
+                    FSM_Container.find('.cooked-fsm-content.cooked-fsm-directions').addClass('cooked-active');
+                    FSM_Container.find('.cooked-fsm-content.cooked-fsm-notes').addClass('cooked-active');
+                }
             });
         }
 	});

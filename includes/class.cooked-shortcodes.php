@@ -637,7 +637,7 @@ class Cooked_Shortcodes {
         endif;
     }
 
-    public static function cooked_info_total_time( $recipe ){
+    public static function cooked_info_total_time( $recipe ) {
         global $_cooked_settings;
         if (in_array('timing_total',$_cooked_settings['recipe_info_display_options'])):
             $total_time = ( isset($recipe['total_time']) ? esc_html( $recipe['total_time'] ) : 0 );
@@ -655,18 +655,18 @@ class Cooked_Shortcodes {
     }
 
     public static function cooked_info_taxonomies() {
-        global $recipe_settings,$_cooked_settings,$clickable;
+        global $recipe_settings, $_cooked_settings, $clickable;
 
         $clickable = ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ? false : true );
 
-        if (in_array('taxonomies',$_cooked_settings['recipe_info_display_options'])):
+        if (in_array('taxonomies', $_cooked_settings['recipe_info_display_options'])):
 
             global $recipe_terms_list;
             $recipe_terms_list = '';
 
             do_action( 'cooked_info_taxonomies_shortcode_before', $recipe_settings );
 
-            if (in_array('cp_recipe_category',$_cooked_settings['recipe_taxonomies'])):
+            if (in_array('cp_recipe_category', $_cooked_settings['recipe_taxonomies'])):
                 if ( $clickable ):
                     $recipe_terms_list .= get_the_term_list( $recipe_settings['id'], 'cp_recipe_category', '<span class="cooked-taxonomy cooked-category"><strong class="cooked-meta-title">' . __('Category','cooked') . '</strong>', ', ', '</span>' );
                 else:
@@ -712,12 +712,24 @@ class Cooked_Shortcodes {
     public function cooked_notes_shortcode($atts, $content = null) {
         global $_cooked_settings, $recipe_settings;
 
+        // Shortcode Attributes
+        $atts = shortcode_atts([
+            'show_header' => false,
+        ], $atts);
+
+        $show_header = Cooked_Functions::sanitize_text_field( $atts['show_header'] );
+
         if (isset($_cooked_settings['recipe_info_display_options']) && is_array($_cooked_settings['recipe_info_display_options']) && in_array('notes', $_cooked_settings['recipe_info_display_options'])) {
             ob_start();
 
-            if (isset($recipe_settings['notes']) && $recipe_settings['notes']) {
+            if (isset($recipe_settings['notes']) && !empty($recipe_settings['notes'])) {
                 $notes = Cooked_Recipes::format_content($recipe_settings['notes']);
-                echo '<div class="cooked-recipe-notes cooked-clearfix">' . wpautop(do_shortcode($notes)) . '</div>';
+                $show_header = ( $show_header ? '<h4>' . __('Notes', 'cooked') . '</h4>' : '' );
+
+                echo '<div class="cooked-recipe-notes cooked-clearfix">';
+                echo $show_header;
+                echo wpautop(do_shortcode($notes));
+                echo '</div>';
             }
 
             return ob_get_clean();

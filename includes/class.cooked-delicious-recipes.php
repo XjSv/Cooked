@@ -218,5 +218,83 @@ class Cooked_Delicious_Recipes {
         // Updte the _thumbnail_id meta.
         $thumbnail_id = get_post_meta($id, '_thumbnail_id', true);
         update_post_meta($new_recipe_id, '_thumbnail_id', $thumbnail_id);
+
+        // Copy comments from old recipe to new recipe.
+        $ratings = [];
+        $comments = get_comments(['post_id' => $id]);
+        foreach ($comments as $comment) {
+            $commentdata = [
+                'comment_post_ID' => $new_recipe_id,
+                'comment_author' => $comment->comment_author,
+                'comment_author_email' => $comment->comment_author_email,
+                'comment_author_url' => $comment->comment_author_url,
+                'comment_content' => $comment->comment_content,
+                'comment_type' => $comment->comment_type,
+                'comment_parent' => $comment->comment_parent,
+                'user_id' => $comment->user_id,
+                'comment_author_IP' => $comment->comment_author_IP,
+                'comment_agent' => $comment->comment_agent,
+                'comment_date' => $comment->comment_date,
+                'comment_approved' => $comment->comment_approved,
+            ];
+            wp_insert_comment($commentdata);
+
+            // Rating are stored in the wp_commentmeta table with the key: 'rating'.
+            $rating = get_comment_meta($comment->comment_ID, 'rating', true);
+            if (!empty($rating)) {
+                $ratings[] = $rating;
+            }
+        }
+
+        // Insert recipe ratings meta data.
+        $rating_average = array_sum($ratings) / count($ratings);
+        update_post_meta($new_recipe_id, '_recipe_rating', $rating_average);
+
+        // Insert recipe likes and wishlist meta data.
+        $likes = get_post_meta( $id, '_recipe_likes', true );
+        update_post_meta( $new_recipe_id, '_recipe_favorites', $likes );
+
+        // Insert recipe taxonomies. Create the terms if they don't exist.
+        $recipe_taxonomies_mapping = [
+            //'recipe-category' => 'cp_recipe_category',
+            'recipe-cuisine' => 'cp_recipe_cuisine',
+            'recipe-cooking-method' => 'cp_recipe_cooking_method',
+            'recipe-tag' => 'cp_recipe_tags',
+            'recipe-dietary' =>  'cp_recipe_diet',
+        ];
+
+        $delicious_recipes_taxonomies = get_object_taxonomies('recipe');
+        foreach ($delicious_recipes_taxonomies as $taxonomy) {
+            if (isset($recipe_taxonomies_mapping[$taxonomy])) {
+                $terms = wp_get_object_terms($id, $taxonomy, ['fields' => 'all']);
+
+                if (!empty($terms)) {
+                    $new_terms = [];
+
+                    foreach ($terms as $term_id) {
+                        $term = get_term($term_id);
+                        $term_exists = term_exists($term->name, $recipe_taxonomies_mapping[$taxonomy]);
+
+                        if (!$term_exists) {
+                            $new_term = wp_insert_term($term->name, $recipe_taxonomies_mapping[$taxonomy]);
+                            if (is_wp_error($new_term)) {
+                                continue;
+                            }
+
+                            $new_term_id = (int)$new_term['term_id'];
+                        } else {
+                            $new_term_id = (int)$term_exists['term_id'];
+                        }
+
+                        $new_terms[] = $new_term_id;
+                    }
+
+                    wp_set_object_terms($new_recipe_id, $new_terms, $recipe_taxonomies_mapping[$taxonomy], true);
+
+                    // Update the term count.
+                    wp_update_term_count($new_terms, $recipe_taxonomies_mapping[$taxonomy]);
+                }
+            }
+        }
     }
 }

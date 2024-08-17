@@ -27,6 +27,7 @@ Most recipe plugins require that you purchase a PRO version for features like nu
 * Photo Galleries
 * Nutrition Facts
 * Difficulty Levels
+* Recipe Notes
 * Powerful recipe search with a text search, categories & sorting options.
 * Author template to list recipes by a single author.
 * Cooking times with clickable, interactive timers.

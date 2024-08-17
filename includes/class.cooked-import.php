@@ -44,8 +44,10 @@ class Cooked_Import {
             $html_desc .= '<br>';
             $html_desc .= __( 'Please click the button below to import these recipes. Here is what will happen to your recipes:', 'cooked' );
             $html_desc .= '<ul class="cooked-admin-ul">';
-                $html_desc .= '<li>' . __( 'Recipes will be imported with the \'draft\' status.', 'cooked' ) . '</li>';
-                $html_desc .= '<li>' . __( 'The existing WP Delicious recipes will not be modified or deleted.', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'Recipes will be imported with the <b>\'Draft\'</b> status.', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'Comments and ratings data will also be imported (ratings are available in Cooked Pro).', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'After the import is complete, you can bulk edit the recipes and change their status to <b>\'Published\'</b>.', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'The existing WP Delicious recipes and data will not be modified or deleted.', 'cooked' ) . '</li>';
                 $html_desc .= '<li>' . __( 'Certain data that is not suppoted by Cooked will not be imported (such as Cooking Temp, Estimated Cost, Recipe Keywords, etc).', 'cooked' ) . '</li>';
                 $html_desc .= '<li>' . __( 'You can run the import multiple times, but keep in mind that duplicate recipes will be created.', 'cooked' ) . '</li>';
             $html_desc .= '</ul>';

@@ -6,7 +6,7 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author: 		Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.8.1
+Version: 		1.8.2
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.8.1' );
+define( 'COOKED_VERSION', '1.8.2' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -204,7 +204,7 @@ final class Cooked_Plugin {
 			self::$instance = new Cooked_Plugin;
 			self::$instance->setup_constants();
 
-			add_action( 'plugins_loaded', array( self::$instance, 'load_textdomain' ) );
+			add_action( 'plugins_loaded', [self::$instance, 'load_textdomain'] );
 
 			self::$instance->includes();
 			self::$instance->roles = new Cooked_Roles();
@@ -419,7 +419,6 @@ final class Cooked_Plugin {
 			load_plugin_textdomain( 'cooked', false, COOKED_FOLDER . '/languages' );
 		}
 	}
-
 }
 
 endif; // End if class_exists check.
@@ -452,3 +451,21 @@ function Cooked() {
 
 // Let's get cooking!
 $CookedPlugin = Cooked();
+
+/**
+ * Plugin Action Links Filter
+ *
+ * Adds a "Upgrade to Pro" link to the plugin list page.
+ *
+ * @since 1.0.0
+ * @param array $links
+ * @return array
+ */
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), function($links) {
+	if (!class_exists( 'Cooked_Pro_Plugin')) {
+		return array_merge(['<a href="https://cooked.pro/get-cooked/" target="_blank">Upgrade to Pro</a>'], $links);
+	} else {
+		array_unshift($links, '<span style="color: #32373c">' . __( 'Required by Cooked Pro', 'cooked' ) . '</span>');
+		return $links;
+	}
+}, 1);

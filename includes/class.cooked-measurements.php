@@ -24,7 +24,7 @@ class Cooked_Measurements {
     public static function get() {
 
         // Use the "cooked_measurements" filter to add your own measurements.
-        $measurements = apply_filters('cooked_measurements',array(
+        $measurements = apply_filters('cooked_measurements', array(
             'g' => array(
                 'singular_abbr' => _x('g','Grams Abbreviation (Singular)','cooked'),
                 'plural_abbr' => _x('g','Grams Abbreviation (Plural)','cooked'),
@@ -533,7 +533,6 @@ class Cooked_Measurements {
             $closest_decimal = self::get_closest_decimal( $decimal, $decimal_array );
 
             switch($closest_decimal):
-
                 case 0.125:
                     return '1/8';
                 case 0.166:
@@ -552,7 +551,6 @@ class Cooked_Measurements {
                     return '3/4';
                 case 0.875:
                     return '7/8';
-
             endswitch;
         else:
             return self::calculate($decimal, 'fraction');

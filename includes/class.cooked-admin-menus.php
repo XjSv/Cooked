@@ -36,6 +36,7 @@ class Cooked_Admin_Menus {
             endforeach;
         endif;
         add_submenu_page('cooked_recipes_menu', __('Settings', 'cooked'), __('Settings','cooked'), 'edit_cooked_settings', 'cooked_settings', array(&$this, 'cooked_settings_page') );
+        add_submenu_page('cooked_recipes_menu', __('Import', 'cooked'), __('Import','cooked'), 'edit_cooked_settings', 'cooked_import', array(&$this, 'cooked_import_page') );
         add_submenu_page('cooked_recipes_menu', __('What\'s New?','cooked'), __('What\'s New?','cooked'), 'edit_cooked_settings', 'cooked_welcome', array(&$this, 'cooked_welcome_content') );
         if ( !class_exists( 'Cooked_Pro_Plugin' ) ):
             add_submenu_page('cooked_recipes_menu', __('Upgrade to Pro','cooked'), '<span class="admin-menu-cooked-upgrade">' . __('Upgrade to Pro','cooked') . '</span>', 'edit_cooked_settings', 'cooked_pro', array(&$this, 'cooked_pro') );
@@ -58,6 +59,15 @@ class Cooked_Admin_Menus {
         }
 
         include COOKED_DIR . 'templates/admin/settings.php';
+    }
+
+    // Settings Panel
+    public function cooked_import_page() {
+        if (!current_user_can('edit_cooked_settings')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'cooked'));
+        }
+
+        include COOKED_DIR . 'templates/admin/import.php';
     }
 
     // Welcome Page

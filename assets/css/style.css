@@ -265,6 +265,20 @@ body .cooked-post-featured-image img {
     display: block;
 }
 
+/* Notes */
+.cooked-recipe-notes {
+    display: block;
+    padding: 0;
+    margin: 0 0 2rem;
+}
+.cooked-recipe-notes .cooked-heading {
+    margin: 0 0 1rem;
+    display: block;
+    font-weight: 600;
+    font-size: 1.25rem;
+    line-height: 1.5;
+}
+
 /* Print Button */
 .cooked-recipe-info span.cooked-print,
 .cooked-recipe-info span.cooked-print > a {
@@ -1595,7 +1609,7 @@ body .cooked-pagination-numbered > a:hover {
 .cooked-fsm .cooked-recipe-ingredients .cooked-ingredient-checkbox {
     top: 0.75rem;
 }
-.cooked-fsm .cooked-fsm-directions {
+.cooked-fsm .cooked-fsm-directions-wrap {
     box-sizing: border-box;
     padding: 5.5rem 2rem 1rem;
     font-size: 1rem;
@@ -1608,6 +1622,7 @@ body .cooked-pagination-numbered > a:hover {
     top: 0;
     left: 30%;
 }
+
 .cooked-fsm .cooked-fsm-directions p {
     margin: 0 0 1.5rem;
     font-size: 1.2rem;
@@ -1646,9 +1661,20 @@ body .cooked-pagination-numbered > a:hover {
     font-weight: 800;
 }
 .cooked-fsm-ingredients .cooked-panel,
-.cooked-fsm-directions .cooked-panel {
+.cooked-fsm-directions .cooked-panel,
+.cooked-fsm-notes .cooked-panel {
     padding-left: 1%;
     padding-right: 2%;
+}
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes {
+    margin: 0 0 1rem;
+}
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes ul li {
+    margin: 0 0 1rem 1rem;
 }
 .cooked-fsm .cooked-fsm-mobile-nav {
     box-sizing: border-box;

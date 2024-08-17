@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.6.1
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -35,6 +35,7 @@ Most recipe plugins require that you purchase a PRO version for features like nu
 * Photo Galleries
 * Nutrition Facts
 * Difficulty Levels
+* Recipe Notes
 * Powerful recipe search with a text search, categories & sorting options.
 * Author template to list recipes by a single author.
 * Cooking times with clickable, interactive timers.
@@ -75,9 +76,15 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.1 includes a fix for a persistent cross-site scripting vulnerability via the Cooked Timer. Please update immediately.
+Version 1.8.2 adds the Notes feature, a new way to add notes to your recipes. It also adds the option to import recipes from the WP Delicious plugin. More imports are coming soon!
 
 == Changelog ==
+
+= 1.8.2 =
+* **FIX:** Fixed bug with the recipe direction not saving correctly.
+* **FIX:** Fixed bug with the tooltips such as in the Recipe Template "Save as Default" button not working when "Smash Balloon Social Photo Feed" plugin is installed.
+* **NEW:** Added the Notes feature, a new field to add notes to your recipes. Use the [cooked-notes] shortcode to display them.
+* **NEW:** Added the option to import recipes from the WP Delicious plugin.
 
 = 1.8.1 =
 * **FIX:** Persistent Cross-Site Scripting Vulnerability via the Cooked Timer.

@@ -19,6 +19,13 @@ function cssAdmin() {
     .pipe(dest('assets/admin/css'));
 }
 
+function cssTooltipster() {
+  return src(['assets/admin/css/tooltipster/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-cooked.css'])
+    .pipe(cleanCSS())
+    .pipe(rename({ suffix: '.min' }))
+    .pipe(dest('assets/admin/css/tooltipster/plugins/tooltipster/sideTip/themes'));
+}
+
 // JavaScript Task.
 function js() {
   return src('assets/js/cooked-functions.js')
@@ -45,14 +52,15 @@ function jsAdmin() {
 function watchFiles() {
   watch(['assets/css/icons.css', 'assets/css/print-only.css', 'assets/css/print.css', 'assets/css/style.css'], css);
   watch(['assets/admin/css/essentials.css', 'assets/admin/css/style.css'], cssAdmin);
+  watch(['assets/admin/css/tooltipster/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-cooked.css'], cssTooltipster);
   watch('assets/js/cooked-functions.js', js);
   watch('assets/js/fotorama/fotorama.js', jsFotorama);
   watch(['assets/admin/js/cooked-functions.js', 'assets/admin/js/cooked-migration.js'], jsAdmin);
 }
 
 // Task for building for production.
-const build = series(css, cssAdmin, js, jsFotorama, jsAdmin);
+const build = series(css, cssAdmin, cssTooltipster, js, jsFotorama, jsAdmin);
 exports.build = build;
 
 // Export the default Gulp task.
-exports.default = series(css, cssAdmin, js, jsFotorama, jsAdmin, watchFiles);
+exports.default = series(css, cssAdmin, cssTooltipster, js, jsFotorama, jsAdmin, watchFiles);

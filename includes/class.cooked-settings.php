@@ -26,7 +26,6 @@ class Cooked_Settings {
     }
 
     public function browse_page_saved( $post_id ) {
-
         // Just a revision, don't do anything
         if ( wp_is_post_revision( $post_id ) )
             return;
@@ -35,15 +34,15 @@ class Cooked_Settings {
         if ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $post_id ):
             flush_rewrite_rules(false);
         endif;
-
     }
 
     public static function init() {
-        global $_cooked_settings,$list_id_counter;
+        global $_cooked_settings, $list_id_counter;
+
         $list_id_counter = 0;
         $_cooked_settings = Cooked_Settings::get();
-        register_setting( 'cooked_settings_group','cooked_settings' );
-        register_setting( 'cooked_settings_group','cooked_settings_saved' );
+        register_setting( 'cooked_settings_group', 'cooked_settings' );
+        register_setting( 'cooked_settings_group', 'cooked_settings_saved' );
     }
 
     public static function reset() {
@@ -52,12 +51,10 @@ class Cooked_Settings {
     }
 
     public static function get() {
-
         $update_settings = false;
         $_cooked_settings = get_option( 'cooked_settings' );
         $cooked_settings_saved = get_option( 'cooked_settings_saved', false );
         $_cooked_settings_version = get_option( 'cooked_settings_version', '1.0.0' );
-        $_og_cooked_settings = $_cooked_settings;
 
         $version_compare = version_compare( $_cooked_settings_version, COOKED_VERSION );
 
@@ -96,213 +93,239 @@ class Cooked_Settings {
         $categories_array = self::terms_array( 'cp_recipe_category', __('No default','cooked'), __('No categories','cooked') );
         $recipes_per_page_array = self::per_page_array();
 
-        return apply_filters('cooked_settings_tabs_fields', array(
-
-        'recipe_settings' => array(
-            'name' => __('General','cooked'),
-            'icon' => 'gear',
-            'fields' => array(
-                'browse_page' => array(
-                    'title' => __('Browse/Search Recipes Page', 'cooked'),
-                    /* translators: a description on how to add the [cooked-browse] shortcode to a page */
-                    'desc' => sprintf( __('Create a page with the %s shortcode on it, then choose it from this dropdown.','cooked'), '[cooked-browse]' ),
-                    'type' => 'select',
-                    'default' => 0,
-                    'options' => $pages_array
-                ),
-                'recipes_per_page' => array(
-                    'title' => __('Recipes Per Page', 'cooked'),
-                    /* translators: a description on how to choose the default number of recipes per page. */
-                    'desc' => sprintf( __('Choose the default (set via the %s panel) or choose a different number here.','cooked'), '<a href="' . trailingslashit( get_admin_url() ) . 'options-reading.php">' . __( 'Settings > Reading', 'cooked' ) . '</a>' ),
-                    'type' => 'select',
-                    'default' => 9,
-                    'options' => $recipes_per_page_array
-                ),
-                'recipe_taxonomies' => array(
-                    'title' => __('Recipe Taxonomies', 'cooked'),
-                    'desc' => __('Choose which taxonomies you want to enable for your recipes.','cooked'),
-                    'type' => 'checkboxes',
-                    'default' => array( 'cp_recipe_category' ),
-                    'options' => apply_filters( 'cooked_taxonomy_options', array(
-                        'cp_recipe_category' => __('Categories','cooked')
-                    ))
-                ),
-                'recipe_info_display_options' => array(
-                    'title' => __('Global Recipe Toggles', 'cooked'),
-                    'desc' => __('You can quickly hide or show different recipe elements (site-wide) with these checkboxes.','cooked'),
-                    'type' => 'checkboxes',
-                    'default' => apply_filters( 'cooked_recipe_info_display_options_defaults', array( 'author','taxonomies','difficulty_level','excerpt','timing_prep','timing_cook','timing_total','servings' ) ),
-                    'options' => apply_filters( 'cooked_recipe_info_display_options', array(
-                        'author' => __('Author','cooked'),
-                        'taxonomies' => __('Category','cooked'),
-                        'difficulty_level' => __('Difficulty Level','cooked'),
-                        'excerpt' => __('Excerpt','cooked'),
-                        'timing_prep' => __('Prep Time','cooked'),
-                        'timing_cook' => __('Cook Time','cooked'),
-                        'timing_total' => __('Total Time','cooked'),
-                        'servings' => __('Servings','cooked')
-                    ))
-                ),
-                'carb_format' => array(
-                    'title' => __('Carbs Format', 'cooked'),
-                    'desc' => __('You can display carbs as "Total" or "Net".','cooked'),
-                    'type' => 'select',
-                    'default' => 'total',
-                    'options' => apply_filters( 'cooked_settings_carb_formats', array(
-                        'total' => __('Total Carbs','cooked'),
-                        'net' => __('Net Carbs','cooked')
-                    ))
-                ),
-                'author_name_format' => array(
-                    'title' => __('Author Name Format', 'cooked'),
-                    'desc' => __('You can show the full author\'s name or just a part of it.','cooked'),
-                    'type' => 'select',
-                    'default' => 'full',
-                    'options' => apply_filters( 'cooked_settings_author_formats', array(
-                        'full' => __('Full name','cooked'),
-                        'first_last_initial' => __('Full first name w/last name initial','cooked'),
-                        'first_initial_last' => __('First name initial w/full last name','cooked'),
-                        'first_only' => __('First name only','cooked')
-                    ))
-                ),
-                'disable_author_links' => array(
-                    'title' => __('Author Links', 'cooked'),
-                    'desc' => __( 'If you do not want the author names to link to the author recipe listings, you can disable them here.', 'cooked' ),
-                    'type' => 'checkboxes',
-                    'color' => 'red',
-                    'default' => array(),
-                    'options' => apply_filters( 'cooked_author_link_options', array(
-                        'disabled' => __('Disable Author Links','cooked'),
-                    ))
-                ),
-                'browse_default_cp_recipe_category' => array(
-                    'title' => __('Default Category', 'cooked'),
-                    /* translators: a description on how to set the default recipe category for the [cooked-browse] shortcode. */
-                    'desc' => sprintf( __('Optionally set the default recipe category for your %s shortcode display.','cooked'), '[cooked-browse]' ),
-                    'type' => 'select',
-                    'default' => 0,
-                    'options' => $categories_array
-                ),
-                'browse_default_sort' => array(
-                    'title' => __('Default Sort Order', 'cooked'),
-                    /* translators: a description on how to set the default sort order for the [cooked-browse] shortcode. */
-                    'desc' => sprintf( __('Set the default sort order for your %s shortcode display.','cooked'), '[cooked-browse]' ),
-                    'type' => 'select',
-                    'default' => 'date_desc',
-                    'options' => apply_filters( 'cooked_settings_sort_options', array(
-                        'date_desc' => __('Newest First','cooked'),
-                        'date_asc' => __('Oldest First','cooked'),
-                        'title_asc' => __('Alphabetical','cooked'),
-                        'title_desc' => __('Alphabetical (reversed)','cooked'),
-                    ))
-                ),
-                'advanced' => array(
-                    'title' => __('Advanced Settings', 'cooked'),
-                    'desc' => '',
-                    'type' => 'checkboxes',
-                    'color' => 'red',
-                    'class' => 'cooked-danger',
-                    'default' => array(),
-                    'options' => apply_filters( 'cooked_advanced_options', array(
-                        /* translators: an option to only show recipes with the [cooked-recipe] shortcode. */
-                        'disable_public_recipes' => '<strong>' . __('Disable Public Recipes','cooked') . '</strong> &mdash; ' . sprintf( __('Only show recipes using the %s shortcode.','cooked'), '<code>[cooked-recipe]</code>' ),
-                        /* translators: an option to disable "meta" tags. */
-                        'disable_meta_tags' => '<strong>' . sprintf( __('Disable %s Tags','cooked'), 'Cooked <code>&lt;meta&gt;</code>' ) . '</strong> &mdash; ' . __('Prevents duplicates when tags already exist.','cooked'),
-                        'disable_servings_switcher' => '<strong>' . __('Disable "Servings Switcher"','cooked') . '</strong> &mdash; ' . __( 'Removes the servings dropdown on recipes.', 'cooked' ),
-                        'disable_schema_output' => '<strong>' . __('Disable Recipe Schema Output','cooked') . '</strong> &mdash; ' . __( 'You should only do this if you\'re using something else to output schema information.', 'cooked' )
-                    ))
-                ),
-            )
-        ),
-        'design' => array(
-            'name' => __('Design','cooked'),
-            'icon' => 'pencil',
-            'fields' => array(
-                'dark_mode' => array(
-                    'title' => __('Dark Mode', 'cooked'),
-                    'desc' => __( 'If your site has a dark background, you should enable "Dark Mode" so that Cooked can match this style.', 'cooked' ),
-                    'type' => 'checkboxes',
-                    'default' => array(),
-                    'options' => apply_filters( 'cooked_dark_mode_options', array(
-                        'enabled' => __('Enable "Dark Mode"','cooked'),
-                    ))
-                ),
-                'hide_author_avatars' => array(
-                    'title' => __('Author Images', 'cooked'),
-                    'desc' => __( 'If you do not want to display the author images (avatars), you can disable them here.', 'cooked' ),
-                    'type' => 'checkboxes',
-                    'color' => 'red',
-                    'default' => array(),
-                    'options' => apply_filters( 'cooked_author_image_options', array(
-                        'hidden' => __('Hide Author Images','cooked'),
-                    ))
-                ),
-                'main_color' => array(
-                    'title' => __('Main Color', 'cooked'),
-                    'desc' => __( 'Used on buttons, cooking timer, etc.', 'cooked' ),
-                    'type' => 'color_field',
-                    'default' => '#16a780',
-                    'options' => '#16a780'
-                ),
-                'main_color_hover' => array(
-                    'title' => __('Main Color (on hover)', 'cooked'),
-                    'desc' => __( 'Used when hovering over buttons.', 'cooked' ),
-                    'type' => 'color_field',
-                    'default' => '#1b9371',
-                    'options' => '#1b9371'
-                ),
-                'responsive_breakpoint_1' => array(
-                    'title' => __( 'First Responsive Breakpoint', 'cooked' ),
-                    'desc' => __( 'Set the first responsive breakpoint. Best for large tablets.', 'cooked' ),
-                    'type' => 'number_field',
-                    'default' => '1000',
-                    'options' => ''
-                ),
-                'responsive_breakpoint_2' => array(
-                    'title' => __('Second Responsive Breakpoint', 'cooked'),
-                    'desc' => __( 'Set the second responsive breakpoint. Best for small tablets.', 'cooked' ),
-                    'type' => 'number_field',
-                    'default' => '750',
-                    'options' => ''
-                ),
-                'responsive_breakpoint_3' => array(
-                    'title' => __('Third Responsive Breakpoint', 'cooked'),
-                    'desc' => __( 'Set the third responsive breakpoint. Best for phones and other small devices.', 'cooked' ),
-                    'type' => 'number_field',
-                    'default' => '520',
-                    'options' => ''
-                )
-            )
-        ),
-        'permalinks' => array(
-            'name' => __('Permalinks','cooked'),
-            'icon' => 'link-lt',
-            'fields' => array(
-                'recipe_permalink' => array(
-                    'title' => __('Recipe Permalink', 'cooked'),
-                    'desc' => '',
-                    'type' => 'permalink_field',
-                    'options' => __( 'recipe-name', 'cooked' ),
-                    'default' => 'recipes'
-                ),
-                'recipe_author_permalink' => array(
-                    'title' => __('Recipe Author Permalink', 'cooked'),
-                    'desc' => '',
-                    'type' => 'permalink_field',
-                    'options' => __( 'author-name', 'cooked' ),
-                    'default' => 'recipe-author'
-                ),
-                'recipe_category_permalink' => array(
-                    'title' => __('Recipe Category Permalink', 'cooked'),
-                    'desc' => '',
-                    'type' => 'permalink_field',
-                    'options' => __( 'recipe-category-name', 'cooked' ),
-                    'default' => 'recipe-category'
-                )
-            )
-        )
-
-        ), $pages_array, $categories_array );
+        return apply_filters('cooked_settings_tabs_fields', [
+            'recipe_settings' => [
+                'name' => __('General', 'cooked'),
+                'icon' => 'gear',
+                'fields' => [
+                    'browse_page' => [
+                        'title' => __('Browse/Search Recipes Page', 'cooked'),
+                        /* translators: a description on how to add the [cooked-browse] shortcode to a page */
+                        'desc' => sprintf(__('Create a page with the %s shortcode on it, then choose it from this dropdown.', 'cooked'), '[cooked-browse]'),
+                        'type' => 'select',
+                        'default' => 0,
+                        'options' => $pages_array
+                    ],
+                    'recipes_per_page' => [
+                        'title' => __('Recipes Per Page', 'cooked'),
+                        /* translators: a description on how to choose the default number of recipes per page. */
+                        'desc' => sprintf(__('Choose the default (set via the %s panel) or choose a different number here.', 'cooked'), '<a href="' . trailingslashit(get_admin_url()) . 'options-reading.php">' . __('Settings > Reading', 'cooked') . '</a>'),
+                        'type' => 'select',
+                        'default' => 9,
+                        'options' => $recipes_per_page_array
+                    ],
+                    'recipe_taxonomies' => [
+                        'title' => __('Recipe Taxonomies', 'cooked'),
+                        'desc' => __('Choose which taxonomies you want to enable for your recipes.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'default' => ['cp_recipe_category'],
+                        'options' => apply_filters(
+                            'cooked_taxonomy_options',
+                            [
+                                'cp_recipe_category' => __('Categories', 'cooked')
+                            ]
+                        )
+                    ],
+                    'recipe_info_display_options' => [
+                        'title' => __('Global Recipe Toggles', 'cooked'),
+                        'desc' => __('You can quickly hide or show different recipe elements (site-wide) with these checkboxes.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'default' => apply_filters('cooked_recipe_info_display_options_defaults', array('author', 'taxonomies', 'difficulty_level', 'excerpt', 'timing_prep', 'timing_cook', 'timing_total', 'servings')),
+                        'options' => apply_filters(
+                            'cooked_recipe_info_display_options',
+                            [
+                                'author' => __('Author', 'cooked'),
+                                'taxonomies' => __('Category', 'cooked'),
+                                'difficulty_level' => __('Difficulty Level', 'cooked'),
+                                'excerpt' => __('Excerpt', 'cooked'),
+                                'notes' => __('Notes', 'cooked'),
+                                'timing_prep' => __('Prep Time', 'cooked'),
+                                'timing_cook' => __('Cook Time', 'cooked'),
+                                'timing_total' => __('Total Time', 'cooked'),
+                                'servings' => __('Servings', 'cooked')
+                            ]
+                        )
+                    ],
+                    'carb_format' => [
+                        'title' => __('Carbs Format', 'cooked'),
+                        'desc' => __('You can display carbs as "Total" or "Net".', 'cooked'),
+                        'type' => 'select',
+                        'default' => 'total',
+                        'options' => apply_filters(
+                            'cooked_settings_carb_formats',
+                            [
+                                'total' => __('Total Carbs', 'cooked'),
+                                'net' => __('Net Carbs', 'cooked')
+                            ]
+                        )
+                    ],
+                    'author_name_format' => [
+                        'title' => __('Author Name Format', 'cooked'),
+                        'desc' => __('You can show the full author\'s name or just a part of it.', 'cooked'),
+                        'type' => 'select',
+                        'default' => 'full',
+                        'options' => apply_filters(
+                            'cooked_settings_author_formats',
+                            [
+                                'full' => __('Full name', 'cooked'),
+                                'first_last_initial' => __('Full first name w/last name initial', 'cooked'),
+                                'first_initial_last' => __('First name initial w/full last name', 'cooked'),
+                                'first_only' => __('First name only', 'cooked')
+                            ]
+                        )
+                    ],
+                    'disable_author_links' => [
+                        'title' => __('Author Links', 'cooked'),
+                        'desc' => __('If you do not want the author names to link to the author recipe listings, you can disable them here.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'color' => 'red',
+                        'default' => [],
+                        'options' => apply_filters(
+                            'cooked_author_link_options',
+                            [
+                                'disabled' => __('Disable Author Links', 'cooked'),
+                            ]
+                        )
+                    ],
+                    'browse_default_cp_recipe_category' => [
+                        'title' => __('Default Category', 'cooked'),
+                        /* translators: a description on how to set the default recipe category for the [cooked-browse] shortcode. */
+                        'desc' => sprintf(__('Optionally set the default recipe category for your %s shortcode display.', 'cooked'), '[cooked-browse]'),
+                        'type' => 'select',
+                        'default' => 0,
+                        'options' => $categories_array
+                    ],
+                    'browse_default_sort' => [
+                        'title' => __('Default Sort Order', 'cooked'),
+                        /* translators: a description on how to set the default sort order for the [cooked-browse] shortcode. */
+                        'desc' => sprintf(__('Set the default sort order for your %s shortcode display.', 'cooked'), '[cooked-browse]'),
+                        'type' => 'select',
+                        'default' => 'date_desc',
+                        'options' => apply_filters(
+                            'cooked_settings_sort_options',
+                            [
+                                'date_desc' => __('Newest First', 'cooked'),
+                                'date_asc' => __('Oldest First', 'cooked'),
+                                'title_asc' => __('Alphabetical', 'cooked'),
+                                'title_desc' => __('Alphabetical (reversed)', 'cooked'),
+                            ]
+                        )
+                    ],
+                    'advanced' => [
+                        'title' => __('Advanced Settings', 'cooked'),
+                        'desc' => '',
+                        'type' => 'checkboxes',
+                        'color' => 'red',
+                        'class' => 'cooked-danger',
+                        'default' => [],
+                        'options' => apply_filters(
+                            'cooked_advanced_options',
+                            [
+                                /* translators: an option to only show recipes with the [cooked-recipe] shortcode. */
+                                'disable_public_recipes' => '<strong>' . __('Disable Public Recipes', 'cooked') . '</strong> &mdash; ' . sprintf(__('Only show recipes using the %s shortcode.', 'cooked'), '<code>[cooked-recipe]</code>'),
+                                /* translators: an option to disable "meta" tags. */
+                                'disable_meta_tags' => '<strong>' . sprintf(__('Disable %s Tags', 'cooked'), 'Cooked <code>&lt;meta&gt;</code>') . '</strong> &mdash; ' . __('Prevents duplicates when tags already exist.', 'cooked'),
+                                'disable_servings_switcher' => '<strong>' . __('Disable "Servings Switcher"', 'cooked') . '</strong> &mdash; ' . __('Removes the servings dropdown on recipes.', 'cooked'),
+                                'disable_schema_output' => '<strong>' . __('Disable Recipe Schema Output', 'cooked') . '</strong> &mdash; ' . __('You should only do this if you\'re using something else to output schema information.', 'cooked')
+                            ]
+                        )
+                    ],
+                ]
+            ],
+            'design' => [
+                'name' => __('Design', 'cooked'),
+                'icon' => 'pencil',
+                'fields' => [
+                    'dark_mode' => [
+                        'title' => __('Dark Mode', 'cooked'),
+                        'desc' => __('If your site has a dark background, you should enable "Dark Mode" so that Cooked can match this style.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'default' => [],
+                        'options' => apply_filters(
+                            'cooked_dark_mode_options',
+                            [
+                                'enabled' => __('Enable "Dark Mode"', 'cooked'),
+                            ]
+                        )
+                    ],
+                    'hide_author_avatars' => [
+                        'title' => __('Author Images', 'cooked'),
+                        'desc' => __('If you do not want to display the author images (avatars), you can disable them here.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'color' => 'red',
+                        'default' => [],
+                        'options' => apply_filters(
+                            'cooked_author_image_options',
+                            [
+                                'hidden' => __('Hide Author Images', 'cooked'),
+                            ]
+                        )
+                    ],
+                    'main_color' => [
+                        'title' => __('Main Color', 'cooked'),
+                        'desc' => __('Used on buttons, cooking timer, etc.', 'cooked'),
+                        'type' => 'color_field',
+                        'default' => '#16a780',
+                        'options' => '#16a780'
+                    ],
+                    'main_color_hover' => [
+                        'title' => __('Main Color (on hover)', 'cooked'),
+                        'desc' => __('Used when hovering over buttons.', 'cooked'),
+                        'type' => 'color_field',
+                        'default' => '#1b9371',
+                        'options' => '#1b9371'
+                    ],
+                    'responsive_breakpoint_1' => [
+                        'title' => __('First Responsive Breakpoint', 'cooked'),
+                        'desc' => __('Set the first responsive breakpoint. Best for large tablets.', 'cooked'),
+                        'type' => 'number_field',
+                        'default' => '1000',
+                        'options' => ''
+                    ],
+                    'responsive_breakpoint_2' => [
+                        'title' => __('Second Responsive Breakpoint', 'cooked'),
+                        'desc' => __('Set the second responsive breakpoint. Best for small tablets.', 'cooked'),
+                        'type' => 'number_field',
+                        'default' => '750',
+                        'options' => ''
+                    ],
+                    'responsive_breakpoint_3' => [
+                        'title' => __('Third Responsive Breakpoint', 'cooked'),
+                        'desc' => __('Set the third responsive breakpoint. Best for phones and other small devices.', 'cooked'),
+                        'type' => 'number_field',
+                        'default' => '520',
+                        'options' => ''
+                    ]
+                ]
+            ],
+            'permalinks' => [
+                'name' => __('Permalinks', 'cooked'),
+                'icon' => 'link-lt',
+                'fields' => [
+                    'recipe_permalink' => [
+                        'title' => __('Recipe Permalink', 'cooked'),
+                        'desc' => '',
+                        'type' => 'permalink_field',
+                        'options' => __('recipe-name', 'cooked'),
+                        'default' => 'recipes'
+                    ],
+                    'recipe_author_permalink' => [
+                        'title' => __('Recipe Author Permalink', 'cooked'),
+                        'desc' => '',
+                        'type' => 'permalink_field',
+                        'options' => __('author-name', 'cooked'),
+                        'default' => 'recipe-author'
+                    ],
+                    'recipe_category_permalink' => [
+                        'title' => __('Recipe Category Permalink', 'cooked'),
+                        'desc' => '',
+                        'type' => 'permalink_field',
+                        'options' => __('recipe-category-name', 'cooked'),
+                        'default' => 'recipe-category'
+                    ]
+                ]
+            ]
+        ], $pages_array, $categories_array);
     }
 
     public static function per_page_array() {
@@ -319,7 +342,6 @@ class Cooked_Settings {
     }
 
     public static function pages_array( $choose_text,$none_text = false ) {
-
         $page_array = [];
         $pages = get_posts(['post_type' => 'page', 'posts_per_page' => -1] );
 
@@ -333,17 +355,15 @@ class Cooked_Settings {
         endif;
 
         return apply_filters( 'cooked_settings_pages_array', $page_array );
-
     }
 
     public static function terms_array( $term, $choose_text, $none_text = false, $hide_empty = false, $parents_only = false, $child_of = false ){
+        $terms_array = [];
 
-        $terms_array = array();
-
-        $args = array(
+        $args = [
             'taxonomy' => $term,
             'hide_empty' => $hide_empty
-        );
+        ];
 
         if ( $parents_only ):
             $args['parent'] = '0';
@@ -439,55 +459,61 @@ class Cooked_Settings {
 
     // Kept here for backwards compatibility only. Removed used in Cooked Pro 1.0.1
     public static function field_misc_button( $field_name, $title ){
-        global $_cooked_settings;
         echo '<p>';
             echo '<input type="submit" class="button-secondary" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $title ) . '">';
         echo '</p>';
     }
     // END
 
-    public static function field_migrate_button( $field_name, $title ){
-        global $_cooked_settings;
-        $old_recipes = get_transient( 'cooked_classic_recipes' );
-        if ( $old_recipes != 'complete' ):
+    public static function field_migrate_button( $field_name, $title ) {
+        $old_recipes = get_transient('cooked_classic_recipes');
+
+        if ($old_recipes != 'complete') {
             $total = count($old_recipes);
-            if ( $total > 0 ):
+
+            if ($total > 0) {
                 echo '<p>';
                     echo '<input id="cooked-migration-button" type="button" class="button-secondary" name="begin_cooked_migration" value="' . __( 'Begin Migration', 'cooked' ) . '">';
                 echo '</p>';
                 echo '<p>';
                     echo '<span id="cooked-migration-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-migration-progress-text" class="cooked-progress-text">0 / ' . esc_html( $total ) . '</span>';
                 echo '</p>';
-                echo '<p id="cooked-migration-completed"><strong>Migration Complete!</strong> You can now <a href="' . esc_url( add_query_arg( array( 'page' => 'cooked_settings' ), admin_url( 'admin.php' ) ) ) . '">' . __( 'reload', 'cooked' ) . '</a> the settings screen.</p>';
-            endif;
-        endif;
+                echo '<p id="cooked-migration-completed"><strong>Migration Complete!</strong> You can now <a href="' . esc_url( add_query_arg(['page' => 'cooked_settings'], admin_url( 'admin.php' ) ) ) . '">' . __( 'reload', 'cooked' ) . '</a> the settings screen.</p>';
+            }
+        }
     }
 
-    public static function field_text( $field_name, $placeholder ){
+    public static function field_text($field_name, $placeholder) {
         global $_cooked_settings;
+
         echo '<p>';
             echo '<input id="cooked_field--' . esc_attr( $field_name ) . '" type="text"' . ( $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '">';
         echo '</p>';
     }
 
-    public static function field_password( $field_name, $placeholder ){
+    public static function field_password($field_name, $placeholder) {
         global $_cooked_settings;
+
         echo '<p>';
             echo '<input type="password"' . ( $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '">';
         echo '</p>';
     }
 
-    public static function field_html( $field_name, $html ){
-        global $_cooked_settings;
-        echo wp_kses_post( $html );
+    public static function field_html($field_name, $html) {
+        echo wp_kses_post($html);
     }
 
-    public static function field_permalink_field( $field_name, $end_of_url ) {
+    public static function field_permalink_field($field_name, $end_of_url) {
         global $_cooked_settings;
-        $browse_page_id = $_cooked_settings['browse_page'];
-        $browse_page_url = get_permalink( $browse_page_id );
 
-        if ( empty($browse_page_url) ) {
+        $browse_page_id = $_cooked_settings['browse_page'];
+        $browse_page_url = '';
+
+        if (!empty($browse_page_id)) {
+            $browse_page_url = get_permalink( $browse_page_id );
+        }
+
+        if (empty($browse_page_url)) {
             $browse_page_url = get_home_url();
         }
 
@@ -498,6 +524,7 @@ class Cooked_Settings {
 
     public static function field_number_field( $field_name, $options ) {
         global $_cooked_settings;
+
         echo '<p>';
             echo '<input type="number" step="any" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '">';
         echo '</p>';
@@ -505,16 +532,17 @@ class Cooked_Settings {
 
     public static function field_color_field( $field_name, $default ) {
         global $_cooked_settings;
+
         echo '<p>';
             echo '<input class="cooked-color-field" type="text"' . ( $default ? ' data-default-color="' . esc_attr( $default ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '">';
         echo '</p>';
     }
 
     public static function field_checkboxes( $field_name, $options, $color = false ) {
-        global $_cooked_settings,$conditions;
+        global $_cooked_settings, $conditions;
+
         echo '<p class="cooked-padded">';
             foreach ( $options as $value => $name) :
-
                 $is_disabled = '';
                 $conditional_value = '';
                 $conditional_requirement = '';

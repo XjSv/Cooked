@@ -71,14 +71,14 @@ $_cooked_settings = Cooked_Settings::get();
 	.cooked-fsm.cooked-active { top:0; }
 	.cooked-fsm .cooked-fsm-mobile-nav { display:block; }
 	.cooked-fsm .cooked-fsm-ingredients,
-	.cooked-fsm .cooked-fsm-directions { padding:9rem 2rem 1rem; width:100%; display:none; left:0; background:#fff; }
+	.cooked-fsm .cooked-fsm-directions-wrap { padding:9rem 2rem 1rem; width:100%; display:none; left:0; background:#fff; }
 	.cooked-fsm .cooked-fsm-ingredients.cooked-active,
-	.cooked-fsm .cooked-fsm-directions.cooked-active { display:block; }
+	.cooked-fsm .cooked-fsm-directions-wrap.cooked-active { display:block; }
 
 	<?php if ( isset($_cooked_settings['dark_mode']) && $_cooked_settings['dark_mode'] ):
 
 	?>.cooked-fsm .cooked-fsm-ingredients,
-	.cooked-fsm .cooked-fsm-directions { background:#000; color:#fff; }<?php
+	.cooked-fsm .cooked-fsm-directions-wrap { background:#000; color:#fff; }<?php
 
 	endif; ?>
 

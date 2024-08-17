@@ -20,15 +20,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Cooked_Elementor {
 
     public function __construct(){
-        add_action( 'plugins_loaded', array( &$this, 'init' ) );
+        add_action( 'plugins_loaded', [&$this, 'init'] );
     }
 
     public function init(){
         // Check if Elementor installed and activated
         if ( did_action( 'elementor/loaded' ) ) {
-            add_filter( 'cooked_recipe_content_filter', array( &$this, 'elementor_filter' ), 15, 3 );
-            add_filter( 'cooked_should_update_post_content', array( &$this, 'should_update_content' ), 10, 2 );
-            add_action( 'elementor/element/before_section_start', array( &$this, 'elementor_is_editing' ), 10, 3 );
+            add_filter( 'cooked_recipe_content_filter', [&$this, 'elementor_filter'], 15, 3 );
+            add_filter( 'cooked_should_update_post_content', [&$this, 'should_update_content'], 10, 2 );
+            add_action( 'elementor/element/before_section_start', [&$this, 'elementor_is_editing'], 10, 3 );
         }
     }
 
@@ -62,4 +62,3 @@ class Cooked_Elementor {
     }
 
 }
-

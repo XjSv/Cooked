@@ -29,7 +29,7 @@ class Cooked_Delicious_Recipes {
     public $import_type = 'delicious_recipes';
 
     /**
-     * The import name.
+     * The constructor (empty for now).
      *
      * @since 1.8.2
      * @access public

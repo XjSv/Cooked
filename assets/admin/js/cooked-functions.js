@@ -837,8 +837,8 @@ function cooked_get_random_int(min, max) {
 }
 
 // Check if value is an integer (for amount field in Ingredients Builder)
-function cooked_is_int(val){
-    if(Math.floor(val) == val && $.isNumeric(val)){
+function cooked_is_int(val) {
+    if (Math.floor(val) == val && $.isNumeric(val)) {
         return true;
     } else {
         return false;
@@ -846,28 +846,26 @@ function cooked_is_int(val){
 }
 
 // Cooked Conditional Fields Function
-function cooked_init_conditional_field(thisID){
+function cooked_init_conditional_field(thisID) {
+    var thisField = jQuery('#' + thisID);
 
-    var thisField = jQuery('#'+thisID);
-
-    if (thisField.is(':radio')){
-        jQuery('body').find('input:radio').on('change',function(){
-            if (!thisField.is(':checked')){
-                jQuery('body').find("[data-condition='" + thisID + "']").each(function(){
+    if (thisField.is(':radio')) {
+        jQuery('body').find('input:radio').on('change', function() {
+            if (!thisField.is(':checked')) {
+                jQuery('body').find("[data-condition='" + thisID + "']").each(function() {
                     jQuery(this).hide();
                 });
             }
         });
     }
 
-    thisField.on('change',function(){
-
+    thisField.on('change', function() {
         jQuery('#cooked_recipe_settings').addClass('cooked-loading');
 
         window.clearTimeout($_CookedConditionalTimeout);
-        $_CookedConditionalTimeout = window.setTimeout(function(){
 
-            jQuery('body').find("[data-condition='" + thisID + "']").each(function(){
+        $_CookedConditionalTimeout = window.setTimeout(function() {
+            jQuery('body').find("[data-condition='" + thisID + "']").each(function() {
                 var thisBlock = jQuery(this),
                     thisBlockType;
 
@@ -879,7 +877,7 @@ function cooked_init_conditional_field(thisID){
 
                 var thisVal = thisBlock.data('value');
 
-                if (thisVal){
+                if (thisVal) {
                     thisVal = thisVal.split(' ');
                 } else {
                     thisVal = false;
@@ -889,9 +887,9 @@ function cooked_init_conditional_field(thisID){
                     thisBlock.css({'display':thisBlockType});
                 } else if (thisField.is(":checkbox") && !thisField.is(":checked")) {
                     thisBlock.hide();
-                } else if (!thisField.is(":checkbox") && !thisVal && thisField.val() || !thisField.is(":checkbox") && thisVal && jQuery.inArray(thisField.val(),thisVal) > -1){
+                } else if (!thisField.is(":checkbox") && !thisVal && thisField.val() || !thisField.is(":checkbox") && thisVal && jQuery.inArray(thisField.val(),thisVal) > -1) {
                     thisBlock.css({'display':thisBlockType});
-                } else if (!thisField.is(":radio") && !thisVal && thisField.val() || !thisField.is(":radio") && thisVal && jQuery.inArray(thisField.val(),thisVal) > -1){
+                } else if (!thisField.is(":radio") && !thisVal && thisField.val() || !thisField.is(":radio") && thisVal && jQuery.inArray(thisField.val(),thisVal) > -1) {
                     thisBlock.css({'display':thisBlockType});
                 } else {
                     thisBlock.hide();
@@ -900,8 +898,6 @@ function cooked_init_conditional_field(thisID){
 
             jQuery('#cooked_recipe_settings').removeClass('cooked-loading');
 
-        },25);
-
+        }, 25);
     });
-
 }

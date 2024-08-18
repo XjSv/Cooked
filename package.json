@@ -1,7 +1,7 @@
 {
   "name": "cooked",
   "version": "1.8.3",
-  "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Now open source!",
+  "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.",
   "main": "index.js",
   "scripts": {
     "build": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp build",

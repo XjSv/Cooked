@@ -678,7 +678,6 @@ function cooked_render_recipe_fields( $post_id ) {
                         <a href="#" data-id="" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                     </div>
                     <div class="cooked-direction-content">
-                        <!-- <textarea id="recipe_settings_direction_template" data-direction-part="content" name=""></textarea> -->
                         <?php
                         wp_editor('', 'recipe_settings_direction_template', [
                             'editor_class' => 'cooked-wysiwyg-editor',

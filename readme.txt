@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.6.1
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,12 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.2 adds the Notes feature, a new way to add notes to your recipes. It also adds the option to import recipes from the WP Delicious plugin. More imports are coming soon!
+Version 1.8.3 includes a fix for a bug when adding new recipe directions in which the WordPress editor was not usable until after saving the recipe.
 
 == Changelog ==
+
+= 1.8.3 =
+* **FIX:** Fixed bug when adding new recipe directions in which the WordPress editor was not usable until after saving the recipe.
 
 = 1.8.2 =
 * **FIX:** Fixed bug with the recipe direction not saving correctly.

@@ -6,7 +6,7 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author: 		Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.8.2
+Version: 		1.8.3
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.8.2' );
+define( 'COOKED_VERSION', '1.8.3' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -242,8 +242,8 @@ final class Cooked_Plugin {
 		if ($modules):
 			foreach ($modules as $module_name):
 				if ($module_name !== '.' && $module_name !== '..'):
-					if ( file_exists( COOKED_DIR . 'modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php' ) ):
-						require_once COOKED_DIR . 'modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php';
+					if ( file_exists( COOKED_DIR . 'modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ):
+						require_once COOKED_DIR . 'modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
 					endif;
 				endif;
 			endforeach;
@@ -255,8 +255,8 @@ final class Cooked_Plugin {
 		if ($modules):
 			foreach ($modules as $module_name):
 				if ($module_name !== '.' && $module_name !== '..'):
-					if ( file_exists( $parent_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php' ) ):
-						require_once $parent_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php';
+					if ( file_exists( $parent_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ):
+						require_once $parent_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
 					endif;
 				endif;
 			endforeach;
@@ -269,8 +269,8 @@ final class Cooked_Plugin {
 			if ($modules):
 				foreach ($modules as $module_name):
 					if ($module_name !== '.' && $module_name !== '..'):
-						if ( file_exists( $child_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php' ) ):
-							require_once $child_theme_folder . 'cooked-modules/'.esc_attr( $module_name ).'/'.esc_attr( $module_name ).'.php';
+						if ( file_exists( $child_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ):
+							require_once $child_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
 						endif;
 					endif;
 				endforeach;

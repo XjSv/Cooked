@@ -605,25 +605,18 @@ var $_CookedConditionalTimeout  = false;
             });
 
             $_CookedRecipeGallery.on('click','.remove-image-button',function(e){
-
                 var thisButton = $(this);
                 directionID = thisButton.data('id');
                 e.preventDefault();
 
                 if ( directionID ){
-
                     $('#direction-'+directionID+'-image-src').parent().removeClass('cooked-has-image').prop('src',false);
                        $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val('');
                     $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value',cooked_js_vars.i18n_image_title );
-
                 } else {
-
                     thisButton.parent().remove();
-
                 }
-
             });
-
         }
 
         if ( $_CookedNutritionFactsTab.length ){
@@ -702,13 +695,11 @@ function cooked_set_default_template(recipe_ids, total_recipes, content, nonce, 
     };
 }
 
-function cooked_updateTotalTimeValue( prepTime, cookTime ){
-
+function cooked_updateTotalTimeValue( prepTime, cookTime ) {
     var totalTimeInput = jQuery( '#cooked-total-time' ),
         totalTime = prepTime + cookTime;
 
     totalTimeInput.val( totalTime );
-
 }
 
 // Reset the Gallery Builder
@@ -756,7 +747,7 @@ function cooked_reset_ingredient_builder() {
 
     ingredientBlocks.each(function(){
 
-        var randomKeyForInterval = cooked_get_random_int(10000000,99999999);
+        var randomKeyForInterval = cooked_get_random_int(10000000, 99999999);
         total_blocks++;
 
         // Set the input "name" values.
@@ -766,11 +757,11 @@ function cooked_reset_ingredient_builder() {
             total_ingredients++;
         }
 
-        $_this.find("[data-ingredient-part]").each(function(){
+        $_this.find("[data-ingredient-part]").each(function() {
             var thisField = jQuery(this);
-            if ( thisField.attr('name') == ''){
+            if ( thisField.attr('name') == '') {
                 var ingredientPartName = thisField.data('ingredient-part');
-                thisField.attr( 'name','_recipe_settings[ingredients][' + randomKeyForInterval + '][' + ingredientPartName + ']' );
+                thisField.attr( 'name', '_recipe_settings[ingredients][' + randomKeyForInterval + '][' + ingredientPartName + ']' );
             }
         });
 
@@ -797,7 +788,7 @@ function cooked_reset_direction_builder() {
         total_blocks = 0;
 
     directionBlocks.each(function() {
-        var randomKeyForInterval = cooked_get_random_int(10000000,99999999);
+        var randomKeyForInterval = cooked_get_random_int(10000000, 99999999);
         total_blocks++;
 
         // Set the input "name" values.
@@ -805,20 +796,30 @@ function cooked_reset_direction_builder() {
 
         $_this.find("[data-direction-part]").each(function() {
             var thisField = jQuery(this);
+            var directionPartName = thisField.data('direction-part');
 
             if ( thisField.attr('name') == '') {
-                var directionPartName = thisField.data('direction-part');
-                thisField.attr( 'name','_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']' );
+                thisField.attr( 'name', '_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']' );
             }
 
             if ( thisField.attr('data-id') == '') {
-                thisField.attr( 'data-id',randomKeyForInterval );
+                thisField.attr( 'data-id', randomKeyForInterval );
             }
 
-            if ( thisField.attr('id') == '') {
-                var directionPartName = thisField.data( 'direction-part' );
-                directionPartName = directionPartName.replace( '_', '-' );
-                thisField.attr( 'id','direction-'+randomKeyForInterval+'-'+directionPartName);
+            let theId = thisField.attr('id');
+            if ( theId == '' || theId == 'recipe_settings_direction_template' ) {
+                thisField.attr( 'id', 'recipe_settings_directions_' + randomKeyForInterval);
+
+                // Init the WordPress Editor.
+                wp.editor.initialize( 'recipe_settings_directions_' + randomKeyForInterval, {
+                    tinymce: true,
+                    quicktags: true,
+                    mediaButtons: false,
+                    wpautop: false,
+                    editor_height: 100,
+                    textarea_name: '_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']'
+                });
+
             }
         });
     });

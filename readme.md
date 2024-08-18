@@ -1,6 +1,6 @@
 # Cooked - A Modern and Customizable Recipe Plugin for WordPress
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Now open source!
+Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.
 
 ## Description
 

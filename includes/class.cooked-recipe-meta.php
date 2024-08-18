@@ -629,7 +629,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <?php else:
 
-                    $random_key = wp_rand( 1000000,9999999 ); ?>
+                    $random_key = wp_rand( 1000000, 9999999 ); ?>
 
                     <div class="recipe-setting-block cooked-direction-block cooked-clearfix">
                         <i class="cooked-icon cooked-icon-drag"></i>

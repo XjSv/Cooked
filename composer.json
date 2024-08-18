@@ -1,12 +1,12 @@
 {
     "name": "xjsv/cooked",
-    "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Now open source!",
+    "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.",
 	"keywords": [
 		"wordpress",
 		"recipe"
 	],
 	"homepage": "https://wordpress.org/plugins/cooked/",
-	"version": "1.8.2",
+	"version": "1.8.3",
 	"type": "wordpress-plugin",
 	"license": "GPL-3.0-or-later",
 	"prefer-stable": true,

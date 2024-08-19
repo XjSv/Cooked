@@ -142,11 +142,11 @@ class Cooked_Delicious_Recipes {
                 } else {
                     foreach ($ingredient['ingredients'] as $ingredient) {
                         $new_cp_recipe_meta['ingredients'][] = [
-                            'amount' => $ingredient['quantity'],
-                            'measurement' => $ingredient['unit'],
-                            'name' => $ingredient['ingredient'],
+                            'amount' => (!empty($ingredient['quantity']) ? $ingredient['quantity'] : ''),
+                            'measurement' => (!empty($ingredient['unit']) ? $ingredient['unit'] : ''),
+                            'name' => (!empty($ingredient['ingredient']) ? $ingredient['ingredient'] : ''),
                             'url' => '',
-                            'description' => $ingredient['notes']
+                            'description' => (!empty($ingredient['notes']) ? $ingredient['notes'] : ''),
                         ];
                     }
                 }
@@ -292,7 +292,7 @@ class Cooked_Delicious_Recipes {
 
         // Insert recipe taxonomies. Create the terms if they don't exist.
         $recipe_taxonomies_mapping = [
-            //'recipe-category' => 'cp_recipe_category',
+            'recipe-course' => 'cp_recipe_category',
             'recipe-cuisine' => 'cp_recipe_cuisine',
             'recipe-cooking-method' => 'cp_recipe_cooking_method',
             'recipe-tag' => 'cp_recipe_tags',

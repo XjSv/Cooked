@@ -280,30 +280,110 @@ body .button.button-cooked-reset:hover { color:#555; }
 
 /* Nutrition Label */
 #cooked_recipe_settings label.cooked-nutrition-label { display:block; font-size:0.7rem; letter-spacing:0.03rem; font-weight:700; text-transform:uppercase; line-height:1; margin:0 0 7px; }
-#cooked_recipe_settings #cooked-nutrition-label { line-height:1.6; font-size:1.1rem; border:1px solid #aaa; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; padding:5%; margin:0 0 2rem; }
-#cooked_recipe_settings #cooked-nutrition-label h2 { font-size:2rem; line-height:1; letter-spacing:0; font-weight:800; padding:0; margin:0 0 0.4rem; color:#333; }
+#cooked_recipe_settings #cooked-nutrition-label {
+  line-height:1.6;
+  font-size:1.1rem;
+  border:1px solid #aaa;
+  -moz-border-radius:3px;
+  -webkit-border-radius:3px;
+  border-radius:3px;
+  padding:5%;
+  margin:0 0 2rem;
+  font-family: 'Helvetica', 'Arial', sans-serif;
+  container-name: nutrition-label;
+  container-type: inline-size;
+}
+
+#cooked_recipe_settings #cooked-nutrition-label h2 {
+  font-size:2.5rem;
+  line-height:1;
+  letter-spacing:0;
+  font-weight:800;
+  padding:0 0 0.5rem 0;
+  margin:0 0 0.4rem;
+  color:#333;
+  border-bottom:1px solid #aaa;
+}
+
+@container nutrition-label (max-width:303px) {
+  #cooked_recipe_settings #cooked-nutrition-label h2 {
+      font-size: 2rem;
+  }
+}
+
+@container nutrition-label (max-width:263px) {
+  #cooked_recipe_settings #cooked-nutrition-label h2 {
+      font-size: 1.8rem;
+  }
+}
+
+@container nutrition-label (max-width:215px) {
+  #cooked_recipe_settings #cooked-nutrition-label h2 {
+      font-size: 1.4rem;
+  }
+}
+
 #cooked_recipe_settings #cooked-nutrition-label p { margin:0; padding:0; font-size:1rem; }
 #cooked_recipe_settings #cooked-nutrition-label p.cooked-daily-value-text { padding:0.5rem 0 0 0; margin:0; font-size:0.9rem; }
+#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-servings p { font-size:1.5rem; }
 #cooked_recipe_settings #cooked-nutrition-label ul { list-style:none; margin:0; padding:0; }
-#cooked_recipe_settings #cooked-nutrition-label li { position:relative; margin:0; padding:3px 0; border-top:1px solid #aaa; }
+#cooked_recipe_settings #cooked-nutrition-label li { position:relative; margin:0; padding:0 0 3px 0; border-top:1px solid #aaa; }
 #cooked_recipe_settings #cooked-nutrition-label li li { padding:3px 0 0; margin:3px 0 0; }
 #cooked_recipe_settings #cooked-nutrition-label li:after { content: ""; display: table; clear: both; }
-#cooked_recipe_settings #cooked-nutrition-label li.cooked-nut-spacer { border:none; height:0.5rem; padding:0; background:#333; }
+#cooked_recipe_settings #cooked-nutrition-label li.no-after:after { content: none; }
+#cooked_recipe_settings #cooked-nutrition-label li.cooked-nut-spacer { border:none; height:0.6rem; padding:0; background:#333; }
 #cooked_recipe_settings #cooked-nutrition-label > ul > li:first-child,
 #cooked_recipe_settings #cooked-nutrition-label ul li.cooked-nut-no-border { border:none; }
 #cooked_recipe_settings #cooked-nutrition-label li ul { padding:0; margin:0 0 0 20px; }
 #cooked_recipe_settings #cooked-nutrition-label li ul.cooked-right { margin:0; }
-#cooked_recipe_settings #cooked-nutrition-label li ul.cooked-right li { border:none; padding:0; margin:0; }
-#cooked_recipe_settings #cooked-nutrition-label .cooked-nut-hr { border:none; border-top:1rem solid #333; margin:1rem 0 0; padding:0; }
+#cooked_recipe_settings #cooked-nutrition-label li ul.cooked-right li { border:none; padding:0; margin:0;  }
+#cooked_recipe_settings #cooked-nutrition-label li.cooked-calories ul.cooked-right li strong.cooked-nut-label { font-size: 2.5rem; line-height:1; }
+#cooked_recipe_settings #cooked-nutrition-label .cooked-calories {
+  border-top:none;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 0;
+}
+
+#cooked_recipe_settings #cooked-nutrition-label .cooked-calories strong,
+#cooked_recipe_settings #cooked-nutrition-label .cooked-calories strong.cooked-nut-label {
+  font-size: 2rem;
+  font-weight: 800;
+}
+#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-servings li { border: none; }
+#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-servings { margin: 0; }
+#cooked_recipe_settings #cooked-nutrition-label .cooked-nut-hr { border:none; border-top:1.3rem solid #333; margin:0.1rem 0 0; padding:0; }
 #cooked_recipe_settings #cooked-nutrition-label strong { font-weight:800; }
-#cooked_recipe_settings #cooked-nutrition-label strong.cooked-nut-heading { font-size:0.75rem; }
+#cooked_recipe_settings #cooked-nutrition-label .cooked-serving-size strong,
+#cooked_recipe_settings #cooked-nutrition-label .cooked-serving-size strong.cooked-nut-label { font-size: 1.5rem; font-weight: 800; }
+#cooked_recipe_settings #cooked-nutrition-label strong.cooked-nut-heading { font-size:1rem; }
 #cooked_recipe_settings #cooked-nutrition-label strong.cooked-nut-label { font-weight:400; }
+
 #cooked_recipe_settings #cooked-nutrition-label .cooked-nut-right { float:right; }
 #cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-bottom { margin:0 0 0.75rem; }
-#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-bottom li { border-top:none; border-bottom:1px solid #aaa; float:left; width:50%; box-sizing:border-box; }
-#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-bottom li .cooked-nut-right { float:none; }
-#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-bottom li strong { font-weight:400; }
+#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-bottom li {
+  border-top:none;
+  border-bottom:1px solid #aaa;
+  float:left;
+  width:100%;
+  box-sizing:border-box;
+}
+/* @TODO: This does not work because the last child could be hidden. */
+/* #cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-bottom li:last-child {
+  border-bottom:none;
+} */
 #cooked_recipe_settings .cooked-measurement-inputs .cooked-select-wrapper:before { top:8px; }
+
+/* Highlight button class */
+.cooked-auto-nutrition {
+  display: flex;
+  justify-content: end;
+  margin: 0 0 1rem;
+}
+#cooked-tooltip-auto-nutrition-notice {
+  margin: 0;
+}
 
 .cooked-settings-header { border-radius: 10px 10px 0 0; width: auto; height: 90px; line-height: 85px; padding: 0 30px; font-weight: 600; box-sizing: border-box; background:#33373c; color:#fff; font-size: 29px; letter-spacing: -0.03rem; }
 .cooked-settings-header .cooked-icon { color:#00e0a9; }
@@ -436,8 +516,9 @@ body .button.button-cooked-reset:hover { color:#555; }
 
 /* Cooked Colors */
 #cooked_recipe_settings .recipe-setting-block h3.cooked-settings-title,
-#cooked_recipe_settings #cooked-nutrition-label .cooked-nut-label,
-#cooked_recipe_settings #cooked-nutrition-label .cooked-nut-right { color:#0173aa; }
+#cooked_recipe_settings #cooked-nutrition-label .cooked-nut-label { color:#0173aa; }
+/* #cooked_recipe_settings #cooked-nutrition-label .cooked-calories .cooked-right .cooked-nut-label,
+#cooked_recipe_settings #cooked-nutrition-label .cooked-serving-size .cooked-right .cooked-nut-label { color: unset; } */
 #cooked_recipe_settings .recipe-setting-block.cooked-danger h3.cooked-settings-title { color:#d44d1f; }
 #cooked_recipe_settings .cooked-alert-block h3.cooked-settings-title { color:#c02a2a; }
 #cooked-recipe-tabs { background:#fff; }

@@ -87,6 +87,7 @@
 	display:block;
 	font-size:15px;
 	margin:0 0 5px;
+	white-space:nowrap;
 }
 
 .tooltipster-sidetip.tooltipster-light .tooltipster-content .cooked-tooltip-buttons {
@@ -106,3 +107,4 @@
 	margin:5px 0 20px;
 	font-size:12px;
 }
+.tooltip_templates { display: none; }

@@ -157,231 +157,268 @@ class Cooked_Measurements {
 
     }
 
-    public static function nutrition_facts(){
-
+    public static function nutrition_facts() {
         global $_cooked_settings;
 
         // Use the "cooked_nutrition_facts" filter to add your own nutrition facts.
-        $nutrition_facts = apply_filters('cooked_nutrition_facts',array(
-
-            'top' => array(
-                'serving_size' => array(
-                    'name' => __('Serving Size','cooked'),
+        // Reference: https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
+        $nutrition_facts = apply_filters('cooked_nutrition_facts', [
+            'top' => [
+                'servings' => [
+                    'name' => __('Servings', 'cooked'),
+                    'type' => 'number'
+                ],
+                'serving_size' => [
+                    'name' => __('Serving size', 'cooked'),
                     'type' => 'text'
-                ),
-                'servings' => array(
-                    'name' => __('Servings','cooked'),
-                    'type' => 'number'
-                )
-            ),
+                ],
+            ],
 
-            'mid' => array(
-                'calories' => array(
-                    'name' => __('Calories','cooked'),
+            'mid' => [
+                'calories' => [
+                    'name' => __('Calories', 'cooked'),
                     'type' => 'number'
-                ),
-                'calories_fat' => array(
-                    'name' => __('Calories from Fat','cooked'),
-                    'type' => 'number'
-                )
-            ),
+                ]
+            ],
 
-            'main' => array(
-                'fat' => array(
-                    'name' => __('Total Fat','cooked'),
+            'main' => [
+                'fat' => [
+                    'name' => __('Total Fat', 'cooked'),
                     'type' => 'number',
                     'measurement' => 'g',
-                    'pdv' => apply_filters( 'cooked_pdv_fat', 65 ),
-                    'subs' => array(
-                        'sat_fat' => array(
-                            'name' => __('Saturated Fat','cooked'),
+                    'pdv' => apply_filters('cooked_pdv_fat', 78),
+                    'subs' => [
+                        'sat_fat' => [
+                            'name' => __('Saturated Fat', 'cooked'),
                             'type' => 'number',
                             'measurement' => 'g',
-                            'pdv' => apply_filters( 'cooked_pdv_satfat', 20 )
-                        ),
-                        'trans_fat' => array(
-                            'name' => __('Trans Fat','cooked'),
+                            'pdv' => apply_filters('cooked_pdv_satfat', 20)
+                        ],
+                        'trans_fat' => [
+                            'name' => __('Trans Fat', 'cooked'),
+                            'nutrition_info_name' => __('<i>Trans</i> Fat', 'cooked'),
                             'type' => 'number',
                             'measurement' => 'g'
-                        )
-                    )
-                ),
-                'cholesterol' => array(
-                    'name' => __('Cholesterol','cooked'),
+                        ],
+                        'monounsaturated_fat' => [
+                            'name' => __('Monounsaturated Fat', 'cooked'),
+                            'type' => 'number',
+                            'measurement' => 'g'
+                        ],
+                        'polyunsaturated_fat' => [
+                            'name' => __('Polyunsaturated Fat', 'cooked'),
+                            'type' => 'number',
+                            'measurement' => 'g'
+                        ]
+                    ]
+                ],
+                'cholesterol' => [
+                    'name' => __('Cholesterol', 'cooked'),
                     'type' => 'number',
                     'measurement' => 'mg',
-                    'pdv' => apply_filters( 'cooked_pdv_cholesterol', 300 )
-                ),
-                'sodium' => array(
-                    'name' => __('Sodium','cooked'),
+                    'pdv' => apply_filters('cooked_pdv_cholesterol', 300)
+                ],
+                'sodium' => [
+                    'name' => __('Sodium', 'cooked'),
                     'type' => 'number',
                     'measurement' => 'mg',
-                    'pdv' => apply_filters( 'cooked_pdv_sodium', 2400 )
-                ),
-                'potassium' => array(
-                    'name' => __('Potassium','cooked'),
-                    'type' => 'number',
-                    'measurement' => 'mg',
-                    'pdv' => apply_filters( 'cooked_pdv_potassium', 3500 )
-                ),
-                'carbs' => array(
-                    'name' => ( isset( $_cooked_settings['carb_format'] ) && $_cooked_settings['carb_format'] == 'total' ? __('Total Carbohydrate','cooked') : __('Net Carbohydrate','cooked') ),
+                    'pdv' => apply_filters('cooked_pdv_sodium', 2300)
+                ],
+                'carbs' => [
+                    'name' => (isset($_cooked_settings['carb_format']) && $_cooked_settings['carb_format'] == 'total' ? __('Total Carbohydrate', 'cooked') : __('Net Carbohydrate', 'cooked')),
                     'type' => 'number',
                     'measurement' => 'g',
-                    'pdv' => apply_filters( 'cooked_pdv_carbs', 300 ),
-                    'subs' => array(
-                        'fiber' => array(
-                            'name' => __('Dietary Fiber','cooked'),
+                    'pdv' => apply_filters('cooked_pdv_carbs', 275),
+                    'subs' => [
+                        'fiber' => [
+                            'name' => __('Dietary Fiber', 'cooked'),
                             'type' => 'number',
                             'measurement' => 'g',
-                            'pdv' => apply_filters( 'cooked_pdv_fiber', 25 )
-                        ),
-                        'sugars' => array(
-                            'name' => __('Sugars','cooked'),
+                            'pdv' => apply_filters('cooked_pdv_fiber', 28)
+                        ],
+                        'sugars' => [
+                            'name' => __('Total Sugars', 'cooked'),
                             'type' => 'number',
-                            'measurement' => 'g'
-                        )
-                    )
-                ),
-                'protein' => array(
-                    'name' => __('Protein','cooked'),
+                            'measurement' => 'g',
+                            //'pdv' => apply_filters('cooked_pdv_sugars', 28)
+                        ],
+                        'added_sugars' => [
+                            'name' => __('Added Sugars', 'cooked'),
+                            'type' => 'number',
+                            'measurement' => 'g',
+                            'pdv' => apply_filters('cooked_pdv_added_sugars', 50)
+                        ]
+                    ]
+                ],
+                'protein' => [
+                    'name' => __('Protein', 'cooked'),
                     'type' => 'number',
                     'measurement' => 'g',
-                    'pdv' => apply_filters( 'cooked_pdv_protein', 50 )
-                )
-            ),
+                    //'pdv' => apply_filters('cooked_pdv_protein', 50)
+                ]
+            ],
 
-            'bottom' => array(
-                'vitamin_a' => array(
-                    'name' => __('Vitamin A','cooked'),
+            'bottom' => [
+                'vitamin_a' => [
+                    'name' => __('Vitamin A', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'vitamin_c' => array(
-                    'name' => __('Vitamin C','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_vitamin_a', 900)
+                ],
+                'vitamin_c' => [
+                    'name' => __('Vitamin C', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'calcium' => array(
-                    'name' => __('Calcium','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_vitamin_c', 90)
+                ],
+                'calcium' => [
+                    'name' => __('Calcium', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'iron' => array(
-                    'name' => __('Iron','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_calcium', 1300)
+                ],
+                'iron' => [
+                    'name' => __('Iron', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'vitamin_d' => array(
-                    'name' => __('Vitamin D','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_iron', 18)
+                ],
+                'potassium' => [
+                    'name' => __('Potassium', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'vitamin_e' => array(
-                    'name' => __('Vitamin E','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_potassium', 4700)
+                ],
+                'vitamin_d' => [
+                    'name' => __('Vitamin D', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'vitamin_k' => array(
-                    'name' => __('Vitamin K','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_vitamin_d', 20)
+                ],
+                'vitamin_e' => [
+                    'name' => __('Vitamin E', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'thiamin' => array(
-                    'name' => __('Thiamin','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_vitamin_e', 15)
+                ],
+                'vitamin_k' => [
+                    'name' => __('Vitamin K', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'riboflavin' => array(
-                    'name' => __('Riboflavin','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_vitamin_k', 120)
+                ],
+                'thiamin' => [
+                    'name' => __('Thiamin', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'niacin' => array(
-                    'name' => __('Niacin','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_thiamin', 1.2)
+                ],
+                'riboflavin' => [
+                    'name' => __('Riboflavin', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'vitamin_b6' => array(
-                    'name' => __('Vitamin B6','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_riboflavin', 1.3)
+                ],
+                'niacin' => [
+                    'name' => __('Niacin', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'folate' => array(
-                    'name' => __('Folate','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_niacin', 16)
+                ],
+                'vitamin_b6' => [
+                    'name' => __('Vitamin B6', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'vitamin_b12' => array(
-                    'name' => __('Vitamin B12','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_vitamin_b6', 1.7)
+                ],
+                'folate' => [
+                    'name' => __('Folate', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'biotin' => array(
-                    'name' => __('Biotin','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_folate', 400)
+                ],
+                'vitamin_b12' => [
+                    'name' => __('Vitamin B12', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'pantothenic_acid' => array(
-                    'name' => __('Pantothenic Acid','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_vitamin_b12', 2.4)
+                ],
+                'biotin' => [
+                    'name' => __('Biotin', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'phosphorus' => array(
-                    'name' => __('Phosphorus','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_biotin', 30)
+                ],
+                'pantothenic_acid' => [
+                    'name' => __('Pantothenic Acid', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'iodine' => array(
-                    'name' => __('Iodine','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_pantothenic_acid', 5)
+                ],
+                'phosphorus' => [
+                    'name' => __('Phosphorus', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'magnesium' => array(
-                    'name' => __('Magnesium','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_phosphorus', 1250)
+                ],
+                'iodine' => [
+                    'name' => __('Iodine', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'zinc' => array(
-                    'name' => __('Zinc','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_iodine', 150)
+                ],
+                'magnesium' => [
+                    'name' => __('Magnesium', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'selenium' => array(
-                    'name' => __('Selenium','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_magnesium', 420)
+                ],
+                'zinc' => [
+                    'name' => __('Zinc', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'copper' => array(
-                    'name' => __('Copper','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_zinc', 11)
+                ],
+                'selenium' => [
+                    'name' => __('Selenium', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'manganese' => array(
-                    'name' => __('Manganese','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_selenium', 55)
+                ],
+                'copper' => [
+                    'name' => __('Copper', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'chromium' => array(
-                    'name' => __('Chromium','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_copper', 0.9)
+                ],
+                'manganese' => [
+                    'name' => __('Manganese', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'molybdenum' => array(
-                    'name' => __('Molybdenum','cooked'),
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_manganese', 2.3)
+                ],
+                'chromium' => [
+                    'name' => __('Chromium', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                ),
-                'chloride' => array(
-                    'name' => __('Chloride','cooked'),
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_chromium', 35)
+                ],
+                'molybdenum' => [
+                    'name' => __('Molybdenum', 'cooked'),
                     'type' => 'number',
-                    'measurement' => '%'
-                )
-            )
-        ));
+                    'measurement' => 'mcg',
+                    'pdv' => apply_filters('cooked_pdv_molybdenum', 45)
+                ],
+                'chloride' => [
+                    'name' => __('Chloride', 'cooked'),
+                    'type' => 'number',
+                    'measurement' => 'mg',
+                    'pdv' => apply_filters('cooked_pdv_chloride', 2300)
+                ]
+            ]
+        ]);
 
         return $nutrition_facts;
-
     }
 
     public static function singular_plural( $singular_text, $plural_text, $count ) {
@@ -529,7 +566,7 @@ class Cooked_Measurements {
         $decimal = $fraction_parts[0] / $fraction_parts[1];
 
         if ($decimal < 1):
-            $decimal_array = array( 0.125, 0.166, 0.200, 0.250, 0.333, 0.500, 0.666, 0.750, 0.875 );
+            $decimal_array = [0.125, 0.166, 0.200, 0.250, 0.333, 0.500, 0.666, 0.750, 0.875];
             $closest_decimal = self::get_closest_decimal( $decimal, $decimal_array );
 
             switch($closest_decimal):
@@ -588,21 +625,21 @@ class Cooked_Measurements {
         endif;
     }
 
-    public function get_fraction_array(){
-        $fractions_a = array(
-            array('⅛','&#8539;','&#215B;','&frac18;'),
-            array('⅙','&#8537;','&#x2159;','&frac16;'),
-            array('⅕','&#8533;','&#x2155;','&frac15;'),
-            array('¼','&#188;','&#xBC;','&frac14;'),
-            array('⅓','&#8531;','&#2153;','&frac13;'),
-            array('½','&#189;','&#xBD;','&frac12;'),
-            array('⅔','&#8532;','&#2154;','&frac23;'),
-            array('⅝','&#8541;','&#x215D;','&frac58;'),
-            array('¾','&#190;','&#xBE;','&frac34;'),
-            array('⅞','&#8542;','&#215E;','&frac78;')
-        );
+    public function get_fraction_array() {
+        $fractions_a = [
+            ['⅛', '&#8539;', '&#215B;', '&frac18;'],
+            ['⅙', '&#8537;', '&#x2159;', '&frac16;'],
+            ['⅕', '&#8533;', '&#x2155;', '&frac15;'],
+            ['¼', '&#188;', '&#xBC;', '&frac14;'],
+            ['⅓', '&#8531;', '&#2153;', '&frac13;'],
+            ['½', '&#189;', '&#xBD;', '&frac12;'],
+            ['⅔', '&#8532;', '&#2154;', '&frac23;'],
+            ['⅝', '&#8541;', '&#x215D;', '&frac58;'],
+            ['¾', '&#190;', '&#xBE;', '&frac34;'],
+            ['⅞', '&#8542;', '&#215E;', '&frac78;']
+        ];
 
-        $fractions_b = array(
+        $fractions_b = [
             '1/8',
             '1/6',
             '1/5',
@@ -613,9 +650,9 @@ class Cooked_Measurements {
             '5/8',
             '3/4',
             '7/8',
-        );
+        ];
 
-        $fractions_c = array(
+        $fractions_c = [
             '&#8539;',
             '&#8537;',
             '&#8533;',
@@ -626,13 +663,13 @@ class Cooked_Measurements {
             '&#8541;',
             '&#190;',
             '&#8542;'
-        );
+        ];
 
-        $fraction_array = array( 'fractions_a' => $fractions_a, 'fractions_b' => $fractions_b, 'fractions_c' => $fractions_c );
+        $fraction_array = ['fractions_a' => $fractions_a, 'fractions_b' => $fractions_b, 'fractions_c' => $fractions_c];
         return $fraction_array;
     }
 
-    public static function time_format( $minutes, $format = 'default' ){
+    public static function time_format( $minutes, $format = 'default' ) {
 
         ob_start();
 

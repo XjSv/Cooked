@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.6.1
-Stable tag: 1.8.3
+Stable tag: 1.8.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,19 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.3 includes a fix for a bug when adding new recipe directions in which the WordPress editor was not usable until after saving the recipe.
+Version 1.8.4 includes a new look for the Nutrition Facts and Percent Daily Value (%DV) to conform with the new FDA guidelines.
 
 == Changelog ==
+
+= 1.8.4 =
+* **TWEAK:** Updated the look of the Nutrition Facts to conform with the new FDA guidelines on [Changes to the Nutrition Facts Label](https://www.fda.gov/food/food-labeling-nutrition/changes-nutrition-facts-label).
+* **TWEAK:** Updated the Percent Daily Value (%DV) to conform with the new FDA guidelines on [Daily Value on the Nutrition and Supplement Facts Labels](https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels).
+* **TWEAK:** Updated the recipe schema to include the nutrition information and updated the "recipeInstructions" property to use the "HowToStep" type for better SEO.
+* **NEW:** Added unique IDs to the recipe directions for the ability to link directly to a recipe step (i.e. https://www.example.com/recipe/my-recipe#cooked-single-direction-step-3).
+* **FIX:** Fixed a bug with the recipe nutrition information not setting values correctly in the admin area.
+* **FIX:** Various bug fixes for the WP Delicious import feature thanks to @Genevsky.
+* **TWEAK:** Fixed a couple of bugs with the permissions system.
+* **TWEAK:** Minor improvements to settings page and other areas of the plugin.
 
 = 1.8.3 =
 * **FIX:** Fixed bug when adding new recipe directions in which the WordPress editor was not usable until after saving the recipe.

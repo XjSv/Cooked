@@ -18,14 +18,12 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  * @since 1.0.0
  */
 class Cooked_Recipe_Meta {
-
     function __construct() {
         add_action( 'add_meta_boxes', [&$this, 'add_recipe_meta_box'] );
         add_action( 'save_post', [&$this, 'save_recipe_meta_box'] );
     }
 
-    public static function meta_cleanup( $recipe_settings ){
-
+    public static function meta_cleanup( $recipe_settings ) {
         $_recipe_settings = [];
 
         if (!empty($recipe_settings)):
@@ -69,21 +67,18 @@ class Cooked_Recipe_Meta {
         endif;
 
         return $_recipe_settings;
-
     }
 
     /**
      * Adds the meta box container.
      */
     public function add_recipe_meta_box( $post_type ) {
-
         // Limit meta box to Cooked Recipes.
         $post_types = apply_filters( 'cp_recipe_metabox_post_types' , ['cp_recipe'] );
 
         if ( in_array( $post_type, $post_types ) ) {
             add_meta_box( 'cooked_recipe_settings', __( 'Settings', 'cooked' ), [&$this, 'render_recipe_meta_box'], $post_type, 'normal', 'high' );
         }
-
     }
 
     /**
@@ -114,7 +109,7 @@ class Cooked_Recipe_Meta {
             return $post_id;
 
         // Check the user's permissions.
-        if ( ! current_user_can( 'edit_cp_recipes', $post_id ) )
+        if ( ! current_user_can( 'edit_cooked_recipes', $post_id ) )
             return $post_id;
 
         global $recipe_settings;
@@ -161,7 +156,6 @@ class Cooked_Recipe_Meta {
         // Add an nonce field so we can check for it later.
         wp_nonce_field( 'cooked_recipe_custom_box', 'cooked_recipe_custom_box_nonce' );
     }
-
 }
 
 function cooked_recipe_shortcodes_content() {
@@ -196,12 +190,12 @@ function cooked_render_recipe_fields( $post_id ) {
 
     // Show the Shortcodes tab if recipe is saved.
     if ( !empty($recipe_settings) ):
-        add_action('cooked_recipe_shortcodes_after','cooked_recipe_shortcodes_content',10);
+        add_action('cooked_recipe_shortcodes_after', 'cooked_recipe_shortcodes_content',10);
     endif;
 
     if( !isset($recipe_settings['cooked_version']) && !empty($c2_recipe_settings) ):
         $recipe_review_required = true;
-        $recipe_settings = Cooked_Recipes::sync_c2_recipe_settings($c2_recipe_settings,$post_id);
+        $recipe_settings = Cooked_Recipes::sync_c2_recipe_settings($c2_recipe_settings, $post_id);
     endif;
 
     $recipe_tabs = apply_filters( 'cooked_recipe_admin_tabs', [
@@ -245,14 +239,14 @@ function cooked_render_recipe_fields( $post_id ) {
 
     $measurements = Cooked_Measurements::get();
 
-    $cooked_page_args = [
+    /* $cooked_page_args = [
         'sort_order' => 'asc',
         'sort_column' => 'post_title',
         'hierarchical' => false,
         'post_type' => 'page',
         'post_status' => 'publish'
     ];
-    $cooked_page_array = get_pages($cooked_page_args);
+    $cooked_page_array = get_pages($cooked_page_args); */
 
     if (!empty($recipe_tabs)):
         echo '<ul id="cooked-recipe-tabs">';
@@ -572,17 +566,17 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <?php if ( isset($recipe_settings['directions']) && !empty($recipe_settings['directions']) ): ?>
 
-                    <?php foreach($recipe_settings['directions'] as $dir_key => $value): ?>
+                    <?php foreach ($recipe_settings['directions'] as $dir_key => $value): ?>
 
                         <?php if ( !isset($value['section_heading_name']) ): ?>
 
                             <?php if (isset($value['image']) && $value['image']) {
-                                $image_thumb = wp_get_attachment_image( $value['image'], 'thumbnail', false, array(
+                                $image_thumb = wp_get_attachment_image( $value['image'], 'thumbnail', false, [
                                     'class' => 'cooked-direction-img',
-                                    'data-id' => esc_attr( $dir_key ),
+                                    'data-id' => esc_attr($dir_key),
                                     'data-direction-part' => 'image_src',
-                                    'id' => 'direction-' . esc_attr( $dir_key ) . '-image-src' )
-                                );
+                                    'id' => 'direction-' . esc_attr($dir_key) . '-image-src'
+                                ]);
                             } else {
                                 $image_thumb = false;
                             } ?>
@@ -715,8 +709,8 @@ function cooked_render_recipe_fields( $post_id ) {
                         <?php $_nutrition_facts = Cooked_Measurements::nutrition_facts();
 
                         $nut_loops = 0;
-                        foreach( $_nutrition_facts as $nutrition_facts ):
-                            foreach( $nutrition_facts as $slug => $nf ):
+                        foreach ( $_nutrition_facts as $nutrition_facts ):
+                            foreach ( $nutrition_facts as $slug => $nf ):
 
                                 $nut_loops++;
                                 if ( $nut_loops == 1 ): echo '<p class="cooked-measurement-inputs">'; endif;
@@ -726,7 +720,7 @@ function cooked_render_recipe_fields( $post_id ) {
                                 echo '</span>';
                                 if ( $nut_loops == 2 ): echo '</p>'; $nut_loops = 0; endif;
                                 if ( isset($nf['subs']) ):
-                                    foreach( $nf['subs'] as $sub_slug => $sub_nf ):
+                                    foreach ( $nf['subs'] as $sub_slug => $sub_nf ):
                                         $nut_loops++;
                                         if ( $nut_loops == 1 ): echo '<p class="cooked-measurement-inputs">'; endif;
                                         echo '<span class="cooked-measurement-column">';
@@ -740,30 +734,37 @@ function cooked_render_recipe_fields( $post_id ) {
                         endforeach;
 
                         ?>
-
                     </div>
                     <div class="cooked-setting-column-12">
+                        <?php do_action( 'cooked_before_nutrition_information', $post_id ); ?>
+
                         <section id="cooked-nutrition-label" class="cooked-nut-label-1">
 
-                            <h2><?php _e('Nutrition Facts','cooked'); ?></h2>
+                            <h2><?php _e('Nutrition Facts', 'cooked'); ?></h2>
 
-                            <?php $nutrition_facts = $_nutrition_facts['top'];
-                            foreach( $nutrition_facts as $slug => $nf ):
-                                echo '<p>' . esc_html($nf['name']) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong></p>';
-                            endforeach; ?>
+                            <ul class="cooked-nut-servings">
+                                <?php $nutrition_facts = $_nutrition_facts['top'];
+                                foreach ( $nutrition_facts as $slug => $nf ):
+                                    if ( $slug === 'serving_size' ):
+                                        echo '<li class="cooked-serving-size"><strong>' . esc_html($nf['name']) . '</strong> ';
+                                            echo '<ul class="cooked-right"><li><strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong></li></ul>';
+                                        echo '</li>';
+                                    else:
+                                        echo '<p><strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong> ' . esc_html(strtolower($nf['name'])) . '</p>';
+                                    endif;
+                                endforeach; ?>
+                            </ul>
 
                             <hr class="cooked-nut-hr" />
 
                             <ul>
-                                <li><strong class="cooked-nut-heading"><?php _e('Amount Per Serving','cooked'); ?></strong></li>
+                                <li><strong class="cooked-nut-heading"><?php _e('Amount per serving', 'cooked'); ?></strong></li>
 
                                 <?php $nutrition_facts = $_nutrition_facts['mid'];
-                                foreach( $nutrition_facts as $slug => $nf ):
-                                    if ( $slug != 'calories_fat' ):
-                                        echo '<li><strong>' . esc_html($nf['name']) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong>';
-                                            echo '<ul class="cooked-calories-fat cooked-right"><li>' . esc_attr($nutrition_facts['calories_fat']['name']) . ' <strong class="cooked-nut-label" data-labeltype="calories_fat">___</strong></li></ul>';
-                                        echo '</li>';
-                                    endif;
+                                foreach ( $nutrition_facts as $slug => $nf ):
+                                    echo '<li class="cooked-calories no-after"><strong>' . esc_html($nf['name']) . '</strong> ';
+                                        echo '<ul class="cooked-right"><li><strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong></li></ul>';
+                                    echo '</li>';
                                 endforeach; ?>
 
                                 <li class="cooked-nut-spacer"></li>
@@ -772,23 +773,33 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <?php $nutrition_facts = $_nutrition_facts['main'];
                                 $nut_loops = 0;
 
-                                foreach( $nutrition_facts as $slug => $nf ):
-
+                                foreach ( $nutrition_facts as $slug => $nf ):
                                     echo '<li>';
-                                    echo '<strong>' . esc_html($nf['name']) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '">___ </strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '_measurement">' . esc_html($nf['measurement']) . '</strong>' : '' );
+                                    echo '<strong>' . esc_html($nf['name']) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '_measurement">' . esc_html($nf['measurement']) . '</strong>' : '' );
                                     echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($nf['pdv']) . '" data-labeltype="' . esc_html($slug) . '">0</span>%</strong>' : '' );
 
                                     if ( isset($nf['subs']) ):
-                                        foreach( $nf['subs'] as $sub_slug => $sub_nf ):
-                                            echo '<ul><li>';
-                                                echo '<strong>' . esc_html($sub_nf['name']) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___ </strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html($sub_nf['measurement']) . '</strong>' : '' );
-                                                echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($sub_nf['pdv']) . '" data-labeltype="' . esc_attr($sub_slug) . '">0</span>%</strong>' : '' );
-                                            echo '</li></ul>';
+                                        foreach ( $nf['subs'] as $sub_slug => $sub_nf ):
+                                            echo '<ul>';
+                                                if ($sub_slug === 'trans_fat'):
+                                                    echo '<li>';
+                                                        echo $sub_nf['nutrition_info_name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html($sub_nf['measurement']) . '</strong>' : '' );
+                                                    echo '</li>';
+                                                elseif ($sub_slug === 'added_sugars'):
+                                                    echo '<ul><li>';
+                                                        echo __('Includes', 'cooked') . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html($sub_nf['measurement']) . '</strong>' : '' ) . ' ' . esc_html($sub_nf['name']);
+                                                        echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($sub_nf['pdv']) . '" data-labeltype="' . esc_attr($sub_slug) . '">0</span>%</strong>' : '' );
+                                                    echo '</li></ul>';
+                                                else:
+                                                    echo '<li>';
+                                                    echo $sub_nf['name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html($sub_nf['measurement']) . '</strong>' : '' );
+                                                    echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($sub_nf['pdv']) . '" data-labeltype="' . esc_attr($sub_slug) . '">0</span>%</strong>' : '' );
+                                                    echo '</li>';
+                                                endif;
+                                            echo '</ul>';
                                         endforeach;
                                     endif;
-
                                     echo '</li>';
-
                                 endforeach; ?>
                             </ul>
 
@@ -796,19 +807,26 @@ function cooked_render_recipe_fields( $post_id ) {
 
                             <ul class="cooked-nut-bottom cooked-clearfix">
                                 <?php $nutrition_facts = $_nutrition_facts['bottom'];
-                                foreach( $nutrition_facts as $slug => $nf ):
+                                foreach ( $nutrition_facts as $slug => $nf ):
                                     echo '<li>';
-                                    echo '<strong>' . esc_html($nf['name']) . ' <span class="cooked-nut-right"><span class="cooked-nut-percent cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">0</span>%</span></strong>';
+                                        echo $nf['name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html($nf['measurement']) . '</strong>' : '' );
+                                        echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($nf['pdv']) . '" data-labeltype="' . esc_attr($slug) . '">0</span>%</strong>' : '' );
                                     echo '</li>';
                                 endforeach; ?>
                             </ul>
 
-                            <p class="cooked-daily-value-text">* <?php _e( 'Percent Daily Values are based on a 2,000 calorie diet. Your daily value may be higher or lower depending on your calorie needs.', 'cooked' ); ?></p>
+                            <ul>
+                                <li class="cooked-nut-spacer"></li>
+                            </ul>
+
+                            <p class="cooked-daily-value-text">* <?php _e( 'The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.', 'cooked' ); ?></p>
 
                         </section>
                     </div>
                 </div>
             </div>
+
+            <input type="hidden" name="_recipe_settings[nutrition][etag]" value="<?php echo !empty($recipe_settings['nutrition']['etag']) ? $recipe_settings['nutrition']['etag'] : ''; ?>" />
 
         </section>
 

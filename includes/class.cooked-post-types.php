@@ -207,6 +207,13 @@ class Cooked_Post_Types {
     }
 
     public static function init_roles() {
+        // Clean up for any old caps or caps that were inserted incorrectly.
+        if ( $role_object = get_role( 'subscriber' ) ) {
+            if ( $role_object->has_cap( 'edit_cp_recipes' ) ) {
+                Cooked_Roles::clean_caps();
+            }
+        }
+
         Cooked_Roles::add_roles();
         Cooked_Roles::add_caps();
     }

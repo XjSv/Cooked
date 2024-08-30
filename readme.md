@@ -85,4 +85,4 @@ Cooked is released under the [GPL-3.0 License](https://github.com/XjSv/Cooked/bl
 
 ## Credits
 
-Cooked was created by [Boxy Studio](https://www.boxystudio.com) and is now maintained by a team of contributors.
+Cooked was created by [Boxy Studio](https://www.boxystudio.com) and is now maintained by [Gora Tech](https://goratech.dev)

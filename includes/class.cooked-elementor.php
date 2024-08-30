@@ -55,7 +55,7 @@ class Cooked_Elementor {
 
     public function should_update_content( $should_update, $recipe_id ) {
         $elementor_page = get_post_meta( $recipe_id, '_elementor_edit_mode', true );
-        if ( $elementor_page ){
+        if ( $elementor_page ) {
             return false;
         }
         return $should_update;

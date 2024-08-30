@@ -900,7 +900,7 @@ class Cooked_Recipes {
                 /* translators: singular and plural "steps" */
                 $step_string = sprintf( __( 'Step %d', 'cooked' ), $step );
 
-                echo '<div class="cooked-single-direction cooked-direction' . ($image ? ' cooked-direction-has-image' : '') . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . $step_string . '"' : '' ) . '>';
+                echo '<div id="cooked-single-direction-step-'. $number .'" class="cooked-single-direction cooked-direction' . ($image ? ' cooked-direction-has-image' : '') . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . $step_string . '"' : '' ) . '>';
                     echo $number ? '<span class="cooked-direction-number">' . esc_html($number) . '</span>' : '';
                     echo '<div class="cooked-dir-content">' . do_shortcode($content) . ($image ? wpautop($image) : '') . '</div>';
                 echo '</div>';

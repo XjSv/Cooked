@@ -50,7 +50,7 @@ class Cooked_Ajax {
     }
 
     public function get_migrate_ids() {
-        if (!current_user_can('read_cp_recipe')):
+        if (!current_user_can('edit_cooked_recipes')):
             wp_die();
         endif;
 
@@ -71,7 +71,7 @@ class Cooked_Ajax {
     }
 
     public function get_import_ids() {
-        if (!current_user_can('read_cp_recipe')):
+        if (!current_user_can('edit_cooked_recipes')):
             wp_die();
         endif;
 
@@ -133,7 +133,7 @@ class Cooked_Ajax {
     public function migrate_recipes() {
         $bulk_amount = 10;
 
-        if (!current_user_can('edit_others_cp_recipes')) {
+        if (!current_user_can('edit_cooked_recipes')) {
             wp_die();
         }
 
@@ -199,7 +199,7 @@ class Cooked_Ajax {
     }
 
     public function import_recipes() {
-        if (!current_user_can('edit_others_cp_recipes')) {
+        if (!current_user_can('edit_cooked_recipes')) {
             wp_die();
         }
 
@@ -344,7 +344,7 @@ class Cooked_Ajax {
     public function load_default() {
         global $_cooked_settings;
 
-        if (!current_user_can('edit_cp_recipes')) {
+        if (!current_user_can('edit_cooked_recipes')) {
             wp_die();
         }
 

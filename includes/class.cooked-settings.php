@@ -23,6 +23,7 @@ class Cooked_Settings {
         add_filter( 'admin_init', [&$this, 'init'] );
         add_filter( 'init', [&$this, 'init'] );
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
+        add_action( 'admin_notices', [&$this, 'cooked_settings_saved_admin_notice'] );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -43,6 +44,18 @@ class Cooked_Settings {
         $_cooked_settings = Cooked_Settings::get();
         register_setting( 'cooked_settings_group', 'cooked_settings' );
         register_setting( 'cooked_settings_group', 'cooked_settings_saved' );
+    }
+
+    function cooked_settings_saved_admin_notice() {
+        if ( !isset($_GET['settings-updated']) || !$_GET['settings-updated'] )
+            return;
+
+        add_settings_error(
+            'cooked_settings',
+            'cooked_settings_updated',
+            __( 'Cooked settings has been updated!', 'cooked' ),
+            'updated'
+        );
     }
 
     public static function reset() {

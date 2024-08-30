@@ -42,7 +42,9 @@ class Cooked_Import {
             /* translators: for displaying singular or plural versions depending on the number of recipes. */
             $html_desc = sprintf( esc_html( _n( 'There is %1$s recipe that should be imported from %2$s.', 'There are %1$s recipes that should be imported from %2$s.', $total, 'cooked' ) ), '<strong>' . number_format( $total ) . '</strong>', '<strong>WP Delicious (formerly Delicious Recipes)</strong>' );
             $html_desc .= '<br>';
-            $html_desc .= __( 'Please click the button below to import these recipes. Here is what will happen to your recipes:', 'cooked' );
+            $html_desc .= __( 'Before you begin, please make sure you <b>backup your database</b> in case something goes wrong.', 'cooked' );
+            $html_desc .= '<br>';
+            $html_desc .= __( 'Click the button below to import these recipes. Here is what will happen to your recipes:', 'cooked' );
             $html_desc .= '<ul class="cooked-admin-ul">';
                 $html_desc .= '<li>' . __( 'Recipes will be imported with the <b>\'Draft\'</b> status.', 'cooked' ) . '</li>';
                 $html_desc .= '<li>' . __( 'Comments and ratings data will also be imported (ratings are available in Cooked Pro).', 'cooked' ) . '</li>';

@@ -262,7 +262,7 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
                         progress_text.text( formattedComplete + " / " + formattedTotal );
                     }
 
-					cooked_import_recipes( new_recipe_ids, total_recipes );
+					cooked_import_recipes( new_recipe_ids, total_recipes, import_type );
 				} else {
 					progress.hide();
 					progress_text.hide();

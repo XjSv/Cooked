@@ -143,7 +143,7 @@ class Cooked_Settings {
                         'title' => __('Global Recipe Toggles', 'cooked'),
                         'desc' => __('You can quickly hide or show different recipe elements (site-wide) with these checkboxes.', 'cooked'),
                         'type' => 'checkboxes',
-                        'default' => apply_filters('cooked_recipe_info_display_options_defaults', array('author', 'taxonomies', 'difficulty_level', 'excerpt', 'timing_prep', 'timing_cook', 'timing_total', 'servings')),
+                        'default' => apply_filters('cooked_recipe_info_display_options_defaults', ['author', 'taxonomies', 'difficulty_level', 'excerpt', 'timing_prep', 'timing_cook', 'timing_total', 'servings']),
                         'options' => apply_filters(
                             'cooked_recipe_info_display_options',
                             [

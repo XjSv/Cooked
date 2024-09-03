@@ -87,7 +87,8 @@ Version 1.8.4 includes a new look for the Nutrition Facts and Percent Daily Valu
 * **NEW:** Added unique IDs to the recipe directions for the ability to link directly to a recipe step (i.e. https://www.example.com/recipe/my-recipe#cooked-single-direction-step-3).
 * **FIX:** Fixed a bug with the recipe nutrition information not setting values correctly in the admin area.
 * **FIX:** Various bug fixes for the WP Delicious import feature thanks to @Genevsky.
-* **TWEAK:** Fixed a couple of bugs with the permissions system.
+* **FIX:** Fixed bug with certain links not saving correctly in the recipes Notes field thanks to @nwm2006.
+* **TWEAK:** Fixed bugs with the permissions system.
 * **TWEAK:** Minor improvements to settings page and other areas of the plugin.
 
 = 1.8.3 =

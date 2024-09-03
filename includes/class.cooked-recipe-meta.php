@@ -27,17 +27,17 @@ class Cooked_Recipe_Meta {
         $_recipe_settings = [];
 
         if (!empty($recipe_settings)):
-            foreach($recipe_settings as $key => $val):
+            foreach ($recipe_settings as $key => $val):
                 if (!is_array($val)):
 
-                    if ( $key === "content" || $key === "excerpt" ):
+                    if ( $key === "content" || $key === "excerpt" || $key === "notes" ):
                         $_recipe_settings[$key] = wp_kses_post( $val );
                     else:
                         $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                     endif;
 
                 else:
-                    foreach($val as $subkey => $subval):
+                    foreach ($val as $subkey => $subval):
                         if (!is_array($subval)):
                             $_recipe_settings[$key][$subkey] = Cooked_Functions::sanitize_text_field($subval);
                         else:
@@ -357,7 +357,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             <h3 class="cooked-settings-title"><?php _e( 'Difficulty Level', 'cooked' ); ?></h3>
                             <select name="_recipe_settings[difficulty_level]">
                                 <option value="0">--</option>
-                                <?php foreach($difficulty_levels as $level => $name):
+                                <?php foreach ($difficulty_levels as $level => $name):
                                     echo '<option value="' . esc_attr( $level ) . '"' . ( isset($recipe_settings['difficulty_level']) && $recipe_settings['difficulty_level'] == $level ? ' selected' : '' ) . '>' . esc_html( $name ) . '</option>';
                                 endforeach; ?>
                             </select>

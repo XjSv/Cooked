@@ -702,7 +702,7 @@ class Cooked_Shortcodes {
 
             if (isset($recipe_settings['excerpt']) && $recipe_settings['excerpt']) {
                 $excerpt = Cooked_Recipes::format_content($recipe_settings['excerpt']);
-                echo '<div class="cooked-recipe-excerpt cooked-clearfix">' . wpautop(do_shortcode($excerpt)) . '</div>';
+                echo '<div class="cooked-recipe-excerpt cooked-clearfix">' . do_shortcode($excerpt) . '</div>';
             }
 
             return ob_get_clean();
@@ -728,7 +728,7 @@ class Cooked_Shortcodes {
 
                 echo '<div class="cooked-recipe-notes cooked-clearfix">';
                 echo $show_header;
-                echo wpautop(do_shortcode($notes));
+                echo do_shortcode($notes);
                 echo '</div>';
             }
 

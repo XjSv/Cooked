@@ -108,7 +108,7 @@ class Cooked_Functions {
 
 	public static function print_options() {
 
-		$default_print_options = apply_filters( 'cooked_default_print_options', array(
+		$default_print_options = apply_filters( 'cooked_default_print_options', [
 			'print_options_title' => 'checked',
 			'print_options_info' => '',
 			'print_options_excerpt' => '',
@@ -116,7 +116,7 @@ class Cooked_Functions {
 			'print_options_ingredients' => 'checked',
 			'print_options_directions' => 'checked',
 			'print_options_nutrition' => '',
-		));
+		]);
 
 		echo '<div id="cooked-print-options" class="cooked-clearfix">';
 

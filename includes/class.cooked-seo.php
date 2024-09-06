@@ -81,6 +81,10 @@ class Cooked_SEO {
                     $image = $image[0];
                 endif;
 
+                if (empty($dir_name)) {
+                    $dir_name = 'Step ' . $number;
+                }
+
                 $directions[] = [
                     '@type' => 'HowToStep',
                     'name' => $dir_name,

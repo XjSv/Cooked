@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.6.1
-Stable tag: 1.8.4
+Stable tag: 1.8.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,16 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.4 includes a new look for the Nutrition Facts and Percent Daily Value (%DV) to conform with the new FDA guidelines.
+Version 1.8.5 includes new measurement options and bug fixes. Be sure to update!
 
 == Changelog ==
+
+= 1.8.5 =
+* **NEW:** Added 4 new measurement options: "Drizzle", "Clove", "Jar", and "Can" to support the Delicious Recipes plugin import.
+* **FIX:** Fixed bug with the recipe gallery not showing Vimeo videos thumbnails.
+* **FIX:** Fixed bug with Cooked settings success message showing on other admin pages.
+* **FIX:** Fixed undefined index error when the Browse Page is not set.
+* **FIX:** Fixed bug with the recipe SEO schema not having a "name" for the recipe directions steps.
 
 = 1.8.4 =
 * **TWEAK:** Updated the look of the Nutrition Facts to conform with the new FDA guidelines on [Changes to the Nutrition Facts Label](https://www.fda.gov/food/food-labeling-nutrition/changes-nutrition-facts-label).

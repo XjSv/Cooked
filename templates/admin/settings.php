@@ -26,7 +26,7 @@
 
 		?>
 
-		<?php settings_errors('cooked_settings'); ?>
+		<?php settings_errors('cooked_settings_group'); ?>
 
 		<div id="cooked_recipe_settings" class="cooked-settings-form-wrapper">
 

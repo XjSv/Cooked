@@ -331,7 +331,7 @@ class Cooked_Shortcodes {
                         // Developers: Filter these to change!
                         // Full list here: http://fotorama.io/customize/options/
 
-                        $gallery_options_array = array();
+                        $gallery_options_array = [];
 
                         foreach ( $gallery_options as $data_key => $data_val ):
                             $gallery_options_array[] = $data_key . '="' . $data_val . '"';
@@ -349,7 +349,7 @@ class Cooked_Shortcodes {
 
                         if ( isset($gallery_items) && !empty($gallery_items) ):
                             foreach( $gallery_items as $item ):
-                                $image_src = wp_get_attachment_image_src( $item, array(900,900) );
+                                $image_src = wp_get_attachment_image_src( $item, [900, 900] );
                                 $image_title = get_the_title( $item );
                                 $gallery_html .= '<a href="' . esc_url( $image_src[0] ) . '" data-alt="'.esc_attr( $image_title ).'" data-caption="'.esc_attr( $image_title ).'"><img alt="'.esc_attr( $image_title ).'" src="' . wp_get_attachment_image_url( $item, 'thumbnail' ) . '" /></a>';
                             endforeach;

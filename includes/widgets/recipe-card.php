@@ -52,13 +52,13 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
 
         if ( empty($recipe_list) ):
 
-            $args = array(
+            $args = [
                 'post_type' => 'cp_recipe',
                 'posts_per_page' => -1,
                 'post_status' => 'publish',
-                'orderby'=>'date',
-                'order'=>'DESC'
-            );
+                'orderby' => 'date',
+                'order' => 'DESC'
+            ];
 
             // Filter out the pending/draft recipes.
             $args = apply_filters( 'cooked_recipe_public_query_filters', $args );

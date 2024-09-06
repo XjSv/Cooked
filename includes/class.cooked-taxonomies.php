@@ -99,17 +99,17 @@ class Cooked_Taxonomies {
 		$term = get_term( $term_id );
 		if ( !empty($term) ):
 
-			$args = array(
+			$args = [
 				'post_type' => 'cp_recipe',
 				'posts_per_page' => -1,
-				'tax_query' => array(
-					array(
+				'tax_query' => [
+					[
 						'taxonomy' => $term->taxonomy,
 						'field' => 'term_id',
-						'terms' => array( $term_id )
-					)
-				)
-			);
+						'terms' => [$term_id]
+					]
+				]
+			];
 
 			$recipes = Cooked_Recipes::get( $args );
 			$recent_recipe = $recipes[0];

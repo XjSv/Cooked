@@ -47,15 +47,14 @@ class Cooked_Settings {
     }
 
     function cooked_settings_saved_admin_notice() {
-        if ( !isset($_GET['settings-updated']) || !$_GET['settings-updated'] )
-            return;
-
-        add_settings_error(
-            'cooked_settings',
-            'cooked_settings_updated',
-            __( 'Cooked settings has been updated!', 'cooked' ),
-            'updated'
-        );
+        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] && isset($_GET['page']) && $_GET['page'] === 'cooked_settings') {
+            add_settings_error(
+                'cooked_settings_group',
+                'cooked_settings_updated',
+                __( 'Cooked settings has been updated!', 'cooked' ),
+                'updated'
+            );
+        }
     }
 
     public static function reset() {

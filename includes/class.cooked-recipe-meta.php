@@ -936,17 +936,17 @@ function cooked_render_recipe_fields( $post_id ) {
                         <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Available Variables','cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
 
-                            <?php $available_cooked_info_vars = apply_filters( 'cooked_available_info_vars', array(
-                                'author' => __( 'Author','cooked' ),
-                                'prep_time' => __( 'Prep Time','cooked' ),
-                                'cook_time' => __( 'Cook Time','cooked' ),
-                                'total_time' => __( 'Total Time','cooked' ),
-                                'difficulty_level' => __( 'Difficulty','cooked' ),
-                                'servings' => __( 'Servings Switcher','cooked' ),
-                                'taxonomies' => __( 'Category','cooked' ),
-                                'print' => __( 'Print Mode','cooked' ),
-                                'fullscreen' => __( 'Full-Screen Mode','cooked' )
-                            ));
+                            <?php $available_cooked_info_vars = apply_filters( 'cooked_available_info_vars', [
+                                'author' => __('Author', 'cooked'),
+                                'prep_time' => __('Prep Time', 'cooked'),
+                                'cook_time' => __('Cook Time', 'cooked'),
+                                'total_time' => __('Total Time', 'cooked'),
+                                'difficulty_level' => __('Difficulty', 'cooked'),
+                                'servings' => __('Servings Switcher', 'cooked'),
+                                'taxonomies' => __('Category', 'cooked'),
+                                'print' => __('Print Mode', 'cooked'),
+                                'fullscreen' => __('Full-Screen Mode', 'cooked')
+                            ]);
 
                             foreach( $available_cooked_info_vars as $var => $name ):
                                 echo '<strong>' . esc_html($var) . '</strong> (' . esc_html($name) . ')<br>';

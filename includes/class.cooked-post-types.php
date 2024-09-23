@@ -105,7 +105,7 @@ class Cooked_Post_Types {
 
         if ( ( is_post_type_archive( 'cp_recipe' ) || is_singular( 'cp_recipe' ) )
              && $item->object_id == $blog_page_id ){
-             $classes = array_diff( $classes, array( 'current_page_parent' ) );
+             $classes = array_diff( $classes, ['current_page_parent'] );
         }
 
         if ( ( is_post_type_archive( 'cp_recipe' ) || is_singular( 'cp_recipe' ) )
@@ -155,7 +155,7 @@ class Cooked_Post_Types {
     }
 
     public static function add_query_vars_filter( $vars ) {
-        $vars[] = "servings";
+        $vars[] = 'servings';
         return $vars;
     }
 
@@ -253,7 +253,7 @@ class Cooked_Post_Types {
             // Recipe Category Permalink
             $permalink_parts = explode( '/', $_cooked_settings['recipe_category_permalink'] );
             if ( isset( $permalink_parts[1] ) ):
-                foreach( $permalink_parts as $key => $part ):
+                foreach ( $permalink_parts as $key => $part ):
                     $part = sanitize_title_with_dashes( $part, null, 'save');
                     $permalink_parts[$key] = sanitize_title_with_dashes( $part, null, 'save');
                 endforeach;
@@ -268,7 +268,7 @@ class Cooked_Post_Types {
                 'recipe_category_permalink' => (!$_cooked_settings['recipe_category_permalink'] ? 'recipe-category' : $recipe_category_permalink)
             ]);
 
-            foreach( $taxonomy_settings_update as $setting_key => $setting_value ):
+            foreach ( $taxonomy_settings_update as $setting_key => $setting_value ):
                 $_cooked_settings[ $setting_key ] = $setting_value;
             endforeach;
 
@@ -298,7 +298,7 @@ class Cooked_Post_Types {
 
         $post_types = self::get();
         if ( !empty($post_types) ) {
-            foreach( $post_types as $slug => $args ) {
+            foreach ( $post_types as $slug => $args ) {
                 register_post_type( $slug, $args );
             }
         }

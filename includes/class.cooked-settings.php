@@ -28,8 +28,7 @@ class Cooked_Settings {
 
     public function browse_page_saved( $post_id ) {
         // Just a revision, don't do anything
-        if ( wp_is_post_revision( $post_id ) )
-            return;
+        if ( wp_is_post_revision( $post_id ) ) return;
 
         $_cooked_settings = Cooked_Settings::get();
         if ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $post_id ):
@@ -518,19 +517,14 @@ class Cooked_Settings {
     public static function field_permalink_field($field_name, $end_of_url) {
         global $_cooked_settings;
 
-        $browse_page_id = $_cooked_settings['browse_page'];
-        $browse_page_url = '';
+        $home_url = get_home_url();
 
-        if (!empty($browse_page_id)) {
-            $browse_page_url = get_permalink( $browse_page_id );
-        }
-
-        if (empty($browse_page_url)) {
-            $browse_page_url = get_home_url();
+        if (substr($home_url, -1) !== '/') {
+            $home_url .= '/';
         }
 
         echo '<p class="cooked-permalink-field-wrapper">';
-            echo '<span>' . $browse_page_url . '/</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
+            echo '<span>' . $home_url . '</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
         echo '</p>';
     }
 

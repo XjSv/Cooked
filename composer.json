@@ -1,16 +1,19 @@
 {
     "name": "xjsv/cooked",
     "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.",
-	"keywords": [
-		"wordpress",
-		"recipe"
-	],
-	"homepage": "https://wordpress.org/plugins/cooked/",
-	"version": "1.8.5",
-	"type": "wordpress-plugin",
-	"license": "GPL-3.0-or-later",
-	"prefer-stable": true,
-	"minimum-stability": "dev",
+    "keywords": [
+        "wordpress",
+        "recipe"
+    ],
+    "homepage": "https://wordpress.org/plugins/cooked/",
+    "version": "1.8.6",
+    "type": "wordpress-plugin",
+    "license": "GPL-3.0-or-later",
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "config": {
+        "optimize-autoloader": true
+    },
     "authors": [
         {
             "name": "Armand Tresova",
@@ -18,18 +21,18 @@
         }
     ],
     "support": {
-		"issues": "https://github.com/XjSv/Cooked/issues",
-		"forum": "https://github.com/XjSv/Cooked/discussions",
-		"wiki": "https://github.com/XjSv/Cooked/wiki",
-		"source": "https://github.com/XjSv/Cooked",
-		"security": "https://github.com/XjSv/Cooked?tab=security-ov-file"
-	},
+        "issues": "https://github.com/XjSv/Cooked/issues",
+        "forum": "https://github.com/XjSv/Cooked/discussions",
+        "wiki": "https://github.com/XjSv/Cooked/wiki",
+        "source": "https://github.com/XjSv/Cooked",
+        "security": "https://github.com/XjSv/Cooked?tab=security-ov-file"
+    },
     "optimize-autoloader": true,
     "require": {
         "php": ">=7.4.0",
         "nxp/math-executor": "^2.3"
     },
     "require-dev": {
-		"php": "^7 || ^8"
+        "php": "^7 || ^8"
     }
 }

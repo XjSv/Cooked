@@ -82,7 +82,7 @@ class Cooked_SEO {
                 endif;
 
                 if (empty($dir_name)) {
-                    $dir_name = 'Step ' . $number;
+                    $dir_name = esc_html__('Step ' . $number);
                 }
 
                 $directions[] = [

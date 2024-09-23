@@ -672,17 +672,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         <a href="#" data-id="" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                     </div>
                     <div class="cooked-direction-content">
-                        <?php
-                        wp_editor('', 'recipe_settings_direction_template', [
-                            'editor_class' => 'cooked-wysiwyg-editor',
-                            'teeny' => true,
-                            'media_buttons' => false,
-                            'wpautop' => false,
-                            'editor_height' => 100,
-                            'textarea_name' => '',
-                            'quicktags' => true
-                        ]);
-                        ?>
+                        <textarea id="" data-direction-part="content" name=""></textarea>
                     </div>
                     <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                 </div>

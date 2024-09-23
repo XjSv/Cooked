@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.6.1
-Stable tag: 1.8.5
+Tested up to: 6.6.2
+Stable tag: 1.8.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,14 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.5 includes new measurement options and bug fixes. Be sure to update!
+Version 1.8.6 includes a fix for recipe pagination and the recipe directions text editor. It also includes a fix for the recipe permalink preview in Cooked Settings > Permalinks.
 
 == Changelog ==
+
+= 1.8.6 =
+* **FIX:** Fixed bug with recipe pagination. It now works with Plain and Custom Permalink structures.
+* **FIX:** Fixed bug with the recipe directions text editor not being responsive.
+* **FIX:** Fixed permalink preview in Cooked Settings > Permalinks.
 
 = 1.8.5 =
 * **NEW:** Added 4 new measurement options: "Drizzle", "Clove", "Jar", and "Can" to support the Delicious Recipes plugin import.

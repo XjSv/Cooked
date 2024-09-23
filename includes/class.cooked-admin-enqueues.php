@@ -157,6 +157,7 @@ class Cooked_Admin_Enqueues {
                 wp_enqueue_script('cooked-functions');
                 wp_enqueue_script('cooked-migration');
 
+                wp_enqueue_editor();
             endif;
         }
     }

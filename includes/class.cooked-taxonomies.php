@@ -66,7 +66,6 @@ class Cooked_Taxonomies {
 		add_filter( 'term_link', ['Cooked_Taxonomies', 'term_link_filter'], 10, 3);
 
 		return $taxonomies;
-
 	}
 
 	public static function single_taxonomy_block( $term_id = false, $style = "block", $taxonomy = "cp_recipe_category" ) {

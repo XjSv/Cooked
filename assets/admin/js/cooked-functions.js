@@ -474,7 +474,7 @@ var $_CookedConditionalTimeout  = false;
             });
 
             // Instantiates the variable that holds the media library frame.
-            var direction_image_frame,directionID;
+            var direction_image_frame, directionID;
 
             $('body').on('click','.cooked-direction-img-placeholder, .cooked-direction-img',function(e) {
                 e.preventDefault();
@@ -517,11 +517,6 @@ var $_CookedConditionalTimeout  = false;
                 // Opens the media library frame.
                 direction_image_frame.open();
             });
-
-            if ($(".cooked-wysiwyg-editor").length) {
-                $(".cooked-wysiwyg-editor").attr('data-direction-part', 'content');
-            }
-
         }
 
         if ( $_CookedRecipeGallery.length ) {
@@ -841,19 +836,30 @@ function cooked_reset_direction_builder() {
             }
 
             let theId = thisField.attr('id');
-            if ( theId == '' || theId == 'recipe_settings_direction_template' ) {
-                thisField.attr( 'id', 'recipe_settings_directions_' + randomKeyForInterval);
 
-                // Init the WordPress Editor.
-                wp.editor.initialize( 'recipe_settings_directions_' + randomKeyForInterval, {
-                    tinymce: true,
-                    quicktags: true,
-                    mediaButtons: false,
-                    wpautop: false,
-                    editor_height: 100,
-                    textarea_name: '_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']'
-                });
+            if ( theId == '' ) {
+                directionPartName = directionPartName.replace( '_', '-' );
+                var fieldID = 'direction-' + randomKeyForInterval + '-' + directionPartName;
+                thisField.attr('id', fieldID);
 
+                if (directionPartName === 'content') {
+                    // Init the WordPress Editor.
+                    wp.editor.initialize( fieldID, {
+                        tinymce: {
+                            wpautop: false,
+                            toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,fullscreen',
+                            toolbar2: '',
+                            toolbar3: '',
+                            toolbar4: '',
+                            editor_height: 100,
+                            textarea_name: '_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']'
+                        },
+                        quicktags: {
+                            buttons: 'strong,em,link,block,del,ins,img,ul,ol,li,code,more,close'
+                        },
+                        mediaButtons: false
+                    });
+                }
             }
         });
     });

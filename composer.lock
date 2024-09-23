@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "81cf3ea6ab1ea434437f48935e8f35c5",
+    "content-hash": "fc964920fa72b528b0fa63217f07cef6",
     "packages": [
         {
             "name": "nxp/math-executor",

@@ -53,8 +53,7 @@ class Cooked_Post_Types {
     }
 
     function taxonomy_page_title( $title = '', $id = 0 ) {
-        if ( is_admin() )
-            return $title;
+        if ( is_admin() ) return $title;
 
         global $wp_query, $post, $_cooked_settings;
         $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;

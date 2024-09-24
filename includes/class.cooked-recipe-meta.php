@@ -24,14 +24,26 @@ class Cooked_Recipe_Meta {
     }
 
     public static function meta_cleanup( $recipe_settings ) {
+        global $_cooked_settings;
         $_recipe_settings = [];
+
+        $wp_editor_roles_allowed = false;
+        if (is_user_logged_in()) {
+            $user = wp_get_current_user();
+            $user_role = $user->roles[0];
+            $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_submission_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_submission_wp_editor_roles'] ) ? true : false;
+        }
 
         if (!empty($recipe_settings)):
             foreach ($recipe_settings as $key => $val):
                 if (!is_array($val)):
 
                     if ( $key === "content" || $key === "excerpt" || $key === "notes" ):
-                        $_recipe_settings[$key] = wp_kses_post( $val );
+                        if ( $wp_editor_roles_allowed ):
+                            $_recipe_settings[$key] = wp_kses_post( $val );
+                        else:
+                            $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
+                        endif;
                     else:
                         $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                     endif;
@@ -94,23 +106,19 @@ class Cooked_Recipe_Meta {
          */
 
         // Check if our nonce is set.
-        if ( !isset( $_POST['cooked_recipe_custom_box_nonce'] ) )
-            return $post_id;
+        if ( !isset( $_POST['cooked_recipe_custom_box_nonce'] ) ) return $post_id;
 
         // Verify that the nonce is valid.
-        if ( ! wp_verify_nonce( $_POST['cooked_recipe_custom_box_nonce'], 'cooked_recipe_custom_box' ) )
-            return $post_id;
+        if ( ! wp_verify_nonce( $_POST['cooked_recipe_custom_box_nonce'], 'cooked_recipe_custom_box' ) ) return $post_id;
 
         /*
          * If this is an autosave, our form has not been submitted,
          * so we don't want to do anything.
          */
-        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
-            return $post_id;
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
 
         // Check the user's permissions.
-        if ( ! current_user_can( 'edit_cooked_recipes', $post_id ) )
-            return $post_id;
+        if ( ! current_user_can( 'edit_cooked_recipes', $post_id ) ) return $post_id;
 
         global $recipe_settings;
 
@@ -119,7 +127,7 @@ class Cooked_Recipe_Meta {
 
         // Update the recipe settings meta field.
         update_post_meta( $post_id, '_recipe_settings', $recipe_settings );
-        $recipe_excerpt = ( isset($recipe_settings['excerpt']) && $recipe_settings['excerpt'] ? $recipe_settings['excerpt'] : get_the_title( $post_id ) );
+        $recipe_excerpt = isset($recipe_settings['excerpt']) && $recipe_settings['excerpt'] ? $recipe_settings['excerpt'] : get_the_title( $post_id );
 
         $seo_content = apply_filters( 'cooked_seo_recipe_content', '<h2>' . wp_kses_post( $recipe_excerpt ) . '</h2><h3>' . __('Ingredients','cooked') . '</h3>[cooked-ingredients checkboxes=false]<h3>' . __('Directions','cooked') . '</h3>[cooked-directions numbers=false]' );
         $seo_content = do_shortcode( $seo_content );

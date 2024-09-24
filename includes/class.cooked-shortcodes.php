@@ -390,7 +390,7 @@ class Cooked_Shortcodes {
     }
 
     public function cooked_info_shortcode($atts, $content = null) {
-        global $recipe,$recipe_settings,$_cooked_settings;
+        global $recipe, $recipe_settings, $_cooked_settings;
 
         if ( !isset($recipe_settings['id']) && isset($recipe->ID) ):
             $recipe_settings['id'] = $recipe->ID;
@@ -400,14 +400,12 @@ class Cooked_Shortcodes {
         endif;
 
         // Shortcode Attributes
-        $atts = shortcode_atts(
-            [
-                'left' => false,
-                'right' => false,
-                'include' => false,
-                'exclude' => false,
-            ], $atts
-        );
+        $atts = shortcode_atts([
+            'left' => false,
+            'right' => false,
+            'include' => false,
+            'exclude' => false,
+        ], $atts);
 
         $left = ( $atts['left'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['left']) ) ) : false );
         $right = ( $atts['right'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['right']) ) ) : false );
@@ -558,57 +556,56 @@ class Cooked_Shortcodes {
     }
 
     public static function cooked_info_author() {
-        global $recipe_settings,$_cooked_settings;
+        global $recipe_settings, $_cooked_settings;
 
-        if (in_array('author', $_cooked_settings['recipe_info_display_options'])):
-
-            $browse_page_id = ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false );
+        if (in_array('author', $_cooked_settings['recipe_info_display_options'])) {
+            $browse_page_id = isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false;
             $front_page_id = get_option( 'page_on_front' );
-            $browse_page_url = ( $browse_page_id ? get_permalink( $browse_page_id ) : false );
+            $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : false;
             $author = !empty($recipe_settings['author']) ? $recipe_settings['author'] : false;
 
-            if ( $author['id'] ):
-                $author_slug = !empty($author) ? sanitize_title( $author['name'] ) : false;
-                $permalink = ( $front_page_id != $browse_page_id && get_option('permalink_structure') ? esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . $author['id'] . '/' . trailingslashit( $author_slug ) ) : esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] ) );
+            if ( !empty($author['id']) ) {
+                $author_slug = !empty($author['name']) ? sanitize_title($author['name']) : false;
+                $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ? esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . $author['id'] . '/' . trailingslashit( $author_slug ) ) : esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
                 $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'] );
-            else:
+            } else {
                 $permalink = false;
-            endif;
+            }
 
-            $author_links = ( isset( $_cooked_settings['disable_author_links'][0] ) && $_cooked_settings['disable_author_links'][0] == 'disabled' ? false : true );
-            $clickable = ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) || !$author_links ? false : true );
-            $hide_avatars = ( isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false );
+            $author_links = isset( $_cooked_settings['disable_author_links'][0] ) && $_cooked_settings['disable_author_links'][0] == 'disabled' ? false : true;
+            $clickable = isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) || !$author_links ? false : true;
+            $hide_avatars = isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false;
+
             echo '<span class="cooked-author' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
-                echo ( !$hide_avatars ? '<span class="cooked-author-avatar">' . wp_kses_post( $author['profile_photo'] ) . '</span>' : '' );
-                echo '<strong class="cooked-meta-title">' . __('Author','cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . esc_html( $author['name'] ) . ( $clickable && $permalink ? '</a>' : '' );
+                echo !$hide_avatars ? '<span class="cooked-author-avatar">' . (!empty($author) ? wp_kses_post( $author['profile_photo'] ) : '') . '</span>' : '';
+                echo '<strong class="cooked-meta-title">' . __('Author','cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . (!empty($author) ? esc_html( $author['name'] ) : '') . ( $clickable && $permalink ? '</a>' : '' );
             echo '</span>';
 
             wp_reset_postdata();
-
-        endif;
+        }
     }
 
     public static function cooked_info_difficulty( $recipe ) {
         global $_cooked_settings;
 
-        if (in_array('difficulty_level', $_cooked_settings['recipe_info_display_options'])):
-            if ( isset($recipe['difficulty_level']) && $recipe['difficulty_level'] ):
-                $dl_html = '<span class="cooked-difficulty-level"><strong class="cooked-meta-title">' . __('Difficulty','cooked') . '</strong>' . Cooked_Recipes::difficulty_level( $recipe['difficulty_level'] ) . '</span>';
-                echo apply_filters( 'cooked_show_difficulty_level', $dl_html, $recipe['difficulty_level'] );
-            endif;
-        endif;
+        if (in_array('difficulty_level', $_cooked_settings['recipe_info_display_options']) && isset($recipe['difficulty_level']) && $recipe['difficulty_level']) {
+            $dl_html = '<span class="cooked-difficulty-level"><strong class="cooked-meta-title">' . __('Difficulty','cooked') . '</strong>' . Cooked_Recipes::difficulty_level( $recipe['difficulty_level'] ) . '</span>';
+            echo apply_filters( 'cooked_show_difficulty_level', $dl_html, $recipe['difficulty_level'] );
+        }
     }
 
     public static function cooked_info_servings( $recipe ) {
         global $_cooked_settings;
-        if (in_array('servings',$_cooked_settings['recipe_info_display_options'])):
-            $servings = ( isset($recipe['nutrition']['servings']) && $recipe['nutrition']['servings'] ? $recipe['nutrition']['servings'] : 1 );
+
+        if (in_array('servings', $_cooked_settings['recipe_info_display_options'])) {
+            $servings = isset($recipe['nutrition']['servings']) && $recipe['nutrition']['servings'] ? $recipe['nutrition']['servings'] : 1;
             Cooked_Recipes::serving_size_switcher( $servings );
-        endif;
+        }
     }
 
     public static function cooked_info_print() {
-        global $recipe_settings,$_cooked_settings;
+        global $recipe_settings, $_cooked_settings;
+
         $recipe_post_url = get_permalink( $recipe_settings['id'] );
         $query_args['print'] = 1;
         $query_args['servings'] = (float)esc_html( get_query_var( 'servings', false ) );
@@ -617,47 +614,53 @@ class Cooked_Shortcodes {
 
     public static function cooked_info_fullscreen() {
         global $recipe_settings, $_cooked_settings;
+
         echo '<span class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen"></i></span>';
         wp_enqueue_script('cooked-nosleep');
     }
 
     public static function cooked_info_prep_time( $recipe ) {
         global $_cooked_settings;
-        if (in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])):
-            $prep_time = ( isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0 );
-            echo ( $prep_time ? '<span class="cooked-prep-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Prep Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $prep_time ) . '</span>' : '' );
-        endif;
+
+        if (in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])) {
+            $prep_time = isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0;
+            echo $prep_time ? '<span class="cooked-prep-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Prep Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $prep_time ) . '</span>' : '';
+        }
     }
 
     public static function cooked_info_cook_time( $recipe ) {
         global $_cooked_settings;
-        if (in_array('timing_cook',$_cooked_settings['recipe_info_display_options'])):
-            $cook_time = ( isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0 );
-            echo ( $cook_time ? '<span class="cooked-cook-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Cook Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $cook_time ) . '</span>' : '' );
-        endif;
+
+        if (in_array('timing_cook', $_cooked_settings['recipe_info_display_options'])) {
+            $cook_time = isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0;
+            echo $cook_time ? '<span class="cooked-cook-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Cook Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $cook_time ) . '</span>' : '';
+        }
     }
 
     public static function cooked_info_total_time( $recipe ) {
         global $_cooked_settings;
-        if (in_array('timing_total',$_cooked_settings['recipe_info_display_options'])):
-            $total_time = ( isset($recipe['total_time']) ? esc_html( $recipe['total_time'] ) : 0 );
-            if ( $total_time ):
-                echo ( $total_time ? '<span class="cooked-total-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Total Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $total_time ) . '</span>' : '' );
-            else:
-                $prep_time = ( isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0 );
-                $cook_time = ( isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0 );
-                if ( $prep_time && $cook_time ):
+
+        if (in_array('timing_total',$_cooked_settings['recipe_info_display_options'])) {
+            $total_time = isset($recipe['total_time']) ? esc_html( $recipe['total_time'] ) : 0;
+
+            if ( $total_time ) {
+                echo $total_time ? '<span class="cooked-total-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Total Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $total_time ) . '</span>' : '';
+            } else {
+                $prep_time = isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0;
+                $cook_time = isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0;
+
+                if ( $prep_time && $cook_time ) {
                     $total_time = $prep_time + $cook_time;
-                    echo ( $total_time ? '<span class="cooked-total-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Total Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $total_time ) . '</span>' : '' );
-                endif;
-            endif;
-        endif;
+                    echo $total_time ? '<span class="cooked-total-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Total Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $total_time ) . '</span>' : '';
+                }
+            }
+        }
     }
 
     public static function cooked_info_taxonomies() {
         global $recipe_settings, $_cooked_settings, $clickable;
 
-        $clickable = ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ? false : true );
+        $clickable = isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ? false : true;
 
         if (in_array('taxonomies', $_cooked_settings['recipe_info_display_options'])):
 

@@ -1108,8 +1108,10 @@ function findVideoId (href, forceVideo) {
   var id,
       type;
 
-  if (href.host.match(/youtube\.com/) && href.search) {
-    //.log();
+  if (href.pathname.includes('shorts')) {
+    id = href.pathname.split('/shorts/')[1];
+    type = 'youtube';
+  } else if (href.host.match(/youtube\.com/) && href.search) {
     id = href.search.split('v=')[1];
     if (id) {
       var ampersandPosition = id.indexOf('&');

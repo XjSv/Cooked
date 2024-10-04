@@ -28,7 +28,7 @@ else:
 
 	$child_taxonomies = false;
 
-	if( $is_author_page ):
+	if ( $is_author_page ):
 
         $hide_avatars = ( isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false );
         echo '<div class="cooked-author-list-heading' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
@@ -53,19 +53,19 @@ else:
         switch( $recipe_args['tax_query'][0]['taxonomy'] ):
             case 'cp_recipe_category':
                 $shortcode = 'categories';
-            break;
+            	break;
             case 'cp_recipe_cooking_method':
                 $shortcode = 'cooking-methods';
-            break;
+            	break;
             case 'cp_recipe_cuisine':
                 $shortcode = 'cuisines';
-            break;
+            	break;
             case 'cp_recipe_tags':
                 $shortcode = 'tags';
-            break;
+            	break;
             case 'cp_recipe_diet':
                 $shortcode = 'diets';
-            break;
+            	break;
         endswitch;
         $tax_slug = $recipe_args['tax_query'][0]['terms'][0];
         $child_taxonomies = do_shortcode( '[cooked-' . esc_attr( $shortcode ) . ' child_of="' . esc_attr( $tax_slug ) . '"]' );
@@ -78,21 +78,19 @@ else:
     if ( !empty($recipes) && !isset( $recipes['raw'] ) && count($recipes) >= 1 || !empty($recipes) && isset( $recipes['raw'] ) && count($recipes) > 1 ):
 
 		$list_id_counter++;
-		$recipe_list_style = apply_filters( 'cooked_recipe_list_style', array( 'grid' => 'Cooked_Recipes' ), $atts['layout'] );
+		$recipe_list_style = apply_filters( 'cooked_recipe_list_style', [ 'grid' => 'Cooked_Recipes' ], $atts['layout'] );
 		$list_style = key( $recipe_list_style );
 		$ls_method = 'list_style_' . esc_attr( $list_style );
 		$ls_class = current( $recipe_list_style );
 
 		echo '<section id="cooked-recipe-list-' . intval( $list_id_counter ) . '" class="cooked-clearfix cooked-recipe-' . esc_attr( $list_style ) . ' cooked-recipe-loader' . ( isset($atts['columns']) && $atts['columns'] ? ' cooked-columns-' . esc_attr( $atts['columns'] ) : '' ) . '">';
 
-		foreach( $recipes as $key => $recipe ):
-
+		foreach ( $recipes as $key => $recipe ):
 			if ( $key === 'raw' ):
 				continue;
 			endif;
 
-			$ls_class::$ls_method();
-
+			$ls_class::$ls_method($atts);
 		endforeach;
 
 		echo '</section>';
@@ -110,4 +108,3 @@ else:
 
 endif;
 // END 'cooked_author_template_override' Filter.
-

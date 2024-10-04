@@ -122,7 +122,7 @@ class Cooked_Users {
     }
 
     function recipe_count_column($column_headers) {
-        $column_headers['cooked_recipe_count'] = __('Recipes Count', 'cooked');
+        $column_headers['cooked_recipe_count'] = __('Recipes', 'cooked');
 
         return $column_headers;
     }

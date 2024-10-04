@@ -76,12 +76,14 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.8 includes
+Version 1.8.8 includes a new parameter for the [cooked-browse] shortcode to hide the recipe excerpt. This is useful for when you want to display a list of recipes without the excerpt.
 
 == Changelog ==
 
 = 1.8.8 =
-* **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanatized.
+* **NEW:** Added 'hide_excerpt' Parameter to [cooked-browse] shortcode to hide the recipe excerpt.
+* **NEW:** Added Recipes column in the Admin users table to show the number of recipes each user has created.
+* **TWEAK:** If Cooked Pro is installed, the Excerpt, Notes and Directions fields will display the WP Editor depending on the 'WP Editor Roles' setting. If not, the WP Editor will always display.
 
 = 1.8.7 =
 * **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanatized.

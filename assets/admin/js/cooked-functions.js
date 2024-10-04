@@ -163,12 +163,8 @@ var $_CookedConditionalTimeout  = false;
                             }
 
                             thisContainer.find('.button, .button-primary').removeClass('disabled');
-                            //console.log( 'SUCCESS' );
-                            //console.log( result );
                         }).fail(function(result) {
                             thisContainer.find('.button, .button-primary').removeClass('disabled');
-                            //console.log( 'ERROR' );
-                            //console.log( result );
                         });
                 }
             });

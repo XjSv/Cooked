@@ -48,9 +48,9 @@ class Cooked_Admin_Enqueues {
     }
 
     public function widget_enqueues( $hook ) {
-        if ( $hook == 'widgets.php' ):
+        if ( $hook == 'widgets.php' ) {
             self::enqueue_widgets();
-        endif;
+        }
     }
 
     public function admin_enqueues( $hook ) {
@@ -74,11 +74,11 @@ class Cooked_Admin_Enqueues {
 
         $load_cooked_admin_assets = false;
 
-        foreach( $cooked_admin_hooks as $hook_slug ):
-            if ( strpos( $hook, $hook_slug ) || $hook_slug == $hook ):
+        foreach ( $cooked_admin_hooks as $hook_slug ) {
+            if ( strpos( $hook, $hook_slug ) || $hook_slug == $hook ) {
                 $load_cooked_admin_assets = true;
-            endif;
-        endforeach;
+            }
+        }
 
         if ( $load_cooked_admin_assets ) {
 

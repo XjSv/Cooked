@@ -25,13 +25,13 @@ class Cooked_Measurements {
 
         // Use the "cooked_measurements" filter to add your own measurements.
         $measurements = apply_filters('cooked_measurements', [
-            'g' => array(
-                'singular_abbr' => _x('g', 'Grams Abbreviation (Singular)', 'cooked'),
-                'plural_abbr' => _x('g', 'Grams Abbreviation (Plural)', 'cooked'),
-                'singular' => __('gram', 'cooked'),
-                'plural' => __('grams', 'cooked'),
-                'variations' => ['g', 'g.', 'gram', 'grams'],
-            ),
+            'g' => [
+				'singular_abbr' => _x( 'g', 'Grams Abbreviation (Singular)', 'cooked' ),
+				'plural_abbr' => _x( 'g', 'Grams Abbreviation (Plural)', 'cooked' ),
+				'singular' => __( 'gram', 'cooked' ),
+				'plural' => __( 'grams', 'cooked' ),
+				'variations' => [ 'g', 'g.', 'gram', 'grams' ],
+			],
             'kg' => [
                 'singular_abbr' => _x('kg', 'Kilograms Abbreviation (Singular)', 'cooked'),
                 'plural_abbr' => _x('kg', 'Kilograms Abbreviation (Plural)', 'cooked'),
@@ -449,17 +449,14 @@ class Cooked_Measurements {
     }
 
     public static function singular_plural( $singular_text, $plural_text, $count ) {
-
         if ($count <= 1 ):
             return $singular_text;
         else:
             return $plural_text;
         endif;
-
     }
 
-    public function cleanup_amount( $amount ){
-
+    public function cleanup_amount( $amount ) {
         $fractions = self::get_fraction_array();
 
         foreach( $fractions['fractions_a'] as $key => $f ):
@@ -478,27 +475,24 @@ class Cooked_Measurements {
         $amount = self::locale_formatted( $amount );
 
         return $amount;
-
     }
 
-    public function locale_formatted( $amount ){
+    public function locale_formatted( $amount ) {
         global $wp_locale;
+
         if ( isset( $wp_locale ) ) {
             $amount = str_replace( $wp_locale->number_format['decimal_point'], '.', str_replace( $wp_locale->number_format['thousands_sep'], '', $amount) );
         } else {
             $amount = str_replace( ',', '', $amount);
         }
+
         return $amount;
     }
 
-    public function format_amount( $float_amount = 0, $format = 'fraction' ){
-
+    public function format_amount( $float_amount = 0, $format = 'fraction' ) {
         if ( $format == 'decimal' ):
-
-            $amount = ( $float_amount ? number_format_i18n( floatval( $float_amount ), 2 ) : 0 );
-
+            $amount = $float_amount ? number_format_i18n( floatval( $float_amount ), 2 ) : 0;
         else:
-
             $float_parts = explode( '.', $float_amount );
             if ( isset($float_parts[1]) ):
                 $float_parts[0] = preg_replace("/[^0-9\/\.]/","",$float_parts[0]);
@@ -518,11 +512,9 @@ class Cooked_Measurements {
             else:
                 $amount = preg_replace("/[^0-9\/\.]/","",$float_parts[0]);
             endif;
-
         endif;
 
         return $amount;
-
     }
 
     public function math($expression = false) {
@@ -585,18 +577,17 @@ class Cooked_Measurements {
         }
 
         return $amount;
-
     }
 
     public function fraction_cleaner($fraction) {
-        $fraction_parts = explode('/',$fraction);
+        $fraction_parts = explode('/', $fraction);
         $decimal = $fraction_parts[0] / $fraction_parts[1];
 
         if ($decimal < 1):
             $decimal_array = [0.125, 0.166, 0.200, 0.250, 0.333, 0.500, 0.666, 0.750, 0.875];
             $closest_decimal = self::get_closest_decimal( $decimal, $decimal_array );
 
-            switch($closest_decimal):
+            switch ($closest_decimal):
                 case 0.125:
                     return '1/8';
                 case 0.166:
@@ -619,7 +610,6 @@ class Cooked_Measurements {
         else:
             return self::calculate($decimal, 'fraction');
         endif;
-
     }
 
     public function get_closest_decimal($search, $arr) {
@@ -633,7 +623,6 @@ class Cooked_Measurements {
     }
 
     public function float2rat($n, $tolerance = 1.e-6) {
-
         $h1=1; $h2=0;
         $k1=0; $k2=1;
         $b = 1/$n;
@@ -697,7 +686,6 @@ class Cooked_Measurements {
     }
 
     public static function time_format( $minutes, $format = 'default' ) {
-
         ob_start();
 
         if ( $minutes < 60 ):
@@ -739,7 +727,6 @@ class Cooked_Measurements {
         endif;
 
         return ob_get_clean();
-
     }
 
 }

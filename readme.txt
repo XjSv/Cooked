@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.6.2
-Stable tag: 1.8.6
+Stable tag: 1.8.8
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,15 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.6 includes a fix for recipe pagination and the recipe directions text editor. It also includes a fix for the recipe permalink preview in Cooked Settings > Permalinks.
+Version 1.8.8 includes
 
 == Changelog ==
+
+= 1.8.8 =
+* **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanatized.
+
+= 1.8.7 =
+* **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanatized.
 
 = 1.8.6 =
 * **FIX:** Fixed bug with recipe pagination. It now works with Plain and Custom Permalink structures.

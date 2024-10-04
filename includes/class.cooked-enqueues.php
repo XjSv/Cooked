@@ -71,11 +71,10 @@ class Cooked_Enqueues {
 	}
 
 	public static function get_dynamic_css($file = false) {
-		if (!$file || $file && !file_exists($file))
-			return;
+		if (!$file || $file && !file_exists($file)) return;
 
 		ob_start();
-		include($file);
+		include $file;
 		$css = ob_get_clean();
 		$compressed_css = self::compress_css($css);
 

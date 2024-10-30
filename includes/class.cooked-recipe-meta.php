@@ -39,14 +39,20 @@ class Cooked_Recipe_Meta {
                 if (!is_array($val)):
 
                     if ( $key === "content" || $key === "excerpt" || $key === "notes" ):
-                        if ( $wp_editor_roles_allowed ):
-                            $_recipe_settings[$key] = wp_kses_post( $val );
-                        else:
-                            $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
-                        endif;
+                        $_recipe_settings[$key] = wp_kses_post( $val );
                     else:
                         $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                     endif;
+
+                    // if ( $key === "content" || $key === "excerpt" || $key === "notes" ):
+                    //     if ( $wp_editor_roles_allowed ):
+                    //         $_recipe_settings[$key] = wp_kses_post( $val );
+                    //     else:
+                    //         $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
+                    //     endif;
+                    // else:
+                    //     $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
+                    // endif;
 
                 else:
                     foreach ($val as $subkey => $subval):

@@ -104,6 +104,21 @@ class Cooked_Settings {
         $categories_array = self::terms_array( 'cp_recipe_category', __('No default','cooked'), __('No categories','cooked') );
         $recipes_per_page_array = self::per_page_array();
 
+        // Dynamically load roles.
+        $role_options = [];
+        if (is_user_logged_in()) {
+            global $wp_roles;
+            $roles = $wp_roles->roles;
+
+            if (!empty($roles)) {
+                foreach ( $roles as $role => $data ) {
+                    $role_options[$role] = [
+                        'label' => $data['name']
+                    ];
+                }
+            }
+        }
+
         return apply_filters('cooked_settings_tabs_fields', [
             'recipe_settings' => [
                 'name' => __('General', 'cooked'),
@@ -222,6 +237,14 @@ class Cooked_Settings {
                             ]
                         )
                     ],
+                    'recipe_submission_wp_editor_roles' => [
+                        'title' => __('WP Editor Roles', 'cooked-pro'),
+                        'desc' => __('Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields.', 'cooked-pro'),
+                        'type' => 'checkboxes',
+                        'conditional_requirement' => 'enable_recipe_submissions',
+                        'default' => apply_filters('cooked_add_recipe_wp_editor_roles_defaults', ['administrator', 'editor', 'cooked_recipe_editor']),
+                        'options' => $role_options
+                    ],
                     'advanced' => [
                         'title' => __('Advanced Settings', 'cooked'),
                         'desc' => '',
@@ -237,7 +260,8 @@ class Cooked_Settings {
                                 /* translators: an option to disable "meta" tags. */
                                 'disable_meta_tags' => '<strong>' . sprintf(__('Disable %s Tags', 'cooked'), 'Cooked <code>&lt;meta&gt;</code>') . '</strong> &mdash; ' . __('Prevents duplicates when tags already exist.', 'cooked'),
                                 'disable_servings_switcher' => '<strong>' . __('Disable "Servings Switcher"', 'cooked') . '</strong> &mdash; ' . __('Removes the servings dropdown on recipes.', 'cooked'),
-                                'disable_schema_output' => '<strong>' . __('Disable Recipe Schema Output', 'cooked') . '</strong> &mdash; ' . __('You should only do this if you\'re using something else to output schema information.', 'cooked')
+                                'disable_schema_output' => '<strong>' . __('Disable Recipe Schema Output', 'cooked') . '</strong> &mdash; ' . __('You should only do this if you\'re using something else to output schema information.', 'cooked'),
+                                'disable_cp_recipe_archive' => '<strong>' . __('Disable Recipe Archive Page', 'cooked') . '</strong> &mdash; ' . __('Prevents the recipe archive from being displayed.', 'cooked')
                             ]
                         )
                     ],

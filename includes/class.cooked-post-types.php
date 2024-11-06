@@ -391,7 +391,7 @@ class Cooked_Post_Types {
         $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
 
 		if ( $browse_page_id == $post->ID ) {
-			$post_states['cooked_page_for_browse_recipes'] = __( 'Browse Recipes Page', 'cooked' );
+			$post_states['cooked_page_for_browse_recipes'] = __( 'Cooked Browse Recipes Page', 'cooked' );
 		}
 
 		return $post_states;

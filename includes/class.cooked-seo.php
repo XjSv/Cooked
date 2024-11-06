@@ -46,7 +46,7 @@ class Cooked_SEO {
 
         $_nutrition_facts = Cooked_Measurements::nutrition_facts();
 
-        $recipe_thumbnail = ( has_post_thumbnail($rpost) ? get_the_post_thumbnail_url( $rpost, 'cooked-medium' ) : '' );
+        $recipe_thumbnail = has_post_thumbnail($rpost) ? get_the_post_thumbnail_url( $rpost, 'cooked-medium' ) : '';
         if ( !$recipe_author = Cooked_Users::format_author_name( get_the_author_meta( 'display_name', $rpost->post_author ) ) ):
             $recipe_author = '';
         endif;
@@ -64,12 +64,11 @@ class Cooked_SEO {
         $directions = [];
         if ( isset($recipe['directions']) && !empty($recipe['directions']) ):
             $number = 1;
-            $dir_name = '';
 
             foreach ( $recipe['directions'] as $dir ):
-                $dir_name = isset( $dir['section_heading_name'] ) ? $dir['section_heading_name'] : $dir_name;
-
-                if ( isset( $dir['section_heading_name'] ) ): continue; endif;
+                if ( isset( $dir['section_heading_name'] ) ):
+                    continue;
+                endif;
 
                 $direction = Cooked_Recipes::single_direction( $dir, false, true );
                 $direction_cleaned = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $direction) );
@@ -81,13 +80,9 @@ class Cooked_SEO {
                     $image = $image[0];
                 endif;
 
-                if (empty($dir_name)) {
-                    $dir_name = __('Step ' . $number);
-                }
-
                 $directions[] = [
                     '@type' => 'HowToStep',
-                    'name' => $dir_name,
+                    'name' => sprintf(__('Step %d', 'cooked'), $number),
                     'text' => $direction_cleaned,
                     'url' => get_permalink($rpost) . '#cooked-single-direction-step-' . $number,
                     'image' => $image,
@@ -106,8 +101,8 @@ class Cooked_SEO {
             endif;
         endif;
 
-        $cook_time = ( isset($recipe['cook_time']) && $recipe['cook_time'] ? esc_html( $recipe['cook_time'] ) : 0 );
-        $prep_time = ( isset($recipe['prep_time']) && $recipe['prep_time'] ? esc_html( $recipe['prep_time'] ) : 0 );
+        $cook_time = isset($recipe['cook_time']) && $recipe['cook_time'] ? esc_html( $recipe['cook_time'] ) : 0;
+        $prep_time = isset($recipe['prep_time']) && $recipe['prep_time'] ? esc_html( $recipe['prep_time'] ) : 0;
         $total_time = $cook_time + $prep_time;
 
         $unsaturatedFatAmount = (isset($recipe['nutrition']['monounsaturated_fat']) && $recipe['nutrition']['monounsaturated_fat'] ? $recipe['nutrition']['monounsaturated_fat'] : 0) + (isset($recipe['nutrition']['polyunsaturated_fat']) && $recipe['nutrition']['polyunsaturated_fat'] ? $recipe['nutrition']['polyunsaturated_fat'] : 0);
@@ -116,6 +111,15 @@ class Cooked_SEO {
             $unsaturatedFatContent = $unsaturatedFatAmount . ' ' . $_nutrition_facts['main']['fat']['subs']['monounsaturated_fat']['measurement'];
         else:
             $unsaturatedFatContent = '';
+        endif;
+
+        $description = '';
+        if (!empty($recipe['seo_description'])):
+            $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe['seo_description']) ); ;
+        elseif (!empty($recipe['excerpt'])):
+            $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe['excerpt']) );
+        elseif (!empty($recipe['title'])):
+            $description = $recipe['title'];
         endif;
 
         $schema_array = false;
@@ -129,7 +133,7 @@ class Cooked_SEO {
             'datePublished' => get_the_date('Y-m-d', $recipe['id']),
             'name' => (isset($recipe['title']) ? $recipe['title'] : ''),
             'image' => $recipe_thumbnail,
-            'description' => (isset($recipe['seo_description']) && $recipe['seo_description'] ? $recipe['seo_description'] : (isset($recipe['excerpt']) && $recipe['excerpt'] ? $recipe['excerpt'] : (isset($recipe['title']) ? $recipe['title'] : ''))),
+            'description' => $description,
             'recipeIngredient' => $ingredients,
             'recipeCategory' => $category_name,
             'recipeYield' => (isset($recipe['nutrition']['servings']) && $recipe['nutrition']['servings'] ? $recipe['nutrition']['servings'] . ' ' . strtolower($_nutrition_facts['top']['servings']['name'])  : ''),

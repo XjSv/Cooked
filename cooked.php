@@ -185,6 +185,22 @@ final class Cooked_Plugin {
     public $elementor;
 
     /**
+     * Cooked Rank Math SEO Object.
+     *
+     * @var object|Cooked_RankMathSEO
+     * @since 1.0.0
+     */
+    public $rankmathseo;
+
+    /**
+     * Cooked Yoast SEO Object.
+     *
+     * @var object|Cooked_YoastSEO
+     * @since 1.0.0
+     */
+    public $yoastseo;
+
+    /**
      * Main Cooked_Plugin Instance.
      *
      * Insures that only one instance of Cooked_Plugin exists in memory at any one
@@ -232,6 +248,8 @@ final class Cooked_Plugin {
             self::$instance->extra = new Cooked_Plugin_Extra();
 
             self::$instance->module_setup();
+
+            add_action( 'plugins_loaded', [self::$instance, 'initialize_plugin_support'], 15 );
         }
 
         return self::$instance;
@@ -277,6 +295,18 @@ final class Cooked_Plugin {
                 endforeach;
             endif;
         endif;
+    }
+
+    public function initialize_plugin_support() {
+        if (is_plugin_active('wordpress-seo/wp-seo.php')) {
+            require_once COOKED_DIR . 'includes/class.cooked-yoastseo.php';
+            self::$instance->yoastseo = new Cooked_YoastSEO();
+        }
+
+        if (is_plugin_active('seo-by-rank-math/rank-math.php')) {
+            require_once COOKED_DIR . 'includes/class.cooked-rankmathseo.php';
+            self::$instance->rankmathseo = new Cooked_RankMathSEO();
+        }
     }
 
     /**

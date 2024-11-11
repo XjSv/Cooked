@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-11-06T16:16:41-05:00\n"
+"POT-Creation-Date: 2024-11-11T17:58:23-05:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: cooked\n"
@@ -99,15 +99,15 @@ msgstr ""
 
 #: includes/class.cooked-admin-menus.php:34
 #: includes/class.cooked-admin-menus.php:57
-#: includes/class.cooked-post-types.php:338
 #: includes/class.cooked-post-types.php:350
+#: includes/class.cooked-post-types.php:362
 #: includes/class.cooked-users.php:125
 msgid "Recipes"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:35
 #: includes/class.cooked-admin-menus.php:59
-#: includes/class.cooked-post-types.php:340
+#: includes/class.cooked-post-types.php:352
 msgid "Add New"
 msgstr ""
 
@@ -134,7 +134,7 @@ msgid "Upgrade to Pro"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:58
-#: includes/class.cooked-post-types.php:345
+#: includes/class.cooked-post-types.php:357
 msgid "All Recipes"
 msgstr ""
 
@@ -848,48 +848,56 @@ msgstr ""
 msgid "Photo"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:320
+#: includes/class.cooked-post-types.php:332
 msgid "Recipe Archive"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:339
+#: includes/class.cooked-post-types.php:351
 msgid "Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:341
+#: includes/class.cooked-post-types.php:353
 msgid "Add New Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:342
+#: includes/class.cooked-post-types.php:354
 msgid "New Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:343
+#: includes/class.cooked-post-types.php:355
 msgid "Edit Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:344
+#: includes/class.cooked-post-types.php:356
 msgid "View Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:346
+#: includes/class.cooked-post-types.php:358
 msgid "Search Recipes"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:347
+#: includes/class.cooked-post-types.php:359
 msgid "No recipes found."
 msgstr ""
 
-#: includes/class.cooked-post-types.php:348
+#: includes/class.cooked-post-types.php:360
 msgid "No recipes found in trash."
 msgstr ""
 
-#: includes/class.cooked-post-types.php:376
+#: includes/class.cooked-post-types.php:388
 msgid "Recipe title ..."
 msgstr ""
 
-#: includes/class.cooked-post-types.php:394
+#: includes/class.cooked-post-types.php:406
 msgid "Cooked Browse Recipes Page"
+msgstr ""
+
+#: includes/class.cooked-rankmathseo.php:34
+msgid "Recipe Category"
+msgstr ""
+
+#: includes/class.cooked-rankmathseo.php:35
+msgid "Current recipe category being viewed"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:178
@@ -1824,6 +1832,10 @@ msgstr ""
 #: includes/class.cooked-widgets.php:37
 #: includes/class.cooked-widgets.php:39
 msgid "Choose recipe(s)..."
+msgstr ""
+
+#: includes/class.cooked-yoastseo.php:31
+msgid "Current Cooked recipe category being viewed"
 msgstr ""
 
 #: includes/widgets/nutrition.php:31

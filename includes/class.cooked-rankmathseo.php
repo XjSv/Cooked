@@ -47,30 +47,17 @@ class Cooked_RankMathSEO {
      * @return string
      */
     public function get_cooked_recipe_category() {
-        global $_cooked_settings;
+        global $wp_query;
 
-        // Sanitize the REQUEST_URI before parsing.
-        $request_uri = esc_url_raw($_SERVER['REQUEST_URI']);
-        $path = trim(parse_url($request_uri, PHP_URL_PATH), '/');
-        $parts = explode('/', $path);
+        if ( isset($wp_query->query['cp_recipe_category']) && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) {
+            $cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
 
-		// Look for recipe-category segment
-		$permalink = isset($_cooked_settings['recipe_category_permalink']) && $_cooked_settings['recipe_category_permalink'] ? $_cooked_settings['recipe_category_permalink'] : 'recipe-category';
-		$key = array_search($permalink, $parts);
-		if ($key !== false && isset($parts[$key + 1])) {
-			$term_slug = $parts[$key + 1];
-			$term = get_term_by('slug', $term_slug, 'cp_recipe_category');
-			return $term ? $term->name : '';
-		}
+            if (!empty($cooked_term) && $cooked_term->name) {
+                return $cooked_term->name;
+            }
+        }
 
-		// Fallback to query param - with sanitization
-		if (isset($_GET['cp_recipe_category'])) {
-			$slug = sanitize_text_field($_GET['cp_recipe_category']);
-			$term = get_term_by('slug', $slug, 'cp_recipe_category');
-			return $term ? $term->name : '';
-		}
-
-		return '';
+        return '';
     }
 
 }

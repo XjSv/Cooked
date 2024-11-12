@@ -32,7 +32,7 @@ class Cooked_RankMathSEO {
 			'cooked_recipe_category',
             [
                 'name'        => __( 'Recipe Category', 'cooked' ),
-                'description' => __( 'Current recipe category being viewed', 'cooked' ),
+                'description' => __( 'Current recipe category being viewed.', 'cooked' ),
                 'variable'    => 'cooked_recipe_category',
                 'example'     => $this->get_cooked_recipe_category(),
             ],

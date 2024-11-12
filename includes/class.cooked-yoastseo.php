@@ -28,7 +28,7 @@ class Cooked_YoastSEO {
     }
 
     public function cooked_register_extra_yoast_variables() {
-        wpseo_register_var_replacement( '%%cooked_recipe_category%%', [$this, 'get_cooked_recipe_category'], 'advanced', __( 'Current Cooked recipe category being viewed', 'cooked' ) );
+        wpseo_register_var_replacement( '%%cooked_recipe_category%%', [$this, 'get_cooked_recipe_category'], 'advanced', __( 'Current recipe category being viewed.', 'cooked' ) );
         $this->variable_registered = true;
 	}
 

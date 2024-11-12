@@ -249,7 +249,7 @@ final class Cooked_Plugin {
 
             self::$instance->module_setup();
 
-            add_action( 'plugins_loaded', [self::$instance, 'initialize_plugin_support'], 15 );
+            add_action( 'plugins_loaded', [self::$instance, 'initialize_plugin_support'], 10 );
         }
 
         return self::$instance;
@@ -298,12 +298,12 @@ final class Cooked_Plugin {
     }
 
     public function initialize_plugin_support() {
-        if (is_plugin_active('wordpress-seo/wp-seo.php')) {
+        if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
             require_once COOKED_DIR . 'includes/class.cooked-yoastseo.php';
             self::$instance->yoastseo = new Cooked_YoastSEO();
         }
 
-        if (is_plugin_active('seo-by-rank-math/rank-math.php')) {
+        if (in_array('seo-by-rank-math/rank-math.php', apply_filters('active_plugins', get_option('active_plugins')))) {
             require_once COOKED_DIR . 'includes/class.cooked-rankmathseo.php';
             self::$instance->rankmathseo = new Cooked_RankMathSEO();
         }

@@ -85,7 +85,7 @@ Version 1.8.8 includes a new parameter for the [cooked-browse] shortcode to hide
 * **NEW:** Added Rank Math SEO and Yoast SEO support. Added a custom variable called `cooked_recipe_category` that can be used in the title or description fields.
 * **NEW:** Added 'hide_excerpt' Parameter to [cooked-browse] shortcode to hide the recipe excerpt.
 * **NEW:** Added Recipes column in the Admin users table to show the number of recipes each user has created.
-* **NEW:** Added post states to the Browse Recipe page. When selected a label will appear in the page list table indicating which page is the Browse Recipe page.
+* **NEW:** Added post states to the Browse Recipe page. When selected a label will appear in the page list table indicating which page is the Cooked Browse Recipes Page.
 * **TWEAK:** Moved WP Editor Roles option into General settings.
 * **TWEAK:** If Cooked Pro is installed, the Excerpt, Notes and Directions fields will display the WP Editor depending on the 'WP Editor Roles' setting. If not, the WP Editor will always display.
 * **TWEAK:** If the "Disable Cooked <meta> Tags" setting is enabled, the SEO Description field will be hidden in the recipe edit screen.

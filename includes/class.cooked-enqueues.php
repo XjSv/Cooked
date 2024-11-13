@@ -35,7 +35,7 @@ class Cooked_Enqueues {
 			'i18n_timer' => __('Timer', 'cooked'),
 		];
 
-		$min = (COOKED_DEV ? '' : '.min');
+		$min = COOKED_DEV ? '' : '.min';
 
 		wp_enqueue_style('cooked-essentials', COOKED_URL . 'assets/admin/css/essentials' . $min . '.css', [], COOKED_VERSION);
 		wp_enqueue_style('cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION);
@@ -71,11 +71,10 @@ class Cooked_Enqueues {
 	}
 
 	public static function get_dynamic_css($file = false) {
-		if (!$file || $file && !file_exists($file))
-			return;
+		if (!$file || $file && !file_exists($file)) return;
 
 		ob_start();
-		include($file);
+		include $file;
 		$css = ob_get_clean();
 		$compressed_css = self::compress_css($css);
 

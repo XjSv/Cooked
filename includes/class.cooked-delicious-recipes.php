@@ -113,7 +113,7 @@ class Cooked_Delicious_Recipes {
         $new_cp_recipe_meta = [];
         $new_cp_recipe_meta['cooked_version'] = COOKED_VERSION;
         $new_cp_recipe_meta['content'] = $default_content;
-        $new_cp_recipe_meta['excerpt'] = $post->post_title;
+        $new_cp_recipe_meta['excerpt'] = isset( $delicious_recipe['recipeDescription'] ) ? sanitize_text_field( $delicious_recipe['recipeDescription'] ) : '';
         $new_cp_recipe_meta['seo_description'] = isset( $delicious_recipe['recipeDescription'] ) ? sanitize_text_field( $delicious_recipe['recipeDescription'] ) : '';
         $new_cp_recipe_meta['notes'] = isset( $delicious_recipe['recipeNotes'] ) ? $delicious_recipe['recipeNotes'] : '';
 

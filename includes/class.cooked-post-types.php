@@ -40,6 +40,9 @@ class Cooked_Post_Types {
         add_filter( 'pre_wp_nav_menu', [&$this, 'disable_taxonomy_page_title'], 10, 2 );
         add_filter( 'wp_nav_menu_items', [&$this, 'enable_taxonomy_page_title'], 10, 2 );
         add_filter( 'wp_title', [&$this, 'taxonomy_meta_title'], 10 );
+
+        // Add a post display state for special pages.
+        add_filter( 'display_post_states', [&$this, 'add_display_post_states' ], 10, 2 );
     }
 
     function disable_taxonomy_page_title( $nav_menu, $args ) {
@@ -118,19 +121,22 @@ class Cooked_Post_Types {
     public static function cooked_meta_tags() {
         global $_cooked_settings, $post, $wp_query;
 
+        if ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) )
+            return false;
+
         if ( isset($wp_query->query['cp_recipe_category']) && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) {
             $cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
         }
 
-        if ( isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) )
-            return false;
-
+        // Browse page.
         if ( isset( $cooked_term ) && $cooked_term->name ) {
             ?><title><?php echo esc_html($cooked_term->name) . ' / ' . esc_html(get_bloginfo('name')); ?></title>
+            <meta name="description" content="<?php echo esc_attr( $cooked_term->description ); ?>">
             <meta property="og:title" content="<?php echo esc_attr( $cooked_term->name ); ?>">
             <meta property="og:description" content="<?php echo esc_attr( $cooked_term->description ); ?>"><?php
         }
 
+        // Single recipe.
         if ( isset( $post->post_type ) && $post->post_type == 'cp_recipe' ) {
             ob_start();
 
@@ -139,12 +145,23 @@ class Cooked_Post_Types {
             $image_url = false;
 
             if ( has_post_thumbnail($recipe) ) {
-                   $image_url = get_the_post_thumbnail_url( $recipe, 'cooked-large' );
-            } ?>
+                $image_url = get_the_post_thumbnail_url( $recipe, 'cooked-large' );
+            }
 
+            $description = '';
+            if (!empty($recipe_settings['seo_description'])):
+                $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe_settings['seo_description']) ); ;
+            elseif (!empty($recipe_settings['excerpt'])):
+                $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe_settings['excerpt']) );
+            elseif (!empty($recipe_settings['title'])):
+                $description = $recipe_settings['title'];
+            endif;
+            ?>
+
+            <meta name="description" content="<?php echo esc_attr( $description ); ?>">
             <meta property="og:type" content="website">
             <meta property="og:title" content="<?php echo esc_attr( $post->post_title ); ?>">
-            <meta property="og:description" content="<?php echo esc_attr( $recipe_settings['excerpt'] ); ?>">
+            <meta property="og:description" content="<?php echo esc_attr( $description ); ?>">
             <meta property="og:image" content="<?php echo esc_attr( $image_url ); ?>">
             <meta property="og:locale" content="<?php echo esc_attr( get_locale() ); ?>">
             <meta property="og:url" content="<?php echo get_permalink( $post->ID ); ?>"><?php
@@ -323,6 +340,10 @@ class Cooked_Post_Types {
             $exclude_from_search = true;
         }
 
+        if ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_cp_recipe_archive', $_cooked_settings['advanced'] ) ) {
+            $has_archive_slug = false;
+        }
+
         $post_types = apply_filters( 'cooked_post_types', [
                 'cp_recipe' => [
                     'labels' => [
@@ -370,6 +391,24 @@ class Cooked_Post_Types {
         }
 
         return $title;
+    }
+
+    /**
+     * Add a post display state for special Cooked pages in the page list table.
+     *
+     * @param array   $post_states An array of post display states.
+     * @param WP_Post $post        The current post object.
+     */
+    public function add_display_post_states( $post_states, $post ) {
+        global $_cooked_settings;
+
+        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+
+        if ( $browse_page_id == $post->ID ) {
+            $post_states['cooked_page_for_browse_recipes'] = __( 'Cooked Browse Recipes Page', 'cooked' );
+        }
+
+        return $post_states;
     }
 
 }

@@ -27,39 +27,31 @@ class Cooked_Recipe_Meta {
         global $_cooked_settings;
         $_recipe_settings = [];
 
-        $wp_editor_roles_allowed = false;
-        if (is_user_logged_in()) {
-            $user = wp_get_current_user();
-            $user_role = $user->roles[0];
-            $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_submission_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_submission_wp_editor_roles'] ) ? true : false;
+        if ( class_exists( 'Cooked_Pro_Plugin' ) ) {
+            $wp_editor_roles_allowed = false;
+            if (is_user_logged_in()) {
+                $user = wp_get_current_user();
+                $user_role = $user->roles[0];
+                $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_submission_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_submission_wp_editor_roles'] ) ? true : false;
+            }
+        } else {
+            $wp_editor_roles_allowed = true;
         }
 
         if (!empty($recipe_settings)):
             foreach ($recipe_settings as $key => $val):
                 if (!is_array($val)):
-
                     if ( $key === "content" || $key === "excerpt" || $key === "notes" ):
                         $_recipe_settings[$key] = wp_kses_post( $val );
                     else:
                         $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                     endif;
-
-                    // if ( $key === "content" || $key === "excerpt" || $key === "notes" ):
-                    //     if ( $wp_editor_roles_allowed ):
-                    //         $_recipe_settings[$key] = wp_kses_post( $val );
-                    //     else:
-                    //         $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
-                    //     endif;
-                    // else:
-                    //     $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
-                    // endif;
-
                 else:
                     foreach ($val as $subkey => $subval):
                         if (!is_array($subval)):
                             $_recipe_settings[$key][$subkey] = Cooked_Functions::sanitize_text_field($subval);
                         else:
-                            foreach( $subval as $sub_subkey => $sub_subval ):
+                            foreach ( $subval as $sub_subkey => $sub_subval ):
                                 if ( !is_array($sub_subval) ):
                                     if ( $sub_subkey == 'content' || $key == 'ingredients' && $sub_subkey == 'name' || $key == 'ingredients' && $sub_subkey == 'section_heading_name' || $key == 'directions' && $sub_subkey == 'section_heading_name' ):
                                         $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $sub_subval );
@@ -67,11 +59,11 @@ class Cooked_Recipe_Meta {
                                         $_recipe_settings[$key][$subkey][$sub_subkey] = Cooked_Functions::sanitize_text_field( $sub_subval );
                                     endif;
                                 else:
-                                    foreach($sub_subval as $sub_sub_subkey => $sub_sub_subval):
+                                    foreach ($sub_subval as $sub_sub_subkey => $sub_sub_subval):
                                         if (!is_array($sub_sub_subval)):
                                             $_recipe_settings[$key][$subkey][$sub_subkey][$sub_sub_subkey] = Cooked_Functions::sanitize_text_field($sub_sub_subval);
                                         else:
-                                            foreach($sub_sub_subval as $sub_sub_sub_subkey => $sub_sub_sub_subval):
+                                            foreach ($sub_sub_subval as $sub_sub_sub_subkey => $sub_sub_sub_subval):
                                                 $_recipe_settings[$key][$subkey][$sub_subkey][$sub_sub_subkey][$sub_sub_sub_subkey] = Cooked_Functions::sanitize_text_field($sub_sub_sub_subval);
                                             endforeach;
                                         endif;
@@ -253,6 +245,17 @@ function cooked_render_recipe_fields( $post_id ) {
 
     $measurements = Cooked_Measurements::get();
 
+    if ( class_exists( 'Cooked_Pro_Plugin' ) ) {
+        $wp_editor_roles_allowed = false;
+        if (is_user_logged_in()) {
+            $user = wp_get_current_user();
+            $user_role = $user->roles[0];
+            $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_submission_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_submission_wp_editor_roles'] ) ? true : false;
+        }
+    } else {
+        $wp_editor_roles_allowed = true;
+    }
+
     /* $cooked_page_args = [
         'sort_order' => 'asc',
         'sort_column' => 'post_title',
@@ -342,25 +345,31 @@ function cooked_render_recipe_fields( $post_id ) {
                 <div class="recipe-setting-block">
                     <h3 class="cooked-settings-title"><?php _e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( __( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <p>
-                        <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? stripslashes(wp_specialchars_decode($recipe_settings['excerpt'])) : ''; ?>
-                        <?php
-                        wp_editor($recipe_excerpt, '_recipe_settings_excerpt', [
-                            'teeny' => true,
-                            'media_buttons' => false,
-                            'wpautop' => false,
-                            'editor_height' => 100,
-                            'textarea_name' => '_recipe_settings[excerpt]',
-                            'quicktags' => true
-                        ]);
-                        ?>
+                        <?php if ( $wp_editor_roles_allowed ): ?>
+                            <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? stripslashes(wp_specialchars_decode($recipe_settings['excerpt'])) : ''; ?>
+                            <?php
+                            wp_editor($recipe_excerpt, '_recipe_settings_excerpt', [
+                                'teeny' => true,
+                                'media_buttons' => false,
+                                'wpautop' => false,
+                                'editor_height' => 100,
+                                'textarea_name' => '_recipe_settings[excerpt]',
+                                'quicktags' => true
+                            ]);
+                            ?>
+                        <?php else: ?>
+                            <textarea name="_recipe_settings[excerpt]"><?php echo ( isset($recipe_settings['excerpt']) ? esc_textarea( $recipe_settings['excerpt'] ) : '' ); ?></textarea>
+                        <?php endif; ?>
                     </p>
 
                 </div>
 
-                <div class="recipe-setting-block">
-                    <h3 class="cooked-settings-title"><?php _e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( __( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
-                    <p><textarea name="_recipe_settings[seo_description]"><?php echo ( isset($recipe_settings['seo_description']) ? esc_textarea( $recipe_settings['seo_description'] ) : '' ); ?></textarea></p>
-                </div>
+                <?php if ( !isset($_cooked_settings['advanced']) || empty($_cooked_settings['advanced']) || !in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) ): ?>
+                    <div class="recipe-setting-block">
+                        <h3 class="cooked-settings-title"><?php _e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( __( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                        <p><textarea name="_recipe_settings[seo_description]"><?php echo isset($recipe_settings['seo_description']) ? esc_textarea( $recipe_settings['seo_description'] ) : ''; ?></textarea></p>
+                    </div>
+                <?php endif; ?>
 
                 <div class="recipe-setting-block">
                     <div class="cooked-clearfix">
@@ -396,18 +405,22 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <div class="recipe-setting-block cooked-bm-30">
                 <h3 class="cooked-settings-title"><?php _e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo __( 'The notes are displayed in the recipe.','cooked'); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
-                    <?php $recipe_notes = isset($recipe_settings['notes']) ? stripslashes(wp_specialchars_decode($recipe_settings['notes'])) : ''; ?>
-                    <?php
-                        wp_editor($recipe_notes, '_recipe_settings_notes', [
-                            'teeny' => false,
-                            'media_buttons' => false,
-                            'wpautop' => false,
-                            'editor_height' => 100,
-                            'textarea_name' => '_recipe_settings[notes]',
-                            'quicktags' => true
-                            ]
-                        );
-                    ?>
+                    <?php if ( $wp_editor_roles_allowed ): ?>
+                        <?php $recipe_notes = isset($recipe_settings['notes']) ? stripslashes(wp_specialchars_decode($recipe_settings['notes'])) : ''; ?>
+                        <?php
+                            wp_editor($recipe_notes, '_recipe_settings_notes', [
+                                'teeny' => false,
+                                'media_buttons' => false,
+                                'wpautop' => false,
+                                'editor_height' => 100,
+                                'textarea_name' => '_recipe_settings[notes]',
+                                'quicktags' => true
+                                ]
+                            );
+                        ?>
+                    <?php else: ?>
+                        <textarea id="_recipe_settings_notes" name="" data-direction-part="content"><?php echo ( isset($recipe_settings['notes']) ? esc_textarea( $recipe_settings['notes'] ) : '' ); ?></textarea>
+                    <?php endif; ?>
                 </div>
 
             </div>
@@ -605,18 +618,22 @@ function cooked_render_recipe_fields( $post_id ) {
                                     <a href="#" data-id="<?php echo esc_attr($dir_key); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                                 </div>
                                 <div class="cooked-direction-content">
-                                    <?php $recipe_directions = isset($value['content']) ? wpautop( wp_kses_post( html_entity_decode( $value['content'] ) ) ) : ''; ?>
-                                    <?php
-                                    wp_editor($recipe_directions, 'recipe_settings_directions_'. esc_attr($dir_key), [
-                                        'editor_class' => 'cooked-wysiwyg-editor',
-                                        'teeny' => true,
-                                        'media_buttons' => false,
-                                        'wpautop' => false,
-                                        'editor_height' => 100,
-                                        'textarea_name' => '_recipe_settings[directions][' . esc_attr($dir_key) . '][content]',
-                                        'quicktags' => true
-                                    ]);
-                                    ?>
+                                    <?php if ( $wp_editor_roles_allowed ): ?>
+                                        <?php $recipe_directions = isset($value['content']) ? wpautop( wp_kses_post( html_entity_decode( $value['content'] ) ) ) : ''; ?>
+                                        <?php
+                                        wp_editor($recipe_directions, 'recipe_settings_directions_'. esc_attr($dir_key), [
+                                            'editor_class' => 'cooked-wysiwyg-editor',
+                                            'teeny' => true,
+                                            'media_buttons' => false,
+                                            'wpautop' => false,
+                                            'editor_height' => 100,
+                                            'textarea_name' => '_recipe_settings[directions][' . esc_attr($dir_key) . '][content]',
+                                            'quicktags' => true
+                                        ]);
+                                        ?>
+                                    <?php else: ?>
+                                        <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][content]"><?php echo esc_html($value['content']); ?></textarea>
+                                    <?php endif; ?>
                                 </div>
                                 <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                             </div>
@@ -649,17 +666,21 @@ function cooked_render_recipe_fields( $post_id ) {
                             <a href="#" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                         </div>
                         <div class="cooked-direction-content">
-                            <?php
-                            wp_editor('', 'recipe_settings_directions_'. $random_key, [
-                                'editor_class' => 'cooked-wysiwyg-editor',
-                                'teeny' => true,
-                                'media_buttons' => false,
-                                'wpautop' => false,
-                                'editor_height' => 100,
-                                'textarea_name' => '_recipe_settings[directions][' . $random_key . '][content]',
-                                'quicktags' => true
-                            ]);
-                            ?>
+                            <?php if ( $wp_editor_roles_allowed ): ?>
+                                <?php
+                                wp_editor('', 'recipe_settings_directions_'. $random_key, [
+                                    'editor_class' => 'cooked-wysiwyg-editor',
+                                    'teeny' => true,
+                                    'media_buttons' => false,
+                                    'wpautop' => false,
+                                    'editor_height' => 100,
+                                    'textarea_name' => '_recipe_settings[directions][' . $random_key . '][content]',
+                                    'quicktags' => true
+                                ]);
+                                ?>
+                            <?php else: ?>
+                                <textarea data-direction-part="content" name=""></textarea>
+                            <?php endif; ?>
                         </div>
                         <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                     </div>

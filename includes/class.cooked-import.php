@@ -22,7 +22,6 @@ class Cooked_Import {
     public function __construct() {
         add_filter( 'admin_init', [&$this, 'init'] );
         add_filter( 'init', [&$this, 'init'] );
-        add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
     }
 
     public static function init() {

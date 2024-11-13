@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.6.2
-Stable tag: 1.8.7
+Tested up to: 6.7
+Stable tag: 1.8.8
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,23 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.7 includes a fix for bad recipe data appearing on the front-end. Please update to this version to ensure your recipes are displaying correctly.
+Version 1.8.8 includes new features like disabling recipe archive pages, SEO improvements with Rank Math and Yoast integration, enhanced browse shortcode options, and various UI improvements and bug fixes for schema output and print functionality.
 
 == Changelog ==
+
+= 1.8.8 =
+* **NEW:** Added option to disable the recipe archive page under Cooked Settings > General > Advanced Settings.
+* **NEW:** Added Rank Math SEO and Yoast SEO support. Added a custom variable called `cooked_recipe_category` that can be used in the title or description fields.
+* **NEW:** Added 'hide_excerpt' Parameter to [cooked-browse] shortcode to hide the recipe excerpt.
+* **NEW:** Added Recipes column in the Admin users table to show the number of recipes each user has created.
+* **NEW:** Added post states to the Browse Recipe page. When selected a label will appear in the page list table indicating which page is the Cooked Browse Recipes Page.
+* **TWEAK:** Moved WP Editor Roles option into General settings.
+* **TWEAK:** If Cooked Pro is installed, the Excerpt, Notes and Directions fields will display the WP Editor depending on the 'WP Editor Roles' setting. If not, the WP Editor will always display.
+* **TWEAK:** If the "Disable Cooked <meta> Tags" setting is enabled, the SEO Description field will be hidden in the recipe edit screen.
+* **FIX:** Added Meta Description to Meta Tags, it uses the SEO Description, Excerpt or Title, in that order.
+* **FIX:** Fixed bug when Disable Cooked <meta> Tags is turned on.
+* **FIX:** Fixed bug with schema output where the direction titles were duplicated as 'Step 1'. The section heading logic is removed in favor or labeling each step as Step #.
+* **FIX:** Fixed bug with the recipe print view not displaying the Notes section.
 
 = 1.8.7 =
 * **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanatized.

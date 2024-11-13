@@ -3,15 +3,14 @@
 class Cooked_Widget_Recipe_Card extends WP_Widget {
 
     public function __construct() {
-        $widget_ops = array(
-            'classname' => 'cooked_widget_recipe_card',
-            'description' => 'Display a recipe card.',
-        );
+        $widget_ops = [
+			'classname' => 'cooked_widget_recipe_card',
+			'description' => 'Display a recipe card.',
+		];
         parent::__construct( 'cooked_widget_recipe_card', 'Cooked - Recipe Card', $widget_ops );
     }
 
     public function widget( $args, $instance ) {
-
         $recipe_id = ( isset($instance['recipe_id']) && $instance['recipe_id'] ? ' id="' . esc_attr( $instance['recipe_id'] ) . '"' : '' );
         $style = ( isset($instance['style']) && $instance['style'] ? ' style="' . esc_attr( $instance['style'] ) . '"' : '' );
         $width = ( isset($instance['width']) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '' );
@@ -33,25 +32,22 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
             echo wp_kses_post( $args['after_widget'] );
 
         endif;
-
     }
 
     public function form( $instance ) {
-
-        $title = ( !empty( $instance['title'] ) ? $instance['title'] : false );
-        $recipe_id = ( !empty( $instance['recipe_id'] ) ? $instance['recipe_id'] : false );
-        $width = ( !empty( $instance['width'] ) ? $instance['width'] : '100%' );
-        $recipe_id = ( isset( $instance['recipe_id'] ) && $instance['recipe_id'] ? $instance['recipe_id'] : false );
-        $style = ( isset( $instance['style'] ) && $instance['style'] ? $instance['style'] : false );
-        $hide_image = ( isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false );
-        $hide_title = ( isset( $instance['hide_title'] ) && $instance['hide_title'] ? true : false );
-        $hide_excerpt = ( isset( $instance['hide_excerpt'] ) && $instance['hide_excerpt'] ? true : false );
-        $hide_author = ( isset( $instance['hide_author'] ) && $instance['hide_author'] ? true : false );
+        $title = !empty( $instance['title'] ) ? $instance['title'] : false;
+        $recipe_id = !empty( $instance['recipe_id'] ) ? $instance['recipe_id'] : false;
+        $width = !empty( $instance['width'] ) ? $instance['width'] : '100%';
+        $recipe_id = isset( $instance['recipe_id'] ) && $instance['recipe_id'] ? $instance['recipe_id'] : false;
+        $style = isset( $instance['style'] ) && $instance['style'] ? $instance['style'] : false;
+        $hide_image = isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false;
+        $hide_title = isset( $instance['hide_title'] ) && $instance['hide_title'] ? true : false;
+        $hide_excerpt = isset( $instance['hide_excerpt'] ) && $instance['hide_excerpt'] ? true : false;
+        $hide_author = isset( $instance['hide_author'] ) && $instance['hide_author'] ? true : false;
 
         $recipe_list = get_transient( 'cooked_widget_recipes_list' );
 
         if ( empty($recipe_list) ):
-
             $args = [
                 'post_type' => 'cp_recipe',
                 'posts_per_page' => -1,
@@ -132,7 +128,7 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
     }
 
     public function update( $new_instance, $old_instance ) {
-        $instance = array();
+        $instance = [];
         $instance['title'] = ( !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '' );
         $instance['recipe_id'] = ( !empty( $new_instance['recipe_id'] ) ? wp_strip_all_tags( $new_instance['recipe_id'] ) : false );
         $instance['width'] = ( !empty( $new_instance['width'] ) ? wp_strip_all_tags( $new_instance['width'] ) : '100%' );

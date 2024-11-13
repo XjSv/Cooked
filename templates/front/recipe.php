@@ -1,6 +1,6 @@
 <?php
 
-global $post,$recipe,$recipe_settings,$cooked_timer_identifier;
+global $post, $recipe, $recipe_settings, $cooked_timer_identifier;
 
 if ( empty($recipe_settings) ):
 	$recipe_id = $post->ID;

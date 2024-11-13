@@ -33,17 +33,20 @@ class Cooked_Admin_Menus {
 
         add_menu_page( __( 'Recipes', 'cooked' ), __( 'Recipes', 'cooked' ), 'edit_cooked_recipes', 'cooked_recipes_menu', '', 'none', 58 );
         add_submenu_page('cooked_recipes_menu', __('Add New','cooked'), __('Add New','cooked'), 'edit_cooked_recipes', 'post-new.php?post_type=cp_recipe', '' );
-        if ( isset($cooked_taxonomies_for_menu) && !empty($cooked_taxonomies_for_menu) ):
-            foreach ( $cooked_taxonomies_for_menu as $menu_item ):
+
+        if ( isset($cooked_taxonomies_for_menu) && !empty($cooked_taxonomies_for_menu) ) {
+            foreach ( $cooked_taxonomies_for_menu as $menu_item ) {
                 add_submenu_page( $menu_item['menu'], $menu_item['name'], $menu_item['name'], $menu_item['capability'], $menu_item['url'], '' );
-            endforeach;
-        endif;
+            }
+        }
+
         add_submenu_page('cooked_recipes_menu', __('Settings', 'cooked'), __('Settings','cooked'), 'edit_cooked_settings', 'cooked_settings', [&$this, 'cooked_settings_page'] );
         add_submenu_page('cooked_recipes_menu', __('Import', 'cooked'), __('Import','cooked'), 'edit_cooked_settings', 'cooked_import', [&$this, 'cooked_import_page'] );
         add_submenu_page('cooked_recipes_menu', __('What\'s New?','cooked'), __('What\'s New?','cooked'), 'edit_cooked_settings', 'cooked_welcome', [&$this, 'cooked_welcome_content'] );
-        if ( !class_exists( 'Cooked_Pro_Plugin' ) ):
+
+        if ( !class_exists( 'Cooked_Pro_Plugin' ) ) {
             add_submenu_page('cooked_recipes_menu', __('Upgrade to Pro','cooked'), '<span class="admin-menu-cooked-upgrade">' . __('Upgrade to Pro','cooked') . '</span>', 'edit_cooked_settings', 'cooked_pro', [&$this, 'cooked_pro'] );
-        endif;
+        }
     }
 
     public function add_admin_bar_menu() {

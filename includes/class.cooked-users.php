@@ -21,6 +21,11 @@ class Cooked_Users {
 
     function __construct(){
         add_action( 'init', [&$this, 'recipe_author_rewrite'], 10 );
+
+        add_filter( 'manage_users_columns', [&$this, 'recipe_count_column'] );
+        add_filter( 'manage_users_sortable_columns', [&$this, 'recipe_count_column_sortable'] );
+        add_filter( 'manage_users_custom_column', [&$this, 'recipe_count_column_value'], 10, 3 );
+        add_action( 'pre_user_query', [&$this, 'pre_user_query'], 1 );
     }
 
     public static function recipe_author_rewrite() {
@@ -81,18 +86,19 @@ class Cooked_Users {
     }
 
     public static function format_author_name( $name, $format = false ) {
-        if ( !$name )
-            return false;
+        if ( !$name ) return false;
 
         global $_cooked_settings;
-        $_cooked_settings = ( !$_cooked_settings || $_cooked_settings && empty($_cooked_settings) ? Cooked_Settings::get() : $_cooked_settings );
+
+        $_cooked_settings = !$_cooked_settings || $_cooked_settings && empty($_cooked_settings) ? Cooked_Settings::get() : $_cooked_settings;
+
         if ( !$format && isset($_cooked_settings['author_name_format']) && $_cooked_settings['author_name_format'] ):
             $format = $_cooked_settings['author_name_format'];
-        elseif(!$format):
+        elseif (!$format):
             $format = 'full';
         endif;
 
-        switch( $format ) {
+        switch ( $format ) {
             case 'full':
                 return $name;
             case 'first_last_initial':
@@ -113,6 +119,46 @@ class Cooked_Users {
         }
 
         return esc_html( $name );
+    }
+
+    function recipe_count_column($column_headers) {
+        $column_headers['cooked_recipe_count'] = __('Recipes', 'cooked');
+
+        return $column_headers;
+    }
+
+    function recipe_count_column_sortable( $columns ) {
+        $columns['cooked_recipe_count'] = 'cooked_recipe_count';
+
+        return $columns;
+    }
+
+    function recipe_count_column_value( $value, $column_name, $user_id ) {
+        if ( 'cooked_recipe_count' === $column_name ) {
+            $value = count_user_posts( $user_id, 'cp_recipe' );
+        }
+
+        return $value;
+    }
+
+
+    function pre_user_query( $query ) {
+        global $wpdb, $current_screen;
+
+        // Only filter in the admin
+        if ( ! is_admin() ) return;
+
+        // Only filter on the users screen
+        if ( ! ( isset( $current_screen ) && 'users' === $current_screen->id ) ) return;
+
+        // Only filter if orderby is set to 'cooked_recipe_count'
+        if ( isset( $query->query_vars ) && isset( $query->query_vars[ 'orderby' ] ) && ( 'cooked_recipe_count' == $query->query_vars[ 'orderby' ] ) ) {
+            // We need the order - default is ASC
+            $order = isset( $query->query_vars ) && isset( $query->query_vars[ 'order' ] ) && strcasecmp( $query->query_vars[ 'order' ], 'desc' ) == 0 ? 'DESC' : 'ASC';
+
+            // Order the posts by recipe count
+            $query->query_orderby = "ORDER BY ( SELECT COUNT(*) FROM {$wpdb->posts} posts WHERE posts.post_type = 'cp_recipe' AND posts.post_status = 'publish' AND posts.post_author = {$wpdb->users}.ID ) {$order}";
+        }
     }
 
 }

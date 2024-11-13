@@ -31,9 +31,9 @@ class Cooked_Settings {
         if ( wp_is_post_revision( $post_id ) ) return;
 
         $_cooked_settings = Cooked_Settings::get();
-        if ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $post_id ):
+        if ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $post_id ) {
             flush_rewrite_rules(false);
-        endif;
+        }
     }
 
     public static function init() {
@@ -71,30 +71,30 @@ class Cooked_Settings {
 
         // Get defaults for fields that are not set yet.
         $cooked_tabs_fields = self::tabs_fields();
-        if ( isset($cooked_tabs_fields) && !empty($cooked_tabs_fields) ):
-            foreach ( $cooked_tabs_fields as $tab ):
-                if ( isset($tab['fields']) && !empty($tab['fields']) ):
-                    foreach ( $tab['fields'] as $name => $field ):
+        if ( isset($cooked_tabs_fields) && !empty($cooked_tabs_fields) ) {
+            foreach ( $cooked_tabs_fields as $tab ) {
+                if ( isset($tab['fields']) && !empty($tab['fields']) ) {
+                    foreach ( $tab['fields'] as $name => $field ) {
+                        if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) continue;
 
-                        if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' )
-                            continue;
-
-                        if ( $field['type'] == 'checkboxes' && $cooked_settings_saved && $version_compare >= 0 ):
-                            $_cooked_settings[$name] = ( isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : [] );
-                        else:
-                            $_cooked_settings[$name] = ( isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false ) );
+                        if ( $field['type'] == 'checkboxes' && $cooked_settings_saved && $version_compare >= 0 ) {
+                            $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : [];
+                        } else {
+                            $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false );
                             $update_settings = true;
-                        endif;
+                        }
+                    }
+                }
+            }
+        }
 
-                    endforeach;
-                endif;
-            endforeach;
-        endif;
+        if ( $update_settings ) {
+            update_option( 'cooked_settings', $_cooked_settings );
+        }
 
-        if ( $update_settings ): update_option( 'cooked_settings', $_cooked_settings ); endif;
-        if ( $version_compare < 0 ):
+        if ( $version_compare < 0 ) {
             update_option( 'cooked_settings_version', COOKED_VERSION );
-        endif;
+        }
 
         return apply_filters( 'cooked_get_settings', $_cooked_settings );
     }
@@ -103,6 +103,21 @@ class Cooked_Settings {
         $pages_array = self::pages_array( __('Choose a page...','cooked'), __('No pages','cooked') );
         $categories_array = self::terms_array( 'cp_recipe_category', __('No default','cooked'), __('No categories','cooked') );
         $recipes_per_page_array = self::per_page_array();
+
+        // Dynamically load roles.
+        $role_options = [];
+        if (is_user_logged_in()) {
+            global $wp_roles;
+            $roles = $wp_roles->roles;
+
+            if (!empty($roles)) {
+                foreach ( $roles as $role => $data ) {
+                    $role_options[$role] = [
+                        'label' => $data['name']
+                    ];
+                }
+            }
+        }
 
         return apply_filters('cooked_settings_tabs_fields', [
             'recipe_settings' => [
@@ -222,6 +237,14 @@ class Cooked_Settings {
                             ]
                         )
                     ],
+                    'recipe_submission_wp_editor_roles' => [
+                        'title' => __('WP Editor Roles', 'cooked-pro'),
+                        'desc' => __('Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields.', 'cooked-pro'),
+                        'type' => 'checkboxes',
+                        'conditional_requirement' => 'enable_recipe_submissions',
+                        'default' => apply_filters('cooked_add_recipe_wp_editor_roles_defaults', ['administrator', 'editor', 'cooked_recipe_editor']),
+                        'options' => $role_options
+                    ],
                     'advanced' => [
                         'title' => __('Advanced Settings', 'cooked'),
                         'desc' => '',
@@ -237,7 +260,8 @@ class Cooked_Settings {
                                 /* translators: an option to disable "meta" tags. */
                                 'disable_meta_tags' => '<strong>' . sprintf(__('Disable %s Tags', 'cooked'), 'Cooked <code>&lt;meta&gt;</code>') . '</strong> &mdash; ' . __('Prevents duplicates when tags already exist.', 'cooked'),
                                 'disable_servings_switcher' => '<strong>' . __('Disable "Servings Switcher"', 'cooked') . '</strong> &mdash; ' . __('Removes the servings dropdown on recipes.', 'cooked'),
-                                'disable_schema_output' => '<strong>' . __('Disable Recipe Schema Output', 'cooked') . '</strong> &mdash; ' . __('You should only do this if you\'re using something else to output schema information.', 'cooked')
+                                'disable_schema_output' => '<strong>' . __('Disable Recipe Schema Output', 'cooked') . '</strong> &mdash; ' . __('You should only do this if you\'re using something else to output schema information.', 'cooked'),
+                                'disable_cp_recipe_archive' => '<strong>' . __('Disable Recipe Archive Page', 'cooked') . '</strong> &mdash; ' . __('Prevents the recipe archive from being displayed.', 'cooked')
                             ]
                         )
                     ],
@@ -354,21 +378,24 @@ class Cooked_Settings {
 
     public static function pages_array( $choose_text,$none_text = false ) {
         $page_array = [];
-        $pages = get_posts(['post_type' => 'page', 'posts_per_page' => -1] );
+        $pages = get_posts([
+            'post_type' => 'page',
+            'posts_per_page' => -1]
+        );
 
-        if( !empty($pages) ) :
+        if( !empty($pages) ) {
             $page_array[0] = $choose_text;
-            foreach($pages as $_page) :
+            foreach ($pages as $_page) {
                 $page_array[$_page->ID] = $_page->post_title;
-            endforeach;
-        elseif( $none_text ):
+            }
+        } elseif ( $none_text ) {
             $page_array[0] = $none_text;
-        endif;
+        }
 
         return apply_filters( 'cooked_settings_pages_array', $page_array );
     }
 
-    public static function terms_array( $term, $choose_text, $none_text = false, $hide_empty = false, $parents_only = false, $child_of = false ){
+    public static function terms_array( $term, $choose_text, $none_text = false, $hide_empty = false, $parents_only = false, $child_of = false ) {
         $terms_array = [];
 
         $args = [
@@ -376,38 +403,40 @@ class Cooked_Settings {
             'hide_empty' => $hide_empty
         ];
 
-        if ( $parents_only ):
+        if ( $parents_only ) {
             $args['parent'] = '0';
-        elseif ( $child_of ):
-            $_term = ( is_numeric($child_of) ? $child_of : get_term_by( 'slug', $child_of, $term ) );
-            $term_id = ( is_object( $_term ) ? $_term->term_id : $_term );
+        } elseif ( $child_of ) {
+            $_term = is_numeric($child_of) ? $child_of : get_term_by( 'slug', $child_of, $term );
+            $term_id = is_object( $_term ) ? $_term->term_id : $_term;
             $args['parent'] = $term_id;
-        endif;
+        }
 
         $terms = get_terms( $args );
 
-        if( !empty($terms) ) :
-            if ($choose_text): $terms_array[0] = $choose_text; endif;
-            foreach($terms as $_term) :
-                if ( !is_array($_term) ):
+        if ( !empty($terms) ) {
+            if ($choose_text) {
+                $terms_array[0] = $choose_text;
+            }
+
+            foreach ($terms as $_term) {
+                if ( !is_array($_term) ) {
                     $terms_array[$_term->term_id] = $_term->name;
-                endif;
-            endforeach;
-        elseif( $none_text ):
+                }
+            }
+        } elseif ( $none_text ) {
             $terms_array[0] = $none_text;
-        endif;
+        }
 
-        return apply_filters( 'cooked_settings_'.$term.'_array', $terms_array );
-
+        return apply_filters( 'cooked_settings_' . $term . '_array', $terms_array );
     }
 
     public static function field_radio( $field_name, $options ) {
-        global $_cooked_settings,$conditions;
+        global $_cooked_settings, $conditions;
+
         $counter = 1;
+
         echo '<p class="cooked-padded">';
-
-            foreach( $options as $value => $name) :
-
+            foreach ( $options as $value => $name) {
                 $is_disabled = '';
                 $conditional_value = '';
                 $conditional_requirement = '';
@@ -416,12 +445,14 @@ class Cooked_Settings {
                     if ( isset($name['read_only']) && $name['read_only'] ):
                         $is_disabled = ' disabled';
                     endif;
+
                     if ( isset($name['conditional_value']) && $name['conditional_value'] ):
                         $conditional_value = ' v-model="' . esc_attr($name['conditional_value']) . '"';
                         if ( !in_array( $name['conditional_value'], $conditions ) ):
                             $conditions[$value] = esc_attr($name['conditional_requirement']);
                         endif;
                     endif;
+
                     if ( isset($name['conditional_requirement']) && $name['conditional_requirement'] ):
                         if ( is_array($name['conditional_requirement']) ):
                             $conditional_requirement = ' v-show="' . implode( ' && ', $name['conditional_requirement'] ) . '"';
@@ -429,6 +460,7 @@ class Cooked_Settings {
                             $conditional_requirement = ' v-show="' . esc_attr($name['conditional_requirement']) . '"';
                         endif;
                     endif;
+
                     $name = $name['label'];
                 endif;
 
@@ -441,8 +473,7 @@ class Cooked_Settings {
                 if ( $conditional_requirement ): echo '</span></transition>'; endif;
 
                 $counter++;
-
-            endforeach;
+            }
         echo '</p>';
     }
 
@@ -451,9 +482,9 @@ class Cooked_Settings {
 
         $is_disabled = '';
 
-        if ( isset($field['read_only']) && $field['read_only'] ):
+        if ( isset($field['read_only']) && $field['read_only'] ) {
             $is_disabled = ' disabled';
-        endif;
+        }
 
         echo '<p>';
             echo '<select' . $is_disabled . ' name="cooked_settings[' . esc_attr( $field_name ) . ']">';
@@ -469,7 +500,7 @@ class Cooked_Settings {
     }
 
     // Kept here for backwards compatibility only. Removed used in Cooked Pro 1.0.1
-    public static function field_misc_button( $field_name, $title ){
+    public static function field_misc_button( $field_name, $title ) {
         echo '<p>';
             echo '<input type="submit" class="button-secondary" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $title ) . '">';
         echo '</p>';
@@ -548,7 +579,7 @@ class Cooked_Settings {
         global $_cooked_settings, $conditions;
 
         echo '<p class="cooked-padded">';
-            foreach ( $options as $value => $name) :
+            foreach ( $options as $value => $name)  {
                 $is_disabled = '';
                 $conditional_value = '';
                 $conditional_requirement = '';
@@ -557,12 +588,14 @@ class Cooked_Settings {
                     if ( isset($name['read_only']) && $name['read_only'] ):
                         $is_disabled = ' disabled';
                     endif;
+
                     if ( isset($name['conditional_value']) && $name['conditional_value'] ):
                         $conditional_value = ' v-model="' . esc_attr($name['conditional_value']) . '"';
                         if ( !in_array( $name['conditional_value'], $conditions ) ):
                             $conditions[$field_name][$name['conditional_value']] = $value;
                         endif;
                     endif;
+
                     if ( isset($name['conditional_requirement']) && $name['conditional_requirement'] ):
                         if ( is_array($name['conditional_requirement']) ):
                             $conditional_requirement = ' v-show="' . implode( ' && ', $name['conditional_requirement'] ) . '"';
@@ -570,23 +603,31 @@ class Cooked_Settings {
                             $conditional_requirement = ' v-show="' . esc_attr($name['conditional_requirement']) . '"';
                         endif;
                     endif;
+
                     $name = $name['label'];
                 endif;
 
                 $combined_extras = $is_disabled . $conditional_value;
 
-                if ( $conditional_requirement ): echo '<transition name="fade"><span class="conditional-requirement"' . esc_attr( $conditional_requirement ) . '>'; endif;
+                if ( $conditional_requirement ):
+                    echo '<transition name="fade"><span class="conditional-requirement"' . esc_attr( $conditional_requirement ) . '>';
+                endif;
+
                 if ( $is_disabled ):
                     echo '<input type="hidden" name="cooked_settings[' . esc_attr( $field_name ) . '][]" value="' . esc_attr( $value ) . '">';
                     echo '<input' . $combined_extras . ' class="cooked-switch' . ( $color ? '-' . esc_attr( $color ) : '' ) . '" type="checkbox" id="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && !empty($_cooked_settings[$field_name]) && in_array( $value, $_cooked_settings[$field_name] ) || $is_disabled ? ' checked' : '' ) . '/>';
                 else:
                     echo '<input' . $combined_extras . ' class="cooked-switch' . ( $color ? '-' . esc_attr( $color ) : '' ) . '" type="checkbox" id="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . '][]" value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && !empty($_cooked_settings[$field_name]) && is_array( $_cooked_settings[$field_name] ) && in_array( $value, $_cooked_settings[$field_name] ) || $is_disabled ? ' checked' : '' ) . '/>';
                 endif;
+
                 echo '&nbsp;<label for="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' . wp_kses_post( $name ) . '</label>';
                 echo '<br>';
-                if ( $conditional_requirement ): echo '</span></transition>'; endif;
 
-            endforeach;
+                if ( $conditional_requirement ):
+                    echo '</span></transition>';
+                endif;
+
+            }
         echo '</p>';
     }
 

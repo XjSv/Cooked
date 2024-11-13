@@ -154,7 +154,7 @@ class Cooked_Taxonomies {
 	public static function term_link_filter( $url, $term, $taxonomy ) {
 		$_cooked_settings = Cooked_Settings::get();
 
-		$parent_page_browse_page = ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false );
+		$parent_page_browse_page = isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false;
 		$front_page = get_option( 'page_on_front' );
 		$cooked_taxonomies = ['cp_recipe_category'];
 

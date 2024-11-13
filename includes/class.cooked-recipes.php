@@ -256,20 +256,20 @@ class Cooked_Recipes {
 
             echo '<div class="cooked-shortcode-recipe-list">';
 
-                foreach( $recipes as $key => $recipe ):
+                foreach ( $recipes as $key => $recipe ):
 
                     $rid = $recipe['id'];
-                    $has_image_class = ( has_post_thumbnail($rid) && !$hide_image ? ' cooked-srl-has-image' : '' );
+                    $has_image_class = has_post_thumbnail($rid) && !$hide_image ? ' cooked-srl-has-image' : '';
 
                     echo '<div class="cooked-srl-single' . esc_attr( $has_image_class ) . '" style="width:100%; max-width:' . esc_attr( $width ) . '">';
 
-                        echo ( has_post_thumbnail($rid) && !$hide_image ? '<div class="cooked-srl-image"><a href="' . esc_url( get_permalink($rid) ) . '">' . get_the_post_thumbnail( $rid, 'thumbnail' ) . '</a></div>' : '' );
+                        echo has_post_thumbnail($rid) && !$hide_image ? '<div class="cooked-srl-image"><a href="' . esc_url( get_permalink($rid) ) . '">' . get_the_post_thumbnail( $rid, 'thumbnail' ) . '</a></div>' : '';
 
                         echo '<div class="cooked-srl-content">';
 
                             echo '<div class="cooked-srl-title"><a href="' . esc_url( get_permalink($rid) ) . '">' . wp_kses_post( $recipe['title'] ) . '</a></div>';
 
-                            if ( in_array('author',$_cooked_settings['recipe_info_display_options']) && !$hide_author ):
+                            if ( in_array('author', $_cooked_settings['recipe_info_display_options']) && !$hide_author ):
                                 echo '<div class="cooked-srl-author">';
                                     $author = $recipe['author'];
                                     /* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */
@@ -289,16 +289,15 @@ class Cooked_Recipes {
     }
 
     public static function card( $rid, $width = false, $hide_image = false, $hide_title = false, $hide_excerpt = false, $hide_author = false, $style = false ) {
-
         global $_cooked_settings;
 
         $recipe = self::get( $rid, true );
-        $style_class = ( $style ? ' cooked-recipe-card-' . esc_attr($style) : '' );
+        $style_class = $style ? ' cooked-recipe-card-' . esc_attr($style) : '';
 
-        $width = ( !$width ? '100%' : $width );
+        $width = !$width ? '100%' : $width;
         $pixel_width = stristr( $width, 'px', true );
         $percent_width = stristr( $width, '%', true );
-        $width = ( $pixel_width ? $pixel_width . 'px' : ( $percent_width ? $percent_width . '%' : ( is_numeric( $width ) ? $width . 'px' : '100%' ) ) );
+        $width = $pixel_width ? $pixel_width . 'px' : ( $percent_width ? $percent_width . '%' : ( is_numeric( $width ) ? $width . 'px' : '100%' ) );
 
         ob_start();
 
@@ -308,7 +307,7 @@ class Cooked_Recipes {
 
             do_action( 'cooked_recipe_grid_before_image', $recipe );
 
-            echo ( has_post_thumbnail($rid) && !$hide_image ? '<span class="cooked-recipe-card-image" style="background-image:url(' . get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) . ');"></span>' : '' );
+            echo has_post_thumbnail($rid) && !$hide_image ? '<span class="cooked-recipe-card-image" style="background-image:url(' . get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) . ');"></span>' : '';
 
             //do_action( 'cooked_recipe_grid_after_image', $recipe );
 
@@ -316,7 +315,7 @@ class Cooked_Recipes {
 
                 do_action( 'cooked_recipe_grid_before_name', $recipe );
 
-                echo ( !$hide_title ? '<span class="cooked-recipe-card-title">' . esc_html( $recipe['title'] ) . '</span>' : '' );
+                echo !$hide_title ? '<span class="cooked-recipe-card-title">' . esc_html( $recipe['title'] ) . '</span>' : '';
 
                 do_action( 'cooked_recipe_grid_after_name', $recipe );
 
@@ -338,7 +337,7 @@ class Cooked_Recipes {
 
                 do_action( 'cooked_recipe_grid_before_excerpt', $recipe );
 
-                echo ( !$hide_excerpt ? '<span class="cooked-recipe-card-excerpt">' . wp_kses_post( $recipe['excerpt'] ) . '</span>' : '' );
+                echo !$hide_excerpt ? '<span class="cooked-recipe-card-excerpt">' . wp_kses_post( $recipe['excerpt'] ) . '</span>' : '';
 
                 do_action( 'cooked_recipe_grid_after_excerpt', $recipe );
 
@@ -349,7 +348,6 @@ class Cooked_Recipes {
         echo '</a>';
 
         return ob_get_clean();
-
     }
 
     public function print_recipe_template() {
@@ -420,23 +418,21 @@ class Cooked_Recipes {
     }
 
     public static function list_view( $list_atts = false ) {
-        global $wp_query,$recipe_query,$atts,$_cooked_settings,$recipes,$recipe_query,$recipe_args,$current_recipe_page;
+        global $wp_query, $recipe_query, $atts, $_cooked_settings, $recipes, $recipe_query, $recipe_args, $current_recipe_page;
 
         // Get the attributes for this view
-        $atts = $list_atts;
+        $atts = array_change_key_case( (array) $list_atts, CASE_LOWER );;
         $ls_method = 'list_style_grid';
         $ls_class = 'Cooked_Recipes';
 
         // Change the recipe layout
         if ( $atts['layout'] ):
-
-            $recipe_list_style = apply_filters( 'cooked_recipe_list_style', array( 'grid' => 'Cooked_Recipes' ), $atts['layout'] );
+            $recipe_list_style = apply_filters( 'cooked_recipe_list_style', [ 'grid' => 'Cooked_Recipes' ], $atts['layout'] );
             $list_style = esc_html( key( $recipe_list_style ) );
             $ls_method = 'list_style_' . $list_style;
             $ls_class = current( $recipe_list_style );
 
             $_cooked_settings['recipe_list_style'] = $list_style;
-
         endif;
 
         $recipe_query = $wp_query->query;
@@ -445,9 +441,9 @@ class Cooked_Recipes {
         do_action( 'cooked_check_recipe_query' );
 
         if ( isset($_cooked_settings['recipe_taxonomies']) && !empty($_cooked_settings['recipe_taxonomies']) ):
-            foreach( $_cooked_settings['recipe_taxonomies'] as $taxonomy ):
+            foreach ( $_cooked_settings['recipe_taxonomies'] as $taxonomy ):
                 if ( isset($recipe_query[$taxonomy]) && $recipe_query[$taxonomy] ):
-                    $field_type = ( is_numeric($recipe_query[$taxonomy]) ? 'id' : 'slug' );
+                    $field_type = is_numeric($recipe_query[$taxonomy]) ? 'id' : 'slug';
                     $tax_query['relation'] = 'AND';
                     $tax_query[] = [
                         'taxonomy' => $taxonomy,
@@ -458,7 +454,7 @@ class Cooked_Recipes {
             endforeach;
 
             if ( empty($tax_query) ):
-                foreach( $_cooked_settings['recipe_taxonomies'] as $taxonomy ):
+                foreach ( $_cooked_settings['recipe_taxonomies'] as $taxonomy ):
                     if ( isset( $_cooked_settings['browse_default_' . $taxonomy] ) && $_cooked_settings['browse_default_' . $taxonomy] ):
                         $tax_query['relation'] = 'AND';
                         $tax_query[] = [
@@ -493,7 +489,7 @@ class Cooked_Recipes {
         $recipes_per_page = ( $atts['show'] ? $atts['show'] : ( isset($_cooked_settings['recipes_per_page']) && $_cooked_settings['recipes_per_page'] ? $_cooked_settings['recipes_per_page'] : get_option( 'posts_per_page' ) ) );
         $current_recipe_page = Cooked_Recipes::current_page();
 
-        $orderby = ( $atts['orderby'] ? esc_html( $atts['orderby'] ) : $sorting_types[0] );
+        $orderby = $atts['orderby'] ? esc_html( $atts['orderby'] ) : $sorting_types[0];
         $meta_sort =  false;
 
         $recipe_args = [
@@ -511,7 +507,6 @@ class Cooked_Recipes {
         endif;
 
         if ( $text_search ):
-
             // Replace [+] [,] [;] with spaces
             $prep_text = str_replace(array('+',',',';'),' ',$text_search);
 
@@ -574,12 +569,12 @@ class Cooked_Recipes {
         return ob_get_clean();
     }
 
-    public static function list_style_grid() {
-        load_template( COOKED_DIR . 'templates/front/recipe-single.php',false);
+    public static function list_style_grid($atts = []) {
+        load_template(COOKED_DIR . 'templates/front/recipe-single.php', false, $atts);
     }
 
     public static function current_page() {
-        return ( get_query_var( 'paged' ) ? max( 1, get_query_var('paged') ) : ( get_query_var( 'page' ) ? max( 1, get_query_var('page') ) : 1 ) );
+        return get_query_var( 'paged' ) ? max( 1, get_query_var('paged') ) : ( get_query_var( 'page' ) ? max( 1, get_query_var('page') ) : 1 );
     }
 
     public static function pagination( $recipe_query, $recipe_args ) {
@@ -643,7 +638,7 @@ class Cooked_Recipes {
                     <div class="cooked-panel"><h2>' . __('Directions', 'cooked') . '</h2>[cooked-directions]</div>
                 </div>
                 <div class="cooked-fsm-notes cooked-fsm-content">
-                    <div class="cooked-panel"><h2>' . __('Notes','cooked') . '</h2>[cooked-notes]</div>
+                    <div class="cooked-panel"><h2>' . __('Notes', 'cooked') . '</h2>[cooked-notes]</div>
                 </div>
             </div>
         ' );

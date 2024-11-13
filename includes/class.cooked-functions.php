@@ -19,7 +19,6 @@ class Cooked_Functions {
 	}
 
 	public static function array_splice_assoc( &$input, $offset, $length, $replacement = [] ) {
-
 	    $replacement = (array) $replacement;
 
 	    if ( is_array($input) ):
@@ -36,7 +35,6 @@ class Cooked_Functions {
 		            + $replacement
 		            + array_slice($input, $offset + $length, NULL, TRUE);
 		endif;
-
 	}
 
 	public static function wpml_xml( $cooked_tabs_fields ) {
@@ -78,9 +76,8 @@ class Cooked_Functions {
 	}
 
 	public static function parse_readme_changelog( $readme_url = false, $title = false ) {
-
 		ob_start();
-		include ( !$readme_url ? COOKED_DIR . 'readme.txt' : $readme_url );
+		include !$readme_url ? COOKED_DIR . 'readme.txt' : $readme_url;
 		$readme = ob_get_clean();
 
 		$readme = make_clickable(esc_html($readme));
@@ -102,12 +99,11 @@ class Cooked_Functions {
 		$readme = preg_replace("/(\<\/ul\>\n(.*)\<ul class=\'cooked-whatsnew-list\'\>*)+/","",$readme);
 		$readme = explode( $whats_new_title, $readme );
 		$readme = $whats_new_title . $readme[1];
-		return $readme;
 
+		return $readme;
 	}
 
 	public static function print_options() {
-
 		$default_print_options = apply_filters( 'cooked_default_print_options', [
 			'print_options_title' => 'checked',
 			'print_options_info' => '',
@@ -115,6 +111,7 @@ class Cooked_Functions {
 			'print_options_images' => '',
 			'print_options_ingredients' => 'checked',
 			'print_options_directions' => 'checked',
+			'print_options_notes' => 'checked',
 			'print_options_nutrition' => '',
 		]);
 
@@ -129,10 +126,10 @@ class Cooked_Functions {
 			echo '<input id="print_options_images" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_images'] ) ? $default_print_options['print_options_images'] : '' ) . ' /> <label for="print_options_images">' . __('Images','cooked') . '</label>';
 			echo '<input id="print_options_ingredients" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_ingredients'] ) ? $default_print_options['print_options_ingredients'] : '' ) . ' /> <label for="print_options_ingredients">' . __('Ingredients','cooked') . '</label>';
 			echo '<input id="print_options_directions" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_directions'] ) ? $default_print_options['print_options_directions'] : '' ) . ' /> <label for="print_options_directions">' . __('Directions','cooked') . '</label>';
+			echo '<input id="print_options_notes" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_notes'] ) ? $default_print_options['print_options_notes'] : '' ) . ' /> <label for="print_options_notes">' . __('Notes','cooked') . '</label>';
 			echo '<input id="print_options_nutrition" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_nutrition'] ) ? $default_print_options['print_options_nutrition'] : '' ) . ' /> <label for="print_options_nutrition">' . __('Nutrition','cooked') . '</label>';
 
 		echo '</div>';
-
 	}
 
 	public static function print_options_js() {
@@ -213,6 +210,14 @@ class Cooked_Functions {
 			        	document.getElementsByClassName('cooked-recipe-directions')[0].style.display = 'block';
 			        } else {
 			        	document.getElementsByClassName('cooked-recipe-directions')[0].style.display = 'none';
+			        }
+			    }
+
+				if (printOpt.id == "print_options_notes" && typeof document.getElementsByClassName('cooked-recipe-notes')[0] != 'undefined' ) {
+			        if ( printOpt.checked ){
+			        	document.getElementsByClassName('cooked-recipe-notes')[0].style.display = 'block';
+			        } else {
+			        	document.getElementsByClassName('cooked-recipe-notes')[0].style.display = 'none';
 			        }
 			    }
 

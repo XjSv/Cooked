@@ -92,6 +92,7 @@ Version 1.8.8 includes a new parameter for the [cooked-browse] shortcode to hide
 * **FIX:** Added Meta Description to Meta Tags, it uses the SEO Description, Excerpt or Title, in that order.
 * **FIX:** Fixed bug when Disable Cooked <meta> Tags is turned on.
 * **FIX:** Fixed bug with schema output where the direction titles were duplicated as 'Step 1'. The section heading logic is removed in favor or labeling each step as Step #.
+* **FIX:** Fixed bug with the recipe print view not displaying the Notes section.
 
 = 1.8.7 =
 * **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanatized.

@@ -35,7 +35,7 @@ class Cooked_Enqueues {
 			'i18n_timer' => __('Timer', 'cooked'),
 		];
 
-		$min = (COOKED_DEV ? '' : '.min');
+		$min = COOKED_DEV ? '' : '.min';
 
 		wp_enqueue_style('cooked-essentials', COOKED_URL . 'assets/admin/css/essentials' . $min . '.css', [], COOKED_VERSION);
 		wp_enqueue_style('cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION);

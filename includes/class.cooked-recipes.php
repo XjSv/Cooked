@@ -638,7 +638,7 @@ class Cooked_Recipes {
                     <div class="cooked-panel"><h2>' . __('Directions', 'cooked') . '</h2>[cooked-directions]</div>
                 </div>
                 <div class="cooked-fsm-notes cooked-fsm-content">
-                    <div class="cooked-panel"><h2>' . __('Notes','cooked') . '</h2>[cooked-notes]</div>
+                    <div class="cooked-panel"><h2>' . __('Notes', 'cooked') . '</h2>[cooked-notes]</div>
                 </div>
             </div>
         ' );

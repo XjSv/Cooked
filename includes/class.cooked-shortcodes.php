@@ -709,7 +709,7 @@ class Cooked_Shortcodes {
 
             if (isset($recipe_settings['notes']) && !empty($recipe_settings['notes'])) {
                 $notes = Cooked_Recipes::format_content($recipe_settings['notes']);
-                $show_header = $show_header ? '<h4>' . __('Notes', 'cooked') . '</h4>' : '';
+                $show_header = $show_header ? '<div class="cooked-heading">' . __('Notes', 'cooked') . '</div>' : '';
 
                 echo '<div class="cooked-recipe-notes cooked-clearfix">';
                 echo $show_header;

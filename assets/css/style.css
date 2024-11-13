@@ -1734,6 +1734,8 @@ body .cooked-pagination-numbered > a:hover {
 .cooked-fsm-notes .cooked-panel .cooked-recipe-notes {
     margin: 0 0 1rem;
 }
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes ol,
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes ul { padding-left: 1.5rem; }
 .cooked-fsm-notes .cooked-panel .cooked-recipe-notes ul li {
     margin: 0 0 1rem 1rem;
 }

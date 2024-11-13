@@ -76,7 +76,7 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.8 includes a new parameter for the [cooked-browse] shortcode to hide the recipe excerpt. This is useful for when you want to display a list of recipes without the excerpt.
+Version 1.8.8 includes new features like disabling recipe archive pages, SEO improvements with Rank Math and Yoast integration, enhanced browse shortcode options, and various UI improvements and bug fixes for schema output and print functionality.
 
 == Changelog ==
 

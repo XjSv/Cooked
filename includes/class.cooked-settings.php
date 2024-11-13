@@ -237,11 +237,10 @@ class Cooked_Settings {
                             ]
                         )
                     ],
-                    'recipe_submission_wp_editor_roles' => [
-                        'title' => __('WP Editor Roles', 'cooked-pro'),
-                        'desc' => __('Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields.', 'cooked-pro'),
+                    'recipe_wp_editor_roles' => [
+                        'title' => __('WP Editor Roles', 'cooked'),
+                        'desc' => __('Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields.', 'cooked'),
                         'type' => 'checkboxes',
-                        'conditional_requirement' => 'enable_recipe_submissions',
                         'default' => apply_filters('cooked_add_recipe_wp_editor_roles_defaults', ['administrator', 'editor', 'cooked_recipe_editor']),
                         'options' => $role_options
                     ],
@@ -376,7 +375,7 @@ class Cooked_Settings {
         return apply_filters( 'cooked_per_page_options', $per_page_array );
     }
 
-    public static function pages_array( $choose_text,$none_text = false ) {
+    public static function pages_array( $choose_text, $none_text = false ) {
         $page_array = [];
         $pages = get_posts([
             'post_type' => 'page',
@@ -575,7 +574,7 @@ class Cooked_Settings {
         echo '</p>';
     }
 
-    public static function field_checkboxes( $field_name, $options, $color = false ) {
+    public static function field_checkboxes( $field_name, $options, $color = false, $field = [] ) {
         global $_cooked_settings, $conditions;
 
         echo '<p class="cooked-padded">';
@@ -615,9 +614,17 @@ class Cooked_Settings {
 
                 if ( $is_disabled ):
                     echo '<input type="hidden" name="cooked_settings[' . esc_attr( $field_name ) . '][]" value="' . esc_attr( $value ) . '">';
-                    echo '<input' . $combined_extras . ' class="cooked-switch' . ( $color ? '-' . esc_attr( $color ) : '' ) . '" type="checkbox" id="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && !empty($_cooked_settings[$field_name]) && in_array( $value, $_cooked_settings[$field_name] ) || $is_disabled ? ' checked' : '' ) . '/>';
+                    echo '<input' . $combined_extras . ' class="cooked-switch' . ( $color ? '-' . esc_attr( $color ) : '' ) . '" type="checkbox" id="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '"' . (
+                        (isset( $_cooked_settings[$field_name] ) && !empty($_cooked_settings[$field_name]) && in_array( $value, $_cooked_settings[$field_name] )) ||
+                        $is_disabled ||
+                        (empty($_cooked_settings[$field_name]) && isset($field['default']) && in_array($value, (array)$field['default']))
+                        ? ' checked' : '' ) . '/>';
                 else:
-                    echo '<input' . $combined_extras . ' class="cooked-switch' . ( $color ? '-' . esc_attr( $color ) : '' ) . '" type="checkbox" id="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . '][]" value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && !empty($_cooked_settings[$field_name]) && is_array( $_cooked_settings[$field_name] ) && in_array( $value, $_cooked_settings[$field_name] ) || $is_disabled ? ' checked' : '' ) . '/>';
+                    echo '<input' . $combined_extras . ' class="cooked-switch' . ( $color ? '-' . esc_attr( $color ) : '' ) . '" type="checkbox" id="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . '][]" value="' . esc_attr( $value ) . '"' . (
+                        (isset( $_cooked_settings[$field_name] ) && !empty($_cooked_settings[$field_name]) && is_array( $_cooked_settings[$field_name] ) && in_array( $value, $_cooked_settings[$field_name] )) ||
+                        $is_disabled ||
+                        (empty($_cooked_settings[$field_name]) && isset($field['default']) && in_array($value, (array)$field['default']))
+                        ? ' checked' : '' ) . '/>';
                 endif;
 
                 echo '&nbsp;<label for="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' . wp_kses_post( $name ) . '</label>';

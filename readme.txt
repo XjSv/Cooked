@@ -87,7 +87,7 @@ Version 1.8.8 includes new features like disabling recipe archive pages, SEO imp
 * **NEW:** Added Recipes column in the Admin users table to show the number of recipes each user has created.
 * **NEW:** Added post states to the Browse Recipe page. When selected a label will appear in the page list table indicating which page is the Cooked Browse Recipes Page.
 * **TWEAK:** Moved WP Editor Roles option into General settings.
-* **TWEAK:** If Cooked Pro is installed, the Excerpt, Notes and Directions fields will display the WP Editor depending on the 'WP Editor Roles' setting. If not, the WP Editor will always display.
+* **TWEAK:** The Excerpt, Notes and Directions fields will display the WP Editor depending on the 'WP Editor Roles' setting.
 * **TWEAK:** If the "Disable Cooked <meta> Tags" setting is enabled, the SEO Description field will be hidden in the recipe edit screen.
 * **FIX:** Added Meta Description to Meta Tags, it uses the SEO Description, Excerpt or Title, in that order.
 * **FIX:** Fixed bug when Disable Cooked <meta> Tags is turned on.

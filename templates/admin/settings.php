@@ -43,7 +43,7 @@
 					$conditional_requirements_js = [];
 					$tab_counter = 1;
 
-					foreach( $cooked_settings_tabs_fields as $tab_slug => $tab ):
+					foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ):
 						echo '<div id="cooked-settings-tab-content-' . esc_attr( $tab_slug ) . '" class="cooked-settings-tab-content">';
 
 							// Add a hidden H2 tag for the messages, if any, to show up below it.

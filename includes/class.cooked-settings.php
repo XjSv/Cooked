@@ -77,10 +77,14 @@ class Cooked_Settings {
                     foreach ( $tab['fields'] as $name => $field ) {
                         if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) continue;
 
-                        if ( $field['type'] == 'checkboxes' && $cooked_settings_saved && $version_compare >= 0 ) {
-                            $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : [];
-                        } else {
-                            $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false );
+                        if ( $cooked_settings_saved && $version_compare >= 0 ) {
+                            if ( $field['type'] == 'checkboxes' ) {
+                                $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : [] );
+                            } else {
+                                $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false );
+                            }
+
+                            // Update the settings only if the version has changed.
                             $update_settings = true;
                         }
                     }
@@ -385,7 +389,7 @@ class Cooked_Settings {
         if( !empty($pages) ) {
             $page_array[0] = $choose_text;
             foreach ($pages as $_page) {
-                $page_array[$_page->ID] = $_page->post_title;
+                $page_array[$_page->ID] = $_page->post_title . ' (ID:' . $_page->ID . ')';
             }
         } elseif ( $none_text ) {
             $page_array[0] = $none_text;

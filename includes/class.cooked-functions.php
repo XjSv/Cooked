@@ -227,4 +227,9 @@ class Cooked_Functions {
 
 	}
 
+	public static function get_current_url() {
+		global $wp;
+		return home_url(add_query_arg([], $wp->request));
+	}
+
 }

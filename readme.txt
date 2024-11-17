@@ -76,12 +76,14 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.9 includes a new feature to better support custom translations and prevent them from being lost during plugin updates.
+Version 1.8.9 includes improvements to translation handling and a fix for incorrect textdomain loading when using Loco Translate.
 
 == Changelog ==
 
 = 1.8.9 =
-* **TWEAK:** Updated how language translations are loaded to better support custom translations and prevent them from being lost during plugin updates.
+* **NEW:** Improved SEO by dynamically updating the canonical URL on the Browse Recipe page to match active category/tag filters. Supports Rank Math SEO and Yoast SEO.
+* **TWEAK:** Enhanced translation handling to better support custom language files and prevent conflicts.
+* **FIX:** Resolved compatibility issue with Loco Translate plugin that was causing incorrect textdomain loading.
 
 = 1.8.8 =
 * **NEW:** Added option to disable the recipe archive page under Cooked Settings > General > Advanced Settings.

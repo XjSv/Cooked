@@ -931,13 +931,13 @@ class Cooked_Recipes {
         $taxonomy_search_fields = '';
 
         if ( isset($recipe_args['tax_query']) ):
-            foreach( $recipe_args['tax_query'] as $query ):
+            foreach ( $recipe_args['tax_query'] as $query ):
                 if ( isset($query['taxonomy']) && isset($query['terms']) ):
                     $filters_set[$query['taxonomy']] = implode( ',', $query['terms'] );
                 endif;
             endforeach;
             if ( isset($filters_set) ):
-                foreach( $filters_set as $taxonomy => $filter ):
+                foreach ( $filters_set as $taxonomy => $filter ):
                     $this_tax = get_term_by( 'slug', $filter, $taxonomy );
                     $this_tax = ( $this_tax ? $this_tax : get_term_by( 'id', $filter, $taxonomy ) );
                     $filters_set[$taxonomy] = $this_tax->term_id;
@@ -1027,13 +1027,34 @@ class Cooked_Recipes {
             $taxonomy_search_fields = false;
         endif;
 
-        if ( !isset( $recipe_args['tax_query'] ) || !get_option('permalink_structure') ):
-            $page_id = ( $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID() );
+        // @TODO: This only works if there is no taxonomy query or permalink structure meaning that it only work
+        // when the permalink structure is the default one and no taxonomy filters are selected.
+        // Need to find a better way to handle this so it works in all cases.
+        if ( !isset( $recipe_args['tax_query'] ) || !get_option('permalink_structure') ) {
+            $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
             $form_redirect = get_permalink( $page_id );
-        else:
+        } else {
             $form_redirect = '';
             $page_id = false;
-        endif;
+        }
+
+        // $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
+        // $form_redirect = get_permalink( $page_id );
+
+        // Replace the form redirect logic with:
+        // $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
+        // $form_redirect = '';
+
+        // if (isset($recipe_args['tax_query'])) {
+        //     // Get current URL if we have taxonomy filters
+        //     $form_redirect = Cooked_Functions::get_current_url();
+        // } else {
+        //     // Default to browse page if no filters
+        //     $form_redirect = get_permalink($page_id);
+        // }
+
+        // Remove any existing search params from the redirect URL
+        //$form_redirect = remove_query_arg(['cooked_search_s', 'cooked_browse_sort_by'], $form_redirect);
 
         ob_start();
 

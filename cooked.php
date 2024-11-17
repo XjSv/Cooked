@@ -6,7 +6,7 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author: 		Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.8.8
+Version: 		1.8.9
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.8.8' );
+define( 'COOKED_VERSION', '1.8.9' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -220,7 +220,7 @@ final class Cooked_Plugin {
             self::$instance = new Cooked_Plugin;
             self::$instance->setup_constants();
 
-            add_action( 'plugins_loaded', [self::$instance, 'load_textdomain'] );
+            add_action( 'init', [self::$instance, 'load_textdomain'] );
 
             self::$instance->includes();
             self::$instance->roles = new Cooked_Roles();
@@ -249,12 +249,18 @@ final class Cooked_Plugin {
 
             self::$instance->module_setup();
 
-            add_action( 'plugins_loaded', [self::$instance, 'initialize_plugin_support'], 10 );
+            add_action( 'init', [self::$instance, 'initialize_plugin_support'], 10 );
         }
 
         return self::$instance;
     }
 
+    /**
+     * Initialize module support.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     private function module_setup() {
         // Look for Cooked Modules
         $modules = file_exists( COOKED_DIR . 'modules' ) ? scandir( COOKED_DIR . 'modules' ) : false;
@@ -297,6 +303,12 @@ final class Cooked_Plugin {
         endif;
     }
 
+    /**
+     * Initialize plugin support.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     public function initialize_plugin_support() {
         if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
             require_once COOKED_DIR . 'includes/class.cooked-yoastseo.php';
@@ -427,35 +439,26 @@ final class Cooked_Plugin {
         /*
          * When translating Cooked, be sure to move your language file into the proper location:
          *
-         * - wp-content/languages/plugins/cooked
+         * - wp-content/languages/plugins
          *
-         * If you do not move custom language files here, they will be lost when updating Cooked. Boxy Studio
-         * recommends Loco Translate for easy translations: https://boxystudio.ticksy.com/article/3235/
+         * If you do not move custom language files here, they will be lost when updating Cooked. Gora Tech
+         * recommends Loco Translate for easy translations: hhttps://github.com/XjSv/Cooked/wiki/Translations-Text-Changes
          */
 
         // Set filter for plugin's languages directory.
         $cooked_lang_dir = apply_filters( 'cooked_languages_directory', COOKED_DIR . 'languages/' );
 
-        // Traditional WordPress plugin locale filter.
-        $locale = apply_filters( 'plugin_locale',  get_locale(), 'cooked' );
-        $mofile = sprintf( '%1$s-%2$s.mo', 'cooked', $locale );
-
-        // Look in wp-content/languages/plugins/cooked
-        $lang_file_ext = WP_LANG_DIR . '/plugins/cooked/' . $mofile;
-
-        if ( file_exists( $lang_file_ext ) ) {
-            // Load the externally located language files.
-            load_textdomain( 'cooked', $lang_file_ext );
-        } else {
-            // Load the default language files.
-            load_plugin_textdomain( 'cooked', false, COOKED_FOLDER . '/languages' );
-        }
+        load_plugin_textdomain(
+            'cooked',
+            false,
+            $cooked_lang_dir
+        );
     }
 }
 
 endif; // End if class_exists check.
 
-// Uninstall Hook
+// Uninstall Hook.
 register_uninstall_hook( __FILE__, 'cooked_uninstall' );
 function cooked_uninstall() {
     Cooked_Roles::remove_caps();
@@ -464,7 +467,7 @@ function cooked_uninstall() {
 }
 
 /**
- * The main function for that returns Cooked_Plugin
+ * The main function for that returns Cooked_Plugin.
  *
  * The main function responsible for returning the Cooked_Plugin
  * Instance to functions everywhere.

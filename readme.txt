@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.7
-Stable tag: 1.8.8
+Stable tag: 1.8.9
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,12 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.8 includes new features like disabling recipe archive pages, SEO improvements with Rank Math and Yoast integration, enhanced browse shortcode options, and various UI improvements and bug fixes for schema output and print functionality.
+Version 1.8.9 includes a new feature to better support custom translations and prevent them from being lost during plugin updates.
 
 == Changelog ==
+
+= 1.8.9 =
+* **TWEAK:** Updated how language translations are loaded to better support custom translations and prevent them from being lost during plugin updates.
 
 = 1.8.8 =
 * **NEW:** Added option to disable the recipe archive page under Cooked Settings > General > Advanced Settings.

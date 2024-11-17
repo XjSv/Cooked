@@ -29,6 +29,8 @@ class Cooked_Recipes {
         add_action( 'cooked_check_recipe_query', [&$this, 'check_recipe_query'], 10 );
         add_action( 'pre_get_posts', [&$this, 'cooked_pre_get_posts'], 10, 1 );
         add_action( 'restrict_manage_posts', [&$this, 'filter_recipes_by_taxonomy'], 10 );
+
+        add_filter('get_canonical_url', [&$this, 'modify_browse_page_canonical_url'], 20, 2);
     }
 
     public static function get( $args = false, $single = false, $ids_only = false ) {
@@ -381,7 +383,7 @@ class Cooked_Recipes {
         global $typenow, $cooked_taxonomies_shown;
         $taxonomies = apply_filters( 'cooked_active_taxonomies', ['cp_recipe_category'] );
         if ( $typenow == 'cp_recipe' ):
-            foreach( $taxonomies as $taxonomy ):
+            foreach ( $taxonomies as $taxonomy ):
                 if ( is_array($cooked_taxonomies_shown) && !in_array( $taxonomy, $cooked_taxonomies_shown ) || !is_array($cooked_taxonomies_shown) ):
                     $cooked_taxonomies_shown[] = $taxonomy;
                     $selected = isset($_GET[$taxonomy]) ? sanitize_title($_GET[$taxonomy]) : '';
@@ -409,7 +411,7 @@ class Cooked_Recipes {
         global $pagenow;
         $taxonomies = apply_filters( 'cooked_active_taxonomies', ['cp_recipe_category'] );
         $q_vars = &$query->query_vars;
-        foreach( $taxonomies as $taxonomy ):
+        foreach ( $taxonomies as $taxonomy ):
             if ( $pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == 'cp_recipe' && isset($q_vars[$taxonomy]) && is_numeric($q_vars[$taxonomy]) && $q_vars[$taxonomy] != 0 ):
                 $term = get_term_by('id', $q_vars[$taxonomy], $taxonomy);
                 $q_vars[$taxonomy] = $term->slug;
@@ -931,7 +933,7 @@ class Cooked_Recipes {
         if ( isset($recipe_args['tax_query']) ):
             foreach( $recipe_args['tax_query'] as $query ):
                 if ( isset($query['taxonomy']) && isset($query['terms']) ):
-                    $filters_set[$query['taxonomy']] = implode( ',',$query['terms'] );
+                    $filters_set[$query['taxonomy']] = implode( ',', $query['terms'] );
                 endif;
             endforeach;
             if ( isset($filters_set) ):
@@ -1288,6 +1290,33 @@ class Cooked_Recipes {
         return apply_filters( 'cooked_sync_c2_recipe_settings', $recipe_settings, $recipe_id );
     }
 
+    public function modify_browse_page_canonical_url($canonical_url, $post = null) {
+        global $_cooked_settings, $wp_query;
+
+        if (!is_page()) {
+            return $canonical_url;
+        }
+
+        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+
+        // Only modify for browse page with category.
+        if (is_page($browse_page_id) &&
+            isset($wp_query->query['cp_recipe_category']) &&
+            taxonomy_exists('cp_recipe_category') &&
+            term_exists($wp_query->query['cp_recipe_category'], 'cp_recipe_category')) {
+
+            // Build the canonical URL based on permalink structure.
+            if (get_option('permalink_structure')) {
+                $new_canonical = untrailingslashit(get_permalink($browse_page_id)) . '/' . $_cooked_settings['recipe_category_permalink'] . '/' . $wp_query->query['cp_recipe_category'];
+            } else {
+                $new_canonical = add_query_arg('cp_recipe_category', $wp_query->query['cp_recipe_category'], get_permalink($browse_page_id));
+            }
+
+            return $new_canonical;
+        }
+
+        return $canonical_url;
+    }
 }
 
 global $Cooked_Recipes;

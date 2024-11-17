@@ -1,16 +1,15 @@
 {
   "name": "cooked",
-  "version": "1.8.8",
+  "version": "1.8.9",
   "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.",
   "main": "index.js",
   "scripts": {
     "build": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp build",
-    "watch": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp default",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp default"
   },
   "runtimeExecutable": "npm",
   "windows": {
-      "runtimeExecutable": "npm.cmd"
+    "runtimeExecutable": "npm.cmd"
   },
   "repository": {
     "type": "git",
@@ -24,11 +23,14 @@
   },
   "homepage": "https://github.com/XjSv/Cooked#readme",
   "devDependencies": {
+    "@playwright/test": "^1.48.2",
+    "@wordpress/e2e-test-utils-playwright": "^1.11.0",
     "gulp": "^5.0.0",
     "gulp-clean-css": "^4.3.0",
     "gulp-rename": "^2.0.0",
     "gulp-sass": "^5.1.0",
     "gulp-uglify": "^3.0.2",
+    "playwright": "^1.48.2",
     "sass": "^1.75.0"
   }
 }

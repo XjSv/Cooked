@@ -220,7 +220,7 @@ final class Cooked_Plugin {
             self::$instance = new Cooked_Plugin;
             self::$instance->setup_constants();
 
-            add_action( 'plugins_loaded', [self::$instance, 'load_textdomain'] );
+            add_action( 'init', [self::$instance, 'load_textdomain'] );
 
             self::$instance->includes();
             self::$instance->roles = new Cooked_Roles();
@@ -249,12 +249,18 @@ final class Cooked_Plugin {
 
             self::$instance->module_setup();
 
-            add_action( 'plugins_loaded', [self::$instance, 'initialize_plugin_support'], 10 );
+            add_action( 'init', [self::$instance, 'initialize_plugin_support'], 10 );
         }
 
         return self::$instance;
     }
 
+    /**
+     * Initialize module support.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     private function module_setup() {
         // Look for Cooked Modules
         $modules = file_exists( COOKED_DIR . 'modules' ) ? scandir( COOKED_DIR . 'modules' ) : false;
@@ -297,6 +303,12 @@ final class Cooked_Plugin {
         endif;
     }
 
+    /**
+     * Initialize plugin support.
+     *
+     * @since 1.0.0
+     * @return void
+     */
     public function initialize_plugin_support() {
         if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
             require_once COOKED_DIR . 'includes/class.cooked-yoastseo.php';
@@ -436,19 +448,6 @@ final class Cooked_Plugin {
         // Set filter for plugin's languages directory.
         $cooked_lang_dir = apply_filters( 'cooked_languages_directory', COOKED_DIR . 'languages/' );
 
-
-        // Load from WP_LANG_DIR first.
-        load_textdomain(
-            'cooked',
-            sprintf(
-                '%s/plugins/%s-%s.mo',
-                WP_LANG_DIR,
-                'cooked',
-                determine_locale()
-            )
-        );
-
-        // Fall back to plugin languages directory.
         load_plugin_textdomain(
             'cooked',
             false,
@@ -459,7 +458,7 @@ final class Cooked_Plugin {
 
 endif; // End if class_exists check.
 
-// Uninstall Hook
+// Uninstall Hook.
 register_uninstall_hook( __FILE__, 'cooked_uninstall' );
 function cooked_uninstall() {
     Cooked_Roles::remove_caps();
@@ -468,7 +467,7 @@ function cooked_uninstall() {
 }
 
 /**
- * The main function for that returns Cooked_Plugin
+ * The main function for that returns Cooked_Plugin.
  *
  * The main function responsible for returning the Cooked_Plugin
  * Instance to functions everywhere.

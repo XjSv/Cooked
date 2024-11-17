@@ -147,7 +147,7 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:135
 #: includes/class.cooked-recipe-meta.php:221
 #: includes/class.cooked-recipe-meta.php:993
-#: includes/class.cooked-recipes.php:634
+#: includes/class.cooked-recipes.php:636
 #: templates/front/recipe.php:34
 msgid "Ingredients"
 msgstr ""
@@ -157,7 +157,7 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:135
 #: includes/class.cooked-recipe-meta.php:227
 #: includes/class.cooked-recipe-meta.php:1024
-#: includes/class.cooked-recipes.php:638
+#: includes/class.cooked-recipes.php:640
 #: templates/front/recipe.php:35
 msgid "Directions"
 msgstr ""
@@ -205,7 +205,7 @@ msgstr ""
 
 #: includes/class.cooked-functions.php:129
 #: includes/class.cooked-recipe-meta.php:1208
-#: includes/class.cooked-recipes.php:641
+#: includes/class.cooked-recipes.php:643
 #: includes/class.cooked-settings.php:171
 #: includes/class.cooked-shortcodes.php:712
 msgid "Notes"
@@ -897,12 +897,12 @@ msgstr ""
 msgid "Cooked Browse Recipes Page"
 msgstr ""
 
-#: includes/class.cooked-rankmathseo.php:34
+#: includes/class.cooked-rankmathseo.php:36
 msgid "Recipe Category"
 msgstr ""
 
-#: includes/class.cooked-rankmathseo.php:35
-#: includes/class.cooked-yoastseo.php:31
+#: includes/class.cooked-rankmathseo.php:37
+#: includes/class.cooked-yoastseo.php:33
 msgid "Current recipe category being viewed."
 msgstr ""
 
@@ -1338,134 +1338,134 @@ msgstr ""
 
 #. translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")
 #. translators: referring to the author (ex: By John Smith)
-#: includes/class.cooked-recipes.php:276
-#: includes/class.cooked-recipes.php:330
+#: includes/class.cooked-recipes.php:278
+#: includes/class.cooked-recipes.php:332
 #: templates/front/recipe-single.php:47
 msgid "By %s"
 msgstr ""
 
 #. translators: For showing "All" of a taxonomy (ex: "All Burgers")
-#: includes/class.cooked-recipes.php:392
+#: includes/class.cooked-recipes.php:394
 msgid "All %s"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:649
+#: includes/class.cooked-recipes.php:651
 msgid "Beginner"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:650
+#: includes/class.cooked-recipes.php:652
 msgid "Intermediate"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:651
+#: includes/class.cooked-recipes.php:653
 msgid "Advanced"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:677
+#: includes/class.cooked-recipes.php:679
 msgid "Cooked Gallery"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:681
+#: includes/class.cooked-recipes.php:683
 msgid "Envira Gallery"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:685
+#: includes/class.cooked-recipes.php:687
 msgid "Soliloquy Slider"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:689
+#: includes/class.cooked-recipes.php:691
 msgid "Slider Revolution"
 msgstr ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:764
+#: includes/class.cooked-recipes.php:766
 msgid "Quarter (%s Serving)"
 msgid_plural "Quarter (%s Servings)"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:767
+#: includes/class.cooked-recipes.php:769
 msgid "Half (%s Serving)"
 msgid_plural "Half (%s Servings)"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:770
+#: includes/class.cooked-recipes.php:772
 msgid "Default (%s Serving)"
 msgid_plural "Default (%s Servings)"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:773
+#: includes/class.cooked-recipes.php:775
 msgid "Double (%s Servings)"
 msgstr ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:776
+#: includes/class.cooked-recipes.php:778
 msgid "Triple (%s Servings)"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:790
+#: includes/class.cooked-recipes.php:792
 #: includes/class.cooked-shortcodes.php:400
 msgid "Yields"
 msgstr ""
 
 #. translators: singular and plural "serving" sizes
-#: includes/class.cooked-recipes.php:794
-#: includes/class.cooked-recipes.php:804
+#: includes/class.cooked-recipes.php:796
+#: includes/class.cooked-recipes.php:806
 msgid "%s Serving"
 msgid_plural "%s Servings"
 msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural "steps"
-#: includes/class.cooked-recipes.php:904
+#: includes/class.cooked-recipes.php:906
 #: includes/class.cooked-seo.php:85
 msgid "Step %d"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:958
+#: includes/class.cooked-recipes.php:960
 msgid "Browse"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:975
+#: includes/class.cooked-recipes.php:977
 #: includes/class.cooked-settings.php:108
 msgid "No categories"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:978
+#: includes/class.cooked-recipes.php:980
 #: includes/class.cooked-settings.php:155
 #: includes/class.cooked-taxonomies.php:38
 #: includes/class.cooked-taxonomies.php:48
 msgid "Categories"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:980
+#: includes/class.cooked-recipes.php:982
 #: includes/class.cooked-taxonomies.php:41
 #: includes/widgets/recipe-categories.php:48
 msgid "All Categories"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1046
+#: includes/class.cooked-recipes.php:1048
 msgid "Find a recipe..."
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1066
+#: includes/class.cooked-recipes.php:1068
 msgid "Newest first"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1070
+#: includes/class.cooked-recipes.php:1072
 msgid "Oldest first"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1074
+#: includes/class.cooked-recipes.php:1076
 msgid "Alphabetical (A-Z)"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1078
+#: includes/class.cooked-recipes.php:1080
 msgid "Alphabetical (Z-A)"
 msgstr ""
 

@@ -49,6 +49,38 @@ class Cooked_Shortcodes {
         add_shortcode('cooked-ingredients', [$this, 'cooked_ingredients_shortcode'] );
         add_shortcode('cooked-directions', [$this, 'cooked_directions_shortcode'] );
         add_shortcode('cooked-nutrition', [$this, 'cooked_nutrition_shortcode'] );
+
+        // Add preprocessing filter for shortcodes for Elementor, Divi, and other builders compatibility.
+        add_filter('pre_do_shortcode_tag', [$this, 'preprocess_shortcode'], 10, 4);
+    }
+
+    public function preprocess_shortcode($output, $tag, $attr, $m) {
+        // Only process for Cooked shortcodes
+        if (strpos($tag, 'cooked-') === false) {
+            return $output;
+        }
+
+        global $recipe_settings, $post;
+
+        // If recipe settings are empty, try to get them.
+        if (empty($recipe_settings)) {
+            // Try to get recipe settings from current post.
+            $post_id = isset($post->ID) ? $post->ID : false;
+            if ($post_id && get_post_type( $post_id ) === 'cp_recipe' ) {
+                $recipe_settings = Cooked_Recipes::get($post_id, true);
+            } else {
+                // We are in the editor but not on a recipe post type. Maybe a single recipe template?
+                // Uses the first recipe found in the database as a sample.
+                $recipe_settings = Cooked_Recipes::get( false, true );
+            }
+
+            // If still empty and we have a specific recipe ID in attributes, try to get them.
+            if (empty($recipe_settings) && isset($attr['id'])) {
+                $recipe_settings = Cooked_Recipes::get(intval($attr['id']), true);
+            }
+        }
+
+        return $output;
     }
 
     public function cooked_search_shortcode( $atts, $content = null ) {
@@ -481,7 +513,7 @@ class Cooked_Shortcodes {
             elseif ( isset($info_array['right']) && !empty($info_array['right']) ):
 
                 echo '<section class="cooked-right">';
-                    foreach( $info_array['right'] as $name => $val ):
+                    foreach ( $info_array['right'] as $name => $val ):
                         $function = 'cooked_info_' . $name;
                         if ( array_key_exists( $function, $available_methods ) ):
                             $class = ( $available_methods[$function] == 'Cooked_Recipes' ? $this : $available_methods[$function] );
@@ -494,7 +526,7 @@ class Cooked_Shortcodes {
 
             else:
 
-                foreach( $info_array as $name => $val ):
+                foreach ( $info_array as $name => $val ):
                     $function = 'cooked_info_' . $name;
                     if ( array_key_exists( $function, $available_methods ) ):
                         $class = ( $available_methods[$function] == 'Cooked_Recipes' ? $this : $available_methods[$function] );
@@ -811,13 +843,13 @@ class Cooked_Shortcodes {
     }
 
     public function cooked_nutrition_shortcode($atts, $content = null) {
+        global $_cooked_settings, $recipe_settings;
+
         // Shortcode Attributes
         $atts = shortcode_atts([
             'id' => false,
             'float' => false,
         ], $atts);
-
-        global $_cooked_settings, $recipe_settings;
 
         if ( isset( $atts['id'] ) && $atts['id'] ):
             $recipe_settings = Cooked_Recipes::get( intval( $atts['id'] ), true );

@@ -69,9 +69,7 @@ class Cooked_Taxonomies {
 	}
 
 	public static function single_taxonomy_block( $term_id = false, $style = "block", $taxonomy = "cp_recipe_category" ) {
-
-		if ( !$term_id )
-			return;
+		if ( !$term_id ) return;
 
 		$term = get_term( $term_id );
 		if ( !empty($term) ):
@@ -88,12 +86,10 @@ class Cooked_Taxonomies {
 			endif;
 
 		endif;
-
 	}
 
 	public static function card( $term_id = false, $width = false, $hide_image = false, $hide_total = false, $style = false ) {
-		if ( !$term_id )
-			return false;
+		if ( !$term_id ) return false;
 
 		$term = get_term( $term_id );
 		if ( !empty($term) ):
@@ -148,7 +144,6 @@ class Cooked_Taxonomies {
 		endif;
 
 		return false;
-
 	}
 
 	public static function term_link_filter( $url, $term, $taxonomy ) {

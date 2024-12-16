@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.7
-Stable tag: 1.8.9
+Tested up to: 6.7.1
+Stable tag: 1.9.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,15 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.9 includes improvements to translation handling and a fix for incorrect textdomain loading when using Loco Translate.
+Version 1.8.10 includes improvements to translation handling and a fix for incorrect textdomain loading when using Loco Translate.
 
 == Changelog ==
+
+= 1.9.0 =
+* **TWEAK:** Updated the Drag & Drop library to the latest version.
+* **FIX:** Fixed issue preventing users from adding or editing links within recipe direction text areas.
+* **NEW:** Added pretty URL's to the Browse Recipe page when searching and filtering recipes.
+* **FIX:** Fixed issue with the recipe search when filters are applied.
 
 = 1.8.9 =
 * **NEW:** Improved SEO by dynamically updating the canonical URL on the Browse Recipe page to match active category/tag filters. Supports Rank Math SEO and Yoast SEO.

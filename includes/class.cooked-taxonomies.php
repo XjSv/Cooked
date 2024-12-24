@@ -60,7 +60,7 @@ class Cooked_Taxonomies {
 
 		], $taxonomy_permalinks, $query_var );
 
-		if ( !in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ): unset( $taxonomies['cp_recipe_category'] ); endif;
+		if ( !empty($_cooked_settings['recipe_taxonomies']) && !in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ): unset( $taxonomies['cp_recipe_category'] ); endif;
 
 		// Filters
 		add_filter( 'term_link', ['Cooked_Taxonomies', 'term_link_filter'], 10, 3);

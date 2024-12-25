@@ -77,7 +77,7 @@ class Cooked_Settings {
                     foreach ( $tab['fields'] as $name => $field ) {
                         if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) continue;
 
-                        if ( $cooked_settings_saved && $version_compare >= 0 ) {
+                        if ( !$cooked_settings_saved || ( $cooked_settings_saved && $version_compare >= 0 ) ) {
                             if ( $field['type'] == 'checkboxes' ) {
                                 $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : [] );
                             } else {

@@ -433,7 +433,7 @@ class Cooked_Shortcodes {
             'prep_time' => __('Prep Time', 'cooked'),
             'cook_time' => __('Cook Time', 'cooked'),
             'total_time' => __('Total Time', 'cooked'),
-            'taxonomies' => $_cooked_settings['recipe_taxonomies']
+            'taxonomies' => !empty($_cooked_settings['recipe_taxonomies']) ? $_cooked_settings['recipe_taxonomies'] : []
         ]);
 
         if ( $left ):
@@ -636,7 +636,7 @@ class Cooked_Shortcodes {
     public static function cooked_info_prep_time( $recipe ) {
         global $_cooked_settings;
 
-        if (in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])) {
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])) {
             $prep_time = isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0;
             echo $prep_time ? '<span class="cooked-prep-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Prep Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $prep_time ) . '</span>' : '';
         }
@@ -645,7 +645,7 @@ class Cooked_Shortcodes {
     public static function cooked_info_cook_time( $recipe ) {
         global $_cooked_settings;
 
-        if (in_array('timing_cook', $_cooked_settings['recipe_info_display_options'])) {
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_cook', $_cooked_settings['recipe_info_display_options'])) {
             $cook_time = isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0;
             echo $cook_time ? '<span class="cooked-cook-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Cook Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $cook_time ) . '</span>' : '';
         }
@@ -654,7 +654,7 @@ class Cooked_Shortcodes {
     public static function cooked_info_total_time( $recipe ) {
         global $_cooked_settings;
 
-        if (in_array('timing_total',$_cooked_settings['recipe_info_display_options'])) {
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_total',$_cooked_settings['recipe_info_display_options'])) {
             $total_time = isset($recipe['total_time']) ? esc_html( $recipe['total_time'] ) : 0;
 
             if ( $total_time ) {
@@ -676,14 +676,14 @@ class Cooked_Shortcodes {
 
         $clickable = isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ? false : true;
 
-        if (in_array('taxonomies', $_cooked_settings['recipe_info_display_options'])):
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('taxonomies', $_cooked_settings['recipe_info_display_options'])):
 
             global $recipe_terms_list;
             $recipe_terms_list = '';
 
             do_action( 'cooked_info_taxonomies_shortcode_before', $recipe_settings );
 
-            if (in_array('cp_recipe_category', $_cooked_settings['recipe_taxonomies'])):
+            if (!empty($_cooked_settings['recipe_taxonomies']) && in_array('cp_recipe_category', $_cooked_settings['recipe_taxonomies'])):
                 if ( $clickable ):
                     $recipe_terms_list .= get_the_term_list( $recipe_settings['id'], 'cp_recipe_category', '<span class="cooked-taxonomy cooked-category"><strong class="cooked-meta-title">' . __('Category','cooked') . '</strong>', ', ', '</span>' );
                 else:

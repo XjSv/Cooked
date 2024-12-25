@@ -25,7 +25,7 @@ class Cooked_Taxonomies {
 		$_cooked_settings = Cooked_Settings::get();
 
 		$front_page_id = get_option( 'page_on_front' );
-		$query_var = ($_cooked_settings['browse_page'] == $front_page_id) ? false : true;
+		$query_var = (!empty($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $front_page_id) ? false : true;
 
 		$taxonomy_permalinks = apply_filters( 'cooked_taxonomy_settings', [
 			'cp_recipe_category' => (isset($_cooked_settings['recipe_category_permalink']) && $_cooked_settings['recipe_category_permalink'] ? $_cooked_settings['recipe_category_permalink'] : 'recipe-category')

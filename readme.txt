@@ -85,6 +85,7 @@ Version 1.8.10 includes improvements to translation handling and a fix for incor
 * **FIX:** Fixed issue preventing users from adding or editing links within recipe direction text areas.
 * **NEW:** Added pretty URL's to the Browse Recipe page when searching and filtering recipes.
 * **FIX:** Fixed issue with the recipe search when filters are applied.
+* **FIX:** Fixed a couple of PHP v8.3 compatibility issues.
 
 = 1.8.9 =
 * **NEW:** Improved SEO by dynamically updating the canonical URL on the Browse Recipe page to match active category/tag filters. Supports Rank Math SEO and Yoast SEO.

@@ -1405,7 +1405,7 @@ msgstr[1] ""
 
 #. translators: singular and plural "steps"
 #: includes/class.cooked-recipes.php:909
-#: includes/class.cooked-seo.php:85
+#: includes/class.cooked-seo.php:88
 msgid "Step %d"
 msgstr ""
 

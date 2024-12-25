@@ -227,4 +227,24 @@ class Cooked_Functions {
 
 	}
 
+	// Store the message
+    public static function set_transient_message($message) {
+        $user_id = get_current_user_id();
+		if ( !empty( $user_id ) && !empty( $message ) ) {
+			set_transient('cooked_user_' . $user_id . '_message', $message, 60); // Expires in 60 seconds
+		}
+    }
+
+    // Retrieve and delete the message
+    public static function get_and_delete_transient_message() {
+        $user_id = get_current_user_id();
+		if ( !empty( $user_id ) ) {
+			$message = get_transient('cooked_user_' . $user_id . '_message');
+			if ( !empty( $message ) ) {
+				delete_transient('cooked_user_' . $user_id . '_message');
+				return $message;
+			}
+		}
+        return false;
+    }
 }

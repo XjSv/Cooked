@@ -109,6 +109,56 @@ var cooked_loading = false;
                 var thisButton = $(this);
                 thisButton.parents('form').trigger('submit');
             });
+
+            // Add form submit handler for the Browse Search Form
+            if ( cooked_js_vars.permalink_structure ) {
+                $('.cooked-recipe-search form').on('submit', function(e) {
+                    e.preventDefault();
+
+                    // Get form values
+                    const formValues = {
+                        category: $(this).find('[name="cp_recipe_category"]').val() || '',
+                        method: $(this).find('[name="cp_recipe_cooking_method"]').val() || '',
+                        cuisine: $(this).find('[name="cp_recipe_cuisine"]').val() || '',
+                        tags: $(this).find('[name="cp_recipe_tags"]').val() || '',
+                        diet: $(this).find('[name="cp_recipe_diet"]').val() || '',
+                        search: $(this).find('[name="cooked_search_s"]').val() || '',
+                        sort: $(this).find('[name="cooked_browse_sort_by"]').val() || 'date_desc',
+                    };
+
+                    // Create URL segments
+                    const urlSegments = [];
+                    urlSegments.push(cooked_js_vars.browse_recipes_slug);
+
+                    // Add taxonomy segments
+                    const taxonomyFields = [
+                        { value: formValues.category, prefix: cooked_js_vars.recipe_category_slug },
+                        { value: formValues.method, prefix: cooked_js_vars.recipe_cooking_method_slug },
+                        { value: formValues.cuisine, prefix: cooked_js_vars.recipe_cuisine_slug },
+                        { value: formValues.tags, prefix: cooked_js_vars.recipe_tags_slug },
+                        { value: formValues.diet, prefix: cooked_js_vars.recipe_diet_slug },
+                    ];
+
+                    taxonomyFields.forEach(field => {
+                        if (field.value) {
+                            urlSegments.push(`${field.prefix}/${encodeURIComponent(field.value)}`);
+                        }
+                    });
+
+                    // Add search segment
+                    if (formValues.search) {
+                        urlSegments.push(`search/${encodeURIComponent(formValues.search)}`);
+                    }
+
+                    // Add sort segment
+                    urlSegments.push(`sort/${encodeURIComponent(formValues.sort)}`);
+
+                    // Build and navigate to URL
+                    const prettyUrl = '/' + urlSegments.filter(Boolean).join('/');
+
+                    window.location.href = prettyUrl;
+                });
+            }
         }
 
         /****   6. Timers   ****/

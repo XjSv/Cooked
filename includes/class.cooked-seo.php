@@ -56,8 +56,10 @@ class Cooked_SEO {
             foreach ( $recipe['ingredients'] as $ing ):
                 if ( isset( $ing['section_heading_name'] ) ): continue; endif;
                 $ingredient = Cooked_Recipes::single_ingredient( $ing, false, true );
-                $ingredient_cleaned = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $ingredient) );
-                $ingredients[] = $ingredient_cleaned;
+                if ( !empty( $ingredient ) ):
+                    $ingredient_cleaned = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $ingredient) );
+                    $ingredients[] = $ingredient_cleaned;
+                endif;
             endforeach;
         endif;
 
@@ -71,24 +73,26 @@ class Cooked_SEO {
                 endif;
 
                 $direction = Cooked_Recipes::single_direction( $dir, false, true );
-                $direction_cleaned = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $direction) );
-                $image_id = isset($dir['image']) ? $dir['image'] : false;
+                if ( !empty( $direction ) ):
+                    $direction_cleaned = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $direction) );
+                    $image_id = isset($dir['image']) ? $dir['image'] : false;
 
-                $image = '';
-                if ( $image_id ):
-                    $image = wp_get_attachment_image_src( $image_id, 'full' );
-                    $image = $image[0];
+                    $image = '';
+                    if ( $image_id ):
+                        $image = wp_get_attachment_image_src( $image_id, 'full' );
+                        $image = $image[0];
+                    endif;
+
+                    $directions[] = [
+                        '@type' => 'HowToStep',
+                        'name' => sprintf(__('Step %d', 'cooked'), $number),
+                        'text' => $direction_cleaned,
+                        'url' => get_permalink($rpost) . '#cooked-single-direction-step-' . $number,
+                        'image' => $image,
+                    ];
                 endif;
-
-                $directions[] = [
-                    '@type' => 'HowToStep',
-                    'name' => sprintf(__('Step %d', 'cooked'), $number),
-                    'text' => $direction_cleaned,
-                    'url' => get_permalink($rpost) . '#cooked-single-direction-step-' . $number,
-                    'image' => $image,
-                ];
-
                 $number++;
+
             endforeach;
         endif;
 

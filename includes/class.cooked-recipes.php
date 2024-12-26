@@ -1011,17 +1011,6 @@ class Cooked_Recipes {
             $taxonomy_search_fields = false;
         endif;
 
-        // @TODO: This only works if there is no taxonomy query or permalink structure meaning that it only work
-        // when the permalink structure is the default one and no taxonomy filters are selected.
-        // Need to find a better way to handle this so it works in all cases.
-        // if ( !isset( $recipe_args['tax_query'] ) || !get_option('permalink_structure') ) {
-        //     $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
-        //     $form_redirect = get_permalink($page_id);
-        // } else {
-        //     $form_redirect = '';
-        //     $page_id = false;
-        // }
-
         $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
         $form_redirect = get_permalink($page_id);
 

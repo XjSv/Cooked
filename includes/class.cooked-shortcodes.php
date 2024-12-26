@@ -546,7 +546,7 @@ class Cooked_Shortcodes {
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_cooked_donut']);
             return '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
-            //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @todo Fix this
+            //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
         endif;
     }
 

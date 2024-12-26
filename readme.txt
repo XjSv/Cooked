@@ -86,6 +86,7 @@ Version 1.8.10 includes improvements to translation handling and a fix for incor
 * **NEW:** Added pretty URL's to the Browse Recipe page when searching and filtering recipes.
 * **FIX:** Fixed issue with the recipe search when filters are applied.
 * **FIX:** Fixed a couple of PHP v8.3 compatibility issues.
+* **FIX:** Fixed issue with Divi Theme Builder shortcodes not loading.
 
 = 1.8.9 =
 * **NEW:** Improved SEO by dynamically updating the canonical URL on the Browse Recipe page to match active category/tag filters. Supports Rank Math SEO and Yoast SEO.

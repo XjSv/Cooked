@@ -177,27 +177,9 @@ class Cooked_Recipes {
     public function check_recipe_query() {
         global $_cooked_settings, $recipe_query;
 
-        // Taxonomies: 'cp_recipe_category', 'cp_recipe_cooking_method', 'cp_recipe_cuisine', 'cp_recipe_tags', 'cp_recipe_diet'
-
         if ( !isset($recipe_query['cp_recipe_category']) ):
             $recipe_query['cp_recipe_category'] = ( isset($_GET['cp_recipe_category']) && $_GET['cp_recipe_category'] ? intval($_GET['cp_recipe_category']) : ( isset($_cooked_settings['browse_default_cp_recipe_category']) && $_cooked_settings['browse_default_cp_recipe_category'] ? $_cooked_settings['browse_default_cp_recipe_category'] : false ) );
         endif;
-
-        // if ( !isset($recipe_query['cp_recipe_cooking_method']) ):
-        //     $recipe_query['cp_recipe_cooking_method'] = ( isset($_GET['cp_recipe_cooking_method']) && $_GET['cp_recipe_cooking_method'] ? intval($_GET['cp_recipe_cooking_method']) : ( isset($_cooked_settings['browse_default_cp_recipe_cooking_method']) && $_cooked_settings['browse_default_cp_recipe_cooking_method'] ? $_cooked_settings['browse_default_cp_recipe_cooking_method'] : false ) );
-        // endif;
-
-        // if ( !isset($recipe_query['cp_recipe_cuisine']) ):
-        //     $recipe_query['cp_recipe_cuisine'] = ( isset($_GET['cp_recipe_cuisine']) && $_GET['cp_recipe_cuisine'] ? intval($_GET['cp_recipe_cuisine']) : ( isset($_cooked_settings['browse_default_cp_recipe_cuisine']) && $_cooked_settings['browse_default_cp_recipe_cuisine'] ? $_cooked_settings['browse_default_cp_recipe_cuisine'] : false ) );
-        // endif;
-
-        // if ( !isset($recipe_query['cp_recipe_tags']) ):
-        //     $recipe_query['cp_recipe_tags'] = ( isset($_GET['cp_recipe_tags']) && $_GET['cp_recipe_tags'] ? intval($_GET['cp_recipe_tags']) : ( isset($_cooked_settings['browse_default_cp_recipe_tags']) && $_cooked_settings['browse_default_cp_recipe_tags'] ? $_cooked_settings['browse_default_cp_recipe_tags'] : false ) );
-        // endif;
-
-        // if ( !isset($recipe_query['cp_recipe_diet']) ):
-        //     $recipe_query['cp_recipe_diet'] = ( isset($_GET['cp_recipe_diet']) && $_GET['cp_recipe_diet'] ? intval($_GET['cp_recipe_diet']) : ( isset($_cooked_settings['browse_default_cp_recipe_diet']) && $_cooked_settings['browse_default_cp_recipe_diet'] ? $_cooked_settings['browse_default_cp_recipe_diet'] : false ) );
-        // endif;
     }
 
     public static function cooked_pre_get_posts( $q ) {

@@ -172,9 +172,7 @@ class Cooked_Post_Types {
 
     public static function add_query_vars_filter( $vars ) {
         $vars[] = 'servings';
-        // $vars[] = 'cp_recipe_category';
-        // $vars[] = 'cooked_search_s';
-        // $vars[] = 'cooked_browse_sort_by';
+
         return $vars;
     }
 

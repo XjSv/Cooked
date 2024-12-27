@@ -338,8 +338,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             'editor_height' => 400,
                             'textarea_name' => '_recipe_settings[content]',
                             'quicktags' => true
-                            ]
-                        );
+                        ]);
                     ?>
                 </div>
 
@@ -416,8 +415,7 @@ function cooked_render_recipe_fields( $post_id ) {
                                 'editor_height' => 100,
                                 'textarea_name' => '_recipe_settings[notes]',
                                 'quicktags' => true
-                                ]
-                            );
+                            ]);
                         ?>
                     <?php else: ?>
                         <textarea id="_recipe_settings_notes" name="" data-direction-part="content"><?php echo ( isset($recipe_settings['notes']) ? esc_textarea( $recipe_settings['notes'] ) : '' ); ?></textarea>
@@ -495,7 +493,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <?php else:
 
-                    $random_key = wp_rand( 1000000,9999999 ); ?>
+                    $random_key = wp_rand( 1000000, 9999999 ); ?>
 
                     <div class="recipe-setting-block cooked-ingredient-block cooked-clearfix">
 
@@ -512,7 +510,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-ingredient-measurement">
                             <select data-ingredient-part="measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][measurement]">
                                 <option value="">--</option>
-                                <?php foreach($measurements as $key => $measurement):
+                                <?php foreach ($measurements as $key => $measurement):
                                     echo '<option value="'.esc_attr( $key ).'">'.esc_html($measurement['plural_abbr']).'</option>';
                                 endforeach; ?>
                             </select>
@@ -619,22 +617,7 @@ function cooked_render_recipe_fields( $post_id ) {
                                     <a href="#" data-id="<?php echo esc_attr($dir_key); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                                 </div>
                                 <div class="cooked-direction-content">
-                                    <?php if ( $wp_editor_roles_allowed ): ?>
-                                        <?php $recipe_directions = isset($value['content']) ? wpautop( wp_kses_post( html_entity_decode( $value['content'] ) ) ) : ''; ?>
-                                        <?php
-                                        wp_editor($recipe_directions, 'recipe_settings_directions_'. esc_attr($dir_key), [
-                                            'editor_class' => 'cooked-wysiwyg-editor',
-                                            'teeny' => true,
-                                            'media_buttons' => false,
-                                            'wpautop' => false,
-                                            'editor_height' => 100,
-                                            'textarea_name' => '_recipe_settings[directions][' . esc_attr($dir_key) . '][content]',
-                                            'quicktags' => true
-                                        ]);
-                                        ?>
-                                    <?php else: ?>
-                                        <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][content]"><?php echo esc_html($value['content']); ?></textarea>
-                                    <?php endif; ?>
+                                    <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][content]"><?php echo !empty($value['content']) ? esc_html($value['content']) : ''; ?></textarea>
                                 </div>
                                 <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                             </div>
@@ -660,27 +643,26 @@ function cooked_render_recipe_fields( $post_id ) {
                     <div class="recipe-setting-block cooked-direction-block cooked-clearfix">
                         <i class="cooked-icon cooked-icon-drag"></i>
                         <div class="cooked-direction-image">
-                            <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $random_key ); ?>][image]" id="direction-<?php echo esc_attr( $random_key ); ?>-image" value="" />
-                            <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-image-button" value="<?php _e( 'Add Image', 'cooked' ); ?>" />
-                            <img id="direction-<?php echo esc_attr( $random_key ); ?>-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="<?php echo esc_attr( $random_key ); ?>">
+                            <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo $random_key; ?>][image]" id="direction-<?php echo $random_key; ?>-image" value="" />
+                            <input data-direction-part="image_button" type="button" data-id="<?php echo $random_key; ?>" class="button direction-image-button" value="<?php _e( 'Add Image', 'cooked' ); ?>" />
+                            <img id="direction-<?php echo $random_key; ?>-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="<?php echo $random_key; ?>">
                             <div class="cooked-direction-img-placeholder"></div>
-                            <a href="#" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                            <a href="#" data-id="<?php echo $random_key; ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                         </div>
                         <div class="cooked-direction-content">
                             <?php if ( $wp_editor_roles_allowed ): ?>
                                 <?php
-                                wp_editor('', 'recipe_settings_directions_'. $random_key, [
-                                    'editor_class' => 'cooked-wysiwyg-editor',
-                                    'teeny' => true,
-                                    'media_buttons' => false,
-                                    'wpautop' => false,
-                                    'editor_height' => 100,
-                                    'textarea_name' => '_recipe_settings[directions][' . $random_key . '][content]',
-                                    'quicktags' => true
-                                ]);
+                                    wp_editor('', 'direction-' . $random_key . '-content', [
+                                        'teeny' => true,
+                                        'media_buttons' => false,
+                                        'wpautop' => false,
+                                        'editor_height' => 100,
+                                        'textarea_name' => '_recipe_settings[directions][' . $random_key . '][content]',
+                                        'quicktags' => true
+                                    ]);
                                 ?>
                             <?php else: ?>
-                                <textarea data-direction-part="content" name=""></textarea>
+                                <textarea id="direction-<?php echo $random_key; ?>-content" data-direction-part="content" name="" data-id="<?php echo $random_key; ?>"></textarea>
                             <?php endif; ?>
                         </div>
                         <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>

@@ -25,7 +25,7 @@ class Cooked_Taxonomies {
 		$_cooked_settings = Cooked_Settings::get();
 
 		$front_page_id = get_option( 'page_on_front' );
-		$query_var = ($_cooked_settings['browse_page'] == $front_page_id) ? false : true;
+		$query_var = (!empty($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $front_page_id) ? false : true;
 
 		$taxonomy_permalinks = apply_filters( 'cooked_taxonomy_settings', [
 			'cp_recipe_category' => (isset($_cooked_settings['recipe_category_permalink']) && $_cooked_settings['recipe_category_permalink'] ? $_cooked_settings['recipe_category_permalink'] : 'recipe-category')
@@ -60,7 +60,7 @@ class Cooked_Taxonomies {
 
 		], $taxonomy_permalinks, $query_var );
 
-		if ( !in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ): unset( $taxonomies['cp_recipe_category'] ); endif;
+		if ( !empty($_cooked_settings['recipe_taxonomies']) && !in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ): unset( $taxonomies['cp_recipe_category'] ); endif;
 
 		// Filters
 		add_filter( 'term_link', ['Cooked_Taxonomies', 'term_link_filter'], 10, 3);
@@ -69,9 +69,7 @@ class Cooked_Taxonomies {
 	}
 
 	public static function single_taxonomy_block( $term_id = false, $style = "block", $taxonomy = "cp_recipe_category" ) {
-
-		if ( !$term_id )
-			return;
+		if ( !$term_id ) return;
 
 		$term = get_term( $term_id );
 		if ( !empty($term) ):
@@ -88,12 +86,10 @@ class Cooked_Taxonomies {
 			endif;
 
 		endif;
-
 	}
 
 	public static function card( $term_id = false, $width = false, $hide_image = false, $hide_total = false, $style = false ) {
-		if ( !$term_id )
-			return false;
+		if ( !$term_id ) return false;
 
 		$term = get_term( $term_id );
 		if ( !empty($term) ):
@@ -148,7 +144,6 @@ class Cooked_Taxonomies {
 		endif;
 
 		return false;
-
 	}
 
 	public static function term_link_filter( $url, $term, $taxonomy ) {

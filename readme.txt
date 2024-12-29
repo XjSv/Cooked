@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.7
-Stable tag: 1.8.9
+Tested up to: 6.7.1
+Stable tag: 1.9.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,12 +76,22 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.8.9 includes a new feature to better support custom translations and prevent them from being lost during plugin updates.
+Version 1.8.10 includes improvements to translation handling and a fix for incorrect textdomain loading when using Loco Translate.
 
 == Changelog ==
 
+= 1.9.0 =
+* **TWEAK:** Updated the Drag & Drop library to the latest version.
+* **FIX:** Fixed issue preventing users from adding or editing links within recipe direction text areas.
+* **NEW:** Added pretty URL's to the Browse Recipe page when searching and filtering recipes.
+* **FIX:** Fixed issue with the recipe search when filters are applied.
+* **FIX:** Fixed a couple of PHP v8.3 compatibility issues.
+* **FIX:** Fixed issue with Divi Theme Builder shortcodes not loading.
+
 = 1.8.9 =
-* **TWEAK:** Updated how language translations are loaded to better support custom translations and prevent them from being lost during plugin updates.
+* **NEW:** Improved SEO by dynamically updating the canonical URL on the Browse Recipe page to match active category/tag filters. Supports Rank Math SEO and Yoast SEO.
+* **TWEAK:** Enhanced translation handling to better support custom language files and prevent conflicts.
+* **FIX:** Resolved compatibility issue with Loco Translate plugin that was causing incorrect textdomain loading.
 
 = 1.8.8 =
 * **NEW:** Added option to disable the recipe archive page under Cooked Settings > General > Advanced Settings.

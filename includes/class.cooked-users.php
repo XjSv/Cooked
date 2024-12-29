@@ -54,8 +54,8 @@ class Cooked_Users {
                 $profile_photo_src = wp_get_attachment_image_src( $_user_meta['profile_photo_id'], 'cooked-square' );
                 $profile_photo_src = ( isset($profile_photo_src[0]) && $profile_photo_src[0] ? $profile_photo_src[0] : false );
             } else {
-                $profile_photo = get_avatar( $_user->user_email, 'cooked-square');
-                $profile_photo_src = get_avatar_url( $_user->user_email, 'cooked-square'); // @TODO fix this
+                $profile_photo = get_avatar( $_user->user_email, 700);
+                $profile_photo_src = get_avatar_url( $_user->user_email, ['size' => 700]);
             }
 
             if ( is_array($_user_meta) ) {

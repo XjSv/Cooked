@@ -1,12 +1,11 @@
 ;(function ( $, window, document, undefined ) {
 
-    $('body').on( 'change', '.cooked-widget-conditional', function(){
+    $('body').on( 'change', '.cooked-widget-conditional', function() {
         var thisConditional = $(this);
         cooked_widget_conditional_init( thisConditional );
     });
 
-    $('body').on( 'click', '.cooked-recipe-finder-show', function(e){
-
+    $('body').on( 'click', '.cooked-recipe-finder-show', function(e) {
         e.preventDefault();
         var thisFinderShowLink = $(this),
             thisFinderShow = thisFinderShowLink.attr('id');
@@ -29,10 +28,10 @@
             closeAfterSelect: true,
             openOnFocus: false,
             options: [],
-            onInitialize: function(){
+            onInitialize: function() {
                 $( '#' + thisFinderID + '-selectized' ).focus();
             },
-            onItemAdd: function(){
+            onItemAdd: function() {
                 thisFinder.trigger('change');
             },
             render: {
@@ -64,10 +63,10 @@
                             if (!res.hasOwnProperty(key)) continue;
                             var obj = res[key];
                             for (var prop in obj) {
-                                if(!obj.hasOwnProperty(prop)) continue;
-                                if ( prop == 'id' ){
+                                if (!obj.hasOwnProperty(prop)) continue;
+                                if (prop == 'id') {
                                     var id = obj[prop];
-                                } else if ( prop == 'title' ){
+                                } else if (prop == 'title') {
                                     var title = obj[prop].rendered;
                                 }
                             }
@@ -83,10 +82,9 @@
 
 })(jQuery, window, document);
 
-function cooked_widget_conditional_init( thisConditional ){
-
-    thisConditional_ID = thisConditional.attr('id'),
-    thisConditional_VAL = jQuery( '#' + thisConditional_ID + ' option:selected').val();
+function cooked_widget_conditional_init(thisConditional) {
+    thisConditional_ID = thisConditional.attr('id');
+    thisConditional_VAL = jQuery('#' + thisConditional_ID + ' option:selected').val();
 
     jQuery( 'body' ).find( '[data-condition="' + thisConditional_ID + '"]' ).each(function(){
         var thisValue = jQuery(this).data('value');

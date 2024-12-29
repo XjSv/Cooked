@@ -50,7 +50,7 @@ else:
 	endif;
 
     if ( isset( $recipe_args['tax_query'][0]['terms'][0] ) ):
-        switch( $recipe_args['tax_query'][0]['taxonomy'] ):
+        switch ( $recipe_args['tax_query'][0]['taxonomy'] ):
             case 'cp_recipe_category':
                 $shortcode = 'categories';
             	break;

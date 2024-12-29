@@ -49,6 +49,38 @@ class Cooked_Shortcodes {
         add_shortcode('cooked-ingredients', [$this, 'cooked_ingredients_shortcode'] );
         add_shortcode('cooked-directions', [$this, 'cooked_directions_shortcode'] );
         add_shortcode('cooked-nutrition', [$this, 'cooked_nutrition_shortcode'] );
+
+        // Add preprocessing filter for shortcodes for Elementor, Divi, and other builders compatibility.
+        add_filter('pre_do_shortcode_tag', [$this, 'preprocess_shortcode'], 10, 4);
+    }
+
+    public function preprocess_shortcode($output, $tag, $attr, $m) {
+        // Only process for Cooked shortcodes
+        if (strpos($tag, 'cooked-') === false) {
+            return $output;
+        }
+
+        global $recipe_settings, $post;
+
+        // If recipe settings are empty, try to get them.
+        if (empty($recipe_settings)) {
+            // Try to get recipe settings from current post.
+            $post_id = isset($post->ID) ? $post->ID : false;
+            if ($post_id && get_post_type( $post_id ) === 'cp_recipe' ) {
+                $recipe_settings = Cooked_Recipes::get($post_id, true);
+            } else {
+                // We are in the editor but not on a recipe post type. Maybe a single recipe template?
+                // Uses the first recipe found in the database as a sample.
+                $recipe_settings = Cooked_Recipes::get( false, true );
+            }
+
+            // If still empty and we have a specific recipe ID in attributes, try to get them.
+            if (empty($recipe_settings) && isset($attr['id'])) {
+                $recipe_settings = Cooked_Recipes::get(intval($attr['id']), true);
+            }
+        }
+
+        return $output;
     }
 
     public function cooked_search_shortcode( $atts, $content = null ) {
@@ -401,7 +433,7 @@ class Cooked_Shortcodes {
             'prep_time' => __('Prep Time', 'cooked'),
             'cook_time' => __('Cook Time', 'cooked'),
             'total_time' => __('Total Time', 'cooked'),
-            'taxonomies' => $_cooked_settings['recipe_taxonomies']
+            'taxonomies' => !empty($_cooked_settings['recipe_taxonomies']) ? $_cooked_settings['recipe_taxonomies'] : []
         ]);
 
         if ( $left ):
@@ -481,7 +513,7 @@ class Cooked_Shortcodes {
             elseif ( isset($info_array['right']) && !empty($info_array['right']) ):
 
                 echo '<section class="cooked-right">';
-                    foreach( $info_array['right'] as $name => $val ):
+                    foreach ( $info_array['right'] as $name => $val ):
                         $function = 'cooked_info_' . $name;
                         if ( array_key_exists( $function, $available_methods ) ):
                             $class = ( $available_methods[$function] == 'Cooked_Recipes' ? $this : $available_methods[$function] );
@@ -494,7 +526,7 @@ class Cooked_Shortcodes {
 
             else:
 
-                foreach( $info_array as $name => $val ):
+                foreach ( $info_array as $name => $val ):
                     $function = 'cooked_info_' . $name;
                     if ( array_key_exists( $function, $available_methods ) ):
                         $class = ( $available_methods[$function] == 'Cooked_Recipes' ? $this : $available_methods[$function] );
@@ -514,7 +546,7 @@ class Cooked_Shortcodes {
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_cooked_donut']);
             return '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
-            //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @todo Fix this
+            //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
         endif;
     }
 
@@ -604,7 +636,7 @@ class Cooked_Shortcodes {
     public static function cooked_info_prep_time( $recipe ) {
         global $_cooked_settings;
 
-        if (in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])) {
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])) {
             $prep_time = isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0;
             echo $prep_time ? '<span class="cooked-prep-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Prep Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $prep_time ) . '</span>' : '';
         }
@@ -613,7 +645,7 @@ class Cooked_Shortcodes {
     public static function cooked_info_cook_time( $recipe ) {
         global $_cooked_settings;
 
-        if (in_array('timing_cook', $_cooked_settings['recipe_info_display_options'])) {
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_cook', $_cooked_settings['recipe_info_display_options'])) {
             $cook_time = isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0;
             echo $cook_time ? '<span class="cooked-cook-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . __('Cook Time','cooked') . '</strong>' . Cooked_Measurements::time_format( $cook_time ) . '</span>' : '';
         }
@@ -622,7 +654,7 @@ class Cooked_Shortcodes {
     public static function cooked_info_total_time( $recipe ) {
         global $_cooked_settings;
 
-        if (in_array('timing_total',$_cooked_settings['recipe_info_display_options'])) {
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_total',$_cooked_settings['recipe_info_display_options'])) {
             $total_time = isset($recipe['total_time']) ? esc_html( $recipe['total_time'] ) : 0;
 
             if ( $total_time ) {
@@ -644,14 +676,14 @@ class Cooked_Shortcodes {
 
         $clickable = isset($_cooked_settings['advanced']) && !empty($_cooked_settings['advanced']) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ? false : true;
 
-        if (in_array('taxonomies', $_cooked_settings['recipe_info_display_options'])):
+        if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('taxonomies', $_cooked_settings['recipe_info_display_options'])):
 
             global $recipe_terms_list;
             $recipe_terms_list = '';
 
             do_action( 'cooked_info_taxonomies_shortcode_before', $recipe_settings );
 
-            if (in_array('cp_recipe_category', $_cooked_settings['recipe_taxonomies'])):
+            if (!empty($_cooked_settings['recipe_taxonomies']) && in_array('cp_recipe_category', $_cooked_settings['recipe_taxonomies'])):
                 if ( $clickable ):
                     $recipe_terms_list .= get_the_term_list( $recipe_settings['id'], 'cp_recipe_category', '<span class="cooked-taxonomy cooked-category"><strong class="cooked-meta-title">' . __('Category','cooked') . '</strong>', ', ', '</span>' );
                 else:
@@ -811,13 +843,13 @@ class Cooked_Shortcodes {
     }
 
     public function cooked_nutrition_shortcode($atts, $content = null) {
+        global $_cooked_settings, $recipe_settings;
+
         // Shortcode Attributes
         $atts = shortcode_atts([
             'id' => false,
             'float' => false,
         ], $atts);
-
-        global $_cooked_settings, $recipe_settings;
 
         if ( isset( $atts['id'] ) && $atts['id'] ):
             $recipe_settings = Cooked_Recipes::get( intval( $atts['id'] ), true );

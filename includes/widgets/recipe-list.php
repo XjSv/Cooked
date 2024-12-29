@@ -3,10 +3,11 @@
 class Cooked_Widget_Recipe_List extends WP_Widget {
 
     public function __construct() {
-        $widget_ops = array(
+        $widget_ops = [
             'classname' => 'cooked_widget_recipe_list',
             'description' => 'Display a list of recipes.',
-        );
+        ];
+
         parent::__construct( 'cooked_widget_recipe_list', 'Cooked - Recipe List', $widget_ops );
     }
 
@@ -17,29 +18,29 @@ class Cooked_Widget_Recipe_List extends WP_Widget {
             echo wp_kses_post( $args['before_title'] ) . apply_filters( 'widget_title', $instance['title'] ) . wp_kses_post( $args['after_title'] );
         }
 
-        $recipes = ( isset($instance['orderby']) && $instance['orderby'] == 'ids' && isset($instance['recipes']) && !empty($instance['recipes']) ? ' recipes="' . implode( ',', $instance['recipes'] ) . '"' : '' );
-        $orderby = ( !$recipes && isset($instance['orderby']) && $instance['orderby'] ? ' orderby="' . esc_attr( $instance['orderby'] ) . '"' : '' );
-        $show = ( !$recipes && isset($instance['show']) && $instance['show'] ? ' show="' . esc_attr( $instance['show'] ) . '"' : '' );
-        $width = ( isset($instance['width']) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '' );
-        $hide_image = ( isset($instance['hide_image']) && $instance['hide_image'] ? ' hide_image="true"' : '' );
-        $hide_author = ( isset($instance['hide_author']) && $instance['hide_author'] ? ' hide_author="true"' : '' );
+        $recipes = isset($instance['orderby']) && $instance['orderby'] == 'ids' && isset($instance['recipes']) && !empty($instance['recipes']) ? ' recipes="' . implode( ',', $instance['recipes'] ) . '"' : '';
+        $orderby = !$recipes && isset($instance['orderby']) && $instance['orderby'] ? ' orderby="' . esc_attr( $instance['orderby'] ) . '"' : '';
+        $show = !$recipes && isset($instance['show']) && $instance['show'] ? ' show="' . esc_attr( $instance['show'] ) . '"' : '';
+        $width = isset($instance['width']) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '';
+        $hide_image = isset($instance['hide_image']) && $instance['hide_image'] ? ' hide_image="true"' : '';
+        $hide_author = isset($instance['hide_author']) && $instance['hide_author'] ? ' hide_author="true"' : '';
+
         echo do_shortcode( '[cooked-recipe-list' . wp_kses_post( $orderby . $show . $recipes . $width . $hide_image . $hide_author ) . ']' );
         echo wp_kses_post( $args['after_widget'] );
 
     }
 
     public function form( $instance ) {
-
-        $title = ( !empty( $instance['title'] ) ? $instance['title'] : false );
-        $orderby = ( !empty( $instance['orderby'] ) ? $instance['orderby'] : 'date' );
-        $show = ( !empty( $instance['show'] ) ? $instance['show'] : 5 );
-        $recipes = ( !empty( $instance['recipes'] ) ? $instance['recipes'] : '' );
-        $width = ( !empty( $instance['width'] ) ? $instance['width'] : '100%' );
-        $hide_image = ( isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false );
+        $title = !empty( $instance['title'] ) ? $instance['title'] : false;
+        $orderby = !empty( $instance['orderby'] ) ? $instance['orderby'] : 'date';
+        $show = !empty( $instance['show'] ) ? $instance['show'] : 5;
+        $recipes = !empty( $instance['recipes'] ) ? $instance['recipes'] : '';
+        $width = !empty( $instance['width'] ) ? $instance['width'] : '100%';
+        $hide_image = isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false;
         $hide_author = ( isset( $instance['hide_author'] ) && $instance['hide_author'] ? true : false );
 
-        $recipes_style = ( $orderby == 'date' ? ' style="display:none;' : '' );
-        $show_style = ( $orderby == 'ids' ? ' style="display:none;' : '' );
+        $recipes_style = $orderby == 'date' ? ' style="display:none;' : '';
+        $show_style = $orderby == 'ids' ? ' style="display:none;' : '';
 
         ?>
 
@@ -97,15 +98,14 @@ class Cooked_Widget_Recipe_List extends WP_Widget {
     }
 
     public function update( $new_instance, $old_instance ) {
-
-        $instance = array();
-        $instance['title'] = ( !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '' );
-        $instance['orderby'] = ( !empty( $new_instance['orderby'] ) ? wp_strip_all_tags( $new_instance['orderby'] ) : 'date' );
-        $instance['width'] = ( !empty( $new_instance['width'] ) ? wp_strip_all_tags( $new_instance['width'] ) : '100%' );
-        $instance['show'] = ( !empty( $new_instance['show'] ) ? wp_strip_all_tags( $new_instance['show'] ) : 5 );
-        $instance['recipes'] = ( !empty( $new_instance['recipes'] ) ? $new_instance['recipes'] : '' );
-        $instance['hide_image'] = ( !empty( $new_instance['hide_image'] ) ? wp_strip_all_tags( $new_instance['hide_image'] ) : false );
-        $instance['hide_author'] = ( !empty( $new_instance['hide_author'] ) ? wp_strip_all_tags( $new_instance['hide_author'] ) : false );
+        $instance = [];
+        $instance['title'] = !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+        $instance['orderby'] = !empty( $new_instance['orderby'] ) ? wp_strip_all_tags( $new_instance['orderby'] ) : 'date';
+        $instance['width'] = !empty( $new_instance['width'] ) ? wp_strip_all_tags( $new_instance['width'] ) : '100%';
+        $instance['show'] = !empty( $new_instance['show'] ) ? wp_strip_all_tags( $new_instance['show'] ) : 5;
+        $instance['recipes'] = !empty( $new_instance['recipes'] ) ? $new_instance['recipes'] : '';
+        $instance['hide_image'] = !empty( $new_instance['hide_image'] ) ? wp_strip_all_tags( $new_instance['hide_image'] ) : false;
+        $instance['hide_author'] = !empty( $new_instance['hide_author'] ) ? wp_strip_all_tags( $new_instance['hide_author'] ) : false;
         return $instance;
     }
 

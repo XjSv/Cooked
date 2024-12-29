@@ -177,26 +177,8 @@ class Cooked_Recipes {
     public function check_recipe_query() {
         global $_cooked_settings, $recipe_query;
 
-        // Taxonomies: 'cp_recipe_category', 'cp_recipe_cooking_method', 'cp_recipe_cuisine', 'cp_recipe_tags', 'cp_recipe_diet'
-
         if ( !isset($recipe_query['cp_recipe_category']) ):
             $recipe_query['cp_recipe_category'] = ( isset($_GET['cp_recipe_category']) && $_GET['cp_recipe_category'] ? intval($_GET['cp_recipe_category']) : ( isset($_cooked_settings['browse_default_cp_recipe_category']) && $_cooked_settings['browse_default_cp_recipe_category'] ? $_cooked_settings['browse_default_cp_recipe_category'] : false ) );
-        endif;
-
-        if ( !isset($recipe_query['cp_recipe_cooking_method']) ):
-            $recipe_query['cp_recipe_cooking_method'] = ( isset($_GET['cp_recipe_cooking_method']) && $_GET['cp_recipe_cooking_method'] ? intval($_GET['cp_recipe_cooking_method']) : ( isset($_cooked_settings['browse_default_cp_recipe_cooking_method']) && $_cooked_settings['browse_default_cp_recipe_cooking_method'] ? $_cooked_settings['browse_default_cp_recipe_cooking_method'] : false ) );
-        endif;
-
-        if ( !isset($recipe_query['cp_recipe_cuisine']) ):
-            $recipe_query['cp_recipe_cuisine'] = ( isset($_GET['cp_recipe_cuisine']) && $_GET['cp_recipe_cuisine'] ? intval($_GET['cp_recipe_cuisine']) : ( isset($_cooked_settings['browse_default_cp_recipe_cuisine']) && $_cooked_settings['browse_default_cp_recipe_cuisine'] ? $_cooked_settings['browse_default_cp_recipe_cuisine'] : false ) );
-        endif;
-
-        if ( !isset($recipe_query['cp_recipe_tags']) ):
-            $recipe_query['cp_recipe_tags'] = ( isset($_GET['cp_recipe_tags']) && $_GET['cp_recipe_tags'] ? intval($_GET['cp_recipe_tags']) : ( isset($_cooked_settings['browse_default_cp_recipe_tags']) && $_cooked_settings['browse_default_cp_recipe_tags'] ? $_cooked_settings['browse_default_cp_recipe_tags'] : false ) );
-        endif;
-
-        if ( !isset($recipe_query['cp_recipe_diet']) ):
-            $recipe_query['cp_recipe_diet'] = ( isset($_GET['cp_recipe_diet']) && $_GET['cp_recipe_diet'] ? intval($_GET['cp_recipe_diet']) : ( isset($_cooked_settings['browse_default_cp_recipe_diet']) && $_cooked_settings['browse_default_cp_recipe_diet'] ? $_cooked_settings['browse_default_cp_recipe_diet'] : false ) );
         endif;
     }
 
@@ -204,7 +186,7 @@ class Cooked_Recipes {
         if ( $title = $q->get( '_cooked_title' ) ):
             add_filter( 'get_meta_sql', function( $sql ) use ( $title ) {
 
-                global $wpdb,$cooked_modified_where;
+                global $wpdb, $cooked_modified_where;
 
                 if ( $cooked_modified_where ) return $sql;
                 $cooked_modified_where = 1;
@@ -212,23 +194,22 @@ class Cooked_Recipes {
                 // Modified WHERE
                 $sql['where'] = sprintf(
                     " AND ( %s OR %s ) ",
-                    apply_filters( 'cooked_query_where_filter', $wpdb->prepare( "{$wpdb->posts}.post_title like '%%%s%%'", esc_like( $title ) ) ),
+                    apply_filters( 'cooked_query_where_filter', $wpdb->prepare( "{$wpdb->posts}.post_title like '%%%s%%'", $wpdb->esc_like( $title ) ) ),
                     mb_substr( $sql['where'], 5, mb_strlen( $sql['where'] ) )
                 );
 
                 return $sql;
             });
         endif;
-
     }
 
     public static function recipe_list( $orderby = 'date', $show = 5, $recipes = false, $width = false, $hide_image = false, $hide_author = false ) {
         global $_cooked_settings;
 
-        $width = ( !$width ? '100%' : $width );
+        $width = !$width ? '100%' : $width;
         $pixel_width = stristr( $width, 'px', true );
         $percent_width = stristr( $width, '%', true );
-        $width = ( $pixel_width ? $pixel_width . 'px' : ( $percent_width ? $percent_width . '%' : ( is_numeric( $width ) ? $width . 'px' : '100%' ) ) );
+        $width = $pixel_width ? $pixel_width . 'px' : ( $percent_width ? $percent_width . '%' : ( is_numeric( $width ) ? $width . 'px' : '100%' ) );
 
         $args = [
             'post_type' => 'cp_recipe',
@@ -238,19 +219,18 @@ class Cooked_Recipes {
             'order' => 'DESC'
         ];
 
-        if ( !empty($recipes) ):
-
+        if ( !empty($recipes) ) {
             $args['posts_per_page'] = -1;
             $args['orderby'] = 'post__in';
             $args['order'] = 'ASC';
             $args['post__in'] = $recipes;
-
-        endif;
+        }
 
         // Filter out the pending/draft recipes.
         $args = apply_filters( 'cooked_recipe_public_query_filters', $args );
 
         $recipes = Cooked_Recipes::get( $args );
+
         if ( isset($recipes['raw']) ): unset( $recipes['raw'] ); endif;
         $recipe_list = [];
 
@@ -411,6 +391,7 @@ class Cooked_Recipes {
         global $pagenow;
         $taxonomies = apply_filters( 'cooked_active_taxonomies', ['cp_recipe_category'] );
         $q_vars = &$query->query_vars;
+
         foreach ( $taxonomies as $taxonomy ):
             if ( $pagenow == 'edit.php' && isset($q_vars['post_type']) && $q_vars['post_type'] == 'cp_recipe' && isset($q_vars[$taxonomy]) && is_numeric($q_vars[$taxonomy]) && $q_vars[$taxonomy] != 0 ):
                 $term = get_term_by('id', $q_vars[$taxonomy], $taxonomy);
@@ -420,7 +401,7 @@ class Cooked_Recipes {
     }
 
     public static function list_view( $list_atts = false ) {
-        global $wp_query, $recipe_query, $atts, $_cooked_settings, $recipes, $recipe_query, $recipe_args, $current_recipe_page;
+        global $wp_query, $recipe_query, $atts, $_cooked_settings, $recipes, $recipe_args, $current_recipe_page;
 
         // Get the attributes for this view
         $atts = array_change_key_case( (array) $list_atts, CASE_LOWER );;
@@ -428,14 +409,14 @@ class Cooked_Recipes {
         $ls_class = 'Cooked_Recipes';
 
         // Change the recipe layout
-        if ( $atts['layout'] ):
+        if ( $atts['layout'] ) {
             $recipe_list_style = apply_filters( 'cooked_recipe_list_style', [ 'grid' => 'Cooked_Recipes' ], $atts['layout'] );
             $list_style = esc_html( key( $recipe_list_style ) );
             $ls_method = 'list_style_' . $list_style;
             $ls_class = current( $recipe_list_style );
 
             $_cooked_settings['recipe_list_style'] = $list_style;
-        endif;
+        }
 
         $recipe_query = $wp_query->query;
         $tax_query = [];
@@ -484,10 +465,12 @@ class Cooked_Recipes {
 
         endif;
 
-        $sorting_type = ( isset($_GET['cooked_browse_sort_by']) && $_GET['cooked_browse_sort_by'] ? sanitize_key($_GET['cooked_browse_sort_by']) : ( isset($_cooked_settings['browse_default_sort']) && $_cooked_settings['browse_default_sort'] ? $_cooked_settings['browse_default_sort'] : 'date_desc' ) );
-        $sorting_types = explode( '_', $sorting_type );
+        $sorting_type = get_query_var('cooked_browse_sort_by', isset($_cooked_settings['browse_default_sort']) && $_cooked_settings['browse_default_sort'] ? $_cooked_settings['browse_default_sort'] : 'date_desc' );
+        $sorting_type = sanitize_key($sorting_type);
+        $sorting_types = explode('_', $sorting_type);
 
-        $text_search = ( isset($_GET['cooked_search_s']) && $_GET['cooked_search_s'] ? esc_html($_GET['cooked_search_s']) : '' );
+        $text_search = get_query_var('cooked_search_s', '');
+        $text_search = esc_html($text_search);
         $recipes_per_page = ( $atts['show'] ? $atts['show'] : ( isset($_cooked_settings['recipes_per_page']) && $_cooked_settings['recipes_per_page'] ? $_cooked_settings['recipes_per_page'] : get_option( 'posts_per_page' ) ) );
         $current_recipe_page = Cooked_Recipes::current_page();
 
@@ -510,7 +493,7 @@ class Cooked_Recipes {
 
         if ( $text_search ):
             // Replace [+] [,] [;] with spaces
-            $prep_text = str_replace(array('+',',',';'),' ',$text_search);
+            $prep_text = str_replace(['+', ',', ';'], ' ', $text_search);
 
             // Replace duplicate spaces
             $prep_text = preg_replace('/\s+/', ' ', $prep_text);
@@ -520,7 +503,7 @@ class Cooked_Recipes {
 
             if ( !empty($words) ):
                 $meta_query['relation'] = 'AND';
-                foreach( $words as $word ):
+                foreach ( $words as $word ):
                     $meta_query[] = [
                         'key' => '_recipe_settings',
                         'value' => $word,
@@ -931,13 +914,14 @@ class Cooked_Recipes {
         $taxonomy_search_fields = '';
 
         if ( isset($recipe_args['tax_query']) ):
-            foreach( $recipe_args['tax_query'] as $query ):
+            foreach ( $recipe_args['tax_query'] as $query ):
                 if ( isset($query['taxonomy']) && isset($query['terms']) ):
                     $filters_set[$query['taxonomy']] = implode( ',', $query['terms'] );
                 endif;
             endforeach;
+
             if ( isset($filters_set) ):
-                foreach( $filters_set as $taxonomy => $filter ):
+                foreach ( $filters_set as $taxonomy => $filter ):
                     $this_tax = get_term_by( 'slug', $filter, $taxonomy );
                     $this_tax = ( $this_tax ? $this_tax : get_term_by( 'id', $filter, $taxonomy ) );
                     $filters_set[$taxonomy] = $this_tax->term_id;
@@ -980,7 +964,7 @@ class Cooked_Recipes {
                         echo '<span class="cooked-tax-column-title">' . __('Categories','cooked') . '</span>';
                         echo '<div class="cooked-tax-scrollable">';
                             echo ( $view_all_recipes_url ? '<a href="' . esc_url( $view_all_recipes_url ) . '">' . __( 'All Categories','cooked' ) . '</a>' : '' );
-                            foreach( $terms_array as $key => $val ):
+                            foreach ( $terms_array as $key => $val ):
                                 if ( $key ):
                                     $term = get_term( $key );
                                     $term_link = ( !empty($term) ? get_term_link( $term ) : false );
@@ -989,7 +973,7 @@ class Cooked_Recipes {
                                     $total_taxonomies++;
                                     $sub_terms_array = Cooked_Settings::terms_array( 'cp_recipe_category', false, false, true, false, $key );
                                     if ( !empty($sub_terms_array) ):
-                                        foreach( $sub_terms_array as $sub_key => $sub_val ):
+                                        foreach ( $sub_terms_array as $sub_key => $sub_val ):
                                             if ( $sub_key ):
                                                 $sub_term = get_term( $sub_key );
                                                 $sub_term_link = ( !empty($sub_term) ? get_term_link( $sub_term ) : false );
@@ -1027,13 +1011,10 @@ class Cooked_Recipes {
             $taxonomy_search_fields = false;
         endif;
 
-        if ( !isset( $recipe_args['tax_query'] ) || !get_option('permalink_structure') ):
-            $page_id = ( $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID() );
-            $form_redirect = get_permalink( $page_id );
-        else:
-            $form_redirect = '';
-            $page_id = false;
-        endif;
+        $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
+        $form_redirect = get_permalink($page_id);
+
+        $cooked_search_s = get_query_var('cooked_search_s', '');
 
         ob_start();
 
@@ -1041,20 +1022,20 @@ class Cooked_Recipes {
 
             echo '<form action="' . esc_url( $form_redirect ) . '" method="get">';
 
+                echo '<input type="hidden" name="page_id" value="' . intval( $page_id ) . '">';
+                if ( isset($recipe_args['tax_query'][0]['taxonomy']) ):
+                    echo '<input type="hidden" name="' . esc_attr( $recipe_args['tax_query'][0]['taxonomy'] ) . '" value="' . esc_attr( $recipe_args['tax_query'][0]['terms'][0] ) . '">';
+                endif;
+
                 echo '<div class="cooked-fields-wrap cooked-' . esc_attr( $tax_col_count ) . '-search-fields">';
 
-                    echo ( !$options['hide_browse'] && $taxonomy_search_fields ? $taxonomy_search_fields : '' );
+                    echo !$options['hide_browse'] && $taxonomy_search_fields ? $taxonomy_search_fields : '';
 
-                    echo '<input class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( isset($_GET['cooked_search_s']) && $_GET['cooked_search_s'] ? Cooked_Functions::sanitize_text_field( $_GET['cooked_search_s'] ) : '' ) . '" placeholder="' . __('Find a recipe...','cooked') . '" />';
+                    echo '<input class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( !empty($cooked_search_s) ? Cooked_Functions::sanitize_text_field( $cooked_search_s ) : '' ) . '" placeholder="' . __('Find a recipe...','cooked') . '" />';
 
                     echo '<a href="#" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search"></i></a>';
 
                 echo '</div>';
-
-                echo '<input type="hidden" name="page_id" value="' . intval( $page_id ) . '">';
-                if ( isset($recipe_args['tax_query'][0]['taxonomy']) && is_front_page() || isset($recipe_args['tax_query'][0]['taxonomy']) && !get_option('permalink_structure') ):
-                    echo '<input type="hidden" name="' . esc_attr( $recipe_args['tax_query'][0]['taxonomy'] ) . '" value="' . esc_attr( $recipe_args['tax_query'][0]['terms'][0] ) . '">';
-                endif;
 
                 if ( isset( $recipe_args['orderby'] ) && is_array( $recipe_args['orderby'] ) ):
                     $sorting_type = key($recipe_args['orderby']) . '_' . current( $recipe_args['orderby'] );
@@ -1084,7 +1065,7 @@ class Cooked_Recipes {
                 if ( !$options['hide_sorting'] ):
 
                     echo '<span class="cooked-sortby-wrap"><select class="cooked-sortby-select" name="cooked_browse_sort_by">';
-                        foreach( $sorting_types as $value => $type ):
+                        foreach ( $sorting_types as $value => $type ):
                             echo '<option value="' . esc_attr( $value ) . '"' . ( $sorting_type == $type['slug'] ? ' selected' : '' ) . '>' . esc_attr( $type['name'] ) . '</option>';
                         endforeach;
                     echo '</select></span>';

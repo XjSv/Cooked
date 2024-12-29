@@ -6,7 +6,7 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author: 		Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.8.9
+Version: 		1.9.0
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.8.9' );
+define( 'COOKED_VERSION', '1.9.0' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -188,7 +188,7 @@ final class Cooked_Plugin {
      * Cooked Rank Math SEO Object.
      *
      * @var object|Cooked_RankMathSEO
-     * @since 1.0.0
+     * @since 1.8.9
      */
     public $rankmathseo;
 
@@ -196,9 +196,17 @@ final class Cooked_Plugin {
      * Cooked Yoast SEO Object.
      *
      * @var object|Cooked_YoastSEO
-     * @since 1.0.0
+     * @since 1.8.9
      */
     public $yoastseo;
+
+    /**
+     * Cooked Extra Object.
+     *
+     * @var object|Cooked_Extra
+     * @since 1.8.7
+     */
+    public $extra;
 
     /**
      * Main Cooked_Plugin Instance.

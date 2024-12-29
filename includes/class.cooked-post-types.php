@@ -172,6 +172,7 @@ class Cooked_Post_Types {
 
     public static function add_query_vars_filter( $vars ) {
         $vars[] = 'servings';
+
         return $vars;
     }
 
@@ -241,7 +242,6 @@ class Cooked_Post_Types {
         $parent_page_slug = ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? ltrim( untrailingslashit( str_replace( home_url(), '', get_permalink( $_cooked_settings['browse_page'] ) ) ), '/' ) : false );
 
         if (!empty($_GET['settings-updated'])) {
-
             // Recipe Permalink
             $permalink_parts = explode( '/', $_cooked_settings['recipe_permalink'] );
             if ( isset( $permalink_parts[1] ) ):
@@ -284,9 +284,9 @@ class Cooked_Post_Types {
                 'recipe_category_permalink' => (!$_cooked_settings['recipe_category_permalink'] ? 'recipe-category' : $recipe_category_permalink)
             ]);
 
-            foreach ( $taxonomy_settings_update as $setting_key => $setting_value ):
+            foreach ( $taxonomy_settings_update as $setting_key => $setting_value ) {
                 $_cooked_settings[ $setting_key ] = $setting_value;
-            endforeach;
+            }
 
             update_option( 'cooked_settings', $_cooked_settings );
             update_option( 'cooked_settings_saved', true );
@@ -296,21 +296,110 @@ class Cooked_Post_Types {
 
         global $cooked_taxonomies_for_menu;
 
-        if ( !empty($_cooked_taxonomies) ):
-            foreach ( $_cooked_taxonomies as $slug => $args ):
+        if ( !empty($_cooked_taxonomies) ) {
+            foreach ( $_cooked_taxonomies as $slug => $args ) {
                 register_taxonomy( $slug, ['cp_recipe'], $args );
-                if ( $parent_page_slug ):
-                    add_rewrite_rule('^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/page/([^/]*)/?', 'index.php?page_id='.$_cooked_settings['browse_page'].'&paged=$matches[2]&'.$slug.'=$matches[1]', 'top');
-                    add_rewrite_rule('^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/?', 'index.php?page_id='.$_cooked_settings['browse_page'].'&'.$slug.'=$matches[1]', 'top');
-                endif;
+
+                if ( $parent_page_slug ) {
+                    // Taxonomy search sort pagination
+                    add_rewrite_rule(
+                        '^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/search/([^/]*)/sort/([^/]*)/page/([^/]*)/?',
+                        'index.php?page_id=' . $_cooked_settings['browse_page'] . '&' . $slug . '=$matches[1]&cooked_search_s=$matches[2]&cooked_browse_sort_by=$matches[3]&paged=$matches[4]',
+                        'top'
+                    );
+
+                    // Taxonomy search sort
+                    add_rewrite_rule(
+                        '^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/search/([^/]*)/sort/([^/]*)/?',
+                        'index.php?page_id=' . $_cooked_settings['browse_page'] . '&' . $slug . '=$matches[1]&cooked_search_s=$matches[2]&cooked_browse_sort_by=$matches[3]',
+                        'top'
+                    );
+
+                    // Taxonomy sort pagination
+                    add_rewrite_rule(
+                        '^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/sort/([^/]*)/page/([^/]*)/?',
+                        'index.php?page_id=' . $_cooked_settings['browse_page'] . '&' . $slug . '=$matches[1]&cooked_browse_sort_by=$matches[2]&paged=$matches[3]',
+                        'top'
+                    );
+
+                    // Taxonomy sort
+                    add_rewrite_rule(
+                        '^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/sort/([^/]*)/?',
+                        'index.php?page_id=' . $_cooked_settings['browse_page'] . '&' . $slug . '=$matches[1]&cooked_browse_sort_by=$matches[2]',
+                        'top'
+                    );
+
+                    // Taxonomy search
+                    add_rewrite_rule(
+                        '^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/search/([^/]*)/?',
+                        'index.php?page_id=' . $_cooked_settings['browse_page'] . '&' . $slug . '=$matches[1]&cooked_search_s=$matches[2]',
+                        'top'
+                    );
+
+                    // Taxonomy pagination
+                    add_rewrite_rule(
+                        '^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/page/([^/]*)/?',
+                        'index.php?page_id=' . $_cooked_settings['browse_page'] . '&paged=$matches[2]&' . $slug . '=$matches[1]',
+                        'top'
+                    );
+
+                    // Taxonomy
+                    add_rewrite_rule(
+                        '^' . $parent_page_slug . '/' . $args['rewrite']['slug'] . '/([^/]*)/?',
+                        'index.php?page_id=' . $_cooked_settings['browse_page'] . '&' . $slug . '=$matches[1]',
+                        'top'
+                    );
+                }
+
+                // Add additional rewrite tags for your query variables.
+                add_rewrite_tag('%' . $slug . '%', '([^&]+)');
+
                 $cooked_taxonomies_for_menu[] = [
                     'menu' => 'cooked_recipes_menu',
                     'name' => $args['labels']['menu_name'],
                     'capability' => 'manage_categories',
                     'url' => 'edit-tags.php?taxonomy=' . $slug . '&post_type=cp_recipe'
                 ];
-            endforeach;
-        endif;
+            }
+        }
+
+        // Search sort
+        add_rewrite_rule(
+            '^' . $parent_page_slug . '/search/([^/]*)/sort/([^/]*)/?',
+            'index.php?page_id=' . $_cooked_settings['browse_page'] . '&cooked_search_s=$matches[1]&cooked_browse_sort_by=$matches[2]',
+            'top'
+        );
+
+        // Sort
+        add_rewrite_rule(
+            '^' . $parent_page_slug . '/sort/([^/]*)/?',
+            'index.php?page_id=' . $_cooked_settings['browse_page'] . '&cooked_browse_sort_by=$matches[1]',
+            'top'
+        );
+
+        // Search
+        add_rewrite_rule(
+            '^' . $parent_page_slug . '/search/([^/]*)/?',
+            'index.php?page_id=' . $_cooked_settings['browse_page'] . '&cooked_search_s=$matches[1]',
+            'top'
+        );
+
+        // Pagination
+        add_rewrite_rule(
+            '^' . $parent_page_slug . '/page/([^/]*)/?',
+            'index.php?page_id=' . $_cooked_settings['browse_page'] . '&paged=$matches[1]',
+            'top'
+        );
+
+        // Plain
+        add_rewrite_rule(
+            '^' . $parent_page_slug . '/?',
+            'index.php?page_id=' . $_cooked_settings['browse_page'],
+            'top'
+        );
+
+        add_rewrite_tag('%cooked_search_s%', '([^&]+)');
+        add_rewrite_tag('%cooked_browse_sort_by%', '([^&]+)');
 
         $post_types = self::get();
         if ( !empty($post_types) ) {
@@ -331,7 +420,7 @@ class Cooked_Post_Types {
 
         $recipe_permalink = isset($_cooked_settings['recipe_permalink']) && $_cooked_settings['recipe_permalink'] ? $_cooked_settings['recipe_permalink'] : 'recipes';
         $public_recipes = true;
-        $has_archive_slug = sanitize_title_with_dashes( __('Recipe Archive','cooked') );
+        $has_archive_slug = sanitize_title_with_dashes( __('Recipe Archive', 'cooked') );
         $exclude_from_search = false;
 
         if ( !isset($_GET['print']) && isset( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ) {

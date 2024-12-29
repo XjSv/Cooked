@@ -54,6 +54,8 @@ class Cooked_Admin_Enqueues {
     }
 
     public function admin_enqueues( $hook ) {
+        global $_cooked_settings;
+
         $cooked_admin_hooks = [
             'index.php',
             'post-new.php',
@@ -108,6 +110,7 @@ class Cooked_Admin_Enqueues {
 
                 // Gonna need jQuery
                 wp_enqueue_media();
+                wp_enqueue_editor();
                 wp_enqueue_script( 'jquery' );
                 wp_enqueue_script( 'wp-color-picker' );
                 wp_enqueue_script( 'jquery-ui-core' );
@@ -119,6 +122,13 @@ class Cooked_Admin_Enqueues {
                 wp_enqueue_style( 'cooked-switchery', COOKED_URL . 'assets/admin/css/switchery/switchery.min.css', [], COOKED_VERSION );
                 wp_enqueue_script( 'cooked-switchery', COOKED_URL . 'assets/admin/js/switchery/switchery.min.js', [], COOKED_VERSION, true );
                 wp_enqueue_script( 'cooked-vue', COOKED_URL . 'assets/admin/js/vue/vue' . $min . '.js', [], COOKED_VERSION, false );
+
+                $wp_editor_roles_allowed = false;
+                if (is_user_logged_in()) {
+                    $user = wp_get_current_user();
+                    $user_role = $user->roles[0];
+                    $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_wp_editor_roles'] ) ? true : false;
+                }
 
                 $cooked_js_vars = [
                     'ajax_url' => admin_url('admin-ajax.php'),
@@ -138,6 +148,14 @@ class Cooked_Admin_Enqueues {
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
                     'i18n_confirm_import_recipes' => __('Please confirm that you are ready to import all recipes.', 'cooked'),
+                    'permalink_structure' => get_option('permalink_structure'),
+                    'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
+                    'browse_recipes_slug' => !isset($_cooked_settings['browse_recipes_slug']) ? 'browse-recipes' : $_cooked_settings['browse_recipes_slug'],
+                    'recipe_category_slug' => !isset($_cooked_settings['recipe_category_permalink']) ? 'recipe-category' : $_cooked_settings['recipe_category_permalink'],
+                    'recipe_cooking_method_slug' => !isset($_cooked_settings['recipe_cooking_method_permalink']) ? 'cooking-method' : $_cooked_settings['recipe_cooking_method_permalink'],
+                    'recipe_cuisine_slug' => !isset($_cooked_settings['recipe_cuisine_permalink']) ? 'cuisine' : $_cooked_settings['recipe_cuisine_permalink'],
+                    'recipe_tags_slug' => !isset($_cooked_settings['recipe_tag_permalink']) ? 'recipe-tag' : $_cooked_settings['recipe_tag_permalink'],
+                    'recipe_diet_slug' => !isset($_cooked_settings['recipe_diet_permalink']) ? 'diet' : $_cooked_settings['recipe_diet_permalink'],
                 ];
 
                 // Cooked Admin Style Assets
@@ -156,8 +174,6 @@ class Cooked_Admin_Enqueues {
                 wp_localize_script('cooked-migration', 'cooked_js_vars', $cooked_js_vars );
                 wp_enqueue_script('cooked-functions');
                 wp_enqueue_script('cooked-migration');
-
-                wp_enqueue_editor();
             endif;
         }
     }

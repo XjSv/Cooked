@@ -77,7 +77,7 @@ class Cooked_Settings {
                     foreach ( $tab['fields'] as $name => $field ) {
                         if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) continue;
 
-                        if ( $cooked_settings_saved && $version_compare >= 0 ) {
+                        if ( !$cooked_settings_saved || ( $cooked_settings_saved && $version_compare >= 0 ) ) {
                             if ( $field['type'] == 'checkboxes' ) {
                                 $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : [] );
                             } else {
@@ -131,7 +131,7 @@ class Cooked_Settings {
                     'browse_page' => [
                         'title' => __('Browse/Search Recipes Page', 'cooked'),
                         /* translators: a description on how to add the [cooked-browse] shortcode to a page */
-                        'desc' => sprintf(__('Create a page with the %s shortcode on it, then choose it from this dropdown.', 'cooked'), '[cooked-browse]'),
+                        'desc' => sprintf(__('Create a page with the %s shortcode on it, then choose it from this dropdown.', 'cooked'), '<code>[cooked-browse]</code>'),
                         'type' => 'select',
                         'default' => 0,
                         'options' => $pages_array

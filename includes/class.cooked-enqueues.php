@@ -29,12 +29,16 @@ class Cooked_Enqueues {
     public function enqueues($hook) {
         global $_cooked_settings;
 
+        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+        $browse_page = get_post($browse_page_id);
+        $browse_recipes_slug = !empty($browse_page) ? $browse_page->post_name : '';
+
         $cooked_js_vars = [
             'ajax_url' => admin_url('admin-ajax.php'),
             'timer_sound' => apply_filters('cooked_timer_sound_mp3', COOKED_URL . 'assets/audio/ding.mp3'),
             'i18n_timer' => __('Timer', 'cooked'),
             'permalink_structure' => get_option('permalink_structure'),
-            'browse_recipes_slug' => !isset($_cooked_settings['browse_recipes_slug']) ? 'browse-recipes' : $_cooked_settings['browse_recipes_slug'],
+            'browse_recipes_slug' => $browse_recipes_slug,
             'recipe_category_slug' => !isset($_cooked_settings['recipe_category_permalink']) ? 'recipe-category' : $_cooked_settings['recipe_category_permalink'],
             'recipe_cooking_method_slug' => !isset($_cooked_settings['recipe_cooking_method_permalink']) ? 'cooking-method' : $_cooked_settings['recipe_cooking_method_permalink'],
             'recipe_cuisine_slug' => !isset($_cooked_settings['recipe_cuisine_permalink']) ? 'cuisine' : $_cooked_settings['recipe_cuisine_permalink'],

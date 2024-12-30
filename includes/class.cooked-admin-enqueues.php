@@ -148,14 +148,7 @@ class Cooked_Admin_Enqueues {
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
                     'i18n_confirm_import_recipes' => __('Please confirm that you are ready to import all recipes.', 'cooked'),
-                    'permalink_structure' => get_option('permalink_structure'),
                     'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
-                    'browse_recipes_slug' => !isset($_cooked_settings['browse_recipes_slug']) ? 'browse-recipes' : $_cooked_settings['browse_recipes_slug'],
-                    'recipe_category_slug' => !isset($_cooked_settings['recipe_category_permalink']) ? 'recipe-category' : $_cooked_settings['recipe_category_permalink'],
-                    'recipe_cooking_method_slug' => !isset($_cooked_settings['recipe_cooking_method_permalink']) ? 'cooking-method' : $_cooked_settings['recipe_cooking_method_permalink'],
-                    'recipe_cuisine_slug' => !isset($_cooked_settings['recipe_cuisine_permalink']) ? 'cuisine' : $_cooked_settings['recipe_cuisine_permalink'],
-                    'recipe_tags_slug' => !isset($_cooked_settings['recipe_tag_permalink']) ? 'recipe-tag' : $_cooked_settings['recipe_tag_permalink'],
-                    'recipe_diet_slug' => !isset($_cooked_settings['recipe_diet_permalink']) ? 'diet' : $_cooked_settings['recipe_diet_permalink'],
                 ];
 
                 // Cooked Admin Style Assets

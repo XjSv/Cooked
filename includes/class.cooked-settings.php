@@ -77,7 +77,7 @@ class Cooked_Settings {
                     foreach ( $tab['fields'] as $name => $field ) {
                         if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) continue;
 
-                        if ( !$cooked_settings_saved || ( $cooked_settings_saved && $version_compare >= 0 ) ) {
+                        if ( !$cooked_settings_saved || ( $cooked_settings_saved && $version_compare < 0 ) ) {
                             if ( $field['type'] == 'checkboxes' ) {
                                 $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : [] );
                             } else {
@@ -94,6 +94,10 @@ class Cooked_Settings {
 
         if ( $update_settings ) {
             update_option( 'cooked_settings', $_cooked_settings );
+
+            if ( self::needs_rewrite_flush( $_cooked_settings_version ) ) {
+                flush_rewrite_rules();
+            }
         }
 
         if ( $version_compare < 0 ) {
@@ -101,6 +105,29 @@ class Cooked_Settings {
         }
 
         return apply_filters( 'cooked_get_settings', $_cooked_settings );
+    }
+
+    private static function needs_rewrite_flush( $old_version ) {
+        // List versions that require a rewrite flush
+        $versions_requiring_flush = [
+            '1.9.0',  // New rewrite rules for Browse page introduced.
+            '1.9.1',  // Hotfix for the permalink structure.
+        ];
+
+        // If old version is newer than our latest flush requirement, no flush needed
+        if (version_compare($old_version, end($versions_requiring_flush), '>=')) {
+            return false;
+        }
+
+        // Find the next version that requires a flush after the old version
+        foreach ($versions_requiring_flush as $version) {
+            if (version_compare($old_version, $version, '<') &&
+                version_compare(COOKED_VERSION, $version, '>=')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static function tabs_fields() {

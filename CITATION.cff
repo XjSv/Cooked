@@ -6,7 +6,7 @@ authors:
     given-names: Justin
   - family-names: Tresova
     given-names: Armand
-version: 1.9.2
+version: 1.9.3
 doi: 10.5281/zenodo.1171250
 date-released: 2017-05-08
 url: "https://github.com/XjSv/cooked"

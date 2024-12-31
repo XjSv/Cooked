@@ -38,6 +38,7 @@ class Cooked_Enqueues {
             'timer_sound' => apply_filters('cooked_timer_sound_mp3', COOKED_URL . 'assets/audio/ding.mp3'),
             'i18n_timer' => __('Timer', 'cooked'),
             'permalink_structure' => get_option('permalink_structure'),
+            'site_url' => get_site_url(),
             'browse_recipes_slug' => $browse_recipes_slug,
             'recipe_category_slug' => !isset($_cooked_settings['recipe_category_permalink']) ? 'recipe-category' : $_cooked_settings['recipe_category_permalink'],
             'recipe_cooking_method_slug' => !isset($_cooked_settings['recipe_cooking_method_permalink']) ? 'cooking-method' : $_cooked_settings['recipe_cooking_method_permalink'],

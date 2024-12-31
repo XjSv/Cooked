@@ -153,10 +153,15 @@ var cooked_loading = false;
                     // Add sort segment
                     urlSegments.push(`sort/${encodeURIComponent(formValues.sort)}`);
 
-                    // Build and navigate to URL
-                    const prettyUrl = '/' + urlSegments.filter(Boolean).join('/');
+                    // Build URL
+                    const prettyUrl = urlSegments.filter(Boolean).join('/');
 
-                    window.location.href = prettyUrl;
+                    // Use WordPress site URL as base
+                    const siteUrl = new URL(cooked_js_vars.site_url);
+                    const finalUrl = `${siteUrl.pathname}/${prettyUrl}`.replace(/\/+/g, '/');
+
+                    // Navigate to URL
+                    window.location.href = finalUrl;
                 });
             }
         }

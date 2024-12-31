@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'xjsv/cooked',
-        'pretty_version' => '1.9.1',
-        'version' => '1.9.1.0',
+        'pretty_version' => '1.9.3',
+        'version' => '1.9.3.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -20,8 +20,8 @@
             'dev_requirement' => false,
         ),
         'xjsv/cooked' => array(
-            'pretty_version' => '1.9.1',
-            'version' => '1.9.1.0',
+            'pretty_version' => '1.9.3',
+            'version' => '1.9.3.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',

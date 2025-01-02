@@ -5,7 +5,8 @@ Versions that are currently being supported with security updates.
 
 | Version     | Supported          |
 | -------     | ------------------ |
-| 1.9.3       | :white_check_mark: |
+| 1.9.4       | :white_check_mark: |
+| 1.9.3       | :x:                |
 | 1.9.2       | :x:                |
 | 1.9.1       | :x:                |
 | 1.9.0       | :x:                |

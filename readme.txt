@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.7.1
-Stable tag: 1.9.3
+Stable tag: 1.9.4
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,14 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.9.3 includes a hotfix for the permalink structure that was introduced in version 1.9.0. Update is highly recommended!
+Version 1.9.4 includes a hotfix for
 
 == Changelog ==
+
+= 1.9.4 =
+* **FIX:** Resolved an issue where user profile avatar photos were not displaying at the correct size.
+* **FIX:** Fixed recipe permalinks when the browse recipe page has the same slug as the recipes permalink.
+* **FIX:** Non-existent recipes now display a 404 page instead of redirecting to the browse recipe page.
 
 = 1.9.3 =
 * **FIX:** Fixed issue with the permalink structure specifically for the Browse Recipe page.

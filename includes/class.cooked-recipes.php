@@ -878,7 +878,7 @@ class Cooked_Recipes {
 
             $dir_image_size = apply_filters( 'cooked_direction_image_size', 'large' );
             $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size ) : '';
-            $content = Cooked_Recipes::format_content($dir['content']);
+            $content = !empty($dir['content']) ? Cooked_Recipes::format_content($dir['content']) : '';
 
             $image = apply_filters('cooked_direction_image_html', $image, $atts);
 

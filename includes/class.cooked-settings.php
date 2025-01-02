@@ -113,6 +113,7 @@ class Cooked_Settings {
             '1.9.0',  // New rewrite rules for Browse page introduced.
             '1.9.1',  // Hotfix for the permalink structure.
             '1.9.2',  // Hotfix for the permalink structure.
+            '1.9.4',  // Hotfix for the permalink structure.
         ];
 
         // If old version is newer than our latest flush requirement, no flush needed

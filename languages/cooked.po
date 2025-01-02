@@ -96,15 +96,15 @@ msgstr ""
 
 #: includes/class.cooked-admin-menus.php:34
 #: includes/class.cooked-admin-menus.php:57
-#: includes/class.cooked-post-types.php:441
-#: includes/class.cooked-post-types.php:453
+#: includes/class.cooked-post-types.php:446
+#: includes/class.cooked-post-types.php:458
 #: includes/class.cooked-users.php:125
 msgid "Recipes"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:35
 #: includes/class.cooked-admin-menus.php:59
-#: includes/class.cooked-post-types.php:443
+#: includes/class.cooked-post-types.php:448
 msgid "Add New"
 msgstr ""
 
@@ -131,7 +131,7 @@ msgid "Upgrade to Pro"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:58
-#: includes/class.cooked-post-types.php:448
+#: includes/class.cooked-post-types.php:453
 msgid "All Recipes"
 msgstr ""
 
@@ -835,47 +835,47 @@ msgstr ""
 msgid "Photo"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:423
+#: includes/class.cooked-post-types.php:428
 msgid "Recipe Archive"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:442
+#: includes/class.cooked-post-types.php:447
 msgid "Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:444
+#: includes/class.cooked-post-types.php:449
 msgid "Add New Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:445
+#: includes/class.cooked-post-types.php:450
 msgid "New Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:446
+#: includes/class.cooked-post-types.php:451
 msgid "Edit Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:447
+#: includes/class.cooked-post-types.php:452
 msgid "View Recipe"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:449
+#: includes/class.cooked-post-types.php:454
 msgid "Search Recipes"
 msgstr ""
 
-#: includes/class.cooked-post-types.php:450
+#: includes/class.cooked-post-types.php:455
 msgid "No recipes found."
 msgstr ""
 
-#: includes/class.cooked-post-types.php:451
+#: includes/class.cooked-post-types.php:456
 msgid "No recipes found in trash."
 msgstr ""
 
-#: includes/class.cooked-post-types.php:479
+#: includes/class.cooked-post-types.php:484
 msgid "Recipe title ..."
 msgstr ""
 
-#: includes/class.cooked-post-types.php:497
+#: includes/class.cooked-post-types.php:502
 msgid "Cooked Browse Recipes Page"
 msgstr ""
 

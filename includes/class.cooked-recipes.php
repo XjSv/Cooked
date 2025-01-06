@@ -33,7 +33,7 @@ class Cooked_Recipes {
         add_filter('get_canonical_url', [&$this, 'modify_browse_page_canonical_url'], 20, 2);
     }
 
-    public static function get( $args = false, $single = false, $ids_only = false ) {
+    public static function get( $args = false, $single = false, $ids_only = false, $limit = false ) {
         $recipes = [];
         $counter = 0;
 
@@ -60,6 +60,10 @@ class Cooked_Recipes {
 
             if ( $ids_only ):
                 $args['fields'] = 'ids';
+            endif;
+
+            if ( $limit ):
+                $args['limit'] = $limit;
             endif;
 
         // Search Query

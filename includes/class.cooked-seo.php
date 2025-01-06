@@ -12,10 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Cooked_SEO {
 
-    public static function json_ld( $recipe = false ){
-
+    public static function json_ld( $recipe = false ) {
         global $_cooked_settings;
-        if ( !in_array( 'disable_schema_output', $_cooked_settings['advanced'] ) ):
+
+        if ( !empty($_cooked_settings['advanced']) && !in_array( 'disable_schema_output', $_cooked_settings['advanced'] ) ):
 
             $schema_values_json = wp_json_encode( self::schema_values( $recipe ) );
 

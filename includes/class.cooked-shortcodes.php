@@ -283,7 +283,7 @@ class Cooked_Shortcodes {
             'id' => false,
         ], $atts);
 
-        global $recipe_settings,$_cooked_content_unfiltered;
+        global $recipe_settings, $_cooked_content_unfiltered;
 
         ob_start();
 

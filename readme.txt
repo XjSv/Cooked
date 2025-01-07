@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.7.1
-Stable tag: 1.9.4
+Stable tag: 1.9.5
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,15 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.9.4 includes a hotfix for
+Version 1.9.5 includes a fix for a memory issue that was causing crashes, especially when used with Elementor. Please update to this version as soon as possible.
 
 == Changelog ==
+
+= 1.9.5 =
+* **FIX:** Resolved an issue with the preprocess_shortcode filter that was causing memory problems and plugin crashes, especially when used with Elementor.
+* **FIX:** Enhanced the navigation for recipe categories and tags in the admin dashboard, ensuring the Recipes menu remains expanded.
+* **FIX:** Addressed compatibility issues with PHP v8.1.
+* **FIX:** Corrected a bug affecting the pretty URLs for sorting and searching in the Browse Recipe feature.
 
 = 1.9.4 =
 * **FIX:** Resolved an issue where user profile avatar photos were not displaying at the correct size.

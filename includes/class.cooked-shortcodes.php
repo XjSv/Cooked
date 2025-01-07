@@ -55,8 +55,18 @@ class Cooked_Shortcodes {
     }
 
     public function preprocess_shortcode($output, $tag, $attr, $m) {
+        // Tags to skip
+        $skip_tags = [
+            'cooked-search',
+            'cooked-browse',
+            'cooked-timer',
+            'cooked-recipe',
+            'cooked-recipe-list',
+            'cooked-recipe-card',
+        ];
+
         // Only process for Cooked shortcodes
-        if (strpos($tag, 'cooked-') === false) {
+        if (is_front_page() || strpos($tag, 'cooked-') === false || in_array($tag, $skip_tags)) {
             return $output;
         }
 
@@ -66,12 +76,12 @@ class Cooked_Shortcodes {
         if (empty($recipe_settings)) {
             // Try to get recipe settings from current post.
             $post_id = isset($post->ID) ? $post->ID : false;
-            if ($post_id && get_post_type( $post_id ) === 'cp_recipe' ) {
+            if ($post_id && get_post_type( $post_id ) === 'cp_recipe') {
                 $recipe_settings = Cooked_Recipes::get($post_id, true);
             } else {
                 // We are in the editor but not on a recipe post type. Maybe a single recipe template?
                 // Uses the first recipe found in the database as a sample.
-                $recipe_settings = Cooked_Recipes::get( false, true );
+                $recipe_settings = Cooked_Recipes::get(false, true, false, 1);
             }
 
             // If still empty and we have a specific recipe ID in attributes, try to get them.
@@ -273,7 +283,7 @@ class Cooked_Shortcodes {
             'id' => false,
         ], $atts);
 
-        global $recipe_settings,$_cooked_content_unfiltered;
+        global $recipe_settings, $_cooked_content_unfiltered;
 
         ob_start();
 

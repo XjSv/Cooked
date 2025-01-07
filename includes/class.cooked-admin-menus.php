@@ -26,6 +26,8 @@ class Cooked_Admin_Menus {
         if (!is_admin()) {
             add_action( 'admin_bar_menu', [&$this, 'add_admin_bar_menu'], 100 );
         }
+
+        add_action('parent_file', [&$this, 'parent_file_filter']);
     }
 
     public function add_menu() {
@@ -36,7 +38,7 @@ class Cooked_Admin_Menus {
 
         if ( isset($cooked_taxonomies_for_menu) && !empty($cooked_taxonomies_for_menu) ) {
             foreach ( $cooked_taxonomies_for_menu as $menu_item ) {
-                add_submenu_page( $menu_item['menu'], $menu_item['name'], $menu_item['name'], $menu_item['capability'], $menu_item['url'], '' );
+                add_submenu_page($menu_item['menu'], $menu_item['name'], $menu_item['name'], $menu_item['capability'], $menu_item['url'], '', null );
             }
         }
 
@@ -63,6 +65,23 @@ class Cooked_Admin_Menus {
                 $wp_admin_bar->add_menu(['parent' => 'cooked-ab', 'title' => __('Settings', 'cooked'), 'id' => 'cooked-settings-ab', 'href' => get_admin_url() . 'admin.php?page=cooked_settings'] );
             }
         }
+    }
+
+    public function parent_file_filter($parent_file) {
+        global $submenu_file, $current_screen, $pagenow;
+        $post_type = 'cp_recipe';
+
+        if ($current_screen->post_type === $post_type && $pagenow === 'edit-tags.php') {
+            $_cooked_taxonomies = Cooked_Taxonomies::get();
+
+            if (array_key_exists($current_screen->taxonomy, $_cooked_taxonomies)) {
+                $submenu_file = 'edit-tags.php?taxonomy=' . $current_screen->taxonomy . '&post_type=' . $post_type;
+            }
+
+            $parent_file = 'cooked_recipes_menu';
+        }
+
+        return $parent_file;
     }
 
     // Settings Panel

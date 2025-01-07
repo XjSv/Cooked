@@ -102,7 +102,7 @@ class Cooked_Admin_Enqueues {
             if ($enqueue):
 
                 $old_recipes = get_transient( 'cooked_classic_recipes' );
-                if ( $old_recipes != 'complete' ):
+                if ( $old_recipes && $old_recipes !== 'complete' && is_array($old_recipes) ):
                     $total_old_recipes = count( $old_recipes );
                 else:
                     $total_old_recipes = 0;

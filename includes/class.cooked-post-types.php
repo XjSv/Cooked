@@ -25,7 +25,7 @@ class Cooked_Post_Types {
         add_action( 'init', [&$this, 'init'] );
         add_filter( 'admin_init', [&$this, 'init_roles'] );
         add_action( 'after_setup_theme', [&$this, 'image_sizes'] );
-        //add_action( 'template_redirect', array( &$this, 'redirects' ) );
+        // add_action( 'template_redirect', [&$this, 'redirects'] );
         add_action( 'wp_head', [&$this, 'cooked_meta_tags'], 5 );
         add_action( 'manage_cp_recipe_posts_custom_column', [&$this, 'custom_columns_data'], 10, 2 );
 
@@ -361,10 +361,24 @@ class Cooked_Post_Types {
             }
         }
 
+        // Search sort pagination
+        add_rewrite_rule(
+            '^' . $base_path . 'search/([^/]*)/sort/([^/]*)/page/([^/]*)/?',
+            'index.php?page_id=' . $_cooked_settings['browse_page'] . '&cooked_search_s=$matches[1]&cooked_browse_sort_by=$matches[2]&paged=$matches[3]',
+            'top'
+        );
+
         // Search sort
         add_rewrite_rule(
             '^' . $base_path . 'search/([^/]*)/sort/([^/]*)/?',
             'index.php?page_id=' . $_cooked_settings['browse_page'] . '&cooked_search_s=$matches[1]&cooked_browse_sort_by=$matches[2]',
+            'top'
+        );
+
+        // Sort Pagination
+        add_rewrite_rule(
+            '^' . $base_path . 'sort/([^/]*)/page/([^/]*)/?',
+            'index.php?page_id=' . $_cooked_settings['browse_page'] . '&cooked_browse_sort_by=$matches[1]&paged=$matches[2]',
             'top'
         );
 

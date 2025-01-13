@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.7.1
-Stable tag: 1.9.5
+Stable tag: 1.9.6
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,14 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.9.5 includes a fix for a memory issue that was causing crashes, especially when used with Elementor. Please update to this version as soon as possible.
+Version 1.9.6 includes a bug fix for the recipe search, schema data generation and a memory fix when using the themes Customizer and the recipe card widget.
 
 == Changelog ==
+
+= 1.9.6 =
+* **FIX:** Fixed bug with the recipe search not working with special characters and spaces in the keywords when the pretty URL structure is used.
+* **FIX:** Fixed bug with the recipe schema data not being generated.
+* **TWEAK:** Fixed a memory issue when using the themes Customizer and the recipe card widget.
 
 = 1.9.5 =
 * **FIX:** Resolved an issue with the preprocess_shortcode filter that was causing memory problems and plugin crashes, especially when used with Elementor.

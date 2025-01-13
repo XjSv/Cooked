@@ -38,7 +38,6 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
         $title = !empty( $instance['title'] ) ? $instance['title'] : false;
         $recipe_id = !empty( $instance['recipe_id'] ) ? $instance['recipe_id'] : false;
         $width = !empty( $instance['width'] ) ? $instance['width'] : '100%';
-        $recipe_id = isset( $instance['recipe_id'] ) && $instance['recipe_id'] ? $instance['recipe_id'] : false;
         $style = isset( $instance['style'] ) && $instance['style'] ? $instance['style'] : false;
         $hide_image = isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false;
         $hide_title = isset( $instance['hide_title'] ) && $instance['hide_title'] ? true : false;
@@ -59,12 +58,12 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
             // Filter out the pending/draft recipes.
             $args = apply_filters( 'cooked_recipe_public_query_filters', $args );
 
-            $recipes = Cooked_Recipes::get( $args );
+            $recipes = Cooked_Recipes::get( $args, false, false, false, true );
             if ( isset($recipes['raw']) ): unset( $recipes['raw'] ); endif;
             $recipe_list = [];
 
             if ( !empty($recipes) ):
-                foreach( $recipes as $key => $recipe ):
+                foreach ( $recipes as $key => $recipe ):
                     $recipe_list[$recipe['id']] = $recipe['title'];
                 endforeach;
             endif;

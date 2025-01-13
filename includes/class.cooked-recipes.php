@@ -33,7 +33,7 @@ class Cooked_Recipes {
         add_filter('get_canonical_url', [&$this, 'modify_browse_page_canonical_url'], 20, 2);
     }
 
-    public static function get( $args = false, $single = false, $ids_only = false, $limit = false ) {
+    public static function get( $args = false, $single = false, $ids_only = false, $limit = false, $ids_and_titles_only = false ) {
         $recipes = [];
         $counter = 0;
 
@@ -58,7 +58,7 @@ class Cooked_Recipes {
                 'order' => 'ASC'
             ];
 
-            if ( $ids_only ):
+            if ( $ids_only || $ids_and_titles_only ):
                 $args['fields'] = 'ids';
             endif;
 
@@ -104,25 +104,35 @@ class Cooked_Recipes {
 
         $recipes_results = new WP_Query($args);
 
-        if ( $recipes_results->have_posts() ):
-            if ( $ids_only ):
+        if ( $recipes_results->have_posts() ) {
+            if ( $ids_only ) {
                 return $recipes_results->posts;
-            else:
-                while ( $recipes_results->have_posts() ):
+            } elseif ( $ids_and_titles_only ) {
+                while ( $recipes_results->have_posts() ) {
+                    $recipes_results->the_post();
+                    $recipes[$counter]['id'] = $recipes_results->post->ID;
+                    $recipes[$counter]['title'] = $recipes_results->post->post_title;
+
+                    $counter++;
+                }
+            } else {
+                while ( $recipes_results->have_posts() ) {
                     $recipes_results->the_post();
                     $recipes[$counter]['id'] = $recipes_results->post->ID;
                     $recipes[$counter]['title'] = $recipes_results->post->post_title;
                     $recipe_settings = self::get_settings($recipes_results->post->ID);
-                    foreach($recipe_settings as $key => $setting):
+
+                    foreach ($recipe_settings as $key => $setting) {
                         $recipes[$counter][$key] = $setting;
-                    endforeach;
+                    }
+
                     $counter++;
-                endwhile;
-            endif;
-        else:
+                }
+            }
+        } else {
             wp_reset_postdata();
             return;
-        endif;
+        }
 
         $recipes['raw'] = $recipes_results;
 
@@ -474,6 +484,7 @@ class Cooked_Recipes {
         $sorting_types = explode('_', $sorting_type);
 
         $text_search = get_query_var('cooked_search_s', '');
+        $text_search = urldecode($text_search);
         $text_search = esc_html($text_search);
         $recipes_per_page = ( $atts['show'] ? $atts['show'] : ( isset($_cooked_settings['recipes_per_page']) && $_cooked_settings['recipes_per_page'] ? $_cooked_settings['recipes_per_page'] : get_option( 'posts_per_page' ) ) );
         $current_recipe_page = Cooked_Recipes::current_page();
@@ -1019,6 +1030,8 @@ class Cooked_Recipes {
         $form_redirect = get_permalink($page_id);
 
         $cooked_search_s = get_query_var('cooked_search_s', '');
+        $cooked_search_s = urldecode($cooked_search_s);
+        $cooked_search_s = Cooked_Functions::sanitize_text_field( $cooked_search_s );
 
         ob_start();
 
@@ -1035,7 +1048,7 @@ class Cooked_Recipes {
 
                     echo !$options['hide_browse'] && $taxonomy_search_fields ? $taxonomy_search_fields : '';
 
-                    echo '<input class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( !empty($cooked_search_s) ? Cooked_Functions::sanitize_text_field( $cooked_search_s ) : '' ) . '" placeholder="' . __('Find a recipe...','cooked') . '" />';
+                    echo '<input class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( !empty($cooked_search_s) ? $cooked_search_s : '' ) . '" placeholder="' . __('Find a recipe...','cooked') . '" />';
 
                     echo '<a href="#" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search"></i></a>';
 

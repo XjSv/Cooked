@@ -39,7 +39,7 @@ class Cooked_Widgets {
 	    echo '<select multiple class="widefat cooked-recipe-finder" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" placeholder="' . __( 'Choose recipe(s)...', 'cooked' ) . '">';
 	    if ( !empty( $included ) ):
 	        foreach ( $included as $recipe ):
-	            $_recipe = Cooked_Recipes::get( $recipe, true );
+	            $_recipe = Cooked_Recipes::get( $recipe, true, false, false, true );
 	            echo '<option selected="selected" value="' . esc_attr( $_recipe['id'] ) . '">' . esc_html( $_recipe['title'] ) . '</option>';
 	        endforeach;
 	    endif;

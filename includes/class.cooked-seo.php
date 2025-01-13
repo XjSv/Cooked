@@ -15,8 +15,7 @@ class Cooked_SEO {
     public static function json_ld( $recipe = false ) {
         global $_cooked_settings;
 
-        if ( !empty($_cooked_settings['advanced']) && !in_array( 'disable_schema_output', $_cooked_settings['advanced'] ) ):
-
+        if ( !isset($_cooked_settings['advanced']) || (isset($_cooked_settings['advanced']) && !in_array( 'disable_schema_output', $_cooked_settings['advanced'] )) ) {
             $schema_values_json = wp_json_encode( self::schema_values( $recipe ) );
 
             $schema_html = '<script type="application/ld+json">';
@@ -24,13 +23,9 @@ class Cooked_SEO {
             $schema_html .= '</script>';
 
             return apply_filters( 'cooked_schema_html', $schema_html, $recipe );
-
-        else:
-
+        } else {
             return '';
-
-        endif;
-
+        }
     }
 
     public static function schema_values( $recipe = false ) {

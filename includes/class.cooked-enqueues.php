@@ -62,7 +62,8 @@ class Cooked_Enqueues {
             wp_register_script('cooked-appear', COOKED_URL . 'assets/js/appear/jquery.appear' . $min . '.js', ['jquery'], '0.3.6');
         }
 
-        wp_register_script('cooked-functions', COOKED_URL . 'assets/js/cooked-functions' . $min . '.js', ['jquery'], COOKED_VERSION);
+        wp_enqueue_script('wp-sanitize');
+        wp_register_script('cooked-functions', COOKED_URL . 'assets/js/cooked-functions' . $min . '.js', ['jquery', 'wp-sanitize'], COOKED_VERSION);
         wp_localize_script('cooked-functions', 'cooked_js_vars', $cooked_js_vars);
     }
 

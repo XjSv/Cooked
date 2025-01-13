@@ -117,20 +117,20 @@ var cooked_loading = false;
 
                     // Get form values
                     const formValues = {
-                        category: $(this).find('[name="cp_recipe_category"]').val() || '',
-                        method: $(this).find('[name="cp_recipe_cooking_method"]').val() || '',
-                        cuisine: $(this).find('[name="cp_recipe_cuisine"]').val() || '',
-                        tags: $(this).find('[name="cp_recipe_tags"]').val() || '',
-                        diet: $(this).find('[name="cp_recipe_diet"]').val() || '',
-                        search: $(this).find('[name="cooked_search_s"]').val() || '',
-                        sort: $(this).find('[name="cooked_browse_sort_by"]').val() || 'date_desc',
+                        category: wp.sanitize.stripTags($(this).find('[name="cp_recipe_category"]').val() || ''),
+                        method: wp.sanitize.stripTags($(this).find('[name="cp_recipe_cooking_method"]').val() || ''),
+                        cuisine: wp.sanitize.stripTags($(this).find('[name="cp_recipe_cuisine"]').val() || ''),
+                        tags: wp.sanitize.stripTags($(this).find('[name="cp_recipe_tags"]').val() || ''),
+                        diet: wp.sanitize.stripTags($(this).find('[name="cp_recipe_diet"]').val() || ''),
+                        search: wp.sanitize.stripTags($(this).find('[name="cooked_search_s"]').val() || ''),
+                        sort: wp.sanitize.stripTags($(this).find('[name="cooked_browse_sort_by"]').val() || 'date_desc'),
                     };
 
-                    // Create URL segments
+                    // Create URL segments with proper encoding
                     const urlSegments = [];
-                    urlSegments.push(cooked_js_vars.browse_recipes_slug);
+                    urlSegments.push(encodeURIComponent(cooked_js_vars.browse_recipes_slug));
 
-                    // Add taxonomy segments
+                    // Add taxonomy segments with improved encoding
                     const taxonomyFields = [
                         { value: formValues.category, prefix: cooked_js_vars.recipe_category_slug },
                         { value: formValues.method, prefix: cooked_js_vars.recipe_cooking_method_slug },
@@ -141,7 +141,9 @@ var cooked_loading = false;
 
                     taxonomyFields.forEach(field => {
                         if (field.value) {
-                            urlSegments.push(`${field.prefix}/${encodeURIComponent(field.value)}`);
+                            const safePrefix = encodeURIComponent(field.prefix);
+                            const safeValue = encodeURIComponent(field.value);
+                            urlSegments.push(`${safePrefix}/${safeValue}`);
                         }
                     });
 

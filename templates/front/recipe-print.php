@@ -14,6 +14,7 @@ function cooked_print_enqueues(){
 <html <?php language_attributes(); ?>>
 <head>
 	<?php wp_head(); ?>
+	<meta name="robots" content="noindex,nofollow">
 </head>
 <body><?php
 

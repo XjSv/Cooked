@@ -8,23 +8,24 @@
     "packages": [
         {
             "name": "nxp/math-executor",
-            "version": "v2.3.2",
+            "version": "v2.3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/neonxp/MathExecutor.git",
-                "reference": "c59f4cd15317754d2b50bd4bff2243012e815790"
+                "reference": "b3b9351b28672f87b47522fb6b6eab05ff258fae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/c59f4cd15317754d2b50bd4bff2243012e815790",
-                "reference": "c59f4cd15317754d2b50bd4bff2243012e815790",
+                "url": "https://api.github.com/repos/neonxp/MathExecutor/zipball/b3b9351b28672f87b47522fb6b6eab05ff258fae",
+                "reference": "b3b9351b28672f87b47522fb6b6eab05ff258fae",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.4"
+                "php": ">=8.0 <8.5"
             },
             "require-dev": {
                 "friendsofphp/php-cs-fixer": "^3.8",
+                "phpstan/phpstan": "^1.9",
                 "phpunit/phpunit": ">=9.0"
             },
             "type": "library",
@@ -59,15 +60,15 @@
             ],
             "support": {
                 "issues": "https://github.com/neonxp/MathExecutor/issues",
-                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.2"
+                "source": "https://github.com/neonxp/MathExecutor/tree/v2.3.7"
             },
-            "time": "2022-12-08T16:15:34+00:00"
+            "time": "2024-10-28T19:41:33+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {},
+    "stability-flags": [],
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

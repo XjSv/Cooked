@@ -78,7 +78,7 @@ class Cooked_Settings {
                         if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) continue;
 
                         if ( !$cooked_settings_saved || ( $cooked_settings_saved && $version_compare < 0 ) ) {
-                            if ( $field['type'] == 'checkboxes' ) {
+                            if ( $field['type'] === 'checkboxes' ) {
                                 $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : [] );
                             } else {
                                 $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false );
@@ -612,6 +612,8 @@ class Cooked_Settings {
         global $_cooked_settings, $conditions;
 
         echo '<p class="cooked-padded">';
+            // Add hidden field to ensure empty arrays are saved
+            echo '<input type="hidden" name="cooked_settings[' . esc_attr( $field_name ) . '][]" value="">';
             foreach ( $options as $value => $name)  {
                 $is_disabled = '';
                 $conditional_value = '';

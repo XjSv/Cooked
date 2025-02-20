@@ -197,9 +197,8 @@ class Cooked_Recipes {
     }
 
     public static function cooked_pre_get_posts( $q ) {
-        if ( $title = $q->get( '_cooked_title' ) ):
+        if ( $title = $q->get( '_cooked_title' ) ) {
             add_filter( 'get_meta_sql', function( $sql ) use ( $title ) {
-
                 global $wpdb, $cooked_modified_where;
 
                 if ( $cooked_modified_where ) return $sql;
@@ -214,7 +213,7 @@ class Cooked_Recipes {
 
                 return $sql;
             });
-        endif;
+        }
     }
 
     public static function recipe_list( $orderby = 'date', $show = 5, $recipes = false, $width = false, $hide_image = false, $hide_author = false ) {
@@ -532,6 +531,7 @@ class Cooked_Recipes {
                     'compare' => 'LIKE'
                 ];
             endif;
+            $recipe_args['_cooked_title'] = $prep_text;
             $recipe_args['s'] = $prep_text;
             $recipe_args['meta_query'] = $meta_query;
 
@@ -901,7 +901,7 @@ class Cooked_Recipes {
         } elseif (isset($dir['content']) && $dir['content'] || isset($dir['image']) && $dir['image']) {
 
             $dir_image_size = apply_filters( 'cooked_direction_image_size', 'large' );
-            $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size ) : '';
+            $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size, false, ['title' => esc_attr(get_the_title($dir['image']))] ) : '';
             $content = !empty($dir['content']) ? Cooked_Recipes::format_content($dir['content']) : '';
 
             $image = apply_filters('cooked_direction_image_html', $image, $atts);

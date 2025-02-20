@@ -744,7 +744,8 @@ class Cooked_Shortcodes {
             'show_header' => false,
         ], $atts);
 
-        $show_header = Cooked_Functions::sanitize_text_field( $atts['show_header'] );
+        $show_header = Cooked_Functions::sanitize_text_field($atts['show_header']);
+        $show_header = !$show_header || $show_header == 'false' ? false : $show_header;
 
         if (isset($_cooked_settings['recipe_info_display_options']) && is_array($_cooked_settings['recipe_info_display_options']) && in_array('notes', $_cooked_settings['recipe_info_display_options'])) {
             ob_start();

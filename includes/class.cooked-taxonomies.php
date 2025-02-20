@@ -50,7 +50,8 @@ class Cooked_Taxonomies {
 				],
 				'show_ui' => true,
 				'show_admin_column' => true,
-				'show_in_menu' => false,
+				'show_in_menu' => true,
+				'show_in_nav_menus' => true,
 				'show_in_rest' => true,
 				'rest_base' => 'recipe_category',
 				'rest_controller_class' => 'WP_REST_Terms_Controller',
@@ -109,7 +110,7 @@ class Cooked_Taxonomies {
 			$recipes = Cooked_Recipes::get( $args );
 			$recent_recipe = $recipes[0];
 			$total_recipes = count( $recipes ) - 1; // Total items in array minus the single ['raw'] item.
-			$thumbnail = get_the_post_thumbnail_url( $recent_recipe['id'], array( 450,450 ) );
+			$thumbnail = get_the_post_thumbnail_url( $recent_recipe['id'], [ 450, 450 ] );
 			$term_link = ( !empty($term) ? get_term_link( $term ) : false );
 			$style_class = ( $style ? ' cooked-recipe-card-' . esc_attr($style) : '' );
 			$width = ( !$width ? '100%' : $width );

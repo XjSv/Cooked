@@ -409,6 +409,17 @@ var $_CookedConditionalTimeout  = false;
                 }
             });
 
+            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
+                e.preventDefault();
+                var thisParent = $(this).parent();
+                if ( thisParent.hasClass('cooked-expanded') ) {
+                    thisParent.removeClass('cooked-expanded');
+                } else {
+                    thisParent.addClass('cooked-expanded');
+                    thisParent.find('input[data-ingredient-part="section_heading_element"]').focus();
+                }
+            });
+
             if ($_CookedAutoNutritionButton.length) {
                 $_CookedIngredientBuilder.on('change', 'input[data-ingredient-part="name"]', function(e) {
                     var ingredient_name_value = false;
@@ -461,6 +472,17 @@ var $_CookedConditionalTimeout  = false;
 
         if ($_CookedDirectionBuilder.length) {
             cooked_reset_direction_builder();
+
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
+                e.preventDefault();
+                var thisParent = $(this).parent();
+                if ( thisParent.hasClass('cooked-expanded') ) {
+                    thisParent.removeClass('cooked-expanded');
+                } else {
+                    thisParent.addClass('cooked-expanded');
+                    thisParent.find('input[data-direction-part="section_heading_element"]').focus();
+                }
+            });
 
             $_CookedDirectionBuilder.parent().on('click', '.cooked-add-direction-button', function(e) {
                 e.preventDefault();

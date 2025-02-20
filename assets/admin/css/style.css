@@ -158,6 +158,74 @@ body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#8
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid > .cooked-settings-title { color:#0aa780; }
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired { border:2px solid #ca4a20; }
 
+/* Heading Element Styles */
+#cooked-ingredients-builder .cooked-ingredient-block:hover > .cooked-heading-name,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded > .cooked-heading-name,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-heading-element > .cooked-heading-name,
+#cooked-directions-builder .cooked-direction-block:hover > .cooked-heading-name,
+#cooked-directions-builder .cooked-direction-block.cooked-expanded > .cooked-heading-name,
+#cooked-directions-builder .cooked-direction-block.cooked-has-heading-element > .cooked-heading-name {
+    padding-right: 32px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element,
+#cooked-directions-builder .cooked-direction-block .cooked-show-heading-element {
+    opacity: 0;
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    top: 14px;
+    right: 35px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element .cooked-icon,
+#cooked-directions-builder .cooked-direction-block .cooked-show-heading-element .cooked-icon {
+    color: #888;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-show-heading-element,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-heading-element,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-heading-element .cooked-show-heading-element,
+#cooked-directions-builder .cooked-direction-block:hover .cooked-show-heading-element,
+#cooked-directions-builder .cooked-direction-block.cooked-expanded .cooked-show-heading-element,
+#cooked-directions-builder .cooked-direction-block.cooked-has-heading-element .cooked-show-heading-element {
+    opacity: 1;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element .cooked-icon:hover,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-heading-element .cooked-icon,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-heading-element .cooked-show-heading-element .cooked-icon,
+#cooked-directions-builder .cooked-direction-block .cooked-show-heading-element .cooked-icon:hover,
+#cooked-directions-builder .cooked-direction-block.cooked-expanded .cooked-show-heading-element .cooked-icon,
+#cooked-directions-builder .cooked-direction-block.cooked-has-heading-element .cooked-show-heading-element .cooked-icon {
+    color: #0685ba;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-element,
+#cooked-directions-builder .cooked-direction-block > .cooked-heading-element {
+    display: none;
+    width: 65%;
+    float: right;
+    margin-top: 4px;
+    padding-right: 32px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-element select,
+#cooked-directions-builder .cooked-direction-block > .cooked-heading-element select {
+    color: #0685ba;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-element label,
+#cooked-directions-builder .cooked-direction-block > .cooked-heading-element label {
+  font-weight: 600;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded > .cooked-heading-element,
+#cooked-directions-builder .cooked-direction-block.cooked-expanded > .cooked-heading-element {
+    display: block;
+}
+
+
 /* Switchery */
 body.post-type-cp_recipe .switchery-small,
 #cooked_recipe_settings .switchery-small { height:1rem; width:1.75rem; border-radius:1rem; margin-right:0.4rem; }

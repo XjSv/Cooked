@@ -422,6 +422,7 @@ class Cooked_Post_Types {
     }
 
     public static function image_sizes() {
+        add_image_size( 'cooked-profile-photo', 150, 150, true );
         add_image_size( 'cooked-square', 700, 700, true );
         add_image_size( 'cooked-medium', 700, 525, true );
         add_image_size( 'cooked-large', 2000, 2000 );

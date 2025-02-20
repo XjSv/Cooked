@@ -50,12 +50,12 @@ class Cooked_Users {
 
         if ( !empty($_user) ) {
             if ( isset( $_user_meta['profile_photo_id'] ) && $_user_meta['profile_photo_id'] && wp_attachment_is_image( $_user_meta['profile_photo_id'] ) ) {
-                $profile_photo = wp_get_attachment_image( $_user_meta['profile_photo_id'], 'cooked-square' );
-                $profile_photo_src = wp_get_attachment_image_src( $_user_meta['profile_photo_id'], 'cooked-square' );
+                $profile_photo = wp_get_attachment_image( $_user_meta['profile_photo_id'], 'cooked-profile-photo' );
+                $profile_photo_src = wp_get_attachment_image_src( $_user_meta['profile_photo_id'], 'cooked-profile-photo' );
                 $profile_photo_src = ( isset($profile_photo_src[0]) && $profile_photo_src[0] ? $profile_photo_src[0] : false );
             } else {
-                $profile_photo = get_avatar($_user->user_email);
-                $profile_photo_src = get_avatar_url($_user->user_email);
+                $profile_photo = get_avatar($_user->user_email, 96);
+                $profile_photo_src = get_avatar_url($_user->user_email, ['size' => 96]);
             }
 
             if ( is_array($_user_meta) ) {

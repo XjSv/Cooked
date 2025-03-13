@@ -33,7 +33,7 @@ class Cooked_Recipes {
         add_filter('get_canonical_url', [&$this, 'modify_browse_page_canonical_url'], 20, 2);
     }
 
-    public static function get( $args = false, $single = false, $ids_only = false, $limit = false, $ids_and_titles_only = false ) {
+    public static function get( $args = false, $single = false, $ids_only = false, $limit = false, $ids_and_titles_only = false, $post_status = 'publish' ) {
         $recipes = [];
         $counter = 0;
 
@@ -44,7 +44,7 @@ class Cooked_Recipes {
             $args = [
                 'post_type' => 'cp_recipe',
                 'post__in' => [$recipe_id],
-                'post_status' => 'publish'
+                'post_status' => $post_status
             ];
 
         // Default Query
@@ -53,7 +53,7 @@ class Cooked_Recipes {
             $args = [
                 'post_type' => 'cp_recipe',
                 'posts_per_page' => -1,
-                'post_status' => 'publish',
+                'post_status' => $post_status,
                 'orderby' => 'name',
                 'order' => 'ASC'
             ];
@@ -238,9 +238,6 @@ class Cooked_Recipes {
             $args['order'] = 'ASC';
             $args['post__in'] = $recipes;
         }
-
-        // Filter out the pending/draft recipes.
-        $args = apply_filters( 'cooked_recipe_public_query_filters', $args );
 
         $recipes = Cooked_Recipes::get( $args );
 
@@ -491,11 +488,16 @@ class Cooked_Recipes {
         $orderby = $atts['orderby'] ? esc_html( $atts['orderby'] ) : $sorting_types[0];
         $meta_sort =  false;
 
+        $post_status = 'publish';
+        if ( isset($atts['public_recipes']) && $atts['public_recipes'] == false ):
+            $post_status = ['publish', 'pending', 'draft'];
+        endif;
+
         $recipe_args = [
             'paged' => $current_recipe_page,
             'post_type' => 'cp_recipe',
             'posts_per_page' => $recipes_per_page,
-            'post_status' => 'publish',
+            'post_status' => $post_status,
             'orderby' => $orderby,
             'order' => ($atts['order'] ? esc_html($atts['order']) : $sorting_types[1])
         ];
@@ -808,7 +810,6 @@ class Cooked_Recipes {
     }
 
     public static function single_ingredient( $ing, $checkboxes = true, $plain_text = false ) {
-
         global $recipe_settings;
 
         $Cooked_Measurements = new Cooked_Measurements();

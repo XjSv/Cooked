@@ -145,19 +145,19 @@ class Cooked_Users {
     function pre_user_query( $query ) {
         global $wpdb, $current_screen;
 
-        // Only filter in the admin
+        // Only filter in the admin.
         if ( ! is_admin() ) return;
 
-        // Only filter on the users screen
+        // Only filter on the users screen.
         if ( ! ( isset( $current_screen ) && 'users' === $current_screen->id ) ) return;
 
-        // Only filter if orderby is set to 'cooked_recipe_count'
+        // Only filter if orderby is set to 'cooked_recipe_count'.
         if ( isset( $query->query_vars ) && isset( $query->query_vars[ 'orderby' ] ) && ( 'cooked_recipe_count' == $query->query_vars[ 'orderby' ] ) ) {
-            // We need the order - default is ASC
+            // We need the order - default is ASC.
             $order = isset( $query->query_vars ) && isset( $query->query_vars[ 'order' ] ) && strcasecmp( $query->query_vars[ 'order' ], 'desc' ) == 0 ? 'DESC' : 'ASC';
 
-            // Order the posts by recipe count
-            $query->query_orderby = "ORDER BY ( SELECT COUNT(*) FROM {$wpdb->posts} posts WHERE posts.post_type = 'cp_recipe' AND posts.post_status = 'publish' AND posts.post_author = {$wpdb->users}.ID ) {$order}";
+            // Order the posts by recipe count.
+            $query->query_orderby = "ORDER BY ( SELECT COUNT(*) FROM {$wpdb->posts} posts WHERE posts.post_type = 'cp_recipe' AND posts.post_status IN ('publish', 'pending', 'draft') AND posts.post_author = {$wpdb->users}.ID ) {$order}";
         }
     }
 

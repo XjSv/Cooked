@@ -1,6 +1,6 @@
 {
   "name": "cooked",
-  "version": "1.9.6",
+  "version": "1.10.0",
   "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.",
   "main": "index.js",
   "scripts": {

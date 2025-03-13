@@ -6,7 +6,7 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author: 		Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.9.6
+Version: 		1.10.0
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.9.6' );
+define( 'COOKED_VERSION', '1.10.0' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -456,11 +456,20 @@ final class Cooked_Plugin {
         // Set filter for plugin's languages directory.
         $cooked_lang_dir = apply_filters( 'cooked_languages_directory', COOKED_DIR . 'languages/' );
 
-        load_plugin_textdomain(
-            'cooked',
-            false,
-            $cooked_lang_dir
-        );
+        // Traditional WordPress plugin locale filter.
+        $locale = apply_filters( 'plugin_locale',  get_locale(), 'cooked' );
+        $mofile = sprintf( '%1$s-%2$s.mo', 'cooked', $locale );
+
+        // Look in wp-content/languages/plugins/cooked
+        $lang_file_ext = WP_LANG_DIR . '/plugins/cooked/' . $mofile;
+
+        if ( file_exists( $lang_file_ext ) ) {
+            // Load the externally located language files.
+            load_textdomain( 'cooked', $lang_file_ext );
+        } else {
+            // Load the default language files.
+            load_plugin_textdomain( 'cooked', false, COOKED_FOLDER . '/languages' );
+        }
     }
 }
 

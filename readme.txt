@@ -81,14 +81,14 @@ Version 1.10.0 includes a major change to recipe post statuses - now using WordP
 == Changelog ==
 
 = 1.10.0 =
-* **TWEAK:** Removed custom recipe post statuses. Now using the default WordPress statuses: 'publish', 'pending', 'draft', 'trash'. This should improve performance and compatibility with other plugins.
-* **TWEAK:** Changed robots to nofollow and noindex in print page.
-* **FIX:** Fixed bug with settings checkbox fields with default values can't be tuned off.
-* **NEW:** Added a new custom image size called cooked-profile-photo. This is used for the user profile photo.
-* **NEW:** Added option to change heading container to H2, H3, H4, H5, H6 or Div for Directions and Ingredients.
-* **FIX:** Added title attribute to the direction images.
-* **FIX:** Fixed the show_header attribute that was not properly read for the [cooked-notes] shortcode.
-* **FIX:** Fixed a bug with loading the built-in French translation.
+* **TWEAK:** Simplified recipe status options to match standard WordPress statuses (publish, pending, draft, trash) for better performance and plugin compatibility.
+* **TWEAK:** Improved SEO by preventing print pages from being indexed in search engines.
+* **FIX:** Fixed an issue where checkbox settings with default values couldn't be turned off in the settings panel.
+* **NEW:** Added support for profile photos with a new optimized image size specifically for user avatars.
+* **NEW:** Added flexibility to customize heading styles for Directions and Ingredients sections - now you can choose between H2, H3, H4, H5, H6 or regular text.
+* **FIX:** Improved accessibility by adding descriptive titles to recipe direction images.
+* **FIX:** Fixed an issue where recipe notes weren't displaying properly when using the [cooked-notes] shortcode with show_header option.
+* **FIX:** Improved French language support by fixing issues with the built-in translation.
 
 = 1.9.6 =
 * **FIX:** Fixed bug with the recipe search not working with special characters and spaces in the keywords when the pretty URL structure is used.

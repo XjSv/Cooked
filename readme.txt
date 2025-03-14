@@ -76,9 +76,19 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.9.6 includes a bug fix for the recipe search, schema data generation and a memory fix when using the themes Customizer and the recipe card widget.
+Version 1.10.0 includes a major change to recipe post statuses - now using WordPress default statuses (publish, pending, draft, trash) instead of custom statuses. This change improves performance and plugin compatibility. Also includes improvements to SEO with nofollow/noindex for print pages, new heading options for Directions/Ingredients sections, and various bug fixes.
 
 == Changelog ==
+
+= 1.10.0 =
+* **TWEAK:** Removed custom recipe post statuses. Now using the default WordPress statuses: 'publish', 'pending', 'draft', 'trash'. This should improve performance and compatibility with other plugins.
+* **TWEAK:** Changed robots to nofollow and noindex in print page.
+* **FIX:** Fixed bug with settings checkbox fields with default values can't be tuned off.
+* **NEW:** Added a new custom image size called cooked-profile-photo. This is used for the user profile photo.
+* **NEW:** Added option to change heading container to H2, H3, H4, H5, H6 or Div for Directions and Ingredients.
+* **FIX:** Added title attribute to the direction images.
+* **FIX:** Fixed the show_header attribute that was not properly read for the [cooked-notes] shortcode.
+* **FIX:** Fixed a bug with loading the built-in French translation.
 
 = 1.9.6 =
 * **FIX:** Fixed bug with the recipe search not working with special characters and spaces in the keywords when the pretty URL structure is used.

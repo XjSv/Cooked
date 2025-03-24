@@ -81,6 +81,13 @@ class Cooked_Measurements {
                 'plural' => __('tablespoons', 'cooked'),
                 'variations' => ['T', 'tbl.', 'tbl', 'tbs.', 'tbs', 'tbsp.', 'tbsp', 'tablespoon', 'tablespoons'],
             ],
+            'dl' => [
+                'singular_abbr' => __('dl', 'cooked'),
+                'plural_abbr' => __('dl', 'cooked'),
+                'singular' => __('deciliter', 'cooked'),
+                'plural' => __('deciliters', 'cooked'),
+                'variations' => ['dl', 'dl.', 'deciliter', 'deciliters'],
+            ],
             'ml' => [
                 'singular_abbr' => __('ml', 'cooked'),
                 'plural_abbr' => __('ml', 'cooked'),

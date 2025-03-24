@@ -72,7 +72,7 @@ class Cooked_Users {
 
                 $user_recipe_args = [
                     'post_type' => 'cp_recipe',
-                    'post_status' => 'publish',
+                    'post_status' => ['publish', 'pending', 'draft'],
                     'posts_per_page' => -1,
                     'author' => $user_id
                 ];

@@ -636,7 +636,8 @@ class Cooked_Shortcodes {
 
         $recipe_post_url = get_permalink( $recipe_settings['id'] );
         $query_args['print'] = 1;
-        $query_args['servings'] = (float)esc_html( get_query_var( 'servings', false ) );
+        $servings = (float)esc_html( get_query_var( 'servings', false ) );
+        $query_args['servings'] = !empty($servings) ? $servings : false;
         echo '<span class="cooked-print"><a target="_blank" rel="nofollow" href="' . add_query_arg( $query_args, $recipe_post_url ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
     }
 

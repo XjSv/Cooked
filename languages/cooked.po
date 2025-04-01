@@ -207,7 +207,7 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:1278
 #: includes/class.cooked-recipes.php:643
 #: includes/class.cooked-settings.php:229
-#: includes/class.cooked-shortcodes.php:755
+#: includes/class.cooked-shortcodes.php:760
 msgid "Notes"
 msgstr ""
 
@@ -404,379 +404,379 @@ msgstr ""
 msgid "tablespoons"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:85
-#: includes/class.cooked-measurements.php:86
+#: includes/class.cooked-measurements.php:92
+#: includes/class.cooked-measurements.php:93
 msgid "ml"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:87
+#: includes/class.cooked-measurements.php:94
 msgid "milliliter"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:88
+#: includes/class.cooked-measurements.php:95
 msgid "milliliters"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:92
-#: includes/class.cooked-measurements.php:93
+#: includes/class.cooked-measurements.php:99
+#: includes/class.cooked-measurements.php:100
 msgid "l"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:94
+#: includes/class.cooked-measurements.php:101
 msgid "liter"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:95
+#: includes/class.cooked-measurements.php:102
 msgid "liters"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:99
-#: includes/class.cooked-measurements.php:101
+#: includes/class.cooked-measurements.php:106
+#: includes/class.cooked-measurements.php:108
 msgid "stick"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:100
-#: includes/class.cooked-measurements.php:102
+#: includes/class.cooked-measurements.php:107
+#: includes/class.cooked-measurements.php:109
 msgid "sticks"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:106
+#: includes/class.cooked-measurements.php:113
 msgid "lb"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:107
+#: includes/class.cooked-measurements.php:114
 msgid "lbs"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:108
+#: includes/class.cooked-measurements.php:115
 msgid "pound"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:109
-msgid "pounds"
-msgstr ""
-
-#: includes/class.cooked-measurements.php:113
-#: includes/class.cooked-measurements.php:115
-msgid "dash"
-msgstr ""
-
-#: includes/class.cooked-measurements.php:114
 #: includes/class.cooked-measurements.php:116
-msgid "dashes"
+msgid "pounds"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:120
 #: includes/class.cooked-measurements.php:122
-msgid "drop"
+msgid "dash"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:121
 #: includes/class.cooked-measurements.php:123
-msgid "drops"
+msgid "dashes"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:127
-msgid "gal"
+#: includes/class.cooked-measurements.php:129
+msgid "drop"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:128
-msgid "gals"
-msgstr ""
-
-#: includes/class.cooked-measurements.php:129
-msgid "gallon"
-msgstr ""
-
 #: includes/class.cooked-measurements.php:130
-msgid "gallons"
+msgid "drops"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:134
-#: includes/class.cooked-measurements.php:136
-msgid "pinch"
+msgid "gal"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:135
+msgid "gals"
+msgstr ""
+
+#: includes/class.cooked-measurements.php:136
+msgid "gallon"
+msgstr ""
+
 #: includes/class.cooked-measurements.php:137
-msgid "pinches"
+msgid "gallons"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:141
-#: includes/class.cooked-measurements.php:142
-msgid "pt"
-msgstr ""
-
 #: includes/class.cooked-measurements.php:143
-msgid "pint"
+msgid "pinch"
 msgstr ""
 
+#: includes/class.cooked-measurements.php:142
 #: includes/class.cooked-measurements.php:144
-msgid "pints"
+msgid "pinches"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:148
-msgid "qt"
-msgstr ""
-
 #: includes/class.cooked-measurements.php:149
-msgid "qts"
+msgid "pt"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:150
-msgid "quart"
+msgid "pint"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:151
-msgid "quarts"
+msgid "pints"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:155
+msgid "qt"
+msgstr ""
+
 #: includes/class.cooked-measurements.php:156
-msgid "drizzle"
+msgid "qts"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:157
+msgid "quart"
+msgstr ""
+
 #: includes/class.cooked-measurements.php:158
-msgid "Drizzle"
+msgid "quarts"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:162
-#: includes/class.cooked-measurements.php:164
-msgid "clove"
+#: includes/class.cooked-measurements.php:163
+msgid "drizzle"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:163
+#: includes/class.cooked-measurements.php:164
 #: includes/class.cooked-measurements.php:165
-msgid "cloves"
+msgid "Drizzle"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:169
 #: includes/class.cooked-measurements.php:171
-msgid "jar"
+msgid "clove"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:170
 #: includes/class.cooked-measurements.php:172
-msgid "jars"
+msgid "cloves"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:176
 #: includes/class.cooked-measurements.php:178
-msgid "can"
+msgid "jar"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:177
 #: includes/class.cooked-measurements.php:179
+msgid "jars"
+msgstr ""
+
+#: includes/class.cooked-measurements.php:183
+#: includes/class.cooked-measurements.php:185
+msgid "can"
+msgstr ""
+
+#: includes/class.cooked-measurements.php:184
+#: includes/class.cooked-measurements.php:186
 msgid "cans"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:195
+#: includes/class.cooked-measurements.php:202
 #: includes/class.cooked-settings.php:233
 msgid "Servings"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:199
+#: includes/class.cooked-measurements.php:206
 msgid "Serving size"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:206
+#: includes/class.cooked-measurements.php:213
 msgid "Calories"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:213
+#: includes/class.cooked-measurements.php:220
 msgid "Total Fat"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:219
+#: includes/class.cooked-measurements.php:226
 msgid "Saturated Fat"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:225
+#: includes/class.cooked-measurements.php:232
 msgid "Trans Fat"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:226
+#: includes/class.cooked-measurements.php:233
 msgid "<i>Trans</i> Fat"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:231
+#: includes/class.cooked-measurements.php:238
 msgid "Monounsaturated Fat"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:236
+#: includes/class.cooked-measurements.php:243
 msgid "Polyunsaturated Fat"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:243
+#: includes/class.cooked-measurements.php:250
 msgid "Cholesterol"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:249
+#: includes/class.cooked-measurements.php:256
 msgid "Sodium"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:255
+#: includes/class.cooked-measurements.php:262
 msgid "Total Carbohydrate"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:255
+#: includes/class.cooked-measurements.php:262
 msgid "Net Carbohydrate"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:261
+#: includes/class.cooked-measurements.php:268
 msgid "Dietary Fiber"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:267
+#: includes/class.cooked-measurements.php:274
 msgid "Total Sugars"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:273
+#: includes/class.cooked-measurements.php:280
 msgid "Added Sugars"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:281
+#: includes/class.cooked-measurements.php:288
 msgid "Protein"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:290
+#: includes/class.cooked-measurements.php:297
 msgid "Vitamin A"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:296
+#: includes/class.cooked-measurements.php:303
 msgid "Vitamin C"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:302
+#: includes/class.cooked-measurements.php:309
 msgid "Calcium"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:308
+#: includes/class.cooked-measurements.php:315
 msgid "Iron"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:314
+#: includes/class.cooked-measurements.php:321
 msgid "Potassium"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:320
+#: includes/class.cooked-measurements.php:327
 msgid "Vitamin D"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:326
+#: includes/class.cooked-measurements.php:333
 msgid "Vitamin E"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:332
+#: includes/class.cooked-measurements.php:339
 msgid "Vitamin K"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:338
+#: includes/class.cooked-measurements.php:345
 msgid "Thiamin"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:344
+#: includes/class.cooked-measurements.php:351
 msgid "Riboflavin"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:350
+#: includes/class.cooked-measurements.php:357
 msgid "Niacin"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:356
+#: includes/class.cooked-measurements.php:363
 msgid "Vitamin B6"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:362
+#: includes/class.cooked-measurements.php:369
 msgid "Folate"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:368
+#: includes/class.cooked-measurements.php:375
 msgid "Vitamin B12"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:374
+#: includes/class.cooked-measurements.php:381
 msgid "Biotin"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:380
+#: includes/class.cooked-measurements.php:387
 msgid "Pantothenic Acid"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:386
+#: includes/class.cooked-measurements.php:393
 msgid "Phosphorus"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:392
+#: includes/class.cooked-measurements.php:399
 msgid "Iodine"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:398
+#: includes/class.cooked-measurements.php:405
 msgid "Magnesium"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:404
+#: includes/class.cooked-measurements.php:411
 msgid "Zinc"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:410
+#: includes/class.cooked-measurements.php:417
 msgid "Selenium"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:416
+#: includes/class.cooked-measurements.php:423
 msgid "Copper"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:422
+#: includes/class.cooked-measurements.php:429
 msgid "Manganese"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:428
+#: includes/class.cooked-measurements.php:435
 msgid "Chromium"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:434
+#: includes/class.cooked-measurements.php:441
 msgid "Molybdenum"
 msgstr ""
 
-#: includes/class.cooked-measurements.php:440
+#: includes/class.cooked-measurements.php:447
 msgid "Chloride"
 msgstr ""
 
 #. translators: singular and plural number of minutes (shorthand)
-#: includes/class.cooked-measurements.php:696
-#: includes/class.cooked-measurements.php:707
-#: includes/class.cooked-measurements.php:725
+#: includes/class.cooked-measurements.php:703
+#: includes/class.cooked-measurements.php:714
+#: includes/class.cooked-measurements.php:732
 msgid "%d min"
 msgstr ""
 
 #. translators: singular and plural number of minutes (shorthand)
-#: includes/class.cooked-measurements.php:696
-#: includes/class.cooked-measurements.php:707
-#: includes/class.cooked-measurements.php:725
+#: includes/class.cooked-measurements.php:703
+#: includes/class.cooked-measurements.php:714
+#: includes/class.cooked-measurements.php:732
 msgid "%d mins"
 msgstr ""
 
 #. translators: singular and plural number of hours (shorthand)
-#: includes/class.cooked-measurements.php:705
-#: includes/class.cooked-measurements.php:723
+#: includes/class.cooked-measurements.php:712
+#: includes/class.cooked-measurements.php:730
 msgid "%d hr"
 msgstr ""
 
 #. translators: singular and plural number of hours (shorthand)
-#: includes/class.cooked-measurements.php:705
-#: includes/class.cooked-measurements.php:723
+#: includes/class.cooked-measurements.php:712
+#: includes/class.cooked-measurements.php:730
 msgid "%d hrs"
 msgstr ""
 
 #. translators: singular and plural number of days
-#: includes/class.cooked-measurements.php:721
+#: includes/class.cooked-measurements.php:728
 msgid "%d day"
 msgstr ""
 
 #. translators: singular and plural number of days
-#: includes/class.cooked-measurements.php:721
+#: includes/class.cooked-measurements.php:728
 msgid "%d days"
 msgstr ""
 
@@ -978,8 +978,8 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:389
 #: includes/class.cooked-recipe-meta.php:1037
 #: includes/class.cooked-settings.php:230
-#: includes/class.cooked-shortcodes.php:443
-#: includes/class.cooked-shortcodes.php:651
+#: includes/class.cooked-shortcodes.php:447
+#: includes/class.cooked-shortcodes.php:656
 msgid "Prep Time"
 msgstr ""
 
@@ -992,17 +992,17 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:394
 #: includes/class.cooked-recipe-meta.php:1038
 #: includes/class.cooked-settings.php:231
-#: includes/class.cooked-shortcodes.php:444
-#: includes/class.cooked-shortcodes.php:660
+#: includes/class.cooked-shortcodes.php:448
+#: includes/class.cooked-shortcodes.php:665
 msgid "Cook Time"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:399
 #: includes/class.cooked-recipe-meta.php:1039
 #: includes/class.cooked-settings.php:232
-#: includes/class.cooked-shortcodes.php:445
-#: includes/class.cooked-shortcodes.php:671
-#: includes/class.cooked-shortcodes.php:678
+#: includes/class.cooked-shortcodes.php:449
+#: includes/class.cooked-shortcodes.php:676
+#: includes/class.cooked-shortcodes.php:683
 msgid "Total Time"
 msgstr ""
 
@@ -1057,27 +1057,27 @@ msgid "Nutrition Information"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:839
-#: includes/class.cooked-shortcodes.php:1040
+#: includes/class.cooked-shortcodes.php:1045
 msgid "Nutrition Facts"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:857
-#: includes/class.cooked-shortcodes.php:1008
+#: includes/class.cooked-shortcodes.php:1013
 msgid "Amount per serving"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:867
-#: includes/class.cooked-shortcodes.php:1018
+#: includes/class.cooked-shortcodes.php:1023
 msgid "% Daily Value *"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:886
-#: includes/class.cooked-shortcodes.php:950
+#: includes/class.cooked-shortcodes.php:955
 msgid "Includes"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:918
-#: includes/class.cooked-shortcodes.php:1044
+#: includes/class.cooked-shortcodes.php:1049
 msgid "The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice."
 msgstr ""
 
@@ -1140,14 +1140,14 @@ msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:1036
 #: includes/class.cooked-settings.php:225
-#: includes/class.cooked-shortcodes.php:440
-#: includes/class.cooked-shortcodes.php:605
+#: includes/class.cooked-shortcodes.php:444
+#: includes/class.cooked-shortcodes.php:609
 msgid "Author"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:1040
-#: includes/class.cooked-shortcodes.php:441
-#: includes/class.cooked-shortcodes.php:616
+#: includes/class.cooked-shortcodes.php:445
+#: includes/class.cooked-shortcodes.php:620
 msgid "Difficulty"
 msgstr ""
 
@@ -1157,8 +1157,8 @@ msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:1042
 #: includes/class.cooked-settings.php:226
-#: includes/class.cooked-shortcodes.php:698
-#: includes/class.cooked-shortcodes.php:701
+#: includes/class.cooked-shortcodes.php:703
+#: includes/class.cooked-shortcodes.php:706
 #: includes/class.cooked-taxonomies.php:39
 msgid "Category"
 msgstr ""
@@ -1391,7 +1391,7 @@ msgid "Triple (%s Servings)"
 msgstr ""
 
 #: includes/class.cooked-recipes.php:792
-#: includes/class.cooked-shortcodes.php:442
+#: includes/class.cooked-shortcodes.php:446
 msgid "Yields"
 msgstr ""
 
@@ -2066,4 +2066,17 @@ msgstr ""
 
 #: includes/class.cooked-settings.php:165
 msgid "No pages"
+msgstr ""
+
+#: includes/class.cooked-measurements.php:85
+#: includes/class.cooked-measurements.php:86
+msgid "dl"
+msgstr ""
+
+#: includes/class.cooked-measurements.php:87
+msgid "deciliter"
+msgstr ""
+
+#: includes/class.cooked-measurements.php:88
+msgid "deciliters"
 msgstr ""

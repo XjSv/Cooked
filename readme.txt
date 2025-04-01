@@ -88,6 +88,7 @@ Version 1.10.0 includes a major change to recipe post statuses - now using WordP
 * **NEW:** Added flexibility to customize heading styles for Directions and Ingredients sections - now you can choose between H2, H3, H4, H5, H6 or regular text.
 * **FIX:** Improved accessibility by adding descriptive titles to recipe direction images.
 * **FIX:** Fixed an issue where recipe notes weren't displaying properly when using the [cooked-notes] shortcode with show_header option.
+* **FIX:** Fixed an issue where the servings was showing as 0 in the recipe print view.
 * **FIX:** Improved French language support by fixing issues with the built-in translation.
 
 = 1.9.6 =

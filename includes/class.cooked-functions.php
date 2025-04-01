@@ -133,7 +133,6 @@ class Cooked_Functions {
 	}
 
 	public static function print_options_js() {
-
 		?><script type="text/javascript">
 
 			var print_options = document.getElementsByTagName('input');

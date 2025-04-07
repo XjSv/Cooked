@@ -55,9 +55,6 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
                 'order' => 'DESC'
             ];
 
-            // Filter out the pending/draft recipes.
-            $args = apply_filters( 'cooked_recipe_public_query_filters', $args );
-
             $recipes = Cooked_Recipes::get( $args, false, false, false, true );
             if ( isset($recipes['raw']) ): unset( $recipes['raw'] ); endif;
             $recipe_list = [];

@@ -371,13 +371,17 @@ class Cooked_Shortcodes {
 
                         $gallery_items = ( isset($recipe_settings['gallery']['items']) && !empty($recipe_settings['gallery']['items']) ? apply_filters( 'cooked_gallery_items_output', $recipe_settings['gallery']['items'] ) : [] );
 
-                        if ( isset($gallery_items) && !empty($gallery_items) ):
-                            foreach( $gallery_items as $item ):
+                        if ( isset($gallery_items) && !empty($gallery_items) ) {
+                            foreach ( $gallery_items as $item ) {
                                 $image_src = wp_get_attachment_image_src( $item, [900, 900] );
                                 $image_title = get_the_title( $item );
-                                $gallery_html .= '<a href="' . esc_url( $image_src[0] ) . '" data-alt="'.esc_attr( $image_title ).'" data-caption="'.esc_attr( $image_title ).'"><img alt="'.esc_attr( $image_title ).'" src="' . wp_get_attachment_image_url( $item, 'thumbnail' ) . '" /></a>';
-                            endforeach;
-                        endif;
+                                if ( is_array($image_src) && isset($image_src[0]) ) {
+                                    $gallery_html .= '<a href="' . esc_url( $image_src[0] ) . '" data-alt="'.esc_attr( $image_title ).'" data-caption="'.esc_attr( $image_title ).'">
+                                        <img alt="'.esc_attr( $image_title ).'" src="' . wp_get_attachment_image_url( $item, 'thumbnail' ) . '" />
+                                    </a>';
+                                }
+                            }
+                        }
 
                         if ( $cooked_gallery_video_last_option && isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ):
                             $gallery_html .= '<a href="' . esc_url($recipe_settings['gallery']['video_url']) . '" data-caption="' . esc_attr($recipe_settings['title']) . '">' . esc_html($recipe_settings['title']) . '</a>';
@@ -632,7 +636,8 @@ class Cooked_Shortcodes {
 
         $recipe_post_url = get_permalink( $recipe_settings['id'] );
         $query_args['print'] = 1;
-        $query_args['servings'] = (float)esc_html( get_query_var( 'servings', false ) );
+        $servings = (float)esc_html( get_query_var( 'servings', false ) );
+        $query_args['servings'] = !empty($servings) ? $servings : false;
         echo '<span class="cooked-print"><a target="_blank" rel="nofollow" href="' . add_query_arg( $query_args, $recipe_post_url ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
     }
 
@@ -744,7 +749,8 @@ class Cooked_Shortcodes {
             'show_header' => false,
         ], $atts);
 
-        $show_header = Cooked_Functions::sanitize_text_field( $atts['show_header'] );
+        $show_header = Cooked_Functions::sanitize_text_field($atts['show_header']);
+        $show_header = !$show_header || $show_header == 'false' ? false : $show_header;
 
         if (isset($_cooked_settings['recipe_info_display_options']) && is_array($_cooked_settings['recipe_info_display_options']) && in_array('notes', $_cooked_settings['recipe_info_display_options'])) {
             ob_start();

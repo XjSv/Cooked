@@ -3,7 +3,7 @@
 	<form action="options.php" method="post">
 
 	<div class="cooked-settings-update-button">
-		<?php submit_button( __( 'Update Settings','cooked' ), 'primary', 'submit', false ); ?>
+		<?php submit_button( __( 'Update Settings', 'cooked' ), 'primary', 'submit', false ); ?>
 	</div>
 
 	<div class="cooked-settings-header">
@@ -18,7 +18,7 @@
 
 		$tab_counter = 1;
 		echo '<ul id="cooked-settings-tabs" class="cooked-clearfix">';
-		foreach( $cooked_settings_tabs_fields as $tab_slug => $tab ):
+		foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ):
 			echo '<li id="cooked-settings-tab-' . esc_attr( $tab_slug ) . '"' . ( $tab_counter == 1 ? ' class="active"' : '' ) . '><a href="#' . esc_attr( $tab_slug ) . '"><i class="cooked-icon cooked-icon-' . esc_attr( $tab['icon'] ) . '"></i>&nbsp;&nbsp;' . esc_attr( $tab['name'] ) . '</a></li>';
 			$tab_counter++;
 		endforeach;
@@ -48,7 +48,7 @@
 
 							// Add a hidden H2 tag for the messages, if any, to show up below it.
 							if ($tab_counter == 1): echo '<h2 style="display:none;"></h2>'; endif;
-							foreach( $tab['fields'] as $name => $field ):
+							foreach ( $tab['fields'] as $name => $field ):
 
 								$notitle = false;
 								$conditional_requirement = '';
@@ -74,7 +74,6 @@
 											$conditional_requirement = ' v-show="' . esc_attr($field['conditional_requirement']) . '"';
 										endif;
 									endif;
-
 
 									echo ( $conditional_requirement ? '<transition name="fade">' : '' );
 									echo '<div' . $conditional_requirement . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
@@ -104,22 +103,20 @@
 
 	if ( !empty($conditions) ):
 
-		foreach( $conditions as $setting_name => $array ):
-			foreach( $array as $name => $true_val ):
+		foreach ( $conditions as $setting_name => $array ):
+			foreach ( $array as $name => $true_val ):
 				$val = ( isset( $_cooked_settings[$setting_name] ) && is_array( $_cooked_settings[$setting_name] ) && in_array( $true_val, $_cooked_settings[$setting_name] ) ? 'true' : 'false' );
 				$conditional_requirements_js[] = "'$name':$val";
 			endforeach;
 		endforeach; ?>
 
 		<script type="text/javascript">
-
 			var vm = new Vue({
 			  	el: '#cooked-settings-panel',
 			  	data: {
 			  		<?php echo implode( ',', $conditional_requirements_js ); ?>
 			  	}
 			});
-
 		</script>
 
 		<style type="text/css">

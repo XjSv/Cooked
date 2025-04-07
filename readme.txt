@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.7.1
-Stable tag: 1.9.6
+Stable tag: 1.10.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,20 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.9.6 includes a bug fix for the recipe search, schema data generation and a memory fix when using the themes Customizer and the recipe card widget.
+Version 1.10.0 includes a major change to recipe post statuses - now using WordPress default statuses (publish, pending, draft, trash) instead of custom statuses. This change improves performance and plugin compatibility. Also includes improvements to SEO with nofollow/noindex for print pages, new heading options for Directions/Ingredients sections, and various bug fixes.
 
 == Changelog ==
+
+= 1.10.0 =
+* **TWEAK:** Simplified recipe status options to match standard WordPress statuses (publish, pending, draft, trash) for better performance and plugin compatibility.
+* **TWEAK:** Improved SEO by preventing print pages from being indexed in search engines.
+* **FIX:** Fixed an issue where checkbox settings with default values couldn't be turned off in the settings panel.
+* **NEW:** Added support for profile photos with a new optimized image size specifically for user avatars.
+* **NEW:** Added flexibility to customize heading styles for Directions and Ingredients sections - now you can choose between H2, H3, H4, H5, H6 or regular text.
+* **FIX:** Improved accessibility by adding descriptive titles to recipe direction images.
+* **FIX:** Fixed an issue where recipe notes weren't displaying properly when using the [cooked-notes] shortcode with show_header option.
+* **FIX:** Fixed an issue where the servings was showing as 0 in the recipe print view.
+* **FIX:** Improved French language support by fixing issues with the built-in translation.
 
 = 1.9.6 =
 * **FIX:** Fixed bug with the recipe search not working with special characters and spaces in the keywords when the pretty URL structure is used.

@@ -33,7 +33,7 @@ class Cooked_Recipes {
         add_filter('get_canonical_url', [&$this, 'modify_browse_page_canonical_url'], 20, 2);
     }
 
-    public static function get( $args = false, $single = false, $ids_only = false, $limit = false, $ids_and_titles_only = false ) {
+    public static function get( $args = false, $single = false, $ids_only = false, $limit = false, $ids_and_titles_only = false, $post_status = 'publish' ) {
         $recipes = [];
         $counter = 0;
 
@@ -44,7 +44,7 @@ class Cooked_Recipes {
             $args = [
                 'post_type' => 'cp_recipe',
                 'post__in' => [$recipe_id],
-                'post_status' => 'publish'
+                'post_status' => $post_status
             ];
 
         // Default Query
@@ -53,7 +53,7 @@ class Cooked_Recipes {
             $args = [
                 'post_type' => 'cp_recipe',
                 'posts_per_page' => -1,
-                'post_status' => 'publish',
+                'post_status' => $post_status,
                 'orderby' => 'name',
                 'order' => 'ASC'
             ];
@@ -197,9 +197,8 @@ class Cooked_Recipes {
     }
 
     public static function cooked_pre_get_posts( $q ) {
-        if ( $title = $q->get( '_cooked_title' ) ):
+        if ( $title = $q->get( '_cooked_title' ) ) {
             add_filter( 'get_meta_sql', function( $sql ) use ( $title ) {
-
                 global $wpdb, $cooked_modified_where;
 
                 if ( $cooked_modified_where ) return $sql;
@@ -214,7 +213,7 @@ class Cooked_Recipes {
 
                 return $sql;
             });
-        endif;
+        }
     }
 
     public static function recipe_list( $orderby = 'date', $show = 5, $recipes = false, $width = false, $hide_image = false, $hide_author = false ) {
@@ -239,9 +238,6 @@ class Cooked_Recipes {
             $args['order'] = 'ASC';
             $args['post__in'] = $recipes;
         }
-
-        // Filter out the pending/draft recipes.
-        $args = apply_filters( 'cooked_recipe_public_query_filters', $args );
 
         $recipes = Cooked_Recipes::get( $args );
 
@@ -492,11 +488,16 @@ class Cooked_Recipes {
         $orderby = $atts['orderby'] ? esc_html( $atts['orderby'] ) : $sorting_types[0];
         $meta_sort =  false;
 
+        $post_status = 'publish';
+        if ( isset($atts['public_recipes']) && $atts['public_recipes'] == false ):
+            $post_status = ['publish', 'pending', 'draft'];
+        endif;
+
         $recipe_args = [
             'paged' => $current_recipe_page,
             'post_type' => 'cp_recipe',
             'posts_per_page' => $recipes_per_page,
-            'post_status' => 'publish',
+            'post_status' => $post_status,
             'orderby' => $orderby,
             'order' => ($atts['order'] ? esc_html($atts['order']) : $sorting_types[1])
         ];
@@ -532,6 +533,7 @@ class Cooked_Recipes {
                     'compare' => 'LIKE'
                 ];
             endif;
+            $recipe_args['_cooked_title'] = $prep_text;
             $recipe_args['s'] = $prep_text;
             $recipe_args['meta_query'] = $meta_query;
 
@@ -808,7 +810,6 @@ class Cooked_Recipes {
     }
 
     public static function single_ingredient( $ing, $checkboxes = true, $plain_text = false ) {
-
         global $recipe_settings;
 
         $Cooked_Measurements = new Cooked_Measurements();
@@ -816,51 +817,57 @@ class Cooked_Recipes {
 
         ob_start();
 
-        if ( isset($ing['section_heading_name']) && $ing['section_heading_name'] ):
+        if ( isset($ing['section_heading_name']) && $ing['section_heading_name'] ) {
 
-            if ( $plain_text ):
+            if ( $plain_text ) {
                 return $ing['section_heading_name'];
-            else:
-                echo '<div class="cooked-single-ingredient cooked-heading">' . esc_html($ing['section_heading_name']) . '</div>';
-            endif;
+            } else {
+                $valid_elements = ['div', 'h2', 'h3', 'h4', 'h5', 'h6'];
+                $element = (isset($ing['section_heading_element']) && in_array($ing['section_heading_element'], $valid_elements, true))
+                    ? $ing['section_heading_element']
+                    : 'div';
 
-        elseif ( isset($ing['name']) && $ing['name'] ):
+                echo '<' . $element . ' class="cooked-single-ingredient cooked-heading">' . esc_html($ing['section_heading_name']) . '</' . $element . '>';
+            }
+
+        } elseif ( isset($ing['name']) && $ing['name'] ) {
 
             $default_serving_size = ( isset($recipe_settings['nutrition']['servings']) && $recipe_settings['nutrition']['servings'] ? $recipe_settings['nutrition']['servings'] : 1 );
             $multiplier = (float)esc_html( get_query_var( 'servings', $recipe_settings['nutrition']['servings'] ) );
             $multiplier = ( !$multiplier ? $default_serving_size : $multiplier );
 
-            if ( !$multiplier || $multiplier == $default_serving_size ):
+            if ( !$multiplier || $multiplier == $default_serving_size ) {
                 $multiplier = 1;
-            else:
+            } else {
                 $multiplier = $multiplier / $default_serving_size;
-            endif;
+            }
 
-            if ($multiplier === 1):
+            if ($multiplier === 1) {
                 $amount = ( isset($ing['amount']) && $ing['amount'] ? esc_html( $ing['amount'] ) : false );
                 $amount = $Cooked_Measurements->cleanup_amount($amount);
                 $format = ( strpos($amount, '/') === false ? ( strpos($amount, '.') !== false || strpos($amount, ',') !== false ? 'decimal' : 'fraction' ) : 'fraction' );
                 $float_amount = $Cooked_Measurements->calculate( $amount, 'decimal' );
                 $amount = $Cooked_Measurements->format_amount( $float_amount, $format );
-            else:
+            } else {
                 $amount = ( isset($ing['amount']) && $ing['amount'] ? esc_html( $ing['amount'] ) : false );
                 $amount = $Cooked_Measurements->cleanup_amount($amount);
                 $format = ( strpos($amount, '/') === false ? ( strpos($amount, '.') !== false || strpos($amount, ',') !== false ? 'decimal' : 'fraction' ) : 'fraction' );
                 $float_amount = $Cooked_Measurements->calculate( $amount, 'decimal' );
-                if ($float_amount):
+
+                if ($float_amount) {
                     $float_amount = $float_amount * $multiplier;
                     $amount = $Cooked_Measurements->format_amount( $float_amount, $format );
-                endif;
-            endif;
+                }
+            }
 
             $measurement = ( isset($ing['measurement']) && $ing['measurement'] ? esc_html( $ing['measurement'] ) : false );
             $measurement = ( $measurement && $float_amount ? $Cooked_Measurements->singular_plural( $measurements[ $measurement ]['singular_abbr'], $measurements[ $measurement ]['plural_abbr'], $float_amount ) : false );
 
             $name = ( isset($ing['name']) && $ing['name'] ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['name'] ), $ing ) : false );
 
-            if ( $plain_text ):
+            if ( $plain_text ) {
                 return ( $amount ? $amount . ' ' : '' ) . ( $measurement ? $measurement . ' ' : '' ) . ( $name ? $name : '' );
-            else:
+            } else {
                 echo '<div itemprop="recipeIngredient" class="cooked-single-ingredient cooked-ingredient' . ( !$checkboxes ? ' cooked-ing-no-checkbox' : '' ) . '">';
                     echo ( $checkboxes ? '<span class="cooked-ingredient-checkbox">&nbsp;</span>' : '' );
                     do_action( 'cooked_ingredient_after_checkbox', $ing );
@@ -869,13 +876,11 @@ class Cooked_Recipes {
                     echo ( $name ? '<span class="cooked-ing-name">' . wp_kses_post( $name ) . '</span>' : '' );
                     do_action( 'cooked_ingredient_after_name', $ing );
                 echo '</div>';
-            endif;
-
-        endif;
+            }
+        }
 
         $ing_html = ob_get_clean();
         echo apply_filters( 'cooked_single_ingredient_html', $ing_html, $ing, $checkboxes, $plain_text );
-
     }
 
     public static function single_direction($dir, $number = false, $plain_text = false, $step = false, $atts = false) {
@@ -886,13 +891,18 @@ class Cooked_Recipes {
             if ($plain_text) {
                 return $dir['section_heading_name'];
             } else {
-                echo '<div class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</div>';
+                $valid_elements = ['div', 'h2', 'h3', 'h4', 'h5', 'h6'];
+                $element = (isset($dir['section_heading_element']) && in_array($dir['section_heading_element'], $valid_elements, true))
+                    ? $dir['section_heading_element']
+                    : 'div';
+
+                echo '<' . $element . ' class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</' . $element . '>';
             }
 
         } elseif (isset($dir['content']) && $dir['content'] || isset($dir['image']) && $dir['image']) {
 
             $dir_image_size = apply_filters( 'cooked_direction_image_size', 'large' );
-            $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size ) : '';
+            $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size, false, ['title' => esc_attr(get_the_title($dir['image']))] ) : '';
             $content = !empty($dir['content']) ? Cooked_Recipes::format_content($dir['content']) : '';
 
             $image = apply_filters('cooked_direction_image_html', $image, $atts);

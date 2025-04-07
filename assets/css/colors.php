@@ -21,7 +21,7 @@ $_cooked_settings = Cooked_Settings::get();
 .cooked-recipe-search .cooked-taxonomy-selected:hover,
 .cooked-browse-search-button:hover { background:<?php echo esc_html( $_cooked_settings['main_color_hover'] ); ?>; }<?php
 
-if ( isset($_cooked_settings['dark_mode']) && $_cooked_settings['dark_mode'] ):
+if ( isset($_cooked_settings['dark_mode']) &&  in_array('enabled', $_cooked_settings['dark_mode']) ):
 
 ?>/* Dark Mode */
 .cooked-recipe-search .cooked-browse-select { background:rgba(255,255,255,0.075); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05); }

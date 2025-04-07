@@ -50,12 +50,12 @@ class Cooked_Users {
 
         if ( !empty($_user) ) {
             if ( isset( $_user_meta['profile_photo_id'] ) && $_user_meta['profile_photo_id'] && wp_attachment_is_image( $_user_meta['profile_photo_id'] ) ) {
-                $profile_photo = wp_get_attachment_image( $_user_meta['profile_photo_id'], 'cooked-square' );
-                $profile_photo_src = wp_get_attachment_image_src( $_user_meta['profile_photo_id'], 'cooked-square' );
+                $profile_photo = wp_get_attachment_image( $_user_meta['profile_photo_id'], 'cooked-profile-photo' );
+                $profile_photo_src = wp_get_attachment_image_src( $_user_meta['profile_photo_id'], 'cooked-profile-photo' );
                 $profile_photo_src = ( isset($profile_photo_src[0]) && $profile_photo_src[0] ? $profile_photo_src[0] : false );
             } else {
-                $profile_photo = get_avatar($_user->user_email);
-                $profile_photo_src = get_avatar_url($_user->user_email);
+                $profile_photo = get_avatar($_user->user_email, 96);
+                $profile_photo_src = get_avatar_url($_user->user_email, ['size' => 96]);
             }
 
             if ( is_array($_user_meta) ) {
@@ -72,7 +72,7 @@ class Cooked_Users {
 
                 $user_recipe_args = [
                     'post_type' => 'cp_recipe',
-                    'post_status' => 'publish',
+                    'post_status' => ['publish', 'pending', 'draft'],
                     'posts_per_page' => -1,
                     'author' => $user_id
                 ];
@@ -145,19 +145,19 @@ class Cooked_Users {
     function pre_user_query( $query ) {
         global $wpdb, $current_screen;
 
-        // Only filter in the admin
+        // Only filter in the admin.
         if ( ! is_admin() ) return;
 
-        // Only filter on the users screen
+        // Only filter on the users screen.
         if ( ! ( isset( $current_screen ) && 'users' === $current_screen->id ) ) return;
 
-        // Only filter if orderby is set to 'cooked_recipe_count'
+        // Only filter if orderby is set to 'cooked_recipe_count'.
         if ( isset( $query->query_vars ) && isset( $query->query_vars[ 'orderby' ] ) && ( 'cooked_recipe_count' == $query->query_vars[ 'orderby' ] ) ) {
-            // We need the order - default is ASC
+            // We need the order - default is ASC.
             $order = isset( $query->query_vars ) && isset( $query->query_vars[ 'order' ] ) && strcasecmp( $query->query_vars[ 'order' ], 'desc' ) == 0 ? 'DESC' : 'ASC';
 
-            // Order the posts by recipe count
-            $query->query_orderby = "ORDER BY ( SELECT COUNT(*) FROM {$wpdb->posts} posts WHERE posts.post_type = 'cp_recipe' AND posts.post_status = 'publish' AND posts.post_author = {$wpdb->users}.ID ) {$order}";
+            // Order the posts by recipe count.
+            $query->query_orderby = "ORDER BY ( SELECT COUNT(*) FROM {$wpdb->posts} posts WHERE posts.post_type = 'cp_recipe' AND posts.post_status IN ('publish', 'pending', 'draft') AND posts.post_author = {$wpdb->users}.ID ) {$order}";
         }
     }
 

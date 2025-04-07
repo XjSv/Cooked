@@ -34,52 +34,51 @@ class Cooked_Recipe_Meta {
             $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_wp_editor_roles'] ) ? true : false;
         }
 
-        if (!empty($recipe_settings)):
-            foreach ($recipe_settings as $key => $val):
-                if (!is_array($val)):
-                    if ( $key === "content" || $key === "excerpt" || $key === "notes" ):
+        if (!empty($recipe_settings)) {
+            foreach ($recipe_settings as $key => $val) {
+                if (!is_array($val)) {
+                    if ( $key === "content" || $key === "excerpt" || $key === "notes" ) {
                         if ($wp_editor_roles_allowed) {
                             $_recipe_settings[$key] = wp_kses_post( $val );
                         } else {
                             $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                         }
-                    else:
+                    } else {
                         $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
-                    endif;
-                else:
-                    foreach ($val as $subkey => $subval):
-                        if (!is_array($subval)):
+                    }
+                } else {
+                    foreach ($val as $subkey => $subval) {
+                        if (!is_array($subval)) {
                             $_recipe_settings[$key][$subkey] = Cooked_Functions::sanitize_text_field($subval);
-                        else:
-                            foreach ( $subval as $sub_subkey => $sub_subval ):
-                                if ( !is_array($sub_subval) ):
-                                    if ( $sub_subkey == 'content' || $key == 'ingredients' && $sub_subkey == 'name' || $key == 'ingredients' && $sub_subkey == 'section_heading_name' || $key == 'directions' && $sub_subkey == 'section_heading_name' ):
-
+                        } else {
+                            foreach ( $subval as $sub_subkey => $sub_subval ) {
+                                if ( !is_array($sub_subval) ) {
+                                    if ( $sub_subkey == 'content' || $key == 'ingredients' && $sub_subkey == 'name' || $key == 'ingredients' && ($sub_subkey == 'section_heading_name' || $sub_subkey == 'section_heading_element') || $key == 'directions' && ($sub_subkey == 'section_heading_name' || $sub_subkey == 'section_heading_element') ) {
                                         if ($wp_editor_roles_allowed) {
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $sub_subval );
                                         } else {
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = Cooked_Functions::sanitize_text_field( $sub_subval );
                                         }
-                                    else:
+                                    } else {
                                         $_recipe_settings[$key][$subkey][$sub_subkey] = Cooked_Functions::sanitize_text_field( $sub_subval );
-                                    endif;
-                                else:
-                                    foreach ($sub_subval as $sub_sub_subkey => $sub_sub_subval):
-                                        if (!is_array($sub_sub_subval)):
+                                    }
+                                } else {
+                                    foreach ($sub_subval as $sub_sub_subkey => $sub_sub_subval) {
+                                        if (!is_array($sub_sub_subval)) {
                                             $_recipe_settings[$key][$subkey][$sub_subkey][$sub_sub_subkey] = Cooked_Functions::sanitize_text_field($sub_sub_subval);
-                                        else:
-                                            foreach ($sub_sub_subval as $sub_sub_sub_subkey => $sub_sub_sub_subval):
+                                        } else {
+                                            foreach ($sub_sub_subval as $sub_sub_sub_subkey => $sub_sub_sub_subval) {
                                                 $_recipe_settings[$key][$subkey][$sub_subkey][$sub_sub_subkey][$sub_sub_sub_subkey] = Cooked_Functions::sanitize_text_field($sub_sub_sub_subval);
-                                            endforeach;
-                                        endif;
-                                    endforeach;
-                                endif;
-                            endforeach;
-                        endif;
-                    endforeach;
-                endif;
-            endforeach;
-        endif;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return $_recipe_settings;
     }
@@ -139,12 +138,13 @@ class Cooked_Recipe_Meta {
         remove_action( 'save_post', [&$this, 'save_recipe_meta_box'] );
 
         // Update the post, which calls save_post again
+        // @TODO: Check if Elementor is active first
         $should_update_content = apply_filters( 'cooked_should_update_post_content', true, $post_id );
-        if ( $should_update_content ):
+        if ( $should_update_content ) {
             wp_update_post(['ID' => $post_id, 'post_excerpt' => $recipe_excerpt, 'post_content' => $seo_content] );
-        else:
+        } else {
             wp_update_post(['ID' => $post_id, 'post_excerpt' => $recipe_excerpt] );
-        endif;
+        }
 
         // Re-hook this function
         add_action( 'save_post', [&$this, 'save_recipe_meta_box'] );
@@ -484,6 +484,28 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <div class="cooked-heading-name">
                                     <input type="text" data-ingredient-part="section_heading_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php _e('Section Heading','cooked'); ?> ...">
                                 </div>
+
+                                <div class="cooked-heading-element">
+                                    <label for="cooked-heading-element-select"><?php _e('Heading Element:', 'cooked'); ?></label>
+                                    <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_element]">
+                                        <?php
+                                        $heading_elements = [
+                                            'div' => 'div (default)',
+                                            'h2' => 'h2',
+                                            'h3' => 'h3',
+                                            'h4' => 'h4',
+                                            'h5' => 'h5',
+                                            'h6' => 'h6'
+                                        ];
+                                        foreach ($heading_elements as $element => $label): ?>
+                                            <option value="<?php echo esc_attr($element); ?>" <?php selected(isset($value['section_heading_element']) ? $value['section_heading_element'] : 'div', $element); ?>>
+                                                <?php echo esc_html($label); ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+
                                 <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
                             </div>
 
@@ -579,6 +601,28 @@ function cooked_render_recipe_fields( $post_id ) {
                     <div class="cooked-heading-name">
                         <input type="text" data-ingredient-part="section_heading_name" name="" value="" placeholder="<?php _e('Section Heading','cooked'); ?> ...">
                     </div>
+
+                    <div class="cooked-heading-element">
+                        <label for="cooked-heading-element-select"><?php _e('Heading Element:', 'cooked'); ?></label>
+                        <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" name="">
+                            <?php
+                            $heading_elements = [
+                                'div' => 'div (default)',
+                                'h2' => 'h2',
+                                'h3' => 'h3',
+                                'h4' => 'h4',
+                                'h5' => 'h5',
+                                'h6' => 'h6'
+                            ];
+                            foreach ($heading_elements as $element => $label): ?>
+                                <option value="<?php echo esc_attr($element); ?>" <?php selected('div', $element); ?>>
+                                    <?php echo esc_html($label); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+
                     <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
                 </div>
                 <!-- END TEMPLATES -->
@@ -627,8 +671,30 @@ function cooked_render_recipe_fields( $post_id ) {
                             <div class="recipe-setting-block cooked-direction-block cooked-direction-heading cooked-clearfix">
                                 <i class="cooked-icon cooked-icon-drag"></i>
                                 <div class="cooked-heading-name">
-                                    <input type="text" data-direction-part="section_heading_name" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php _e('Section Heading','cooked'); ?> ...">
+                                    <input type="text" data-direction-part="section_heading_name" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php _e('Section Heading', 'cooked'); ?> ...">
                                 </div>
+
+                                <div class="cooked-heading-element">
+                                    <label for="cooked-heading-element-select"><?php _e('Heading Element:', 'cooked'); ?></label>
+                                    <select class="cooked-heading-element-select" data-direction-part="section_heading_element" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_element]">
+                                        <?php
+                                        $heading_elements = [
+                                            'div' => 'div (default)',
+                                            'h2' => 'h2',
+                                            'h3' => 'h3',
+                                            'h4' => 'h4',
+                                            'h5' => 'h5',
+                                            'h6' => 'h6'
+                                        ];
+                                        foreach ($heading_elements as $element => $label): ?>
+                                            <option value="<?php echo $element; ?>" <?php selected(isset($value['section_heading_element']) ? $value['section_heading_element'] : 'div', $element); ?>>
+                                                <?php echo $label; ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </div>
+                                <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+
                                 <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                             </div>
 
@@ -699,7 +765,29 @@ function cooked_render_recipe_fields( $post_id ) {
                     <div class="cooked-heading-name">
                         <input type="text" data-direction-part="section_heading_name" name="" value="" placeholder="<?php _e('Section Heading','cooked'); ?> ...">
                     </div>
-                    <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
+
+                    <div class="cooked-heading-element">
+                        <label for="cooked-heading-element-select"><?php _e('Heading Element:', 'cooked'); ?></label>
+                        <select class="cooked-heading-element-select" data-direction-part="section_heading_element" name="">
+                            <?php
+                            $heading_elements = [
+                                'div' => 'div (default)',
+                                'h2' => 'h2',
+                                'h3' => 'h3',
+                                'h4' => 'h4',
+                                'h5' => 'h5',
+                                'h6' => 'h6'
+                            ];
+                            foreach ($heading_elements as $element => $label): ?>
+                                <option value="<?php echo $element ?>" <?php selected('div', $element); ?>>
+                                    <?php echo $label; ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+
+                    <span href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></span>
                 </div>
                 <!-- END TEMPLATES -->
 

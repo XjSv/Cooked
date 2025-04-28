@@ -60,9 +60,13 @@ class Cooked_Settings {
                             $settings[$field_name] = [];
                         } else {
                             // Remove any empty string values from checkbox arrays
-                            $settings[$field_name] = array_filter($settings[$field_name], function($value) {
-                                return $value !== '';
-                            });
+                            if (!isset($settings[$field_name]) || !is_array($settings[$field_name])) {
+                                $settings[$field_name] = [];
+                            } else {
+                                $settings[$field_name] = array_filter($settings[$field_name], function($value) {
+                                    return $value !== '';
+                                });
+                            }
                         }
                     }
                 }

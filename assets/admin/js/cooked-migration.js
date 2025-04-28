@@ -13,14 +13,14 @@
             	e.preventDefault();
 
             	var thisButton = $(this),
-            		confirm_migrate = confirm(cooked_js_vars.i18n_confirm_migrate_recipe);
+            		confirm_migrate = confirm(cooked_migration_js_vars.i18n_confirm_migrate_recipe);
 
             	if (confirm_migrate && !thisButton.hasClass('disabled')) {
             		thisButton.addClass('disabled').attr('disabled', true);
             		thisButton.hide();
 
             		var ajax__bulk_migrate_recipes = $.post(
-	                    cooked_js_vars.ajax_url,
+	                    cooked_migration_js_vars.ajax_url,
 	                    {
                             action: 'cooked_get_migrate_ids'
                         },
@@ -46,14 +46,14 @@
 
             	var thisButton = $(this),
                     import_type = thisButton.data('import-type'),
-            		confirm_import = confirm(cooked_js_vars.i18n_confirm_import_recipes);
+            		confirm_import = confirm(cooked_migration_js_vars.i18n_confirm_import_recipes);
 
             	if (confirm_import && !thisButton.hasClass('disabled')) {
             		thisButton.addClass('disabled').attr('disabled', true);
             		thisButton.hide();
 
             		var ajax__bulk_import_recipes = $.post(
-	                    cooked_js_vars.ajax_url,
+	                    cooked_migration_js_vars.ajax_url,
 	                    {
                             action: 'cooked_get_import_ids',
                             import_type: import_type
@@ -137,7 +137,7 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
         formattedTotal.toLocaleString();
 
 		var ajax__bulk_migrate_recipes = jQuery.post(
-            cooked_js_vars.ajax_url,
+            cooked_migration_js_vars.ajax_url,
             {
                 action: 'cooked_migrate_recipes',
                 recipe_ids: recipe_ids
@@ -168,9 +168,9 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
                         if ( estimatedHours >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " hrs, " + estimatedMinutes + " mins " + cooked_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " hrs, " + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else if ( estimatedMinutes >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " mins " + cooked_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }
@@ -219,7 +219,7 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
         formattedTotal.toLocaleString();
 
 		var ajax__bulk_migrate_recipes = jQuery.post(
-            cooked_js_vars.ajax_url,
+            cooked_migration_js_vars.ajax_url,
             {
                 action: 'cooked_import_recipes',
                 recipe_ids: recipe_ids,
@@ -251,9 +251,9 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
                         if ( estimatedHours >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " hrs, " + estimatedMinutes + " mins " + cooked_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " hrs, " + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else if ( estimatedMinutes >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " mins " + cooked_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }

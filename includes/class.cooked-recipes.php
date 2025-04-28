@@ -823,9 +823,12 @@ class Cooked_Recipes {
                 return $ing['section_heading_name'];
             } else {
                 $valid_elements = ['div', 'h2', 'h3', 'h4', 'h5', 'h6'];
+                global $_cooked_settings;
+                $default_element = isset($_cooked_settings['section_heading_default_html_tag']) ? $_cooked_settings['section_heading_default_html_tag'] : 'div';
+
                 $element = (isset($ing['section_heading_element']) && in_array($ing['section_heading_element'], $valid_elements, true))
-                    ? $ing['section_heading_element']
-                    : 'div';
+                    ? ($ing['section_heading_element'] === 'div' ? $default_element : $ing['section_heading_element'])
+                    : $default_element;
 
                 echo '<' . $element . ' class="cooked-single-ingredient cooked-heading">' . esc_html($ing['section_heading_name']) . '</' . $element . '>';
             }
@@ -892,9 +895,12 @@ class Cooked_Recipes {
                 return $dir['section_heading_name'];
             } else {
                 $valid_elements = ['div', 'h2', 'h3', 'h4', 'h5', 'h6'];
+                global $_cooked_settings;
+                $default_element = isset($_cooked_settings['section_heading_default_html_tag']) ? $_cooked_settings['section_heading_default_html_tag'] : 'div';
+
                 $element = (isset($dir['section_heading_element']) && in_array($dir['section_heading_element'], $valid_elements, true))
-                    ? $dir['section_heading_element']
-                    : 'div';
+                    ? ($dir['section_heading_element'] === 'div' ? $default_element : $dir['section_heading_element'])
+                    : $default_element;
 
                 echo '<' . $element . ' class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</' . $element . '>';
             }

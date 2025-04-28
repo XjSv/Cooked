@@ -23,7 +23,7 @@ class Cooked_Settings {
         add_filter( 'admin_init', [&$this, 'init'] );
         add_filter( 'init', [&$this, 'init'] );
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
-        add_action( 'admin_notices', [&$this, 'cooked_settings_saved_admin_notice'] );
+        add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -45,7 +45,7 @@ class Cooked_Settings {
         register_setting( 'cooked_settings_group', 'cooked_settings_saved' );
     }
 
-    // Add this new method to handle settings sanitization
+    // Add this new method to handle settings sanitization.
     public static function sanitize_settings($settings) {
         $cooked_tabs_fields = self::tabs_fields();
 
@@ -218,7 +218,19 @@ class Cooked_Settings {
                         'title' => __('Global Recipe Toggles', 'cooked'),
                         'desc' => __('You can quickly hide or show different recipe elements (site-wide) with these checkboxes.', 'cooked'),
                         'type' => 'checkboxes',
-                        'default' => apply_filters('cooked_recipe_info_display_options_defaults', ['author', 'taxonomies', 'difficulty_level', 'excerpt', 'timing_prep', 'timing_cook', 'timing_total', 'servings']),
+                        'default' => apply_filters(
+                            'cooked_recipe_info_display_options_defaults',
+                            [
+                                'author',
+                                'taxonomies',
+                                'difficulty_level',
+                                'excerpt',
+                                'timing_prep',
+                                'timing_cook',
+                                'timing_total',
+                                'servings'
+                            ]
+                        ),
                         'options' => apply_filters(
                             'cooked_recipe_info_display_options',
                             [
@@ -296,6 +308,24 @@ class Cooked_Settings {
                                 'date_asc' => __('Oldest First', 'cooked'),
                                 'title_asc' => __('Alphabetical', 'cooked'),
                                 'title_desc' => __('Alphabetical (reversed)', 'cooked'),
+                            ]
+                        )
+                    ],
+                    'section_heading_default_html_tag' => [
+                        'title' => __('Section Heading Default HTML Tag', 'cooked'),
+                        /* translators: a description on how to set the default sort order for the [cooked-browse] shortcode. */
+                        'desc' => __('Set the default HTML tag for your section headings.', 'cooked'),
+                        'type' => 'select',
+                        'default' => 'div',
+                        'options' => apply_filters(
+                            'cooked_settings_section_heading_default_html_tag_options',
+                            [
+                                'div' => __('div', 'cooked'),
+                                'h2' => __('h2', 'cooked'),
+                                'h3' => __('h3', 'cooked'),
+                                'h4' => __('h4', 'cooked'),
+                                'h5' => __('h5', 'cooked'),
+                                'h6' => __('h6', 'cooked'),
                             ]
                         )
                     ],

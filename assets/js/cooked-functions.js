@@ -111,7 +111,7 @@ var cooked_loading = false;
             });
 
             // Add form submit handler for the Browse Search Form
-            if ( cooked_js_vars.permalink_structure ) {
+            if ( cooked_functions_js_vars.permalink_structure ) {
                 $('.cooked-recipe-search form').on('submit', function(e) {
                     e.preventDefault();
 
@@ -128,15 +128,18 @@ var cooked_loading = false;
 
                     // Create URL segments with proper encoding
                     const urlSegments = [];
-                    urlSegments.push(encodeURIComponent(cooked_js_vars.browse_recipes_slug));
+
+                    if (cooked_functions_js_vars.front_page !== cooked_functions_js_vars.browse_page) {
+                        urlSegments.push(encodeURIComponent(cooked_functions_js_vars.browse_recipes_slug));
+                    }
 
                     // Add taxonomy segments with improved encoding
                     const taxonomyFields = [
-                        { value: formValues.category, prefix: cooked_js_vars.recipe_category_slug },
-                        { value: formValues.method, prefix: cooked_js_vars.recipe_cooking_method_slug },
-                        { value: formValues.cuisine, prefix: cooked_js_vars.recipe_cuisine_slug },
-                        { value: formValues.tags, prefix: cooked_js_vars.recipe_tags_slug },
-                        { value: formValues.diet, prefix: cooked_js_vars.recipe_diet_slug },
+                        { value: formValues.category, prefix: cooked_functions_js_vars.recipe_category_slug },
+                        { value: formValues.method, prefix: cooked_functions_js_vars.recipe_cooking_method_slug },
+                        { value: formValues.cuisine, prefix: cooked_functions_js_vars.recipe_cuisine_slug },
+                        { value: formValues.tags, prefix: cooked_functions_js_vars.recipe_tags_slug },
+                        { value: formValues.diet, prefix: cooked_functions_js_vars.recipe_diet_slug },
                     ];
 
                     taxonomyFields.forEach(field => {
@@ -159,7 +162,7 @@ var cooked_loading = false;
                     const prettyUrl = urlSegments.filter(Boolean).join('/');
 
                     // Use WordPress site URL as base
-                    const siteUrl = new URL(cooked_js_vars.site_url);
+                    const siteUrl = new URL(cooked_functions_js_vars.site_url);
                     const finalUrl = `${siteUrl.pathname}/${prettyUrl}`.replace(/\/+/g, '/');
 
                     // Navigate to URL
@@ -202,7 +205,7 @@ var cooked_loading = false;
                     if (thisTimer.parents('.cooked-single-direction').length) {
                         var thisStep = thisTimer.parents('.cooked-single-direction').data('step');
                     } else {
-                        var thisStep = cooked_js_vars.i18n_timer;
+                        var thisStep = cooked_functions_i18n_js_vars.i18n_timer;
                     }
 
                     var Timer = {
@@ -294,7 +297,7 @@ var cooked_loading = false;
         }
 
         function cookedTimer(timerObj, startPaused) {
-            var timer_sound = cooked_js_vars.timer_sound;
+            var timer_sound = cooked_functions_js_vars.timer_sound;
             var audio = new Audio(timer_sound);
 
             var thisTimerID = timerObj.parents('.cooked-timer-block').attr('id'),

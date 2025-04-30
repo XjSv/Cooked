@@ -594,6 +594,7 @@ class Cooked_Shortcodes {
 
             if ( !empty($author['id']) ) {
                 $author_slug = !empty($author['name']) ? sanitize_title($author['name']) : false;
+                // @TODO: Convert the homepage link to use pretty URLs.
                 $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ? esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . $author['id'] . '/' . trailingslashit( $author_slug ) ) : esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
                 $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'] );
             } else {

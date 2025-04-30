@@ -25,7 +25,6 @@ class Cooked_Post_Types {
         add_action( 'init', [&$this, 'init'] );
         add_filter( 'admin_init', [&$this, 'init_roles'] );
         add_action( 'after_setup_theme', [&$this, 'image_sizes'] );
-        // add_action( 'template_redirect', [&$this, 'redirects'] );
         add_action( 'wp_head', [&$this, 'cooked_meta_tags'], 5 );
         add_action( 'manage_cp_recipe_posts_custom_column', [&$this, 'custom_columns_data'], 10, 2 );
 
@@ -33,6 +32,7 @@ class Cooked_Post_Types {
         add_filter( 'query_vars', [&$this, 'add_query_vars_filter'] );
         add_filter( 'manage_cp_recipe_posts_columns', [&$this, 'custom_columns'] );
         add_filter( 'nav_menu_css_class', [&$this, 'cooked_nav_classes'], 10, 2 );
+        add_filter( 'redirect_canonical', [&$this, 'disable_canonical_redirect'], 10, 2 );
 
         // Taxonomy Titles
         add_action( 'template_redirect', [&$this, 'remove_default_title_tag'] );
@@ -183,40 +183,6 @@ class Cooked_Post_Types {
         }
     }
 
-    public function redirects() {
-        $_cooked_settings = Cooked_Settings::get();
-        $parent_page = isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false;
-        $front_page = get_option( 'page_on_front' );
-
-        if ( $parent_page ):
-            if ( is_post_type_archive('cp_recipe') && !is_feed() ):
-                if ( wp_redirect( get_permalink( $parent_page ) ) ):
-                    exit;
-                endif;
-            elseif ( is_tax('cp_recipe_category') ):
-                global $wp_query;
-                if ( isset($wp_query->query['cp_recipe_category']) && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' )
-                     || isset($wp_query->query['taxonomy']) && $wp_query->query['taxonomy'] == 'cp_recipe_category' && taxonomy_exists('cp_recipe_category') && term_exists( $wp_query->query['term'], 'cp_recipe_category' ) ):
-                    if ( $parent_page != $front_page && get_option('permalink_structure') ):
-                        if ( wp_redirect( esc_url_raw( untrailingslashit( get_permalink( $parent_page ) ) . '/' . $_cooked_settings['recipe_category_permalink'] . '/' . ( isset( $wp_query->query['term'] ) ? $wp_query->query['term'] : $wp_query->query['cp_recipe_category'] ) ) ) ):
-                            exit;
-                        endif;
-                    elseif ( $parent_page == $front_page ):
-                        if ( wp_redirect( esc_url_raw( get_home_url() . '?cp_recipe_category=' . ( isset( $wp_query->query['term'] ) ? $wp_query->query['term'] : $wp_query->query['cp_recipe_category'] ) ) ) ):
-                            exit;
-                        endif;
-                    else:
-                        if ( wp_redirect( esc_url_raw( get_permalink( $parent_page ) . '&cp_recipe_category=' . ( isset( $wp_query->query['term'] ) ? $wp_query->query['term'] : $wp_query->query['cp_recipe_category'] ) ) ) ):
-                            exit;
-                        endif;
-                    endif;
-                endif;
-            else:
-                do_action( 'cooked_redirects' );
-            endif;
-        endif;
-    }
-
     public static function activation() {
         self::init();
         self::init_roles();
@@ -302,6 +268,7 @@ class Cooked_Post_Types {
         if ( !empty($_cooked_taxonomies) ) {
             foreach ( $_cooked_taxonomies as $slug => $args ) {
                 register_taxonomy( $slug, ['cp_recipe'], $args );
+                add_rewrite_tag("%{$slug}%", '([^/]+)');
 
                 // Taxonomy search sort pagination
                 add_rewrite_rule(
@@ -511,6 +478,45 @@ class Cooked_Post_Types {
         }
 
         return $post_states;
+    }
+
+    /**
+     * Disable canonical redirects for Cooked URLs on the homepage
+     *
+     * @param string $redirect_url The redirect URL
+     * @param string $requested_url The originally requested URL
+     * @return string|bool The redirect URL or false to prevent redirect
+     */
+    public function disable_canonical_redirect($redirect_url, $requested_url) {
+        global $_cooked_settings;
+        $_cooked_taxonomies = Cooked_Taxonomies::get();
+
+        // Only process if this is the homepage
+        if (!is_front_page()) {
+            return $redirect_url;
+        }
+
+        // Check if any Cooked query vars are present
+        $cooked_query_vars = [
+            'cooked_search_s',
+            'cooked_browse_sort_by',
+            'paged'
+        ];
+
+        // Add taxonomy query vars
+        if (!empty($_cooked_taxonomies)) {
+            foreach ( $_cooked_taxonomies as $slug => $args ) {
+                $cooked_query_vars[] = $slug;
+            }
+        }
+
+        foreach ($cooked_query_vars as $var) {
+            if (get_query_var($var)) {
+                return false;
+            }
+        }
+
+        return $redirect_url;
     }
 
 }

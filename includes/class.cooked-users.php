@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Cooked_Users {
 
-    function __construct(){
+    function __construct() {
         add_action( 'init', [&$this, 'recipe_author_rewrite'], 10 );
 
         add_filter( 'manage_users_columns', [&$this, 'recipe_count_column'] );
@@ -140,7 +140,6 @@ class Cooked_Users {
 
         return $value;
     }
-
 
     function pre_user_query( $query ) {
         global $wpdb, $current_screen;

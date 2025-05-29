@@ -24,6 +24,9 @@ class Cooked_Settings {
         add_filter( 'init', [&$this, 'init'] );
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
+
+        // Add action to check version and update settings at the end of page load
+        add_action( 'shutdown', [&$this, 'check_version_and_update'] );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -93,50 +96,55 @@ class Cooked_Settings {
     }
 
     public static function get() {
-        $update_settings = false;
         $_cooked_settings = get_option( 'cooked_settings' );
-        $cooked_settings_saved = get_option( 'cooked_settings_saved', false );
-        $_cooked_settings_version = get_option( 'cooked_settings_version', '1.0.0' );
-
-        $version_compare = version_compare( $_cooked_settings_version, COOKED_VERSION );
 
         // Get defaults for fields that are not set yet.
         $cooked_tabs_fields = self::tabs_fields();
+
         if ( isset($cooked_tabs_fields) && !empty($cooked_tabs_fields) ) {
             foreach ( $cooked_tabs_fields as $tab ) {
                 if ( isset($tab['fields']) && !empty($tab['fields']) ) {
                     foreach ( $tab['fields'] as $name => $field ) {
                         if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) continue;
 
-                        if ( !$cooked_settings_saved || ( $cooked_settings_saved && $version_compare < 0 ) ) {
-                            if ( $field['type'] === 'checkboxes' ) {
-                                $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : [] );
-                            } else {
-                                $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false );
-                            }
-
-                            // Update the settings only if the version has changed.
-                            $update_settings = true;
+                        if ( $field['type'] === 'checkboxes' ) {
+                            $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : [] );
+                        } else {
+                            $_cooked_settings[$name] = isset($_cooked_settings[$name]) ? $_cooked_settings[$name] : ( isset( $field['default'] ) ? $field['default'] : false );
                         }
                     }
                 }
             }
-
         }
 
-        if ( $update_settings ) {
+        return apply_filters( 'cooked_get_settings', $_cooked_settings );
+    }
+
+    public static function check_version_and_update() {
+        global $_cooked_settings;
+
+        $cooked_settings_saved = get_option( 'cooked_settings_saved', false );
+        $_cooked_settings_version = get_option( 'cooked_settings_version', '1.0.0' );
+        $_cooked_pro_settings_version = get_option( 'cooked_pro_settings_version', '1.0.0' );
+
+        // Check both versions
+        $cooked_version_compare = version_compare( $_cooked_settings_version, COOKED_VERSION );
+        $cooked_pro_version_compare = defined('COOKED_PRO_VERSION') ? version_compare( $_cooked_pro_settings_version, COOKED_PRO_VERSION ) : 0;
+
+        // Update if either version has changed or settings haven't been saved before
+        if ( !$cooked_settings_saved || $cooked_version_compare < 0 || $cooked_pro_version_compare < 0 ) {
             update_option( 'cooked_settings', $_cooked_settings );
+
+            // Update both version numbers
+            update_option( 'cooked_settings_version', COOKED_VERSION );
+            if ( defined('COOKED_PRO_VERSION') ) {
+                update_option( 'cooked_pro_settings_version', COOKED_PRO_VERSION );
+            }
 
             if ( self::needs_rewrite_flush( $_cooked_settings_version ) ) {
                 flush_rewrite_rules();
             }
         }
-
-        if ( $version_compare < 0 ) {
-            update_option( 'cooked_settings_version', COOKED_VERSION );
-        }
-
-        return apply_filters( 'cooked_get_settings', $_cooked_settings );
     }
 
     private static function needs_rewrite_flush( $old_version ) {
@@ -294,7 +302,7 @@ class Cooked_Settings {
                     'browse_default_cp_recipe_category' => [
                         'title' => __('Default Category', 'cooked'),
                         /* translators: a description on how to set the default recipe category for the [cooked-browse] shortcode. */
-                        'desc' => sprintf(__('Optionally set the default recipe category for your %s shortcode display.', 'cooked'), '[cooked-browse]'),
+                        'desc' => sprintf(__('Optionally set the default recipe category for your %s shortcode display.', 'cooked'), '<code>[cooked-browse]</code>'),
                         'type' => 'select',
                         'default' => 0,
                         'options' => $categories_array
@@ -302,7 +310,7 @@ class Cooked_Settings {
                     'browse_default_sort' => [
                         'title' => __('Default Sort Order', 'cooked'),
                         /* translators: a description on how to set the default sort order for the [cooked-browse] shortcode. */
-                        'desc' => sprintf(__('Set the default sort order for your %s shortcode display.', 'cooked'), '[cooked-browse]'),
+                        'desc' => sprintf(__('Set the default sort order for your %s shortcode display.', 'cooked'), '<code>[cooked-browse]</code>'),
                         'type' => 'select',
                         'default' => 'date_desc',
                         'options' => apply_filters(
@@ -337,7 +345,7 @@ class Cooked_Settings {
                         'title' => __('WP Editor Roles', 'cooked'),
                         'desc' => __('Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields.', 'cooked'),
                         'type' => 'checkboxes',
-                        'default' => apply_filters('cooked_add_recipe_wp_editor_roles_defaults', ['administrator', 'editor', 'cooked_recipe_editor']),
+                        'default' => apply_filters('cooked_recipe_wp_editor_roles_defaults', ['administrator', 'editor', 'cooked_recipe_editor']),
                         'options' => $role_options
                     ],
                     'advanced' => [

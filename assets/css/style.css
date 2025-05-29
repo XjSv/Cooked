@@ -743,11 +743,13 @@ body .cooked-nutrition-label dt.cooked-serving-size {
     padding-top: 0;
 }
 body .cooked-nutrition-label dt.cooked-serving-size strong,
+body .cooked-nutrition-label div.cooked-serving-size strong,
 body .cooked-nutrition-label dt.cooked-serving-size strong.cooked-nut-label {
     font-size: 1.3rem;
     font-weight: 800;
 }
-body .cooked-nutrition-label dt.cooked-nut-servings p {
+body .cooked-nutrition-label dt.cooked-nut-servings p,
+body .cooked-nutrition-label div.cooked-nut-servings p {
     font-size: 1.2rem;
 }
 body .cooked-nutrition-label dt dt {
@@ -762,7 +764,8 @@ body .cooked-nutrition-label dt:after {
 body .cooked-nutrition-label dt.no-after:after {
     content: none;
 }
-body .cooked-nutrition-label dt.cooked-nut-spacer {
+body .cooked-nutrition-label dt.cooked-nut-spacer,
+body .cooked-nutrition-label div.cooked-nut-spacer {
     border: none;
     height: 0.5rem;
     padding: 0;

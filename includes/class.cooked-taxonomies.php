@@ -159,14 +159,14 @@ class Cooked_Taxonomies {
 				$custom_cooked_tax_setting = 'recipe_category_permalink';
 			}
 
-			// $browse_page_id = $_cooked_settings['browse_page'];
-			// $browse_page_link = get_permalink($browse_page_id);
-			// $url_test = $browse_page_link . '?taxonomy=' . $taxonomy . '&term=' . $term->slug;
-
 			if ( $parent_page_browse_page != $front_page && get_option('permalink_structure') ) {
 				$url = esc_url_raw( untrailingslashit( get_permalink( $parent_page_browse_page ) ) . '/' . $_cooked_settings[$custom_cooked_tax_setting] . '/' . $term->slug );
 			} elseif ( $parent_page_browse_page == $front_page ) {
-				$url = esc_url_raw( get_home_url() . '?' . $taxonomy . '=' . ( isset( $term->slug ) ? $term->slug : $taxonomy ) );
+				if ( get_option('permalink_structure') ) {
+                    $url = esc_url_raw( get_home_url() . '/' . $_cooked_settings[$custom_cooked_tax_setting] . '/' . $term->slug );
+                } else {
+                    $url = esc_url_raw( get_home_url() . '?' . $taxonomy . '=' . ( isset( $term->slug ) ? $term->slug : $taxonomy ) );
+                }
 			} else {
 				$url = esc_url_raw( get_permalink( $parent_page_browse_page ) . '&' . $taxonomy . '=' . ( isset( $term->slug ) ? $term->slug : $taxonomy ) );
 			}

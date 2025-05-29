@@ -4,9 +4,9 @@
 Plugin Name: 	Cooked - Recipe Management
 Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
-Author: 		Gora Tech
+Author:         Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.10.0
+Version: 		1.11.0
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.10.0' );
+define( 'COOKED_VERSION', '1.11.0' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -229,6 +229,7 @@ final class Cooked_Plugin {
             self::$instance->setup_constants();
 
             add_action( 'init', [self::$instance, 'load_textdomain'] );
+            add_action( 'plugins_loaded', [self::$instance, 'check_plugin_update'] );
 
             self::$instance->includes();
             self::$instance->roles = new Cooked_Roles();
@@ -326,6 +327,23 @@ final class Cooked_Plugin {
         if (in_array('seo-by-rank-math/rank-math.php', apply_filters('active_plugins', get_option('active_plugins')))) {
             require_once COOKED_DIR . 'includes/class.cooked-rankmathseo.php';
             self::$instance->rankmathseo = new Cooked_RankMathSEO();
+        }
+    }
+
+    /**
+     * Check for plugin updates and run migrations if needed
+     *
+     * @since 1.10.0
+     */
+    public function check_plugin_update() {
+        $current_version = get_option('cooked_version', '0');
+
+        if (version_compare($current_version, COOKED_VERSION, '<')) {
+            // Run migrations
+            $this->migration->init();
+
+            // Update version in database
+            update_option('cooked_version', COOKED_VERSION);
         }
     }
 

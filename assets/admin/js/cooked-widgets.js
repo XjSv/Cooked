@@ -47,7 +47,7 @@
                 this.refreshItems();
                 if (!query.length) return callback();
                 $.ajax({
-                    url: cooked_js_vars.rest_url + 'wp/v2/cooked_recipe/',
+                    url: cooked_widgets_js_vars.rest_url + 'wp/v2/cooked_recipe/',
                     type: 'GET',
                     dataType: 'json',
                     data: {

@@ -62,7 +62,7 @@ body .cooked-nutrition-label dl { margin:0 !important; padding:0 !important; }
 body .cooked-nutrition-label dt { position:relative; margin:0; padding:2px 0; border-top:1px solid #aaa; }
 body .cooked-nutrition-label dt dt { padding:2px 0 0; margin:2px 0 0; }
 body .cooked-nutrition-label dt:after { content: ""; display: table; clear: both; }
-body .cooked-nutrition-label dt.cooked-nut-spacer { border:none; height:0.5rem; padding:0; background:#333; }
+body .cooked-nutrition-label dt.cooked-nut-spacer, body .cooked-nutrition-label div.cooked-nut-spacer  { border:none; height:0.5rem; padding:0; background:#333; }
 body .cooked-nutrition-label > dl > dt:first-child,
 body .cooked-nutrition-label dl dt.cooked-nut-no-border { border:none; }
 body .cooked-nutrition-label dt dl { padding:0; margin:0 0 0 1.5rem; }

@@ -632,14 +632,14 @@ class Cooked_Recipes {
 
     public static function fsm_content() {
         return apply_filters( 'cooked_fsm_content', '
-            <div class="cooked-fsm-ingredients cooked-fsm-content cooked-active">
+            <div class="cooked-fsm-ingredients cooked-fsm-content cooked-active" data-nosnippet aria-hidden="false">
                 <div class="cooked-panel"><h2>' . __('Ingredients', 'cooked') . '</h2>[cooked-ingredients]</div>
             </div>
-            <div class="cooked-fsm-directions-wrap cooked-fsm-content">
+            <div class="cooked-fsm-directions-wrap cooked-fsm-content" data-nosnippet aria-hidden="true">
                 <div class="cooked-fsm-directions cooked-fsm-content">
                     <div class="cooked-panel"><h2>' . __('Directions', 'cooked') . '</h2>[cooked-directions]</div>
                 </div>
-                <div class="cooked-fsm-notes cooked-fsm-content">
+                <div class="cooked-fsm-notes cooked-fsm-content" data-nosnippet aria-hidden="true">
                     <div class="cooked-panel"><h2>' . __('Notes', 'cooked') . '</h2>[cooked-notes]</div>
                 </div>
             </div>
@@ -783,7 +783,7 @@ class Cooked_Recipes {
                 'default' => ['name' => $default_string, 'value' => $default],
                 'double' => ['name' => $double_string, 'value' => $double],
                 'triple' => ['name' => $triple_string, 'value' => $triple],
-            ], $quarter,$half,$default,$double,$triple );
+            ], $quarter, $half, $default, $double, $triple );
         else:
             $servings_array = [];
         endif;
@@ -795,8 +795,9 @@ class Cooked_Recipes {
                 /* translators: singular and plural "serving" sizes */
                 $servings_string = sprintf( esc_html( _n( '%s Serving', '%s Servings', $servings, 'cooked' ) ), $servings );
 
-                echo '<a href="#">' . $servings_string . '</a>';
-                echo '<select name="servings" class="cooked-servings-changer">';
+                echo '<a aria-label="' . $servings_string . '" href="#">' . $servings_string . '</a>';
+                echo '<label for="cooked-servings-changer" class="screen-reader-text">' . __('Servings', 'cooked') . '</label>';
+                echo '<select id="cooked-servings-changer" name="servings" class="cooked-servings-changer">';
                     foreach ( $servings_array as $stype ):
                         echo '<option value="' . $stype['value'] . '"' . ( $stype['value'] == $servings ? ' selected' : '' ) . '>' . esc_attr( $stype['name'] ) . '</option>';
                     endforeach;
@@ -1064,9 +1065,9 @@ class Cooked_Recipes {
 
                     echo !$options['hide_browse'] && $taxonomy_search_fields ? $taxonomy_search_fields : '';
 
-                    echo '<input class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( !empty($cooked_search_s) ? $cooked_search_s : '' ) . '" placeholder="' . __('Find a recipe...','cooked') . '" />';
+                    echo '<input aria-label="' . __('Find a recipe...', 'cooked') . '" class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( !empty($cooked_search_s) ? $cooked_search_s : '' ) . '" placeholder="' . __('Find a recipe...','cooked') . '" />';
 
-                    echo '<a href="#" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search"></i></a>';
+                    echo '<a aria-label="' . __('Search', 'cooked') . '" href="#" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search"></i></a>';
 
                 echo '</div>';
 

@@ -134,10 +134,11 @@ class Cooked_Shortcodes {
         }
 
         $timer_id = md5( $seconds . $desc . $content ) . '_' . $cooked_timer_identifier;
+        $desc = $desc ? wp_strip_all_tags( $desc ) : wp_strip_all_tags( $content );
 
         wp_enqueue_script( 'cooked-timer' );
 
-        return '<span class="cooked-timer"><a data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . ( $desc ? wp_strip_all_tags( $desc ) : wp_strip_all_tags( $content ) ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
+        return '<span class="cooked-timer"><a aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . ( $desc ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
     }
 
     public function cooked_browse_shortcode( $sc_atts, $content = null ) {
@@ -567,6 +568,7 @@ class Cooked_Shortcodes {
     function cooked_kses_servings_switcher($tags) {
         $tags['select'] = [
             'name' => true,
+            'id' => true,
             'class' => true,
         ];
         $tags['option'] = [
@@ -639,13 +641,13 @@ class Cooked_Shortcodes {
         $query_args['print'] = 1;
         $servings = (float)esc_html( get_query_var( 'servings', false ) );
         $query_args['servings'] = !empty($servings) ? $servings : false;
-        echo '<span class="cooked-print"><a target="_blank" rel="nofollow" href="' . add_query_arg( $query_args, $recipe_post_url ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
+        echo '<span class="cooked-print"><a aria-label="' . __('Print', 'cooked') . '" target="_blank" rel="nofollow" href="' . add_query_arg( $query_args, $recipe_post_url ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
     }
 
     public static function cooked_info_fullscreen() {
         global $recipe_settings, $_cooked_settings;
 
-        echo '<span class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen"></i></span>';
+        echo '<span aria-label="' . __('Fullscreen', 'cooked') . '" role="button" class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen"></i></span>';
         wp_enqueue_script('cooked-nosleep');
     }
 
@@ -794,7 +796,7 @@ class Cooked_Shortcodes {
 
         if (has_post_thumbnail($recipe)) :
             echo '<div class="cooked-post-featured-image">';
-                echo get_the_post_thumbnail( $recipe,'cooked-large' );
+                echo get_the_post_thumbnail( $recipe, 'cooked-large' );
             echo '</div>';
         endif;
 
@@ -891,17 +893,17 @@ class Cooked_Shortcodes {
                 // Start output buffer for top facts.
                 ob_start();
 
-                echo '<dt class="cooked-nut-servings">';
+                echo '<div class="cooked-nut-servings">';
                 foreach ( $top_facts as $slug => $nf ):
                     if ( $slug === 'serving_size' ):
-                        echo '<dt class="cooked-serving-size"><strong>' . esc_html($nf['name']) . '</strong> ';
+                        echo '<div class="cooked-serving-size"><strong>' . esc_html($nf['name']) . '</strong> ';
                             echo '<p class="cooked-right"><strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">' . esc_html( isset($nutrition_facts[$slug]) ? $nutrition_facts[$slug] : '' ) . '</strong></p>';
-                        echo '</dt>';
+                        echo '</div>';
                     else:
                         echo '<p><strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">' . $servings_change . '</strong> ' . esc_html(strtolower($nf['name'])) . '</p>';
                     endif;
                 endforeach;
-                echo '</dt>';
+                echo '</div>';
 
                 // Get top facts content from buffer.
                 $top_facts_content = ob_get_clean();
@@ -1046,7 +1048,7 @@ class Cooked_Shortcodes {
                     echo '<div class="cooked-nutrition-title">' . __('Nutrition Facts', 'cooked') . '</div>';
                     echo wp_kses_post( $nutrition_facts_content );
                     if ( isset($main_facts_content) && $main_facts_content || isset($bottom_facts_content) && $bottom_facts_content ):
-                        echo '<dt class="cooked-nut-spacer"></dt>';
+                        echo '<div class="cooked-nut-spacer"></div>';
                         echo '<p class="cooked-daily-value-text">* ' . __('The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.','cooked') . '</p>';
                     endif;
 

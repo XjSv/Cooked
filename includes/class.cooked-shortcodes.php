@@ -609,7 +609,7 @@ class Cooked_Shortcodes {
 
             echo '<span class="cooked-author' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
                 echo !$hide_avatars ? '<span class="cooked-author-avatar">' . (!empty($author) ? wp_kses_post( $author['profile_photo'] ) : '') . '</span>' : '';
-                echo '<strong class="cooked-meta-title">' . __('Author','cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . (!empty($author) ? esc_html( $author['name'] ) : '') . ( $clickable && $permalink ? '</a>' : '' );
+                echo '<strong class="cooked-meta-title">' . __('Author','cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . (!empty($author) ? $author['name'] : '') . ( $clickable && $permalink ? '</a>' : '' );
             echo '</span>';
 
             wp_reset_postdata();

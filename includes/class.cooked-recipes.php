@@ -319,7 +319,7 @@ class Cooked_Recipes {
                     echo '<span class="cooked-recipe-card-author">';
                         $author = $recipe['author'];
                         /* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */
-                        echo sprintf( __( 'By %s', 'cooked' ), '<strong>' . wp_kses_post( $author['name'] ) . '</strong>' );
+                        echo sprintf( __( 'By %s', 'cooked' ), '<strong>' . $author['name'] . '</strong>' );
                     echo '</span>';
                 endif;
 

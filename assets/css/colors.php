@@ -43,7 +43,7 @@ if ( isset($_cooked_settings['dark_mode']) &&  in_array('enabled', $_cooked_sett
 .cooked-nutrition-label { background:rgba(0,0,0,0.25); border:none; border-radius:5px; }
 .cooked-nutrition-label .cooked-nutrition-title { color:#fff; }
 body .cooked-nutrition-label .cooked-nut-hr { border-color:rgba(255,255,255,0.15); }
-body .cooked-nutrition-label dt.cooked-nut-spacer { background:rgba(255,255,255,0.15); }
+body .cooked-nutrition-label dt.cooked-nut-spacer, body .cooked-nutrition-label dl.cooked-nut-spacer  { background:rgba(255,255,255,0.15); }
 body .cooked-nutrition-label dt,
 body .cooked-nutrition-label dl.cooked-nut-bottom dt,
 body .cooked-nutrition-label dl.cooked-nut-bottom dt:nth-last-child(2):nth-child(2n) { border-color:rgba(255,255,255,0.15); }

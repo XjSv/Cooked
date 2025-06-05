@@ -28,10 +28,10 @@ class Cooked_Recipe_Meta {
         $_recipe_settings = [];
 
         $wp_editor_roles_allowed = false;
-        if (is_user_logged_in()) {
+        if ( is_user_logged_in() ) {
             $user = wp_get_current_user();
-            $user_role = $user->roles[0];
-            $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_wp_editor_roles'] ) ? true : false;
+            $user_roles = $user->roles;
+            $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && ! empty( array_intersect( $user_roles, $_cooked_settings['recipe_wp_editor_roles'] ) ) ? true : false;
         }
 
         if (!empty($recipe_settings)) {
@@ -251,10 +251,10 @@ function cooked_render_recipe_fields( $post_id ) {
     $measurements = Cooked_Measurements::get();
 
     $wp_editor_roles_allowed = false;
-    if (is_user_logged_in()) {
+    if ( is_user_logged_in() ) {
         $user = wp_get_current_user();
-        $user_role = $user->roles[0];
-        $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && in_array( $user_role, $_cooked_settings['recipe_wp_editor_roles'] ) ? true : false;
+        $user_roles = $user->roles;
+        $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && ! empty( array_intersect( $user_roles, $_cooked_settings['recipe_wp_editor_roles'] ) ) ? true : false;
     }
 
     /* $cooked_page_args = [

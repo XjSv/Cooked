@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.7.1
-Stable tag: 1.10.0
+Tested up to: 6.8.1
+Stable tag: 1.11.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,20 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.10.0 includes a major change to recipe post statuses - now using WordPress default statuses (publish, pending, draft, trash) instead of custom statuses. This change improves performance and plugin compatibility. Also includes improvements to SEO with nofollow/noindex for print pages, new heading options for Directions/Ingredients sections, and various bug fixes.
+Version 1.11.0 includes bug fixes for user roles and PHP issues, new heading tag options, improved Browse Recipe filters, and accessibility enhancements.
 
 == Changelog ==
+
+= 1.11.0 =
+* **FIX:** Fixed a bug when users have multiple roles where the WP Editor does not appear in the recipe edit screen.
+* **NEW:** Added the 'cooked_format_author_name' developer filter for customizing how author names are displayed via code. View the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki/Author-Name) for more information.
+* **NEW:** Added 'Default Heading Tags' settings option to allow users to choose between H2, H3, H4, H5, H6 or Div for the Directions and Ingredients sections.
+* **FIX:** Fixed a couple of PHP related issues.
+* **FIX:** Fixed a bug with the Browse Recipe filters that would not work when the Browse Recipe Page is set as the Homepage.
+* **FIX:** Fixed a bug with default values not loading when introducing a new settings field and the settings page was not saved yet.
+* **TWEAK:** Changed the way the cooked migration is checked for better performance.
+* **TWEAK:** Accessibility improvements throughout the plugin.
+* **TWEAK:** Settings UI improvements.
 
 = 1.10.0 =
 * **TWEAK:** Simplified recipe status options to match standard WordPress statuses (publish, pending, draft, trash) for better performance and plugin compatibility.

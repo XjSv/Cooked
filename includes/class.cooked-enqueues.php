@@ -36,15 +36,20 @@ class Cooked_Enqueues {
         $cooked_js_vars = [
             'ajax_url' => admin_url('admin-ajax.php'),
             'timer_sound' => apply_filters('cooked_timer_sound_mp3', COOKED_URL . 'assets/audio/ding.mp3'),
-            'i18n_timer' => __('Timer', 'cooked'),
             'permalink_structure' => get_option('permalink_structure'),
             'site_url' => get_site_url(),
+            'browse_page' => $browse_page_id,
+            'front_page' => get_option( 'page_on_front' ),
             'browse_recipes_slug' => $browse_recipes_slug,
             'recipe_category_slug' => !isset($_cooked_settings['recipe_category_permalink']) ? 'recipe-category' : $_cooked_settings['recipe_category_permalink'],
             'recipe_cooking_method_slug' => !isset($_cooked_settings['recipe_cooking_method_permalink']) ? 'cooking-method' : $_cooked_settings['recipe_cooking_method_permalink'],
             'recipe_cuisine_slug' => !isset($_cooked_settings['recipe_cuisine_permalink']) ? 'cuisine' : $_cooked_settings['recipe_cuisine_permalink'],
             'recipe_tags_slug' => !isset($_cooked_settings['recipe_tag_permalink']) ? 'recipe-tag' : $_cooked_settings['recipe_tag_permalink'],
             'recipe_diet_slug' => !isset($_cooked_settings['recipe_diet_permalink']) ? 'diet' : $_cooked_settings['recipe_diet_permalink'],
+        ];
+
+        $cooked_i18n_js_vars = [
+            'i18n_timer' => __('Timer', 'cooked'),
         ];
 
         $min = COOKED_DEV ? '' : '.min';
@@ -64,7 +69,8 @@ class Cooked_Enqueues {
 
         wp_enqueue_script('wp-sanitize');
         wp_register_script('cooked-functions', COOKED_URL . 'assets/js/cooked-functions' . $min . '.js', ['jquery', 'wp-sanitize'], COOKED_VERSION);
-        wp_localize_script('cooked-functions', 'cooked_js_vars', $cooked_js_vars);
+        wp_localize_script('cooked-functions', 'cooked_functions_i18n_js_vars', $cooked_i18n_js_vars);
+        wp_add_inline_script( 'cooked-functions', 'const cooked_functions_js_vars = ' . json_encode( $cooked_js_vars ) . ';', 'before' );
     }
 
     public function css_colors() {

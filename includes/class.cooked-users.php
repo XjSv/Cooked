@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Cooked_Users {
 
-    function __construct(){
+    function __construct() {
         add_action( 'init', [&$this, 'recipe_author_rewrite'], 10 );
 
         add_filter( 'manage_users_columns', [&$this, 'recipe_count_column'] );
@@ -98,9 +98,24 @@ class Cooked_Users {
             $format = 'full';
         endif;
 
+        $filtered = apply_filters( 'cooked_format_author_name', $name, $format );
+
+        // If the filter returns an array with a second element true, treat as safe.
+        if ( is_array( $filtered ) && isset( $filtered[1] ) && $filtered[1] === true ) {
+            $name = $filtered[0];
+            $safe = true;
+        } else {
+            $name = is_array( $filtered ) ? $filtered[0] : $filtered;
+            $safe = false;
+        }
+
         switch ( $format ) {
             case 'full':
-                return $name;
+                if ( $safe ) {
+                    return $name;
+                } else {
+                    return esc_html( $name );
+                }
             case 'first_last_initial':
                 $name = explode( ' ', $name );
                 if ( isset($name[1]) ):
@@ -118,7 +133,11 @@ class Cooked_Users {
                 return esc_html( $name[0] );
         }
 
-        return esc_html( $name );
+        if ( $safe ) {
+            return $name;
+        } else {
+            return esc_html( $name );
+        }
     }
 
     function recipe_count_column($column_headers) {
@@ -140,7 +159,6 @@ class Cooked_Users {
 
         return $value;
     }
-
 
     function pre_user_query( $query ) {
         global $wpdb, $current_screen;

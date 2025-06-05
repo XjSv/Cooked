@@ -82,6 +82,7 @@ Version 1.11.0 includes bug fixes for user roles and PHP issues, new heading tag
 
 = 1.11.0 =
 * **FIX:** Fixed a bug when users have multiple roles where the WP Editor does not appear in the recipe edit screen.
+* **NEW:** Added the 'cooked_format_author_name' developer filter for customizing how author names are displayed via code. View the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki/Author-Name) for more information.
 * **NEW:** Added 'Default Heading Tags' settings option to allow users to choose between H2, H3, H4, H5, H6 or Div for the Directions and Ingredients sections.
 * **FIX:** Fixed a couple of PHP related issues.
 * **FIX:** Fixed a bug with the Browse Recipe filters that would not work when the Browse Recipe Page is set as the Homepage.

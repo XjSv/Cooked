@@ -92,11 +92,11 @@ class Cooked_Settings {
 
     public static function reset() {
         global $_cooked_settings;
-        $_cooked_settings = Cooked_Settings::get();
+        $_cooked_settings = self::get();
     }
 
     public static function get() {
-        $_cooked_settings = get_option( 'cooked_settings' );
+        $_cooked_settings = get_option( 'cooked_settings', [] );
 
         // Get defaults for fields that are not set yet.
         $cooked_tabs_fields = self::tabs_fields();
@@ -121,8 +121,6 @@ class Cooked_Settings {
     }
 
     public static function check_version_and_update() {
-        global $_cooked_settings;
-
         $cooked_settings_saved = get_option( 'cooked_settings_saved', false );
         $_cooked_settings_version = get_option( 'cooked_settings_version', '1.0.0' );
         $_cooked_pro_settings_version = get_option( 'cooked_pro_settings_version', '1.0.0' );
@@ -133,6 +131,12 @@ class Cooked_Settings {
 
         // Update if either version has changed or settings haven't been saved before
         if ( !$cooked_settings_saved || $cooked_version_compare < 0 || $cooked_pro_version_compare < 0 ) {
+            global $_cooked_settings;
+
+            if ( empty($_cooked_settings) ) {
+                $_cooked_settings = self::get();
+            }
+
             update_option( 'cooked_settings', $_cooked_settings );
 
             // Update both version numbers

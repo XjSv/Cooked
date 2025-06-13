@@ -41,14 +41,14 @@ msgid "remaining"
 msgstr ""
 
 #: includes/class.cooked-admin-enqueues.php:138
-#: includes/class.cooked-recipe-meta.php:658
-#: includes/class.cooked-recipe-meta.php:713
-#: includes/class.cooked-recipe-meta.php:753
+#: includes/class.cooked-recipe-meta.php:677
+#: includes/class.cooked-recipe-meta.php:732
+#: includes/class.cooked-recipe-meta.php:772
 msgid "Add Image"
 msgstr ""
 
 #: includes/class.cooked-admin-enqueues.php:139
-#: includes/class.cooked-recipe-meta.php:658
+#: includes/class.cooked-recipe-meta.php:677
 msgid "Change Image"
 msgstr ""
 
@@ -57,7 +57,7 @@ msgid "Use this Image"
 msgstr ""
 
 #: includes/class.cooked-admin-enqueues.php:141
-#: includes/class.cooked-recipe-meta.php:985
+#: includes/class.cooked-recipe-meta.php:1004
 msgid "Add to Gallery"
 msgstr ""
 
@@ -145,9 +145,9 @@ msgstr ""
 
 #: includes/class.cooked-ajax.php:173
 #: includes/class.cooked-functions.php:127
-#: includes/class.cooked-recipe-meta.php:134
-#: includes/class.cooked-recipe-meta.php:221
-#: includes/class.cooked-recipe-meta.php:1063
+#: includes/class.cooked-recipe-meta.php:153
+#: includes/class.cooked-recipe-meta.php:240
+#: includes/class.cooked-recipe-meta.php:1082
 #: includes/class.cooked-recipes.php:636
 #: templates/front/recipe.php:34
 msgid "Ingredients"
@@ -155,9 +155,9 @@ msgstr ""
 
 #: includes/class.cooked-ajax.php:173
 #: includes/class.cooked-functions.php:128
-#: includes/class.cooked-recipe-meta.php:134
-#: includes/class.cooked-recipe-meta.php:227
-#: includes/class.cooked-recipe-meta.php:1094
+#: includes/class.cooked-recipe-meta.php:153
+#: includes/class.cooked-recipe-meta.php:246
+#: includes/class.cooked-recipe-meta.php:1113
 #: includes/class.cooked-recipes.php:640
 #: templates/front/recipe.php:35
 msgid "Directions"
@@ -169,7 +169,7 @@ msgid "Error importing recipe."
 msgstr ""
 
 #: includes/class.cooked-enqueues.php:52
-#: includes/class.cooked-recipe-meta.php:1309
+#: includes/class.cooked-recipe-meta.php:1328
 msgid "Timer"
 msgstr ""
 
@@ -197,8 +197,8 @@ msgid "Information"
 msgstr ""
 
 #: includes/class.cooked-functions.php:125
-#: includes/class.cooked-recipe-meta.php:1254
-#: includes/class.cooked-settings.php:253
+#: includes/class.cooked-recipe-meta.php:1273
+#: includes/class.cooked-settings.php:256
 msgid "Excerpt"
 msgstr ""
 
@@ -207,15 +207,15 @@ msgid "Images"
 msgstr ""
 
 #: includes/class.cooked-functions.php:129
-#: includes/class.cooked-recipe-meta.php:1278
+#: includes/class.cooked-recipe-meta.php:1297
 #: includes/class.cooked-recipes.php:643
-#: includes/class.cooked-settings.php:254
+#: includes/class.cooked-settings.php:257
 #: includes/class.cooked-shortcodes.php:763
 msgid "Notes"
 msgstr ""
 
 #: includes/class.cooked-functions.php:130
-#: includes/class.cooked-recipe-meta.php:233
+#: includes/class.cooked-recipe-meta.php:252
 msgid "Nutrition"
 msgstr ""
 
@@ -293,7 +293,7 @@ msgid "Begin Import"
 msgstr ""
 
 #: includes/class.cooked-import.php:119
-#: includes/class.cooked-settings.php:625
+#: includes/class.cooked-settings.php:630
 msgid "reload"
 msgstr ""
 
@@ -577,7 +577,7 @@ msgstr ""
 
 #: includes/class.cooked-measurements.php:202
 #: includes/class.cooked-recipes.php:799
-#: includes/class.cooked-settings.php:258
+#: includes/class.cooked-settings.php:261
 msgid "Servings"
 msgstr ""
 
@@ -901,442 +901,442 @@ msgstr ""
 msgid "Current recipe category being viewed."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:179
+#: includes/class.cooked-recipe-meta.php:198
 msgid "Display Recipe"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:180
+#: includes/class.cooked-recipe-meta.php:199
 msgid "This shortcode displays the recipe in its entirety, using the \"Recipe Template\" field in the first tab."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:215
+#: includes/class.cooked-recipe-meta.php:234
 msgid "Layout"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:239
-#: includes/class.cooked-recipe-meta.php:1175
+#: includes/class.cooked-recipe-meta.php:258
+#: includes/class.cooked-recipe-meta.php:1194
 msgid "Gallery"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:245
+#: includes/class.cooked-recipe-meta.php:264
 msgid "Shortcodes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:302
+#: includes/class.cooked-recipe-meta.php:321
 msgid "Recipe Review Required"
 msgstr ""
 
 #. translators: for displaying singular or plural versions depending on the number of recipes.
-#: includes/class.cooked-recipe-meta.php:305
+#: includes/class.cooked-recipe-meta.php:324
 #, php-format
 msgid "It looks like this recipe is from a different version of %s. Please review and click \"Update\" to save it."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:313
+#: includes/class.cooked-recipe-meta.php:332
 msgid "Recipe Shortcode"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:314
+#: includes/class.cooked-recipe-meta.php:333
 msgid "You can use the following shortcode to display your recipe anywhere:"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:328
+#: includes/class.cooked-recipe-meta.php:347
 msgid "Recipe Template"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:328
+#: includes/class.cooked-recipe-meta.php:347
 msgid "Default Recipe Template"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:328
+#: includes/class.cooked-recipe-meta.php:347
 msgid "Choose from the options below to use this layout as the default for new recipes or for all recipes."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:328
+#: includes/class.cooked-recipe-meta.php:347
 msgid "Save as Default"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:328
+#: includes/class.cooked-recipe-meta.php:347
 msgid "Apply to All"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:328
+#: includes/class.cooked-recipe-meta.php:347
 msgid "Reset"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:328
+#: includes/class.cooked-recipe-meta.php:347
 msgid "Using the built-in recipe shortcodes found on the \"Shortcodes\" tab, you can create the layout of your recipe below. Use the \"Save as Default\" button to save your template."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:346
+#: includes/class.cooked-recipe-meta.php:365
 msgid "Recipe Excerpt"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:346
+#: includes/class.cooked-recipe-meta.php:365
 msgid "The excerpt is used on recipe listing templates, where the full recipe should not be displayed."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:369
+#: includes/class.cooked-recipe-meta.php:388
 msgid "SEO Description"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:369
+#: includes/class.cooked-recipe-meta.php:388
 msgid "This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:380
-#: includes/class.cooked-settings.php:252
+#: includes/class.cooked-recipe-meta.php:399
+#: includes/class.cooked-settings.php:255
 msgid "Difficulty Level"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:389
-#: includes/class.cooked-recipe-meta.php:1037
-#: includes/class.cooked-settings.php:255
+#: includes/class.cooked-recipe-meta.php:408
+#: includes/class.cooked-recipe-meta.php:1056
+#: includes/class.cooked-settings.php:258
 #: includes/class.cooked-shortcodes.php:448
 #: includes/class.cooked-shortcodes.php:659
 msgid "Prep Time"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:391
-#: includes/class.cooked-recipe-meta.php:396
-#: includes/class.cooked-recipe-meta.php:401
+#: includes/class.cooked-recipe-meta.php:410
+#: includes/class.cooked-recipe-meta.php:415
+#: includes/class.cooked-recipe-meta.php:420
 msgid "minutes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:394
-#: includes/class.cooked-recipe-meta.php:1038
-#: includes/class.cooked-settings.php:256
+#: includes/class.cooked-recipe-meta.php:413
+#: includes/class.cooked-recipe-meta.php:1057
+#: includes/class.cooked-settings.php:259
 #: includes/class.cooked-shortcodes.php:449
 #: includes/class.cooked-shortcodes.php:668
 msgid "Cook Time"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:399
-#: includes/class.cooked-recipe-meta.php:1039
-#: includes/class.cooked-settings.php:257
+#: includes/class.cooked-recipe-meta.php:418
+#: includes/class.cooked-recipe-meta.php:1058
+#: includes/class.cooked-settings.php:260
 #: includes/class.cooked-shortcodes.php:450
 #: includes/class.cooked-shortcodes.php:679
 #: includes/class.cooked-shortcodes.php:686
 msgid "Total Time"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:407
+#: includes/class.cooked-recipe-meta.php:426
 msgid "Recipe Notes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:407
+#: includes/class.cooked-recipe-meta.php:426
 msgid "The notes are displayed in the recipe."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:432
+#: includes/class.cooked-recipe-meta.php:451
 msgid "Amount"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:433
+#: includes/class.cooked-recipe-meta.php:452
 msgid "Measurement"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:434
+#: includes/class.cooked-recipe-meta.php:453
 msgid "Item"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:471
-#: includes/class.cooked-recipe-meta.php:544
-#: includes/class.cooked-recipe-meta.php:591
+#: includes/class.cooked-recipe-meta.php:490
+#: includes/class.cooked-recipe-meta.php:563
+#: includes/class.cooked-recipe-meta.php:610
 msgid "ex. Eggs, Milk, etc."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:485
-#: includes/class.cooked-recipe-meta.php:602
-#: includes/class.cooked-recipe-meta.php:674
-#: includes/class.cooked-recipe-meta.php:766
+#: includes/class.cooked-recipe-meta.php:504
+#: includes/class.cooked-recipe-meta.php:621
+#: includes/class.cooked-recipe-meta.php:693
+#: includes/class.cooked-recipe-meta.php:785
 msgid "Section Heading"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:561
+#: includes/class.cooked-recipe-meta.php:580
 msgid "Add Ingredient"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:562
-#: includes/class.cooked-recipe-meta.php:745
+#: includes/class.cooked-recipe-meta.php:581
+#: includes/class.cooked-recipe-meta.php:764
 msgid "Add Section Heading"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:744
+#: includes/class.cooked-recipe-meta.php:763
 msgid "Add Direction"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:801
+#: includes/class.cooked-recipe-meta.php:820
 msgid "Nutrition Information"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:839
+#: includes/class.cooked-recipe-meta.php:858
 #: includes/class.cooked-shortcodes.php:1048
 msgid "Nutrition Facts"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:857
+#: includes/class.cooked-recipe-meta.php:876
 #: includes/class.cooked-shortcodes.php:1016
 msgid "Amount per serving"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:867
+#: includes/class.cooked-recipe-meta.php:886
 #: includes/class.cooked-shortcodes.php:1026
 msgid "% Daily Value *"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:886
+#: includes/class.cooked-recipe-meta.php:905
 #: includes/class.cooked-shortcodes.php:958
 msgid "Includes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:918
+#: includes/class.cooked-recipe-meta.php:937
 #: includes/class.cooked-shortcodes.php:1052
 msgid "The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:934
+#: includes/class.cooked-recipe-meta.php:953
 msgid "Recipe Gallery Type"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:947
+#: includes/class.cooked-recipe-meta.php:966
 msgid "Choose one..."
 msgstr ""
 
 #. translators: a title for the video section of the recipe editor, where users can paste a YouToub or Vimeo URL into the field below.
-#: includes/class.cooked-recipe-meta.php:961
+#: includes/class.cooked-recipe-meta.php:980
 #, php-format
 msgid "%1$s or %2$s Video"
 msgstr ""
 
 #. translators: a message describing how to display a video from YouTube or Vimeo.
-#: includes/class.cooked-recipe-meta.php:965
+#: includes/class.cooked-recipe-meta.php:984
 #, php-format
 msgid "If you would like to display a video as the first item in your gallery, you can paste a valid %1$s or %2$s URL below."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:970
+#: includes/class.cooked-recipe-meta.php:989
 msgid "Gallery Items"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1001
+#: includes/class.cooked-recipe-meta.php:1020
 msgid "Recipe Information"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1002
+#: includes/class.cooked-recipe-meta.php:1021
 msgid "This will display the recipe author, cooking times, etc."
 msgstr ""
 
 #. translators: "include and exclude" section title
 #. translators: "left and right" section title
-#: includes/class.cooked-recipe-meta.php:1011
-#: includes/class.cooked-recipe-meta.php:1021
+#: includes/class.cooked-recipe-meta.php:1030
+#: includes/class.cooked-recipe-meta.php:1040
 #, php-format
 msgid "\"%1$s\" and \"%2$s\""
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1013
+#: includes/class.cooked-recipe-meta.php:1032
 msgid "This will allow you to include or exclude content from the shortcode output."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1022
+#: includes/class.cooked-recipe-meta.php:1041
 msgid "Used like \"include\", but will position the content to the left or right."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1032
-#: includes/class.cooked-recipe-meta.php:1078
-#: includes/class.cooked-recipe-meta.php:1109
-#: includes/class.cooked-recipe-meta.php:1134
-#: includes/class.cooked-recipe-meta.php:1158
-#: includes/class.cooked-recipe-meta.php:1218
-#: includes/class.cooked-recipe-meta.php:1263
-#: includes/class.cooked-recipe-meta.php:1293
-#: includes/class.cooked-recipe-meta.php:1338
+#: includes/class.cooked-recipe-meta.php:1051
+#: includes/class.cooked-recipe-meta.php:1097
+#: includes/class.cooked-recipe-meta.php:1128
+#: includes/class.cooked-recipe-meta.php:1153
+#: includes/class.cooked-recipe-meta.php:1177
+#: includes/class.cooked-recipe-meta.php:1237
+#: includes/class.cooked-recipe-meta.php:1282
+#: includes/class.cooked-recipe-meta.php:1312
+#: includes/class.cooked-recipe-meta.php:1357
 msgid "Available Variables"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1036
-#: includes/class.cooked-settings.php:250
+#: includes/class.cooked-recipe-meta.php:1055
+#: includes/class.cooked-settings.php:253
 #: includes/class.cooked-shortcodes.php:445
 #: includes/class.cooked-shortcodes.php:612
 msgid "Author"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1040
+#: includes/class.cooked-recipe-meta.php:1059
 #: includes/class.cooked-shortcodes.php:446
 #: includes/class.cooked-shortcodes.php:623
 msgid "Difficulty"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1041
+#: includes/class.cooked-recipe-meta.php:1060
 msgid "Servings Switcher"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1042
-#: includes/class.cooked-settings.php:251
+#: includes/class.cooked-recipe-meta.php:1061
+#: includes/class.cooked-settings.php:254
 #: includes/class.cooked-shortcodes.php:706
 #: includes/class.cooked-shortcodes.php:709
 #: includes/class.cooked-taxonomies.php:39
 msgid "Category"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1043
+#: includes/class.cooked-recipe-meta.php:1062
 msgid "Print Mode"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1044
+#: includes/class.cooked-recipe-meta.php:1063
 msgid "Full-Screen Mode"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1064
+#: includes/class.cooked-recipe-meta.php:1083
 msgid "This will display the list of ingredients, added via the \"Ingredients\" tab."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1070
+#: includes/class.cooked-recipe-meta.php:1089
 msgid "This will allow you to hide or show the checkboxes:"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1080
+#: includes/class.cooked-recipe-meta.php:1099
 msgid "Show checkboxes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1081
+#: includes/class.cooked-recipe-meta.php:1100
 msgid "Hide checkboxes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1095
+#: includes/class.cooked-recipe-meta.php:1114
 msgid "This will display the list of directions, added via the \"Directions\" tab."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1101
+#: includes/class.cooked-recipe-meta.php:1120
 msgid "This will allow you to hide or show the numbers:"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1111
+#: includes/class.cooked-recipe-meta.php:1130
 msgid "Show numbers"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1112
+#: includes/class.cooked-recipe-meta.php:1131
 msgid "Hide numbers"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1125
+#: includes/class.cooked-recipe-meta.php:1144
 msgid "Featured Image"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1126
+#: includes/class.cooked-recipe-meta.php:1145
 msgid "This will display the featured image, if one is set."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1136
-#: includes/class.cooked-recipe-meta.php:1160
-#: includes/class.cooked-recipe-meta.php:1265
+#: includes/class.cooked-recipe-meta.php:1155
+#: includes/class.cooked-recipe-meta.php:1179
+#: includes/class.cooked-recipe-meta.php:1284
 msgid "None"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1149
+#: includes/class.cooked-recipe-meta.php:1168
 msgid "Nutrition Label"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1150
+#: includes/class.cooked-recipe-meta.php:1169
 msgid "This will display the Nutrition Facts label, if data is present."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1176
+#: includes/class.cooked-recipe-meta.php:1195
 msgid "This will display the gallery, if one is set or created from the \"Gallery\" tab."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1184
+#: includes/class.cooked-recipe-meta.php:1203
 msgid "Set the width of the gallery."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1191
+#: includes/class.cooked-recipe-meta.php:1210
 msgid "Set the image size ratio."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1201
+#: includes/class.cooked-recipe-meta.php:1220
 msgid "Set the navigation style."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1208
+#: includes/class.cooked-recipe-meta.php:1227
 msgid "Enable or disable \"Full-Screen\" mode."
 msgstr ""
 
 #. translators: related to the width of  slideshows: "80% or 300px" section title
-#: includes/class.cooked-recipe-meta.php:1223
+#: includes/class.cooked-recipe-meta.php:1242
 #, php-format
 msgid "ex: \"%1$s\" or \"%2$s\""
 msgstr ""
 
 #. translators: related to the image ratio for slideshows: "ex: 800/600" section title
-#: includes/class.cooked-recipe-meta.php:1228
+#: includes/class.cooked-recipe-meta.php:1247
 #, php-format
 msgid "ex: \"%s\""
 msgstr ""
 
 #. translators: related to the navigation style for slideshows: "dots, thumbs or false" section title
-#: includes/class.cooked-recipe-meta.php:1233
+#: includes/class.cooked-recipe-meta.php:1252
 #, php-format
 msgid "\"%1$s\", \"%2$s\", or \"%3$s\""
 msgstr ""
 
 #. translators: related to allowing full screen for slideshows: "true or false" section title
-#: includes/class.cooked-recipe-meta.php:1238
+#: includes/class.cooked-recipe-meta.php:1257
 #, php-format
 msgid "\"%1$s\" or \"%2$s\""
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1255
+#: includes/class.cooked-recipe-meta.php:1274
 msgid "This will display the excerpt, if one is available from the \"Layout & Content\" tab."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1279
+#: includes/class.cooked-recipe-meta.php:1298
 msgid "This will display the notes, if one is available from the \"Layout & Content\" tab."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1285
+#: includes/class.cooked-recipe-meta.php:1304
 msgid "This will allow you to hide or show the header for the notes section:"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1295
+#: includes/class.cooked-recipe-meta.php:1314
 msgid "Show header"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1296
+#: includes/class.cooked-recipe-meta.php:1315
 msgid "Hide header"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1310
+#: includes/class.cooked-recipe-meta.php:1329
 msgid "This will display a special link to start a cooking timer."
 msgstr ""
 
 #. translators: "seconds, minutes and hours" section title
-#: includes/class.cooked-recipe-meta.php:1319
+#: includes/class.cooked-recipe-meta.php:1338
 #, php-format
 msgid "\"%1$s\", \"%2$s\" and \"%3$s\""
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1321
+#: includes/class.cooked-recipe-meta.php:1340
 msgid "Use just one or a combination of all three to set the timer length"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1328
+#: includes/class.cooked-recipe-meta.php:1347
 msgid "Add a short description for this timer, if applicable."
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1340
+#: includes/class.cooked-recipe-meta.php:1359
 msgid "Time in seconds"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1341
+#: includes/class.cooked-recipe-meta.php:1360
 msgid "Time in minutes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1342
+#: includes/class.cooked-recipe-meta.php:1361
 msgid "Time in hours"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:1343
+#: includes/class.cooked-recipe-meta.php:1362
 msgid "Timer Description"
 msgstr ""
 
@@ -1445,12 +1445,12 @@ msgid "Browse"
 msgstr ""
 
 #: includes/class.cooked-recipes.php:993
-#: includes/class.cooked-settings.php:178
+#: includes/class.cooked-settings.php:182
 msgid "No categories"
 msgstr ""
 
 #: includes/class.cooked-recipes.php:996
-#: includes/class.cooked-settings.php:226
+#: includes/class.cooked-settings.php:229
 #: includes/class.cooked-taxonomies.php:38
 #: includes/class.cooked-taxonomies.php:48
 msgid "Categories"
@@ -1490,308 +1490,308 @@ msgstr ""
 msgid "Cooked settings has been updated!"
 msgstr ""
 
-#: includes/class.cooked-settings.php:178
+#: includes/class.cooked-settings.php:182
 msgid "No default"
 msgstr ""
 
-#: includes/class.cooked-settings.php:198
+#: includes/class.cooked-settings.php:202
 msgid "General"
 msgstr ""
 
-#: includes/class.cooked-settings.php:202
+#: includes/class.cooked-settings.php:206
 msgid "Browse/Search Recipes Page"
 msgstr ""
 
 #. translators: a description on how to add the [cooked-browse] shortcode to a page
-#: includes/class.cooked-settings.php:204
+#: includes/class.cooked-settings.php:208
 #, php-format
 msgid "Create a page with the %s shortcode on it, then choose it from this dropdown."
 msgstr ""
 
-#: includes/class.cooked-settings.php:211
+#: includes/class.cooked-settings.php:214
 msgid "Recipes Per Page"
 msgstr ""
 
 #. translators: a description on how to choose the default number of recipes per page.
-#: includes/class.cooked-settings.php:213
+#: includes/class.cooked-settings.php:216
 #, php-format
 msgid "Choose the default (set via the %s panel) or choose a different number here."
 msgstr ""
 
 #. translators: a description on how to choose the default number of recipes per page.
-#: includes/class.cooked-settings.php:213
+#: includes/class.cooked-settings.php:216
 msgid "Settings > Reading"
 msgstr ""
 
-#: includes/class.cooked-settings.php:219
+#: includes/class.cooked-settings.php:222
 msgid "Recipe Taxonomies"
 msgstr ""
 
-#: includes/class.cooked-settings.php:220
+#: includes/class.cooked-settings.php:223
 msgid "Choose which taxonomies you want to enable for your recipes."
 msgstr ""
 
-#: includes/class.cooked-settings.php:231
+#: includes/class.cooked-settings.php:234
 msgid "Global Recipe Toggles"
 msgstr ""
 
-#: includes/class.cooked-settings.php:232
+#: includes/class.cooked-settings.php:235
 msgid "You can quickly hide or show different recipe elements (site-wide) with these checkboxes."
 msgstr ""
 
-#: includes/class.cooked-settings.php:263
+#: includes/class.cooked-settings.php:266
 msgid "Carbs Format"
 msgstr ""
 
-#: includes/class.cooked-settings.php:264
+#: includes/class.cooked-settings.php:267
 msgid "You can display carbs as \"Total\" or \"Net\"."
 msgstr ""
 
-#: includes/class.cooked-settings.php:270
+#: includes/class.cooked-settings.php:273
 msgid "Total Carbs"
 msgstr ""
 
-#: includes/class.cooked-settings.php:271
+#: includes/class.cooked-settings.php:274
 msgid "Net Carbs"
 msgstr ""
 
-#: includes/class.cooked-settings.php:276
+#: includes/class.cooked-settings.php:279
 msgid "Author Name Format"
 msgstr ""
 
-#: includes/class.cooked-settings.php:277
+#: includes/class.cooked-settings.php:280
 msgid "You can show the full author's name or just a part of it."
 msgstr ""
 
-#: includes/class.cooked-settings.php:283
+#: includes/class.cooked-settings.php:286
 msgid "Full name"
 msgstr ""
 
-#: includes/class.cooked-settings.php:284
+#: includes/class.cooked-settings.php:287
 msgid "Full first name w/last name initial"
 msgstr ""
 
-#: includes/class.cooked-settings.php:285
+#: includes/class.cooked-settings.php:288
 msgid "First name initial w/full last name"
 msgstr ""
 
-#: includes/class.cooked-settings.php:286
+#: includes/class.cooked-settings.php:289
 msgid "First name only"
 msgstr ""
 
-#: includes/class.cooked-settings.php:291
+#: includes/class.cooked-settings.php:294
 msgid "Author Links"
 msgstr ""
 
-#: includes/class.cooked-settings.php:292
+#: includes/class.cooked-settings.php:295
 msgid "If you do not want the author names to link to the author recipe listings, you can disable them here."
 msgstr ""
 
-#: includes/class.cooked-settings.php:299
+#: includes/class.cooked-settings.php:302
 msgid "Disable Author Links"
 msgstr ""
 
-#: includes/class.cooked-settings.php:304
+#: includes/class.cooked-settings.php:307
 msgid "Default Category"
 msgstr ""
 
 #. translators: a description on how to set the default recipe category for the [cooked-browse] shortcode.
-#: includes/class.cooked-settings.php:306
+#: includes/class.cooked-settings.php:309
 #, php-format
 msgid "Optionally set the default recipe category for your %s shortcode display."
 msgstr ""
 
-#: includes/class.cooked-settings.php:312
+#: includes/class.cooked-settings.php:315
 msgid "Default Sort Order"
 msgstr ""
 
 #. translators: a description on how to set the default sort order for the [cooked-browse] shortcode.
-#: includes/class.cooked-settings.php:314
+#: includes/class.cooked-settings.php:317
 #, php-format
 msgid "Set the default sort order for your %s shortcode display."
 msgstr ""
 
-#: includes/class.cooked-settings.php:320
+#: includes/class.cooked-settings.php:323
 msgid "Newest First"
 msgstr ""
 
-#: includes/class.cooked-settings.php:321
+#: includes/class.cooked-settings.php:324
 msgid "Oldest First"
 msgstr ""
 
-#: includes/class.cooked-settings.php:322
+#: includes/class.cooked-settings.php:325
 msgid "Alphabetical"
 msgstr ""
 
-#: includes/class.cooked-settings.php:323
+#: includes/class.cooked-settings.php:326
 msgid "Alphabetical (reversed)"
 msgstr ""
 
-#: includes/class.cooked-settings.php:346
+#: includes/class.cooked-settings.php:349
 msgid "WP Editor Roles"
 msgstr ""
 
-#: includes/class.cooked-settings.php:347
+#: includes/class.cooked-settings.php:350
 msgid "Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields."
 msgstr ""
 
-#: includes/class.cooked-settings.php:353
+#: includes/class.cooked-settings.php:356
 msgid "Advanced Settings"
 msgstr ""
 
 #. translators: an option to only show recipes with the [cooked-recipe] shortcode.
-#: includes/class.cooked-settings.php:363
+#: includes/class.cooked-settings.php:366
 msgid "Disable Public Recipes"
 msgstr ""
 
 #. translators: an option to only show recipes with the [cooked-recipe] shortcode.
-#: includes/class.cooked-settings.php:363
+#: includes/class.cooked-settings.php:366
 #, php-format
 msgid "Only show recipes using the %s shortcode."
 msgstr ""
 
 #. translators: an option to disable "meta" tags.
-#: includes/class.cooked-settings.php:365
+#: includes/class.cooked-settings.php:368
 #, php-format
 msgid "Disable %s Tags"
 msgstr ""
 
 #. translators: an option to disable "meta" tags.
-#: includes/class.cooked-settings.php:365
+#: includes/class.cooked-settings.php:368
 msgid "Prevents duplicates when tags already exist."
 msgstr ""
 
-#: includes/class.cooked-settings.php:366
+#: includes/class.cooked-settings.php:369
 msgid "Disable \"Servings Switcher\""
 msgstr ""
 
-#: includes/class.cooked-settings.php:366
+#: includes/class.cooked-settings.php:369
 msgid "Removes the servings dropdown on recipes."
 msgstr ""
 
-#: includes/class.cooked-settings.php:367
+#: includes/class.cooked-settings.php:370
 msgid "Disable Recipe Schema Output"
 msgstr ""
 
-#: includes/class.cooked-settings.php:367
+#: includes/class.cooked-settings.php:370
 msgid "You should only do this if you're using something else to output schema information."
 msgstr ""
 
-#: includes/class.cooked-settings.php:368
+#: includes/class.cooked-settings.php:371
 msgid "Disable Recipe Archive Page"
 msgstr ""
 
-#: includes/class.cooked-settings.php:368
+#: includes/class.cooked-settings.php:371
 msgid "Prevents the recipe archive from being displayed."
 msgstr ""
 
-#: includes/class.cooked-settings.php:375
+#: includes/class.cooked-settings.php:378
 msgid "Design"
 msgstr ""
 
-#: includes/class.cooked-settings.php:379
+#: includes/class.cooked-settings.php:382
 msgid "Dark Mode"
 msgstr ""
 
-#: includes/class.cooked-settings.php:380
+#: includes/class.cooked-settings.php:383
 msgid "If your site has a dark background, you should enable \"Dark Mode\" so that Cooked can match this style."
 msgstr ""
 
-#: includes/class.cooked-settings.php:386
+#: includes/class.cooked-settings.php:389
 msgid "Enable \"Dark Mode\""
 msgstr ""
 
-#: includes/class.cooked-settings.php:391
+#: includes/class.cooked-settings.php:394
 msgid "Author Images"
 msgstr ""
 
-#: includes/class.cooked-settings.php:392
+#: includes/class.cooked-settings.php:395
 msgid "If you do not want to display the author images (avatars), you can disable them here."
 msgstr ""
 
-#: includes/class.cooked-settings.php:399
+#: includes/class.cooked-settings.php:402
 msgid "Hide Author Images"
 msgstr ""
 
-#: includes/class.cooked-settings.php:404
+#: includes/class.cooked-settings.php:407
 msgid "Main Color"
 msgstr ""
 
-#: includes/class.cooked-settings.php:405
+#: includes/class.cooked-settings.php:408
 msgid "Used on buttons, cooking timer, etc."
 msgstr ""
 
-#: includes/class.cooked-settings.php:411
+#: includes/class.cooked-settings.php:414
 msgid "Main Color (on hover)"
 msgstr ""
 
-#: includes/class.cooked-settings.php:412
+#: includes/class.cooked-settings.php:415
 msgid "Used when hovering over buttons."
 msgstr ""
 
-#: includes/class.cooked-settings.php:418
+#: includes/class.cooked-settings.php:421
 msgid "First Responsive Breakpoint"
 msgstr ""
 
-#: includes/class.cooked-settings.php:419
+#: includes/class.cooked-settings.php:422
 msgid "Set the first responsive breakpoint. Best for large tablets."
 msgstr ""
 
-#: includes/class.cooked-settings.php:425
+#: includes/class.cooked-settings.php:428
 msgid "Second Responsive Breakpoint"
 msgstr ""
 
-#: includes/class.cooked-settings.php:426
+#: includes/class.cooked-settings.php:429
 msgid "Set the second responsive breakpoint. Best for small tablets."
 msgstr ""
 
-#: includes/class.cooked-settings.php:432
+#: includes/class.cooked-settings.php:435
 msgid "Third Responsive Breakpoint"
 msgstr ""
 
-#: includes/class.cooked-settings.php:433
+#: includes/class.cooked-settings.php:436
 msgid "Set the third responsive breakpoint. Best for phones and other small devices."
 msgstr ""
 
-#: includes/class.cooked-settings.php:441
+#: includes/class.cooked-settings.php:444
 msgid "Permalinks"
 msgstr ""
 
-#: includes/class.cooked-settings.php:445
+#: includes/class.cooked-settings.php:448
 msgid "Recipe Permalink"
 msgstr ""
 
-#: includes/class.cooked-settings.php:448
+#: includes/class.cooked-settings.php:451
 msgid "recipe-name"
 msgstr ""
 
-#: includes/class.cooked-settings.php:452
+#: includes/class.cooked-settings.php:455
 msgid "Recipe Author Permalink"
 msgstr ""
 
-#: includes/class.cooked-settings.php:455
+#: includes/class.cooked-settings.php:458
 msgid "author-name"
 msgstr ""
 
-#: includes/class.cooked-settings.php:459
+#: includes/class.cooked-settings.php:462
 msgid "Recipe Category Permalink"
 msgstr ""
 
-#: includes/class.cooked-settings.php:462
+#: includes/class.cooked-settings.php:465
 msgid "recipe-category-name"
 msgstr ""
 
 #. translators: posts_per_page default
-#: includes/class.cooked-settings.php:473
+#: includes/class.cooked-settings.php:476
 #, php-format
 msgid "WordPress Default %s"
 msgstr ""
 
-#: includes/class.cooked-settings.php:478
+#: includes/class.cooked-settings.php:481
 msgid "Show All (no pagination)"
 msgstr ""
 
-#: includes/class.cooked-settings.php:620
+#: includes/class.cooked-settings.php:625
 msgid "Begin Migration"
 msgstr ""
 
@@ -2100,10 +2100,10 @@ msgstr ""
 msgid "View all recipes"
 msgstr ""
 
-#: includes/class.cooked-recipe-meta.php:489
-#: includes/class.cooked-recipe-meta.php:606
-#: includes/class.cooked-recipe-meta.php:678
-#: includes/class.cooked-recipe-meta.php:770
+#: includes/class.cooked-recipe-meta.php:508
+#: includes/class.cooked-recipe-meta.php:625
+#: includes/class.cooked-recipe-meta.php:697
+#: includes/class.cooked-recipe-meta.php:789
 msgid "Heading Element:"
 msgstr ""
 
@@ -2120,41 +2120,36 @@ msgstr ""
 msgid "deciliters"
 msgstr ""
 
-#: cooked.php:283
-msgctxt "Page title"
-msgid "Browse Recipes"
-msgstr ""
-
-#: includes/class.cooked-settings.php:328
+#: includes/class.cooked-settings.php:331
 msgid "Section Heading Default HTML Tag"
 msgstr ""
 
 #. translators: a description on how to set the default sort order for the [cooked-browse] shortcode.
-#: includes/class.cooked-settings.php:330
+#: includes/class.cooked-settings.php:333
 msgid "Set the default HTML tag for your section headings."
 msgstr ""
 
-#: includes/class.cooked-settings.php:336
+#: includes/class.cooked-settings.php:339
 msgid "div"
 msgstr ""
 
-#: includes/class.cooked-settings.php:337
+#: includes/class.cooked-settings.php:340
 msgid "h2"
 msgstr ""
 
-#: includes/class.cooked-settings.php:338
+#: includes/class.cooked-settings.php:341
 msgid "h3"
 msgstr ""
 
-#: includes/class.cooked-settings.php:339
+#: includes/class.cooked-settings.php:342
 msgid "h4"
 msgstr ""
 
-#: includes/class.cooked-settings.php:340
+#: includes/class.cooked-settings.php:343
 msgid "h5"
 msgstr ""
 
-#: includes/class.cooked-settings.php:341
+#: includes/class.cooked-settings.php:344
 msgid "h6"
 msgstr ""
 
@@ -2164,4 +2159,12 @@ msgstr ""
 
 #: includes/class.cooked-shortcodes.php:650
 msgid "Fullscreen"
+msgstr ""
+
+#: includes/class.cooked-settings.php:181
+msgid "Choose a page..."
+msgstr ""
+
+#: includes/class.cooked-settings.php:181
+msgid "No pages"
 msgstr ""

@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
 Tested up to: 6.8.1
-Stable tag: 1.11.0
+Stable tag: 1.11.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,13 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.11.0 includes bug fixes for user roles and PHP issues, new heading tag options, improved Browse Recipe filters, and accessibility enhancements.
+Version 1.11.1 includes a bug fix for the first time installation and activation of the plugin and a bug fix for the WordPress Importer.
 
 == Changelog ==
+
+= 1.11.1 =
+* **FIX:** Fixed a bug when installing and activating the plugin for the first time.
+* **FIX:** Fixed a bug when exporting and importing recipes using the WordPress Importer.
 
 = 1.11.0 =
 * **FIX:** Fixed a bug when users have multiple roles where the WP Editor does not appear in the recipe edit screen.

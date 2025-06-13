@@ -125,7 +125,26 @@ class Cooked_Recipe_Meta {
         global $recipe_settings;
 
         /* OK, it's safe for us to validate/sanitize the data now. */
-        $recipe_settings = isset($_POST['_recipe_settings']) ? self::meta_cleanup( $_POST['_recipe_settings'] ) : false;
+        $recipe_settings = isset($_POST['_recipe_settings']) ? self::meta_cleanup( $_POST['_recipe_settings'] ) : [];
+
+        if ( isset( $recipe_settings['content'] ) ) {
+            $recipe_settings['content'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['content'] );
+        }
+        if ( isset( $recipe_settings['excerpt'] ) ) {
+            $recipe_settings['excerpt'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['excerpt'] );
+        }
+        if ( isset( $recipe_settings['notes'] ) ) {
+            $recipe_settings['notes'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['notes'] );
+        }
+
+        // Directions
+        if ( isset( $recipe_settings['directions'] ) ) {
+            foreach ( $recipe_settings['directions'] as $key => $direction ) {
+                if ( isset( $direction['content'] ) ) {
+                    $recipe_settings['directions'][$key]['content'] = str_replace( ["\r\n", "\r"], "\n", $direction['content'] );
+                }
+            }
+        }
 
         // Update the recipe settings meta field.
         update_post_meta( $post_id, '_recipe_settings', $recipe_settings );

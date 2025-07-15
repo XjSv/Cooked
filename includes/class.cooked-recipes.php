@@ -89,7 +89,7 @@ class Cooked_Recipes {
             $recipes_pre_search = new WP_Query($pre_search_args);
             if ( $recipes_pre_search->have_posts() ):
                 $rposts = $recipes_pre_search->posts;
-                $recipe_ids = ( !empty($recipe_ids) ? array_merge( $recipe_ids, $rposts ) : $rposts );
+                $recipe_ids = !empty($recipe_ids) ? array_merge( $recipe_ids, $rposts ) : $rposts;
             endif;
 
             $recipe_ids = array_unique( $recipe_ids );
@@ -947,7 +947,10 @@ class Cooked_Recipes {
 
         if ( isset($recipe_args['tax_query']) ):
             foreach ( $recipe_args['tax_query'] as $query ):
-                if ( isset($query['taxonomy']) && isset($query['terms']) ):
+                // Only process inclusion queries (default operator or explicit 'IN')
+                // Skip exclusion queries ('NOT IN') and other complex operators
+                $operator = isset($query['operator']) ? $query['operator'] : 'IN';
+                if ( $operator === 'IN' && isset($query['taxonomy']) && isset($query['terms']) ):
                     $filters_set[$query['taxonomy']] = implode( ',', $query['terms'] );
                 endif;
             endforeach;
@@ -955,16 +958,18 @@ class Cooked_Recipes {
             if ( isset($filters_set) ):
                 foreach ( $filters_set as $taxonomy => $filter ):
                     $this_tax = get_term_by( 'slug', $filter, $taxonomy );
-                    $this_tax = ( $this_tax ? $this_tax : get_term_by( 'id', $filter, $taxonomy ) );
-                    $filters_set[$taxonomy] = $this_tax->term_id;
-                    $active_taxonomy = ( !isset($active_taxonomy) ? $this_tax->name : $active_taxonomy );
+                    $this_tax = $this_tax ? $this_tax : get_term_by( 'id', $filter, $taxonomy );
+                    if ( $this_tax && !is_wp_error($this_tax) ):
+                        $filters_set[$taxonomy] = $this_tax->term_id;
+                        $active_taxonomy = !isset($active_taxonomy) ? $this_tax->name : $active_taxonomy;
+                    endif;
                 endforeach;
             endif;
         endif;
 
         $total_taxonomies = 0;
 
-        $inline_browse = ( isset($options['inline_browse']) && $options['inline_browse'] ? true : false );
+        $inline_browse = isset($options['inline_browse']) && $options['inline_browse'] ? true : false;
 
         ob_start();
         if ( !empty($_cooked_settings['recipe_taxonomies']) ):

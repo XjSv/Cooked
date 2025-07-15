@@ -594,11 +594,13 @@ class Cooked_Shortcodes {
             $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : false;
             $author = !empty($recipe_settings['author']) ? $recipe_settings['author'] : false;
 
-            if ( !empty($author['id']) ) {
-                $author_slug = !empty($author['name']) ? sanitize_title($author['name']) : false;
-                // @TODO: Convert the homepage link to use pretty URLs.
-                $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ? esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . $author['id'] . '/' . trailingslashit( $author_slug ) ) : esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
-                $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'] );
+            if ( !empty($author['id']) && !empty($browse_page_id) ) {
+                $author_slug = !empty($author['user_nicename']) ? urlencode(sanitize_title($author['user_nicename'])) : false;
+                $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ?
+                                esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . trailingslashit( $author_slug ) ) :
+                                esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
+
+                $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'], $author_slug  );
             } else {
                 $permalink = false;
             }
@@ -608,8 +610,8 @@ class Cooked_Shortcodes {
             $hide_avatars = isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false;
 
             echo '<span class="cooked-author' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
-                echo !$hide_avatars ? '<span class="cooked-author-avatar">' . (!empty($author) ? wp_kses_post( $author['profile_photo'] ) : '') . '</span>' : '';
-                echo '<strong class="cooked-meta-title">' . __('Author','cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . (!empty($author) ? $author['name'] : '') . ( $clickable && $permalink ? '</a>' : '' );
+                echo !$hide_avatars ? '<span class="cooked-author-avatar">' . ( !empty($author) ? wp_kses_post( $author['profile_photo'] ) : '' ) . '</span>' : '';
+                echo '<strong class="cooked-meta-title">' . __('Author', 'cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . (!empty($author) ? $author['name'] : '') . ( $clickable && $permalink ? '</a>' : '' );
             echo '</span>';
 
             wp_reset_postdata();

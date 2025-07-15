@@ -24,9 +24,7 @@ class Cooked_Settings {
         add_filter( 'init', [&$this, 'init'] );
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
-
-        // Add action to check version and update settings at the end of page load
-        add_action( 'shutdown', [&$this, 'check_version_and_update'] );
+        add_action( 'admin_notices', [ &$this, 'browse_page_missing_notice' ] );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -90,9 +88,30 @@ class Cooked_Settings {
         }
     }
 
+    function browse_page_missing_notice() {
+        // Only show on admin pages, not on the Cooked settings page itself
+        if ( isset($_GET['page']) && $_GET['page'] === 'cooked_settings' ) {
+            return;
+        }
+
+        // Get Cooked settings
+        $_cooked_settings = self::get();
+
+        // Check if browse page is set
+        if ( empty($_cooked_settings['browse_page']) || !$_cooked_settings['browse_page'] ) {
+            $class = 'notice notice-warning is-dismissible';
+            $message = sprintf(
+                '<strong>' . __( 'Cooked Plugin Setup', 'cooked' ) . '</strong> ' .
+                __( 'To display your recipes properly, please set up your %s.', 'cooked' ),
+                '<a href="' . trailingslashit( admin_url() ) . 'admin.php?page=cooked_settings#recipe_settings">' . __( 'Browse/Search Recipes Page', 'cooked' ) . '</a>'
+            );
+            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message );
+        }
+    }
+
     public static function reset() {
         global $_cooked_settings;
-        $_cooked_settings = self::get();
+        $_cooked_settings = Cooked_Settings::get();
     }
 
     public static function get() {
@@ -118,63 +137,6 @@ class Cooked_Settings {
         }
 
         return apply_filters( 'cooked_get_settings', $_cooked_settings );
-    }
-
-    public static function check_version_and_update() {
-        $cooked_settings_saved = get_option( 'cooked_settings_saved', false );
-        $_cooked_settings_version = get_option( 'cooked_settings_version', '1.0.0' );
-        $_cooked_pro_settings_version = get_option( 'cooked_pro_settings_version', '1.0.0' );
-
-        // Check both versions
-        $cooked_version_compare = version_compare( $_cooked_settings_version, COOKED_VERSION );
-        $cooked_pro_version_compare = defined('COOKED_PRO_VERSION') ? version_compare( $_cooked_pro_settings_version, COOKED_PRO_VERSION ) : 0;
-
-        // Update if either version has changed or settings haven't been saved before
-        if ( !$cooked_settings_saved || $cooked_version_compare < 0 || $cooked_pro_version_compare < 0 ) {
-            global $_cooked_settings;
-
-            if ( empty($_cooked_settings) ) {
-                $_cooked_settings = self::get();
-            }
-
-            update_option( 'cooked_settings', $_cooked_settings );
-
-            // Update both version numbers
-            update_option( 'cooked_settings_version', COOKED_VERSION );
-            if ( defined('COOKED_PRO_VERSION') ) {
-                update_option( 'cooked_pro_settings_version', COOKED_PRO_VERSION );
-            }
-
-            if ( self::needs_rewrite_flush( $_cooked_settings_version ) ) {
-                flush_rewrite_rules();
-            }
-        }
-    }
-
-    private static function needs_rewrite_flush( $old_version ) {
-        // List versions that require a rewrite flush
-        $versions_requiring_flush = [
-            '1.9.0',  // New rewrite rules for Browse page introduced.
-            '1.9.1',  // Hotfix for the permalink structure.
-            '1.9.2',  // Hotfix for the permalink structure.
-            '1.9.4',  // Hotfix for the permalink structure.
-            '1.9.5',  // Hotfix for the permalink structure (sort & search).
-        ];
-
-        // If old version is newer than our latest flush requirement, no flush needed
-        if (version_compare($old_version, end($versions_requiring_flush), '>=')) {
-            return false;
-        }
-
-        // Find the next version that requires a flush after the old version
-        foreach ($versions_requiring_flush as $version) {
-            if (version_compare($old_version, $version, '<') &&
-                version_compare(COOKED_VERSION, $version, '>=')) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public static function tabs_fields() {
@@ -205,7 +167,7 @@ class Cooked_Settings {
                     'browse_page' => [
                         'title' => __('Browse/Search Recipes Page', 'cooked'),
                         /* translators: a description on how to add the [cooked-browse] shortcode to a page */
-                        'desc' => sprintf(__('Create a page with the %s shortcode on it, then choose it from this dropdown.', 'cooked'), '<code>[cooked-browse]</code>'),
+                        'desc' => sprintf(__('Create a page with the %s shortcode on it, then choose it from this dropdown.', 'cooked'), '<code>[cooked-browse]</code>') . '<br><em>' . __('<b>Note:</b> This setting is required for the plugin to function properly.', 'cooked') . '</em>',
                         'type' => 'select',
                         'default' => 0,
                         'options' => $pages_array
@@ -292,7 +254,7 @@ class Cooked_Settings {
                     ],
                     'disable_author_links' => [
                         'title' => __('Author Links', 'cooked'),
-                        'desc' => __('If you do not want the author names to link to the author recipe listings, you can disable them here.', 'cooked'),
+                        'desc' => __('If you do not want the author names to link to the author recipe listings, you can disable them here.', 'cooked') . '<br><em>' . __('<b>Note:</b> Author links require the Browse/Search Recipes Page to be set up correctly to function properly.', 'cooked') . '</em>',
                         'type' => 'checkboxes',
                         'color' => 'red',
                         'default' => [],
@@ -655,14 +617,23 @@ class Cooked_Settings {
     public static function field_permalink_field($field_name, $end_of_url) {
         global $_cooked_settings;
 
-        $home_url = get_home_url();
+        $browse_page_id = $_cooked_settings['browse_page'];
+        $browse_page_url = '';
 
-        if (substr($home_url, -1) !== '/') {
-            $home_url .= '/';
+        if (!empty($browse_page_id) && $field_name !== 'recipe_permalink') {
+            $browse_page_url = get_permalink( $browse_page_id );
+        }
+
+        if (empty($browse_page_url)) {
+            $browse_page_url = get_home_url();
+        }
+
+        if (substr($browse_page_url, -1) !== '/') {
+            $browse_page_url .= '/';
         }
 
         echo '<p class="cooked-permalink-field-wrapper">';
-            echo '<span>' . $home_url . '</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
+            echo '<span>' . $browse_page_url . '</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
         echo '</p>';
     }
 

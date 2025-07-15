@@ -6,7 +6,7 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author:         Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.11.1
+Version: 		1.11.2
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.11.1' );
+define( 'COOKED_VERSION', '1.11.2' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -95,6 +95,14 @@ final class Cooked_Plugin {
      * @since 1.0.0
      */
     public $migration;
+
+    /**
+     * Cooked Updates Object.
+     *
+     * @var object|Cooked_Updates
+     * @since 1.0.0
+     */
+    public $updates;
 
     /**
      * Cooked Post Types Object.
@@ -243,6 +251,7 @@ final class Cooked_Plugin {
 
             self::$instance->admin_settings = new Cooked_Settings();
             self::$instance->migration = new Cooked_Migration();
+            self::$instance->updates = new Cooked_Updates();
             self::$instance->post_types = new Cooked_Post_Types();
             self::$instance->recipe_meta = new Cooked_Recipe_Meta();
             self::$instance->recipe_meta = new Cooked_Measurements();
@@ -259,6 +268,8 @@ final class Cooked_Plugin {
             self::$instance->module_setup();
 
             add_action( 'init', [self::$instance, 'initialize_plugin_support'], 10 );
+
+            do_action('cooked_loaded');
         }
 
         return self::$instance;
@@ -446,6 +457,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-admin-menus.php';
         require_once COOKED_DIR . 'includes/class.cooked-settings.php';
         require_once COOKED_DIR . 'includes/class.cooked-migration.php';
+        require_once COOKED_DIR . 'includes/class.cooked-updates.php';
         require_once COOKED_DIR . 'includes/class.cooked-ajax.php';
         require_once COOKED_DIR . 'includes/class.cooked-functions.php';
         require_once COOKED_DIR . 'includes/class.cooked-widgets.php';

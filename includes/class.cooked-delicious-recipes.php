@@ -99,7 +99,7 @@ class Cooked_Delicious_Recipes {
         if (is_wp_error($new_recipe_id)) {
             return [
                 'status' => false,
-                'message' => __('Error importing recipe.', 'cooked'),
+                'message' => __('Error importing WP Delicious recipe.', 'cooked'),
             ];
         }
 

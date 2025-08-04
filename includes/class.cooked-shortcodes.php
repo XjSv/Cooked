@@ -436,10 +436,10 @@ class Cooked_Shortcodes {
             'exclude' => false,
         ], $atts);
 
-        $left = ( $atts['left'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['left']) ) ) : false );
-        $right = ( $atts['right'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['right']) ) ) : false );
-        $include = ( $atts['include'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['include']) ) ) : false );
-        $exclude = ( $atts['exclude'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['exclude']) ) ) : false );
+        $left = $atts['left'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['left']) ) ) : false;
+        $right = $atts['right'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['right']) ) ) : false;
+        $include = $atts['include'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['include']) ) ) : false;
+        $exclude = $atts['exclude'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['exclude']) ) ) : false;
 
         $default_info_array = apply_filters( 'cooked_default_info_array', [
             'author' => __('Author', 'cooked'),
@@ -560,7 +560,9 @@ class Cooked_Shortcodes {
         if ( $cooked_info_html ):
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_cooked_donut']);
-            return '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
+            $cooked_info_html = '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
+            $cooked_info_html = apply_filters( 'cooked_info_shortcode_output', $cooked_info_html, $recipe_settings );
+            return $cooked_info_html;
             //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
         endif;
     }
@@ -818,15 +820,17 @@ class Cooked_Shortcodes {
 
         ob_start();
 
+        do_action( 'cooked_ingredients_shortcode_before', $recipe_settings );
+
         if ( isset($recipe_settings['ingredients']) && !empty($recipe_settings['ingredients']) ):
             echo '<div class="cooked-recipe-ingredients">';
-                foreach( $recipe_settings['ingredients'] as $ing ):
-
+                foreach ( $recipe_settings['ingredients'] as $ing ):
                     Cooked_Recipes::single_ingredient( $ing, $checkboxes );
-
                 endforeach;
             echo '</div>';
         endif;
+
+        do_action( 'cooked_ingredients_shortcode_after', $recipe_settings );
 
         return ob_get_clean();
     }

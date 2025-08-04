@@ -2,9 +2,9 @@
 /**
  * Plugin Updates and Data Migrations
  *
- * @package     Cooked
- * @subpackage  Updates
- * @since       1.0.0
+ * @package     Cooked_Updates
+ * @subpackage  Cooked_Updates / Core
+ * @since       1.11.2
 */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( !defined( 'ABSPATH' ) ) exit;
  * This class handles all version updates and data migrations for the Cooked plugin.
  * It follows WordPress best practices for plugin updates and ensures data integrity.
  *
- * @since 1.0.0
+ * @since 1.11.2
  */
 class Cooked_Updates {
 
@@ -66,9 +66,6 @@ class Cooked_Updates {
 
         // Log the update
         error_log( sprintf( 'Cooked: Updated from version %s to %s', $old_version, self::$current_version ) );
-
-        // Clear any transients that might be affected
-        self::clear_affected_transients();
     }
 
     /**
@@ -99,22 +96,32 @@ class Cooked_Updates {
      */
     private static function get_version_updates() {
         return apply_filters( 'cooked_version_updates', [
-            '1.12.0' => [
+            '1.9.0' => [
+                'update_rewrite_rules'
+            ],
+            '1.9.1' => [
+                'update_rewrite_rules'
+            ],
+            '1.9.2' => [
+                'update_rewrite_rules'
+            ],
+            '1.9.4' => [
+                'update_rewrite_rules'
+            ],
+            '1.9.5' => [
+                'update_rewrite_rules'
+            ],
+            '1.11.2' => [
                 'fix_recipe_line_endings',
                 'update_rewrite_rules'
             ],
-            // Add future version updates here
-            // '1.1.0' => [
-            //     'new_feature_migration',
-            //     'another_migration'
-            // ],
         ]);
     }
 
     /**
      * Fix line endings in existing recipes to prevent WordPress exporter/importer issues
      *
-     * @since 1.0.0
+     * @since 1.11.2
      */
     private static function fix_recipe_line_endings() {
         // Get all recipe posts
@@ -195,39 +202,11 @@ class Cooked_Updates {
     /**
      * Update rewrite rules if needed
      *
-     * @since 1.0.0
+     * @since 1.11.2
      */
     private static function update_rewrite_rules() {
-        // List versions that require a rewrite flush
-        $versions_requiring_flush = [
-            '1.9.0',  // New rewrite rules for Browse page introduced.
-            '1.9.1',  // Hotfix for the permalink structure.
-            '1.9.2',  // Hotfix for the permalink structure.
-            '1.9.4',  // Hotfix for the permalink structure.
-            '1.9.5',  // Hotfix for the permalink structure (sort & search).
-            '1.12.0', // Fix for the permalink structure (author).
-        ];
-
-        // Check if we need to flush rewrite rules
-        foreach ( $versions_requiring_flush as $version ) {
-            if ( version_compare( self::$previous_version, $version, '<' ) &&
-                 version_compare( self::$current_version, $version, '>=' ) ) {
-                flush_rewrite_rules();
-                error_log( 'Cooked: Flushed rewrite rules due to version update.' );
-                break;
-            }
-        }
-    }
-
-    /**
-     * Clear transients that might be affected by updates
-     */
-    private static function clear_affected_transients() {
-        // Clear any transients that might be affected by updates
-        delete_transient( 'cooked_classic_recipes' );
-
-        // Add more transients to clear as needed
-        // delete_transient( 'cooked_other_transient' );
+        flush_rewrite_rules();
+        error_log( 'Cooked: Flushed rewrite rules due to version update.' );
     }
 
     /**

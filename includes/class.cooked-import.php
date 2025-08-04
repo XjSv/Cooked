@@ -34,6 +34,10 @@ class Cooked_Import {
         $delicious_recipes = $Cooked_Delicious_Recipes::get_recipes();
         $cooked_delicious_recipes_imported = get_option( 'cooked_delicious_recipes_imported', false );
 
+        $Cooked_Recipe_Maker_Recipes = new Cooked_Recipe_Maker_Recipes();
+        $wp_recipe_maker_recipes = $Cooked_Recipe_Maker_Recipes::get_recipes();
+        $cooked_wp_recipe_maker_imported = get_option( 'cooked_wp_recipe_maker_imported', false );
+
         $import_tabs = [];
         if (!empty($delicious_recipes)) {
             $total = count($delicious_recipes);
@@ -89,11 +93,66 @@ class Cooked_Import {
             ];
         }
 
+        if (!empty($wp_recipe_maker_recipes)) {
+            $total = count($wp_recipe_maker_recipes);
+
+            /* translators: for displaying singular or plural versions depending on the number of recipes. */
+            $html_desc = sprintf( esc_html( _n( 'There is %1$s recipe that should be imported from %2$s.', 'There are %1$s recipes that should be imported from %2$s.', $total, 'cooked' ) ), '<strong>' . number_format( $total ) . '</strong>', '<strong>WP Recipe Maker</strong>' );
+            $html_desc .= '<br>';
+            $html_desc .= __( 'Before you begin, please make sure you <b>backup your database</b> in case something goes wrong.', 'cooked' );
+            $html_desc .= '<br>';
+            $html_desc .= __( 'Click the button below to import these recipes. Here is what will happen to your recipes:', 'cooked' );
+            $html_desc .= '<ul class="cooked-admin-ul">';
+                $html_desc .= '<li>' . __( 'Recipes will be imported with the <b>\'Draft\'</b> status.', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'Comments and ratings data will also be imported (ratings are available in Cooked Pro).', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'The difficulty level will be set to <b>Beginner</b> since it is not supported by WP Recipe Maker.', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'After the import is complete, you can bulk edit the recipes and change their status to <b>\'Published\'</b>.', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'The existing WP Recipe Maker and data will not be modified or deleted.', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'Certain data that is not suppoted by Cooked will not be imported (such as Cooking Temp, Estimated Cost, Recipe Keywords, etc).', 'cooked' ) . '</li>';
+                $html_desc .= '<li>' . __( 'You can run the import multiple times, but keep in mind that duplicate recipes will be created.', 'cooked' ) . '</li>';
+            $html_desc .= '</ul>';
+
+            if ($total > 2000) {
+                $html_desc .= '<p class="cooked-import-note"><strong>' . __( 'Wow, you have a lot of recipes!', 'cooked' ) . '</strong><br><em style="color:#333;">' . __( 'It is definitely recommended that you get yourself a cup of coffee or tea after clicking this button.', 'cooked' ) . '</em></p>';
+            } else {
+                $html_desc .= '<p class="cooked-import-note"><strong>' . __( 'Note:', 'cooked' ) . '</strong> ' . __( 'The more recipes you have, the longer this will take.', 'cooked' ) . '</p>';
+            }
+
+            if ($total > 0) {
+                $import_tabs['wp_recipe_maker_import'] = [
+                    'name' => __('WP Recipe Maker - Import', 'cooked'),
+                    'icon' => 'migrate',
+                    'fields' => [
+                        'cooked_import_button' => [
+                            'title' => 'WP Recipe Maker&nbsp;&nbsp;<i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;Cooked',
+                            'desc' => $html_desc,
+                            'type' => 'import_button',
+                            'total' => $total,
+                            'import_type' => $Cooked_Recipe_Maker_Recipes->import_type,
+                        ]
+                    ]
+                ];
+            }
+        } else {
+            $import_tabs['no_wp_recipe_maker_recipes'] = [
+                'name' => __('WP Recipe Maker - Import', 'cooked'),
+                'icon' => 'migrate',
+                'fields' => [
+                    'cooked_no_wp_recipe_maker_recipes' => [
+                        'title' => 'WP Recipe Maker',
+                        'desc' => '',
+                        'type' => 'message',
+                        'message' => 'There are no recipes to import from WP Recipe Maker.',
+                    ]
+                ]
+            ];
+        }
+
         $import_tabs['more_imports_coming_soon'] = [
             'name' => __('More Imports are Coming Soon...', 'cooked'),
             'icon' => 'migrate',
             'fields' => [
-                'cooked_no_delicious_recipes' => [
+                'cooked_more_imports_coming_soon' => [
                     'title' => 'More Imports are Coming Soon...',
                     'desc' => '',
                     'type' => 'message',

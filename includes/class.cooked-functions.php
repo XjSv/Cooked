@@ -12,6 +12,13 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 class Cooked_Functions {
 
+	/**
+	 * Guest message ID
+	 *
+	 * @var string
+	 */
+	private static $guest_message_id = false;
+
 	public static function sanitize_text_field( $text ) {
 		$text = htmlentities( stripslashes( $text ) );
 		$text = sanitize_text_field( $text );
@@ -223,25 +230,42 @@ class Cooked_Functions {
 	    	}
 
 		</script><?php
-
 	}
 
 	// Store the message
     public static function set_transient_message($message) {
         $user_id = get_current_user_id();
-		if ( !empty( $user_id ) && !empty( $message ) ) {
-			set_transient('cooked_user_' . $user_id . '_message', $message, 60); // Expires in 60 seconds
+		if ( !empty( $message )) {
+			if ( !empty( $user_id ) ) {
+				set_transient('cooked_user_' . $user_id . '_message', $message, 60); // Expires in 60 seconds
+			} else {
+				// For guests
+				self::$guest_message_id = uniqid();
+				set_transient('cooked_guest_' . self::$guest_message_id . '_message', $message, 60); // Expires in 60 seconds
+				return self::$guest_message_id;
+			}
 		}
     }
 
     // Retrieve and delete the message
-    public static function get_and_delete_transient_message() {
+    public static function get_and_delete_transient_message($guest_message_id = false) {
         $user_id = get_current_user_id();
 		if ( !empty( $user_id ) ) {
 			$message = get_transient('cooked_user_' . $user_id . '_message');
 			if ( !empty( $message ) ) {
 				delete_transient('cooked_user_' . $user_id . '_message');
 				return $message;
+			}
+		} else {
+			// For guests - use provided guest_message_id or fall back to static property
+			$message_id = $guest_message_id ?: self::$guest_message_id;
+			if ( $message_id ) {
+				$message = get_transient('cooked_guest_' . $message_id . '_message');
+				if ( !empty( $message ) ) {
+					delete_transient('cooked_guest_' . $message_id . '_message');
+					self::$guest_message_id = false;
+					return $message;
+				}
 			}
 		}
         return false;

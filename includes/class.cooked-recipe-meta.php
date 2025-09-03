@@ -369,7 +369,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             <?php
                             wp_editor($recipe_excerpt, '_recipe_settings_excerpt', [
                                 'teeny' => true,
-                                'media_buttons' => false,
+                                'media_buttons' => true,
                                 'wpautop' => false,
                                 'editor_height' => 100,
                                 'textarea_name' => '_recipe_settings[excerpt]',
@@ -429,7 +429,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         <?php
                             wp_editor($recipe_notes, '_recipe_settings_notes', [
                                 'teeny' => false,
-                                'media_buttons' => false,
+                                'media_buttons' => true,
                                 'wpautop' => false,
                                 'editor_height' => 100,
                                 'textarea_name' => '_recipe_settings[notes]',

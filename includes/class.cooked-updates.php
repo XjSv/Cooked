@@ -31,6 +31,21 @@ class Cooked_Updates {
     private static $previous_version;
 
     /**
+     * Current pro plugin version
+     */
+    private static $current_pro_version;
+
+    /**
+     * Previous pro plugin version
+     */
+    private static $previous_pro_version;
+
+    /**
+     * Cooked Settings Saved
+     */
+    private static $cooked_settings_saved;
+
+    /**
      * Initialize the updates system
      */
     public function __construct() {
@@ -42,13 +57,45 @@ class Cooked_Updates {
      * Initialize the updates
      */
     public static function init() {
+        self::$cooked_settings_saved = get_option( 'cooked_settings_saved', false );
         self::$current_version = COOKED_VERSION;
         self::$previous_version = get_option( 'cooked_settings_version', '1.0.0' );
+        self::$current_pro_version = defined('COOKED_PRO_VERSION') ? COOKED_PRO_VERSION : null;
+        self::$previous_pro_version = get_option( 'cooked_pro_settings_version', '1.0.0' );
+
+        if ( !self::$cooked_settings_saved ) {
+            global $_cooked_settings;
+
+            if ( empty($_cooked_settings) ) {
+                $_cooked_settings = Cooked_Settings::get();
+            }
+
+            update_option( 'cooked_settings', $_cooked_settings );
+            self::$cooked_settings_saved = true;
+        }
 
         // Only run updates if version has changed
-        if ( version_compare( self::$previous_version, self::$current_version, '<' ) ) {
+        if ( self::needs_update() ) {
             self::run_updates();
         }
+    }
+
+    /**
+     * Check if an update is needed
+     *
+     * @return bool True if update is needed
+     */
+    public static function needs_update() {
+        // Check both versions.
+        $cooked_version_compare = version_compare( self::$previous_version, self::$current_version );
+        $cooked_pro_version_compare = ( defined('COOKED_PRO_VERSION') && self::$current_pro_version !== null ) ? version_compare( self::$previous_pro_version, self::$current_pro_version ) : 0;
+
+        // Update if either version has changed.
+        if ( $cooked_version_compare < 0 || $cooked_pro_version_compare < 0 ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -61,8 +108,11 @@ class Cooked_Updates {
         // Run version-specific updates
         self::run_version_updates();
 
-        // Update the stored version
+        // Update both version numbers.
         update_option( 'cooked_settings_version', self::$current_version );
+        if ( defined('COOKED_PRO_VERSION') ) {
+            update_option( 'cooked_pro_settings_version', self::$current_pro_version );
+        }
 
         // Log the update
         error_log( sprintf( 'Cooked: Updated from version %s to %s', $old_version, self::$current_version ) );
@@ -209,30 +259,4 @@ class Cooked_Updates {
         error_log( 'Cooked: Flushed rewrite rules due to version update.' );
     }
 
-    /**
-     * Get current version
-     *
-     * @return string Current version
-     */
-    public static function get_current_version() {
-        return self::$current_version;
-    }
-
-    /**
-     * Get previous version
-     *
-     * @return string Previous version
-     */
-    public static function get_previous_version() {
-        return self::$previous_version;
-    }
-
-    /**
-     * Check if an update is needed
-     *
-     * @return bool True if update is needed
-     */
-    public static function needs_update() {
-        return version_compare( self::$previous_version, self::$current_version, '<' );
-    }
 }

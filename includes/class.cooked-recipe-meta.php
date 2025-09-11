@@ -44,7 +44,11 @@ class Cooked_Recipe_Meta {
                             $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                         }
                     } else {
-                        $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
+                        if ($key === "post_title") {
+                            $_recipe_settings[$key] = wp_kses_post( $val );
+                        } else {
+                            $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
+                        }
                     }
                 } else {
                     foreach ($val as $subkey => $subval) {

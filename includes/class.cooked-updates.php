@@ -50,7 +50,7 @@ class Cooked_Updates {
      */
     public function __construct() {
         // Add action to check version and update settings at the end of page load.
-        add_action( 'shutdown', [&$this, 'init'] );
+        add_action( 'shutdown', [__CLASS__, 'init'] );
     }
 
     /**
@@ -129,7 +129,7 @@ class Cooked_Updates {
                 foreach ( $update_methods as $method ) {
                     if ( method_exists( __CLASS__, $method ) ) {
                         try {
-                            self::$method();
+                            call_user_func( [__CLASS__, $method] );
                         } catch ( Exception $e ) {
                             error_log( sprintf( 'Cooked: Error running update method %s: %s', $method, $e->getMessage() ) );
                         }

@@ -89,6 +89,7 @@ Version 1.11.2 includes a new import for WP Recipe Maker recipes, transient mess
 * **TWEAK:** Refactored update logic and version tracking.
 * **TWEAK:** Updated version to 1.11.2 across metadata files.
 * **TWEAK:** Also updates translations and documentation.
+* **TWEAK:** Fixed bug with formatting of the post title when submitting a recipe from the front end in other languages (submit a recipe shortcode).
 * **TWEAK:** Various code style and logic improvements for reliability and maintainability.
 
 = 1.11.1 =

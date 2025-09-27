@@ -597,7 +597,14 @@ class Cooked_Shortcodes {
             $author = !empty($recipe_settings['author']) ? $recipe_settings['author'] : false;
 
             if ( !empty($author['id']) && !empty($browse_page_id) ) {
-                $author_slug = !empty($author['user_nicename']) ? urlencode(sanitize_title($author['user_nicename'])) : false;
+                // Generate author slug from user_nicename, fallback to user ID if nicename is empty
+                if ( !empty($author['user_nicename']) ) {
+                    $author_slug = urlencode(sanitize_title($author['user_nicename']));
+                } else {
+                    // Fallback to user ID if user_nicename is empty or missing
+                    $author_slug = $author['id'];
+                }
+
                 $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ?
                                 esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . trailingslashit( $author_slug ) ) :
                                 esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );

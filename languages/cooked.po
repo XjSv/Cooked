@@ -175,7 +175,7 @@ msgid "What's new in %s?"
 msgstr ""
 
 #: includes/class.cooked-functions.php:127
-#: includes/class.cooked-shortcodes.php:648
+#: includes/class.cooked-shortcodes.php:655
 msgid "Print"
 msgstr ""
 
@@ -205,7 +205,7 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:1301
 #: includes/class.cooked-recipes.php:643
 #: includes/class.cooked-settings.php:219
-#: includes/class.cooked-shortcodes.php:767
+#: includes/class.cooked-shortcodes.php:774
 msgid "Notes"
 msgstr ""
 
@@ -1000,7 +1000,7 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:1060
 #: includes/class.cooked-settings.php:220
 #: includes/class.cooked-shortcodes.php:448
-#: includes/class.cooked-shortcodes.php:663
+#: includes/class.cooked-shortcodes.php:670
 msgid "Prep Time"
 msgstr ""
 
@@ -1014,7 +1014,7 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:1061
 #: includes/class.cooked-settings.php:221
 #: includes/class.cooked-shortcodes.php:449
-#: includes/class.cooked-shortcodes.php:672
+#: includes/class.cooked-shortcodes.php:679
 msgid "Cook Time"
 msgstr ""
 
@@ -1022,8 +1022,8 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:1062
 #: includes/class.cooked-settings.php:222
 #: includes/class.cooked-shortcodes.php:450
-#: includes/class.cooked-shortcodes.php:683
 #: includes/class.cooked-shortcodes.php:690
+#: includes/class.cooked-shortcodes.php:697
 msgid "Total Time"
 msgstr ""
 
@@ -1078,27 +1078,27 @@ msgid "Nutrition Information"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:862
-#: includes/class.cooked-shortcodes.php:1054
+#: includes/class.cooked-shortcodes.php:1061
 msgid "Nutrition Facts"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:880
-#: includes/class.cooked-shortcodes.php:1022
+#: includes/class.cooked-shortcodes.php:1029
 msgid "Amount per serving"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:890
-#: includes/class.cooked-shortcodes.php:1032
+#: includes/class.cooked-shortcodes.php:1039
 msgid "% Daily Value *"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:909
-#: includes/class.cooked-shortcodes.php:964
+#: includes/class.cooked-shortcodes.php:971
 msgid "Includes"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:941
-#: includes/class.cooked-shortcodes.php:1058
+#: includes/class.cooked-shortcodes.php:1065
 msgid "The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice."
 msgstr ""
 
@@ -1165,13 +1165,13 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:1059
 #: includes/class.cooked-settings.php:215
 #: includes/class.cooked-shortcodes.php:445
-#: includes/class.cooked-shortcodes.php:616
+#: includes/class.cooked-shortcodes.php:623
 msgid "Author"
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:1063
 #: includes/class.cooked-shortcodes.php:446
-#: includes/class.cooked-shortcodes.php:627
+#: includes/class.cooked-shortcodes.php:634
 msgid "Difficulty"
 msgstr ""
 
@@ -1181,8 +1181,8 @@ msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:1065
 #: includes/class.cooked-settings.php:216
-#: includes/class.cooked-shortcodes.php:710
-#: includes/class.cooked-shortcodes.php:713
+#: includes/class.cooked-shortcodes.php:717
+#: includes/class.cooked-shortcodes.php:720
 #: includes/class.cooked-taxonomies.php:39
 msgid "Category"
 msgstr ""
@@ -2165,7 +2165,7 @@ msgstr ""
 msgid "Search"
 msgstr ""
 
-#: includes/class.cooked-shortcodes.php:654
+#: includes/class.cooked-shortcodes.php:661
 msgid "Fullscreen"
 msgstr ""
 

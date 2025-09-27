@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.8.1
-Stable tag: 1.11.1
+Tested up to: 6.8.2
+Stable tag: 1.11.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -76,9 +76,21 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.11.1 includes a bug fix for the first time installation and activation of the plugin and a bug fix for the WordPress Importer.
+Version 1.11.2 includes a new import for WP Recipe Maker recipes, transient message handling for guests to support guest recipe submissions, and developer hooks: `cooked_info_shortcode_output` filter and `cooked_ingredients_shortcode_before`/`cooked_ingredients_shortcode_after` actions for enhanced customization.
 
 == Changelog ==
+
+= 1.11.2 =
+* **NEW:** Added import for WP Recipe Maker recipes.
+* **TWEAK:** Improved author permalink generation and rewrite rules for recipe authors.
+* **TWEAK:** Added transient message handling for guests to support guest recipe submissions.
+* **NEW:** Added developer hooks: `cooked_info_shortcode_output` filter and `cooked_ingredients_shortcode_before`/`cooked_ingredients_shortcode_after` actions for enhanced customization.
+* **TWEAK:** Enhanced admin notices and settings descriptions to clarify required setup.
+* **TWEAK:** Refactored update logic and version tracking.
+* **TWEAK:** Updated version to 1.11.2 across metadata files.
+* **TWEAK:** Also updates translations and documentation.
+* **TWEAK:** Fixed bug with formatting of the post title when submitting a recipe from the front end in other languages (submit a recipe shortcode).
+* **TWEAK:** Various code style and logic improvements for reliability and maintainability.
 
 = 1.11.1 =
 * **FIX:** Fixed a bug when installing and activating the plugin for the first time.

@@ -31,20 +31,29 @@ class Cooked_Users {
     public static function recipe_author_rewrite() {
         global $_cooked_settings;
 
-        $browse_page_id = ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false );
+        $browse_page_id = isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false;
         $front_page_id = get_option( 'page_on_front' );
-        $browse_page_slug = ( $browse_page_id ? basename( get_permalink( $browse_page_id ) ) : false );
+        $browse_page_slug = $browse_page_id ? basename( get_permalink( $browse_page_id ) ) : false;
 
         if ( $browse_page_id != $front_page_id ) {
             add_rewrite_tag('%recipe_author%', '([^&]+)');
             if ( isset( $_cooked_settings['browse_page'] ) ) {
-                add_rewrite_rule('^' . $browse_page_slug . '/' . $_cooked_settings['recipe_author_permalink'] . '/([^/]*)/([^/]*)/page/([^/]*)/?', 'index.php?page_id=' . esc_attr( $_cooked_settings['browse_page'] ) . '&paged=$matches[3]&recipe_author=$matches[1]', 'top' );
+                add_rewrite_rule('^' . $browse_page_slug . '/' . $_cooked_settings['recipe_author_permalink'] . '/([^/]*)/page/([^/]*)/?', 'index.php?page_id=' . esc_attr( $_cooked_settings['browse_page'] ) . '&paged=$matches[2]&recipe_author=$matches[1]', 'top' );
                 add_rewrite_rule('^' . $browse_page_slug . '/' . $_cooked_settings['recipe_author_permalink'] . '/([^/]*)/?', 'index.php?page_id=' . esc_attr( $_cooked_settings['browse_page'] ) . '&recipe_author=$matches[1]', 'top' );
             }
         }
     }
 
-    public static function get( $user_id, $basic = false ) {
+    public static function get( $user_id = false, $basic = false, $user_nicename = false ) {
+        if ( !$user_id && $user_nicename ) {
+            $user = get_user_by( 'slug', $user_nicename );
+            if ( $user ) {
+                $user_id = $user->ID;
+            } else {
+                return false;
+            }
+        }
+
         $_user = get_userdata( $user_id );
         $_user_meta = get_user_meta( $user_id, 'cooked_user_meta', true );
 
@@ -52,7 +61,7 @@ class Cooked_Users {
             if ( isset( $_user_meta['profile_photo_id'] ) && $_user_meta['profile_photo_id'] && wp_attachment_is_image( $_user_meta['profile_photo_id'] ) ) {
                 $profile_photo = wp_get_attachment_image( $_user_meta['profile_photo_id'], 'cooked-profile-photo' );
                 $profile_photo_src = wp_get_attachment_image_src( $_user_meta['profile_photo_id'], 'cooked-profile-photo' );
-                $profile_photo_src = ( isset($profile_photo_src[0]) && $profile_photo_src[0] ? $profile_photo_src[0] : false );
+                $profile_photo_src = isset($profile_photo_src[0]) && $profile_photo_src[0] ? $profile_photo_src[0] : false;
             } else {
                 $profile_photo = get_avatar($_user->user_email, 96);
                 $profile_photo_src = get_avatar_url($_user->user_email, ['size' => 96]);
@@ -63,6 +72,7 @@ class Cooked_Users {
             }
 
             $_user_data['id'] = $user_id;
+            $_user_data['user_nicename'] = $_user->user_nicename;
             $_user_data['name'] = self::format_author_name( $_user->display_name );
             $_user_data['profile_photo'] = $profile_photo;
             $_user_data['profile_photo_src'] = $profile_photo_src;

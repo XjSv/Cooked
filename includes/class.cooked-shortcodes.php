@@ -436,10 +436,10 @@ class Cooked_Shortcodes {
             'exclude' => false,
         ], $atts);
 
-        $left = ( $atts['left'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['left']) ) ) : false );
-        $right = ( $atts['right'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['right']) ) ) : false );
-        $include = ( $atts['include'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['include']) ) ) : false );
-        $exclude = ( $atts['exclude'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['exclude']) ) ) : false );
+        $left = $atts['left'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['left']) ) ) : false;
+        $right = $atts['right'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['right']) ) ) : false;
+        $include = $atts['include'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['include']) ) ) : false;
+        $exclude = $atts['exclude'] ? array_map( 'trim', explode( ',', Cooked_Functions::sanitize_text_field($atts['exclude']) ) ) : false;
 
         $default_info_array = apply_filters( 'cooked_default_info_array', [
             'author' => __('Author', 'cooked'),
@@ -560,7 +560,9 @@ class Cooked_Shortcodes {
         if ( $cooked_info_html ):
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_cooked_donut']);
-            return '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
+            $cooked_info_html = '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
+            $cooked_info_html = apply_filters( 'cooked_info_shortcode_output', $cooked_info_html, $recipe_settings );
+            return $cooked_info_html;
             //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
         endif;
     }
@@ -594,11 +596,20 @@ class Cooked_Shortcodes {
             $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : false;
             $author = !empty($recipe_settings['author']) ? $recipe_settings['author'] : false;
 
-            if ( !empty($author['id']) ) {
-                $author_slug = !empty($author['name']) ? sanitize_title($author['name']) : false;
-                // @TODO: Convert the homepage link to use pretty URLs.
-                $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ? esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . $author['id'] . '/' . trailingslashit( $author_slug ) ) : esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
-                $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'] );
+            if ( !empty($author['id']) && !empty($browse_page_id) ) {
+                // Generate author slug from user_nicename, fallback to user ID if nicename is empty
+                if ( !empty($author['user_nicename']) ) {
+                    $author_slug = urlencode(sanitize_title($author['user_nicename']));
+                } else {
+                    // Fallback to user ID if user_nicename is empty or missing
+                    $author_slug = $author['id'];
+                }
+
+                $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ?
+                                esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . trailingslashit( $author_slug ) ) :
+                                esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
+
+                $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'], $author_slug  );
             } else {
                 $permalink = false;
             }
@@ -608,8 +619,8 @@ class Cooked_Shortcodes {
             $hide_avatars = isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false;
 
             echo '<span class="cooked-author' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
-                echo !$hide_avatars ? '<span class="cooked-author-avatar">' . (!empty($author) ? wp_kses_post( $author['profile_photo'] ) : '') . '</span>' : '';
-                echo '<strong class="cooked-meta-title">' . __('Author','cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . (!empty($author) ? $author['name'] : '') . ( $clickable && $permalink ? '</a>' : '' );
+                echo !$hide_avatars ? '<span class="cooked-author-avatar">' . ( !empty($author) ? wp_kses_post( $author['profile_photo'] ) : '' ) . '</span>' : '';
+                echo '<strong class="cooked-meta-title">' . __('Author', 'cooked') . '</strong>' . ( $clickable && $permalink ? '<a href="' . esc_url( $permalink ) . '">' : '' ) . (!empty($author) ? $author['name'] : '') . ( $clickable && $permalink ? '</a>' : '' );
             echo '</span>';
 
             wp_reset_postdata();
@@ -816,15 +827,17 @@ class Cooked_Shortcodes {
 
         ob_start();
 
+        do_action( 'cooked_ingredients_shortcode_before', $recipe_settings );
+
         if ( isset($recipe_settings['ingredients']) && !empty($recipe_settings['ingredients']) ):
             echo '<div class="cooked-recipe-ingredients">';
-                foreach( $recipe_settings['ingredients'] as $ing ):
-
+                foreach ( $recipe_settings['ingredients'] as $ing ):
                     Cooked_Recipes::single_ingredient( $ing, $checkboxes );
-
                 endforeach;
             echo '</div>';
         endif;
+
+        do_action( 'cooked_ingredients_shortcode_after', $recipe_settings );
 
         return ob_get_clean();
     }

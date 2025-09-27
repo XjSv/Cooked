@@ -16,7 +16,7 @@
 							__('If this is your first time using %1$s, head over to the %2$s page for some initial configuration. You can also check out the %3$s if you get stuck or contact me on %4$s. If you just recently updated, you can find out what\'s new below.', 'cooked'),
 							'Cooked',
 							'<a href="' . untrailingslashit( admin_url() ) . '/admin.php?page=cooked_settings">' . __( 'Settings', 'cooked' ) . '</a>',
-							'<a href="https://github.com/XjSv/Cooked/wiki" target="_blank">' . __( 'documentation', 'cooked' ) . '</a>' ,
+							'<a href="https://docs.cooked.pro/" target="_blank">' . __( 'documentation', 'cooked' ) . '</a>' ,
 							'<a href="https://discord.gg/qdGwXaXxc6" target="_blank">' . __( 'Discord', 'cooked' ) . '</a>'
 						)
 					);
@@ -28,7 +28,7 @@
 					<div class="cooked-welcome-panel-column">
 						<h4><?php _e( 'Quick Links', 'cooked' ); ?></h4>
 						<ul>
-							<li><i class="cooked-icon cooked-icon-link-lt cooked-icon-fw"></i>&nbsp;&nbsp;<a href="https://github.com/XjSv/Cooked/wiki" target="_blank"><?php _e( 'Documentation','cooked' ); ?></a></li>
+							<li><i class="cooked-icon cooked-icon-link-lt cooked-icon-fw"></i>&nbsp;&nbsp;<a href="https://docs.cooked.pro/" target="_blank"><?php _e( 'Documentation','cooked' ); ?></a></li>
 							<li><i class="cooked-icon cooked-icon-comment cooked-icon-fw"></i>&nbsp;&nbsp;<a href="https://discord.gg/qdGwXaXxc6" target="_blank"><?php _e( 'Discord','cooked' ); ?></a></li>
 							<li><i class="cooked-icon cooked-icon-gear cooked-icon-fw"></i>&nbsp;&nbsp;<a href="<?php echo admin_url('admin.php?page=cooked_settings'); ?>"><?php _e('Cooked Settings','cooked'); ?></a></li>
 							<li><i class="cooked-icon cooked-icon-pencil cooked-icon-fw"></i>&nbsp;&nbsp;<a href="<?php echo admin_url('post-new.php?post_type=cp_recipe'); ?>"><?php _e('Create a Recipe','cooked'); ?></a></li>

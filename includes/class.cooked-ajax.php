@@ -94,14 +94,15 @@ class Cooked_Ajax {
             ];
         } elseif ($import_type === 'wp_recipe_maker') {
             $args = [
-                'post_type' => 'recipe',
+                'post_type' => 'wprm_recipe',
                 'posts_per_page' => -1,
                 'post_status' => 'any',
                 'fields' => 'ids',
                 'meta_query' => [
                     [
-                        'key' => 'recipe_maker_metadata',
-                        'compare' => 'EXISTS',
+                        'key' => 'wprm_type',
+                        'value' => 'food',
+                        'compare' => '=',
                     ],
                 ],
             ];
@@ -204,6 +205,7 @@ class Cooked_Ajax {
         }
 
         require_once COOKED_DIR . 'includes/class.cooked-delicious-recipes.php';
+        require_once COOKED_DIR . 'includes/class.cooked-recipe-maker.php';
 
         $bulk_amount = 10;
 
@@ -233,9 +235,9 @@ class Cooked_Ajax {
                 foreach ( $recipe_ids as $rid ) {
                     if ($import_type === 'delicious_recipes') {
                         Cooked_Delicious_Recipes::import_recipe( $rid );
-                    } /* elseif ($import_type === 'wp_recipe_maker') {
+                    } elseif ($import_type === 'wp_recipe_maker') {
                         Cooked_Recipe_Maker_Recipes::import_recipe( $rid );
-                    } */
+                    }
                 }
 
                 if ( !empty( $leftover_recipe_ids ) ) {
@@ -244,9 +246,9 @@ class Cooked_Ajax {
                 } else {
                     if ($import_type === 'delicious_recipes') {
                         update_option( 'cooked_delicious_recipes_imported', true );
-                    } /* elseif ($import_type === 'wp_recipe_maker') {
+                    } elseif ($import_type === 'wp_recipe_maker') {
                         update_option( 'cooked_wp_recipe_maker_imported', true );
-                    } */
+                    }
                 }
             }
 

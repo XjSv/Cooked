@@ -99,7 +99,7 @@ msgstr ""
 #: includes/class.cooked-admin-menus.php:59
 #: includes/class.cooked-post-types.php:421
 #: includes/class.cooked-post-types.php:433
-#: includes/class.cooked-users.php:152
+#: includes/class.cooked-users.php:154
 msgid "Recipes"
 msgstr ""
 

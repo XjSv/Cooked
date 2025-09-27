@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-09-27T12:15:58-04:00\n"
+"POT-Creation-Date: 2025-09-27T12:25:34-04:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: cooked\n"
@@ -102,7 +102,7 @@ msgstr ""
 #: includes/class.cooked-admin-menus.php:59
 #: includes/class.cooked-post-types.php:421
 #: includes/class.cooked-post-types.php:433
-#: includes/class.cooked-users.php:152
+#: includes/class.cooked-users.php:154
 msgid "Recipes"
 msgstr ""
 

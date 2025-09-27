@@ -47,10 +47,12 @@ class Cooked_Users {
     public static function get( $user_id = false, $basic = false, $user_nicename = false ) {
         if ( !$user_id && $user_nicename ) {
             $user = get_user_by( 'slug', $user_nicename );
-            $user_id = $user->ID;
+            if ( $user ) {
+                $user_id = $user->ID;
+            } else {
+                return false;
+            }
         }
-
-        if ( !$user_id ) return false;
 
         $_user = get_userdata( $user_id );
         $_user_meta = get_user_meta( $user_id, 'cooked_user_meta', true );

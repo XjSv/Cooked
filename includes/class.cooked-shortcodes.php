@@ -1003,7 +1003,7 @@ class Cooked_Shortcodes {
                 foreach ( $bottom_facts as $slug => $nf ):
                     if ( isset( $nutrition_facts[$slug] ) && $nutrition_facts[$slug] || isset( $nutrition_facts[$slug] ) && $nutrition_facts[$slug] === '0' ):
                         echo '<dt>';
-                            echo '<strong>' . esc_html($nf['name']) . ' <span class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">' . esc_html( $nutrition_facts[$slug] ) . '</span>' . ( isset($nf['measurement']) ? '<span class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html($nf['measurement']) . '</span>' : '' );
+                            echo '<strong>' . esc_html($nf['name']) . '</strong> <span class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">' . esc_html( $nutrition_facts[$slug] ) . '</span>' . ( isset($nf['measurement']) ? '<span class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html($nf['measurement']) . '</span>' : '' );
                             echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($nf['pdv']) . '" data-labeltype="' . esc_attr($slug) . '">' . ceil( ( esc_html( $nutrition_facts[$slug] ) / $nf['pdv'] ) * 100 ) . '</span>%</strong>' : '' );
                         echo '</dt>';
                     endif;

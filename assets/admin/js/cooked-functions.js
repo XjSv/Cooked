@@ -416,7 +416,13 @@ var $_CookedConditionalTimeout  = false;
                     thisParent.removeClass('cooked-expanded');
                 } else {
                     thisParent.addClass('cooked-expanded');
-                    thisParent.find('input[data-ingredient-part="section_heading_element"]').focus();
+                    if ( thisParent.find('input[data-ingredient-part="section_heading_element"]').length ) {
+                        thisParent.find('input[data-ingredient-part="section_heading_element"]').focus();
+                    } else if ( thisParent.find('select[data-ingredient-part="section_heading_element"]').length ) {
+                        thisParent.find('select[data-ingredient-part="section_heading_element"]').focus();
+                    } else {
+                        thisParent.find('input[data-ingredient-part="sub_amount"]').focus();
+                    }
                 }
             });
 

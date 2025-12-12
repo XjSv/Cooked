@@ -654,6 +654,7 @@ body .button.button-cooked-reset:hover { color:#555; }
     width: 100%;
     box-sizing: border-box;
     padding-bottom: 5px;
+    position: relative;
 }
 
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-ingredient-amount { width: 15%; }
@@ -670,4 +671,20 @@ body .button.button-cooked-reset:hover { color:#555; }
     float: left;
     box-sizing: border-box;
     padding-right: 10px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-delete-substitution {
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    top: 10px;
+    right: 11px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-delete-substitution .cooked-icon {
+    color: #ccc;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-delete-substitution:hover .cooked-icon {
+    color: #de2020;
 }

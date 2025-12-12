@@ -474,6 +474,15 @@ var $_CookedConditionalTimeout  = false;
                 $(this).parent().remove();
                 cooked_reset_ingredient_builder();
             });
+
+            $_CookedIngredientBuilder.parent().on('click','.cooked-delete-substitution',function(e) {
+                e.preventDefault();
+                var thisParent = $(this).parents('.cooked-ingredient-block');
+                thisParent.find('input[data-ingredient-part="sub_amount"]').val('');
+                thisParent.find('select[data-ingredient-part="sub_measurement"]').val('');
+                thisParent.find('input[data-ingredient-part="sub_name"]').val('');
+                thisParent.removeClass('cooked-expanded');
+            });
         }
 
         if ($_CookedDirectionBuilder.length) {

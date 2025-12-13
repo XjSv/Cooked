@@ -1048,7 +1048,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         /* translators: a message describing how to display a video from YouTube or Vimeo. */
                         echo sprintf( __( 'If you would like to display a video as the first item in your gallery, you can paste a valid %1$s or %2$s URL below.','cooked'),'YouTube','Vimeo' );
                     ?></p>
-                    <input type="text" name="_recipe_settings[gallery][video_url]" value="<?php echo ( isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ? esc_attr( $recipe_settings['gallery']['video_url'] ) : '' ); ?>" placeholder="ex. 
+                    <input type="text" name="_recipe_settings[gallery][video_url]" value="<?php echo ( isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ? esc_attr( $recipe_settings['gallery']['video_url'] ) : '' ); ?>" placeholder="ex. https://www.youtube.com/watch?v=abc123">
                 </div>
 
                 <h3 class="cooked-settings-title"><?php _e( 'Gallery Items', 'cooked' ); ?></h3>

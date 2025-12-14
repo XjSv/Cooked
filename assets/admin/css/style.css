@@ -175,7 +175,7 @@ body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#8
     font-size: 14px;
     position: absolute;
     top: 14px;
-    right: 50px;
+    right: 35px;
 }
 
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element .cooked-icon,
@@ -226,6 +226,14 @@ body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#8
     display: block;
 }
 
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution { opacity:0; cursor:pointer; font-size:14px; position:absolute; top:15px; right:35px; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution .cooked-icon { color:#888; }
+#cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-show-substitution,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-substitution,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-substitution .cooked-show-substitution { opacity:1; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution .cooked-icon:hover,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-substitution .cooked-icon,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-substitution .cooked-show-substitution .cooked-icon { color:#0685ba; }
 
 /* Switchery */
 body.post-type-cp_recipe .switchery-small,
@@ -261,7 +269,7 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked_recipe_settings .cooked-ingredient-headers span.cooked-ingredient-header-measurement { width:20%; }
 #cooked_recipe_settings .cooked-ingredient-headers span.cooked-ingredient-header-item { width:65%; }
 #cooked-ingredients-builder { margin:0 0 20px; }
-#cooked-ingredients-builder .cooked-ingredient-block { display:block; padding:5px 25px 5px 35px; }
+#cooked-ingredients-builder .cooked-ingredient-block { display:block; padding:5px 45px 5px 35px; }
 #cooked-ingredients-builder .cooked-ingredient-block:hover { background:#eee; }
 #cooked-ingredients-builder .cooked-ingredient-block input[type="text"],
 #cooked-ingredients-builder .cooked-ingredient-block input[type="number"],
@@ -284,6 +292,10 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient .cooked-icon { color:#fff; }
 #cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-delete-ingredient .cooked-icon { color:#888; }
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient .cooked-icon:hover { color:#de2020; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-substitution { cursor:pointer; font-size:14px; position:absolute; top:37px; right:-10px; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-substitution .cooked-icon { color:#fff; }
+#cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-delete-substitution .cooked-icon { color:#888; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-substitution .cooked-icon:hover { color:#de2020; }
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-ingredient-heading { margin:10px 0; }
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-ingredient-heading > div input[type="text"] { padding:0px 7px; font-size:16px; background:#f9f9f9; font-weight:600; }
 
@@ -522,8 +534,8 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-welcome-screen .cooked-welcome-panel-column h4 a { position:absolute; top:0; right:0; font-size:12px; font-weight:400; }
 #cooked-welcome-screen .cooked-welcome-panel-column h4 a i.fa { position:relative; top:1px; }
 
-#cooked-welcome-screen .cooked-welcome-panel-column .cooked-welcome-panel-full { width:100%; padding-right:0; float:none; }
-#cooked-welcome-screen .cooked-welcome-panel-column .cooked-welcome-panel-last { width:70%; padding-right:0; float:right; }
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-full { width:100%; padding-right:0; float:none; }
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-last { width:70%; padding-right:0; float:right; }
 #cooked-welcome-screen .cooked-welcome-panel-column .fa-external-link { color:#888; }
 
 #cooked-welcome-screen .cooked-welcome-panel-content { min-height: 1px; padding:10px 50px 20px; margin:0; }
@@ -648,7 +660,7 @@ body .button.button-cooked-reset:hover { color:#555; }
     margin-top: 10px;
     padding-top: 10px;
     padding-right: 0;
-    padding-left: 0; 
+    padding-left: 0;
     margin-left: 0;
     box-sizing: border-box;
     padding-bottom: 5px;
@@ -669,20 +681,4 @@ body .button.button-cooked-reset:hover { color:#555; }
     float: left;
     box-sizing: border-box;
     padding-right: 10px;
-}
-
-#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-delete-substitution {
-    cursor: pointer;
-    font-size: 14px;
-    position: absolute;
-    top: 10px;
-    right: 11px;
-}
-
-#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-delete-substitution .cooked-icon {
-    color: #ccc;
-}
-
-#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-delete-substitution:hover .cooked-icon {
-    color: #de2020;
 }

@@ -497,7 +497,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
                                 <?php do_action( 'cooked_after_ingredient_name_field', $ing_key, $value ); ?>
 
-                                <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-reverse"></i></span>
+                                <span href="#" class="cooked-show-substitution"><i class="cooked-icon cooked-icon-reverse"></i></span>
                                 <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
 
                                 <div class="cooked-heading-element cooked-substitution-fields">

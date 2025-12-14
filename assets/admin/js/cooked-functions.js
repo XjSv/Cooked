@@ -409,20 +409,24 @@ var $_CookedConditionalTimeout  = false;
                 }
             });
 
-            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
+            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-substitution', function(e) {
                 e.preventDefault();
                 var thisParent = $(this).parent();
                 if ( thisParent.hasClass('cooked-expanded') ) {
                     thisParent.removeClass('cooked-expanded');
                 } else {
                     thisParent.addClass('cooked-expanded');
-                    if ( thisParent.find('input[data-ingredient-part="section_heading_element"]').length ) {
-                        thisParent.find('input[data-ingredient-part="section_heading_element"]').focus();
-                    } else if ( thisParent.find('select[data-ingredient-part="section_heading_element"]').length ) {
-                        thisParent.find('select[data-ingredient-part="section_heading_element"]').focus();
-                    } else {
-                        thisParent.find('input[data-ingredient-part="sub_amount"]').focus();
-                    }
+                    thisParent.find('input[data-ingredient-part="sub_amount"]').focus();
+                }
+            });
+
+            $_CookedIngredientBuilder.on('keyup', 'input[data-ingredient-part="sub_amount"]', function(e) {
+                var thisVal = $(this).val(),
+                    parentBlock = $(this).parents('.recipe-setting-block');
+                if (thisVal){
+                    parentBlock.addClass('cooked-has-substitution');
+                } else {
+                    parentBlock.removeClass('cooked-has-substitution');
                 }
             });
 

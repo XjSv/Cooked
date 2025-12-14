@@ -175,7 +175,7 @@ body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#8
     font-size: 14px;
     position: absolute;
     top: 14px;
-    right: 50px;
+    right: 35px;
 }
 
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element .cooked-icon,
@@ -522,7 +522,7 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-welcome-screen .cooked-welcome-panel-column h4 a { position:absolute; top:0; right:0; font-size:12px; font-weight:400; }
 #cooked-welcome-screen .cooked-welcome-panel-column h4 a i.fa { position:relative; top:1px; }
 
-#cooked-welcome-screen .cooked-welcome-panel-column .cooked-welcome-panel-full { width:100%; padding-right:0; float:none; }
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-full { width:100%; padding-right:0; float:none; }
 #cooked-welcome-screen .cooked-welcome-panel-column .cooked-welcome-panel-last { width:70%; padding-right:0; float:right; }
 #cooked-welcome-screen .cooked-welcome-panel-column .fa-external-link { color:#888; }
 

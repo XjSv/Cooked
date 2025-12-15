@@ -468,7 +468,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             <?php $ingredient_classes = apply_filters( 'cooked_ingredient_field_classes', 'recipe-setting-block cooked-ingredient-block cooked-clearfix', $value ); ?>
                             <?php $has_sub = isset($value['sub_name']) && !empty($value['sub_name']); ?>
 
-                            <div class="<?php echo esc_attr( $ingredient_classes ); echo ($has_sub ? ' cooked-expanded' : ''); ?>">
+                            <div class="<?php echo esc_attr( $ingredient_classes ); echo ($has_sub ? ' cooked-has-substitution' : ''); ?>">
 
                                 <i class="cooked-icon cooked-icon-drag"></i>
 

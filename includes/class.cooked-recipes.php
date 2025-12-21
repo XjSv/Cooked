@@ -870,7 +870,7 @@ class Cooked_Recipes {
             $name = ( isset($ing['name']) && $ing['name'] ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['name'] ), $ing ) : false );
 
             // Substitution Logic
-            $sub_name = ( isset($ing['sub_name']) && $ing['sub_name'] ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['sub_name'] ), $ing ) : false );
+            $sub_name = ( isset($ing['sub_name']) && $ing['sub_name'] ?  wp_kses_post( $ing['sub_name'] ) : false );
             $sub_amount = false;
             $sub_measurement = false;
             $sub_float_amount = 0;

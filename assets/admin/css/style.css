@@ -226,14 +226,18 @@ body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#8
     display: block;
 }
 
-#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution { opacity:0; cursor:pointer; font-size:14px; position:absolute; top:15px; right:35px; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution { opacity:0; cursor:pointer; font-size:14px; position:absolute; top:15px; right:58px; }
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution .cooked-icon { color:#888; }
 #cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-show-substitution,
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-substitution,
-#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-substitution .cooked-show-substitution { opacity:1; }
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-substitution .cooked-show-substitution { opacity:1; right:50px; }
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution .cooked-icon:hover,
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-substitution .cooked-icon,
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-has-substitution .cooked-show-substitution .cooked-icon { color:#0685ba; }
+
+#cooked-ingredients-builder .cooked-ingredient-block:hover > .cooked-ingredient-name,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded > .cooked-ingredient-name,
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-substitution > .cooked-ingredient-name { padding-right:32px; }
 
 /* Switchery */
 body.post-type-cp_recipe .switchery-small,

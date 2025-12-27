@@ -296,10 +296,6 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient .cooked-icon { color:#fff; }
 #cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-delete-ingredient .cooked-icon { color:#888; }
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient .cooked-icon:hover { color:#de2020; }
-#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-substitution { cursor:pointer; font-size:14px; position:absolute; top:37px; right:-10px; }
-#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-substitution .cooked-icon { color:#fff; }
-#cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-delete-substitution .cooked-icon { color:#888; }
-#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-substitution .cooked-icon:hover { color:#de2020; }
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-ingredient-heading { margin:10px 0; }
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-ingredient-heading > div input[type="text"] { padding:0px 7px; font-size:16px; background:#f9f9f9; font-weight:600; }
 

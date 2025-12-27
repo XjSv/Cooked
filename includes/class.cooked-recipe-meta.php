@@ -497,11 +497,10 @@ function cooked_render_recipe_fields( $post_id ) {
 
                                 <?php do_action( 'cooked_after_ingredient_name_field', $ing_key, $value ); ?>
 
-                                <span href="#" class="cooked-show-substitution"><i class="cooked-icon cooked-icon-reverse"></i></span>
-                                <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                                <span href="#" class="cooked-show-substitution" aria-label="Show Substitution"><i class="cooked-icon cooked-icon-reverse"></i></span>
+                                <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
 
                                 <div class="cooked-heading-element cooked-substitution-fields">
-                                    <span href="#" class="cooked-delete-substitution" title="<?php _e('Remove Substitution', 'cooked'); ?>"><i class="cooked-icon cooked-icon-times"></i></span>
                                     <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php _e('Substitution:','cooked'); ?></label>
                                     <div class="cooked-ingredient-amount">
                                         <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr($ing_key); ?>][sub_amount]" value="<?php echo isset($value['sub_amount']) ? esc_attr( $value['sub_amount'] ) : ''; ?>" placeholder="--">
@@ -590,11 +589,10 @@ function cooked_render_recipe_fields( $post_id ) {
 
                         <?php do_action( 'cooked_after_ingredient_name_field', $random_key, false ); ?>
 
-                        <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-reverse"></i></span>
-                        <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                        <span href="#" class="cooked-show-substitution" aria-label="Show Heading Element"><i class="cooked-icon cooked-icon-reverse"></i></span>
+                        <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
 
                         <div class="cooked-heading-element cooked-substitution-fields">
-                            <span href="#" class="cooked-delete-substitution" title="<?php _e('Remove Substitution', 'cooked'); ?>"><i class="cooked-icon cooked-icon-times"></i></span>
                             <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php _e('Substitution:','cooked'); ?></label>
                             <div class="cooked-ingredient-amount">
                                 <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr($random_key); ?>][sub_amount]" value="" placeholder="--">
@@ -657,11 +655,10 @@ function cooked_render_recipe_fields( $post_id ) {
 
                     <?php do_action( 'cooked_after_ingredient_name_field', false, false ); ?>
 
-                    <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-reverse"></i></span>
-                    <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                    <span href="#" class="cooked-show-substitution" aria-label="Show Substitution"><i class="cooked-icon cooked-icon-reverse"></i></span>
+                    <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
 
                     <div class="cooked-heading-element cooked-substitution-fields">
-                        <span href="#" class="cooked-delete-substitution" title="<?php _e('Remove Substitution', 'cooked'); ?>"><i class="cooked-icon cooked-icon-times"></i></span>
                         <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php _e('Substitution:','cooked'); ?></label>
                         <div class="cooked-ingredient-amount">
                             <input type="text" data-ingredient-part="sub_amount" name="" value="" placeholder="--">
@@ -705,9 +702,9 @@ function cooked_render_recipe_fields( $post_id ) {
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+                    <span href="#" class="cooked-show-heading-element" aria-label="Show Heading Element"><i class="cooked-icon cooked-icon-pencil"></i></span>
 
-                    <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                    <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
                 </div>
                 <!-- END TEMPLATES -->
 

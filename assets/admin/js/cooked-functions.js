@@ -420,10 +420,13 @@ var $_CookedConditionalTimeout  = false;
                 }
             });
 
-            $_CookedIngredientBuilder.on('keyup', 'input[data-ingredient-part="sub_amount"]', function(e) {
-                var thisVal = $(this).val(),
-                    parentBlock = $(this).parents('.recipe-setting-block');
-                if (thisVal){
+            $_CookedIngredientBuilder.on('keyup change', 'input[data-ingredient-part="sub_amount"], input[data-ingredient-part="sub_name"], select[data-ingredient-part="sub_measurement"]', function(e) {
+                var parentBlock = $(this).parents('.recipe-setting-block'),
+                    subAmount = parentBlock.find('input[data-ingredient-part="sub_amount"]').val(),
+                    subMeasurement = parentBlock.find('select[data-ingredient-part="sub_measurement"]').val(),
+                    subName = parentBlock.find('input[data-ingredient-part="sub_name"]').val();
+
+                if (subAmount || subMeasurement || subName){
                     parentBlock.addClass('cooked-has-substitution');
                 } else {
                     parentBlock.removeClass('cooked-has-substitution');
@@ -477,15 +480,6 @@ var $_CookedConditionalTimeout  = false;
                 e.preventDefault();
                 $(this).parent().remove();
                 cooked_reset_ingredient_builder();
-            });
-
-            $_CookedIngredientBuilder.parent().on('click','.cooked-delete-substitution',function(e) {
-                e.preventDefault();
-                var thisParent = $(this).parents('.cooked-ingredient-block');
-                thisParent.find('input[data-ingredient-part="sub_amount"]').val('');
-                thisParent.find('select[data-ingredient-part="sub_measurement"]').val('');
-                thisParent.find('input[data-ingredient-part="sub_name"]').val('');
-                thisParent.removeClass('cooked-expanded');
             });
         }
 

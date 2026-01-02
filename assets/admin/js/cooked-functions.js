@@ -422,11 +422,9 @@ var $_CookedConditionalTimeout  = false;
 
             $_CookedIngredientBuilder.on('keyup change', 'input[data-ingredient-part="sub_amount"], input[data-ingredient-part="sub_name"], select[data-ingredient-part="sub_measurement"]', function(e) {
                 var parentBlock = $(this).parents('.recipe-setting-block'),
-                    subAmount = parentBlock.find('input[data-ingredient-part="sub_amount"]').val(),
-                    subMeasurement = parentBlock.find('select[data-ingredient-part="sub_measurement"]').val(),
                     subName = parentBlock.find('input[data-ingredient-part="sub_name"]').val();
 
-                if (subAmount || subMeasurement || subName){
+                if (subName && subName.trim()){
                     parentBlock.addClass('cooked-has-substitution');
                 } else {
                     parentBlock.removeClass('cooked-has-substitution');

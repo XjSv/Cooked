@@ -284,6 +284,8 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-measurement { width:20%; }
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-measurement .cooked-select-wrapper { width:100%; }
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-measurement .cooked-select-wrapper select { width:100%; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-substitution-fields > .cooked-ingredient-measurement .cooked-select-wrapper { width:100%; }
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-substitution-fields > .cooked-ingredient-measurement .cooked-select-wrapper select { width:100%; }
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-name { width:65%; }
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-name { width:100%; }
 #cooked-ingredients-builder .cooked-ingredient-block > div small.cooked-input-ex { display:block; padding:5px 0 0 2px; }

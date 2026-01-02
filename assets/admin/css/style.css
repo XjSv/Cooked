@@ -106,7 +106,7 @@ body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#8
 #cooked_recipe_settings textarea { width:100%; height:75px; padding:15px; box-sizing:border-box; position:relative; top:5px; }
 #cooked_recipe_settings .recipe-setting-block > label.cooked-select-label { top:5px; }
 #cooked_recipe_settings select { cursor:pointer; -webkit-appearance:none; -moz-appearance:none; appearance:none; box-shadow: none; border-radius: 3px; padding: 0 45px 0 9px; line-height: 31px; height: 33px; box-sizing: border-box; background:#fff; }
-#cooked_recipe_settings .cooked-select-wrapper { background:#fff; position:relative; width:100%; display:inline-block; border-radius: 3px; margin:0 5px 0 0; }
+#cooked_recipe_settings .cooked-select-wrapper { background:#fff; position:relative; width:auto; display:inline-block; border-radius: 3px; margin:0 5px 0 0; }
 #cooked_recipe_settings .cooked-select-wrapper select { margin:0; background:transparent; position:relative; }
 #cooked_recipe_settings .cooked-select-wrapper:before { font-family:'CookedIcons'; display:block; width:15px; height:15px; line-height:14px; color:#000; font-size:14px; content:"\f00b"; position:absolute; right:12px; top:11px; color:rgba(0,0,0,0.3); }
 #cooked_recipe_settings .cooked-select-wrapper:hover:before { color:#000; }

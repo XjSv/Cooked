@@ -409,14 +409,25 @@ var $_CookedConditionalTimeout  = false;
                 }
             });
 
-            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
+            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-substitution', function(e) {
                 e.preventDefault();
                 var thisParent = $(this).parent();
                 if ( thisParent.hasClass('cooked-expanded') ) {
                     thisParent.removeClass('cooked-expanded');
                 } else {
                     thisParent.addClass('cooked-expanded');
-                    thisParent.find('input[data-ingredient-part="section_heading_element"]').focus();
+                    thisParent.find('input[data-ingredient-part="sub_amount"]').focus();
+                }
+            });
+
+            $_CookedIngredientBuilder.on('keyup change', 'input[data-ingredient-part="sub_amount"], input[data-ingredient-part="sub_name"], select[data-ingredient-part="sub_measurement"]', function(e) {
+                var parentBlock = $(this).parents('.recipe-setting-block'),
+                    subName = parentBlock.find('input[data-ingredient-part="sub_name"]').val();
+
+                if (subName && subName.trim()){
+                    parentBlock.addClass('cooked-has-substitution');
+                } else {
+                    parentBlock.removeClass('cooked-has-substitution');
                 }
             });
 

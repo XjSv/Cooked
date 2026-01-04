@@ -168,6 +168,21 @@ body .cooked-post-featured-image img {
     opacity: 0.5;
 }
 
+/* Substitution Styles */
+.cooked-ingredient-substitution {
+    font-style: italic;
+    color: #777;
+    margin-left: 5px;
+    display: inline-block;
+}
+.cooked-ing-sub-label {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.85em;
+    color: #999;
+    margin-right: 2px;
+}
+
 /* Directions */
 .cooked-recipe-directions {
     display: block;

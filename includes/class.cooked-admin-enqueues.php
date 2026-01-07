@@ -148,6 +148,8 @@ class Cooked_Admin_Enqueues {
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
                     'i18n_confirm_import_recipes' => __('Please confirm that you are ready to import all recipes.', 'cooked'),
+                    'i18n_csv_no_file' => __('Please select a CSV file.', 'cooked'),
+                    'i18n_csv_invalid_file' => __('Please select a valid CSV file.', 'cooked'),
                     'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
                 ];
 

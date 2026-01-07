@@ -35,7 +35,7 @@ body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#8
   position: relative;
   border-radius: 10px;
   margin: 40px 40px 40px 20px;
-  /* max-width:1000px; */
+  max-width: 1000px;
   min-width: 1000px;
   background: #fff;
   box-shadow:
@@ -258,6 +258,14 @@ body.post-type-cp_recipe .switchery-small > small,
 #cooked-migration-progress-text.cooked-progress-text, #cooked-import-progress-text.cooked-progress-text { font-size:11px; color:#888; max-width:600px; }
 #cooked-migration-completed, #cooked-import-completed { display:none; }
 #cooked-migration-completed.cooked-active, #cooked-import-completed.cooked-active { display:block; }
+#cooked-csv-import-progress.cooked-progress { background:#ccc; margin:25px 0 0 0; border-radius:6px; height:12px; max-width:600px; }
+#cooked-csv-import-progress.cooked-progress .cooked-progress-bar { border-radius:6px; height:12px; }
+#cooked-csv-import-progress-text.cooked-progress-text { font-size:11px; color:#888; max-width:600px; }
+#cooked-csv-import-completed { display:none; }
+#cooked-csv-import-completed.cooked-active { display:block; }
+#cooked-csv-import-form { max-width:100%; box-sizing:border-box; }
+#cooked-csv-import-form input[type="file"] { max-width:100%; box-sizing:border-box; width:100%; }
+#cooked-csv-import-errors { max-width:100%; box-sizing:border-box; word-wrap:break-word; }
 
 /* Save as Default */
 #cooked_recipe_settings .cooked-layout-save-default { position:relative; top:-2px; z-index:10; margin:0 0 0 15px; padding:0 8px 1px; }

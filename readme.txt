@@ -41,6 +41,8 @@ Most recipe plugins require that you purchase a PRO version for features like nu
 * Cooking times with clickable, interactive timers.
 * Very developer-friendly with loads of hooks & filters.
 * Servings switcher to adjust ingredient amounts.
+* Ingredient Substitutions - Add alternative ingredients for dietary restrictions or preferences.
+* CSV Import - Bulk import recipes from CSV files with support for ingredients, directions, substitutions, and more.
 * And more to come...
 
 Of course, if you want even more, you can always check out the [PRO](https://cooked.pro) version of Cooked. It adds features like ratings & favorites, recipe submissions, and so much more.
@@ -76,9 +78,14 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.11.2 includes a new import for WP Recipe Maker recipes, transient message handling for guests to support guest recipe submissions, and developer hooks: `cooked_info_shortcode_output` filter and `cooked_ingredients_shortcode_before`/`cooked_ingredients_shortcode_after` actions for enhanced customization.
+Version 1.11.3 includes CSV import functionality, allowing you to bulk import recipes from CSV files. This makes it easy to migrate recipes from other systems or import large recipe collections. The CSV import supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
 
 == Changelog ==
+
+= 1.11.3 =
+* **NEW:** Added CSV import functionality for bulk importing recipes from CSV files.
+* **NEW:** CSV import supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
+* **NEW:** Added `bundle` npm script for creating distribution-ready zip files.
 
 = 1.11.2 =
 * **NEW:** Added import for WP Recipe Maker recipes.

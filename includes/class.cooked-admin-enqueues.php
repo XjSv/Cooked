@@ -148,8 +148,20 @@ class Cooked_Admin_Enqueues {
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
                     'i18n_confirm_import_recipes' => __('Please confirm that you are ready to import all recipes.', 'cooked'),
+                    'i18n_confirm_csv_import' => __('Are you sure you want to import recipes from this CSV file?', 'cooked'),
                     'i18n_csv_no_file' => __('Please select a CSV file.', 'cooked'),
                     'i18n_csv_invalid_file' => __('Please select a valid CSV file.', 'cooked'),
+                    'i18n_uploading' => __('Uploading...', 'cooked'),
+                    'i18n_processing' => __('Processing...', 'cooked'),
+                    'i18n_recipes_imported' => __('recipes imported', 'cooked'),
+                    'i18n_errors' => __('Errors:', 'cooked'),
+                    'i18n_import_failed' => __('Import failed.', 'cooked'),
+                    'i18n_failed_process_csv' => __('Failed to process CSV file.', 'cooked'),
+                    'i18n_failed_upload_csv' => __('Failed to upload CSV file.', 'cooked'),
+                    'i18n_file_upload_failed' => __('File upload failed.', 'cooked'),
+                    'i18n_something_wrong' => __('Something went wrong', 'cooked'),
+                    'i18n_hrs' => __('hrs', 'cooked'),
+                    'i18n_mins' => __('mins', 'cooked'),
                     'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
                 ];
 

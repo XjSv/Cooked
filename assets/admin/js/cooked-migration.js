@@ -71,7 +71,7 @@
 	                    			cooked_import_recipes(json_recipe_ids, total_recipes, import_type);
 	                    		}
 	                    	} else {
-                                console.log('Something went wrong');
+                                console.log(cooked_migration_js_vars.i18n_something_wrong || 'Something went wrong');
                                 thisButton.addClass('disabled').attr('disabled', false);
             		            thisButton.show();
                             }
@@ -109,7 +109,7 @@
                     return;
                 }
 
-                var confirm_import = confirm(cooked_migration_js_vars.i18n_confirm_import_recipes || 'Are you sure you want to import recipes from this CSV file?');
+                var confirm_import = confirm(cooked_migration_js_vars.i18n_confirm_csv_import || cooked_migration_js_vars.i18n_confirm_import_recipes || 'Are you sure you want to import recipes from this CSV file?');
                 if (!confirm_import) {
                     return;
                 }
@@ -126,7 +126,7 @@
                     $_CookedCSVImportProgress.addClass('cooked-active');
                     $_CookedCSVImportProgressText.addClass('cooked-active');
                     $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "0%" });
-                    $_CookedCSVImportProgressText.text('Uploading...');
+                    $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_uploading || 'Uploading...');
                 }
 
                 // Upload file
@@ -138,7 +138,7 @@
                     contentType: false,
                     success: function(response) {
                         if (response.success) {
-                            $_CookedCSVImportProgressText.text('Processing...');
+                            $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_processing || 'Processing...');
                             $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "50%" });
 
                             // Process CSV
@@ -151,11 +151,13 @@
                                 function(processResponse) {
                                     if (processResponse.success) {
                                         $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "100%" });
-                                        $_CookedCSVImportProgressText.text(processResponse.data.success + ' / ' + processResponse.data.total + ' recipes imported');
+                                        var recipesImportedText = cooked_migration_js_vars.i18n_recipes_imported || 'recipes imported';
+                                        $_CookedCSVImportProgressText.text(processResponse.data.success + ' / ' + processResponse.data.total + ' ' + recipesImportedText);
 
                                         // Show errors if any
                                         if (processResponse.data.errors && processResponse.data.errors.length > 0) {
-                                            var errorHtml = '<p><strong>Errors:</strong></p><ul>';
+                                            var errorsLabel = cooked_migration_js_vars.i18n_errors || 'Errors:';
+                                            var errorHtml = '<p><strong>' + errorsLabel + '</strong></p><ul>';
                                             processResponse.data.errors.forEach(function(error) {
                                                 errorHtml += '<li>' + error + '</li>';
                                             });
@@ -172,7 +174,8 @@
                                             fileInput.hide();
                                         }, 2000);
                                     } else {
-                                        errorsDiv.html('<p>' + (processResponse.data.message || 'Import failed.') + '</p>').show();
+                                        var importFailedText = cooked_migration_js_vars.i18n_import_failed || 'Import failed.';
+                                        errorsDiv.html('<p>' + (processResponse.data.message || importFailedText) + '</p>').show();
                                         if (processResponse.data.errors && processResponse.data.errors.length > 0) {
                                             var errorHtml = '<ul>';
                                             processResponse.data.errors.forEach(function(error) {
@@ -189,14 +192,16 @@
                                 },
                                 'json'
                             ).fail(function() {
-                                errorsDiv.html('<p>Failed to process CSV file.</p>').show();
+                                var failedProcessText = cooked_migration_js_vars.i18n_failed_process_csv || 'Failed to process CSV file.';
+                                errorsDiv.html('<p>' + failedProcessText + '</p>').show();
                                 thisButton.removeClass('disabled').attr('disabled', false);
                                 fileInput.attr('disabled', false);
                                 $_CookedCSVImportProgress.removeClass('cooked-active');
                                 $_CookedCSVImportProgressText.removeClass('cooked-active');
                             });
                         } else {
-                            errorsDiv.html('<p>' + (response.data.message || 'File upload failed.') + '</p>').show();
+                            var fileUploadFailedText = cooked_migration_js_vars.i18n_file_upload_failed || 'File upload failed.';
+                            errorsDiv.html('<p>' + (response.data.message || fileUploadFailedText) + '</p>').show();
                             thisButton.removeClass('disabled').attr('disabled', false);
                             fileInput.attr('disabled', false);
                             $_CookedCSVImportProgress.removeClass('cooked-active');
@@ -204,7 +209,8 @@
                         }
                     },
                     error: function() {
-                        errorsDiv.html('<p>Failed to upload CSV file.</p>').show();
+                        var failedUploadText = cooked_migration_js_vars.i18n_failed_upload_csv || 'Failed to upload CSV file.';
+                        errorsDiv.html('<p>' + failedUploadText + '</p>').show();
                         thisButton.removeClass('disabled').attr('disabled', false);
                         fileInput.attr('disabled', false);
                         $_CookedCSVImportProgress.removeClass('cooked-active');
@@ -304,10 +310,12 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
                     if ( progress_percent < 100 && progress_percent > 3 && isFinite( estimatedCompletionTime ) ){
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
+                        var hrsText = cooked_migration_js_vars.i18n_hrs || 'hrs';
+                        var minsText = cooked_migration_js_vars.i18n_mins || 'mins';
                         if ( estimatedHours >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " hrs, " + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + hrsText + ", " + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else if ( estimatedMinutes >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }
@@ -387,10 +395,12 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
                     if ( progress_percent < 100 && progress_percent > 3 && isFinite( estimatedCompletionTime ) ) {
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
+                        var hrsText = cooked_migration_js_vars.i18n_hrs || 'hrs';
+                        var minsText = cooked_migration_js_vars.i18n_mins || 'mins';
                         if ( estimatedHours >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " hrs, " + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + hrsText + ", " + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else if ( estimatedMinutes >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " mins " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }

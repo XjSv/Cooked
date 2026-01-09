@@ -343,7 +343,7 @@ class Cooked_Ajax {
             $_cooked_settings['default_content'] = wp_kses_post( $_POST['default_content'] );
             update_option('cooked_settings', $_cooked_settings);
         } else {
-            echo 'No default content provided.';
+            echo esc_html__( 'No default content provided.', 'cooked' );
         }
 
         wp_die();

@@ -20,7 +20,7 @@ class Cooked_Functions {
 	private static $guest_message_id = false;
 
 	public static function sanitize_text_field( $text ) {
-		$text = htmlentities( stripslashes( $text ) );
+		$text = htmlentities( wp_unslash( $text ) );
 		$text = sanitize_text_field( $text );
 		return $text;
 	}

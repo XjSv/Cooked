@@ -351,7 +351,7 @@ class Cooked_Ajax {
         }
 
         if (isset($_cooked_settings['default_content'])) {
-            $default_content = stripslashes($_cooked_settings['default_content']);
+            $default_content = wp_unslash($_cooked_settings['default_content']);
         } else {
             $default_content = Cooked_Recipes::default_content();
         }

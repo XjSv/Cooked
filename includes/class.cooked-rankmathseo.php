@@ -69,7 +69,7 @@ class Cooked_RankMathSEO {
             return $canonical_url;
         }
 
-        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+        $browse_page_id = Cooked_Multilingual::get_browse_page_id();
 
         // Only modify for browse page with category.
         if (is_page($browse_page_id) &&

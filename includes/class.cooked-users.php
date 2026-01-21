@@ -31,16 +31,28 @@ class Cooked_Users {
     public static function recipe_author_rewrite() {
         global $_cooked_settings;
 
-        $browse_page_id = isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false;
         $front_page_id = get_option( 'page_on_front' );
-        $browse_page_slug = $browse_page_id ? basename( get_permalink( $browse_page_id ) ) : false;
 
-        if ( $browse_page_id != $front_page_id ) {
-            add_rewrite_tag('%recipe_author%', '([^&]+)');
-            if ( isset( $_cooked_settings['browse_page'] ) ) {
-                add_rewrite_rule('^' . $browse_page_slug . '/' . $_cooked_settings['recipe_author_permalink'] . '/([^/]*)/page/([^/]*)/?', 'index.php?page_id=' . esc_attr( $_cooked_settings['browse_page'] ) . '&paged=$matches[2]&recipe_author=$matches[1]', 'top' );
-                add_rewrite_rule('^' . $browse_page_slug . '/' . $_cooked_settings['recipe_author_permalink'] . '/([^/]*)/?', 'index.php?page_id=' . esc_attr( $_cooked_settings['browse_page'] ) . '&recipe_author=$matches[1]', 'top' );
+        // Get all browse page translations for rewrite rules
+        $browse_pages = Cooked_Multilingual::get_all_browse_pages();
+
+        if ( empty( $browse_pages ) ) {
+            return;
+        }
+
+        add_rewrite_tag('%recipe_author%', '([^&]+)');
+
+        // Create rewrite rules for each browse page translation
+        foreach ( $browse_pages as $lang => $page_data ) {
+            $browse_page_id = $page_data['id'];
+            $browse_page_slug = $page_data['slug'] ? basename( $page_data['slug'] ) : false;
+
+            if ( ! $browse_page_slug || $browse_page_id == $front_page_id ) {
+                continue;
             }
+
+            add_rewrite_rule('^' . $browse_page_slug . '/' . $_cooked_settings['recipe_author_permalink'] . '/([^/]*)/page/([^/]*)/?', 'index.php?page_id=' . esc_attr( $browse_page_id ) . '&paged=$matches[2]&recipe_author=$matches[1]', 'top' );
+            add_rewrite_rule('^' . $browse_page_slug . '/' . $_cooked_settings['recipe_author_permalink'] . '/([^/]*)/?', 'index.php?page_id=' . esc_attr( $browse_page_id ) . '&recipe_author=$matches[1]', 'top' );
         }
     }
 

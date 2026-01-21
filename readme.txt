@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.8.2
-Stable tag: 1.11.2
+Tested up to: 6.9
+Stable tag: 1.12.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -60,8 +60,10 @@ Cooked has a whole bunch of actions and filters to customize Cooked as much as y
 == Frequently Asked Questions ==
 
 = Having issues with the plugin? =
-
 Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki) for guides and documentation. If you're still having issues, create a new support topic and let me know what's going on. I'm happy to help! Please don't post a bad review without discussing here first, I really appreciate it!
+
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the Cooked plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fbd28-34aa-4ce6-9dfd-8a2024a2170f). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Screenshots ==
 
@@ -76,9 +78,19 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.11.2 includes a new import for WP Recipe Maker recipes, transient message handling for guests to support guest recipe submissions, and developer hooks: `cooked_info_shortcode_output` filter and `cooked_ingredients_shortcode_before`/`cooked_ingredients_shortcode_after` actions for enhanced customization.
+Version 1.12.0 includes the ability to add ingredients substitutions.
 
 == Changelog ==
+
+= 1.12.0 =
+* **NEW:** Added the ability to add ingredients substitutions.
+
+= 1.11.4 =
+* **FIX:** Addressed the CVE-2025-68586 security vulnerability.
+* **FIX:** Addressed the CVE-2025-62989 security vulnerability.
+
+= 1.11.3 =
+* **NEW:** Added the Patchstack Vulnerability Disclosure Program.
 
 = 1.11.2 =
 * **NEW:** Added import for WP Recipe Maker recipes.

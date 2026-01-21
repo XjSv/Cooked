@@ -31,6 +31,7 @@ class Cooked_Shortcodes {
         add_shortcode('cooked-categories', [$this, 'cooked_categories_shortcode'] );
         add_shortcode('cooked-recipe-list', [$this, 'cooked_recipe_list_shortcode'] );
         add_shortcode('cooked-recipe-card', [$this, 'cooked_recipe_card_shortcode'] );
+        add_shortcode('cooked-related-recipes', [$this, 'cooked_related_recipes_shortcode'] );
 
         if ( shortcode_exists( 'timer' ) ):
             add_shortcode('cooked-timer', [$this, 'cooked_timer'] );
@@ -591,7 +592,7 @@ class Cooked_Shortcodes {
         global $recipe_settings, $_cooked_settings;
 
         if (in_array('author', $_cooked_settings['recipe_info_display_options'])) {
-            $browse_page_id = isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false;
+            $browse_page_id = Cooked_Multilingual::get_browse_page_id();
             $front_page_id = get_option( 'page_on_front' );
             $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : false;
             $author = !empty($recipe_settings['author']) ? $recipe_settings['author'] : false;
@@ -607,7 +608,7 @@ class Cooked_Shortcodes {
 
                 $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ?
                                 esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . trailingslashit( $author_slug ) ) :
-                                esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
+                                esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $browse_page_id . '&recipe_author=' . $author['id'] );
 
                 $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'], $author_slug  );
             } else {

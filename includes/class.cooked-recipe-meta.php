@@ -39,13 +39,17 @@ class Cooked_Recipe_Meta {
                 if (!is_array($val)) {
                     if ( $key === "content" || $key === "excerpt" || $key === "notes" ) {
                         if ($wp_editor_roles_allowed) {
-                            $_recipe_settings[$key] = wp_kses_post( $val );
+                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
+                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $_recipe_settings[$key] = wp_kses_post( $decoded_val );
                         } else {
                             $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                         }
                     } else {
                         if ($key === "post_title") {
-                            $_recipe_settings[$key] = wp_kses_post( $val );
+                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
+                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $_recipe_settings[$key] = wp_kses_post( $decoded_val );
                         } else {
                             $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
                         }
@@ -57,9 +61,18 @@ class Cooked_Recipe_Meta {
                         } else {
                             foreach ( $subval as $sub_subkey => $sub_subval ) {
                                 if ( !is_array($sub_subval) ) {
-                                    if ( $sub_subkey == 'content' || $key == 'ingredients' && $sub_subkey == 'name' || $key == 'ingredients' && ($sub_subkey == 'section_heading_name' || $sub_subkey == 'section_heading_element') || $key == 'directions' && ($sub_subkey == 'section_heading_name' || $sub_subkey == 'section_heading_element') ) {
+                                    if (
+                                        // For content keys: allow 'content'
+                                        ($sub_subkey === 'content') ||
+                                        // For ingredients: allow 'name' and section heading fields
+                                        ($key === 'ingredients' && ($sub_subkey === 'name' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element')) ||
+                                        // For directions: allow 'content' and section heading fields
+                                        ($key === 'directions' && ($sub_subkey === 'content' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element'))
+                                    ) {
                                         if ($wp_editor_roles_allowed) {
-                                            $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $sub_subval );
+                                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
+                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $decoded_sub_subval );
                                         } else {
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = Cooked_Functions::sanitize_text_field( $sub_subval );
                                         }
@@ -129,7 +142,7 @@ class Cooked_Recipe_Meta {
         global $recipe_settings;
 
         /* OK, it's safe for us to validate/sanitize the data now. */
-        $recipe_settings = isset($_POST['_recipe_settings']) ? self::meta_cleanup( $_POST['_recipe_settings'] ) : [];
+        $recipe_settings = isset($_POST['_recipe_settings']) ? self::meta_cleanup( wp_unslash( $_POST['_recipe_settings'] ) ) : [];
 
         if ( isset( $recipe_settings['content'] ) ) {
             $recipe_settings['content'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['content'] );
@@ -352,7 +365,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 <?php endif; ?>
 
                 <div class="recipe-setting-block cooked-bm-30">
-                    <?php $recipe_content = isset($recipe_settings['content']) ? stripslashes(wp_specialchars_decode($recipe_settings['content'])) : (isset($_cooked_settings['default_content']) ? stripslashes(wp_specialchars_decode($_cooked_settings['default_content'])) : Cooked_Recipes::default_content()); ?>
+                    <?php $recipe_content = isset($recipe_settings['content']) ? wp_unslash($recipe_settings['content']) : (isset($_cooked_settings['default_content']) ? wp_unslash($_cooked_settings['default_content']) : Cooked_Recipes::default_content()); ?>
                     <?php
                         wp_editor($recipe_content, '_recipe_settings_content', [
                             'teeny' => false,
@@ -369,7 +382,7 @@ function cooked_render_recipe_fields( $post_id ) {
                     <h3 class="cooked-settings-title"><?php _e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( __( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <p>
                         <?php if ( $wp_editor_roles_allowed ): ?>
-                            <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? stripslashes(wp_specialchars_decode($recipe_settings['excerpt'])) : ''; ?>
+                            <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? wp_unslash($recipe_settings['excerpt']) : ''; ?>
                             <?php
                             wp_editor($recipe_excerpt, '_recipe_settings_excerpt', [
                                 'teeny' => true,
@@ -429,7 +442,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 <div class="recipe-setting-block cooked-bm-30">
                 <h3 class="cooked-settings-title"><?php _e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo __( 'The notes are displayed in the recipe.','cooked'); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <?php if ( $wp_editor_roles_allowed ): ?>
-                        <?php $recipe_notes = isset($recipe_settings['notes']) ? stripslashes(wp_specialchars_decode($recipe_settings['notes'])) : ''; ?>
+                        <?php $recipe_notes = isset($recipe_settings['notes']) ? wp_unslash($recipe_settings['notes']) : ''; ?>
                         <?php
                             wp_editor($recipe_notes, '_recipe_settings_notes', [
                                 'teeny' => false,
@@ -1422,6 +1435,31 @@ function cooked_render_recipe_fields( $post_id ) {
                             <strong>minutes</strong> (<?php _e( 'Time in minutes','cooked' ); ?>)<br>
                             <strong>hours</strong> (<?php _e( 'Time in hours','cooked' ); ?>)<br>
                             <strong>desc</strong> (<?php _e( 'Timer Description','cooked' ); ?>)
+                        </p>
+                    </div>
+
+                </div>
+
+                <hr class="cooked-hr">
+
+                <!-- [cooked-next-previous] -->
+                <div class="cooked-clearfix">
+
+                    <div class="cooked-setting-column-23">
+
+                        <h3 class="cooked-settings-title cooked-bm-0"><?php _e( 'Next & Previous Recipe Navigation', 'cooked' ); ?></h3>
+                        <p class="cooked-bm-10"><?php _e( 'This will display navigation links to the next and previous recipes.', 'cooked' ); ?></p>
+                        <div class="cooked-bm-20 cooked-block">
+                            <input class='cooked-shortcode-field' type='text' readonly value='[cooked-next-previous]' />
+                        </div>
+                        <p class="cooked-bm-10"><?php _e( 'This shortcode automatically displays the previous and next recipe links based on the current recipe page. No parameters are required.', 'cooked' ); ?></p>
+
+                    </div>
+
+                    <div class="cooked-setting-column-13">
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Usage','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10">
+                            <?php _e( 'Simply add the shortcode to your recipe template or content area. The navigation will automatically show the previous and next recipes based on recipe ID order.', 'cooked' ); ?>
                         </p>
                     </div>
 

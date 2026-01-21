@@ -129,10 +129,6 @@ var cooked_loading = false;
                     // Create URL segments with proper encoding
                     const urlSegments = [];
 
-                    if (cooked_functions_js_vars.front_page !== cooked_functions_js_vars.browse_page) {
-                        urlSegments.push(encodeURIComponent(cooked_functions_js_vars.browse_recipes_slug));
-                    }
-
                     // Add taxonomy segments with improved encoding
                     const taxonomyFields = [
                         { value: formValues.category, prefix: cooked_functions_js_vars.recipe_category_slug },
@@ -158,12 +154,10 @@ var cooked_loading = false;
                     // Add sort segment
                     urlSegments.push(`sort/${encodeURIComponent(formValues.sort)}`);
 
-                    // Build URL
+                    // Build URL using browse_page_url as base (includes language prefix for multilingual sites)
                     const prettyUrl = urlSegments.filter(Boolean).join('/');
-
-                    // Use WordPress site URL as base
-                    const siteUrl = new URL(cooked_functions_js_vars.site_url);
-                    const finalUrl = `${siteUrl.pathname}/${prettyUrl}`.replace(/\/+/g, '/');
+                    const baseUrl = cooked_functions_js_vars.browse_page_url || cooked_functions_js_vars.site_url;
+                    const finalUrl = `${baseUrl}/${prettyUrl}`.replace(/\/+/g, '/').replace(':/', '://');
 
                     // Navigate to URL
                     window.location.href = finalUrl;

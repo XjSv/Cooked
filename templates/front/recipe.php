@@ -29,7 +29,7 @@ if ( is_feed() && !is_admin() || is_singular() && !is_admin() ):
 	$recipe_content = $wp_embed->autoembed( $recipe_content );
 	$recipe_content .=  '<div id="cooked-fsm-' . intval( $recipe_id ) . '" class="cooked-fsm" data-recipe-id="' . intval( $recipe_id ) . '">';
 		$recipe_content .=  do_shortcode( Cooked_Recipes::fsm_content() );
-		$recipe_content .=  '<div class="cooked-fsm-top">' . wp_kses_post( $recipe_settings['title'] ) . '<a href="#" class="cooked-close-fsm"><i class="cooked-icon cooked-icon-close"></i></a></div>';
+		$recipe_content .=  '<div class="cooked-fsm-top">' . esc_html( $recipe_settings['title'] ) . '<a href="#" class="cooked-close-fsm"><i class="cooked-icon cooked-icon-close"></i></a></div>';
 		$recipe_content .=  '<div class="cooked-fsm-mobile-nav">';
 			$recipe_content .=  '<a href="#ingredients" data-nav-id="ingredients" class="cooked-fsm-nav-ingredients cooked-active">' . __( 'Ingredients', 'cooked' ) . '</a>';
 			$recipe_content .=  '<a href="#directions" data-nav-id="directions" class="cooked-fsm-nav-directions">' . __( 'Directions', 'cooked' ) . '</a>';

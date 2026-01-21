@@ -29,9 +29,12 @@ class Cooked_Enqueues {
     public function enqueues($hook) {
         global $_cooked_settings;
 
-        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+        $browse_page_id = Cooked_Multilingual::get_browse_page_id();
         $browse_page = get_post($browse_page_id);
         $browse_recipes_slug = !empty($browse_page) ? $browse_page->post_name : '';
+
+        // Get the full browse page URL (includes language prefix when using Polylang/WPML)
+        $browse_page_url = $browse_page_id ? get_permalink($browse_page_id) : get_site_url();
 
         $cooked_js_vars = [
             'ajax_url' => admin_url('admin-ajax.php'),
@@ -39,6 +42,7 @@ class Cooked_Enqueues {
             'permalink_structure' => get_option('permalink_structure'),
             'site_url' => get_site_url(),
             'browse_page' => $browse_page_id,
+            'browse_page_url' => untrailingslashit($browse_page_url),
             'front_page' => get_option( 'page_on_front' ),
             'browse_recipes_slug' => $browse_recipes_slug,
             'recipe_category_slug' => !isset($_cooked_settings['recipe_category_permalink']) ? 'recipe-category' : $_cooked_settings['recipe_category_permalink'],

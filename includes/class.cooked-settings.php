@@ -32,8 +32,21 @@ class Cooked_Settings {
         if ( wp_is_post_revision( $post_id ) ) return;
 
         $_cooked_settings = Cooked_Settings::get();
-        if ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $post_id ) {
+        $main_browse_page_id = isset($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+
+        // Check if this is the main browse page
+        if ( $main_browse_page_id == $post_id ) {
             flush_rewrite_rules(false);
+            return;
+        }
+
+        // Also flush if this is a translation of the browse page
+        $browse_pages = Cooked_Multilingual::get_all_browse_pages();
+        foreach ( $browse_pages as $lang => $page_data ) {
+            if ( $page_data['id'] == $post_id ) {
+                flush_rewrite_rules(false);
+                return;
+            }
         }
     }
 

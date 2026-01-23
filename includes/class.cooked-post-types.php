@@ -500,9 +500,22 @@ class Cooked_Post_Types {
     public function add_display_post_states( $post_states, $post ) {
         global $_cooked_settings;
 
-        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+        // Check both the main browse page and any translations
+        $main_browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+        $browse_pages = Cooked_Multilingual::get_all_browse_pages();
 
-        if ( $browse_page_id == $post->ID ) {
+        // Check if this post is the main browse page or any translation
+        $is_browse_page = ( $main_browse_page_id == $post->ID );
+        if ( ! $is_browse_page && ! empty( $browse_pages ) ) {
+            foreach ( $browse_pages as $lang => $page_data ) {
+                if ( $page_data['id'] == $post->ID ) {
+                    $is_browse_page = true;
+                    break;
+                }
+            }
+        }
+
+        if ( $is_browse_page ) {
             $post_states['cooked_page_for_browse_recipes'] = __( 'Cooked Browse Recipes Page', 'cooked' );
         }
 

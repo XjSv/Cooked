@@ -38,10 +38,14 @@ class Cooked_Multilingual {
     /**
      * Check if WPML is active
      *
+     * Note: We check for ICL_SITEPRESS_VERSION constant which is specific to WPML.
+     * We can't just check function_exists('icl_object_id') because Polylang
+     * provides WPML compatibility functions.
+     *
      * @return bool
      */
     public static function is_wpml_active() {
-        return function_exists( 'icl_object_id' );
+        return defined( 'ICL_SITEPRESS_VERSION' );
     }
 
     /**
@@ -73,16 +77,15 @@ class Cooked_Multilingual {
             return false;
         }
 
-        // Polylang support
+        // Polylang support (check first, as it's more common)
         if ( self::is_polylang_active() ) {
             $translated_id = pll_get_post( $browse_page_id );
             if ( $translated_id ) {
                 return $translated_id;
             }
         }
-
-        // WPML support
-        if ( self::is_wpml_active() ) {
+        // WPML support (only if Polylang is not active)
+        elseif ( self::is_wpml_active() ) {
             $translated_id = icl_object_id( $browse_page_id, 'page', true );
             if ( $translated_id ) {
                 return $translated_id;
@@ -116,7 +119,7 @@ class Cooked_Multilingual {
             'slug' => self::get_page_slug( $default_page_id )
         ];
 
-        // Polylang translations
+        // Polylang translations (check first, as it's more common)
         if ( self::is_polylang_active() && function_exists( 'pll_get_post_translations' ) ) {
             $translations = pll_get_post_translations( $default_page_id );
             foreach ( $translations as $lang => $translated_id ) {
@@ -128,9 +131,8 @@ class Cooked_Multilingual {
                 }
             }
         }
-
-        // WPML translations
-        if ( self::is_wpml_active() && function_exists( 'wpml_get_active_languages_filter' ) ) {
+        // WPML translations (only if Polylang is not active)
+        elseif ( self::is_wpml_active() ) {
             $languages = apply_filters( 'wpml_active_languages', null );
             if ( is_array( $languages ) ) {
                 foreach ( $languages as $lang_code => $lang_data ) {
@@ -183,7 +185,7 @@ class Cooked_Multilingual {
             return $missing;
         }
 
-        // Check Polylang translations
+        // Check Polylang translations (check first, as it's more common)
         if ( self::is_polylang_active() && function_exists( 'pll_languages_list' ) && function_exists( 'pll_get_post_translations' ) ) {
             $languages = pll_languages_list( [ 'fields' => 'slug' ] );
             $translations = pll_get_post_translations( $default_page_id );
@@ -194,9 +196,8 @@ class Cooked_Multilingual {
                 }
             }
         }
-
-        // Check WPML translations
-        if ( self::is_wpml_active() ) {
+        // Check WPML translations (only if Polylang is not active)
+        elseif ( self::is_wpml_active() ) {
             $languages = apply_filters( 'wpml_active_languages', null );
             if ( is_array( $languages ) ) {
                 foreach ( $languages as $lang_code => $lang_data ) {

@@ -84,8 +84,8 @@ Version 1.12.0 includes the ability to add ingredients substitutions.
 
 = 1.12.0 =
 * **NEW:** Added the ability to add ingredients substitutions thanks to @mgiannopoulos24.
-* **NEW:** Added [cooked-related-recipes] shortcode.
-* **NEW:** Added Polylang & WPML Support.
+* **NEW:** Added new [cooked-related-recipes] shortcode to display related recipes based on categories, cuisines, ingredients, and other factors.
+* **NEW:** Added Polylang & WPML plugin support.
 * **TWEAK:** Added [cooked-next-previous] shortcode documentation in recipe "Shortcodes" tab.
 
 = 1.11.4 =

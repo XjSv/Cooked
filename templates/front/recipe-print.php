@@ -22,7 +22,7 @@ $recipe_settings = Cooked_Recipes::get_settings( $post->ID );
 
 Cooked_Functions::print_options();
 
-echo '<h1 id="printTitle">' . get_the_title() . '</h1>';
+echo '<h1 id="printTitle">' . esc_html( get_the_title() ) . '</h1>';
 echo wpautop( do_shortcode( Cooked_Recipes::print_content() ) );
 
 Cooked_Functions::print_options_js();

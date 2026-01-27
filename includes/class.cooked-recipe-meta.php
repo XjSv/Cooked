@@ -43,7 +43,10 @@ class Cooked_Recipe_Meta {
                             $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
                             $_recipe_settings[$key] = wp_kses_post( $decoded_val );
                         } else {
-                            $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
+                            // Strip all HTML tags - don't encode entities since format_content() will decode them
+                            // Decode entities first in case they're already encoded
+                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $_recipe_settings[$key] = wp_strip_all_tags( $decoded_val );
                         }
                     } else {
                         if ($key === "post_title") {
@@ -74,7 +77,10 @@ class Cooked_Recipe_Meta {
                                             $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $decoded_sub_subval );
                                         } else {
-                                            $_recipe_settings[$key][$subkey][$sub_subkey] = Cooked_Functions::sanitize_text_field( $sub_subval );
+                                            // Strip all HTML tags - don't encode entities since format_content() will decode them
+                                            // Decode entities first in case they're already encoded
+                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $_recipe_settings[$key][$subkey][$sub_subkey] = wp_strip_all_tags( $decoded_sub_subval );
                                         }
                                     } else {
                                         $_recipe_settings[$key][$subkey][$sub_subkey] = Cooked_Functions::sanitize_text_field( $sub_subval );
@@ -365,7 +371,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 <?php endif; ?>
 
                 <div class="recipe-setting-block cooked-bm-30">
-                    <?php $recipe_content = isset($recipe_settings['content']) ? wp_unslash($recipe_settings['content']) : (isset($_cooked_settings['default_content']) ? wp_unslash($_cooked_settings['default_content']) : Cooked_Recipes::default_content()); ?>
+                    <?php $recipe_content = isset($recipe_settings['content']) ? wp_unslash(wp_specialchars_decode($recipe_settings['content'])) : (isset($_cooked_settings['default_content']) ? wp_unslash(wp_specialchars_decode($_cooked_settings['default_content'])) : Cooked_Recipes::default_content()); ?>
                     <?php
                         wp_editor($recipe_content, '_recipe_settings_content', [
                             'teeny' => false,
@@ -382,7 +388,7 @@ function cooked_render_recipe_fields( $post_id ) {
                     <h3 class="cooked-settings-title"><?php _e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( __( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <p>
                         <?php if ( $wp_editor_roles_allowed ): ?>
-                            <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? wp_unslash($recipe_settings['excerpt']) : ''; ?>
+                            <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? wp_unslash(wp_specialchars_decode($recipe_settings['excerpt'])) : ''; ?>
                             <?php
                             wp_editor($recipe_excerpt, '_recipe_settings_excerpt', [
                                 'teeny' => true,
@@ -442,7 +448,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 <div class="recipe-setting-block cooked-bm-30">
                 <h3 class="cooked-settings-title"><?php _e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo __( 'The notes are displayed in the recipe.','cooked'); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <?php if ( $wp_editor_roles_allowed ): ?>
-                        <?php $recipe_notes = isset($recipe_settings['notes']) ? wp_unslash($recipe_settings['notes']) : ''; ?>
+                        <?php $recipe_notes = isset($recipe_settings['notes']) ? wp_unslash(wp_specialchars_decode($recipe_settings['notes'])) : ''; ?>
                         <?php
                             wp_editor($recipe_notes, '_recipe_settings_notes', [
                                 'teeny' => false,
@@ -454,7 +460,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             ]);
                         ?>
                     <?php else: ?>
-                        <textarea id="_recipe_settings_notes" name="" data-direction-part="content"><?php echo ( isset($recipe_settings['notes']) ? esc_textarea( $recipe_settings['notes'] ) : '' ); ?></textarea>
+                        <textarea name="_recipe_settings[notes]"><?php echo ( isset($recipe_settings['notes']) ? esc_textarea( $recipe_settings['notes'] ) : '' ); ?></textarea>
                     <?php endif; ?>
                 </div>
 
@@ -1460,6 +1466,116 @@ function cooked_render_recipe_fields( $post_id ) {
                         <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Usage','cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
                             <?php _e( 'Simply add the shortcode to your recipe template or content area. The navigation will automatically show the previous and next recipes based on recipe ID order.', 'cooked' ); ?>
+                        </p>
+                    </div>
+
+                </div>
+
+                <hr class="cooked-hr">
+
+                <!-- [cooked-related-recipes] -->
+                <div class="cooked-clearfix">
+
+                    <div class="cooked-setting-column-23">
+
+                        <h3 class="cooked-settings-title cooked-bm-0"><?php _e( 'Related Recipes', 'cooked' ); ?></h3>
+                        <p class="cooked-bm-10"><?php _e( 'This will display a grid of related recipes based on categories, cuisines, ingredients, and other factors.', 'cooked' ); ?></p>
+                        <div class="cooked-bm-20 cooked-block">
+                            <input class='cooked-shortcode-field' type='text' readonly value='[cooked-related-recipes]' />
+                        </div>
+
+                        <div class="cooked-clearfix">
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"id"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Specify a recipe ID. If not provided, uses the current recipe.','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='id="123"' />
+                                </div>
+                            </div>
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"title"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Set the heading text for the related recipes section.','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='title="You May Also Like"' />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cooked-clearfix">
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"limit"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Number of recipes to display (default: 6).','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='limit="4"' />
+                                </div>
+                            </div>
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"columns"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Number of columns in the grid (default: 3).','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='columns="2"' />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cooked-clearfix">
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"hide_image"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Hide recipe card images.','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='hide_image="true"' />
+                                </div>
+                            </div>
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"hide_excerpt"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Hide recipe card excerpts.','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='hide_excerpt="true"' />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cooked-clearfix">
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"hide_author"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Hide recipe card authors.','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='hide_author="true"' />
+                                </div>
+                            </div>
+                            <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"match_*"</strong></p>
+                                <p class="cooked-bm-10"><?php _e( 'Enable/disable matching by categories, cuisines, ingredients, etc. (default: true for most).','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='match_categories="true"' />
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="cooked-bm-5"><strong><?php _e( 'Matching Options:', 'cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10"><?php _e( 'Control which factors are used to find related recipes: match_categories, match_cuisines, match_cooking_methods, match_tags, match_diets, match_ingredients, match_author, match_difficulty.','cooked'); ?></p>
+
+                        <p class="cooked-bm-5"><strong><?php _e( 'Weight Options:', 'cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10"><?php _e( 'Adjust the importance of each matching factor: category_weight, cuisine_weight, cooking_method_weight, tag_weight, diet_weight, ingredient_weight, author_weight, difficulty_weight.','cooked'); ?></p>
+
+                    </div>
+
+                    <div class="cooked-setting-column-13">
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10">
+                            <strong>id</strong> (<?php _e( 'Recipe ID','cooked' ); ?>)<br>
+                            <strong>title</strong> (<?php _e( 'Section heading','cooked' ); ?>)<br>
+                            <strong>limit</strong> (<?php _e( 'Number of recipes','cooked' ); ?>)<br>
+                            <strong>columns</strong> (<?php _e( 'Grid columns','cooked' ); ?>)<br>
+                            <strong>hide_image</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
+                            <strong>hide_excerpt</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
+                            <strong>hide_author</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
+                            <strong>match_*</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
+                            <strong>*_weight</strong> (<?php _e( 'Numeric value','cooked' ); ?>)
+                        </p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Example','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10">
+                            <code>[cooked-related-recipes limit="4" columns="2" title="Related Recipes"]</code>
                         </p>
                     </div>
 

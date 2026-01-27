@@ -229,6 +229,45 @@ var $_CookedConditionalTimeout  = false;
             });
         }
 
+        // Calculate Related Recipes Button (Settings > Tools)
+        if ($('#cooked-calculate-related-button').length) {
+            $('#cooked-calculate-related-button').on('click', function(e) {
+                e.preventDefault();
+                var thisButton = $(this),
+                    msg = (typeof cooked_functions_js_vars !== 'undefined' && cooked_functions_js_vars.i18n_confirm_calculate_related) ? cooked_functions_js_vars.i18n_confirm_calculate_related : 'Pre-calculate related recipes for all published recipes? This may take a while on large sites.';
+                if (!confirm(msg) || thisButton.hasClass('disabled')) { return; }
+                thisButton.addClass('disabled').attr('disabled', true);
+                thisButton.hide();
+                $.post(cooked_functions_js_vars.ajax_url, { action: 'cooked_get_related_recipes_ids' }, function(data) {
+                    var response = typeof data === 'string' ? JSON.parse(data) : data;
+                    var ids = [];
+                    var total = 0;
+
+                    // Handle both old format (array) and new format (object)
+                    if (Array.isArray(response)) {
+                        ids = response;
+                        total = ids.length;
+                    } else if (response && typeof response === 'object') {
+                        ids = response.ids || [];
+                        total = response.total || 0;
+                    }
+
+                    if (total === 0 || ids.length === 0) {
+                        thisButton.removeClass('disabled').attr('disabled', false).show();
+                        return;
+                    }
+                    var progress = $('#cooked-related-progress'),
+                        progress_bar = progress.find('.cooked-progress-bar'),
+                        progress_text = $('#cooked-related-progress-text');
+                    progress.addClass('cooked-active');
+                    progress_text.addClass('cooked-active');
+                    progress_bar.css('width', '0%');
+                    progress_text.text('0 / ' + total);
+                    cooked_calculate_related_recipes(ids, total, 0);
+                });
+            });
+        }
+
         // Conditional Fields (Recipes and Settings Pages)
         if ($_CookedConditionals.length) {
             var conditionalFields = [];
@@ -697,6 +736,71 @@ var $_CookedConditionalTimeout  = false;
 })( jQuery );
 
 var cooked_recipe_update_counter = 0;
+
+function cooked_calculate_related_recipes(recipe_ids, total_recipes, processed_count) {
+    processed_count = processed_count || 0;
+
+    if (total_recipes <= 0 || !recipe_ids || recipe_ids.length === 0) {
+        jQuery('#cooked-related-progress').hide();
+        jQuery('#cooked-related-progress-text').hide();
+        jQuery('.recipe-setting-block.calculate_related_button').find('h3').hide();
+        jQuery('.recipe-setting-block.calculate_related_button').find('p:nth-child(2)').hide();
+        jQuery('#cooked-related-completed').addClass('cooked-active').show();
+        return;
+    }
+    var progress = jQuery('#cooked-related-progress'),
+        progress_bar = progress.find('.cooked-progress-bar'),
+        progress_text = jQuery('#cooked-related-progress-text');
+    if (!progress.hasClass('cooked-active')) {
+        progress.addClass('cooked-active');
+        progress_text.addClass('cooked-active');
+    }
+    jQuery.post(
+        cooked_functions_js_vars.ajax_url,
+        {
+            action: 'cooked_calculate_related_recipes',
+            recipe_ids: JSON.stringify(recipe_ids),
+            total_recipes: total_recipes,
+            processed_count: processed_count
+        },
+        function(response) {
+            var leftover = [];
+            var doneMeta = null;
+            var newProcessedCount = processed_count + 1; // One recipe was just processed
+
+            if (response && typeof response === 'object' && response.complete === true) {
+                doneMeta = { count: response.count, date_formatted: response.date_formatted };
+                leftover = [];
+            } else if (response && response !== 'complete' && response !== 'false') {
+                try {
+                    leftover = Array.isArray(response) ? response : JSON.parse(response);
+                } catch (e) {}
+            }
+
+            var done = newProcessedCount;
+            var pct = total_recipes > 0 ? Math.min(100, Math.round((done / total_recipes) * 100)) : 100;
+            if (pct < 2) { pct = 2; }
+            progress_bar.css('width', pct + '%');
+            progress_text.text(done + ' / ' + total_recipes);
+
+            if (!Array.isArray(leftover) || leftover.length === 0) {
+                progress.hide();
+                progress_text.hide();
+                jQuery('.recipe-setting-block.calculate_related_button').find('h3').hide();
+                jQuery('.recipe-setting-block.calculate_related_button').find('p:nth-child(2)').hide();
+                jQuery('#cooked-calculate-related-button').hide();
+                jQuery('#cooked-related-completed').addClass('cooked-active').show();
+                if (doneMeta && doneMeta.date_formatted != null && doneMeta.count != null) {
+                    var tpl = (typeof cooked_functions_js_vars !== 'undefined' && cooked_functions_js_vars.i18n_last_calculated) ? cooked_functions_js_vars.i18n_last_calculated : 'Last: %1$s · %2$s recipes';
+                    var msg = tpl.replace(/%1\$s/g, doneMeta.date_formatted).replace(/%2\$s/g, String(doneMeta.count));
+                    jQuery('#cooked-related-last-done').text(msg).show();
+                }
+            } else {
+                cooked_calculate_related_recipes(leftover, total_recipes, newProcessedCount);
+            }
+        }
+    );
+}
 
 function cooked_set_default_template(recipe_ids, total_recipes, content, nonce, instance) {
     var temp_counter = 0,

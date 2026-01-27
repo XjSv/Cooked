@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 require_once __DIR__ . '/vendor/autoload.php';
 
 define( 'COOKED_VERSION', '1.12.0' );
-define( 'COOKED_DEV', false );
+define( 'COOKED_DEV', true );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
 
@@ -217,6 +217,14 @@ final class Cooked_Plugin {
     public $multilingual;
 
     /**
+     * Cooked Related Recipes Object.
+     *
+     * @var object|Cooked_Related_Recipes
+     * @since 1.12.0
+     */
+    public $related_recipes;
+
+    /**
      * Cooked Extra Object.
      *
      * @var object|Cooked_Plugin_Extra
@@ -259,6 +267,7 @@ final class Cooked_Plugin {
 
             self::$instance->admin_settings = new Cooked_Settings();
             self::$instance->migration = new Cooked_Migration();
+            self::$instance->related_recipes = new Cooked_Related_Recipes();
             self::$instance->updates = new Cooked_Updates();
             self::$instance->post_types = new Cooked_Post_Types();
             self::$instance->recipe_meta = new Cooked_Recipe_Meta();
@@ -458,6 +467,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
         require_once COOKED_DIR . 'includes/class.cooked-seo.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
+        require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
         require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
         require_once COOKED_DIR . 'includes/class.cooked-measurements.php';

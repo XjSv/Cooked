@@ -58,6 +58,23 @@ class Cooked_Multilingual {
     }
 
     /**
+     * Get the current language code
+     *
+     * @return string|false Language code or false if not available
+     */
+    public static function get_current_language() {
+        // Polylang support
+        if ( self::is_polylang_active() && function_exists( 'pll_current_language' ) ) {
+            return pll_current_language();
+        }
+        // WPML support
+        elseif ( self::is_wpml_active() ) {
+            return apply_filters( 'wpml_current_language', null );
+        }
+        return false;
+    }
+
+    /**
      * Get the browse page ID for the current language
      *
      * This method returns the translated browse page ID when a multilingual plugin is active.

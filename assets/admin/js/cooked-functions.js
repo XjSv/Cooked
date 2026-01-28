@@ -21,7 +21,8 @@ var $_CookedConditionalTimeout  = false;
             $_CookedRecipeGallery			= $('#cooked-recipe-image-gallery'),
             $_CookedNutritionFactsTab		= $('#cooked-recipe-tab-content-nutrition'),
             $_CookedSettingsPanel 			= $('#cooked-settings-panel'),
-            $_CookedSettingsTabs 			= $('#cooked-settings-tabs');
+            $_CookedSettingsTabs 			= $('#cooked-settings-tabs'),
+            $_CookedCalculateRelatedButton 	= $('#cooked-calculate-related-button');
 
         // Cooked Color Pickers
         if ($_CookedColorPickers.length) {
@@ -230,27 +231,28 @@ var $_CookedConditionalTimeout  = false;
         }
 
         // Calculate Related Recipes Button (Settings > Tools)
-        if ($('#cooked-calculate-related-button').length) {
-            $('#cooked-calculate-related-button').on('click', function(e) {
+        if ($_CookedCalculateRelatedButton.length) {
+            $_CookedCalculateRelatedButton.on('click', function(e) {
                 e.preventDefault();
                 var thisButton = $(this),
-                    msg = (typeof cooked_functions_js_vars !== 'undefined' && cooked_functions_js_vars.i18n_confirm_calculate_related) ? cooked_functions_js_vars.i18n_confirm_calculate_related : 'Pre-calculate related recipes for all published recipes? This may take a while on large sites.';
+                    msg = cooked_functions_js_vars.i18n_confirm_calculate_related;
+
                 if (!confirm(msg) || thisButton.hasClass('disabled')) { return; }
+
                 thisButton.addClass('disabled').attr('disabled', true);
                 thisButton.hide();
-                $.post(cooked_functions_js_vars.ajax_url, { action: 'cooked_get_related_recipes_ids' }, function(data) {
-                    var response = typeof data === 'string' ? JSON.parse(data) : data;
-                    var ids = [];
-                    var total = 0;
 
-                    // Handle both old format (array) and new format (object)
-                    if (Array.isArray(response)) {
-                        ids = response;
-                        total = ids.length;
-                    } else if (response && typeof response === 'object') {
-                        ids = response.ids || [];
-                        total = response.total || 0;
+                // Get related recipes IDs
+                $.post(cooked_functions_js_vars.ajax_url, { action: 'cooked_get_related_recipes_ids' }, function(data) {
+                    var response;
+                    try {
+                        response = typeof data === 'string' ? JSON.parse(data) : data;
+                    } catch (e) {
+                        thisButton.removeClass('disabled').attr('disabled', false).show();
+                        return;
                     }
+                    var ids = (response && response.ids) ? response.ids : [];
+                    var total = (response && typeof response.total === 'number') ? response.total : 0;
 
                     if (total === 0 || ids.length === 0) {
                         thisButton.removeClass('disabled').attr('disabled', false).show();
@@ -264,6 +266,8 @@ var $_CookedConditionalTimeout  = false;
                     progress_bar.css('width', '0%');
                     progress_text.text('0 / ' + total);
                     cooked_calculate_related_recipes(ids, total, 0);
+                }).fail(function() {
+                    thisButton.removeClass('disabled').attr('disabled', false).show();
                 });
             });
         }

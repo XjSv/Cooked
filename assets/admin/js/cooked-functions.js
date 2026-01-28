@@ -755,10 +755,12 @@ function cooked_calculate_related_recipes(recipe_ids, total_recipes, processed_c
     var progress = jQuery('#cooked-related-progress'),
         progress_bar = progress.find('.cooked-progress-bar'),
         progress_text = jQuery('#cooked-related-progress-text');
+
     if (!progress.hasClass('cooked-active')) {
         progress.addClass('cooked-active');
         progress_text.addClass('cooked-active');
     }
+
     jQuery.post(
         cooked_functions_js_vars.ajax_url,
         {
@@ -768,14 +770,14 @@ function cooked_calculate_related_recipes(recipe_ids, total_recipes, processed_c
             processed_count: processed_count
         },
         function(response) {
-            var leftover = [];
+            var newProcessedCount = processed_count + 1;
             var doneMeta = null;
-            var newProcessedCount = processed_count + 1; // One recipe was just processed
+            var leftover = [];
 
+            // Backend returns either: { complete: true, count, date_formatted } or an array of remaining IDs (possibly as JSON string).
             if (response && typeof response === 'object' && response.complete === true) {
                 doneMeta = { count: response.count, date_formatted: response.date_formatted };
-                leftover = [];
-            } else if (response && response !== 'complete' && response !== 'false') {
+            } else {
                 try {
                     leftover = Array.isArray(response) ? response : JSON.parse(response);
                 } catch (e) {}
@@ -792,10 +794,10 @@ function cooked_calculate_related_recipes(recipe_ids, total_recipes, processed_c
                 progress_text.hide();
                 jQuery('.recipe-setting-block.calculate_related_button').find('h3').hide();
                 jQuery('.recipe-setting-block.calculate_related_button').find('p:nth-child(2)').hide();
-                jQuery('#cooked-calculate-related-button').hide();
+                $_CookedCalculateRelatedButton.hide();
                 jQuery('#cooked-related-completed').addClass('cooked-active').show();
                 if (doneMeta && doneMeta.date_formatted != null && doneMeta.count != null) {
-                    var tpl = (typeof cooked_functions_js_vars !== 'undefined' && cooked_functions_js_vars.i18n_last_calculated) ? cooked_functions_js_vars.i18n_last_calculated : 'Last: %1$s · %2$s recipes';
+                    var tpl = cooked_functions_js_vars.i18n_last_calculated;
                     var msg = tpl.replace(/%1\$s/g, doneMeta.date_formatted).replace(/%2\$s/g, String(doneMeta.count));
                     jQuery('#cooked-related-last-done').text(msg).show();
                 }
@@ -803,7 +805,13 @@ function cooked_calculate_related_recipes(recipe_ids, total_recipes, processed_c
                 cooked_calculate_related_recipes(leftover, total_recipes, newProcessedCount);
             }
         }
-    );
+    ).fail(function() {
+        progress.removeClass('cooked-active').hide();
+        progress_text.removeClass('cooked-active').hide();
+        jQuery('.recipe-setting-block.calculate_related_button').find('h3').show();
+        jQuery('.recipe-setting-block.calculate_related_button').find('p:nth-child(2)').show();
+        $_CookedCalculateRelatedButton.removeClass('disabled').attr('disabled', false).show();
+    });
 }
 
 function cooked_set_default_template(recipe_ids, total_recipes, content, nonce, instance) {

@@ -32,8 +32,21 @@ class Cooked_Settings {
         if ( wp_is_post_revision( $post_id ) ) return;
 
         $_cooked_settings = Cooked_Settings::get();
-        if ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] == $post_id ) {
+        $main_browse_page_id = isset($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+
+        // Check if this is the main browse page
+        if ( $main_browse_page_id == $post_id ) {
             flush_rewrite_rules(false);
+            return;
+        }
+
+        // Also flush if this is a translation of the browse page
+        $browse_pages = Cooked_Multilingual::get_all_browse_pages();
+        foreach ( $browse_pages as $lang => $page_data ) {
+            if ( $page_data['id'] == $post_id ) {
+                flush_rewrite_rules(false);
+                return;
+            }
         }
     }
 
@@ -592,6 +605,25 @@ class Cooked_Settings {
                 echo '<p id="cooked-migration-completed"><strong>Migration Complete!</strong> You can now <a href="' . esc_url( add_query_arg(['page' => 'cooked_settings'], admin_url( 'admin.php' ) ) ) . '">' . __( 'reload', 'cooked' ) . '</a> the settings screen.</p>';
             }
         }
+    }
+
+    public static function field_calculate_related_button( $field_name, $title ) {
+        $last = get_option( 'cooked_related_calculation_last', [] );
+        $last_ts   = isset( $last['time'] ) ? (int) $last['time'] : 0;
+        $last_count = isset( $last['count'] ) ? (int) $last['count'] : -1;
+        $last_text = '';
+        if ( $last_ts && $last_count >= 0 ) {
+            $date = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_ts );
+            $last_text = sprintf( __( 'Last: %1$s · %2$s recipes', 'cooked' ), $date, number_format_i18n( $last_count ) );
+        }
+        echo '<p id="cooked-related-last-done" class="cooked-related-status"' . ( $last_text ? '' : ' style="display:none;"' ) . '>' . esc_html( $last_text ) . '</p>';
+        echo '<p>';
+        echo '<input id="cooked-calculate-related-button" type="button" class="button-secondary" value="' . esc_attr__( 'Calculate Related Recipes', 'cooked' ) . '">';
+        echo '</p>';
+        echo '<p>';
+        echo '<span id="cooked-related-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-related-progress-text" class="cooked-progress-text">0 / 0</span>';
+        echo '</p>';
+        echo '<p id="cooked-related-completed" class="cooked-related-status" style="display:none;"><strong>' . esc_html__( 'Done.', 'cooked' ) . '</strong> ' . esc_html__( 'Related recipes cached.', 'cooked' ) . '</p>';
     }
 
     public static function field_text($field_name, $placeholder) {

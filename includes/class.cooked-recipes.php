@@ -259,7 +259,7 @@ class Cooked_Recipes {
 
                         echo '<div class="cooked-srl-content">';
 
-                            echo '<div class="cooked-srl-title"><a href="' . esc_url( get_permalink($rid) ) . '">' . wp_kses_post( $recipe['title'] ) . '</a></div>';
+                            echo '<div class="cooked-srl-title"><a href="' . esc_url( get_permalink($rid) ) . '">' . esc_html( $recipe['title'] ) . '</a></div>';
 
                             if ( in_array('author', $_cooked_settings['recipe_info_display_options']) && !$hide_author ):
                                 echo '<div class="cooked-srl-author">';
@@ -869,8 +869,41 @@ class Cooked_Recipes {
 
             $name = ( isset($ing['name']) && $ing['name'] ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['name'] ), $ing ) : false );
 
+            // Substitution Logic
+            $sub_name = ( isset($ing['sub_name']) && $ing['sub_name'] ?  wp_kses_post( $ing['sub_name'] ) : false );
+            $sub_amount = false;
+            $sub_measurement = false;
+            $sub_float_amount = 0;
+
+            if ( $sub_name ) {
+                if ($multiplier === 1) {
+                    $sub_amount = ( isset($ing['sub_amount']) && $ing['sub_amount'] ? esc_html( $ing['sub_amount'] ) : false );
+                    $sub_amount = $Cooked_Measurements->cleanup_amount($sub_amount);
+                    $sub_format = ( strpos($sub_amount, '/') === false ? ( strpos($sub_amount, '.') !== false || strpos($sub_amount, ',') !== false ? 'decimal' : 'fraction' ) : 'fraction' );
+                    $sub_float_amount = $Cooked_Measurements->calculate( $sub_amount, 'decimal' );
+                    $sub_amount = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
+                } else {
+                    $sub_amount = ( isset($ing['sub_amount']) && $ing['sub_amount'] ? esc_html( $ing['sub_amount'] ) : false );
+                    $sub_amount = $Cooked_Measurements->cleanup_amount($sub_amount);
+                    $sub_format = ( strpos($sub_amount, '/') === false ? ( strpos($sub_amount, '.') !== false || strpos($sub_amount, ',') !== false ? 'decimal' : 'fraction' ) : 'fraction' );
+                    $sub_float_amount = $Cooked_Measurements->calculate( $sub_amount, 'decimal' );
+
+                    if ($sub_float_amount) {
+                        $sub_float_amount = $sub_float_amount * $multiplier;
+                        $sub_amount = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
+                    }
+                }
+
+                $sub_measurement_key = ( isset($ing['sub_measurement']) && $ing['sub_measurement'] ? esc_html( $ing['sub_measurement'] ) : false );
+                $sub_measurement = ( $sub_measurement_key && $sub_float_amount && isset($measurements[$sub_measurement_key]) ? $Cooked_Measurements->singular_plural( $measurements[ $sub_measurement_key ]['singular_abbr'], $measurements[ $sub_measurement_key ]['plural_abbr'], $sub_float_amount ) : false );
+            }
+
             if ( $plain_text ) {
-                return ( $amount ? $amount . ' ' : '' ) . ( $measurement ? $measurement . ' ' : '' ) . ( $name ? $name : '' );
+                $output = ( $amount ? $amount . ' ' : '' ) . ( $measurement ? $measurement . ' ' : '' ) . ( $name ? $name : '' );
+                if ( $sub_name ) {
+                    $output .= ' (' . __('or', 'cooked') . ' ' . ( $sub_amount ? $sub_amount . ' ' : '' ) . ( $sub_measurement ? $sub_measurement . ' ' : '' ) . $sub_name . ')';
+                }
+                return $output;
             } else {
                 echo '<div itemprop="recipeIngredient" class="cooked-single-ingredient cooked-ingredient' . ( !$checkboxes ? ' cooked-ing-no-checkbox' : '' ) . '">';
                     echo ( $checkboxes ? '<span class="cooked-ingredient-checkbox">&nbsp;</span>' : '' );
@@ -879,6 +912,14 @@ class Cooked_Recipes {
                     do_action( 'cooked_ingredient_after_amount', $ing );
                     echo ( $name ? '<span class="cooked-ing-name">' . wp_kses_post( $name ) . '</span>' : '' );
                     do_action( 'cooked_ingredient_after_name', $ing );
+
+                    if ( $sub_name ) {
+                        echo '<span class="cooked-ingredient-substitution">';
+                            echo ' <span class="cooked-ing-sub-label">' . __('or', 'cooked') . '</span> ';
+                            echo ( $sub_amount ? '<span class="cooked-ing-amount" data-decimal="' . esc_html($sub_float_amount) . '">' . wp_kses_post($sub_amount) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( $sub_measurement ) . '</span> ' : '' );
+                            echo '<span class="cooked-ing-name">' . wp_kses_post( $sub_name ) . '</span>';
+                        echo '</span>';
+                    }
                 echo '</div>';
             }
         }
@@ -988,7 +1029,8 @@ class Cooked_Recipes {
             do_action( 'cooked_before_search_filter_columns' );
 
             if ( isset($active_taxonomy) ):
-                $recipes_page_id = ( $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID() );
+                $recipes_page_id = Cooked_Multilingual::get_browse_page_id();
+                $recipes_page_id = $recipes_page_id ? $recipes_page_id : get_the_ID();
                 $view_all_recipes_url = get_permalink( $recipes_page_id );
             else:
                 $view_all_recipes_url = false;
@@ -1048,7 +1090,8 @@ class Cooked_Recipes {
             $taxonomy_search_fields = false;
         endif;
 
-        $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
+        $page_id = Cooked_Multilingual::get_browse_page_id();
+        $page_id = $page_id ? $page_id : get_the_ID();
         $form_redirect = get_permalink($page_id);
 
         $cooked_search_s = get_query_var('cooked_search_s', '');
@@ -1317,7 +1360,7 @@ class Cooked_Recipes {
             return $canonical_url;
         }
 
-        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+        $browse_page_id = Cooked_Multilingual::get_browse_page_id();
 
         // Only modify for browse page with category.
         if (is_page($browse_page_id) &&

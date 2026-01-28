@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 use NXP\MathExecutor;
 
 /**
- * Cooked_Recipe_Meta Class
+ * Cooked_Measurements Class
  *
- * This class handles the Cooked Recipe Meta Box creation.
+ * This class handles the Cooked Measurements.
  *
  * @since 1.0.0
  */

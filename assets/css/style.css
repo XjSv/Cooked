@@ -168,6 +168,21 @@ body .cooked-post-featured-image img {
     opacity: 0.5;
 }
 
+/* Substitution Styles */
+.cooked-ingredient-substitution {
+    font-style: italic;
+    color: #777;
+    margin-left: 5px;
+    display: inline-block;
+}
+.cooked-ing-sub-label {
+    font-style: normal;
+    font-weight: 600;
+    font-size: 0.85em;
+    color: #999;
+    margin-right: 2px;
+}
+
 /* Directions */
 .cooked-recipe-directions {
     display: block;
@@ -1881,4 +1896,60 @@ body.cooked-fsm-active #wpadminbar {
     -moz-transition: all 100ms cubic-bezier(0.42, 0, 0.15, 1);
     -o-transition: all 100ms cubic-bezier(0.42, 0, 0.15, 1);
     transition: all 100ms cubic-bezier(0.42, 0, 0.15, 1);
+}
+
+/* Related Recipes Styles */
+.cooked-related-recipes-title {
+    margin: 0 0 20px 0;
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #333;
+}
+
+.cooked-related-recipes-grid {
+    margin: 20px 0;
+}
+
+.cooked-related-recipes-error,
+.cooked-related-recipes-empty {
+    padding: 15px;
+    margin: 20px 0;
+    background: #f9f9f9;
+    border-left: 4px solid #d63638;
+    color: #666;
+    font-style: italic;
+}
+
+.cooked-related-recipes-empty {
+    border-left-color: #0073aa;
+    text-align: center;
+}
+
+/* Ensure related recipes grid uses existing Cooked styles */
+.cooked-related-recipes-grid .cooked-recipe-card {
+    margin-bottom: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .cooked-related-recipes-grid.cooked-columns-3,
+    .cooked-related-recipes-grid.cooked-columns-4 {
+        margin-left: -1.5%;
+        width: 103%;
+    }
+
+    .cooked-related-recipes-grid.cooked-columns-3 .cooked-recipe,
+    .cooked-related-recipes-grid.cooked-columns-4 .cooked-recipe {
+        width: 47%;
+        min-width: 47%;
+    }
+}
+
+@media (max-width: 480px) {
+    .cooked-related-recipes-grid.cooked-columns-2 .cooked-recipe,
+    .cooked-related-recipes-grid.cooked-columns-3 .cooked-recipe,
+    .cooked-related-recipes-grid.cooked-columns-4 .cooked-recipe {
+        width: 97%;
+        min-width: 97%;
+    }
 }

@@ -25,30 +25,8 @@ class Cooked_Related_Recipes {
      * Constructor.
      */
     public function __construct() {
-        add_filter( 'cooked_settings_tabs_fields', [ $this, 'add_related_recipes_tab' ], 15, 1 );
         add_action( 'save_post', [ $this, 'maybe_bump_cache_version' ], 10, 1 );
         add_action( 'delete_post', [ $this, 'maybe_bump_cache_version' ], 10, 1 );
-    }
-
-    /**
-     * Add Tools tab to Settings with Calculate Related Recipes section.
-     *
-     * @param array $tabs Existing tabs.
-     * @return array
-     */
-    public function add_related_recipes_tab( $tabs ) {
-        $tabs['tools'] = [
-            'name'   => __( 'Tools', 'cooked' ),
-            'icon'   => 'gear',
-            'fields' => [
-                'cooked_calculate_related_button' => [
-                    'title' => __( 'Calculate Related Recipes', 'cooked' ),
-                    'desc'  => __( 'Pre-calculate related recipes for every published recipe. Uses default shortcode options. Run this after importing or adding many recipes, or when the cache was cleared. One recipe is processed per step to avoid memory issues on large sites.', 'cooked' ),
-                    'type'  => 'calculate_related_button',
-                ],
-            ],
-        ];
-        return $tabs;
     }
 
     /**

@@ -1138,7 +1138,7 @@ class Cooked_Shortcodes {
             return '<p class="cooked-related-recipes-error">' . esc_html($error_msg) . '</p>';
         }
 
-        // Find related recipes (uses transient cache; pre-calc via Settings > Related Recipes)
+        // Find related recipes (uses transient cache; pre-calc via Recipes > Tools)
         // Limit is applied inside get_related_recipes() based on $atts['limit']
         $related_recipes = Cooked_Related_Recipes::get_related_recipes( $recipe_id, $atts );
 

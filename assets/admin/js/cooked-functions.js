@@ -230,7 +230,7 @@ var $_CookedConditionalTimeout  = false;
             });
         }
 
-        // Calculate Related Recipes Button (Settings > Tools)
+        // Calculate Related Recipes Button (Recipes > Tools)
         if ($_CookedCalculateRelatedButton.length) {
             $_CookedCalculateRelatedButton.on('click', function(e) {
                 e.preventDefault();

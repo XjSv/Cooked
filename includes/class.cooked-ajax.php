@@ -335,12 +335,8 @@ class Cooked_Ajax {
             }
         }
 
-        // If we're running low on IDs and there are more to fetch, get next batch
-        if ( count( $recipe_ids ) < 10 && $processed_count < $total_recipes ) {
-            $next_batch = $this->get_next_batch_of_recipe_ids( $processed_count );
-            $recipe_ids = array_merge( $recipe_ids, $next_batch );
-        }
-
+        // Only fetch more IDs when the queue is empty; prefetching with offset processed_count
+        // would duplicate the same IDs we still have in the queue and inflate the progress count.
        	if ( empty( $recipe_ids ) ) {
            	$ts = current_time( 'timestamp' );
            	if ( $total_recipes > 0 ) {

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-01-28T10:29:58-05:00\n"
+"POT-Creation-Date: 2026-02-02T12:44:14-05:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: cooked\n"
@@ -39,78 +39,135 @@ msgstr ""
 msgid "https://goratech.dev"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:137
+#: includes/class.cooked-admin-enqueues.php:138
 msgid "remaining"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:138
+#: includes/class.cooked-admin-enqueues.php:139
 #: includes/class.cooked-recipe-meta.php:758
 #: includes/class.cooked-recipe-meta.php:813
 #: includes/class.cooked-recipe-meta.php:853
 msgid "Add Image"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:139
+#: includes/class.cooked-admin-enqueues.php:140
 #: includes/class.cooked-recipe-meta.php:758
 msgid "Change Image"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:140
+#: includes/class.cooked-admin-enqueues.php:141
 msgid "Use this Image"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:141
+#: includes/class.cooked-admin-enqueues.php:142
 #: includes/class.cooked-recipe-meta.php:1085
 msgid "Add to Gallery"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:142
+#: includes/class.cooked-admin-enqueues.php:143
 msgid "Edit Gallery Item"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:143
+#: includes/class.cooked-admin-enqueues.php:144
 msgid "Update Gallery Item"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:144
+#: includes/class.cooked-admin-enqueues.php:145
 msgid "Saved"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:145
+#: includes/class.cooked-admin-enqueues.php:146
 msgid "Applied"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:146
+#: includes/class.cooked-admin-enqueues.php:147
 msgid "Are you sure you want to apply this new template to all of your recipes?"
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:147
+#: includes/class.cooked-admin-enqueues.php:148
 msgid "Are you sure you want to reset this recipe template to the Cooked plugin default?"
 msgstr ""
 
 #. translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration.
-#: includes/class.cooked-admin-enqueues.php:149
+#: includes/class.cooked-admin-enqueues.php:150
 #, php-format
 msgid "Please confirm that you are ready to migrate all %s recipes."
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:150
+#: includes/class.cooked-admin-enqueues.php:151
 msgid "Please confirm that you are ready to import all recipes."
 msgstr ""
 
-#: includes/class.cooked-admin-enqueues.php:151
+#: includes/class.cooked-admin-enqueues.php:152
+msgid "Are you sure you want to import recipes from this CSV file?"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:153
+msgid "Please select a CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:154
+msgid "Please select a valid CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:155
+msgid "Uploading..."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:156
+msgid "Processing..."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:157
+msgid "recipes imported"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:158
+msgid "Errors:"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:159
+msgid "Import failed."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:160
+msgid "Failed to process CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:161
+msgid "Failed to upload CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:162
+#: includes/class.cooked-ajax.php:552
+msgid "File upload failed."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:163
+msgid "Something went wrong"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:164
+msgid "hrs"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:165
+msgid "mins"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:166
 msgid "Pre-calculate related recipes for all published recipes? This may take a while on large sites."
 msgstr ""
 
 #. translators: 1: date and time, 2: number of recipes
-#: includes/class.cooked-admin-enqueues.php:153
+#: includes/class.cooked-admin-enqueues.php:168
 #: includes/class.cooked-settings.php:617
 #, php-format
 msgid "Last: %1$s · %2$s recipes"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:36
-#: includes/class.cooked-admin-menus.php:59
+#: includes/class.cooked-admin-menus.php:60
 #: includes/class.cooked-post-types.php:450
 #: includes/class.cooked-post-types.php:462
 #: includes/class.cooked-users.php:166
@@ -118,14 +175,14 @@ msgid "Recipes"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:37
-#: includes/class.cooked-admin-menus.php:61
+#: includes/class.cooked-admin-menus.php:62
 #: includes/class.cooked-post-types.php:452
 msgid "Add New"
 msgstr ""
 
 #. translators: referring to the bottom of the Settings page.
 #: includes/class.cooked-admin-menus.php:45
-#: includes/class.cooked-admin-menus.php:65
+#: includes/class.cooked-admin-menus.php:66
 #: includes/class.cooked-recipe-meta.php:117
 #: includes/class.cooked-shortcodes.php:150
 #: templates/admin/welcome.php:18
@@ -133,31 +190,38 @@ msgid "Settings"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:46
-msgid "Import"
+#: templates/admin/tools.php:13
+msgid "Tools"
 msgstr ""
 
 #: includes/class.cooked-admin-menus.php:47
+msgid "Import"
+msgstr ""
+
+#: includes/class.cooked-admin-menus.php:48
 msgid "What's New?"
 msgstr ""
 
-#: includes/class.cooked-admin-menus.php:50
+#: includes/class.cooked-admin-menus.php:51
 #: templates/admin/welcome.php:35
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: includes/class.cooked-admin-menus.php:60
+#: includes/class.cooked-admin-menus.php:61
 #: includes/class.cooked-post-types.php:457
 msgid "All Recipes"
 msgstr ""
 
-#: includes/class.cooked-admin-menus.php:90
-#: includes/class.cooked-admin-menus.php:99
-#: includes/class.cooked-admin-menus.php:108
-#: includes/class.cooked-admin-menus.php:117
+#: includes/class.cooked-admin-menus.php:91
+#: includes/class.cooked-admin-menus.php:100
+#: includes/class.cooked-admin-menus.php:109
+#: includes/class.cooked-admin-menus.php:118
+#: includes/class.cooked-admin-menus.php:127
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: includes/class.cooked-ajax.php:179
+#: includes/class.cooked-ajax.php:184
+#: includes/class.cooked-csv-import.php:323
 #: includes/class.cooked-functions.php:134
 #: includes/class.cooked-recipe-meta.php:176
 #: includes/class.cooked-recipe-meta.php:263
@@ -167,7 +231,8 @@ msgstr ""
 msgid "Ingredients"
 msgstr ""
 
-#: includes/class.cooked-ajax.php:179
+#: includes/class.cooked-ajax.php:184
+#: includes/class.cooked-csv-import.php:323
 #: includes/class.cooked-functions.php:135
 #: includes/class.cooked-recipe-meta.php:176
 #: includes/class.cooked-recipe-meta.php:269
@@ -175,6 +240,78 @@ msgstr ""
 #: includes/class.cooked-recipes.php:640
 #: templates/front/recipe.php:35
 msgid "Directions"
+msgstr ""
+
+#: includes/class.cooked-ajax.php:519
+msgid "No default content provided."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:548
+#: includes/class.cooked-ajax.php:584
+msgid "You do not have permission to import recipes."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:558
+msgid "Invalid file type. Please upload a CSV file."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:591
+msgid "CSV file not found. Please upload again."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:609
+msgid "CSV Import class could not be loaded."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:623
+#, php-format
+msgid "Successfully imported %d recipe(s)."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:632
+msgid "No recipes were imported."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:39
+msgid "Cooked_Recipes class not found. Plugin may not be properly loaded."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:44
+msgid "Cooked_Measurements class not found. Plugin may not be properly loaded."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:49
+msgid "Cooked_Recipe_Meta class not found. Plugin may not be properly loaded."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:54
+msgid "CSV file not found."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:61
+msgid "Could not open CSV file."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:68
+msgid "CSV file is empty or invalid."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:79
+msgid "CSV file must contain a \"title\" column."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:106
+msgid "Unknown error"
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:107
+#: includes/class.cooked-csv-import.php:114
+#, php-format
+msgid "Row %d: %s"
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:140
+msgid "Title is required"
 msgstr ""
 
 #: includes/class.cooked-delicious-recipes.php:102
@@ -294,6 +431,7 @@ msgstr ""
 
 #: includes/class.cooked-import.php:63
 #: includes/class.cooked-import.php:118
+#: includes/class.cooked-import.php:165
 #: includes/class.cooked-migration.php:60
 msgid "Note:"
 msgstr ""
@@ -323,16 +461,93 @@ msgid "WP Recipe Maker - Import"
 msgstr ""
 
 #: includes/class.cooked-import.php:152
+msgid "Import recipes from a CSV file. Your CSV file should include the following columns:"
+msgstr ""
+
+#: includes/class.cooked-import.php:154
+msgid "Recipe title (required)"
+msgstr ""
+
+#: includes/class.cooked-import.php:155
+msgid "Recipe excerpt/description"
+msgstr ""
+
+#: includes/class.cooked-import.php:156
+msgid "Prep time in minutes"
+msgstr ""
+
+#: includes/class.cooked-import.php:157
+msgid "Cook time in minutes"
+msgstr ""
+
+#: includes/class.cooked-import.php:158
+msgid "Difficulty level (1=Beginner, 2=Intermediate, 3=Advanced)"
+msgstr ""
+
+#: includes/class.cooked-import.php:159
+msgid "Ingredients separated by pipe (|). Format: \"amount|measurement|name\" or \"name\" for simple ingredients. Add substitutions with double pipe (||): \"amount|measurement|name||sub_amount|sub_measurement|sub_name\""
+msgstr ""
+
+#: includes/class.cooked-import.php:160
+msgid "Directions/instructions separated by pipe (|)"
+msgstr ""
+
+#: includes/class.cooked-import.php:161
+msgid "Recipe notes"
+msgstr ""
+
+#: includes/class.cooked-import.php:162
+msgid "Categories separated by comma"
+msgstr ""
+
+#: includes/class.cooked-import.php:163
+msgid "Tags separated by comma"
+msgstr ""
+
+#: includes/class.cooked-import.php:165
+msgid "Recipes will be imported with the <b>'Draft'</b> status. After the import is complete, you can bulk edit the recipes and change their status to <b>'Published'</b>."
+msgstr ""
+
+#: includes/class.cooked-import.php:168
+msgid "CSV Import"
+msgstr ""
+
+#: includes/class.cooked-import.php:172
+msgid "Import Recipes via CSV"
+msgstr ""
+
+#: includes/class.cooked-import.php:180
 msgid "More Imports are Coming Soon..."
 msgstr ""
 
-#: includes/class.cooked-import.php:173
+#: includes/class.cooked-import.php:201
 msgid "Begin Import"
 msgstr ""
 
-#: includes/class.cooked-import.php:178
+#: includes/class.cooked-import.php:206
+#: includes/class.cooked-import.php:226
 #: includes/class.cooked-settings.php:605
 msgid "reload"
+msgstr ""
+
+#: includes/class.cooked-import.php:221
+msgid "Upload and Import CSV"
+msgstr ""
+
+#: includes/class.cooked-import.php:226
+msgid "Import Complete!"
+msgstr ""
+
+#: includes/class.cooked-import.php:226
+msgid "You can now"
+msgstr ""
+
+#: includes/class.cooked-import.php:226
+msgid "the import screen or"
+msgstr ""
+
+#: includes/class.cooked-import.php:226
+msgid "view your recipes"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:29
@@ -1450,7 +1665,7 @@ msgid "Simply add the shortcode to your recipe template or content area. The nav
 msgstr ""
 
 #: includes/class.cooked-recipe-meta.php:1481
-#: includes/class.cooked-related-recipes.php:73
+#: includes/class.cooked-related-recipes.php:51
 msgid "Related Recipes"
 msgstr ""
 
@@ -1686,19 +1901,6 @@ msgstr ""
 
 #: includes/class.cooked-recipes.php:1143
 msgid "Alphabetical (Z-A)"
-msgstr ""
-
-#: includes/class.cooked-related-recipes.php:41
-msgid "Tools"
-msgstr ""
-
-#: includes/class.cooked-related-recipes.php:45
-#: includes/class.cooked-settings.php:621
-msgid "Calculate Related Recipes"
-msgstr ""
-
-#: includes/class.cooked-related-recipes.php:46
-msgid "Pre-calculate related recipes for every published recipe. Uses default shortcode options. Run this after importing or adding many recipes, or when the cache was cleared. One recipe is processed per step to avoid memory issues on large sites."
 msgstr ""
 
 #: includes/class.cooked-roles.php:22
@@ -2074,6 +2276,12 @@ msgstr ""
 msgid "Begin Migration"
 msgstr ""
 
+#: includes/class.cooked-settings.php:621
+#: templates/admin/tools.php:15
+#: templates/admin/tools.php:17
+msgid "Calculate Related Recipes"
+msgstr ""
+
 #: includes/class.cooked-settings.php:626
 msgid "Done."
 msgstr ""
@@ -2381,6 +2589,14 @@ msgstr ""
 #: templates/admin/settings.php:10
 #: templates/admin/welcome.php:33
 msgid "Cooked Settings"
+msgstr ""
+
+#: templates/admin/tools.php:5
+msgid "Cooked Tools"
+msgstr ""
+
+#: templates/admin/tools.php:16
+msgid "Pre-calculate related recipes for every published recipe. Uses default shortcode options. Run this after importing or adding many recipes, or when the cache was cleared. One recipe is processed per step to avoid memory issues on large sites."
 msgstr ""
 
 #. translators: referring to "Cooked"

@@ -62,6 +62,7 @@ class Cooked_Admin_Enqueues {
             'post.php',
             'edit.php',
             'cooked_settings',
+            'cooked_tools',
             'cooked_import',
             'cooked_welcome',
             'cooked_pending',
@@ -162,6 +163,9 @@ class Cooked_Admin_Enqueues {
                     'i18n_something_wrong' => __('Something went wrong', 'cooked'),
                     'i18n_hrs' => __('hrs', 'cooked'),
                     'i18n_mins' => __('mins', 'cooked'),
+                    'i18n_confirm_calculate_related' => __('Pre-calculate related recipes for all published recipes? This may take a while on large sites.', 'cooked'),
+                    /* translators: 1: date and time, 2: number of recipes */
+                    'i18n_last_calculated' => __( 'Last: %1$s · %2$s recipes', 'cooked' ),
                     'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
                 ];
 

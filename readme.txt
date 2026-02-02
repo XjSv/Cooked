@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.8.2
-Stable tag: 1.11.2
+Tested up to: 6.9
+Stable tag: 1.12.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -14,7 +14,7 @@ Cooked is the absolute best way to create & display recipes with WordPress. SEO 
 
 Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Check out the full list below.
 
-Be sure to check out the **[Live Preview](https://wordpress.org/plugins/cooked/?preview=1)** as well as the **[Cooked Wiki](https://github.com/XjSv/Cooked/wiki)** if you need some help!
+Be sure to check out the **[Live Preview](https://wordpress.org/plugins/cooked/?preview=1)** as well as the **[Cooked Documentation](https://docs.cooked.pro/)** if you need some help!
 
 = Quality design & usability =
 
@@ -49,7 +49,7 @@ Of course, if you want even more, you can always check out the [PRO](https://coo
 
 = Developers love it =
 
-Cooked has a whole bunch of actions and filters to customize Cooked as much as you need to. Be sure to check out the [Developer Documentation](https://github.com/XjSv/Cooked/wiki).
+Cooked has a whole bunch of actions and filters to customize Cooked as much as you need to. Be sure to check out the [Developer Documentation](https://docs.cooked.pro/).
 
 == Installation ==
 
@@ -57,13 +57,15 @@ Cooked has a whole bunch of actions and filters to customize Cooked as much as y
 2. Activate the plugin through the 'Plugins' screen in WordPress.
 3. Use the Recipes > Settings screen to configure the plugin.
 4. Go to Recipes > Add New to start adding your recipes!
-5. Head over to the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki) for more help.
+5. Head over to the [Cooked Documentation](https://docs.cooked.pro/) for more help.
 
 == Frequently Asked Questions ==
 
 = Having issues with the plugin? =
+Be sure to check the [Cooked Documentation](https://docs.cooked.pro/) for guides and documentation. If you're still having issues, create a new support topic and let me know what's going on. I'm happy to help! Please don't post a bad review without discussing here first, I really appreciate it!
 
-Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki) for guides and documentation. If you're still having issues, create a new support topic and let me know what's going on. I'm happy to help! Please don't post a bad review without discussing here first, I really appreciate it!
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the Cooked plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fbd28-34aa-4ce6-9dfd-8a2024a2170f). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
 
 == Screenshots ==
 
@@ -78,14 +80,29 @@ Be sure to check the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki)
 
 == Upgrade Notice ==
 
-Version 1.11.3 includes CSV import functionality, allowing you to bulk import recipes from CSV files. This makes it easy to migrate recipes from other systems or import large recipe collections. The CSV import supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
+Version 1.12.0 includes the ability to add ingredients substitutions.
 
 == Changelog ==
 
+Version 1.13.0 includes CSV import functionality, allowing you to bulk import recipes from CSV files. This makes it easy to migrate recipes from other systems or import large recipe collections. The CSV import supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
+
+== Changelog ==
+
+= 1.13.0 =
+* **NEW:** Added CSV import functionality for bulk importing recipes from CSV files. Supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
+
+= 1.12.0 =
+* **NEW:** Added the ability to add ingredients substitutions thanks to @mgiannopoulos24.
+* **NEW:** Added new [cooked-related-recipes] shortcode to display related recipes based on categories, cuisines, ingredients, and other factors.
+* **NEW:** Added Polylang & WPML plugin support.
+* **TWEAK:** Added [cooked-next-previous] shortcode documentation in recipe "Shortcodes" tab.
+
+= 1.11.4 =
+* **FIX:** Addressed the CVE-2025-68586 security vulnerability.
+* **FIX:** Addressed the CVE-2025-62989 security vulnerability.
+
 = 1.11.3 =
-* **NEW:** Added CSV import functionality for bulk importing recipes from CSV files.
-* **NEW:** CSV import supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
-* **NEW:** Added `bundle` npm script for creating distribution-ready zip files.
+* **NEW:** Added the Patchstack Vulnerability Disclosure Program.
 
 = 1.11.2 =
 * **NEW:** Added import for WP Recipe Maker recipes.
@@ -105,7 +122,7 @@ Version 1.11.3 includes CSV import functionality, allowing you to bulk import re
 
 = 1.11.0 =
 * **FIX:** Fixed a bug when users have multiple roles where the WP Editor does not appear in the recipe edit screen.
-* **NEW:** Added the 'cooked_format_author_name' developer filter for customizing how author names are displayed via code. View the [Cooked Documentation](https://github.com/XjSv/Cooked/wiki/Author-Name) for more information.
+* **NEW:** Added the 'cooked_format_author_name' developer filter for customizing how author names are displayed via code. View the [Cooked Documentation](https://docs.cooked.pro/docs/author-name/) for more information.
 * **NEW:** Added 'Default Heading Tags' settings option to allow users to choose between H2, H3, H4, H5, H6 or Div for the Directions and Ingredients sections.
 * **FIX:** Fixed a couple of PHP related issues.
 * **FIX:** Fixed a bug with the Browse Recipe filters that would not work when the Browse Recipe Page is set as the Homepage.

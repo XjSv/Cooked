@@ -259,7 +259,7 @@ class Cooked_Recipes {
 
                         echo '<div class="cooked-srl-content">';
 
-                            echo '<div class="cooked-srl-title"><a href="' . esc_url( get_permalink($rid) ) . '">' . wp_kses_post( $recipe['title'] ) . '</a></div>';
+                            echo '<div class="cooked-srl-title"><a href="' . esc_url( get_permalink($rid) ) . '">' . esc_html( $recipe['title'] ) . '</a></div>';
 
                             if ( in_array('author', $_cooked_settings['recipe_info_display_options']) && !$hide_author ):
                                 echo '<div class="cooked-srl-author">';
@@ -1029,7 +1029,8 @@ class Cooked_Recipes {
             do_action( 'cooked_before_search_filter_columns' );
 
             if ( isset($active_taxonomy) ):
-                $recipes_page_id = ( $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID() );
+                $recipes_page_id = Cooked_Multilingual::get_browse_page_id();
+                $recipes_page_id = $recipes_page_id ? $recipes_page_id : get_the_ID();
                 $view_all_recipes_url = get_permalink( $recipes_page_id );
             else:
                 $view_all_recipes_url = false;
@@ -1089,7 +1090,8 @@ class Cooked_Recipes {
             $taxonomy_search_fields = false;
         endif;
 
-        $page_id = $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : get_the_ID();
+        $page_id = Cooked_Multilingual::get_browse_page_id();
+        $page_id = $page_id ? $page_id : get_the_ID();
         $form_redirect = get_permalink($page_id);
 
         $cooked_search_s = get_query_var('cooked_search_s', '');
@@ -1358,7 +1360,7 @@ class Cooked_Recipes {
             return $canonical_url;
         }
 
-        $browse_page_id = !empty($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
+        $browse_page_id = Cooked_Multilingual::get_browse_page_id();
 
         // Only modify for browse page with category.
         if (is_page($browse_page_id) &&

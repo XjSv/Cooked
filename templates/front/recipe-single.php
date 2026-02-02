@@ -30,7 +30,7 @@ echo '<article class="' . implode( ' ', $recipe_classes ) . ' cooked-recipe-card
 
         do_action( 'cooked_recipe_grid_before_name', $recipe );
 
-        echo '<a href="' . esc_url( get_permalink( $recipe['id'] ) ) . '" class="cooked-recipe-card-title">' . wp_kses_post( $recipe_settings['title'] ) . '</a>';
+        echo '<a href="' . esc_url( get_permalink( $recipe['id'] ) ) . '" class="cooked-recipe-card-title">' . esc_html( $recipe_settings['title'] ) . '</a>';
 
         do_action( 'cooked_recipe_grid_after_name', $recipe );
 

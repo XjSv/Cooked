@@ -35,7 +35,8 @@ else:
             echo ( isset($author['profile_photo']) && $author['profile_photo'] ? ( !$hide_avatars ? '<span class="cooked-author-avatar">' . esc_html( $author['profile_photo'] ) . '</span>' : '' ) : '' );
             /* translators: referring to the author (ex: Recipes by John Smith) */
 			echo '<strong class="cooked-meta-title">' . sprintf( __('Recipes by %s','cooked'), $author['name'] ) . '</strong>';
-            echo ( isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? '<br><a href="' . get_permalink($_cooked_settings['browse_page']) . '">' . __( 'View all recipes','cooked' ) . '</a>' : '' );
+            $browse_page_id = Cooked_Multilingual::get_browse_page_id();
+            echo ( $browse_page_id ? '<br><a href="' . get_permalink( $browse_page_id ) . '">' . __( 'View all recipes','cooked' ) . '</a>' : '' );
         echo '</div>';
 
 	elseif ( $atts['search'] === 'true' ):

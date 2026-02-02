@@ -31,6 +31,7 @@ class Cooked_Shortcodes {
         add_shortcode('cooked-categories', [$this, 'cooked_categories_shortcode'] );
         add_shortcode('cooked-recipe-list', [$this, 'cooked_recipe_list_shortcode'] );
         add_shortcode('cooked-recipe-card', [$this, 'cooked_recipe_card_shortcode'] );
+        add_shortcode('cooked-related-recipes', [$this, 'cooked_related_recipes_shortcode'] );
 
         if ( shortcode_exists( 'timer' ) ):
             add_shortcode('cooked-timer', [$this, 'cooked_timer'] );
@@ -591,7 +592,7 @@ class Cooked_Shortcodes {
         global $recipe_settings, $_cooked_settings;
 
         if (in_array('author', $_cooked_settings['recipe_info_display_options'])) {
-            $browse_page_id = isset($_cooked_settings['browse_page']) && $_cooked_settings['browse_page'] ? $_cooked_settings['browse_page'] : false;
+            $browse_page_id = Cooked_Multilingual::get_browse_page_id();
             $front_page_id = get_option( 'page_on_front' );
             $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : false;
             $author = !empty($recipe_settings['author']) ? $recipe_settings['author'] : false;
@@ -607,7 +608,7 @@ class Cooked_Shortcodes {
 
                 $permalink = $front_page_id != $browse_page_id && get_option('permalink_structure') ?
                                 esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . trailingslashit( $author_slug ) ) :
-                                esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $_cooked_settings['browse_page'] . '&recipe_author=' . $author['id'] );
+                                esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $browse_page_id . '&recipe_author=' . $author['id'] );
 
                 $permalink = apply_filters( 'cooked_author_permalink', $permalink, $author['id'], $author_slug  );
             } else {
@@ -790,7 +791,7 @@ class Cooked_Shortcodes {
             $recipe_settings['id'] = $recipe->ID;
         }
 
-        return get_the_title($recipe_settings['id']);
+        return esc_html( get_the_title($recipe_settings['id']) );
     }
 
     public function cooked_image_shortcode($atts, $content = null) {
@@ -1080,5 +1081,129 @@ class Cooked_Shortcodes {
         endif;
 
         return ob_get_clean();
+    }
+
+    /**
+     * Related Recipes Shortcode
+     *
+     * Displays related recipes based on keywords, cuisines, ingredients, categories, and other factors.
+     *
+     * @param array $atts Shortcode attributes
+     * @param string $content Shortcode content
+     * @return string Related recipes HTML
+     * @since 1.0.0
+     */
+    public function cooked_related_recipes_shortcode($atts, $content = null) {
+        if ( is_admin() ) return false;
+
+        global $post, $_cooked_settings;
+
+        // Shortcode Attributes
+        $atts = shortcode_atts( Cooked_Related_Recipes::get_default_atts(), $atts );
+
+        // Get recipe ID - validate if provided, otherwise try current post
+        $recipe_id = false;
+
+        if (!empty($atts['id'])) {
+            // Validate that the ID is numeric before converting
+            if (is_numeric($atts['id']) && $atts['id'] > 0) {
+                $recipe_id = (int) $atts['id'];
+            } else {
+                // Invalid ID provided (e.g., "asdas", "", "0", "-5")
+                return '<p class="cooked-related-recipes-error">' . esc_html__('Invalid recipe ID specified. Please provide a valid numeric recipe ID.', 'cooked') . '</p>';
+            }
+        } else {
+            // No ID provided, try to get from current post
+            if (isset($post->ID) && get_post_type($post->ID) === 'cp_recipe') {
+                $recipe_id = $post->ID;
+            }
+        }
+
+        if (!$recipe_id) {
+            return '<p class="cooked-related-recipes-error">' . esc_html__('No recipe found. Please specify a recipe ID using the id attribute, or use this shortcode on a recipe page.', 'cooked') . '</p>';
+        }
+
+        // Get the source recipe (allow any status to support drafts/pending)
+        $source_recipe = Cooked_Recipes::get($recipe_id, true, false, false, false, 'any');
+
+        if (!$source_recipe || empty($source_recipe)) {
+            $error_msg = __('Recipe not found.', 'cooked');
+            // Check if it's a different post type
+            $post_check = get_post($recipe_id);
+            if ($post_check && $post_check->post_type !== 'cp_recipe') {
+                $error_msg .= ' ' . sprintf(__('The specified ID (%d) is not a recipe.', 'cooked'), $recipe_id);
+            } elseif (!$post_check) {
+                $error_msg .= ' ' . sprintf(__('No post found with ID %d.', 'cooked'), $recipe_id);
+            }
+            return '<p class="cooked-related-recipes-error">' . esc_html($error_msg) . '</p>';
+        }
+
+        // Find related recipes (uses transient cache; pre-calc via Recipes > Tools)
+        // Limit is applied inside get_related_recipes() based on $atts['limit']
+        $related_recipes = Cooked_Related_Recipes::get_related_recipes( $recipe_id, $atts );
+
+        if (empty($related_recipes)) {
+            $empty_msg = __('No related recipes found.', 'cooked');
+            // Provide helpful context
+            if (class_exists('Cooked_Multilingual') && Cooked_Multilingual::is_multilingual_active()) {
+                $empty_msg .= ' ' . __('This may be because there are no other recipes in the current language with matching attributes.', 'cooked');
+            } else {
+                $empty_msg .= ' ' . __('Try adjusting the matching criteria or ensure you have other published recipes with shared categories, tags, or ingredients.', 'cooked');
+            }
+            return '<p class="cooked-related-recipes-empty">' . esc_html($empty_msg) . '</p>';
+        }
+
+        // Get recipe IDs for display and filter out deleted/invalid recipes
+        // Note: Language filtering is already handled by WP_Query in find_related_recipes()
+        $recipe_ids = array_column($related_recipes, 'id');
+
+        /**
+         * Filter recipe IDs before display.
+         *
+         * @since 1.12.0
+         *
+         * @param array $recipe_ids     Array of recipe IDs to display.
+         * @param array $related_recipes Full related recipes array with scores.
+         * @param int   $recipe_id      Source recipe ID.
+         * @param array $atts           Shortcode attributes.
+         */
+        $recipe_ids = apply_filters( 'cooked_related_recipes_display_ids', $recipe_ids, $related_recipes, $recipe_id, $atts );
+
+        ob_start();
+
+        // Display title
+        if ($atts['title']) {
+            echo '<h3 class="cooked-related-recipes-title">' . esc_html($atts['title']) . '</h3>';
+        }
+
+        // Display recipes in grid
+        $columns = intval($atts['columns']);
+        $hide_image = $atts['hide_image'] && $atts['hide_image'] !== 'false';
+        $hide_excerpt = $atts['hide_excerpt'] && $atts['hide_excerpt'] !== 'false';
+        $hide_author = $atts['hide_author'] && $atts['hide_author'] !== 'false';
+
+        echo '<div class="cooked-related-recipes-grid cooked-recipe-grid cooked-columns-' . esc_attr($columns) . '">';
+
+        foreach ($recipe_ids as $rid) {
+            echo '<div class="cooked-recipe">';
+            echo Cooked_Recipes::card($rid, false, $hide_image, false, $hide_excerpt, $hide_author);
+            echo '</div>';
+        }
+
+        echo '</div>';
+
+        $output = ob_get_clean();
+
+        /**
+         * Filter the related recipes shortcode output HTML.
+         *
+         * @since 1.12.0
+         *
+         * @param string $output      The shortcode HTML output.
+         * @param array  $recipe_ids Array of recipe IDs being displayed.
+         * @param int    $recipe_id  Source recipe ID.
+         * @param array  $atts       Shortcode attributes.
+         */
+        return apply_filters( 'cooked_related_recipes_output', $output, $recipe_ids, $recipe_id, $atts );
     }
 }

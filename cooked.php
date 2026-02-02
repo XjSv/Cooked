@@ -6,7 +6,7 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author:         Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.11.2
+Version: 		1.12.0
 Text Domain: 	cooked
 Domain Path: 	languages
 License:     	GPL2
@@ -30,7 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-define( 'COOKED_VERSION', '1.11.2' );
+define( 'COOKED_VERSION', '1.12.0' );
 define( 'COOKED_DEV', false );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
@@ -209,9 +209,25 @@ final class Cooked_Plugin {
     public $yoastseo;
 
     /**
+     * Cooked Multilingual Object.
+     *
+     * @var object|Cooked_Multilingual
+     * @since 1.12.0
+     */
+    public $multilingual;
+
+    /**
+     * Cooked Related Recipes Object.
+     *
+     * @var object|Cooked_Related_Recipes
+     * @since 1.12.0
+     */
+    public $related_recipes;
+
+    /**
      * Cooked Extra Object.
      *
-     * @var object|Cooked_Extra
+     * @var object|Cooked_Plugin_Extra
      * @since 1.8.7
      */
     public $extra;
@@ -251,10 +267,11 @@ final class Cooked_Plugin {
 
             self::$instance->admin_settings = new Cooked_Settings();
             self::$instance->migration = new Cooked_Migration();
+            self::$instance->related_recipes = new Cooked_Related_Recipes();
             self::$instance->updates = new Cooked_Updates();
             self::$instance->post_types = new Cooked_Post_Types();
             self::$instance->recipe_meta = new Cooked_Recipe_Meta();
-            self::$instance->recipe_meta = new Cooked_Measurements();
+            self::$instance->measurements = new Cooked_Measurements();
             self::$instance->users = new Cooked_Users();
             self::$instance->recipes = new Cooked_Recipes();
             self::$instance->shortcodes = new Cooked_Shortcodes();
@@ -264,6 +281,7 @@ final class Cooked_Plugin {
             self::$instance->gutenberg = new Cooked_Gutenberg();
             self::$instance->elementor = new Cooked_Elementor();
             self::$instance->extra = new Cooked_Plugin_Extra();
+            self::$instance->multilingual = new Cooked_Multilingual();
 
             self::$instance->module_setup();
 
@@ -449,6 +467,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
         require_once COOKED_DIR . 'includes/class.cooked-seo.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
+        require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
         require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
         require_once COOKED_DIR . 'includes/class.cooked-measurements.php';
@@ -464,6 +483,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-gutenberg.php';
         require_once COOKED_DIR . 'includes/class.cooked-elementor.php';
         require_once COOKED_DIR . 'includes/class.cooked-plugin-extra.php';
+        require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
     }
 
     /**

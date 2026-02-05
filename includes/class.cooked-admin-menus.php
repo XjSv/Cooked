@@ -43,7 +43,6 @@ class Cooked_Admin_Menus {
         }
 
         add_submenu_page('cooked_recipes_menu', __('Settings', 'cooked'), __('Settings','cooked'), 'edit_cooked_settings', 'cooked_settings', [&$this, 'cooked_settings_page'] );
-        add_submenu_page('cooked_recipes_menu', __('Tools', 'cooked'), __('Tools','cooked'), 'edit_cooked_recipes', 'cooked_tools', [&$this, 'cooked_tools_page'] );
         add_submenu_page('cooked_recipes_menu', __('Import', 'cooked'), __('Import','cooked'), 'edit_cooked_settings', 'cooked_import', [&$this, 'cooked_import_page'] );
         add_submenu_page('cooked_recipes_menu', __('What\'s New?','cooked'), __('What\'s New?','cooked'), 'edit_cooked_settings', 'cooked_welcome', [&$this, 'cooked_welcome_content'] );
 
@@ -92,15 +91,6 @@ class Cooked_Admin_Menus {
         }
 
         include COOKED_DIR . 'templates/admin/settings.php';
-    }
-
-    // Tools Page
-    public function cooked_tools_page() {
-        if ( ! current_user_can( 'edit_cooked_recipes' ) ) {
-            wp_die( __( 'You do not have sufficient permissions to access this page.', 'cooked' ) );
-        }
-
-        include COOKED_DIR . 'templates/admin/tools.php';
     }
 
     // Import Page

@@ -62,7 +62,6 @@ class Cooked_Admin_Enqueues {
             'post.php',
             'edit.php',
             'cooked_settings',
-            'cooked_tools',
             'cooked_import',
             'cooked_welcome',
             'cooked_pending',
@@ -149,9 +148,6 @@ class Cooked_Admin_Enqueues {
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
                     'i18n_confirm_import_recipes' => __('Please confirm that you are ready to import all recipes.', 'cooked'),
-                    'i18n_confirm_calculate_related' => __('Pre-calculate related recipes for all published recipes? This may take a while on large sites.', 'cooked'),
-                    /* translators: 1: date and time, 2: number of recipes */
-                    'i18n_last_calculated' => __( 'Last: %1$s · %2$s recipes', 'cooked' ),
                     'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
                 ];
 

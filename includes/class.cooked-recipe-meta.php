@@ -494,7 +494,7 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <?php do_action( 'cooked_before_ingredient_fields', $ing_key, $value ); ?>
 
                                 <div class="cooked-ingredient-amount">
-                                    <input type="text" data-ingredient-part="amount" name="_recipe_settings[ingredients][<?php echo esc_attr($ing_key); ?>][amount]" value="<?php echo esc_attr( $value['amount'] ); ?>" placeholder="--">
+                                    <input type="text" data-ingredient-part="amount" name="_recipe_settings[ingredients][<?php echo esc_attr($ing_key); ?>][amount]" value="<?php echo esc_attr( isset( $value['amount'] ) ? $value['amount'] : '' ); ?>" placeholder="--">
                                 </div>
 
                                 <?php do_action( 'cooked_after_ingredient_amount_field', $ing_key, $value ); ?>
@@ -502,8 +502,8 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <div class="cooked-ingredient-measurement">
                                     <select data-ingredient-part="measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][measurement]">
                                         <option value="">--</option>
-                                        <?php foreach($measurements as $key => $measurement):
-                                            echo '<option value="' . esc_attr( $key ) . '"' . ( $value['measurement'] == $key ? ' selected' : '' ) . '>' . esc_html($measurement['plural_abbr']) . '</option>';
+                                        <?php foreach ($measurements as $key => $measurement):
+                                            echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['measurement'] ) && $value['measurement'] == $key ? ' selected' : '' ) . '>' . esc_html($measurement['plural_abbr']) . '</option>';
                                         endforeach; ?>
                                     </select>
                                 </div>
@@ -511,7 +511,7 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <?php do_action( 'cooked_after_ingredient_measurement_field', $ing_key, $value ); ?>
 
                                 <div class="cooked-ingredient-name">
-                                    <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][name]" value="<?php echo esc_attr( $value['name'] ); ?>" placeholder="<?php _e('ex. Eggs, Milk, etc.','cooked'); ?> ...">
+                                    <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][name]" value="<?php echo esc_attr( isset( $value['name'] ) ? $value['name'] : '' ); ?>" placeholder="<?php _e('ex. Eggs, Milk, etc.','cooked'); ?> ...">
                                 </div>
 
                                 <?php do_action( 'cooked_after_ingredient_name_field', $ing_key, $value ); ?>
@@ -1479,7 +1479,7 @@ function cooked_render_recipe_fields( $post_id ) {
                     <div class="cooked-setting-column-23">
 
                         <h3 class="cooked-settings-title cooked-bm-0"><?php _e( 'Related Recipes', 'cooked' ); ?></h3>
-                        <p class="cooked-bm-10"><?php _e( 'This will display a grid of related recipes based on categories, cuisines, ingredients, and other factors.', 'cooked' ); ?></p>
+                        <p class="cooked-bm-10"><?php _e( 'Displays a grid of related recipes based on shared terms in any of the recipe taxonomies (categories, cuisines, cooking methods, tags, diets), shown in random order. No cache or pre-calculation.', 'cooked' ); ?></p>
                         <div class="cooked-bm-20 cooked-block">
                             <input class='cooked-shortcode-field' type='text' readonly value='[cooked-related-recipes]' />
                         </div>
@@ -1504,14 +1504,14 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"limit"</strong></p>
-                                <p class="cooked-bm-10"><?php _e( 'Number of recipes to display (default: 6).','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php _e( 'Number of recipes to display (default: 4).','cooked'); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='limit="4"' />
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"columns"</strong></p>
-                                <p class="cooked-bm-10"><?php _e( 'Number of columns in the grid (default: 3).','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php _e( 'Number of columns in the grid (default: 2).','cooked'); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='columns="2"' />
                                 </div>
@@ -1545,18 +1545,15 @@ function cooked_render_recipe_fields( $post_id ) {
                             </div>
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"match_*"</strong></p>
-                                <p class="cooked-bm-10"><?php _e( 'Enable/disable matching by categories, cuisines, ingredients, etc. (default: true for most).','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php _e( 'Toggle which taxonomies are used: match_categories, match_cuisines, match_cooking_methods, match_tags, match_diets (default: true).','cooked'); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='match_categories="true"' />
                                 </div>
                             </div>
                         </div>
 
-                        <p class="cooked-bm-5"><strong><?php _e( 'Matching Options:', 'cooked' ); ?></strong></p>
-                        <p class="cooked-bm-10"><?php _e( 'Control which factors are used to find related recipes: match_categories, match_cuisines, match_cooking_methods, match_tags, match_diets, match_ingredients, match_author, match_difficulty.','cooked'); ?></p>
-
-                        <p class="cooked-bm-5"><strong><?php _e( 'Weight Options:', 'cooked' ); ?></strong></p>
-                        <p class="cooked-bm-10"><?php _e( 'Adjust the importance of each matching factor: category_weight, cuisine_weight, cooking_method_weight, tag_weight, diet_weight, ingredient_weight, author_weight, difficulty_weight.','cooked'); ?></p>
+                        <p class="cooked-bm-5"><strong><?php _e( 'Matching options:', 'cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10"><?php _e( 'Set to false to exclude a taxonomy from related recipes, e.g. match_cuisines="false" to ignore cuisines.', 'cooked' ); ?></p>
 
                     </div>
 
@@ -1570,8 +1567,7 @@ function cooked_render_recipe_fields( $post_id ) {
                             <strong>hide_image</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
                             <strong>hide_excerpt</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
                             <strong>hide_author</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
-                            <strong>match_*</strong> (<?php _e( 'true/false','cooked' ); ?>)<br>
-                            <strong>*_weight</strong> (<?php _e( 'Numeric value','cooked' ); ?>)
+                            <strong>match_*</strong> (<?php _e( 'true/false','cooked' ); ?>)
                         </p>
                         <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php _e( 'Example','cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">

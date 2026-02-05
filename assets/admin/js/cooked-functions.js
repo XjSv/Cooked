@@ -21,8 +21,7 @@ var $_CookedConditionalTimeout  = false;
             $_CookedRecipeGallery			= $('#cooked-recipe-image-gallery'),
             $_CookedNutritionFactsTab		= $('#cooked-recipe-tab-content-nutrition'),
             $_CookedSettingsPanel 			= $('#cooked-settings-panel'),
-            $_CookedSettingsTabs 			= $('#cooked-settings-tabs'),
-            $_CookedCalculateRelatedButton 	= $('#cooked-calculate-related-button');
+            $_CookedSettingsTabs 			= $('#cooked-settings-tabs');
 
         // Cooked Color Pickers
         if ($_CookedColorPickers.length) {
@@ -227,48 +226,6 @@ var $_CookedConditionalTimeout  = false;
         if ($_CookedShortcodeField.length) {
             $_CookedShortcodeField.on('click',function(e) {
                 $(this).select();
-            });
-        }
-
-        // Calculate Related Recipes Button (Recipes > Tools)
-        if ($_CookedCalculateRelatedButton.length) {
-            $_CookedCalculateRelatedButton.on('click', function(e) {
-                e.preventDefault();
-                var thisButton = $(this),
-                    msg = cooked_functions_js_vars.i18n_confirm_calculate_related;
-
-                if (!confirm(msg) || thisButton.hasClass('disabled')) { return; }
-
-                thisButton.addClass('disabled').attr('disabled', true);
-                thisButton.hide();
-
-                // Get related recipes IDs
-                $.post(cooked_functions_js_vars.ajax_url, { action: 'cooked_get_related_recipes_ids' }, function(data) {
-                    var response;
-                    try {
-                        response = typeof data === 'string' ? JSON.parse(data) : data;
-                    } catch (e) {
-                        thisButton.removeClass('disabled').attr('disabled', false).show();
-                        return;
-                    }
-                    var ids = (response && response.ids) ? response.ids : [];
-                    var total = (response && typeof response.total === 'number') ? response.total : 0;
-
-                    if (total === 0 || ids.length === 0) {
-                        thisButton.removeClass('disabled').attr('disabled', false).show();
-                        return;
-                    }
-                    var progress = $('#cooked-related-progress'),
-                        progress_bar = progress.find('.cooked-progress-bar'),
-                        progress_text = $('#cooked-related-progress-text');
-                    progress.addClass('cooked-active');
-                    progress_text.addClass('cooked-active');
-                    progress_bar.css('width', '0%');
-                    progress_text.text('0 / ' + total);
-                    cooked_calculate_related_recipes(ids, total, 0);
-                }).fail(function() {
-                    thisButton.removeClass('disabled').attr('disabled', false).show();
-                });
             });
         }
 
@@ -740,79 +697,6 @@ var $_CookedConditionalTimeout  = false;
 })( jQuery );
 
 var cooked_recipe_update_counter = 0;
-
-function cooked_calculate_related_recipes(recipe_ids, total_recipes, processed_count) {
-    processed_count = processed_count || 0;
-
-    if (total_recipes <= 0 || !recipe_ids || recipe_ids.length === 0) {
-        jQuery('#cooked-related-progress').hide();
-        jQuery('#cooked-related-progress-text').hide();
-        jQuery('.recipe-setting-block.calculate_related_button').find('h3').hide();
-        jQuery('.recipe-setting-block.calculate_related_button').find('p:nth-child(2)').hide();
-        jQuery('#cooked-related-completed').addClass('cooked-active').show();
-        return;
-    }
-    var progress = jQuery('#cooked-related-progress'),
-        progress_bar = progress.find('.cooked-progress-bar'),
-        progress_text = jQuery('#cooked-related-progress-text');
-
-    if (!progress.hasClass('cooked-active')) {
-        progress.addClass('cooked-active');
-        progress_text.addClass('cooked-active');
-    }
-
-    jQuery.post(
-        cooked_functions_js_vars.ajax_url,
-        {
-            action: 'cooked_calculate_related_recipes',
-            recipe_ids: JSON.stringify(recipe_ids),
-            total_recipes: total_recipes,
-            processed_count: processed_count
-        },
-        function(response) {
-            var newProcessedCount = processed_count + 1;
-            var doneMeta = null;
-            var leftover = [];
-
-            // Backend returns either: { complete: true, count, date_formatted } or an array of remaining IDs (possibly as JSON string).
-            if (response && typeof response === 'object' && response.complete === true) {
-                doneMeta = { count: response.count, date_formatted: response.date_formatted };
-            } else {
-                try {
-                    leftover = Array.isArray(response) ? response : JSON.parse(response);
-                } catch (e) {}
-            }
-
-            var done = newProcessedCount;
-            var pct = total_recipes > 0 ? Math.min(100, Math.round((done / total_recipes) * 100)) : 100;
-            if (pct < 2) { pct = 2; }
-            progress_bar.css('width', pct + '%');
-            progress_text.text(done + ' / ' + total_recipes);
-
-            if (!Array.isArray(leftover) || leftover.length === 0) {
-                progress.hide();
-                progress_text.hide();
-                jQuery('.recipe-setting-block.calculate_related_button').find('h3').hide();
-                jQuery('.recipe-setting-block.calculate_related_button').find('p:nth-child(2)').hide();
-                $_CookedCalculateRelatedButton.hide();
-                jQuery('#cooked-related-completed').addClass('cooked-active').show();
-                if (doneMeta && doneMeta.date_formatted != null && doneMeta.count != null) {
-                    var tpl = cooked_functions_js_vars.i18n_last_calculated;
-                    var msg = tpl.replace(/%1\$s/g, doneMeta.date_formatted).replace(/%2\$s/g, String(doneMeta.count));
-                    jQuery('#cooked-related-last-done').text(msg).show();
-                }
-            } else {
-                cooked_calculate_related_recipes(leftover, total_recipes, newProcessedCount);
-            }
-        }
-    ).fail(function() {
-        progress.removeClass('cooked-active').hide();
-        progress_text.removeClass('cooked-active').hide();
-        jQuery('.recipe-setting-block.calculate_related_button').find('h3').show();
-        jQuery('.recipe-setting-block.calculate_related_button').find('p:nth-child(2)').show();
-        $_CookedCalculateRelatedButton.removeClass('disabled').attr('disabled', false).show();
-    });
-}
 
 function cooked_set_default_template(recipe_ids, total_recipes, content, nonce, instance) {
     var temp_counter = 0,

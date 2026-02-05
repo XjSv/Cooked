@@ -182,7 +182,6 @@ class Cooked_Recipes {
         // Include the Post ID
         $recipe_settings['id'] = $post_id;
 
-        // You're welcome developers!
         $recipe_settings = apply_filters( 'cooked_single_recipe_settings', $recipe_settings, $post_id );
 
         return $recipe_settings;

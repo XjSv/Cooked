@@ -165,6 +165,9 @@ class Cooked_Updates {
                 'fix_recipe_line_endings',
                 'update_rewrite_rules'
             ],
+            '1.13.0' => [
+                'purge_legacy_related_recipes_cache',
+            ],
         ]);
     }
 
@@ -247,6 +250,22 @@ class Cooked_Updates {
         if ( $updated_count > 0 ) {
             error_log( sprintf( 'Cooked: Fixed line endings in %d recipes for WordPress exporter/importer compatibility.', $updated_count ) );
         }
+    }
+
+    /**
+     * Purge legacy related-recipes transients and options (cache and pre-calculation data).
+     * One-time cleanup when moving to on-demand related recipes with no cache.
+     *
+     * @since 1.12.0
+     */
+    private static function purge_legacy_related_recipes_cache() {
+        global $wpdb;
+
+        $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_cooked_related_%' OR option_name LIKE '_transient_timeout_cooked_related_%'" );
+        delete_option( 'cooked_related_version' );
+        delete_option( 'cooked_related_calculation_last' );
+
+        error_log( 'Cooked: Purged legacy related-recipes cache and options.' );
     }
 
     /**

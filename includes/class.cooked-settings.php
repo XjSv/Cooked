@@ -607,25 +607,6 @@ class Cooked_Settings {
         }
     }
 
-    public static function field_calculate_related_button( $field_name, $title ) {
-        $last = get_option( 'cooked_related_calculation_last', [] );
-        $last_ts   = isset( $last['time'] ) ? (int) $last['time'] : 0;
-        $last_count = isset( $last['count'] ) ? (int) $last['count'] : -1;
-        $last_text = '';
-        if ( $last_ts && $last_count >= 0 ) {
-            $date = date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $last_ts );
-            $last_text = sprintf( __( 'Last: %1$s · %2$s recipes', 'cooked' ), $date, number_format_i18n( $last_count ) );
-        }
-        echo '<p id="cooked-related-last-done" class="cooked-related-status"' . ( $last_text ? '' : ' style="display:none;"' ) . '>' . esc_html( $last_text ) . '</p>';
-        echo '<p>';
-        echo '<input id="cooked-calculate-related-button" type="button" class="button-secondary" value="' . esc_attr__( 'Calculate Related Recipes', 'cooked' ) . '">';
-        echo '</p>';
-        echo '<p>';
-        echo '<span id="cooked-related-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-related-progress-text" class="cooked-progress-text">0 / 0</span>';
-        echo '</p>';
-        echo '<p id="cooked-related-completed" class="cooked-related-status" style="display:none;"><strong>' . esc_html__( 'Done.', 'cooked' ) . '</strong> ' . esc_html__( 'Related recipes cached.', 'cooked' ) . '</p>';
-    }
-
     public static function field_text($field_name, $placeholder) {
         global $_cooked_settings;
 

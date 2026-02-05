@@ -62,7 +62,6 @@ class Cooked_Admin_Enqueues {
             'post.php',
             'edit.php',
             'cooked_settings',
-            'cooked_tools',
             'cooked_import',
             'cooked_welcome',
             'cooked_pending',

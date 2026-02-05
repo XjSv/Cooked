@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 4.7
-Tested up to: 6.9
-Stable tag: 1.12.0
+Tested up to: 6.9.1
+Stable tag: 1.13.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -80,16 +80,17 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.12.0 includes the ability to add ingredients substitutions.
+Version 1.13.0 includes changes to the [cooked-related-recipes] shortcode.
 
 == Changelog ==
 
-Version 1.13.0 includes CSV import functionality, allowing you to bulk import recipes from CSV files. This makes it easy to migrate recipes from other systems or import large recipe collections. The CSV import supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
+Version 1.13.0 includes CSV import functionality and changes to the [cooked-related-recipes] shortcode.
 
 == Changelog ==
 
 = 1.13.0 =
 * **NEW:** Added CSV import functionality for bulk importing recipes from CSV files. Supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
+* **TWEAK:** Simplified the way the [cooked-related-recipes] shortcode works.
 
 = 1.12.0 =
 * **NEW:** Added the ability to add ingredients substitutions thanks to @mgiannopoulos24.

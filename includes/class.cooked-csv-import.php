@@ -4,7 +4,7 @@
  *
  * @package     Cooked
  * @subpackage  CSV Import
- * @since       1.0.0
+ * @since       1.13.0
 */
 
 // Exit if accessed directly
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * This class handles the import of recipes from CSV files.
  *
- * @since 1.0.0
+ * @since 1.13.0
  */
 class Cooked_CSV_Import {
 
@@ -33,22 +33,6 @@ class Cooked_CSV_Import {
             'errors' => [],
             'total' => 0
         ];
-
-        // Ensure required classes are loaded
-        if ( ! class_exists( 'Cooked_Recipes' ) ) {
-            $results['errors'][] = __( 'Cooked_Recipes class not found. Plugin may not be properly loaded.', 'cooked' );
-            return $results;
-        }
-
-        if ( ! class_exists( 'Cooked_Measurements' ) ) {
-            $results['errors'][] = __( 'Cooked_Measurements class not found. Plugin may not be properly loaded.', 'cooked' );
-            return $results;
-        }
-
-        if ( ! class_exists( 'Cooked_Recipe_Meta' ) ) {
-            $results['errors'][] = __( 'Cooked_Recipe_Meta class not found. Plugin may not be properly loaded.', 'cooked' );
-            return $results;
-        }
 
         if ( ! file_exists( $file_path ) ) {
             $results['errors'][] = __( 'CSV file not found.', 'cooked' );
@@ -198,16 +182,16 @@ class Cooked_CSV_Import {
             // When we see ||, it becomes two consecutive empty strings in the array
             $all_parts = array_map( 'trim', explode( '|', $data['ingredients'] ) );
             $i = 0;
-            
+
             while ( $i < count( $all_parts ) ) {
                 // Skip empty parts (they come from || separator)
                 if ( empty( $all_parts[ $i ] ) ) {
                     $i++;
                     continue;
                 }
-                
+
                 $part = $all_parts[ $i ];
-                
+
                 // Check if it's a section heading (starts with #)
                 if ( strpos( $part, '#' ) === 0 ) {
                     $recipe_meta['ingredients'][] = [
@@ -216,7 +200,7 @@ class Cooked_CSV_Import {
                     $i++;
                     continue;
                 }
-                
+
                 // Collect next 3 non-empty parts for an ingredient (amount|measurement|name)
                 $ingredient_parts = [];
                 $j = $i;
@@ -227,11 +211,11 @@ class Cooked_CSV_Import {
                     }
                     $j++;
                 }
-                
+
                 if ( count( $ingredient_parts ) >= 3 ) {
                     $ingredient = self::parse_ingredient_parts( $ingredient_parts, $measurements );
                     $i = $j; // Move past the collected parts
-                    
+
                     // Check if next parts are empty (indicating || separator for substitution)
                     // Look ahead to see if we have empty parts followed by non-empty parts
                     $next_empty_count = 0;
@@ -240,7 +224,7 @@ class Cooked_CSV_Import {
                         $next_empty_count++;
                         $k++;
                     }
-                    
+
                     // If we have empty parts (from ||) and then more parts, it's a substitution
                     if ( $next_empty_count > 0 && $k < count( $all_parts ) ) {
                         // Collect substitution parts (next 3 non-empty parts)
@@ -253,7 +237,7 @@ class Cooked_CSV_Import {
                             }
                             $sub_i++;
                         }
-                        
+
                             // Parse substitution
                             if ( count( $sub_parts ) >= 3 ) {
                                 $ingredient['sub_amount'] = sanitize_text_field( $sub_parts[0] );
@@ -269,10 +253,10 @@ class Cooked_CSV_Import {
                             } elseif ( count( $sub_parts ) == 1 ) {
                                 $ingredient['sub_name'] = sanitize_text_field( $sub_parts[0] );
                             }
-                        
+
                         $i = $sub_i; // Move past substitution
                     }
-                    
+
                     $recipe_meta['ingredients'][] = $ingredient;
                 } else {
                     // Not enough parts for a complete ingredient, skip
@@ -396,12 +380,12 @@ class Cooked_CSV_Import {
      */
     private static function match_measurement( $measurement_string, $measurements ) {
         $measurement_string = strtolower( trim( $measurement_string ) );
-        
+
         // First, check for exact key match
         if ( isset( $measurements[ $measurement_string ] ) ) {
             return $measurement_string;
         }
-        
+
         // Check variations, singular, and plural for each measurement
         foreach ( $measurements as $key => $measurement_data ) {
             // Check variations
@@ -412,28 +396,28 @@ class Cooked_CSV_Import {
                     }
                 }
             }
-            
+
             // Check singular
             if ( isset( $measurement_data['singular'] ) && strtolower( $measurement_data['singular'] ) === $measurement_string ) {
                 return $key;
             }
-            
+
             // Check plural
             if ( isset( $measurement_data['plural'] ) && strtolower( $measurement_data['plural'] ) === $measurement_string ) {
                 return $key;
             }
-            
+
             // Check singular abbreviation
             if ( isset( $measurement_data['singular_abbr'] ) && strtolower( $measurement_data['singular_abbr'] ) === $measurement_string ) {
                 return $key;
             }
-            
+
             // Check plural abbreviation
             if ( isset( $measurement_data['plural_abbr'] ) && strtolower( $measurement_data['plural_abbr'] ) === $measurement_string ) {
                 return $key;
             }
         }
-        
+
         return false;
     }
 

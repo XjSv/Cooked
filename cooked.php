@@ -6,7 +6,6 @@ Plugin URI: 	https://wordpress.org/plugins/cooked/
 Description: 	A recipe plugin for WordPress.
 Author:         Gora Tech
 Author URI: 	https://goratech.dev
-Version: 		1.12.0
 Version: 		1.13.0
 Text Domain: 	cooked
 Domain Path: 	languages

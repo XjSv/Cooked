@@ -418,12 +418,6 @@ class Cooked_Ajax {
             wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
         }
 
-        require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
-        require_once COOKED_DIR . 'includes/class.cooked-measurements.php';
-        require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
-
-        require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
-
         // Process the CSV file
         if (!class_exists('Cooked_CSV_Import')) {
             wp_send_json_error(['message' => __('CSV Import class could not be loaded.', 'cooked')]);

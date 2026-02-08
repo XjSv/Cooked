@@ -159,13 +159,12 @@ class Cooked_Import {
         $html_desc .= '<li><strong>ingredients</strong> - ' . __( 'Ingredients separated by pipe (|). Format: "amount|measurement|name" or "name" for simple ingredients. Add substitutions with double pipe (||): "amount|measurement|name||sub_amount|sub_measurement|sub_name"', 'cooked' ) . '</li>';
         $html_desc .= '<li><strong>directions</strong> - ' . __( 'Directions/instructions separated by pipe (|)', 'cooked' ) . '</li>';
         $html_desc .= '<li><strong>notes</strong> - ' . __( 'Recipe notes', 'cooked' ) . '</li>';
-            $html_desc .= '<li><strong>categories</strong> - ' . __( 'Categories separated by comma', 'cooked' ) . '</li>';
-            $html_desc .= '<li><strong>tags</strong> - ' . __( 'Tags separated by comma', 'cooked' ) . '</li>';
+            $html_desc .= '<li><strong>recipe_course</strong> - ' . __( 'Recipe course (category), separated by comma', 'cooked' ) . '</li>';
             if ( defined('COOKED_PRO_VERSION') ) {
-                $html_desc .= '<li><strong>cuisine</strong> - ' . __( 'Recipe cuisine', 'cooked' ) . '</li>';
-                $html_desc .= '<li><strong>cooking_method</strong> - ' . __( 'Cooking method', 'cooked' ) . '</li>';
+                $html_desc .= '<li><strong>recipe_cuisine</strong> - ' . __( 'Recipe cuisine, separated by comma', 'cooked' ) . '</li>';
+                $html_desc .= '<li><strong>recipe_cooking_method</strong> - ' . __( 'Cooking method, separated by comma', 'cooked' ) . '</li>';
                 $html_desc .= '<li><strong>recipe_tags</strong> - ' . __( 'Recipe tags, separated by comma', 'cooked' ) . '</li>';
-                $html_desc .= '<li><strong>diet</strong> - ' . __( 'Diet type', 'cooked' ) . '</li>';
+                $html_desc .= '<li><strong>recipe_dietary</strong> - ' . __( 'Diet type, separated by comma', 'cooked' ) . '</li>';
             }
             $html_desc .= '</ul>';
         $html_desc .= '<p class="cooked-import-note"><strong>' . __( 'Note:', 'cooked' ) . '</strong> ' . __( 'Recipes will be imported with the <b>\'Draft\'</b> status. After the import is complete, you can bulk edit the recipes and change their status to <b>\'Published\'</b>.', 'cooked' ) . '</p>';

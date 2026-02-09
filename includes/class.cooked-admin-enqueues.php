@@ -152,7 +152,7 @@ class Cooked_Admin_Enqueues {
                 ];
 
                 // Cooked Admin Style Assets
-                wp_register_script( 'cooked-functions', COOKED_URL . 'assets/admin/js/cooked-functions' . $min . '.js', ['jquery'], COOKED_VERSION, true );
+                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/admin/js/cooked-functions' . $min . '.js', ['jquery'], COOKED_VERSION, true );
                 wp_register_script( 'cooked-migration', COOKED_URL . 'assets/admin/js/cooked-migration' . $min . '.js', ['jquery'], COOKED_VERSION, true );
                 wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/admin/css/style' . $min . '.css', [], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
@@ -163,9 +163,9 @@ class Cooked_Admin_Enqueues {
                 wp_enqueue_style('cooked-tooltipster-theme', COOKED_URL . 'assets/admin/css/tooltipster/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-cooked' . $min . '.css', [], COOKED_VERSION, 'screen' );
 
                 // Cooked Admin Script
-                wp_localize_script('cooked-functions', 'cooked_functions_js_vars', $cooked_js_vars );
+                wp_localize_script('cooked-admin-functions', 'cooked_admin_functions_js_vars', $cooked_js_vars );
                 wp_localize_script('cooked-migration', 'cooked_migration_js_vars', $cooked_js_vars );
-                wp_enqueue_script('cooked-functions');
+                wp_enqueue_script('cooked-admin-functions');
                 wp_enqueue_script('cooked-migration');
             endif;
         }

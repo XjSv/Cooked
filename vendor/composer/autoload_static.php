@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInit67a35766b07094746ef209d583ffb1f5
 {
     public static $prefixLengthsPsr4 = array (
-        'N' => 
+        'N' =>
         array (
             'NXP\\' => 4,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'NXP\\' => 
+        'NXP\\' =>
         array (
             0 => __DIR__ . '/..' . '/nxp/math-executor/src/NXP',
         ),

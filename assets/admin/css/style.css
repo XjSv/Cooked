@@ -294,7 +294,7 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-name { width:100%; }
 #cooked-ingredients-builder .cooked-ingredient-block > div small.cooked-input-ex { display:block; padding:5px 0 0 2px; }
 #cooked-ingredients-builder .cooked-ingredient-block { margin:0; }
-#cooked-ingredients-builder .cooked-ingredient-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:5px; left:1px; }
+#cooked-ingredients-builder .cooked-ingredient-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:5px; left:1px; touch-action:none; }
 #cooked-ingredients-builder .cooked-ingredient-block:hover i.cooked-icon-drag { color:#888; }
 #cooked-ingredients-builder .cooked-ingredient-block.ui-sortable-helper { background:#f5f5f5; box-shadow:0 10px 20px rgba(0,0,0,0.15); -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; }
 #cooked-ingredients-builder .cooked-ingredient-block.ui-sortable-placeholder { visibility:visible !important; background:#eee; display:block; width:100%; height:43px; border-top:6px solid #fff; border-bottom:6px solid #fff; }
@@ -329,7 +329,7 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-content { width:100%; padding-left:120px; }
 #cooked-directions-builder .cooked-direction-block > .cooked-heading-name { width:100%; }
 #cooked-directions-builder .cooked-direction-block { margin:0; }
-#cooked-directions-builder .cooked-direction-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:13px; left:1px; }
+#cooked-directions-builder .cooked-direction-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:13px; left:1px; touch-action:none; }
 #cooked-directions-builder .cooked-direction-block.cooked-direction-heading i.cooked-icon-drag { top:5px; }
 #cooked-directions-builder .cooked-direction-block:hover i.cooked-icon-drag { color:#888; }
 #cooked-directions-builder .cooked-direction-block.ui-sortable-helper { background:#f5f5f5; box-shadow:0 10px 20px rgba(0,0,0,0.15); -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; }

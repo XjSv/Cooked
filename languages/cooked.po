@@ -2377,3 +2377,61 @@ msgstr ""
 #: includes/class.cooked-recipe-meta.php:1556
 msgid "Set to false to exclude a taxonomy from related recipes, e.g. match_cuisines=\"false\" to ignore cuisines."
 msgstr ""
+
+#: includes/class.cooked-cli.php:41
+msgid "Please provide a tool name. Use `wp cooked tools list` to see available tools."
+msgstr ""
+
+#: includes/class.cooked-cli.php:51
+msgid "Tool completed successfully."
+msgstr ""
+
+#: includes/class.cooked-cli.php:68
+msgid "No tools available."
+msgstr ""
+
+#: includes/class.cooked-updates.php:150
+msgid "Flush rewrite rules"
+msgstr ""
+
+#: includes/class.cooked-updates.php:151
+msgid "Refreshes permalink rules for recipe and profile URLs."
+msgstr ""
+
+#: includes/class.cooked-updates.php:154
+msgid "Fix recipe line endings"
+msgstr ""
+
+#: includes/class.cooked-updates.php:155
+msgid "Normalizes line endings in recipe content for exporter/importer compatibility."
+msgstr ""
+
+#: includes/class.cooked-updates.php:158
+msgid "Purge legacy related recipes cache"
+msgstr ""
+
+#: includes/class.cooked-updates.php:159
+msgid "Removes old transients and options from the previous related-recipes cache."
+msgstr ""
+
+#: includes/class.cooked-updates.php:162
+msgid "Remove recipes from user meta"
+msgstr ""
+
+#: includes/class.cooked-updates.php:163
+msgid "Removes the legacy \"recipes\" key from all users' cooked_user_meta."
+msgstr ""
+
+#: includes/class.cooked-updates.php:196
+msgid "Tool name is required."
+msgstr ""
+
+#: includes/class.cooked-updates.php:207
+#, php-format
+msgid "Unknown tool: %s."
+msgstr ""
+
+#: includes/class.cooked-updates.php:210
+#, php-format
+msgid "Tool method %s does not exist."
+msgstr ""

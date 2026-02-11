@@ -117,7 +117,15 @@ var cookedSortableTouchHandler = function(event) {
                     }
                 });
             } else {
-                $_CookedSortable.sortable();
+                $_CookedSortable.sortable({
+                    handle: '.cooked-icon-drag',
+                    stop: function(event, ui) {
+                        // Update direction step numbers when reordering directions
+                        if (ui.item.closest('#cooked-directions-builder').length) {
+                            cooked_reset_direction_builder();
+                        }
+                    }
+                });
             }
         }
 

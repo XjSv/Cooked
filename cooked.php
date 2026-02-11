@@ -484,6 +484,9 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-plugin-extra.php';
         require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
 
+        if ( defined( 'WP_CLI' ) && WP_CLI ) {
+            require_once COOKED_DIR . 'includes/class.cooked-cli.php';
+        }
     }
 
     /**

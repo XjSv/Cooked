@@ -30,6 +30,11 @@ td.column-featured_image { width:50px; text-align:center; }
 body.post-type-cp_recipe #titlediv #title { box-shadow:none; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; padding:0 12px; font-weight:400; font-size:19px; letter-spacing:0; height:44px; }
 body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#888; font-weight:400; letter-spacing:0; padding:12px 15px; }
 
+/* TinyMCE fullscreen above admin menu and Cooked sticky UI */
+body.post-type-cp_recipe .mce-fullscreen {
+  z-index: 100100 !important;
+}
+
 #cooked-settings-prewrap { display:flex; justify-content:center; }
 #cooked-settings-wrap {
   position: relative;
@@ -327,6 +332,10 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image img { width:100%; height:auto; display:block; margin:15px 0 0; }
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image .cooked-direction-img-placeholder { display:none; }
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-content { width:100%; padding-left:120px; }
+#cooked-directions-builder .cooked-direction-block .cooked-direction-number { opacity:0.4; position:absolute; display:inline-block; font-weight:800; top:17px; left:35px; font-size:1.25rem; line-height:1; }
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number > .cooked-direction-image { left: 65px; }
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number > .cooked-direction-content { padding-left:175px; }
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number-wide > .cooked-direction-content { padding-left:185px; }
 #cooked-directions-builder .cooked-direction-block > .cooked-heading-name { width:100%; }
 #cooked-directions-builder .cooked-direction-block { margin:0; }
 #cooked-directions-builder .cooked-direction-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:13px; left:1px; touch-action:none; }

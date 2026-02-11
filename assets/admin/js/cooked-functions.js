@@ -76,6 +76,11 @@ var cookedSortableTouchHandler = function(event) {
                 $_CookedSortable.sortable({
                     handle: '.cooked-icon-drag',
                     stop: function(event, ui) {
+                        // Update direction step numbers when reordering directions
+                        if (ui.item.closest('#cooked-directions-builder').length) {
+                            cooked_reset_direction_builder();
+                        }
+
                         let textarea = ui.item.find('textarea');
                         if (textarea.length) {
                             let textareaName = textarea.attr('name');
@@ -562,9 +567,10 @@ var cookedSortableTouchHandler = function(event) {
 
             $_CookedDirectionBuilder.parent().on('click', '.remove-image-button', function(e) {
                 e.preventDefault();
-                $(this).parent().removeClass('cooked-has-image');
-                $(this).parent().find('img').remove();
-                $(this).parent().find('input[data-direction-part="image"]').val('');
+                var $parent = $(this).parent();
+                $parent.removeClass('cooked-has-image');
+                $parent.find('img').attr('src', '').removeAttr('srcset').removeAttr('sizes');
+                $parent.find('input[data-direction-part="image"]').val('');
                 cooked_reset_direction_builder();
             });
 
@@ -578,8 +584,7 @@ var cookedSortableTouchHandler = function(event) {
             });
 
             // Runs when the image button is clicked.
-            $('body').on('click', '.direction-image-button',function(e) {
-
+            $('body').on('click', '.direction-image-button', function(e) {
                 var thisButton = $(this);
                 directionID = thisButton.data('id');
 
@@ -604,9 +609,14 @@ var cookedSortableTouchHandler = function(event) {
                     var media_attachment = direction_image_frame.state().get('selection').first().toJSON();
 
                     // Sends the attachment URL to our custom image input field.
-                    $('#direction-'+directionID+'-image-src').attr('src',media_attachment.sizes.thumbnail.url).parent().addClass('cooked-has-image');
-                    $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val( media_attachment.id );
-                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value', cooked_admin_functions_js_vars.i18n_image_change );
+                    // Remove srcset/sizes so the UI updates when an image was previously loaded (WP outputs srcset on edit).
+                    var $directionImg = $('#direction-' + directionID + '-image-src');
+                    $directionImg.attr('src', media_attachment.sizes.thumbnail.url)
+                        .removeAttr('srcset')
+                        .removeAttr('sizes')
+                        .parent().addClass('cooked-has-image');
+                    $('input[name="_recipe_settings[directions][' + directionID + '][image]"]').val( media_attachment.id );
+                    $('.direction-image-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_image_change );
                 });
 
                 // Opens the media library frame.
@@ -956,6 +966,20 @@ function cooked_reset_direction_builder() {
                 }
             }
         });
+    });
+
+    // Update step numbers for direction blocks (skip section headings).
+    var stepNum = 0;
+    jQuery('#cooked-directions-builder').find('.cooked-direction-block').each(function() {
+        var $_block = jQuery(this);
+        if ( !$_block.hasClass('cooked-direction-heading') ) {
+            stepNum++;
+            $_block.find('.cooked-direction-number').text(stepNum);
+            $_block.toggleClass('cooked-direction-has-number-wide', stepNum > 9);
+            $_block.addClass('cooked-direction-has-number');
+        } else {
+            $_block.removeClass('cooked-direction-has-number cooked-direction-has-number-wide');
+        }
     });
 
     if ( total_blocks ) {

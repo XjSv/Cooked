@@ -736,11 +736,11 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <?php if ( isset($recipe_settings['directions']) && !empty($recipe_settings['directions']) ): ?>
 
-                    <?php foreach ($recipe_settings['directions'] as $dir_key => $value): ?>
+                    <?php $direction_step = 0; foreach ($recipe_settings['directions'] as $dir_key => $value): ?>
 
                         <?php if ( !isset($value['section_heading_name']) ): ?>
 
-                            <?php if (isset($value['image']) && $value['image']) {
+                            <?php $direction_step++; if (isset($value['image']) && $value['image']) {
                                 $image_thumb = wp_get_attachment_image( $value['image'], 'thumbnail', false, [
                                     'class' => 'cooked-direction-img',
                                     'data-id' => esc_attr($dir_key),
@@ -751,8 +751,9 @@ function cooked_render_recipe_fields( $post_id ) {
                                 $image_thumb = false;
                             } ?>
 
-                            <div class="recipe-setting-block cooked-direction-block cooked-clearfix">
+                            <div class="recipe-setting-block cooked-direction-block cooked-clearfix cooked-direction-has-number<?php echo ( $direction_step > 9 ? ' cooked-direction-has-number-wide' : '' ); ?>">
                                 <i class="cooked-icon cooked-icon-drag"></i>
+                                <span class="cooked-direction-number"><?php echo (int) $direction_step; ?></span>
                                 <div class="cooked-direction-image<?php echo ( $image_thumb ? ' cooked-has-image' : '' ); ?>">
                                     <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][image]" id="direction-<?php echo esc_attr($dir_key); ?>-image" value="<?php if ( isset ( $value['image'] ) ) echo esc_attr( $value['image'] ); ?>" />
                                     <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr($dir_key); ?>" class="button direction-image-button" value="<?php echo ( $image_thumb ? __( 'Change Image', 'cooked' ) : __( 'Add Image', 'cooked' ) ); ?>" />
@@ -806,8 +807,9 @@ function cooked_render_recipe_fields( $post_id ) {
 
                     $random_key = wp_rand( 1000000, 9999999 ); ?>
 
-                    <div class="recipe-setting-block cooked-direction-block cooked-clearfix">
+                    <div class="recipe-setting-block cooked-direction-block cooked-clearfix cooked-direction-has-number">
                         <i class="cooked-icon cooked-icon-drag"></i>
+                        <span class="cooked-direction-number">1</span>
                         <div class="cooked-direction-image">
                             <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo $random_key; ?>][image]" id="direction-<?php echo $random_key; ?>-image" value="" />
                             <input data-direction-part="image_button" type="button" data-id="<?php echo $random_key; ?>" class="button direction-image-button" value="<?php _e( 'Add Image', 'cooked' ); ?>" />
@@ -848,6 +850,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 <!-- TEMPLATES -->
                 <div class="recipe-setting-block cooked-template cooked-direction-template cooked-clearfix">
                     <i class="cooked-icon cooked-icon-drag"></i>
+                    <span class="cooked-direction-number"></span>
                     <div class="cooked-direction-image">
                         <input data-direction-part="image" type="hidden" name="" value="" />
                         <input data-direction-part="image_button" data-id="" type="button" class="button direction-image-button" value="<?php _e( 'Add Image', 'cooked' )?>" />

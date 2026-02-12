@@ -1,9 +1,47 @@
 var $_CookedConditionalTimeout  = false;
 
+// Touch event support for sortable drag handles on mobile devices
+var cookedSortableTouchHandler = function(event) {
+    var target = event.target;
+
+    // Only handle touches on drag handles within cooked sortable containers
+    var dragHandle = target.closest('.cooked-icon-drag');
+    if (!dragHandle || !dragHandle.closest('.cooked-sortable')) {
+        return; // Let the event proceed normally (allows scrolling)
+    }
+
+    var touch = event.changedTouches[0];
+    var types = {
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    };
+
+    // Prevent default to stop page scrolling when dragging
+    event.preventDefault();
+
+    var simulatedEvent = new MouseEvent(types[event.type], {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        detail: 1,
+        screenX: touch.screenX,
+        screenY: touch.screenY,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        ctrlKey: false,
+        altKey: false,
+        shiftKey: false,
+        metaKey: false,
+        button: 0,
+        relatedTarget: null
+    });
+    touch.target.dispatchEvent(simulatedEvent);
+};
+
 (function( $ ) {
 
     $(document).ready(function() {
-
         var $_CookedColorPickers 			= $('.cooked-color-field'),
             $_CookedSelectFields 			= $('#cooked_recipe_settings').find('select'),
             $_CookedRecipeTabs 				= $('#cooked-recipe-tabs'),
@@ -30,44 +68,64 @@ var $_CookedConditionalTimeout  = false;
 
         // Cooked Sortables
         if ($_CookedSortable.length) {
-            if ($_CookedSortable.find('.cooked-icon-drag')) {
-                $_CookedSortable.sortable({
-                    stop: function(event, ui) {
-                        let textarea = ui.item.find('textarea');
-                        let textareaName = textarea.attr('name');
-                        let fieldID = textarea.attr('id');
+            document.addEventListener("touchstart", cookedSortableTouchHandler, { passive: false });
+            document.addEventListener("touchmove", cookedSortableTouchHandler, { passive: false });
+            document.addEventListener("touchend", cookedSortableTouchHandler, { passive: false });
 
-                        wp.editor.remove(fieldID);
-                        wp.editor.initialize(fieldID, {
-                            tinymce: {
-                                wpautop: false,
-                                toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,wp_link_advanced,unlink,fullscreen',
-                                toolbar2: '',
-                                toolbar3: '',
-                                toolbar4: '',
-                                height: 100,
-                                textarea_name: textareaName,
-                                plugins: 'link lists fullscreen wordpress wplink',
-                                setup: function(editor) {
-                                    // @TODO: Inline Link editor does not work.
-                                    // editor.on('init', function() {
-                                    //     if (typeof wpLink !== 'undefined') {
-                                    //         editor.addCommand('WP_Link', function() {
-                                    //             window.wpActiveEditor = editor.id;
-                                    //             wpLink.open(editor.id);
-                                    //             return false;
-                                    //         });
-                                    //     }
-                                    // });
-                                }
-                            },
-                            quicktags: true,
-                            mediaButtons: false
-                        });
+            if ($_CookedSortable.find('.cooked-icon-drag').length) {
+                $_CookedSortable.sortable({
+                    handle: '.cooked-icon-drag',
+                    stop: function(event, ui) {
+                        // Update direction step numbers when reordering directions
+                        if (ui.item.closest('#cooked-directions-builder').length) {
+                            cooked_reset_direction_builder();
+                        }
+
+                        let textarea = ui.item.find('textarea');
+                        if (textarea.length) {
+                            let textareaName = textarea.attr('name');
+                            let fieldID = textarea.attr('id');
+
+                            wp.editor.remove(fieldID);
+                            wp.editor.initialize(fieldID, {
+                                tinymce: {
+                                    wpautop: false,
+                                    toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,wp_link_advanced,unlink,fullscreen',
+                                    toolbar2: '',
+                                    toolbar3: '',
+                                    toolbar4: '',
+                                    height: 100,
+                                    textarea_name: textareaName,
+                                    plugins: 'link lists fullscreen wordpress wplink',
+                                    setup: function(editor) {
+                                        // @TODO: Inline Link editor does not work.
+                                        // editor.on('init', function() {
+                                        //     if (typeof wpLink !== 'undefined') {
+                                        //         editor.addCommand('WP_Link', function() {
+                                        //             window.wpActiveEditor = editor.id;
+                                        //             wpLink.open(editor.id);
+                                        //             return false;
+                                        //         });
+                                        //     }
+                                        // });
+                                    }
+                                },
+                                quicktags: true,
+                                mediaButtons: false
+                            });
+                        }
                     }
                 });
             } else {
-                $_CookedSortable.sortable();
+                $_CookedSortable.sortable({
+                    handle: '.cooked-icon-drag',
+                    stop: function(event, ui) {
+                        // Update direction step numbers when reordering directions
+                        if (ui.item.closest('#cooked-directions-builder').length) {
+                            cooked_reset_direction_builder();
+                        }
+                    }
+                });
             }
         }
 
@@ -90,7 +148,7 @@ var $_CookedConditionalTimeout  = false;
                             cooked_save_default_nonce = thisButton.data('nonce'),
                             cooked_save_default_bulk_nonce = thisButton.data('bulk-nonce'),
                             thisContainer = thisButton.parent(),
-                            confirm_save = confirm(cooked_functions_js_vars.i18n_confirm_save_default_all),
+                            confirm_save = confirm(cooked_admin_functions_js_vars.i18n_confirm_save_default_all),
                             recipe_editor_textarea = $( "#_recipe_settings_content" ),
                             recipe_editor = tinymce.get('_recipe_settings_content');
 
@@ -104,7 +162,7 @@ var $_CookedConditionalTimeout  = false;
                             thisContainer.find('.button, .button-primary').addClass('disabled');
 
                             var ajax__save_default_new = $.post(
-                                cooked_functions_js_vars.ajax_url,
+                                cooked_admin_functions_js_vars.ajax_url,
                                 {
                                     action: 'cooked_save_default',
                                     'default_content': recipe_editor_content,
@@ -112,7 +170,7 @@ var $_CookedConditionalTimeout  = false;
                                 },
                                 function(result) {
                                     var ajax__save_default_all = $.post(
-                                        cooked_functions_js_vars.ajax_url,
+                                        cooked_admin_functions_js_vars.ajax_url,
                                         {
                                             action: 'cooked_get_recipe_ids',
                                             nonce: cooked_save_default_bulk_nonce
@@ -152,14 +210,14 @@ var $_CookedConditionalTimeout  = false;
                         if (!thisButton.hasClass('disabled')) {
                             thisContainer.find('.button, .button-primary').addClass('disabled');
                             var ajax__save_default_new = $.post(
-                                cooked_functions_js_vars.ajax_url,
+                                cooked_admin_functions_js_vars.ajax_url,
                                 {
                                     action: 'cooked_save_default',
                                     'default_content': recipe_editor_content,
                                     nonce: nonce
                                 },
                                 function(result) {
-                                    thisButton.text( cooked_functions_js_vars.i18n_saved );
+                                    thisButton.text( cooked_admin_functions_js_vars.i18n_saved );
                                     thisContainer.find('.button-primary').removeClass('disabled');
                                 }
                             ).fail(function(result) {
@@ -175,14 +233,14 @@ var $_CookedConditionalTimeout  = false;
 
                 var thisButton = $(this),
                     thisContainer = thisButton.parent(),
-                    confirm_load = confirm( cooked_functions_js_vars.i18n_confirm_load_default ),
+                    confirm_load = confirm( cooked_admin_functions_js_vars.i18n_confirm_load_default ),
                     recipe_editor_textarea = $( "#_recipe_settings_content" ),
                     recipe_editor = tinymce.get('_recipe_settings_content');
 
                 if (confirm_load && !thisButton.hasClass('disabled')) {
                     thisContainer.find('.button, .button-primary').addClass('disabled');
                     var ajax__save_default_all = $.post(
-                        cooked_functions_js_vars.ajax_url,
+                        cooked_admin_functions_js_vars.ajax_url,
                         {
                             action: 'cooked_load_default'
                         },
@@ -517,9 +575,10 @@ var $_CookedConditionalTimeout  = false;
 
             $_CookedDirectionBuilder.parent().on('click', '.remove-image-button', function(e) {
                 e.preventDefault();
-                $(this).parent().removeClass('cooked-has-image');
-                $(this).parent().find('img').remove();
-                $(this).parent().find('input[data-direction-part="image"]').val('');
+                var $parent = $(this).parent();
+                $parent.removeClass('cooked-has-image');
+                $parent.find('img').attr('src', '').removeAttr('srcset').removeAttr('sizes');
+                $parent.find('input[data-direction-part="image"]').val('');
                 cooked_reset_direction_builder();
             });
 
@@ -533,8 +592,7 @@ var $_CookedConditionalTimeout  = false;
             });
 
             // Runs when the image button is clicked.
-            $('body').on('click', '.direction-image-button',function(e) {
-
+            $('body').on('click', '.direction-image-button', function(e) {
                 var thisButton = $(this);
                 directionID = thisButton.data('id');
 
@@ -548,8 +606,8 @@ var $_CookedConditionalTimeout  = false;
 
                 // Sets up the media library frame
                 direction_image_frame = wp.media.frames.direction_image_frame = wp.media({
-                    title: cooked_functions_js_vars.i18n_image_title,
-                    button: { text:  cooked_functions_js_vars.i18n_image_button },
+                    title: cooked_admin_functions_js_vars.i18n_image_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_image_button },
                     library: { type: 'image' }
                 });
 
@@ -559,9 +617,14 @@ var $_CookedConditionalTimeout  = false;
                     var media_attachment = direction_image_frame.state().get('selection').first().toJSON();
 
                     // Sends the attachment URL to our custom image input field.
-                    $('#direction-'+directionID+'-image-src').attr('src',media_attachment.sizes.thumbnail.url).parent().addClass('cooked-has-image');
-                    $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val( media_attachment.id );
-                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value', cooked_functions_js_vars.i18n_image_change );
+                    // Remove srcset/sizes so the UI updates when an image was previously loaded (WP outputs srcset on edit).
+                    var $directionImg = $('#direction-' + directionID + '-image-src');
+                    $directionImg.attr('src', media_attachment.sizes.thumbnail.url)
+                        .removeAttr('srcset')
+                        .removeAttr('sizes')
+                        .parent().addClass('cooked-has-image');
+                    $('input[name="_recipe_settings[directions][' + directionID + '][image]"]').val( media_attachment.id );
+                    $('.direction-image-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_image_change );
                 });
 
                 // Opens the media library frame.
@@ -587,8 +650,8 @@ var $_CookedConditionalTimeout  = false;
 
                 // Sets up the media library frame
                 gallery_images_frame = wp.media.frames.gallery_images_frame = wp.media({
-                    title: cooked_functions_js_vars.i18n_gallery_image_title,
-                    button: { text:  cooked_functions_js_vars.i18n_gallery_image_title },
+                    title: cooked_admin_functions_js_vars.i18n_gallery_image_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_gallery_image_title },
                     library: { type: 'image' },
                     multiple: true
                 });
@@ -627,8 +690,8 @@ var $_CookedConditionalTimeout  = false;
 
                 // Sets up the media library frame
                 var image_edit_frame = wp.media.frames.gallery_images_frame = wp.media({
-                    title: cooked_functions_js_vars.i18n_edit_image_title,
-                    button: { text:  cooked_functions_js_vars.i18n_edit_image_button },
+                    title: cooked_admin_functions_js_vars.i18n_edit_image_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_edit_image_button },
                     library: { type: 'image' },
                     multiple: false
                 });
@@ -668,7 +731,7 @@ var $_CookedConditionalTimeout  = false;
                 if ( directionID ) {
                     $('#direction-'+directionID+'-image-src').parent().removeClass('cooked-has-image').prop('src',false);
                        $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val('');
-                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value',cooked_functions_js_vars.i18n_image_title );
+                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value',cooked_admin_functions_js_vars.i18n_image_title );
                 } else {
                     thisButton.parent().remove();
                 }
@@ -716,7 +779,7 @@ function cooked_set_default_template(recipe_ids, total_recipes, content, nonce, 
         }
 
         var ajax__bulk_save_default_template = jQuery.post(
-            cooked_functions_js_vars.ajax_url,
+            cooked_admin_functions_js_vars.ajax_url,
             {
                 action: 'cooked_save_default_bulk',
                 recipe_ids: recipe_ids,
@@ -735,7 +798,7 @@ function cooked_set_default_template(recipe_ids, total_recipes, content, nonce, 
                     progress_text.text(cooked_recipe_update_counter + " / " + total_recipes);
                     cooked_set_default_template(new_recipe_ids, total_recipes, content, nonce, instance);
                 } else {
-                    jQuery('.cooked-save-default-all').text(cooked_functions_js_vars.i18n_applied);
+                    jQuery('.cooked-save-default-all').text(cooked_admin_functions_js_vars.i18n_applied);
                     progress_bar.css({ "width" : "100%" });
                     progress.removeClass('cooked-active');
                     progress_text.removeClass('cooked-active').text("");
@@ -880,7 +943,7 @@ function cooked_reset_direction_builder() {
                 var fieldID = 'direction-' + randomKeyForInterval + '-' + directionPartName;
                 thisField.attr('id', fieldID);
 
-                if (directionPartName === 'content' && thisField.is('textarea') && cooked_functions_js_vars.wp_editor_roles_allowed) {
+                if (directionPartName === 'content' && thisField.is('textarea') && cooked_admin_functions_js_vars.wp_editor_roles_allowed) {
                     // Init the WordPress Editor.
                     wp.editor.initialize(fieldID, {
                         tinymce: {
@@ -911,6 +974,20 @@ function cooked_reset_direction_builder() {
                 }
             }
         });
+    });
+
+    // Update step numbers for direction blocks (skip section headings).
+    var stepNum = 0;
+    jQuery('#cooked-directions-builder').find('.cooked-direction-block').each(function() {
+        var $_block = jQuery(this);
+        if ( !$_block.hasClass('cooked-direction-heading') ) {
+            stepNum++;
+            $_block.find('.cooked-direction-number').text(stepNum);
+            $_block.toggleClass('cooked-direction-has-number-wide', stepNum > 9);
+            $_block.addClass('cooked-direction-has-number');
+        } else {
+            $_block.removeClass('cooked-direction-has-number cooked-direction-has-number-wide');
+        }
     });
 
     if ( total_blocks ) {

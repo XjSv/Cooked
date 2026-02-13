@@ -322,10 +322,11 @@ class Cooked_CSV_Import {
         }
 
         // Handle taxonomies
-        if ( ! empty( $data['categories'] ) ) {
+        if ( ! empty( $data['categories'] ) && taxonomy_exists( 'cp_recipe_category' ) ) {
             $categories = array_map( 'trim', explode( ',', $data['categories'] ) );
             $category_ids = [];
             foreach ( $categories as $category_name ) {
+                $category_name = sanitize_text_field( $category_name );
                 if ( ! empty( $category_name ) ) {
                     $term = get_term_by( 'name', $category_name, 'cp_recipe_category' );
                     if ( ! $term ) {
@@ -343,24 +344,90 @@ class Cooked_CSV_Import {
             }
         }
 
-        if ( ! empty( $data['tags'] ) ) {
-            $tags = array_map( 'trim', explode( ',', $data['tags'] ) );
-            $tag_ids = [];
-            foreach ( $tags as $tag_name ) {
-                if ( ! empty( $tag_name ) ) {
-                    $term = get_term_by( 'name', $tag_name, 'cp_recipe_tags' );
-                    if ( ! $term ) {
-                        $term = wp_insert_term( $tag_name, 'cp_recipe_tags' );
-                        if ( ! is_wp_error( $term ) ) {
-                            $tag_ids[] = $term['term_id'];
+        if ( defined('COOKED_PRO_VERSION') ) {
+            if ( ! empty( $data['cuisine'] ) && taxonomy_exists( 'cp_recipe_cuisine' ) ) {
+                $cuisines = array_map( 'trim', explode( ',', $data['cuisine'] ) );
+                $cuisine_ids = [];
+                foreach ( $cuisines as $cuisine_name ) {
+                    $cuisine_name = sanitize_text_field( $cuisine_name );
+                    if ( ! empty( $cuisine_name ) ) {
+                        $term = get_term_by( 'name', $cuisine_name, 'cp_recipe_cuisine' );
+                        if ( ! $term ) {
+                            $term = wp_insert_term( $cuisine_name, 'cp_recipe_cuisine' );
+                            if ( ! is_wp_error( $term ) ) {
+                                $cuisine_ids[] = $term['term_id'];
+                            }
+                        } else {
+                            $cuisine_ids[] = $term->term_id;
                         }
-                    } else {
-                        $tag_ids[] = $term->term_id;
                     }
                 }
+                if ( ! empty( $cuisine_ids ) ) {
+                    wp_set_object_terms( $recipe_id, $cuisine_ids, 'cp_recipe_cuisine' );
+                }
             }
-            if ( ! empty( $tag_ids ) ) {
-                wp_set_object_terms( $recipe_id, $tag_ids, 'cp_recipe_tags' );
+
+            if ( ! empty( $data['cooking_method'] ) && taxonomy_exists( 'cp_recipe_cooking_method' ) ) {
+                $cooking_methods = array_map( 'trim', explode( ',', $data['cooking_method'] ) );
+                $cooking_method_ids = [];
+                foreach ( $cooking_methods as $cooking_method_name ) {
+                    $cooking_method_name = sanitize_text_field( $cooking_method_name );
+                    if ( ! empty( $cooking_method_name ) ) {
+                        $term = get_term_by( 'name', $cooking_method_name, 'cp_recipe_cooking_method' );
+                        if ( ! $term ) {
+                            $term = wp_insert_term( $cooking_method_name, 'cp_recipe_cooking_method' );
+                            if ( ! is_wp_error( $term ) ) {
+                                $cooking_method_ids[] = $term['term_id'];
+                            }
+                        } else {
+                            $cooking_method_ids[] = $term->term_id;
+                        }
+                    }
+                }
+                if ( ! empty( $cooking_method_ids ) ) {
+                    wp_set_object_terms( $recipe_id, $cooking_method_ids, 'cp_recipe_cooking_method' );
+                }
+            }
+
+            if ( ! empty( $data['diet'] ) && taxonomy_exists( 'cp_recipe_diet' ) ) {
+                $diets = array_map( 'trim', explode( ',', $data['diet'] ) );
+                $diet_ids = [];
+                foreach ( $diets as $diet_name ) {
+                    $diet_name = sanitize_text_field( $diet_name );
+                    if ( empty( $diet_name ) ) {
+                        continue;
+                    }
+                    // cp_recipe_diet is restricted to Schema.org RestrictedDiet values - only assign existing terms
+                    $term = get_term_by( 'name', $diet_name, 'cp_recipe_diet' );
+
+                    if ( $term ) {
+                        $diet_ids[] = $term->term_id;
+                    }
+                }
+                if ( ! empty( $diet_ids ) ) {
+                    wp_set_object_terms( $recipe_id, $diet_ids, 'cp_recipe_diet' );
+                }
+            }
+
+            if ( ! empty( $data['tags'] ) && taxonomy_exists( 'cp_recipe_tags' ) ) {
+                $tags = array_map( 'trim', explode( ',', $data['tags'] ) );
+                $tag_ids = [];
+                foreach ( $tags as $tag_name ) {
+                    if ( ! empty( $tag_name ) ) {
+                        $term = get_term_by( 'name', $tag_name, 'cp_recipe_tags' );
+                        if ( ! $term ) {
+                            $term = wp_insert_term( $tag_name, 'cp_recipe_tags' );
+                            if ( ! is_wp_error( $term ) ) {
+                                $tag_ids[] = $term['term_id'];
+                            }
+                        } else {
+                            $tag_ids[] = $term->term_id;
+                        }
+                    }
+                }
+                if ( ! empty( $tag_ids ) ) {
+                    wp_set_object_terms( $recipe_id, $tag_ids, 'cp_recipe_tags' );
+                }
             }
         }
 

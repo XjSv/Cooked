@@ -94,14 +94,12 @@
                 errorsDiv.hide().empty();
 
                 if (!file) {
-                    var errorMsg = (cooked_migration_js_vars.i18n_csv_no_file || 'Please select a CSV file.');
-                    errorsDiv.html('<p>' + errorMsg + '</p>').show();
+                    errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_csv_no_file + '</p>').show();
                     return;
                 }
 
                 if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
-                    var invalidFileMsg = (cooked_migration_js_vars.i18n_csv_invalid_file || 'Please select a valid CSV file.');
-                    errorsDiv.html('<p>' + invalidFileMsg + '</p>').show();
+                    errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_csv_invalid_file + '</p>').show();
                     return;
                 }
 
@@ -109,7 +107,7 @@
                     return;
                 }
 
-                var confirm_import = confirm(cooked_migration_js_vars.i18n_confirm_csv_import || cooked_migration_js_vars.i18n_confirm_import_recipes || 'Are you sure you want to import recipes from this CSV file?');
+                var confirm_import = confirm(cooked_migration_js_vars.i18n_confirm_csv_import);
                 if (!confirm_import) {
                     return;
                 }
@@ -126,7 +124,7 @@
                     $_CookedCSVImportProgress.addClass('cooked-active');
                     $_CookedCSVImportProgressText.addClass('cooked-active');
                     $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "0%" });
-                    $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_uploading || 'Uploading...');
+                    $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_uploading);
                 }
 
                 // Upload file
@@ -138,7 +136,7 @@
                     contentType: false,
                     success: function(response) {
                         if (response.success) {
-                            $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_processing || 'Processing...');
+                            $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_processing);
                             $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "50%" });
 
                             // Process CSV
@@ -151,13 +149,11 @@
                                 function(processResponse) {
                                     if (processResponse.success) {
                                         $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "100%" });
-                                        var recipesImportedText = cooked_migration_js_vars.i18n_recipes_imported || 'recipes imported';
-                                        $_CookedCSVImportProgressText.text(processResponse.data.success + ' / ' + processResponse.data.total + ' ' + recipesImportedText);
+                                        $_CookedCSVImportProgressText.text(processResponse.data.success + ' / ' + processResponse.data.total + ' ' + cooked_migration_js_vars.i18n_recipes_imported);
 
                                         // Show errors if any
                                         if (processResponse.data.errors && processResponse.data.errors.length > 0) {
-                                            var errorsLabel = cooked_migration_js_vars.i18n_errors || 'Errors:';
-                                            var errorHtml = '<p><strong>' + errorsLabel + '</strong></p><ul>';
+                                            var errorHtml = '<p><strong>' + cooked_migration_js_vars.i18n_errors + '</strong></p><ul>';
                                             processResponse.data.errors.forEach(function(error) {
                                                 errorHtml += '<li>' + error + '</li>';
                                             });
@@ -174,16 +170,7 @@
                                             fileInput.hide();
                                         }, 2000);
                                     } else {
-                                        var importFailedText = cooked_migration_js_vars.i18n_import_failed || 'Import failed.';
-                                        errorsDiv.html('<p>' + (processResponse.data.message || importFailedText) + '</p>').show();
-                                        if (processResponse.data.errors && processResponse.data.errors.length > 0) {
-                                            var errorHtml = '<ul>';
-                                            processResponse.data.errors.forEach(function(error) {
-                                                errorHtml += '<li>' + error + '</li>';
-                                            });
-                                            errorHtml += '</ul>';
-                                            errorsDiv.append(errorHtml);
-                                        }
+                                        errorsDiv.html('<p>' + (processResponse.data.message || cooked_migration_js_vars.i18n_import_failed) + '</p>').show();
                                         thisButton.removeClass('disabled').attr('disabled', false);
                                         fileInput.attr('disabled', false);
                                         $_CookedCSVImportProgress.removeClass('cooked-active');
@@ -192,16 +179,14 @@
                                 },
                                 'json'
                             ).fail(function() {
-                                var failedProcessText = cooked_migration_js_vars.i18n_failed_process_csv || 'Failed to process CSV file.';
-                                errorsDiv.html('<p>' + failedProcessText + '</p>').show();
+                                errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_failed_process_csv + '</p>').show();
                                 thisButton.removeClass('disabled').attr('disabled', false);
                                 fileInput.attr('disabled', false);
                                 $_CookedCSVImportProgress.removeClass('cooked-active');
                                 $_CookedCSVImportProgressText.removeClass('cooked-active');
                             });
                         } else {
-                            var fileUploadFailedText = cooked_migration_js_vars.i18n_file_upload_failed || 'File upload failed.';
-                            errorsDiv.html('<p>' + (response.data.message || fileUploadFailedText) + '</p>').show();
+                            errorsDiv.html('<p>' + (response.data.message || cooked_migration_js_vars.i18n_file_upload_failed) + '</p>').show();
                             thisButton.removeClass('disabled').attr('disabled', false);
                             fileInput.attr('disabled', false);
                             $_CookedCSVImportProgress.removeClass('cooked-active');
@@ -209,8 +194,7 @@
                         }
                     },
                     error: function() {
-                        var failedUploadText = cooked_migration_js_vars.i18n_failed_upload_csv || 'Failed to upload CSV file.';
-                        errorsDiv.html('<p>' + failedUploadText + '</p>').show();
+                        errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_failed_upload_csv + '</p>').show();
                         thisButton.removeClass('disabled').attr('disabled', false);
                         fileInput.attr('disabled', false);
                         $_CookedCSVImportProgress.removeClass('cooked-active');

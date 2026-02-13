@@ -386,7 +386,7 @@ class Cooked_Ajax {
         }
 
         // Use WordPress upload handler
-        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once ABSPATH . 'wp-admin/includes/file.php';
         $upload = wp_handle_upload($_FILES['csv_file'], ['test_form' => false]);
 
         if (isset($upload['error'])) {
@@ -419,10 +419,7 @@ class Cooked_Ajax {
         }
 
         // Process the CSV file
-        if (!class_exists('Cooked_CSV_Import')) {
-            wp_send_json_error(['message' => __('CSV Import class could not be loaded.', 'cooked')]);
-        }
-
+        require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
         $results = Cooked_CSV_Import::import_from_file($file_path);
 
         // Clean up

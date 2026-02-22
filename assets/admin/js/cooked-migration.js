@@ -71,7 +71,7 @@
 	                    			cooked_import_recipes(json_recipe_ids, total_recipes, import_type);
 	                    		}
 	                    	} else {
-                                console.log(cooked_migration_js_vars.i18n_something_wrong || 'Something went wrong');
+                                console.log(cooked_migration_js_vars.i18n_something_wrong);
                                 thisButton.addClass('disabled').attr('disabled', false);
             		            thisButton.show();
                             }
@@ -283,7 +283,7 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
                     formattedComplete.toLocaleString();
 
 					progress_percent = Math.round10( ( cooked_recipe_migrate_counter / total_recipes ) * 100, -1 );
-                    if ( progress_percent < 2 ){ progress_percent = 2; }
+                    if ( progress_percent < 2 ) { progress_percent = 2; }
 					progress_bar.css( { "width" : progress_percent + "%" } );
 
                     var remainingProgress = 100 - progress_percent;
@@ -291,15 +291,13 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
                     var estimatedHours, estimatedMinutes;
                     progressIterations += 1;
 
-                    if ( progress_percent < 100 && progress_percent > 3 && isFinite( estimatedCompletionTime ) ){
+                    if ( progress_percent < 100 && progress_percent > 3 && isFinite( estimatedCompletionTime ) ) {
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
-                        var hrsText = cooked_migration_js_vars.i18n_hrs || 'hrs';
-                        var minsText = cooked_migration_js_vars.i18n_mins || 'mins';
                         if ( estimatedHours >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + hrsText + ", " + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + cooked_migration_js_vars.i18n_hrs + ", " + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else if ( estimatedMinutes >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }
@@ -326,9 +324,7 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
 
 
 function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
-	var temp_counter = 0,
-		total_counter = 0,
-		progress_percent = 0;
+	var progress_percent = 0;
 
 	if (total_recipes > 0) {
 		var progress = jQuery( '#cooked-import-progress' );
@@ -379,12 +375,10 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
                     if ( progress_percent < 100 && progress_percent > 3 && isFinite( estimatedCompletionTime ) ) {
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
-                        var hrsText = cooked_migration_js_vars.i18n_hrs || 'hrs';
-                        var minsText = cooked_migration_js_vars.i18n_mins || 'mins';
-                        if ( estimatedHours >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + hrsText + ", " + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
-                        } else if ( estimatedMinutes >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + minsText + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                        if ( estimatedHours >= 1 ) {
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + cooked_migration_js_vars.i18n_hrs + ", " + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                        } else if ( estimatedMinutes >= 1 ) {
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }

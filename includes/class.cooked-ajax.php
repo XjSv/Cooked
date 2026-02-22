@@ -48,6 +48,11 @@ class Cooked_Ajax {
         // Import Recipes
         add_action( 'wp_ajax_cooked_import_recipes', [&$this, 'import_recipes']);
 
+        // CSV Import - Upload file
+        add_action( 'wp_ajax_cooked_upload_csv', [&$this, 'upload_csv']);
+
+        // CSV Import - Process file
+        add_action( 'wp_ajax_cooked_process_csv', [&$this, 'process_csv']);
     }
 
     public function get_migrate_ids() {
@@ -338,7 +343,7 @@ class Cooked_Ajax {
             $_cooked_settings['default_content'] = wp_kses_post( $_POST['default_content'] );
             update_option('cooked_settings', $_cooked_settings);
         } else {
-            echo 'No default content provided.';
+            echo __( 'No default content provided.', 'cooked' );
         }
 
         wp_die();
@@ -360,5 +365,84 @@ class Cooked_Ajax {
         echo wp_kses_post($default_content);
 
         wp_die();
+    }
+
+    /**
+     * Handle CSV file upload
+     */
+    public function upload_csv() {
+        if (!current_user_can('edit_cooked_recipes')) {
+            wp_send_json_error(['message' => __('You do not have permission to import recipes.', 'cooked')]);
+        }
+
+        if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+            wp_send_json_error(['message' => __('File upload failed.', 'cooked')]);
+        }
+
+        // Validate file type
+        $file_type = wp_check_filetype($_FILES['csv_file']['name']);
+        if ($file_type['ext'] !== 'csv') {
+            wp_send_json_error(['message' => __('Invalid file type. Please upload a CSV file.', 'cooked')]);
+        }
+
+        // Use WordPress upload handler
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        $upload = wp_handle_upload($_FILES['csv_file'], ['test_form' => false]);
+
+        if (isset($upload['error'])) {
+            wp_send_json_error(['message' => $upload['error']]);
+        }
+
+        // Store file path in transient for processing
+        $transient_key = 'cooked_csv_import_' . get_current_user_id() . '_' . time();
+        set_transient($transient_key, $upload['file'], 3600); // 1 hour
+
+        wp_send_json_success([
+            'transient_key' => $transient_key,
+            'file_path' => $upload['file']
+        ]);
+    }
+
+    /**
+     * Process CSV file and import recipes
+     */
+    public function process_csv() {
+        if (!current_user_can('edit_cooked_recipes')) {
+            wp_send_json_error(['message' => __('You do not have permission to import recipes.', 'cooked')]);
+        }
+
+        $transient_key = isset($_POST['transient_key']) ? sanitize_text_field($_POST['transient_key']) : '';
+        $file_path = get_transient($transient_key);
+
+        if (!$file_path || !file_exists($file_path)) {
+            wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
+        }
+
+        // Process the CSV file
+        require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
+        $results = Cooked_CSV_Import::import_from_file($file_path);
+
+        // Clean up
+        if (file_exists($file_path)) {
+            @unlink($file_path);
+        }
+        delete_transient($transient_key);
+
+        if ($results['success'] > 0) {
+            wp_send_json_success([
+                'message' => sprintf(
+                    __('Successfully imported %d recipe(s).', 'cooked'),
+                    $results['success']
+                ),
+                'success' => $results['success'],
+                'total' => $results['total'],
+                'errors' => $results['errors']
+            ]);
+        } else {
+            wp_send_json_error([
+                'message' => __('No recipes were imported.', 'cooked'),
+                'errors' => $results['errors']
+            ]);
+        }
     }
 }

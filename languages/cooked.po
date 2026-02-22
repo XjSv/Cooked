@@ -143,23 +143,25 @@ msgstr ""
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: includes/class.cooked-ajax.php:175
+#: includes/class.cooked-ajax.php:180
+#: includes/class.cooked-csv-import.php:307
 #: includes/class.cooked-functions.php:134
 #: includes/class.cooked-recipe-meta.php:176
 #: includes/class.cooked-recipe-meta.php:263
 #: includes/class.cooked-recipe-meta.php:1166
 #: includes/class.cooked-recipes.php:635
-#: templates/front/recipe.php:34
+#: includes/class.cooked-recipes.php:667
 msgid "Ingredients"
 msgstr ""
 
-#: includes/class.cooked-ajax.php:175
+#: includes/class.cooked-ajax.php:180
+#: includes/class.cooked-csv-import.php:307
 #: includes/class.cooked-functions.php:135
 #: includes/class.cooked-recipe-meta.php:176
 #: includes/class.cooked-recipe-meta.php:269
 #: includes/class.cooked-recipe-meta.php:1197
 #: includes/class.cooked-recipes.php:639
-#: templates/front/recipe.php:35
+#: includes/class.cooked-recipes.php:668
 msgid "Directions"
 msgstr ""
 
@@ -202,6 +204,7 @@ msgid "Images"
 msgstr ""
 
 #: includes/class.cooked-functions.php:136
+#: includes/class.cooked-import.php:161
 #: includes/class.cooked-recipe-meta.php:1381
 #: includes/class.cooked-recipes.php:642
 #: includes/class.cooked-settings.php:232
@@ -276,6 +279,7 @@ msgstr ""
 
 #: includes/class.cooked-import.php:63
 #: includes/class.cooked-import.php:118
+#: includes/class.cooked-import.php:170
 #: includes/class.cooked-migration.php:60
 msgid "Note:"
 msgstr ""
@@ -291,15 +295,16 @@ msgstr ""
 msgid "WP Delicious - Import"
 msgstr ""
 
-#: includes/class.cooked-import.php:152
+#: includes/class.cooked-import.php:185
 msgid "More Imports are Coming Soon..."
 msgstr ""
 
-#: includes/class.cooked-import.php:173
+#: includes/class.cooked-import.php:206
 msgid "Begin Import"
 msgstr ""
 
-#: includes/class.cooked-import.php:178
+#: includes/class.cooked-import.php:211
+#: includes/class.cooked-import.php:230
 #: includes/class.cooked-settings.php:605
 msgid "reload"
 msgstr ""
@@ -583,7 +588,7 @@ msgid "cans"
 msgstr ""
 
 #: includes/class.cooked-measurements.php:202
-#: includes/class.cooked-recipes.php:798
+#: includes/class.cooked-recipes.php:872
 #: includes/class.cooked-settings.php:236
 msgid "Servings"
 msgstr ""
@@ -1363,36 +1368,36 @@ msgstr ""
 msgid "All %s"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:650
+#: includes/class.cooked-recipes.php:724
 msgid "Beginner"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:651
+#: includes/class.cooked-recipes.php:725
 msgid "Intermediate"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:652
+#: includes/class.cooked-recipes.php:726
 msgid "Advanced"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:678
+#: includes/class.cooked-recipes.php:752
 msgid "Cooked Gallery"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:682
+#: includes/class.cooked-recipes.php:756
 msgid "Envira Gallery"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:686
+#: includes/class.cooked-recipes.php:760
 msgid "Soliloquy Slider"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:690
+#: includes/class.cooked-recipes.php:764
 msgid "Slider Revolution"
 msgstr ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:765
+#: includes/class.cooked-recipes.php:839
 #, php-format
 msgid "Quarter (%s Serving)"
 msgid_plural "Quarter (%s Servings)"
@@ -1400,7 +1405,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:768
+#: includes/class.cooked-recipes.php:842
 #, php-format
 msgid "Half (%s Serving)"
 msgid_plural "Half (%s Servings)"
@@ -1408,7 +1413,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:771
+#: includes/class.cooked-recipes.php:845
 #, php-format
 msgid "Default (%s Serving)"
 msgid_plural "Default (%s Servings)"
@@ -1416,25 +1421,25 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:774
+#: includes/class.cooked-recipes.php:848
 #, php-format
 msgid "Double (%s Servings)"
 msgstr ""
 
 #. translators: singular and plural quarter "serving" size
-#: includes/class.cooked-recipes.php:777
+#: includes/class.cooked-recipes.php:851
 #, php-format
 msgid "Triple (%s Servings)"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:791
+#: includes/class.cooked-recipes.php:865
 #: includes/class.cooked-shortcodes.php:448
 msgid "Yields"
 msgstr ""
 
 #. translators: singular and plural "serving" sizes
-#: includes/class.cooked-recipes.php:795
-#: includes/class.cooked-recipes.php:806
+#: includes/class.cooked-recipes.php:869
+#: includes/class.cooked-recipes.php:880
 #, php-format
 msgid "%s Serving"
 msgid_plural "%s Servings"
@@ -1442,51 +1447,51 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: singular and plural "steps"
-#: includes/class.cooked-recipes.php:961
+#: includes/class.cooked-recipes.php:1035
 #: includes/class.cooked-seo.php:83
 #, php-format
 msgid "Step %d"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1021
+#: includes/class.cooked-recipes.php:1095
 msgid "Browse"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1039
+#: includes/class.cooked-recipes.php:1113
 #: includes/class.cooked-settings.php:157
 msgid "No categories"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1042
+#: includes/class.cooked-recipes.php:1116
 #: includes/class.cooked-settings.php:204
 #: includes/class.cooked-taxonomies.php:38
 #: includes/class.cooked-taxonomies.php:48
 msgid "Categories"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1044
+#: includes/class.cooked-recipes.php:1118
 #: includes/class.cooked-taxonomies.php:41
 #: includes/widgets/recipe-categories.php:48
 msgid "All Categories"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1115
+#: includes/class.cooked-recipes.php:1189
 msgid "Find a recipe..."
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1130
+#: includes/class.cooked-recipes.php:1204
 msgid "Newest first"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1134
+#: includes/class.cooked-recipes.php:1208
 msgid "Oldest first"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1138
+#: includes/class.cooked-recipes.php:1212
 msgid "Alphabetical (A-Z)"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1142
+#: includes/class.cooked-recipes.php:1216
 msgid "Alphabetical (Z-A)"
 msgstr ""
 
@@ -2162,7 +2167,7 @@ msgstr ""
 msgid "h6"
 msgstr ""
 
-#: includes/class.cooked-recipes.php:1117
+#: includes/class.cooked-recipes.php:1191
 msgid "Search"
 msgstr ""
 
@@ -2229,8 +2234,8 @@ msgstr ""
 msgid "ex. Apple Sauce, Tofu, etc."
 msgstr ""
 
-#: includes/class.cooked-recipes.php:903
-#: includes/class.cooked-recipes.php:917
+#: includes/class.cooked-recipes.php:977
+#: includes/class.cooked-recipes.php:991
 msgid "or"
 msgstr ""
 
@@ -2434,4 +2439,211 @@ msgstr ""
 #: includes/class.cooked-updates.php:210
 #, php-format
 msgid "Tool method %s does not exist."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:151
+msgid "Are you sure you want to import recipes from this CSV file?"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:152
+msgid "Please select a CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:153
+msgid "Please select a valid CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:154
+msgid "Uploading..."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:155
+msgid "Processing..."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:156
+msgid "recipes imported"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:157
+msgid "Errors:"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:158
+msgid "Import failed."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:159
+msgid "Failed to process CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:160
+msgid "Failed to upload CSV file."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:161
+#: includes/class.cooked-ajax.php:379
+msgid "File upload failed."
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:162
+msgid "Something went wrong"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:163
+msgid "hrs"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:164
+msgid "mins"
+msgstr ""
+
+#: includes/class.cooked-admin-enqueues.php:165
+msgid "Pre-calculate related recipes for all published recipes? This may take a while on large sites."
+msgstr ""
+
+#. translators: 1: date and time, 2: number of recipes
+#: includes/class.cooked-admin-enqueues.php:167
+#, php-format
+msgid "Last: %1$s · %2$s recipes"
+msgstr ""
+
+#: includes/class.cooked-ajax.php:346
+msgid "No default content provided."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:375
+#: includes/class.cooked-ajax.php:411
+msgid "You do not have permission to import recipes."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:385
+msgid "Invalid file type. Please upload a CSV file."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:418
+msgid "CSV file not found. Please upload again."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:434
+#, php-format
+msgid "Successfully imported %d recipe(s)."
+msgstr ""
+
+#: includes/class.cooked-ajax.php:443
+msgid "No recipes were imported."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:38
+msgid "CSV file not found."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:45
+msgid "Could not open CSV file."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:52
+msgid "CSV file is empty or invalid."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:63
+msgid "CSV file must contain a \"title\" column."
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:90
+msgid "Unknown error"
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:91
+#: includes/class.cooked-csv-import.php:98
+#, php-format
+msgid "Row %d: %s"
+msgstr ""
+
+#: includes/class.cooked-csv-import.php:124
+msgid "Title is required"
+msgstr ""
+
+#: includes/class.cooked-import.php:152
+msgid "Import recipes from a CSV file. Your CSV file should include the following columns:"
+msgstr ""
+
+#: includes/class.cooked-import.php:154
+msgid "Recipe title (required)"
+msgstr ""
+
+#: includes/class.cooked-import.php:156
+msgid "Prep time in minutes"
+msgstr ""
+
+#: includes/class.cooked-import.php:157
+msgid "Cook time in minutes"
+msgstr ""
+
+#: includes/class.cooked-import.php:158
+msgid "Difficulty level (1=Beginner, 2=Intermediate, 3=Advanced)"
+msgstr ""
+
+#: includes/class.cooked-import.php:165
+msgid "Cooking method, separated by comma"
+msgstr ""
+
+#: includes/class.cooked-import.php:170
+msgid "Recipes will be imported with the <b>'Draft'</b> status. After the import is complete, you can bulk edit the recipes and change their status to <b>'Published'</b>."
+msgstr ""
+
+#: includes/class.cooked-import.php:173
+msgid "CSV Import"
+msgstr ""
+
+#: includes/class.cooked-import.php:177
+msgid "Import Recipes via CSV"
+msgstr ""
+
+#: includes/class.cooked-import.php:225
+msgid "Upload and Import CSV"
+msgstr ""
+
+#: includes/class.cooked-import.php:230
+msgid "Import Complete!"
+msgstr ""
+
+#: includes/class.cooked-import.php:230
+msgid "You can now"
+msgstr ""
+
+#: includes/class.cooked-import.php:230
+msgid "the import screen or"
+msgstr ""
+
+#: includes/class.cooked-import.php:230
+msgid "view your recipes"
+msgstr ""
+
+#: includes/class.cooked-import.php:155
+msgid "Excerpt/description"
+msgstr ""
+
+#: includes/class.cooked-import.php:159
+msgid "Ingredients, separated by pipe (|). Format: \"amount|measurement|name\" or \"name\" for simple ingredients. Add substitutions with double pipe (||): \"amount|measurement|name||sub_amount|sub_measurement|sub_name\""
+msgstr ""
+
+#: includes/class.cooked-import.php:160
+msgid "Directions/instructions, separated by pipe (|)"
+msgstr ""
+
+#: includes/class.cooked-import.php:162
+msgid "Category, separated by comma"
+msgstr ""
+
+#: includes/class.cooked-import.php:164
+msgid "Cuisine, separated by comma"
+msgstr ""
+
+#: includes/class.cooked-import.php:166
+msgid "Tags, separated by comma"
+msgstr ""
+
+#: includes/class.cooked-import.php:167
+msgid "Restricted diet type (Schema.org RestrictedDiet), separated by comma"
 msgstr ""

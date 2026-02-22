@@ -41,6 +41,8 @@ Most recipe plugins require that you purchase a PRO version for features like nu
 * Cooking times with clickable, interactive timers.
 * Very developer-friendly with loads of hooks & filters.
 * Servings switcher to adjust ingredient amounts.
+* Ingredient Substitutions - Add alternative ingredients for dietary restrictions or preferences.
+* CSV Import - Bulk import recipes from CSV files with support for ingredients, directions, substitutions, and more.
 * And more to come...
 
 Of course, if you want even more, you can always check out the [PRO](https://cooked.pro) version of Cooked. It adds features like ratings & favorites, recipe submissions, and so much more.
@@ -82,7 +84,12 @@ Version 1.13.0 includes changes to the [cooked-related-recipes] shortcode.
 
 == Changelog ==
 
+Version 1.13.0 includes CSV import functionality and changes to the [cooked-related-recipes] shortcode.
+
+== Changelog ==
+
 = 1.13.0 =
+* **NEW:** Added CSV import functionality for bulk importing recipes from CSV files. Supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
 * **TWEAK:** Simplified the way the [cooked-related-recipes] shortcode works.
 
 = 1.12.0 =

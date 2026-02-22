@@ -30,6 +30,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
+define( 'COOKED_DEV', false );
 define( 'COOKED_VERSION', '1.13.0' );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :

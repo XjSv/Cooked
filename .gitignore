@@ -9,3 +9,6 @@ tests/playwright-report/
 tests/blob-report/
 tests/playwright/.cache/
 tests/.auth/
+
+# Build 
+*.zip

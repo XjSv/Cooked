@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "build": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp build",
-    "watch": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp default"
+    "watch": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp default",
+    "start:env": "wp-env start",
+    "stop:env": "wp-env stop",
+    "destroy:env": "wp-env destroy",
+    "bundle": "bun run gulp build && bunx bestzip cooked.zip cooked.php includes/ views/ assets/ languages/ vendor/ templates/"
   },
   "runtimeExecutable": "npm",
   "windows": {
@@ -23,15 +27,17 @@
   },
   "homepage": "https://github.com/XjSv/Cooked#readme",
   "devDependencies": {
-    "@playwright/test": "^1.48.2",
-    "@types/node": "^20.17.10",
-    "@wordpress/e2e-test-utils-playwright": "^1.11.0",
-    "gulp": "^5.0.0",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^20.19.33",
+    "@wordpress/e2e-test-utils-playwright": "^1.40.0",
+    "gulp": "^5.0.1",
     "gulp-clean-css": "^4.3.0",
-    "gulp-rename": "^2.0.0",
+    "gulp-rename": "^2.1.0",
     "gulp-sass": "^5.1.0",
     "gulp-uglify": "^3.0.2",
-    "playwright": "^1.48.2",
-    "sass": "^1.75.0"
+    "playwright": "^1.58.2",
+    "sass": "^1.97.3",
+    "@wordpress/env": "^10.39.0",
+    "bestzip": "^2.2.1"
   }
 }

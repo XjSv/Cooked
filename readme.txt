@@ -91,6 +91,13 @@ Version 1.13.0 includes CSV import functionality and changes to the [cooked-rela
 = 1.13.0 =
 * **NEW:** Added CSV import functionality for bulk importing recipes from CSV files. Supports all recipe fields including ingredients with substitutions, directions, nutrition data, categories, and tags.
 * **TWEAK:** Simplified the way the [cooked-related-recipes] shortcode works.
+* **FIX:** Fixed a bug with the recipe directions and ingredients not being sortable in mobile devices.
+* **FIX:** Fixed a bug when toggling full screen view in recipe fields that use the WP Editor.
+* **FIX:** Fixed bug when changing image under recipe instructions steps where the image thumbnail was not updated with the replaced photo after clicking "Use this image".
+* **FIX:** Fixed styling issue in numbering with recipes with 10+ instructions steps.
+* **NEW:** Added recipe instruction steps counter in the editing view.
+* **FIX:** Fixed a bug with full screen mode not working inside Elementor.
+* **TWEAK:** Other minor improvements and bug fixes.
 
 = 1.12.0 =
 * **NEW:** Added the ability to add ingredients substitutions thanks to @mgiannopoulos24.

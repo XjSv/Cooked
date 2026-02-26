@@ -89,7 +89,15 @@ var cookedSortableTouchHandler = function(event) {
                         }
 
                         let textarea = ui.item.find('textarea');
-                        if (textarea.length) {
+                        var canUseWpEditor = !!(
+                            cooked_admin_functions_js_vars.wp_editor_roles_allowed &&
+                            typeof wp !== 'undefined' &&
+                            wp.editor &&
+                            typeof wp.editor.remove === 'function' &&
+                            typeof wp.editor.initialize === 'function'
+                        );
+
+                        if (textarea.length && canUseWpEditor) {
                             let textareaName = textarea.attr('name');
                             let fieldID = textarea.attr('id');
 
@@ -952,7 +960,14 @@ function cooked_reset_direction_builder() {
                 var fieldID = 'direction-' + randomKeyForInterval + '-' + directionPartName;
                 thisField.attr('id', fieldID);
 
-                if (directionPartName === 'content' && thisField.is('textarea') && cooked_admin_functions_js_vars.wp_editor_roles_allowed) {
+                var canInitializeWpEditor = !!(
+                    cooked_admin_functions_js_vars.wp_editor_roles_allowed &&
+                    typeof wp !== 'undefined' &&
+                    wp.editor &&
+                    typeof wp.editor.initialize === 'function'
+                );
+
+                if (directionPartName === 'content' && thisField.is('textarea') && canInitializeWpEditor) {
                     // Init the WordPress Editor.
                     wp.editor.initialize(fieldID, {
                         tinymce: {

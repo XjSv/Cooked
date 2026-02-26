@@ -3,6 +3,11 @@ var $_CookedConditionalTimeout  = false;
 // Touch event support for sortable drag handles on mobile devices
 var cookedSortableTouchHandler = function(event) {
     var target = event.target;
+    var types = {
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    };
 
     // Only handle touches on drag handles within cooked sortable containers
     var dragHandle = target.closest('.cooked-icon-drag');
@@ -10,12 +15,11 @@ var cookedSortableTouchHandler = function(event) {
         return; // Let the event proceed normally (allows scrolling)
     }
 
+    if (!event.changedTouches || !event.changedTouches.length || !types[event.type]) {
+        return;
+    }
+
     var touch = event.changedTouches[0];
-    var types = {
-        touchstart: "mousedown",
-        touchmove: "mousemove",
-        touchend: "mouseup"
-    };
 
     // Prevent default to stop page scrolling when dragging
     event.preventDefault();
@@ -75,6 +79,9 @@ var cookedSortableTouchHandler = function(event) {
             if ($_CookedSortable.find('.cooked-icon-drag').length) {
                 $_CookedSortable.sortable({
                     handle: '.cooked-icon-drag',
+                    // scroll: true,
+                    // scrollSensitivity: 80,
+                    // scrollSpeed: 30,
                     stop: function(event, ui) {
                         // Update direction step numbers when reordering directions
                         if (ui.item.closest('#cooked-directions-builder').length) {
@@ -118,6 +125,9 @@ var cookedSortableTouchHandler = function(event) {
                 });
             } else {
                 $_CookedSortable.sortable({
+                    // scroll: true,
+                    // scrollSensitivity: 80,
+                    // scrollSpeed: 30,
                     stop: function(event, ui) {
                         // Update direction step numbers when reordering directions
                         if (ui.item.closest('#cooked-directions-builder').length) {

@@ -6,9 +6,13 @@
   "scripts": {
     "build": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp build",
     "watch": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp default",
-    "start:env": "wp-env start",
-    "stop:env": "wp-env stop",
-    "destroy:env": "wp-env destroy",
+    "start:wp-env": "wp-env start",
+    "stop:wp-env": "wp-env stop",
+    "destroy:wp-env": "wp-env destroy",
+    "start:ddev": "ddev start",
+    "stop:ddev": "ddev stop",
+    "destroy:ddev": "ddev delete -O",
+    "init:ddev": "ddev config",
     "bundle": "bun run gulp build && bunx bestzip cooked.zip cooked.php includes/ views/ assets/ languages/ vendor/ templates/"
   },
   "runtimeExecutable": "npm",

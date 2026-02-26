@@ -213,12 +213,19 @@ body .cooked-post-featured-image img {
 .cooked-recipe-directions
     .cooked-direction.cooked-direction-has-number
     .cooked-dir-content {
-    padding-left: 2rem;
+    padding-left: 2.75rem;
 }
 .cooked-recipe-directions
     .cooked-direction.cooked-direction-has-number-wide
     .cooked-dir-content {
     padding-left: 2.75rem;
+}
+.cooked-recipe-directions
+    .cooked-direction.cooked-direction-has-number-wide
+    .cooked-direction-number {
+    width: 2ch;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
 }
 .cooked-recipe-directions .cooked-direction-number {
     opacity: 0.35;
@@ -1717,7 +1724,7 @@ body .cooked-pagination-numbered > a:hover {
     .cooked-recipe-directions
     .cooked-direction.cooked-direction-has-number
     .cooked-dir-content {
-    padding-left: 2.3rem;
+    padding-left: 3.05rem;
 }
 .cooked-fsm
     .cooked-recipe-directions

@@ -586,7 +586,24 @@ var cookedSortableTouchHandler = function(event) {
 
             $_CookedDirectionBuilder.parent().on('click', '.cooked-delete-direction', function(e) {
                 e.preventDefault();
-                $(this).parent().remove();
+                var directionBlock = $(this).parent();
+                var canRemoveWpEditor = !!(
+                    cooked_admin_functions_js_vars.wp_editor_roles_allowed &&
+                    typeof wp !== 'undefined' &&
+                    wp.editor &&
+                    typeof wp.editor.remove === 'function'
+                );
+
+                if (canRemoveWpEditor) {
+                    var directionTextarea = directionBlock.find('textarea[data-direction-part="content"]');
+                    var fieldID = directionTextarea.attr('id');
+
+                    if (fieldID) {
+                        wp.editor.remove(fieldID);
+                    }
+                }
+
+                directionBlock.remove();
                 cooked_reset_direction_builder();
             });
 

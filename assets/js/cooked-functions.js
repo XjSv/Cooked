@@ -47,20 +47,19 @@ var cooked_loading = false;
         if ( $_Cooked_Ingredient_Boxes.length ) {
 
             init_cooked_ingredients($_Cooked_Ingredient_Boxes);
+        }
 
-            function init_cooked_ingredients( Cooked_Ingredient_Boxes ){
-                Cooked_Ingredient_Boxes.on( 'click',function(e){
-                    var thisCheckbox = $(this);
-                    if ( thisCheckbox.hasClass( 'cooked-checked' ) ){
-                        thisCheckbox.parent().removeClass( 'cooked-checked' );
-                        thisCheckbox.removeClass( 'cooked-checked' );
-                    } else {
-                        thisCheckbox.parent().addClass( 'cooked-checked' );
-                        thisCheckbox.addClass( 'cooked-checked' );
-                    }
-                });
-            }
-
+        function init_cooked_ingredients( Cooked_Ingredient_Boxes ){
+            Cooked_Ingredient_Boxes.on( 'click',function(e){
+                var thisCheckbox = $(this);
+                if ( thisCheckbox.hasClass( 'cooked-checked' ) ){
+                    thisCheckbox.parent().removeClass( 'cooked-checked' );
+                    thisCheckbox.removeClass( 'cooked-checked' );
+                } else {
+                    thisCheckbox.parent().addClass( 'cooked-checked' );
+                    thisCheckbox.addClass( 'cooked-checked' );
+                }
+            });
         }
 
         /****   4. Servings Switcher   ****/

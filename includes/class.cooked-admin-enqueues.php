@@ -148,6 +148,20 @@ class Cooked_Admin_Enqueues {
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes' => sprintf(__('Please confirm that you are ready to migrate all %s recipes.', 'cooked'), number_format($total_old_recipes)),
                     'i18n_confirm_import_recipes' => __('Please confirm that you are ready to import all recipes.', 'cooked'),
+                    'i18n_confirm_csv_import' => __('Are you sure you want to import recipes from this CSV file?', 'cooked'),
+                    'i18n_csv_no_file' => __('Please select a CSV file.', 'cooked'),
+                    'i18n_csv_invalid_file' => __('Please select a valid CSV file.', 'cooked'),
+                    'i18n_uploading' => __('Uploading...', 'cooked'),
+                    'i18n_processing' => __('Processing...', 'cooked'),
+                    'i18n_recipes_imported' => __('recipes imported', 'cooked'),
+                    'i18n_errors' => __('Errors:', 'cooked'),
+                    'i18n_import_failed' => __('Import failed.', 'cooked'),
+                    'i18n_failed_process_csv' => __('Failed to process CSV file.', 'cooked'),
+                    'i18n_failed_upload_csv' => __('Failed to upload CSV file.', 'cooked'),
+                    'i18n_file_upload_failed' => __('File upload failed.', 'cooked'),
+                    'i18n_something_wrong' => __('Something went wrong', 'cooked'),
+                    'i18n_hrs' => __('hrs', 'cooked'),
+                    'i18n_mins' => __('mins', 'cooked'),
                     'i18n_confirm_calculate_related' => __('Pre-calculate related recipes for all published recipes? This may take a while on large sites.', 'cooked'),
                     /* translators: 1: date and time, 2: number of recipes */
                     'i18n_last_calculated' => __( 'Last: %1$s · %2$s recipes', 'cooked' ),
@@ -155,7 +169,7 @@ class Cooked_Admin_Enqueues {
                 ];
 
                 // Cooked Admin Style Assets
-                wp_register_script( 'cooked-functions', COOKED_URL . 'assets/admin/js/cooked-functions' . $min . '.js', ['jquery'], COOKED_VERSION, true );
+                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/admin/js/cooked-functions' . $min . '.js', ['jquery'], COOKED_VERSION, true );
                 wp_register_script( 'cooked-migration', COOKED_URL . 'assets/admin/js/cooked-migration' . $min . '.js', ['jquery'], COOKED_VERSION, true );
                 wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/admin/css/style' . $min . '.css', [], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
@@ -166,9 +180,9 @@ class Cooked_Admin_Enqueues {
                 wp_enqueue_style('cooked-tooltipster-theme', COOKED_URL . 'assets/admin/css/tooltipster/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-cooked' . $min . '.css', [], COOKED_VERSION, 'screen' );
 
                 // Cooked Admin Script
-                wp_localize_script('cooked-functions', 'cooked_functions_js_vars', $cooked_js_vars );
+                wp_localize_script('cooked-admin-functions', 'cooked_admin_functions_js_vars', $cooked_js_vars );
                 wp_localize_script('cooked-migration', 'cooked_migration_js_vars', $cooked_js_vars );
-                wp_enqueue_script('cooked-functions');
+                wp_enqueue_script('cooked-admin-functions');
                 wp_enqueue_script('cooked-migration');
             endif;
         }

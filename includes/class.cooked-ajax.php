@@ -48,10 +48,11 @@ class Cooked_Ajax {
         // Import Recipes
         add_action( 'wp_ajax_cooked_import_recipes', [&$this, 'import_recipes']);
 
-        // Related Recipes: get IDs for pre-calculation
-        add_action( 'wp_ajax_cooked_get_related_recipes_ids', [ &$this, 'get_related_recipes_ids' ] );
-        // Related Recipes: calculate for one recipe per request
-        add_action( 'wp_ajax_cooked_calculate_related_recipes', [ &$this, 'calculate_related_recipes' ] );
+        // CSV Import - Upload file
+        add_action( 'wp_ajax_cooked_upload_csv', [&$this, 'upload_csv']);
+
+        // CSV Import - Process file
+        add_action( 'wp_ajax_cooked_process_csv', [&$this, 'process_csv']);
     }
 
     public function get_migrate_ids() {
@@ -264,179 +265,6 @@ class Cooked_Ajax {
         wp_die();
     }
 
-    /**
-     * Return all published recipe IDs for the Related Recipes pre-calculation tool.
-     * Returns count and first batch to avoid memory issues with large sites.
-     */
-    public function get_related_recipes_ids() {
-        if ( ! current_user_can( 'edit_cooked_recipes' ) ) {
-            wp_die();
-        }
-
-        // Get total count first (lightweight query)
-        $count_args = [
-            'post_type'      => 'cp_recipe',
-            'post_status'    => 'publish',
-            'fields'         => 'ids',
-            'posts_per_page' => 1,
-        ];
-        $count_query = new \WP_Query( $count_args );
-        $total = (int) $count_query->found_posts;
-        wp_reset_postdata();
-
-        if ( $total === 0 ) {
-            wp_send_json( [ 'total' => 0, 'ids' => [] ] );
-            return;
-        }
-
-        // For very large sites, return first batch and let calculate_related_recipes fetch more server-side
-        // This avoids sending 100,000+ IDs in a single AJAX response
-        $batch_size = apply_filters( 'cooked_related_recipes_ids_batch_size', 1000 );
-        
-        $args = [
-            'post_type'      => 'cp_recipe',
-            'post_status'    => 'publish',
-            'fields'         => 'ids',
-            'posts_per_page' => min( $batch_size, $total ),
-            'orderby'        => 'ID',
-            'order'          => 'ASC',
-        ];
-        
-        $query = new \WP_Query( $args );
-        $ids = ! empty( $query->posts ) ? $query->posts : [];
-        wp_reset_postdata();
-
-        wp_send_json( [
-            'total' => $total,
-            'ids'   => $ids,
-            'offset' => count( $ids ),
-        ] );
-    }
-
-    /**
-     * Process one recipe for Related Recipes pre-calculation; returns remaining IDs.
-     * Fetches more IDs server-side when running low to avoid sending all IDs at once.
-     */
-    public function calculate_related_recipes() {
-        if ( ! current_user_can( 'edit_cooked_recipes' ) ) {
-            wp_die();
-        }
-
-        $total_recipes = isset( $_POST['total_recipes'] ) ? (int) $_POST['total_recipes'] : 0;
-        $processed_count = isset( $_POST['processed_count'] ) ? (int) $_POST['processed_count'] : 0;
-
-        if ( ! isset( $_POST['recipe_ids'] ) ) {
-            // No IDs provided, try to fetch first batch
-            $recipe_ids = $this->get_next_batch_of_recipe_ids( 0 );
-        } else {
-           	$recipe_ids = json_decode( stripslashes( (string) $_POST['recipe_ids'] ), true );
-           	if ( ! is_array( $recipe_ids ) ) {
-                $recipe_ids = [];
-            }
-        }
-
-        // If we're running low on IDs and there are more to fetch, get next batch
-        if ( count( $recipe_ids ) < 10 && $processed_count < $total_recipes ) {
-            $next_batch = $this->get_next_batch_of_recipe_ids( $processed_count );
-            $recipe_ids = array_merge( $recipe_ids, $next_batch );
-        }
-
-       	if ( empty( $recipe_ids ) ) {
-           	$ts = current_time( 'timestamp' );
-           	if ( $total_recipes > 0 ) {
-           		update_option( 'cooked_related_calculation_last', [
-           			'time'  => $ts,
-           			'count' => $total_recipes,
-           		] );
-           	}
-           	wp_send_json( [
-           		'complete'       => true,
-           		'count'          => $total_recipes,
-           		'date_formatted' => date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $ts ),
-           	] );
-           	return;
-       	}
-
-       	$sanitized = [];
-       	foreach ( $recipe_ids as $id ) {
-           	$id = (int) $id;
-           	if ( $id > 0 ) {
-               	$sanitized[] = $id;
-           	}
-       	}
-       	$recipe_ids = $sanitized;
-
-       	$current = array_shift( $recipe_ids );
-       	if ( $current ) {
-           	Cooked_Related_Recipes::prime_cache_for_recipe( $current );
-           	$processed_count++;
-       	}
-
-       	if ( ! empty( $recipe_ids ) ) {
-           	echo wp_json_encode( $recipe_ids );
-       	} else {
-           	// No more IDs in current batch, check if there are more to fetch
-           	if ( $processed_count < $total_recipes ) {
-               	// Fetch next batch
-               	$next_batch = $this->get_next_batch_of_recipe_ids( $processed_count );
-               	if ( ! empty( $next_batch ) ) {
-                   	echo wp_json_encode( $next_batch );
-               	} else {
-                   	// Truly done
-                   	$ts = current_time( 'timestamp' );
-                   	update_option( 'cooked_related_calculation_last', [
-                   		'time'  => $ts,
-                   		'count' => $total_recipes,
-                   	] );
-                   	wp_send_json( [
-                   		'complete'       => true,
-                   		'count'          => $total_recipes,
-                   		'date_formatted' => date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $ts ),
-                   	] );
-               	}
-           	} else {
-               	// All done
-               	$ts = current_time( 'timestamp' );
-               	update_option( 'cooked_related_calculation_last', [
-               		'time'  => $ts,
-               		'count' => $total_recipes,
-               	] );
-               	wp_send_json( [
-               		'complete'       => true,
-               		'count'          => $total_recipes,
-               		'date_formatted' => date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), $ts ),
-               	] );
-           	}
-       	}
-       	wp_die();
-    }
-
-    /**
-     * Get next batch of recipe IDs for processing.
-     *
-     * @param int $offset Number of recipes already processed.
-     * @return array Array of recipe IDs.
-     */
-    private function get_next_batch_of_recipe_ids( $offset = 0 ) {
-        $batch_size = apply_filters( 'cooked_related_recipes_ids_batch_size', 1000 );
-        
-        $args = [
-            'post_type'      => 'cp_recipe',
-            'post_status'    => 'publish',
-            'fields'         => 'ids',
-            'posts_per_page' => $batch_size,
-            'offset'         => $offset,
-            'orderby'        => 'ID',
-            'order'          => 'ASC',
-        ];
-        
-        $query = new \WP_Query( $args );
-        $ids = ! empty( $query->posts ) ? $query->posts : [];
-        wp_reset_postdata();
-        
-        return $ids;
-    }
-
     public function get_recipe_ids() {
         if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default_bulk') || !current_user_can('edit_cooked_default_template')) {
             wp_die();
@@ -515,7 +343,7 @@ class Cooked_Ajax {
             $_cooked_settings['default_content'] = wp_kses_post( $_POST['default_content'] );
             update_option('cooked_settings', $_cooked_settings);
         } else {
-            echo 'No default content provided.';
+            echo __( 'No default content provided.', 'cooked' );
         }
 
         wp_die();
@@ -537,5 +365,84 @@ class Cooked_Ajax {
         echo wp_kses_post($default_content);
 
         wp_die();
+    }
+
+    /**
+     * Handle CSV file upload
+     */
+    public function upload_csv() {
+        if (!current_user_can('edit_cooked_recipes')) {
+            wp_send_json_error(['message' => __('You do not have permission to import recipes.', 'cooked')]);
+        }
+
+        if (!isset($_FILES['csv_file']) || $_FILES['csv_file']['error'] !== UPLOAD_ERR_OK) {
+            wp_send_json_error(['message' => __('File upload failed.', 'cooked')]);
+        }
+
+        // Validate file type
+        $file_type = wp_check_filetype($_FILES['csv_file']['name']);
+        if ($file_type['ext'] !== 'csv') {
+            wp_send_json_error(['message' => __('Invalid file type. Please upload a CSV file.', 'cooked')]);
+        }
+
+        // Use WordPress upload handler
+        require_once ABSPATH . 'wp-admin/includes/file.php';
+        $upload = wp_handle_upload($_FILES['csv_file'], ['test_form' => false]);
+
+        if (isset($upload['error'])) {
+            wp_send_json_error(['message' => $upload['error']]);
+        }
+
+        // Store file path in transient for processing
+        $transient_key = 'cooked_csv_import_' . get_current_user_id() . '_' . time();
+        set_transient($transient_key, $upload['file'], 3600); // 1 hour
+
+        wp_send_json_success([
+            'transient_key' => $transient_key,
+            'file_path' => $upload['file']
+        ]);
+    }
+
+    /**
+     * Process CSV file and import recipes
+     */
+    public function process_csv() {
+        if (!current_user_can('edit_cooked_recipes')) {
+            wp_send_json_error(['message' => __('You do not have permission to import recipes.', 'cooked')]);
+        }
+
+        $transient_key = isset($_POST['transient_key']) ? sanitize_text_field($_POST['transient_key']) : '';
+        $file_path = get_transient($transient_key);
+
+        if (!$file_path || !file_exists($file_path)) {
+            wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
+        }
+
+        // Process the CSV file
+        require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
+        $results = Cooked_CSV_Import::import_from_file($file_path);
+
+        // Clean up
+        if (file_exists($file_path)) {
+            @unlink($file_path);
+        }
+        delete_transient($transient_key);
+
+        if ($results['success'] > 0) {
+            wp_send_json_success([
+                'message' => sprintf(
+                    __('Successfully imported %d recipe(s).', 'cooked'),
+                    $results['success']
+                ),
+                'success' => $results['success'],
+                'total' => $results['total'],
+                'errors' => $results['errors']
+            ]);
+        } else {
+            wp_send_json_error([
+                'message' => __('No recipes were imported.', 'cooked'),
+                'errors' => $results['errors']
+            ]);
+        }
     }
 }

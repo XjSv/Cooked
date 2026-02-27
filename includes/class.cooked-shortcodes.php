@@ -1086,7 +1086,8 @@ class Cooked_Shortcodes {
     /**
      * Related Recipes Shortcode
      *
-     * Displays related recipes based on keywords, cuisines, ingredients, categories, and other factors.
+     * Displays related recipes based on shared terms in any recipe taxonomy (categories,
+     * cuisines, cooking methods, tags, diets), random order. No scoring, ingredients, or cache.
      *
      * @param array $atts Shortcode attributes
      * @param string $content Shortcode content
@@ -1110,7 +1111,7 @@ class Cooked_Shortcodes {
                 $recipe_id = (int) $atts['id'];
             } else {
                 // Invalid ID provided (e.g., "asdas", "", "0", "-5")
-                return '<p class="cooked-related-recipes-error">' . esc_html__('Invalid recipe ID specified. Please provide a valid numeric recipe ID.', 'cooked') . '</p>';
+                return '<p class="cooked-related-recipes-error">' . __('Invalid recipe ID specified. Please provide a valid numeric recipe ID.', 'cooked') . '</p>';
             }
         } else {
             // No ID provided, try to get from current post
@@ -1120,7 +1121,7 @@ class Cooked_Shortcodes {
         }
 
         if (!$recipe_id) {
-            return '<p class="cooked-related-recipes-error">' . esc_html__('No recipe found. Please specify a recipe ID using the id attribute, or use this shortcode on a recipe page.', 'cooked') . '</p>';
+            return '<p class="cooked-related-recipes-error">' . __('No recipe found. Please specify a recipe ID using the id attribute, or use this shortcode on a recipe page.', 'cooked') . '</p>';
         }
 
         // Get the source recipe (allow any status to support drafts/pending)
@@ -1138,8 +1139,7 @@ class Cooked_Shortcodes {
             return '<p class="cooked-related-recipes-error">' . esc_html($error_msg) . '</p>';
         }
 
-        // Find related recipes (uses transient cache; pre-calc via Settings > Related Recipes)
-        // Limit is applied inside get_related_recipes() based on $atts['limit']
+        // Find related recipes (on-demand query: taxonomies OR + orderby rand, no cache)
         $related_recipes = Cooked_Related_Recipes::get_related_recipes( $recipe_id, $atts );
 
         if (empty($related_recipes)) {
@@ -1150,7 +1150,7 @@ class Cooked_Shortcodes {
             } else {
                 $empty_msg .= ' ' . __('Try adjusting the matching criteria or ensure you have other published recipes with shared categories, tags, or ingredients.', 'cooked');
             }
-            return '<p class="cooked-related-recipes-empty">' . esc_html($empty_msg) . '</p>';
+            return '<p class="cooked-related-recipes-empty">' . $empty_msg . '</p>';
         }
 
         // Get recipe IDs for display and filter out deleted/invalid recipes
@@ -1163,7 +1163,7 @@ class Cooked_Shortcodes {
          * @since 1.12.0
          *
          * @param array $recipe_ids     Array of recipe IDs to display.
-         * @param array $related_recipes Full related recipes array with scores.
+         * @param array $related_recipes Full related recipes array (each item has 'id').
          * @param int   $recipe_id      Source recipe ID.
          * @param array $atts           Shortcode attributes.
          */

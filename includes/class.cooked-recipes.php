@@ -182,7 +182,6 @@ class Cooked_Recipes {
         // Include the Post ID
         $recipe_settings['id'] = $post_id;
 
-        // You're welcome developers!
         $recipe_settings = apply_filters( 'cooked_single_recipe_settings', $recipe_settings, $post_id );
 
         return $recipe_settings;
@@ -644,6 +643,80 @@ class Cooked_Recipes {
                 </div>
             </div>
         ' );
+    }
+
+    /**
+     * Returns the fullscreen modal (FSM) markup for a recipe.
+     * Used by the recipe template and by the Elementor filter when appending FSM.
+     *
+     * @param int   $recipe_id Recipe post ID.
+     * @param array $settings  Recipe settings (from get_settings() or global $recipe_settings).
+     * @return string FSM HTML block.
+     */
+    public static function get_fsm_markup( $recipe_id, array $settings ) {
+        $recipe_id = intval( $recipe_id );
+        if ( ! $recipe_id || empty( $settings['title'] ) ) {
+            return '';
+        }
+        global $recipe_settings;
+        $recipe_settings = $settings;
+        $markup  = '<div id="cooked-fsm-' . $recipe_id . '" class="cooked-fsm" data-recipe-id="' . $recipe_id . '">';
+        $markup .= do_shortcode( self::fsm_content() );
+        $markup .= '<div class="cooked-fsm-top">' . esc_html( $settings['title'] ) . '<a href="#" class="cooked-close-fsm"><i class="cooked-icon cooked-icon-close"></i></a></div>';
+        $markup .= '<div class="cooked-fsm-mobile-nav">';
+        $markup .= '<a href="#ingredients" data-nav-id="ingredients" class="cooked-fsm-nav-ingredients cooked-active">' . __( 'Ingredients', 'cooked' ) . '</a>';
+        $markup .= '<a href="#directions" data-nav-id="directions" class="cooked-fsm-nav-directions">' . __( 'Directions', 'cooked' ) . '</a>';
+        $markup .= '</div>';
+        $markup .= '</div>';
+        return $markup;
+    }
+
+    /**
+     * Checks whether the recipe content includes the fullscreen option in a [cooked-info] shortcode.
+     * Looks at left, right, and include attributes.
+     *
+     * @param int    $recipe_id Recipe post ID.
+     * @param string $content   Raw recipe layout content (shortcodes).
+     * @return bool True if fullscreen is present in at least one [cooked-info] shortcode.
+     */
+    public static function recipe_has_fullscreen( $recipe_id, $content ) {
+        $recipe_id = intval( $recipe_id );
+        if ( ! $recipe_id ) {
+            return false;
+        }
+        if ( empty( $content ) || strpos( $content, 'cooked-info' ) === false ) {
+            return false;
+        }
+        $regex = get_shortcode_regex( [ 'cooked-info' ] );
+        if ( ! preg_match_all( '/' . $regex . '/s', $content, $matches, PREG_SET_ORDER ) ) {
+            return false;
+        }
+        $check_values = function ( $attr_string ) {
+            if ( empty( $attr_string ) ) {
+                return false;
+            }
+            $atts = shortcode_parse_atts( $attr_string );
+            if ( ! is_array( $atts ) ) {
+                return false;
+            }
+            foreach ( [ 'left', 'right', 'include' ] as $key ) {
+                if ( empty( $atts[ $key ] ) ) {
+                    continue;
+                }
+                $parts = array_map( 'trim', explode( ',', $atts[ $key ] ) );
+                if ( in_array( 'fullscreen', $parts, true ) ) {
+                    return true;
+                }
+            }
+            return false;
+        };
+        foreach ( $matches as $m ) {
+            $attr_string = isset( $m[3] ) ? $m[3] : '';
+            if ( $check_values( $attr_string ) ) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static function difficulty_levels() {
@@ -1181,7 +1254,9 @@ class Cooked_Recipes {
             // load_template( COOKED_DIR . 'templates/front/recipe.php', false );
 
             $recipe_content = ob_get_clean();
-            return shortcode_unautop( apply_filters( 'cooked_recipe_content_filter', $recipe_content, $content, $post->ID ) );
+            global $cooked_recipe_layout_content;
+            $layout_content = isset( $cooked_recipe_layout_content ) ? $cooked_recipe_layout_content : null;
+            return shortcode_unautop( apply_filters( 'cooked_recipe_content_filter', $recipe_content, $content, $post->ID, $layout_content ) );
 
         endif;
 

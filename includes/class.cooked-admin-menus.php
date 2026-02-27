@@ -93,7 +93,7 @@ class Cooked_Admin_Menus {
         include COOKED_DIR . 'templates/admin/settings.php';
     }
 
-    // Settings Panel
+    // Import Page
     public function cooked_import_page() {
         if (!current_user_can('edit_cooked_settings')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'cooked'));

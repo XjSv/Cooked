@@ -25,8 +25,9 @@ body p { font-size:1rem; line-height:1.6; margin:0 0 1rem; padding:0; }
 .cooked-recipe-directions .cooked-heading { margin:0 0 1rem; display:block; font-weight:600; font-size:1.25rem; line-height:1.5; }
 .cooked-recipe-directions .cooked-direction { position:relative; padding:0; margin:0; font-size:inherit; }
 .cooked-recipe-directions .cooked-direction img { max-width:100%; height:auto; display:block; margin:0 0 2rem; padding:0; border:none; }
-.cooked-recipe-directions .cooked-direction.cooked-direction-has-number .cooked-dir-content { padding-left:2rem; }
+.cooked-recipe-directions .cooked-direction.cooked-direction-has-number .cooked-dir-content { padding-left:2.75rem; }
 .cooked-recipe-directions .cooked-direction.cooked-direction-has-number-wide .cooked-dir-content { padding-left:2.75rem; }
+.cooked-recipe-directions .cooked-direction.cooked-direction-has-number-wide .cooked-direction-number { width:2ch; text-align:right; font-variant-numeric: tabular-nums; }
 .cooked-recipe-directions .cooked-direction-number { opacity:0.35; position:absolute; display:inline-block; width:auto; height:1rem; line-height:1rem; font-weight:800; top:0; left:0; font-size:1.5rem; }
 .cooked-recipe-notes {
 	display:block; padding:0; margin:0 0 2rem;

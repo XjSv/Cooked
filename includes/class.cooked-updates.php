@@ -140,6 +140,85 @@ class Cooked_Updates {
     }
 
     /**
+     * Get list of tools that can be run on demand (for Tools page and WP-CLI).
+     *
+     * @return array[] List of tools: [ 'id' => method_name, 'name' => label, 'description' => desc ]
+     */
+    public static function get_runnable_tools() {
+        $labels = [
+            'update_rewrite_rules' => [
+                'name'        => __( 'Flush rewrite rules', 'cooked' ),
+                'description' => __( 'Refreshes permalink rules for recipe and profile URLs.', 'cooked' ),
+            ],
+            'fix_recipe_line_endings' => [
+                'name'        => __( 'Fix recipe line endings', 'cooked' ),
+                'description' => __( 'Normalizes line endings in recipe content for exporter/importer compatibility.', 'cooked' ),
+            ],
+            'purge_legacy_related_recipes_cache' => [
+                'name'        => __( 'Purge legacy related recipes cache', 'cooked' ),
+                'description' => __( 'Removes old transients and options from the previous related-recipes cache.', 'cooked' ),
+            ],
+            'remove_recipes_from_cooked_user_meta' => [
+                'name'        => __( 'Remove recipes from user meta', 'cooked' ),
+                'description' => __( 'Removes the legacy "recipes" key from all users\' cooked_user_meta.', 'cooked' ),
+            ],
+        ];
+
+        $updates = self::get_version_updates();
+        $method_names = [];
+        foreach ( $updates as $methods ) {
+            foreach ( $methods as $method ) {
+                $method_names[ $method ] = true;
+            }
+        }
+        $method_names = array_keys( $method_names );
+
+        $tools = [];
+        foreach ( $method_names as $method ) {
+            $tools[] = [
+                'id'          => $method,
+                'name'        => isset( $labels[ $method ]['name'] ) ? $labels[ $method ]['name'] : $method,
+                'description' => isset( $labels[ $method ]['description'] ) ? $labels[ $method ]['description'] : '',
+            ];
+        }
+        return $tools;
+    }
+
+    /**
+     * Run a single migration/tool by name (on demand). Used by Tools page and WP-CLI.
+     *
+     * @param string $tool_name Method name (must exist in get_version_updates).
+     * @return true|WP_Error True on success, WP_Error on failure.
+     */
+    public static function run_tool( $tool_name ) {
+        $tool_name = is_string( $tool_name ) ? trim( $tool_name ) : '';
+        if ( $tool_name === '' ) {
+            return new \WP_Error( 'cooked_tool_empty', __( 'Tool name is required.', 'cooked' ) );
+        }
+
+        $updates = self::get_version_updates();
+        $allowed = [];
+        foreach ( $updates as $methods ) {
+            foreach ( $methods as $method ) {
+                $allowed[ $method ] = true;
+            }
+        }
+        if ( ! isset( $allowed[ $tool_name ] ) ) {
+            return new \WP_Error( 'cooked_tool_invalid', sprintf( __( 'Unknown tool: %s.', 'cooked' ), $tool_name ) );
+        }
+        if ( ! method_exists( __CLASS__, $tool_name ) ) {
+            return new \WP_Error( 'cooked_tool_missing', sprintf( __( 'Tool method %s does not exist.', 'cooked' ), $tool_name ) );
+        }
+
+        try {
+            call_user_func( [ __CLASS__, $tool_name ] );
+            return true;
+        } catch ( \Exception $e ) {
+            return new \WP_Error( 'cooked_tool_error', $e->getMessage() );
+        }
+    }
+
+    /**
      * Define version-specific updates
      *
      * @return array Array of version updates with their corresponding methods
@@ -164,6 +243,10 @@ class Cooked_Updates {
             '1.11.2' => [
                 'fix_recipe_line_endings',
                 'update_rewrite_rules'
+            ],
+            '1.13.0' => [
+                'purge_legacy_related_recipes_cache',
+                'remove_recipes_from_cooked_user_meta',
             ],
         ]);
     }
@@ -246,6 +329,57 @@ class Cooked_Updates {
         // Log the update if any recipes were modified
         if ( $updated_count > 0 ) {
             error_log( sprintf( 'Cooked: Fixed line endings in %d recipes for WordPress exporter/importer compatibility.', $updated_count ) );
+        }
+    }
+
+    /**
+     * Purge legacy related-recipes transients and options (cache and pre-calculation data).
+     * One-time cleanup when moving to on-demand related recipes with no cache.
+     *
+     * @since 1.13.0
+     */
+    private static function purge_legacy_related_recipes_cache() {
+        global $wpdb;
+
+        $wpdb->query( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_cooked_related_%' OR option_name LIKE '_transient_timeout_cooked_related_%'" );
+        delete_option( 'cooked_related_version' );
+        delete_option( 'cooked_related_calculation_last' );
+
+        error_log( 'Cooked: Purged legacy related-recipes cache and options.' );
+    }
+
+    /**
+     * Remove legacy 'recipes' key from cooked_user_meta for all users.
+     * Recipes are computed on demand in Cooked_Users::get(); they must not be stored in user meta.
+     *
+     * @since 1.13.0
+     */
+    private static function remove_recipes_from_cooked_user_meta() {
+        $user_ids = get_users( [
+            'meta_key' => 'cooked_user_meta',
+            'fields'   => 'ID',
+        ] );
+
+        if ( empty( $user_ids ) ) {
+            return;
+        }
+
+        $updated_count = 0;
+
+        foreach ( $user_ids as $user_id ) {
+            $meta = get_user_meta( $user_id, 'cooked_user_meta', true );
+
+            if ( ! is_array( $meta ) || ! isset( $meta['recipes'] ) ) {
+                continue;
+            }
+
+            unset( $meta['recipes'] );
+            update_user_meta( $user_id, 'cooked_user_meta', $meta );
+            $updated_count++;
+        }
+
+        if ( $updated_count > 0 ) {
+            error_log( sprintf( 'Cooked: Removed legacy recipes key from %d user(s) cooked_user_meta.', $updated_count ) );
         }
     }
 

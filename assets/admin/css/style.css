@@ -30,12 +30,17 @@ td.column-featured_image { width:50px; text-align:center; }
 body.post-type-cp_recipe #titlediv #title { box-shadow:none; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; padding:0 12px; font-weight:400; font-size:19px; letter-spacing:0; height:44px; }
 body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#888; font-weight:400; letter-spacing:0; padding:12px 15px; }
 
+/* TinyMCE fullscreen above admin menu and Cooked sticky UI */
+body.post-type-cp_recipe .mce-fullscreen {
+  z-index: 100100 !important;
+}
+
 #cooked-settings-prewrap { display:flex; justify-content:center; }
 #cooked-settings-wrap {
   position: relative;
   border-radius: 10px;
   margin: 40px 40px 40px 20px;
-  /* max-width:1000px; */
+  max-width: 1200px;
   min-width: 1000px;
   background: #fff;
   box-shadow:
@@ -253,6 +258,19 @@ body.post-type-cp_recipe .switchery-small > small,
 .cooked-progress.cooked-active, .cooked-progress-text.cooked-active { display:block; }
 .cooked-progress .cooked-progress-bar { display:block; position:absolute; background:#0085ba; width:0%; height:6px; top:0; left:0; border-radius:3px; }
 
+#cooked-migration-progress.cooked-progress, #cooked-import-progress.cooked-progress { background:#ccc; margin:25px 0 0 0; border-radius:6px; height:12px; max-width:600px; }
+#cooked-migration-progress.cooked-progress .cooked-progress-bar, #cooked-import-progress.cooked-progress .cooked-progress-bar { border-radius:6px; height:12px; }
+#cooked-migration-progress-text.cooked-progress-text, #cooked-import-progress-text.cooked-progress-text { font-size:11px; color:#888; max-width:600px; }
+#cooked-migration-completed, #cooked-import-completed { display:none; }
+#cooked-migration-completed.cooked-active, #cooked-import-completed.cooked-active { display:block; }
+#cooked-csv-import-progress.cooked-progress { background:#ccc; margin:25px 0 0 0; border-radius:6px; height:12px; max-width:600px; }
+#cooked-csv-import-progress.cooked-progress .cooked-progress-bar { border-radius:6px; height:12px; }
+#cooked-csv-import-progress-text.cooked-progress-text { font-size:11px; color:#888; max-width:600px; }
+#cooked-csv-import-completed { display:none; }
+#cooked-csv-import-completed.cooked-active { display:block; }
+#cooked-csv-import-form { max-width:100%; box-sizing:border-box; }
+#cooked-csv-import-form input[type="file"] { max-width:100%; box-sizing:border-box; width:100%; }
+#cooked-csv-import-errors { max-width:100%; box-sizing:border-box; word-wrap:break-word; }
 #cooked-migration-progress.cooked-progress, #cooked-import-progress.cooked-progress, #cooked-related-progress.cooked-progress { background:#ccc; margin:25px 0 0 0; border-radius:6px; height:12px; max-width:600px; }
 #cooked-migration-progress.cooked-progress .cooked-progress-bar, #cooked-import-progress.cooked-progress .cooked-progress-bar, #cooked-related-progress.cooked-progress .cooked-progress-bar { border-radius:6px; height:12px; }
 #cooked-migration-progress-text.cooked-progress-text, #cooked-import-progress-text.cooked-progress-text, #cooked-related-progress-text.cooked-progress-text { font-size:11px; color:#888; max-width:600px; }
@@ -294,7 +312,7 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-name { width:100%; }
 #cooked-ingredients-builder .cooked-ingredient-block > div small.cooked-input-ex { display:block; padding:5px 0 0 2px; }
 #cooked-ingredients-builder .cooked-ingredient-block { margin:0; }
-#cooked-ingredients-builder .cooked-ingredient-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:5px; left:1px; }
+#cooked-ingredients-builder .cooked-ingredient-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:5px; left:1px; touch-action:none; }
 #cooked-ingredients-builder .cooked-ingredient-block:hover i.cooked-icon-drag { color:#888; }
 #cooked-ingredients-builder .cooked-ingredient-block.ui-sortable-helper { background:#f5f5f5; box-shadow:0 10px 20px rgba(0,0,0,0.15); -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; }
 #cooked-ingredients-builder .cooked-ingredient-block.ui-sortable-placeholder { visibility:visible !important; background:#eee; display:block; width:100%; height:43px; border-top:6px solid #fff; border-bottom:6px solid #fff; }
@@ -327,9 +345,13 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image img { width:100%; height:auto; display:block; margin:15px 0 0; }
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image .cooked-direction-img-placeholder { display:none; }
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-content { width:100%; padding-left:120px; }
+#cooked-directions-builder .cooked-direction-block .cooked-direction-number { opacity:0.4; position:absolute; display:inline-block; font-weight:800; top:17px; left:35px; font-size:1.25rem; line-height:1; }
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number > .cooked-direction-image { left: 65px; }
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number > .cooked-direction-content { padding-left:175px; }
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number-wide > .cooked-direction-content { padding-left:185px; }
 #cooked-directions-builder .cooked-direction-block > .cooked-heading-name { width:100%; }
 #cooked-directions-builder .cooked-direction-block { margin:0; }
-#cooked-directions-builder .cooked-direction-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:13px; left:1px; }
+#cooked-directions-builder .cooked-direction-block i.cooked-icon-drag { cursor:move; color:#ccc; font-size:32px; position:absolute; top:13px; left:1px; touch-action:none; }
 #cooked-directions-builder .cooked-direction-block.cooked-direction-heading i.cooked-icon-drag { top:5px; }
 #cooked-directions-builder .cooked-direction-block:hover i.cooked-icon-drag { color:#888; }
 #cooked-directions-builder .cooked-direction-block.ui-sortable-helper { background:#f5f5f5; box-shadow:0 10px 20px rgba(0,0,0,0.15); -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; }

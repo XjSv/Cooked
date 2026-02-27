@@ -9,6 +9,7 @@
             require_once COOKED_DIR . 'includes/class.cooked-import.php';
             require_once COOKED_DIR . 'includes/class.cooked-delicious-recipes.php';
             require_once COOKED_DIR . 'includes/class.cooked-recipe-maker.php';
+            require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
 
             global $_cooked_settings;
 

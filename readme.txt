@@ -80,11 +80,7 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.13.0 includes changes to the [cooked-related-recipes] shortcode.
-
-== Changelog ==
-
-Version 1.13.0 includes CSV import functionality and changes to the [cooked-related-recipes] shortcode.
+Version 1.13.0 includes CSV import functionality, changes to the [cooked-related-recipes] shortcode, and other minor improvements and bug fixes.
 
 == Changelog ==
 

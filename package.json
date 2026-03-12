@@ -10,8 +10,6 @@
     "build": "gulp build",
     "watch": "gulp default",
     "start:wp-env": "wp-env start",
-    "restart:wp-env": "wp-env start",
-    "restart:wp-env:update": "wp-env start --update",
     "reset:wp-env": "wp-env reset all",
     "stop:wp-env": "wp-env stop",
     "destroy:wp-env": "wp-env destroy",

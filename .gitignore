@@ -17,7 +17,7 @@ tests/playwright/.cache/
 tests/.auth/
 
 # Build
-build/*.zip
+build/*
 
 # DDEV generated files
 .ddev/docker-compose.cooked.yaml

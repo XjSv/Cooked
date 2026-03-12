@@ -34,8 +34,12 @@
     "cooking",
     "nutrition"
   ],
-  "author": "Gora Tech",
-  "license": "GPL-2.0-or-later",
+  "author": {
+    "name": "Gora Tech",
+    "email": "contact@goratech.dev",
+    "url": "https://goratech.dev"
+  },
+  "license": "GPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/XjSv/Cooked/issues"
   },

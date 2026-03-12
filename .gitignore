@@ -1,6 +1,12 @@
 # MacOS
 .DS_Store
 
+# VSCode
+.vscode/
+
+# DDEV
+.ddev/
+
 # Node.js
 node_modules/
 
@@ -9,3 +15,12 @@ tests/playwright-report/
 tests/blob-report/
 tests/playwright/.cache/
 tests/.auth/
+
+# Build
+build/*
+
+# DDEV generated files
+.ddev/docker-compose.cooked.yaml
+
+# WordPress
+wordpress/

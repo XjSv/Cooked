@@ -3,29 +3,41 @@
   "version": "1.13.0",
   "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.",
   "main": "index.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
-    "build": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp build",
-    "watch": "ddev exec -d /var/www/html/wp-content/plugins/cooked gulp default",
+    "build": "gulp build",
+    "watch": "gulp default",
     "start:wp-env": "wp-env start",
+    "restart:wp-env": "wp-env start",
+    "restart:wp-env:update": "wp-env start --update",
+    "reset:wp-env": "wp-env reset all",
     "stop:wp-env": "wp-env stop",
     "destroy:wp-env": "wp-env destroy",
     "start:ddev": "ddev start",
+    "restart:ddev": "ddev restart",
     "stop:ddev": "ddev stop",
-    "destroy:ddev": "ddev delete -O",
-    "init:ddev": "ddev config",
-    "bundle": "bun run gulp build && bunx bestzip cooked.zip cooked.php includes/ views/ assets/ languages/ vendor/ templates/"
-  },
-  "runtimeExecutable": "npm",
-  "windows": {
-    "runtimeExecutable": "npm.cmd"
+    "destroy:ddev": "ddev delete -O && rm -rf wordpress && rm -rf .ddev",
+    "init:ddev": "if [ -f wordpress/wp-load.php ]; then echo 'DDEV project is already initialized. Use \"run launch:ddev\" to start it or \"run destroy:ddev\" then \"run init:ddev\" to start fresh.'; exit 0; fi && ddev config --project-type=wordpress --project-name=cooked --php-version=7.4 --docroot=wordpress && printf 'services:\\n  web:\\n    volumes:\\n      - ../:/var/www/html/wordpress/wp-content/plugins/cooked\\n' > .ddev/docker-compose.cooked.yaml && mkdir -p wordpress/wp-content/plugins && ddev start && ddev wp core download && ddev wp core install --url=cooked.ddev.site --title=Cooked --admin_user=admin --admin_password=password --admin_email=admin@example.com && ddev wp plugin activate cooked && echo \"Admin username: admin, Admin password: password\" && echo \"Admin URL: cooked.ddev.site/wp-admin/\"",
+    "launch:ddev": "ddev launch wp-admin/",
+    "bundle": "bun run gulp build && bunx bestzip build/cooked.zip cooked.php LICENSE readme.txt wpml-config.xml assets/ includes/ languages/ templates/ vendor/"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/XjSv/Cooked.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "wordpress",
+    "plugin",
+    "recipe",
+    "recipes",
+    "food",
+    "cooking",
+    "nutrition"
+  ],
+  "author": "Gora Tech",
+  "license": "GPL-2.0-or-later",
   "bugs": {
     "url": "https://github.com/XjSv/Cooked/issues"
   },

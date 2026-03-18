@@ -178,32 +178,29 @@ var cookedSortableTouchHandler = function(event) {
                         if (confirm_save && !thisButton.hasClass('disabled')) {
                             thisContainer.find('.button, .button-primary').addClass('disabled');
 
-                            var ajax__save_default_new = $.post(
+                            $.post(
                                 cooked_admin_functions_js_vars.ajax_url,
                                 {
                                     action: 'cooked_save_default',
                                     'default_content': recipe_editor_content,
                                     nonce: cooked_save_default_nonce
                                 },
-                                function(result) {
-                                    var ajax__save_default_all = $.post(
+                                function() {
+                                    $.post(
                                         cooked_admin_functions_js_vars.ajax_url,
                                         {
-                                            action: 'cooked_get_recipe_ids',
+                                            action: 'cooked_get_recipe_count',
                                             nonce: cooked_save_default_bulk_nonce
                                         },
-                                        function(json_recipe_ids) {
+                                        function(response) {
                                             thisButton.removeClass("button-primary").addClass("button");
 
-                                            if (json_recipe_ids) {
-                                                var recipe_ids = JSON.parse(json_recipe_ids),
-                                                    total_recipes = Object.keys(recipe_ids).length;
-
-                                                if (total_recipes > 0) {
-                                                    cooked_set_default_template(json_recipe_ids, total_recipes, recipe_editor_content, cooked_save_default_bulk_nonce, instance);
-                                                }
+                                            if (response && response.success && response.data.total > 0) {
+                                                cooked_recipe_update_counter = 0;
+                                                cooked_set_default_template(0, response.data.total, recipe_editor_content, cooked_save_default_bulk_nonce, instance);
                                             }
-                                        }
+                                        },
+                                        'json'
                                     );
                                 }
                             );
@@ -794,54 +791,55 @@ var cookedSortableTouchHandler = function(event) {
 })( jQuery );
 
 var cooked_recipe_update_counter = 0;
+var cooked_bulk_per_page = 20;
 
-function cooked_set_default_template(recipe_ids, total_recipes, content, nonce, instance) {
-    var temp_counter = 0,
-        total_counter = 0,
-        progress_percent = 0;
+function cooked_set_default_template(page, total_recipes, content, nonce, instance) {
+    if (total_recipes <= 0) {
+        return;
+    }
 
-    if (total_recipes > 0) {
-        var progress = jQuery('#cooked-template-progress');
-        var progress_bar = progress.find('.cooked-progress-bar');
-        var progress_text = jQuery('#cooked-template-progress-text');
+    var progress = jQuery('#cooked-template-progress');
+    var progress_bar = progress.find('.cooked-progress-bar');
+    var progress_text = jQuery('#cooked-template-progress-text');
 
-        if (!progress.hasClass('cooked-active')) {
-            progress.addClass('cooked-active');
-            progress_text.addClass('cooked-active');
-            progress_bar.css({ "width" : "0%" });
-            instance.reposition();
-        }
+    if (!progress.hasClass('cooked-active')) {
+        progress.addClass('cooked-active');
+        progress_text.addClass('cooked-active');
+        progress_bar.css({ "width" : "0%" });
+        instance.reposition();
+    }
 
-        var ajax__bulk_save_default_template = jQuery.post(
-            cooked_admin_functions_js_vars.ajax_url,
-            {
-                action: 'cooked_save_default_bulk',
-                recipe_ids: recipe_ids,
-                default_content: content,
-                nonce: nonce
-            },
-            function(new_recipe_ids) {
-                if (new_recipe_ids && new_recipe_ids != 'false' && new_recipe_ids != false) {
-                    var leftover_recipe_ids = JSON.parse(new_recipe_ids),
-                        leftover_recipes = Object.keys(leftover_recipe_ids).length;
+    jQuery.post(
+        cooked_admin_functions_js_vars.ajax_url,
+        {
+            action: 'cooked_save_default_bulk',
+            page: page,
+            default_content: content,
+            nonce: nonce
+        },
+        function(response) {
+            if (response && response.success) {
+                cooked_recipe_update_counter = Math.min((page + 1) * cooked_bulk_per_page, total_recipes);
 
-                    cooked_recipe_update_counter = total_recipes - leftover_recipes;
+                var progress_percent = Math.round((cooked_recipe_update_counter / total_recipes) * 100);
+                progress_bar.css({ "width" : progress_percent + "%" });
+                progress_text.text(cooked_recipe_update_counter + " / " + total_recipes);
 
-                    progress_percent = Math.round((cooked_recipe_update_counter / total_recipes ) * 100);
-                    progress_bar.css({ "width" : progress_percent + "%" });
-                    progress_text.text(cooked_recipe_update_counter + " / " + total_recipes);
-                    cooked_set_default_template(new_recipe_ids, total_recipes, content, nonce, instance);
+                if (response.data.has_more) {
+                    cooked_set_default_template(page + 1, total_recipes, content, nonce, instance);
                 } else {
                     jQuery('.cooked-save-default-all').text(cooked_admin_functions_js_vars.i18n_applied);
                     progress_bar.css({ "width" : "100%" });
+                    progress_text.text(total_recipes + " / " + total_recipes);
                     progress.removeClass('cooked-active');
                     progress_text.removeClass('cooked-active').text("");
 
                     instance.reposition();
                 }
             }
-        );
-    };
+        },
+        'json'
+    );
 }
 
 function cooked_updateTotalTimeValue( prepTime, cookTime ) {

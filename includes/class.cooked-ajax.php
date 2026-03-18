@@ -36,6 +36,9 @@ class Cooked_Ajax {
         // Get JSON list of Recipe IDs
         add_action( 'wp_ajax_cooked_get_recipe_ids', [&$this, 'get_recipe_ids'] );
 
+        // Get Recipe Count
+        add_action( 'wp_ajax_cooked_get_recipe_count', [&$this, 'get_recipe_count'] );
+
         // Get JSON list of Recipe IDs, ready for Migration
         add_action( 'wp_ajax_cooked_get_migrate_ids', [&$this, 'get_migrate_ids'] );
 
@@ -282,54 +285,66 @@ class Cooked_Ajax {
         wp_die();
     }
 
+    public function get_recipe_count() {
+        if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default_bulk') || !current_user_can('edit_cooked_default_template')) {
+            wp_die();
+        }
+
+        $args = [
+            'post_type'      => 'cp_recipe',
+            'posts_per_page' => 1,
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+        ];
+
+        $query = new WP_Query( $args );
+        wp_send_json_success( [ 'total' => $query->found_posts ] );
+    }
+
     public function save_default_bulk() {
-        $bulk_amount = 5;
+        $per_page = 20;
 
         if (!wp_verify_nonce($_POST['nonce'], 'cooked_save_default_bulk') || !current_user_can('edit_cooked_default_template')) {
             wp_die();
         }
 
-        if (isset($_POST['recipe_ids'])) {
-            $recipe_ids = json_decode($_POST['recipe_ids'], true);
-            if (is_array($recipe_ids) && !empty($recipe_ids)) {
-                $_recipe_ids = [];
-                foreach ($recipe_ids as $_rid) {
-                    $safe_id = intval($_rid);
-                    if ($safe_id) {
-                        $_recipe_ids[] = $_rid;
-                    }
-                }
-                $recipe_ids = $_recipe_ids;
-            } else {
-                return false;
-            }
+        if (!isset($_POST['default_content'])) {
+            wp_send_json_error( [ 'message' => __( 'No default content provided.', 'cooked' ) ] );
+        }
 
-            $leftover_recipe_ids = array_slice($recipe_ids, $bulk_amount);
-            $recipe_ids = array_slice($recipe_ids, 0, $bulk_amount);
+        $page = isset($_POST['page']) ? absint($_POST['page']) : 0;
+        $content = wp_kses_post($_POST['default_content']);
 
-            if (empty($recipe_ids)) {
-                echo 'false';
-                wp_die();
-            } else {
-                foreach ($recipe_ids as $rid) {
-                    $recipe_settings = get_post_meta($rid, '_recipe_settings', true);
-                    if (!empty($recipe_settings)) {
-                        $recipe_settings['content'] = wp_kses_post($_POST['default_content']);
-                        update_post_meta($rid, '_recipe_settings', $recipe_settings);
-                    }
-                }
+        $args = [
+            'post_type'      => 'cp_recipe',
+            'posts_per_page' => $per_page,
+            'offset'         => $page * $per_page,
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+            'orderby'        => 'ID',
+            'order'          => 'ASC',
+        ];
 
-                if (!empty($leftover_recipe_ids)) {
-                    echo wp_json_encode($leftover_recipe_ids);
-                    wp_die();
-                } else {
-                    echo 'false';
-                    wp_die();
-                }
+        $query = new WP_Query( $args );
+        $recipe_ids = $query->posts;
+        $updated = 0;
+
+        foreach ($recipe_ids as $rid) {
+            $recipe_settings = get_post_meta($rid, '_recipe_settings', true);
+            if (!empty($recipe_settings)) {
+                $recipe_settings['content'] = $content;
+                update_post_meta($rid, '_recipe_settings', $recipe_settings);
+                $updated++;
             }
         }
 
-        wp_die();
+        $processed = ( $page * $per_page ) + count( $recipe_ids );
+        $has_more  = $processed < $query->found_posts;
+
+        wp_send_json_success( [
+            'updated'  => $updated,
+            'has_more' => $has_more,
+        ] );
     }
 
     public function save_default() {

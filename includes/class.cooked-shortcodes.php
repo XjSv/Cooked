@@ -198,7 +198,8 @@ class Cooked_Shortcodes {
         $recipe_id = intval( $atts['id'] );
         $category_id = intval( $atts['category'] );
         $width = Cooked_Functions::sanitize_text_field( $atts['width'] );
-        $style = Cooked_Functions::sanitize_text_field( $atts['style'] );
+        $valid_styles = [ 'modern', 'modern-centered' ];
+        $style = in_array( $atts['style'], $valid_styles, true ) ? $atts['style'] : false;
         $hide_image = Cooked_Functions::sanitize_text_field( $atts['hide_image'] );
         $hide_total = Cooked_Functions::sanitize_text_field( $atts['hide_total'] );
         $hide_title = Cooked_Functions::sanitize_text_field( $atts['hide_title'] );
@@ -228,7 +229,8 @@ class Cooked_Shortcodes {
 
         $hide_empty = Cooked_Functions::sanitize_text_field( $atts['hide_empty'] );
         $child_of = Cooked_Functions::sanitize_text_field( $atts['child_of'] );
-        $style = Cooked_Functions::sanitize_text_field( $atts['style'] );
+        $valid_styles = [ 'block', 'list' ];
+        $style = in_array( $atts['style'], $valid_styles, true ) ? $atts['style'] : 'block';
         $parents_only = $child_of ? false : true;
 
         ob_start();

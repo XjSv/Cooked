@@ -148,6 +148,9 @@ class Cooked_Recipe_Maker_Recipes {
                             'name' => (!empty($ingredient['name']) ? $ingredient['name'] : ''),
                             'url' => '',
                             'description' => (!empty($ingredient['notes']) ? $ingredient['notes'] : ''),
+                            'sub_amount' => '',
+                            'sub_measurement' => '',
+                            'sub_name' => '',
                         ];
                     }
                 }

@@ -1349,6 +1349,9 @@ class Cooked_Recipes {
                     $recipe_settings['ingredients'][$rand_id]['amount'] = $ing['amount'];
                     $recipe_settings['ingredients'][$rand_id]['measurement'] = $ing['measurement'];
                     $recipe_settings['ingredients'][$rand_id]['name'] = $ing['name'];
+                    $recipe_settings['ingredients'][$rand_id]['sub_amount'] = '';
+                    $recipe_settings['ingredients'][$rand_id]['sub_measurement'] = '';
+                    $recipe_settings['ingredients'][$rand_id]['sub_name'] = '';
                 elseif ( isset($ing['type']) && $ing['type'] == 'section' ):
                     $recipe_settings['ingredients'][$rand_id]['section_heading_name'] = $ing['value'];
                 else:
@@ -1358,6 +1361,9 @@ class Cooked_Recipes {
                         $recipe_settings['ingredients'][$rand_id]['amount'] = false;
                         $recipe_settings['ingredients'][$rand_id]['measurement'] = false;
                         $recipe_settings['ingredients'][$rand_id]['name'] = $ing;
+                        $recipe_settings['ingredients'][$rand_id]['sub_amount'] = '';
+                        $recipe_settings['ingredients'][$rand_id]['sub_measurement'] = '';
+                        $recipe_settings['ingredients'][$rand_id]['sub_name'] = '';
                     endif;
                 endif;
             endforeach;

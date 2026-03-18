@@ -147,6 +147,9 @@ class Cooked_Delicious_Recipes {
                             'name' => (!empty($ingredient['ingredient']) ? $ingredient['ingredient'] : ''),
                             'url' => '',
                             'description' => (!empty($ingredient['notes']) ? $ingredient['notes'] : ''),
+                            'sub_amount' => '',
+                            'sub_measurement' => '',
+                            'sub_name' => '',
                         ];
                     }
                 }

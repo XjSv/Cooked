@@ -17,7 +17,7 @@
             	e.preventDefault();
 
             	var thisButton = $(this),
-            		confirm_migrate = confirm(cooked_migration_js_vars.i18n_confirm_migrate_recipe);
+            		confirm_migrate = confirm(cooked_migration_js_vars.i18n_confirm_migrate_recipes);
 
             	if (confirm_migrate && !thisButton.hasClass('disabled')) {
             		thisButton.addClass('disabled').attr('disabled', true);
@@ -34,7 +34,7 @@
 	                    			total_recipes = Object.keys(recipe_ids).length;
 
 	                    		if (total_recipes > 0) {
-	                    			cooked_migrate_recipes(json_recipe_ids, total_recipe);
+	                    			cooked_migrate_recipes(json_recipe_ids, total_recipes);
 	                    		}
 	                    	}
 	                    }

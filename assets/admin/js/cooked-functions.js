@@ -1,6 +1,6 @@
 var $_CookedConditionalTimeout  = false;
 
-// Touch event support for sortable drag handles on mobile devices
+/** Maps touch events on sortable drag handles to mouse events so sortable works on touch devices. */
 var cookedSortableTouchHandler = function(event) {
     var target = event.target;
     var types = {
@@ -663,6 +663,9 @@ var cookedSortableTouchHandler = function(event) {
             });
         }
 
+        // Bulk Add Modal
+        cooked_init_bulk_add($);
+
         if ( $_CookedRecipeGallery.length ) {
 
             var gallery_images_frame;
@@ -793,6 +796,7 @@ var cookedSortableTouchHandler = function(event) {
 var cooked_recipe_update_counter = 0;
 var cooked_bulk_per_page = 20;
 
+/** Applies default recipe content in paginated AJAX batches and updates the progress UI. */
 function cooked_set_default_template(page, total_recipes, content, nonce, instance) {
     if (total_recipes <= 0) {
         return;
@@ -842,6 +846,7 @@ function cooked_set_default_template(page, total_recipes, content, nonce, instan
     );
 }
 
+/** Sets the total time field to prep time plus cook time. */
 function cooked_updateTotalTimeValue( prepTime, cookTime ) {
     var totalTimeInput = jQuery( '#cooked-total-time' ),
         totalTime = prepTime + cookTime;
@@ -856,6 +861,7 @@ function cooked_init_gallery_sorting() {
     jQuery('#cooked-recipe-image-gallery').sortable();
 }
 
+/** Syncs nutrition tab inputs with the live nutrition label preview (values and daily-value percents). */
 function init_nutrition_facts( nutritionTab ) {
     nutritionTab.find('input').each(function() {
         var thisInput = jQuery(this),
@@ -1105,4 +1111,408 @@ function cooked_init_conditional_field(thisID) {
 
         }, 25);
     });
+}
+
+/** Wires the bulk-add modal (preview, parse, submit) for ingredients and directions. */
+function cooked_init_bulk_add($) {
+    var $overlay = $('#cooked-bulk-add-overlay');
+    if (!$overlay.length) return;
+
+    var $textarea = $('#cooked-bulk-add-textarea'),
+        $preview = $('#cooked-bulk-add-preview'),
+        $previewList = $('#cooked-bulk-add-preview-list'),
+        $title = $('#cooked-bulk-add-title'),
+        $typeField = $('#cooked-bulk-add-type'),
+        $submitBtn = $overlay.find('.cooked-bulk-add-submit'),
+        $spinner = $overlay.find('.cooked-bulk-add-spinner'),
+        jsVars = cooked_admin_functions_js_vars,
+        parseTimer = null,
+        lastParsedText = '';
+
+    /** Opens the bulk-add overlay for the given type and sets copy/placeholders. */
+    function openModal(type) {
+        $typeField.val(type);
+        $textarea.val('');
+        $previewList.empty();
+        $preview.attr('data-bulk-type', '');
+        $preview.hide();
+        $submitBtn.attr('disabled', 'disabled');
+        $spinner.hide();
+        lastParsedText = '';
+
+        if (type === 'ingredients') {
+            $title.text(jsVars.i18n_bulk_add_ingredients);
+            $textarea.attr('placeholder', jsVars.i18n_bulk_add_placeholder_ingredients);
+            $submitBtn.text(jsVars.i18n_bulk_add_submit_ingredients);
+        } else {
+            $title.text(jsVars.i18n_bulk_add_directions);
+            $textarea.attr('placeholder', jsVars.i18n_bulk_add_placeholder_directions);
+            $submitBtn.text(jsVars.i18n_bulk_add_submit_directions);
+        }
+
+        $overlay.show();
+        $textarea.focus();
+    }
+
+    /** Hides the bulk-add overlay and clears its state. */
+    function closeModal() {
+        $overlay.hide();
+        $textarea.val('');
+        $previewList.empty();
+        $preview.attr('data-bulk-type', '');
+        $preview.hide();
+        lastParsedText = '';
+        if (parseTimer) clearTimeout(parseTimer);
+    }
+
+    /** Strips leading list markers from a single line of bulk text. */
+    function cleanLine(line) {
+        line = line.trim();
+        line = line.replace(/^(\d+\)\s+|\d+\.\s+|[a-z]+\)\s+|[•·\-\*]\s+|[A-Z]+\.\s+|[IVX]+\.\s+)/, '');
+        return line.trim();
+    }
+
+    /** Splits bulk textarea content into non-empty cleaned lines. */
+    function parseTextToLines(text) {
+        var lines = text.split(/[\r\n]+/);
+        var result = [];
+        for (var i = 0; i < lines.length; i++) {
+            var cleaned = cleanLine(lines[i]);
+            if (cleaned) {
+                result.push(cleaned);
+            }
+        }
+        return result;
+    }
+
+    /** Escapes a string for safe insertion into HTML attribute strings. */
+    function escHtml(str) {
+        return $('<span>').text(str).html();
+    }
+
+    /** Renders bulk directions preview rows from parsed lines. */
+    function renderDirectionsPreview(lines) {
+        $previewList.empty();
+        if (!lines.length) {
+            $preview.attr('data-bulk-type', '');
+            $preview.hide();
+            $submitBtn.attr('disabled', 'disabled');
+            return;
+        }
+        $preview.attr('data-bulk-type', 'directions');
+        $preview.show();
+        $submitBtn.removeAttr('disabled');
+
+        for (var i = 0; i < lines.length; i++) {
+            var $row = $('<div class="cooked-bulk-add-preview-row"></div>');
+            var $cb = $('<label class="cooked-bulk-add-heading-toggle"><input type="checkbox" data-index="' + i + '" /><span>' + jsVars.i18n_bulk_add_section_heading + '</span></label>');
+            var $text = $('<input type="text" class="cooked-bulk-add-preview-text" data-index="' + i + '" value="' + escHtml(lines[i]) + '" />');
+            $row.append($cb).append($text);
+            $previewList.append($row);
+        }
+    }
+
+    /** Renders bulk ingredients preview rows (optionally with server-parsed amount/unit/name). */
+    function renderIngredientsPreview(lines, parsed) {
+        $previewList.empty();
+        if (!lines.length) {
+            $preview.attr('data-bulk-type', '');
+            $preview.hide();
+            $submitBtn.attr('disabled', 'disabled');
+            return;
+        }
+        $preview.attr('data-bulk-type', 'ingredients');
+        $preview.show();
+        $submitBtn.removeAttr('disabled');
+
+        if (!$previewList.find('.cooked-bulk-add-preview-header').length) {
+            $previewList.prepend(
+                '<div class="cooked-bulk-add-preview-header">' +
+                    '<span class="cooked-bulk-add-col-heading"></span>' +
+                    '<span class="cooked-bulk-add-col-amount">' + escHtml(jsVars.i18n_bulk_add_amount) + '</span>' +
+                    '<span class="cooked-bulk-add-col-unit">' + escHtml(jsVars.i18n_bulk_add_unit) + '</span>' +
+                    '<span class="cooked-bulk-add-col-name">' + escHtml(jsVars.i18n_bulk_add_name) + '</span>' +
+                '</div>'
+            );
+        }
+
+        for (var i = 0; i < lines.length; i++) {
+            var p = parsed && parsed[i] ? parsed[i] : { amount: '', measurement: '', name: lines[i] };
+            var $row = $('<div class="cooked-bulk-add-preview-row cooked-bulk-add-preview-row-ingredient" data-index="' + i + '"></div>');
+            var $cb = $('<label class="cooked-bulk-add-heading-toggle"><input type="checkbox" data-index="' + i + '" /><span>' + jsVars.i18n_bulk_add_section_heading + '</span></label>');
+            var $headingWrap = $('<div class="cooked-bulk-add-heading-line-wrap"></div>');
+            var $headingLbl = $('<span class="cooked-bulk-add-heading-line-label"></span>').text(jsVars.i18n_bulk_add_heading_line_label);
+            var $lineInput = $('<input type="text" class="cooked-bulk-add-preview-text" data-index="' + i + '" />').val(lines[i]);
+            $headingWrap.append($headingLbl).append($lineInput);
+            var $amt = $('<input type="text" class="cooked-bulk-add-parsed-amount" data-index="' + i + '" value="' + escHtml(p.amount) + '" />');
+            var $unit = $('<input type="text" class="cooked-bulk-add-parsed-unit" data-index="' + i + '" value="' + escHtml(p.measurement) + '" />');
+            var $name = $('<input type="text" class="cooked-bulk-add-parsed-name" data-index="' + i + '" value="' + escHtml(p.name) + '" />');
+            $row.append($cb).append($headingWrap).append($amt).append($unit).append($name);
+            $previewList.append($row);
+        }
+    }
+
+    /** Fetches AJAX-parsed ingredient lines and refreshes the preview. */
+    function fetchIngredientParse(lines) {
+        if (!lines.length) {
+            renderIngredientsPreview([], null);
+            return;
+        }
+
+        $spinner.show().css('visibility', 'visible');
+
+        $.post(jsVars.ajax_url, {
+            action: 'cooked_parse_bulk_ingredients',
+            nonce: jsVars.cooked_bulk_add_nonce,
+            lines: lines
+        }, function(response) {
+            $spinner.hide();
+            var parsed = (response.success && response.data && response.data.parsed) ? response.data.parsed : null;
+            renderIngredientsPreview(lines, parsed);
+        }).fail(function() {
+            $spinner.hide();
+            renderIngredientsPreview(lines, null);
+        });
+    }
+
+    $textarea.on('input', function() {
+        var type = $typeField.val();
+        var lines = parseTextToLines($(this).val());
+        var textKey = lines.join('\n');
+
+        if (type === 'directions') {
+            renderDirectionsPreview(lines);
+        } else {
+            if (textKey === lastParsedText) return;
+            lastParsedText = textKey;
+            renderIngredientsPreview(lines, null);
+            if (parseTimer) clearTimeout(parseTimer);
+            parseTimer = setTimeout(function() {
+                fetchIngredientParse(lines);
+            }, 400);
+        }
+    });
+
+    $(document).on('click', '.cooked-bulk-add-button', function(e) {
+        e.preventDefault();
+        var type = $(this).data('type');
+        openModal(type);
+    });
+
+    $overlay.on('click', '.cooked-bulk-add-close, .cooked-bulk-add-cancel', function(e) {
+        e.preventDefault();
+        closeModal();
+    });
+
+    $overlay.on('click', function(e) {
+        if ($(e.target).is($overlay)) {
+            closeModal();
+        }
+    });
+
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $overlay.is(':visible')) {
+            closeModal();
+        }
+    });
+
+    $previewList.on('change', 'input[type="checkbox"]', function() {
+        var $row = $(this).closest('.cooked-bulk-add-preview-row');
+        var isHeading = $(this).is(':checked');
+        $row.toggleClass('cooked-bulk-add-is-heading', isHeading);
+    });
+
+    $submitBtn.on('click', function(e) {
+        e.preventDefault();
+        if ($(this).attr('disabled')) return;
+
+        var type = $typeField.val();
+        var items = [];
+
+        if (type === 'ingredients') {
+            $previewList.find('.cooked-bulk-add-preview-row').each(function() {
+                var $row = $(this);
+                var isHeading = $row.find('input[type="checkbox"]').is(':checked');
+                var text = $row.find('.cooked-bulk-add-preview-text').val().trim();
+                if (!text) return;
+
+                if (isHeading) {
+                    items.push({ text: text, heading: true });
+                } else {
+                    items.push({
+                        heading: false,
+                        amount: $row.find('.cooked-bulk-add-parsed-amount').val().trim(),
+                        measurement: $row.find('.cooked-bulk-add-parsed-unit').val().trim(),
+                        name: $row.find('.cooked-bulk-add-parsed-name').val().trim() || text
+                    });
+                }
+            });
+        } else {
+            $previewList.find('.cooked-bulk-add-preview-row').each(function() {
+                var $row = $(this);
+                var text = $row.find('.cooked-bulk-add-preview-text').val().trim();
+                var isHeading = $row.find('input[type="checkbox"]').is(':checked');
+                if (text) {
+                    items.push({ text: text, heading: isHeading });
+                }
+            });
+        }
+
+        if (!items.length) return;
+
+        if (type === 'directions') {
+            cooked_bulk_add_directions(items);
+            closeModal();
+        } else {
+            cooked_bulk_add_ingredients_parsed(items);
+            closeModal();
+        }
+    });
+}
+
+/** Returns true if an ingredient row has no meaningful field values (heading or line fields). */
+function cooked_is_ingredient_block_empty($block) {
+    if ($block.hasClass('cooked-ingredient-heading')) {
+        return ($block.find('[data-ingredient-part="section_heading_name"]').val() || '').trim() === '';
+    }
+    var hasContent = false;
+    $block.find('[data-ingredient-part]').each(function() {
+        var part = jQuery(this).data('ingredient-part');
+        if (part === 'section_heading_element') {
+            return;
+        }
+        var $f = jQuery(this);
+        var v = $f.is('select') ? $f.val() : ($f.val() || '').trim();
+        if (v !== null && v !== '' && String(v).trim() !== '') {
+            hasContent = true;
+            return false;
+        }
+    });
+    return !hasContent;
+}
+
+/** Plain-text direction step content from TinyMCE or textarea (HTML stripped, NBSPs normalized). */
+function cooked_direction_block_content_text($block) {
+    var $ta = $block.find('textarea[data-direction-part="content"]');
+    if (!$ta.length) {
+        return '';
+    }
+    var id = $ta.attr('id');
+    var raw = '';
+    if (id && typeof tinymce !== 'undefined' && tinymce.get(id)) {
+        raw = tinymce.get(id).getContent() || '';
+    } else {
+        raw = $ta.val() || '';
+    }
+    return jQuery('<div>').html(raw).text().replace(/\u00a0/g, ' ').trim();
+}
+
+/** Returns true if a direction row is empty (no heading text, image, or body content). */
+function cooked_is_direction_block_empty($block) {
+    if ($block.hasClass('cooked-direction-heading')) {
+        return ($block.find('[data-direction-part="section_heading_name"]').val() || '').trim() === '';
+    }
+    if (($block.find('input[data-direction-part="image"]').val() || '').trim() !== '') {
+        return false;
+    }
+    return cooked_direction_block_content_text($block) === '';
+}
+
+/** Removes ingredient rows that are empty before bulk-adding new items. */
+function cooked_bulk_remove_empty_ingredient_rows() {
+    jQuery('#cooked-ingredients-builder').children('.cooked-ingredient-block').each(function() {
+        var $b = jQuery(this);
+        if (cooked_is_ingredient_block_empty($b)) {
+            $b.remove();
+        }
+    });
+}
+
+/** Removes empty direction rows before bulk-adding, and removes WP editors when needed. */
+function cooked_bulk_remove_empty_direction_rows() {
+    var canRemoveWpEditor = !!(
+        cooked_admin_functions_js_vars.wp_editor_roles_allowed &&
+        typeof wp !== 'undefined' &&
+        wp.editor &&
+        typeof wp.editor.remove === 'function'
+    );
+
+    jQuery('#cooked-directions-builder').children('.cooked-direction-block').each(function() {
+        var $b = jQuery(this);
+        if (!cooked_is_direction_block_empty($b)) {
+            return;
+        }
+        if (canRemoveWpEditor) {
+            var $ta = $b.find('textarea[data-direction-part="content"]');
+            var fieldID = $ta.attr('id');
+            if (fieldID) {
+                wp.editor.remove(fieldID);
+            }
+        }
+        $b.remove();
+    });
+}
+
+/** Appends direction rows from bulk-add items (headings or plain steps) and resets the builder. */
+function cooked_bulk_add_directions(items) {
+    cooked_bulk_remove_empty_direction_rows();
+
+    var $_builder = jQuery('#cooked-directions-builder');
+    var $_parent = $_builder.parent();
+
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+
+        if (item.heading) {
+            var $heading = $_parent.find('.cooked-heading-template').clone()
+                .removeClass('cooked-template cooked-heading-template')
+                .addClass('cooked-direction-block cooked-direction-heading');
+            $heading.find('[data-direction-part="section_heading_name"]').val(item.text);
+            $_builder.append($heading);
+        } else {
+            var $direction = $_parent.find('.cooked-direction-template').clone()
+                .removeClass('cooked-template cooked-direction-template')
+                .addClass('cooked-direction-block');
+            $direction.find('[data-direction-part="content"]').val(item.text);
+            $_builder.append($direction);
+        }
+    }
+
+    cooked_reset_direction_builder();
+}
+
+/** Appends ingredient rows from bulk-add items (headings or amount/unit/name) and resets the builder. */
+function cooked_bulk_add_ingredients_parsed(items) {
+    cooked_bulk_remove_empty_ingredient_rows();
+
+    var $_builder = jQuery('#cooked-ingredients-builder');
+    var $_parent = $_builder.parent();
+
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+
+        if (item.heading) {
+            var $heading = $_parent.find('.cooked-heading-template').clone()
+                .removeClass('cooked-template cooked-heading-template')
+                .addClass('cooked-ingredient-block cooked-ingredient-heading');
+            $heading.find('[data-ingredient-part="section_heading_name"]').val(item.text);
+            $_builder.append($heading);
+        } else {
+            var $ingredient = $_parent.find('.cooked-ingredient-template').clone()
+                .removeClass('cooked-template cooked-ingredient-template')
+                .addClass('cooked-ingredient-block');
+
+            $ingredient.find('[data-ingredient-part="amount"]').val(item.amount || '');
+
+            if (item.measurement) {
+                $ingredient.find('[data-ingredient-part="measurement"]').val(item.measurement);
+            }
+
+            $ingredient.find('[data-ingredient-part="name"]').val(item.name || '');
+
+            $_builder.append($ingredient);
+        }
+    }
+
+    cooked_reset_ingredient_builder();
 }

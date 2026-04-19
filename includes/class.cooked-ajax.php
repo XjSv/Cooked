@@ -56,6 +56,10 @@ class Cooked_Ajax {
 
         // CSV Import - Process file
         add_action( 'wp_ajax_cooked_process_csv', [&$this, 'process_csv']);
+
+        // Bulk Add - Parse Ingredients
+        add_action( 'wp_ajax_cooked_parse_bulk_ingredients', [&$this, 'parse_bulk_ingredients'] );
+        add_action( 'wp_ajax_nopriv_cooked_parse_bulk_ingredients', [&$this, 'parse_bulk_ingredients'] );
     }
 
     public function get_migrate_ids() {
@@ -459,5 +463,116 @@ class Cooked_Ajax {
                 'errors' => $results['errors']
             ]);
         }
+    }
+
+    public function parse_bulk_ingredients() {
+        if ( ! check_ajax_referer( 'cooked_bulk_add', 'nonce', false ) ) {
+            wp_send_json_error( [ 'message' => __( 'Security check failed.', 'cooked' ) ] );
+        }
+
+        $lines = isset( $_POST['lines'] ) ? (array) $_POST['lines'] : [];
+
+        if ( empty( $lines ) ) {
+            wp_send_json_error( [ 'message' => __( 'No ingredients provided.', 'cooked' ) ] );
+        }
+
+        $measurements = Cooked_Measurements::get();
+
+        $variations_map = [];
+        foreach ( $measurements as $key => $m ) {
+            if ( ! empty( $m['variations'] ) ) {
+                foreach ( $m['variations'] as $variation ) {
+                    $variations_map[ $variation ] = $key;
+                }
+            }
+        }
+
+        // Sort variations longest-first to avoid partial matches.
+        $variation_strings = array_keys( $variations_map );
+        usort( $variation_strings, function( $a, $b ) {
+            return strlen( $b ) - strlen( $a );
+        });
+
+        $escaped = array_map( function( $v ) {
+            return preg_quote( $v, '/' );
+        }, $variation_strings );
+
+        $units_pattern = '/^(' . implode( '|', $escaped ) . ')\.?\s+/iu';
+
+        $parsed = [];
+
+        foreach ( $lines as $index => $line ) {
+            // Do not use Cooked_Functions::sanitize_text_field() here — it runs htmlentities() and turns
+            // Unicode like en dash or ½ into &ndash; / &frac12;, which breaks parsing and leaks into output.
+            $line = is_string( $line ) ? $line : '';
+            $line = wp_unslash( $line );
+            $line = html_entity_decode( $line, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+            $line = trim( sanitize_text_field( $line ) );
+
+            if ( '' === $line ) {
+                $parsed[ $index ] = [ 'amount' => '', 'measurement' => '', 'name' => '' ];
+                continue;
+            }
+
+            $raw = $line;
+            $amount = '';
+            $measurement = '';
+
+            $raw = str_replace( "\xE2\x81\x84", '/', $raw );
+
+            $fraction_map = [
+                "\xC2\xBC" => '1/4', "\xC2\xBD" => '1/2', "\xC2\xBE" => '3/4',
+                "\xE2\x85\x93" => '1/3', "\xE2\x85\x94" => '2/3',
+                "\xE2\x85\x95" => '1/5', "\xE2\x85\x96" => '2/5',
+                "\xE2\x85\x97" => '3/5', "\xE2\x85\x98" => '4/5',
+                "\xE2\x85\x99" => '1/6', "\xE2\x85\x9A" => '5/6',
+                "\xE2\x85\x9B" => '1/8', "\xE2\x85\x9C" => '3/8',
+                "\xE2\x85\x9D" => '5/8', "\xE2\x85\x9E" => '7/8',
+            ];
+            // "1½" must become "1 1/2", not "11/2".
+            foreach ( $fraction_map as $symbol => $replacement ) {
+                $raw = preg_replace( '/(\d)' . preg_quote( $symbol, '/' ) . '/u', '$1 ' . $replacement, $raw );
+            }
+            foreach ( $fraction_map as $symbol => $replacement ) {
+                $raw = str_replace( $symbol, $replacement, $raw );
+            }
+
+            // Allow en dash (U+2013) and em dash (U+2014) in amounts like "2–3".
+            $amount_regex = '/^\s*([\d][\s\/\-\d.,\x{2013}\x{2014}]*)\s*/u';
+            if ( preg_match( $amount_regex, $raw, $match ) ) {
+                $amount = trim( $match[1] );
+                $raw = trim( substr( $raw, strlen( $match[0] ) ) );
+            }
+
+            if ( preg_match( $units_pattern, $raw, $match ) ) {
+                $matched_variation = trim( rtrim( $match[1], '.' ) );
+                $matched_lower = strtolower( $matched_variation );
+
+                foreach ( $variations_map as $variation => $key ) {
+                    if ( strtolower( $variation ) === $matched_lower ) {
+                        $measurement = $key;
+                        break;
+                    }
+                }
+
+                $raw = trim( substr( $raw, strlen( $match[0] ) ) );
+            }
+
+            $name = trim( $raw );
+
+            if ( ! $name ) {
+                $amount = '';
+                $measurement = '';
+                $name = trim( $line );
+            }
+
+            $parsed[ $index ] = [
+                'amount'      => $amount,
+                'measurement' => $measurement,
+                'name'        => $name,
+            ];
+        }
+
+        wp_send_json_success( [ 'parsed' => $parsed ] );
     }
 }

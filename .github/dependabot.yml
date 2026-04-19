@@ -6,10 +6,15 @@
 version: 2
 
 updates:
-  - package-ecosystem: composer
+  - package-ecosystem: "composer"
     target-branch: develop
-    directory: /
+    directory: "/"
     schedule:
-      interval: weekly
+      interval: "weekly"
     allow:
       - dependency-type: production
+  - package-ecosystem: "npm"
+    target-branch: develop
+    directory: "/"
+    schedule:
+      interval: "weekly"

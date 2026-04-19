@@ -711,3 +711,215 @@ body .button.button-cooked-reset:hover { color:#555; }
     box-sizing: border-box;
     padding-right: 10px;
 }
+
+/* Bulk Add Modal */
+.cooked-bulk-add-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 100100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.cooked-bulk-add-modal {
+    background: #fff;
+    border-radius: 6px;
+    width: 600px;
+    max-width: 90vw;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.3);
+}
+.cooked-bulk-add-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid #ddd;
+}
+.cooked-bulk-add-header h2 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.3;
+}
+.cooked-bulk-add-close {
+    font-size: 24px;
+    text-decoration: none;
+    color: #666;
+    line-height: 1;
+    padding: 0 4px;
+}
+.cooked-bulk-add-close:hover { color: #d63638; }
+.cooked-bulk-add-body {
+    padding: 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+.cooked-bulk-add-help {
+    margin-top: 0;
+    color: #666;
+    font-size: 13px;
+}
+#cooked-bulk-add-textarea {
+    width: 100%;
+    min-height: 160px;
+    font-size: 14px;
+    padding: 10px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+.cooked-bulk-add-preview {
+    margin-top: 16px;
+}
+.cooked-bulk-add-preview-label {
+    margin: 0 0 8px;
+    font-size: 13px;
+}
+.cooked-bulk-add-preview-notice-ingredients {
+    display: none;
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.45;
+    color: #b45309;
+    font-weight: 700;
+    gap: 6px;
+    align-items: flex-start;
+}
+#cooked-bulk-add-preview[data-bulk-type="ingredients"] .cooked-bulk-add-preview-notice-ingredients {
+    display: flex;
+}
+.cooked-bulk-add-preview-notice-mark {
+    flex-shrink: 0;
+    font-weight: 700;
+    line-height: 1.45;
+    color: #b45309;
+}
+.cooked-bulk-add-preview-notice-text {
+    flex: 1;
+    min-width: 0;
+    font-weight: 700;
+    color: #b45309;
+}
+.cooked-bulk-add-preview-list {
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px;
+}
+.cooked-bulk-add-preview-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px;
+    border-bottom: 1px solid #f0f0f0;
+}
+.cooked-bulk-add-preview-row:last-child { border-bottom: 0; }
+.cooked-bulk-add-heading-toggle {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    font-size: 12px;
+    color: #666;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+.cooked-bulk-add-heading-toggle input[type="checkbox"] { margin: 0; }
+.cooked-bulk-add-preview-text {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 4px 8px;
+    font-size: 13px;
+}
+.cooked-bulk-add-preview-row:not(.cooked-bulk-add-preview-row-ingredient).cooked-bulk-add-is-heading .cooked-bulk-add-preview-text { font-weight: 700; }
+.cooked-bulk-add-preview-row-ingredient .cooked-bulk-add-heading-line-wrap {
+    display: none;
+    flex: 1;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+.cooked-bulk-add-preview-row-ingredient.cooked-bulk-add-is-heading .cooked-bulk-add-heading-line-wrap { display: flex; }
+.cooked-bulk-add-preview-row-ingredient.cooked-bulk-add-is-heading .cooked-bulk-add-parsed-amount,
+.cooked-bulk-add-preview-row-ingredient.cooked-bulk-add-is-heading .cooked-bulk-add-parsed-unit,
+.cooked-bulk-add-preview-row-ingredient.cooked-bulk-add-is-heading .cooked-bulk-add-parsed-name { display: none; }
+.cooked-bulk-add-heading-line-label {
+    flex-shrink: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+}
+.cooked-bulk-add-preview-row-ingredient .cooked-bulk-add-heading-line-wrap .cooked-bulk-add-preview-text {
+    flex: 1;
+    min-width: 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 4px 8px;
+    font-size: 13px;
+    font-weight: 600;
+}
+.cooked-bulk-add-preview-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 6px 6px;
+    border-bottom: 1px solid #ddd;
+    font-size: 11px;
+    font-weight: 600;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.cooked-bulk-add-col-heading { flex-shrink: 0; width: 108px; }
+.cooked-bulk-add-col-amount { width: 72px; flex-shrink: 0; }
+.cooked-bulk-add-col-unit { width: 108px; flex-shrink: 0; }
+.cooked-bulk-add-col-name { flex: 1; }
+.cooked-bulk-add-parsed-amount {
+    width: 72px;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-size: 13px;
+    text-align: center;
+}
+.cooked-bulk-add-parsed-unit {
+    width: 108px;
+    flex-shrink: 0;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-size: 13px;
+}
+.cooked-bulk-add-parsed-name {
+    flex: 1;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    padding: 4px 6px;
+    font-size: 13px;
+}
+.cooked-bulk-add-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    padding: 14px 20px;
+    border-top: 1px solid #ddd;
+}
+.cooked-bulk-add-footer .button,
+.cooked-bulk-add-footer .button.button-primary {
+    float: none;
+    margin: 0;
+    vertical-align: middle;
+}
+.cooked-bulk-add-spinner {
+    float: none !important;
+    margin: 0 !important;
+}

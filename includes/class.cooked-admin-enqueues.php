@@ -166,6 +166,19 @@ class Cooked_Admin_Enqueues {
                     /* translators: 1: date and time, 2: number of recipes */
                     'i18n_last_calculated' => __( 'Last: %1$s · %2$s recipes', 'cooked' ),
                     'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
+                    'cooked_bulk_add_nonce' => wp_create_nonce( 'cooked_bulk_add' ),
+                    'i18n_bulk_add_ingredients' => __( 'Bulk Add Ingredients', 'cooked' ),
+                    'i18n_bulk_add_directions' => __( 'Bulk Add Directions', 'cooked' ),
+                    'i18n_bulk_add_placeholder_ingredients' => __( "2 cups flour\n1 tsp salt\n1/2 cup sugar\n3 large eggs", 'cooked' ),
+                    'i18n_bulk_add_placeholder_directions' => __( "Preheat oven to 350°F.\nMix dry ingredients together.\nAdd wet ingredients and stir.", 'cooked' ),
+                    'i18n_bulk_add_section_heading' => __( 'Section heading', 'cooked' ),
+                    'i18n_bulk_add_parsing' => __( 'Parsing...', 'cooked' ),
+                    'i18n_bulk_add_submit_ingredients' => __( 'Add Ingredients', 'cooked' ),
+                    'i18n_bulk_add_submit_directions' => __( 'Add Directions', 'cooked' ),
+                    'i18n_bulk_add_amount' => __( 'Amount', 'cooked' ),
+                    'i18n_bulk_add_unit' => __( 'Measurement', 'cooked' ),
+                    'i18n_bulk_add_name' => __( 'Item', 'cooked' ),
+                    'i18n_bulk_add_heading_line_label' => __( 'Heading text', 'cooked' ),
                 ];
 
                 // Cooked Admin Style Assets

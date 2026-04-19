@@ -209,6 +209,45 @@ class Cooked_Recipe_Meta {
         // Add an nonce field so we can check for it later.
         wp_nonce_field( 'cooked_recipe_custom_box', 'cooked_recipe_custom_box_nonce' );
     }
+
+    public static function bulk_add_modal() {
+        // Frontend submit form uses cooked-button + colors.php; wp-admin uses core .button styles.
+        if ( is_admin() ) {
+            $bulk_cancel_class = 'button cooked-bulk-add-cancel';
+            $bulk_submit_class = 'button button-primary cooked-bulk-add-submit';
+        } else {
+            $bulk_cancel_class = 'cooked-button cooked-secondary-button cooked-bulk-add-cancel';
+            $bulk_submit_class = 'cooked-button cooked-bulk-add-submit';
+        }
+        ?>
+        <div id="cooked-bulk-add-overlay" class="cooked-bulk-add-overlay" style="display:none;">
+            <div class="cooked-bulk-add-modal">
+                <div class="cooked-bulk-add-header">
+                    <h2 id="cooked-bulk-add-title"></h2>
+                    <a href="#" class="cooked-bulk-add-close">&times;</a>
+                </div>
+                <div class="cooked-bulk-add-body">
+                    <p class="cooked-bulk-add-help"><?php _e( 'Enter one item per line. Use the checkboxes below to mark section headings.', 'cooked' ); ?></p>
+                    <textarea id="cooked-bulk-add-textarea" rows="8" placeholder=""></textarea>
+                    <div id="cooked-bulk-add-preview" class="cooked-bulk-add-preview" style="display:none;" data-bulk-type="">
+                        <p class="cooked-bulk-add-preview-label"><strong><?php _e( 'Preview', 'cooked' ); ?></strong></p>
+                        <div id="cooked-bulk-add-preview-list" class="cooked-bulk-add-preview-list"></div>
+                        <p class="cooked-bulk-add-preview-notice cooked-bulk-add-preview-notice-ingredients" role="note">
+                            <span class="cooked-bulk-add-preview-notice-mark" aria-hidden="true">*</span>
+                            <span class="cooked-bulk-add-preview-notice-text"><?php echo __( 'Please review the parsed fields before adding. Automatic parsing may misread amounts—for example, a range written as 2-3 could appear as 23 unless you correct it.', 'cooked' ); ?></span>
+                        </p>
+                    </div>
+                </div>
+                <div class="cooked-bulk-add-footer">
+                    <button type="button" class="<?php echo esc_attr( $bulk_cancel_class ); ?>"><?php _e( 'Cancel', 'cooked' ); ?></button>
+                    <button type="button" class="<?php echo esc_attr( $bulk_submit_class ); ?>" disabled></button>
+                    <span class="cooked-bulk-add-spinner spinner" style="display:none;"></span>
+                </div>
+                <input type="hidden" id="cooked-bulk-add-type" value="">
+            </div>
+        </div>
+        <?php
+    }
 }
 
 function cooked_recipe_shortcodes_content() {
@@ -642,6 +681,7 @@ function cooked_render_recipe_fields( $post_id ) {
                     <a href="#" class="button cooked-add-ingredient-button"><?php _e('Add Ingredient','cooked'); ?></a>
                     &nbsp;<a href="#" class="button cooked-add-heading-button"><?php _e('Add Section Heading','cooked'); ?></a>
                     <?php do_action( 'cooked_ingredient_buttons_end' ); ?>
+                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="ingredients"><?php _e('Bulk Add','cooked'); ?></a>
                 </p>
 
                 <!-- TEMPLATES -->
@@ -843,8 +883,11 @@ function cooked_render_recipe_fields( $post_id ) {
             <div class="recipe-setting-block">
 
                 <p>
+                    <?php do_action( 'cooked_direction_buttons_start' ); ?>
                     <a href="#" class="button cooked-add-direction-button"><?php _e('Add Direction','cooked'); ?></a>
                     &nbsp;<a href="#" class="button cooked-add-heading-button"><?php _e('Add Section Heading','cooked'); ?></a>
+                    <?php do_action( 'cooked_direction_buttons_end' ); ?>
+                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="directions"><?php _e('Bulk Add','cooked'); ?></a>
                 </p>
 
                 <!-- TEMPLATES -->
@@ -1589,6 +1632,8 @@ function cooked_render_recipe_fields( $post_id ) {
         <?php do_action('cooked_recipe_tabs_after'); ?>
 
     </div>
+
+    <?php Cooked_Recipe_Meta::bulk_add_modal(); ?>
 
 <?php
 }

@@ -26,13 +26,13 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
     }
 
     public function widget( $args, $instance ) {
-        $recipe_id = ( isset($instance['recipe_id']) && $instance['recipe_id'] ? ' id="' . esc_attr( $instance['recipe_id'] ) . '"' : '' );
-        $style = ( isset($instance['style']) && $instance['style'] ? ' style="' . esc_attr( $instance['style'] ) . '"' : '' );
-        $width = ( isset($instance['width']) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '' );
-        $hide_image = ( isset($instance['hide_image']) && $instance['hide_image'] ? ' hide_image="true"' : '' );
-        $hide_title = ( isset($instance['hide_title']) && $instance['hide_title'] ? ' hide_title="true"' : '' );
-        $hide_excerpt = ( isset($instance['hide_excerpt']) && $instance['hide_excerpt'] ? ' hide_excerpt="true"' : '' );
-        $hide_author = ( isset($instance['hide_author']) && $instance['hide_author'] ? ' hide_author="true"' : '' );
+        $recipe_id = isset($instance['recipe_id']) && $instance['recipe_id'] ? ' id="' . esc_attr( $instance['recipe_id'] ) . '"' : '';
+        $style = isset($instance['style']) && $instance['style'] ? ' style="' . esc_attr( $instance['style'] ) . '"' : '';
+        $width = isset($instance['width']) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '';
+        $hide_image = isset($instance['hide_image']) && $instance['hide_image'] ? ' hide_image="true"' : '';
+        $hide_title = isset($instance['hide_title']) && $instance['hide_title'] ? ' hide_title="true"' : '';
+        $hide_excerpt = isset($instance['hide_excerpt']) && $instance['hide_excerpt'] ? ' hide_excerpt="true"' : '';
+        $hide_author = isset($instance['hide_author']) && $instance['hide_author'] ? ' hide_author="true"' : '';
 
         if ( apply_filters( 'cooked_can_show_recipe', true, $instance['recipe_id'] ) ):
 
@@ -95,7 +95,7 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
         <label for="<?php echo esc_attr( $this->get_field_id( 'recipe_id' ) ); ?>"><?php esc_attr_e( 'Recipe:', 'cooked' ); ?></label>
         <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'recipe_id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'recipe_id' ) ); ?>">
             <?php foreach( $recipe_list as $rid => $name ): ?>
-                <option value="<?php echo esc_attr($rid); ?>"<?php echo ( $recipe_id == $rid ? ' selected' : '' ); ?>><?php echo esc_html($name); ?></option>
+                <option value="<?php echo esc_attr($rid); ?>"<?php echo $recipe_id == $rid ? ' selected' : ''; ?>><?php echo esc_html($name); ?></option>
             <?php endforeach; ?>
         </select>
         </p>
@@ -103,10 +103,10 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
         <p>
         <label for="<?php echo esc_attr( $this->get_field_id( 'style' ) ); ?>"><?php esc_attr_e( 'Style:', 'cooked' ); ?></label>
         <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'style' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'style' ) ); ?>">
-            <option value=""<?php echo ( !$style ? ' selected' : '' ); ?>><?php esc_html_e( 'Simple', 'cooked' ); ?></option>
-            <option value="centered"<?php echo ( $style == 'centered' ? ' selected' : '' ); ?>><?php esc_html_e( 'Simple Centered', 'cooked' ); ?></option>
-            <option value="modern"<?php echo ( $style == 'modern' ? ' selected' : '' ); ?>><?php esc_html_e( 'Modern', 'cooked' ); ?></option>
-            <option value="modern-centered"<?php echo ( $style == 'modern-centered' ? ' selected' : '' ); ?>><?php esc_html_e( 'Modern Centered', 'cooked' ); ?></option>
+            <option value=""<?php echo !$style ? ' selected' : ''; ?>><?php esc_html_e( 'Simple', 'cooked' ); ?></option>
+            <option value="centered"<?php echo $style == 'centered' ? ' selected' : ''; ?>><?php esc_html_e( 'Simple Centered', 'cooked' ); ?></option>
+            <option value="modern"<?php echo $style == 'modern' ? ' selected' : ''; ?>><?php esc_html_e( 'Modern', 'cooked' ); ?></option>
+            <option value="modern-centered"<?php echo $style == 'modern-centered' ? ' selected' : ''; ?>><?php esc_html_e( 'Modern Centered', 'cooked' ); ?></option>
         </select>
         </p>
 
@@ -116,22 +116,22 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
         </p>
 
         <p>
-        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_image' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_image' ) ); ?>"<?php echo ( $hide_image ? ' checked' : '' ); ?> type="checkbox" value="1">
+        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_image' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_image' ) ); ?>"<?php echo $hide_image ? ' checked' : ''; ?> type="checkbox" value="1">
         <label for="<?php echo esc_attr( $this->get_field_id( 'hide_image' ) ); ?>"><?php esc_attr_e( 'Hide Image', 'cooked' ); ?></label>
         </p>
 
         <p>
-        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_title' ) ); ?>"<?php echo ( $hide_title ? ' checked' : '' ); ?> type="checkbox" value="1">
+        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_title' ) ); ?>"<?php echo $hide_title ? ' checked' : ''; ?> type="checkbox" value="1">
         <label for="<?php echo esc_attr( $this->get_field_id( 'hide_title' ) ); ?>"><?php esc_attr_e( 'Hide Title', 'cooked' ); ?></label>
         </p>
 
         <p>
-        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_author' ) ); ?>"<?php echo ( $hide_author ? ' checked' : '' ); ?> type="checkbox" value="1">
+        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_author' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_author' ) ); ?>"<?php echo $hide_author ? ' checked' : ''; ?> type="checkbox" value="1">
         <label for="<?php echo esc_attr( $this->get_field_id( 'hide_author' ) ); ?>"><?php esc_attr_e( 'Hide Author', 'cooked' ); ?></label>
         </p>
 
         <p>
-        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_excerpt' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_excerpt' ) ); ?>"<?php echo ( $hide_excerpt ? ' checked' : '' ); ?> type="checkbox" value="1">
+        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_excerpt' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_excerpt' ) ); ?>"<?php echo $hide_excerpt ? ' checked' : ''; ?> type="checkbox" value="1">
         <label for="<?php echo esc_attr( $this->get_field_id( 'hide_excerpt' ) ); ?>"><?php esc_attr_e( 'Hide Excerpt', 'cooked' ); ?></label>
         </p>
 
@@ -140,14 +140,14 @@ class Cooked_Widget_Recipe_Card extends WP_Widget {
 
     public function update( $new_instance, $old_instance ) {
         $instance = [];
-        $instance['title'] = ( !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '' );
-        $instance['recipe_id'] = ( !empty( $new_instance['recipe_id'] ) ? wp_strip_all_tags( $new_instance['recipe_id'] ) : false );
-        $instance['width'] = ( !empty( $new_instance['width'] ) ? wp_strip_all_tags( $new_instance['width'] ) : '100%' );
-        $instance['style'] = ( !empty( $new_instance['style'] ) ? wp_strip_all_tags( $new_instance['style'] ) : false );
-        $instance['hide_image'] = ( !empty( $new_instance['hide_image'] ) ? wp_strip_all_tags( $new_instance['hide_image'] ) : false );
-        $instance['hide_title'] = ( !empty( $new_instance['hide_title'] ) ? wp_strip_all_tags( $new_instance['hide_title'] ) : false );
-        $instance['hide_excerpt'] = ( !empty( $new_instance['hide_excerpt'] ) ? wp_strip_all_tags( $new_instance['hide_excerpt'] ) : false );
-        $instance['hide_author'] = ( !empty( $new_instance['hide_author'] ) ? wp_strip_all_tags( $new_instance['hide_author'] ) : false );
+        $instance['title'] = !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+        $instance['recipe_id'] = !empty( $new_instance['recipe_id'] ) ? wp_strip_all_tags( $new_instance['recipe_id'] ) : false;
+        $instance['width'] = !empty( $new_instance['width'] ) ? wp_strip_all_tags( $new_instance['width'] ) : '100%';
+        $instance['style'] = !empty( $new_instance['style'] ) ? wp_strip_all_tags( $new_instance['style'] ) : false;
+        $instance['hide_image'] = !empty( $new_instance['hide_image'] ) ? wp_strip_all_tags( $new_instance['hide_image'] ) : false;
+        $instance['hide_title'] = !empty( $new_instance['hide_title'] ) ? wp_strip_all_tags( $new_instance['hide_title'] ) : false;
+        $instance['hide_excerpt'] = !empty( $new_instance['hide_excerpt'] ) ? wp_strip_all_tags( $new_instance['hide_excerpt'] ) : false;
+        $instance['hide_author'] = !empty( $new_instance['hide_author'] ) ? wp_strip_all_tags( $new_instance['hide_author'] ) : false;
         return $instance;
     }
 

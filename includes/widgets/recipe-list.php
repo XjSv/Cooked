@@ -52,7 +52,7 @@ class Cooked_Widget_Recipe_List extends WP_Widget {
         $recipes = !empty( $instance['recipes'] ) ? $instance['recipes'] : '';
         $width = !empty( $instance['width'] ) ? $instance['width'] : '100%';
         $hide_image = isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false;
-        $hide_author = ( isset( $instance['hide_author'] ) && $instance['hide_author'] ? true : false );
+        $hide_author = isset( $instance['hide_author'] ) && $instance['hide_author'] ? true : false;
 
         $recipes_style = $orderby == 'date' ? ' style="display:none;' : '';
         $show_style = $orderby == 'ids' ? ' style="display:none;' : '';

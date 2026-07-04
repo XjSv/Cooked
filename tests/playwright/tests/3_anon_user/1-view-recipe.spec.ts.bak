@@ -1,0 +1,71 @@
+import { test as base, expect } from '@playwright/test';
+import { ensureValidAuth, getAuthPath } from '../../utils/auth';
+import path from 'path';
+import { execSync } from 'child_process';
+
+var postId: number;
+
+// test.afterEach('Close the page', async ({ page }) => {
+//   // logout before closing the page
+//   await page.close();
+// });
+
+// Create a new recipe
+test.describe('Create a new recipe (admin)', () => {
+  test.beforeEach(async ({ page }) => {
+    await ensureValidAuth(page, 'mtresova', 'password');
+  });
+
+  test.use({ storageState: authFile });
+
+  test('Create a new recipe', async ({ page }) => {
+    await page.goto('/wp-admin/post-new.php?post_type=cp_recipe', { waitUntil: 'networkidle' });
+    await page.getByLabel('Recipe title ...').fill('Test Recipe Playwright - ' + Date.now());
+
+    // Submit the form directly
+    // const form = page.locator('#post');
+    // await form.evaluate(form => (form as HTMLFormElement).submit());
+
+    // Wait for 1 seconds
+    await page.waitForTimeout(1000);
+
+    await page.getByRole('button', { name: 'Publish', exact: true }).click();
+
+    // await page.getByRole('button', { name: 'Publish', exact: true }).focus();
+    // await page.keyboard.press("Enter");
+
+    // await page.pause();
+
+    // await page.locator('#publish').click();
+    await page.waitForNavigation({ waitUntil: 'networkidle' });
+
+    // Check for success message
+    await expect(page.locator('.notice-success')).toBeVisible();
+    await expect(page.locator('.notice-success')).toContainText('Post published.');
+
+    // Get the post ID
+    const url = page.url();
+    const urlParts = url.split('/');
+    postId = parseInt(urlParts[urlParts.length - 1]);
+  });
+});
+
+// test.describe('Check that the recipe is created (guest)', () => {
+//   test.use({ storageState: { cookies: [], origins: [] } });
+
+//   test('Check that the recipe is created', async ({ page }) => {
+//     await page.goto('/recipes/test-recipe-playwright');
+//     await expect(page.getByText('Test Recipe Playwright')).toBeDefined();
+//   });
+// });
+
+// Delete the recipe
+// test.describe('Delete the recipe', () => {
+//   test.use({ storageState: authFile });
+
+//   test('Delete the recipe', async ({ page }) => {
+//     await page.goto(`/wp-admin/post.php?post=${postId}&action=trash`);
+//     await expect(page.locator('.notice-success')).toBeVisible();
+//     await expect(page.locator('.notice-success')).toContainText('Post moved to the Trash.');
+//   });
+// });

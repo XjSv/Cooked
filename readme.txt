@@ -93,9 +93,9 @@ Version 1.15.0 adds metric/imperial measurement system switcher, allergen suppor
 = 1.15.0 =
 * **NEW:** Metric/Imperial measurement system switcher. Convert ingredient units between systems with a new toggle alongside the servings switcher. Option available in settings to enable/disable the switcher.
 * **NEW:** Added allergen support. Mark up to 14 major allergens (FDA + EU) on a recipe via a new sidebar meta box. Allergen icons are shown on recipe cards (option available in settings to enable/disable) and can be added to single recipes via `[cooked-info include="allergens"]`.
-* **TWEAK:** Added [cooked-recipe-card] documentation in the recipe "Shortcodes" tab.
+* **TWEAK:** Added `[cooked-recipe-card]` documentation in the recipe "Shortcodes" tab.
 * **FIX:** Fix to prevent website from crashing if `[cooked-recipe id="3587"]` shortcode is used in recipe template with the same ID as the recipe.
-* **NEW:** Add a wrapping class to recipe output from the [cooked-recipe] shortcode for easier styling.
+* **NEW:** Add a wrapping class to recipe output from the `[cooked-recipe]` shortcode for easier styling.
 * **FIX:** Fixed issue with measurement units not translating in nutrient facts.
 * **FIX:** Fixed invalid recipe schema when servings were left empty, which caused critical errors in Google Search Console. Servings now default to 1 when not set.
 * **FIX:** Fixed recipe queries ignoring the limit, which could load all recipes and cause performance issues on large sites.

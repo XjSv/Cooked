@@ -330,7 +330,7 @@ class Cooked_Allergens {
         }
 
         echo '<span class="cooked-allergens-info">';
-        echo '<strong class="cooked-meta-title">' . esc_html__( 'Allergens', 'cooked' ) . '</strong>';
+        echo '<strong class="cooked-meta-title">' . __( 'Allergens', 'cooked' ) . '</strong>';
         echo $html;
         echo '</span>';
     }

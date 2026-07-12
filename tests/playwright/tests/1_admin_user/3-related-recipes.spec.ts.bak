@@ -1,0 +1,711 @@
+/**
+ * Related Recipes Shortcode Tests
+ * 
+ * Tests the [cooked-related-recipes] shortcode functionality:
+ * - Creates test recipes with specific relationships (shared categories, tags, ingredients)
+ * - Verifies related recipes are displayed correctly
+ * - Tests shortcode parameters (limit, columns, hide_image, match_categories, title)
+ * - Tests admin calculation tool in Settings > Tools
+ * 
+ * Test recipes created:
+ * - Source recipe: Italian category, pasta/dinner tags, flour/eggs/tomato/garlic ingredients
+ * - Related Recipe 1: Same category, shared ingredients (flour, eggs)
+ * - Related Recipe 2: Shared tags (pasta, dinner), shared ingredients (tomato, garlic)
+ * - Unrelated Recipe: Different category, different tags, different ingredients
+ */
+
+import { test as base, expect } from '@playwright/test';
+import { ensureValidAuth, getAuthPath } from '../../utils/auth';
+import { execSync } from 'child_process';
+
+// Recipe IDs for cleanup
+var sourceRecipeId: number;
+var relatedRecipe1Id: number;
+var relatedRecipe2Id: number;
+var unrelatedRecipeId: number;
+
+// Taxonomies created during tests (for cleanup)
+var createdCategorySlugs: string[] = [];
+var createdTagNames: string[] = [];
+
+declare global {
+  interface Window {
+    tinyMCE: {
+      get: (id: string) => {
+        setContent: (content: string) => void;
+      };
+      editors: { [key: string]: any };
+    };
+  }
+}
+
+// Create a fixture for authentication
+const test = base.extend({
+  adminContext: async ({ browser }, use) => {
+    const context = await browser.newContext({
+      storageState: getAuthPath('mtresova')
+    });
+    const page = await context.newPage();
+    await ensureValidAuth(page, 'mtresova', 'password');
+    await use(context);
+    await page.close();
+    await context.close();
+  }
+});
+
+/**
+ * Helper function to get or create a category and return its ID
+ * Tracks created categories for cleanup
+ */
+function getOrCreateCategory(slug: string, name: string): number {
+  try {
+    // Check if category already exists
+    const result = execSync(`wp term get cp_recipe_category ${slug} --field=term_id --format=json`, { encoding: 'utf-8' });
+    return parseInt(result.trim());
+  } catch {
+    // Category doesn't exist, create it
+    try {
+      const result = execSync(`wp term create cp_recipe_category "${name}" --slug="${slug}" --format=json`, { encoding: 'utf-8' });
+      const term = JSON.parse(result);
+      // Track that we created this category
+      if (!createdCategorySlugs.includes(slug)) {
+        createdCategorySlugs.push(slug);
+      }
+      return term.term_id;
+    } catch {
+      // Fallback: try to find any existing category
+      const result = execSync(`wp term list cp_recipe_category --format=json --fields=term_id,slug`, { encoding: 'utf-8' });
+      const terms = JSON.parse(result);
+      if (terms.length > 0) {
+        return terms[0].term_id;
+      }
+      return 0;
+    }
+  }
+}
+
+/**
+ * Helper function to track tag names used in recipes
+ */
+function trackTags(tagNames: string[]): void {
+  tagNames.forEach(tag => {
+    if (tag && !createdTagNames.includes(tag)) {
+      createdTagNames.push(tag);
+    }
+  });
+}
+
+/**
+ * Helper function to create a recipe with specific attributes
+ */
+async function createRecipe(
+  adminPage: any,
+  title: string,
+  categorySlug: string = '',
+  tagNames: string[] = [],
+  ingredients: string[] = [],
+  difficulty: string = '1'
+): Promise<number> {
+  await adminPage.goto('/wp-admin/post-new.php?post_type=cp_recipe', { waitUntil: 'networkidle' });
+  
+  await adminPage.getByLabel('Recipe title ...').fill(title);
+  await adminPage.selectOption('select[name="_recipe_settings[difficulty_level]"]', difficulty);
+  await adminPage.fill('input[name="_recipe_settings[prep_time]"]', '15');
+  await adminPage.fill('input[name="_recipe_settings[cook_time]"]', '30');
+  
+  // Set nutrition servings
+  await adminPage.click('#cooked-recipe-tab-nutrition', { force: true });
+  await adminPage.fill('input[name="_recipe_settings[nutrition][servings]"]', '4');
+  
+  // Set category if provided
+  if (categorySlug) {
+    const catId = getOrCreateCategory(categorySlug, categorySlug.charAt(0).toUpperCase() + categorySlug.slice(1));
+    if (catId > 0) {
+      // Wait for category checkboxes to be available
+      await adminPage.waitForSelector(`input[name="tax_input[cp_recipe_category][]"]`, { timeout: 5000 }).catch(() => {});
+      const checkbox = adminPage.locator(`input[name="tax_input[cp_recipe_category][]"][value="${catId}"]`);
+      if (await checkbox.count() > 0) {
+        await checkbox.check();
+      }
+    }
+  }
+  
+  // Set tags
+  if (tagNames.length > 0) {
+    trackTags(tagNames);
+    await adminPage.locator('input[name="newtag[cp_recipe_tags]"]').fill(tagNames.join(', '));
+  }
+  
+  // Set ingredients - add them one by one
+  if (ingredients.length > 0) {
+    await adminPage.evaluate((ingredientList: string[]) => {
+      // Get existing ingredient blocks
+      let ingredientBlocks = Array.from(document.querySelectorAll('.cooked-ingredient-block'));
+      
+      // Add more blocks if needed
+      const addButton = document.querySelector('.cooked-add-ingredient-button') as HTMLElement;
+      while (ingredientBlocks.length < ingredientList.length && addButton) {
+        addButton.click();
+        ingredientBlocks = Array.from(document.querySelectorAll('.cooked-ingredient-block'));
+      }
+      
+      // Set ingredient names
+      ingredientList.forEach((ingredientName, index) => {
+        if (index < ingredientBlocks.length) {
+          const block = ingredientBlocks[index];
+          const itemInput = block.querySelector('input[data-ingredient-part="name"]') as HTMLInputElement;
+          if (itemInput) {
+            itemInput.value = ingredientName;
+            // Trigger change event
+            itemInput.dispatchEvent(new Event('input', { bubbles: true }));
+            itemInput.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        }
+      });
+    }, ingredients);
+    
+    // Wait for ingredients to be set
+    await adminPage.waitForTimeout(800);
+  }
+  
+  // Publish
+  await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+  
+  await Promise.all([
+    adminPage.waitForURL(/post\.php\?post=\d+&action=edit/),
+    adminPage.waitForSelector('.notice-success', { timeout: 10000 })
+  ]);
+  
+  const url = adminPage.url();
+  const postIdMatch = url.match(/post=(\d+)/);
+  return postIdMatch ? parseInt(postIdMatch[1]) : 0;
+}
+
+test.describe('Related Recipes Shortcode Tests', () => {
+  test.beforeAll(async ({ adminContext }) => {
+    const adminPage = await adminContext.newPage();
+    
+    // Create source recipe: Italian Pasta with specific category, tags, and ingredients
+    sourceRecipeId = await createRecipe(
+      adminPage,
+      `Source Recipe - Related Test ${Date.now()}`,
+      'italian', // Category slug (will be created if doesn't exist)
+      ['pasta', 'italian', 'dinner'],
+      ['flour', 'eggs', 'tomato', 'garlic'],
+      '2' // Intermediate difficulty
+    );
+    
+    // Create related recipe 1: Shares category and some ingredients
+    relatedRecipe1Id = await createRecipe(
+      adminPage,
+      `Related Recipe 1 - Shared Category ${Date.now()}`,
+      'italian', // Same category
+      ['italian', 'main-course'],
+      ['flour', 'eggs', 'cheese'], // Shares flour and eggs
+      '1'
+    );
+    
+    // Create related recipe 2: Shares tags and ingredients
+    relatedRecipe2Id = await createRecipe(
+      adminPage,
+      `Related Recipe 2 - Shared Tags ${Date.now()}`,
+      '', // Different category (none)
+      ['pasta', 'dinner'], // Shares tags
+      ['tomato', 'garlic', 'onion'], // Shares tomato and garlic
+      '2' // Same difficulty
+    );
+    
+    // Create unrelated recipe: No shared attributes
+    unrelatedRecipeId = await createRecipe(
+      adminPage,
+      `Unrelated Recipe - No Matches ${Date.now()}`,
+      'dessert', // Different category
+      ['dessert', 'sweet'],
+      ['sugar', 'butter', 'vanilla'],
+      '1'
+    );
+    
+    await adminPage.close();
+    
+    // Pre-calculate related recipes cache via admin tool
+    const settingsPage = await adminContext.newPage();
+    await settingsPage.goto('/wp-admin/admin.php?page=cooked_settings#tools', { waitUntil: 'networkidle' });
+    
+    // Click Calculate Related Recipes button
+    const calculateButton = settingsPage.locator('#cooked-calculate-related-button');
+    if (await calculateButton.isVisible()) {
+      await calculateButton.click();
+      
+      // Wait for completion
+      await settingsPage.waitForSelector('#cooked-related-completed.cooked-active', { timeout: 120000 });
+    }
+    
+    await settingsPage.close();
+  });
+
+  test('Related recipes shortcode displays correctly with explicit ID', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId) {
+      test.skip();
+      return;
+    }
+    
+    // Create a test page with the shortcode
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Recipes Display ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    await adminPage.click('#content-html'); // Switch to text editor
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    await adminPage.close();
+    
+    // View the page on frontend
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Check if related recipes section exists
+    const relatedSection = page.locator('.cooked-related-recipes-grid, .cooked-related-recipes-title');
+    await expect(relatedSection.first()).toBeVisible({ timeout: 10000 });
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Related recipes respects title parameter', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId) {
+      test.skip();
+      return;
+    }
+    
+    const customTitle = `My Custom Related Recipes ${Date.now()}`;
+    
+    // Create a test page with custom title
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Recipes Title ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    await adminPage.click('#content-html');
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}" title="${customTitle}"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    await adminPage.close();
+    
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Check that custom title is displayed
+    const titleElement = page.locator('.cooked-related-recipes-title');
+    await expect(titleElement).toBeVisible();
+    await expect(titleElement).toHaveText(customTitle);
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Related recipes shows recipes with shared categories', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId || !relatedRecipe1Id) {
+      test.skip();
+      return;
+    }
+    
+    // Create a test page with the shortcode
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Categories ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    await adminPage.click('#content-html');
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    await adminPage.close();
+    
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Wait for related recipes to load
+    await page.waitForSelector('.cooked-related-recipes-grid', { timeout: 10000 });
+    
+    // Check that related recipe 1 (shares category) appears
+    const relatedRecipe1 = page.locator(`#cooked-recipe-${relatedRecipe1Id}`);
+    await expect(relatedRecipe1).toBeVisible({ timeout: 10000 });
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Related recipes shows recipes with shared tags', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId || !relatedRecipe2Id) {
+      test.skip();
+      return;
+    }
+    
+    // Create a test page with the shortcode
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Tags ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    await adminPage.click('#content-html');
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    await adminPage.close();
+    
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Wait for related recipes to load
+    await page.waitForSelector('.cooked-related-recipes-grid', { timeout: 10000 });
+    
+    // Check that related recipe 2 (shares tags) appears
+    const relatedRecipe2 = page.locator(`#cooked-recipe-${relatedRecipe2Id}`);
+    await expect(relatedRecipe2).toBeVisible({ timeout: 10000 });
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Related recipes excludes unrelated recipes', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId || !unrelatedRecipeId) {
+      test.skip();
+      return;
+    }
+    
+    // Create a test page with the shortcode
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Exclude ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    await adminPage.click('#content-html');
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    await adminPage.close();
+    
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Wait for related recipes section to load
+    await page.waitForSelector('.cooked-related-recipes-grid, .cooked-related-recipes-empty', { timeout: 10000 });
+    
+    // Check that unrelated recipe does NOT appear
+    const unrelatedRecipe = page.locator(`#cooked-recipe-${unrelatedRecipeId}`);
+    await expect(unrelatedRecipe).not.toBeVisible();
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Related recipes respects limit parameter', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId) {
+      test.skip();
+      return;
+    }
+    
+    // Create a page with the shortcode using limit=1
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Recipes Limit ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    
+    // Add shortcode with limit
+    await adminPage.click('#content-html'); // Switch to text editor
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}" limit="1"]`);
+    
+    // Publish page
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    
+    await adminPage.close();
+    
+    // View the page on frontend
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Check that only 1 recipe is displayed
+    const relatedRecipes = page.locator('.cooked-related-recipes-grid .cooked-recipe');
+    const count = await relatedRecipes.count();
+    expect(count).toBeLessThanOrEqual(1);
+    
+    // Cleanup test page
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Related recipes respects columns parameter', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId) {
+      test.skip();
+      return;
+    }
+    
+    // Create a page with the shortcode using columns=2
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Recipes Columns ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    
+    await adminPage.click('#content-html');
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}" columns="2"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    
+    await adminPage.close();
+    
+    // View the page
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Check that grid has 2 columns class
+    const grid = page.locator('.cooked-related-recipes-grid.cooked-columns-2');
+    await expect(grid).toBeVisible();
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Related recipes respects hide_image parameter', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId) {
+      test.skip();
+      return;
+    }
+    
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Recipes Hide Image ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    
+    await adminPage.click('#content-html');
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}" hide_image="true"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    
+    await adminPage.close();
+    
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Check that recipe images are not visible
+    const recipeImages = page.locator('.cooked-related-recipes-grid .cooked-recipe-image');
+    const count = await recipeImages.count();
+    expect(count).toBe(0);
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+
+  test('Admin: Calculate Related Recipes tool completes successfully', async ({ adminContext }) => {
+    const adminPage = await adminContext.newPage();
+    await adminPage.goto('/wp-admin/admin.php?page=cooked_settings#tools', { waitUntil: 'networkidle' });
+    
+    // Check that the Calculate Related Recipes button exists
+    const calculateButton = adminPage.locator('#cooked-calculate-related-button');
+    await expect(calculateButton).toBeVisible();
+    
+    // Check if "Last calculated" message exists (from previous runs)
+    const lastDone = adminPage.locator('#cooked-related-last-done');
+    const hasLastRun = await lastDone.isVisible().catch(() => false);
+    
+    // Click the button
+    await calculateButton.click();
+    
+    // Wait for progress bar to appear
+    await adminPage.waitForSelector('#cooked-related-progress.cooked-active', { timeout: 5000 });
+    
+    // Wait for completion (with a reasonable timeout for large sites)
+    await adminPage.waitForSelector('#cooked-related-completed.cooked-active', { timeout: 120000 });
+    
+    // Verify completion message is shown
+    const completedMessage = adminPage.locator('#cooked-related-completed.cooked-active');
+    await expect(completedMessage).toBeVisible();
+    await expect(completedMessage).toContainText('Done.');
+    
+    // Verify "Last calculated" message is updated/shown
+    const lastDoneAfter = adminPage.locator('#cooked-related-last-done');
+    await expect(lastDoneAfter).toBeVisible();
+    await expect(lastDoneAfter).toContainText('Last:');
+    
+    await adminPage.close();
+  });
+
+  test('Related recipes with match_categories=false excludes category matches', async ({ page }) => {
+    test.use({ storageState: { cookies: [], origins: [] } });
+    
+    if (!sourceRecipeId || !relatedRecipe1Id) {
+      test.skip();
+      return;
+    }
+    
+    const adminPage = await page.context().newPage();
+    await adminPage.goto('/wp-admin/post-new.php?post_type=page', { waitUntil: 'networkidle' });
+    
+    const pageTitle = `Test Related Recipes No Categories ${Date.now()}`;
+    await adminPage.getByLabel('Add title').fill(pageTitle);
+    
+    await adminPage.click('#content-html');
+    await adminPage.locator('#content').fill(`[cooked-related-recipes id="${sourceRecipeId}" match_categories="false"]`);
+    
+    await adminPage.getByRole('button', { name: 'Publish', exact: true }).click();
+    await adminPage.waitForURL(/post\.php\?post=\d+&action=edit/);
+    
+    const pageUrl = adminPage.url();
+    const pageIdMatch = pageUrl.match(/post=(\d+)/);
+    const testPageId = pageIdMatch ? parseInt(pageIdMatch[1]) : 0;
+    
+    await adminPage.close();
+    
+    await page.goto(`/?p=${testPageId}`, { waitUntil: 'networkidle' });
+    
+    // Recipe 1 should not appear (it only matched by category)
+    const relatedRecipe1 = page.locator(`#cooked-recipe-${relatedRecipe1Id}`);
+    await expect(relatedRecipe1).not.toBeVisible();
+    
+    // Recipe 2 should still appear (matches by tags/ingredients)
+    const relatedRecipe2 = page.locator(`#cooked-recipe-${relatedRecipe2Id}`);
+    await expect(relatedRecipe2).toBeVisible();
+    
+    // Cleanup
+    if (testPageId) {
+      execSync(`wp post delete ${testPageId} --force`, { stdio: 'ignore' });
+    }
+  });
+});
+
+// Cleanup - Delete all test recipes and created taxonomies
+test.afterAll(async () => {
+  // Delete test recipes
+  const recipeIds = [sourceRecipeId, relatedRecipe1Id, relatedRecipe2Id, unrelatedRecipeId].filter(id => id);
+  
+  for (const recipeId of recipeIds) {
+    try {
+      console.log(`Cleaning up: Deleting recipe ${recipeId}`);
+      execSync(`wp post delete ${recipeId} --force`, { stdio: 'ignore' });
+    } catch (error) {
+      console.error(`Failed to delete recipe ${recipeId}:`, error);
+    }
+  }
+  
+  // Delete created categories (only if they have no posts associated)
+  for (const categorySlug of createdCategorySlugs) {
+    try {
+      // Get category count before deleting
+      const result = execSync(`wp term get cp_recipe_category ${categorySlug} --format=json --fields=term_id,count`, { encoding: 'utf-8' }).trim();
+      if (result) {
+        const category = JSON.parse(result);
+        // Only delete if count is 0 (no posts using it) after our recipes are deleted
+        if (category.count === 0 || category.count === undefined) {
+          console.log(`Cleaning up: Deleting category ${categorySlug} (ID: ${category.term_id})`);
+          execSync(`wp term delete cp_recipe_category ${categorySlug} --force`, { stdio: 'ignore' });
+        } else {
+          console.log(`Skipping category ${categorySlug} - still in use by ${category.count} post(s)`);
+        }
+      }
+    } catch (error) {
+      // Category might not exist or already deleted, ignore
+      console.log(`Category ${categorySlug} not found or already deleted`);
+    }
+  }
+  
+  // Delete created tags (only if they have no posts associated)
+  for (const tagName of createdTagNames) {
+    try {
+      // Get tag by name
+      const result = execSync(`wp term list cp_recipe_tags --format=json --fields=term_id,name,count --name="${tagName}"`, { encoding: 'utf-8' }).trim();
+      if (result) {
+        const tags = JSON.parse(result);
+        for (const tag of tags) {
+          if (tag.name === tagName) {
+            // Only delete if count is 0 (no posts using it) or if it was likely created by us
+            // After deleting our test recipes, count should be 0
+            if (tag.count === 0 || tag.count === undefined) {
+              console.log(`Cleaning up: Deleting tag ${tagName} (ID: ${tag.term_id})`);
+              execSync(`wp term delete cp_recipe_tags ${tag.term_id} --force`, { stdio: 'ignore' });
+            } else {
+              console.log(`Skipping tag ${tagName} - still in use by ${tag.count} post(s)`);
+            }
+            break;
+          }
+        }
+      }
+    } catch (error) {
+      // Tag might not exist or already deleted, ignore
+      console.log(`Tag ${tagName} not found or already deleted`);
+    }
+  }
+  
+  // Clear the related recipes calculation cache option (optional, but good for clean state)
+  try {
+    execSync(`wp option delete cooked_related_calculation_last`, { stdio: 'ignore' });
+  } catch (error) {
+    // Option might not exist, ignore
+  }
+});

@@ -18,10 +18,10 @@
 class Cooked_Widget_Search extends WP_Widget {
 
     public function __construct() {
-        $widget_ops = array(
+        $widget_ops = [
             'classname' => 'cooked_widget_search',
             'description' => 'Display the recipe search form.',
-        );
+        ];
         parent::__construct( 'cooked_widget_search', 'Cooked - Recipe Search', $widget_ops );
     }
 
@@ -31,9 +31,9 @@ class Cooked_Widget_Search extends WP_Widget {
         if ( ! empty( $instance['title'] ) ) {
             echo wp_kses_post( $args['before_title'] ) . apply_filters( 'widget_title', $instance['title'] ) . wp_kses_post( $args['after_title'] );
         }
-        $size = ( isset($instance['size']) && $instance['size'] == 'compact' ? ' compact="true"' : '' );
-        $browse = ( isset($instance['hide_browse']) && $instance['hide_browse'] ? ' hide_browse="true"' : '' );
-        $sorting = ( isset($instance['hide_sorting']) && $instance['hide_sorting'] ? ' hide_sorting="true"' : '' );
+        $size = isset($instance['size']) && $instance['size'] == 'compact' ? ' compact="true"' : '';
+        $browse = isset($instance['hide_browse']) && $instance['hide_browse'] ? ' hide_browse="true"' : '';
+        $sorting = isset($instance['hide_sorting']) && $instance['hide_sorting'] ? ' hide_sorting="true"' : '';
         echo do_shortcode( '[cooked-search' . esc_attr( $size . $browse . $sorting ) . ']' );
         echo wp_kses_post( $args['after_widget'] );
 
@@ -41,10 +41,10 @@ class Cooked_Widget_Search extends WP_Widget {
 
     public function form( $instance ) {
 
-        $title = ( !empty( $instance['title'] ) ? $instance['title'] : false );
-        $size = ( !empty( $instance['size'] ) ? $instance['size'] : 'compact' );
-        $hide_browse = ( isset( $instance['hide_browse'] ) && $instance['hide_browse'] ? true : false );
-        $hide_sorting = ( isset( $instance['hide_sorting'] ) && $instance['hide_sorting'] ? true : false );
+        $title = !empty( $instance['title'] ) ? $instance['title'] : false;
+        $size = !empty( $instance['size'] ) ? $instance['size'] : 'compact';
+        $hide_browse = isset( $instance['hide_browse'] ) && $instance['hide_browse'] ? true : false;
+        $hide_sorting = isset( $instance['hide_sorting'] ) && $instance['hide_sorting'] ? true : false;
 
         ?>
 
@@ -56,8 +56,8 @@ class Cooked_Widget_Search extends WP_Widget {
         <p>
         <label for="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>"><?php esc_attr_e( 'Size:', 'cooked' ); ?></label>
         <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'size' ) ); ?>">
-            <option value="compact"<?php echo ( $size == 'compact' ? ' selected' : '' ); ?>><?php esc_html_e( 'Compact', 'cooked' ); ?></option>
-            <option value="wide"<?php echo ( $size == 'wide' ? ' selected' : '' ); ?>><?php esc_html_e( 'Wide', 'cooked' ); ?></option>
+            <option value="compact"<?php echo $size == 'compact' ? ' selected' : ''; ?>><?php esc_html_e( 'Compact', 'cooked' ); ?></option>
+            <option value="wide"<?php echo $size == 'wide' ? ' selected' : ''; ?>><?php esc_html_e( 'Wide', 'cooked' ); ?></option>
         </select>
         </p>
 
@@ -75,11 +75,11 @@ class Cooked_Widget_Search extends WP_Widget {
     }
 
     public function update( $new_instance, $old_instance ) {
-        $instance = array();
-        $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
-        $instance['size'] = ( ! empty( $new_instance['size'] ) ) ? wp_strip_all_tags( $new_instance['size'] ) : 'compact';
-        $instance['hide_browse'] = ( !isset( $new_instance['hide_browse'] ) ? 0 : 1 );
-        $instance['hide_sorting'] = ( !isset( $new_instance['hide_sorting'] ) ? 0 : 1 );
+        $instance = [];
+        $instance['title'] = !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+        $instance['size'] = !empty( $new_instance['size'] ) ? wp_strip_all_tags( $new_instance['size'] ) : 'compact';
+        $instance['hide_browse'] = !empty( $new_instance['hide_browse'] ) ? 1 : 0;
+        $instance['hide_sorting'] = !empty( $new_instance['hide_sorting'] ) ? 1 : 0;
         return $instance;
     }
 

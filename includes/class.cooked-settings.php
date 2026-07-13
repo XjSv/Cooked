@@ -25,6 +25,7 @@ class Cooked_Settings {
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
         add_action( 'admin_notices', [ &$this, 'browse_page_missing_notice' ] );
+        add_action( 'admin_notices', [ &$this, 'pixwell_dark_mode_notice' ] );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -95,6 +96,10 @@ class Cooked_Settings {
             }
         }
 
+        if ( isset( $settings['dark_mode'] ) ) {
+            $settings['dark_mode'] = self::normalize_dark_mode( $settings['dark_mode'] );
+        }
+
         return $settings;
     }
 
@@ -130,6 +135,32 @@ class Cooked_Settings {
         }
     }
 
+    public function pixwell_dark_mode_notice() {
+        if ( ! function_exists( 'pixwell_dark_mode' ) || ! pixwell_dark_mode() ) {
+            return;
+        }
+
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return;
+        }
+
+        $_cooked_settings = self::get();
+        $mode             = self::normalize_dark_mode( isset( $_cooked_settings['dark_mode'] ) ? $_cooked_settings['dark_mode'] : 'off' );
+
+        if ( 'enabled' !== $mode ) {
+            return;
+        }
+
+        $settings_url = trailingslashit( admin_url() ) . 'admin.php?page=cooked_settings#design';
+        $class        = 'notice notice-warning is-dismissible';
+        $message      = sprintf(
+            __( 'Pixwell has a frontend dark mode toggle. Consider switching Cooked %s to <strong>Auto</strong> so recipe styles follow the visitor\'s theme choice.', 'cooked' ),
+            '<a href="' . esc_url( $settings_url ) . '">' . __( 'Dark Mode', 'cooked' ) . '</a>'
+        );
+
+        printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
+    }
+
     public static function reset() {
         global $_cooked_settings;
         $_cooked_settings = Cooked_Settings::get();
@@ -157,7 +188,93 @@ class Cooked_Settings {
             }
         }
 
+        if ( isset( $_cooked_settings['dark_mode'] ) ) {
+            $_cooked_settings['dark_mode'] = self::normalize_dark_mode( $_cooked_settings['dark_mode'] );
+        }
+
         return apply_filters( 'cooked_get_settings', $_cooked_settings );
+    }
+
+    /**
+     * Normalize dark mode setting to off|enabled|auto.
+     *
+     * Accepts legacy checkbox arrays (e.g. ['enabled']) and the current select string.
+     *
+     * @param mixed $mode Raw dark_mode setting value.
+     * @return string One of: off, enabled, auto.
+     */
+    public static function normalize_dark_mode( $mode ) {
+        if ( is_array( $mode ) ) {
+            if ( in_array( 'auto', $mode, true ) ) {
+                return 'auto';
+            }
+            if ( in_array( 'enabled', $mode, true ) ) {
+                return 'enabled';
+            }
+            return 'off';
+        }
+
+        $mode = is_string( $mode ) ? $mode : 'off';
+
+        if ( in_array( $mode, [ 'off', 'enabled', 'auto' ], true ) ) {
+            return $mode;
+        }
+
+        return 'off';
+    }
+
+    /**
+     * Dark mode CSS scope for dynamic styles.
+     *
+     * @return string|false Empty string when dark mode is forced on; theme selector when auto; false when off.
+     */
+    public static function get_dark_mode_scope() {
+        $settings = self::get();
+        $mode     = self::normalize_dark_mode( isset( $settings['dark_mode'] ) ? $settings['dark_mode'] : 'off' );
+
+        if ( 'auto' === $mode ) {
+            $scope = apply_filters( 'cooked_dark_mode_auto_scope', '' );
+
+            if ( '' === $scope && function_exists( 'pixwell_dark_mode' ) && pixwell_dark_mode() ) {
+                $scope = "body[data-theme='dark']";
+            }
+
+            return $scope ? $scope : false;
+        }
+
+        if ( 'enabled' === $mode ) {
+            return '';
+        }
+
+        return false;
+    }
+
+    /**
+     * Prefix a comma-separated CSS selector list with the dark mode scope.
+     *
+     * @param string $selectors Comma-separated CSS selectors.
+     * @return string|false Prefixed selectors, or false when dark mode is off.
+     */
+    public static function prefix_dark_mode_css( $selectors ) {
+        $scope = self::get_dark_mode_scope();
+
+        if ( false === $scope ) {
+            return false;
+        }
+
+        if ( '' === $scope ) {
+            return $selectors;
+        }
+
+        $parts = array_map( 'trim', explode( ',', $selectors ) );
+        $parts = array_map(
+            function ( $part ) use ( $scope ) {
+                return $scope . ' ' . $part;
+            },
+            $parts
+        );
+
+        return implode( ', ', $parts );
     }
 
     public static function tabs_fields() {
@@ -370,13 +487,15 @@ class Cooked_Settings {
                 'fields' => [
                     'dark_mode' => [
                         'title' => __('Dark Mode', 'cooked'),
-                        'desc' => __('If your site has a dark background, you should enable "Dark Mode" so that Cooked can match this style.', 'cooked'),
-                        'type' => 'checkboxes',
-                        'default' => [],
+                        'desc' => __('Choose how Cooked styles recipes on dark backgrounds. Auto matches themes with a visitor-controlled dark mode toggle (e.g. Pixwell).', 'cooked'),
+                        'type' => 'select',
+                        'default' => 'off',
                         'options' => apply_filters(
                             'cooked_dark_mode_options',
                             [
-                                'enabled' => __('Enable "Dark Mode"', 'cooked'),
+                                'off'     => __('Off', 'cooked'),
+                                'enabled' => __('On', 'cooked'),
+                                'auto'    => __('Auto (match theme dark mode)', 'cooked'),
                             ]
                         )
                     ],

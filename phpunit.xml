@@ -5,6 +5,7 @@
     bootstrap="tests/phpunit/bootstrap.php"
     backupGlobals="false"
     colors="true"
+    testdox="true"
     cacheResultFile="tests/phpunit/.cache/result"
 >
     <testsuites>

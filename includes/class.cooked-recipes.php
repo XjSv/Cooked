@@ -1124,11 +1124,12 @@ class Cooked_Recipes {
                 echo '<' . $element . ' class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</' . $element . '>';
             }
 
-        } elseif (isset($dir['content']) && $dir['content'] || isset($dir['image']) && $dir['image']) {
+        } elseif (isset($dir['content']) && $dir['content'] || isset($dir['image']) && $dir['image'] || isset($dir['video']) && $dir['video']) {
 
             $dir_image_size = apply_filters( 'cooked_direction_image_size', 'large' );
             $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size, false, ['title' => esc_attr(get_the_title($dir['image']))] ) : '';
             $content = !empty($dir['content']) ? Cooked_Recipes::format_content($dir['content']) : '';
+            $video = isset($dir['video']) && $dir['video'] ? wp_get_attachment_url($dir['video']) : '';
 
             $image = apply_filters('cooked_direction_image_html', $image, $atts);
 
@@ -1140,7 +1141,7 @@ class Cooked_Recipes {
 
                 echo '<div id="cooked-single-direction-step-'. $number .'" class="cooked-single-direction cooked-direction' . ($image ? ' cooked-direction-has-image' : '') . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . $step_string . '"' : '' ) . '>';
                     echo $number ? '<span class="cooked-direction-number">' . esc_html($number) . '</span>' : '';
-                    echo '<div class="cooked-dir-content">' . do_shortcode($content) . ($image ? wpautop($image) : '') . '</div>';
+                    echo '<div class="cooked-dir-content">' . do_shortcode($content) . ($image ? wpautop($image) : '') . ($video ? '<video class="cooked-direction-video" src="' . esc_url($video) . '" controls preload="metadata" playsinline></video>' : '') . '</div>';
                 echo '</div>';
             }
         }

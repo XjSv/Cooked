@@ -613,8 +613,18 @@ var cookedSortableTouchHandler = function(event) {
                 cooked_reset_direction_builder();
             });
 
+            $_CookedDirectionBuilder.parent().on('click', '.remove-video-button', function(e) {
+                e.preventDefault();
+                var $parent = $(this).parent();
+                $parent.removeClass('cooked-has-video');
+                $parent.find('.cooked-direction-video-preview').attr('src', '');
+                $parent.find('input[data-direction-part="video"]').val('');
+                $parent.find('.direction-video-button').prop('value', cooked_admin_functions_js_vars.i18n_video_title);
+                cooked_reset_direction_builder();
+            });
+
             // Instantiates the variable that holds the media library frame.
-            var direction_image_frame, directionID;
+            var direction_image_frame, direction_video_frame, directionID;
 
             $('body').on('click', '.cooked-direction-img-placeholder, .cooked-direction-img', function(e) {
                 e.preventDefault();
@@ -660,6 +670,47 @@ var cookedSortableTouchHandler = function(event) {
 
                 // Opens the media library frame.
                 direction_image_frame.open();
+            });
+
+            $('body').on('click', '.cooked-direction-video-placeholder, .cooked-direction-video-preview', function(e) {
+                e.preventDefault();
+                var thisButton = $(this).parent().find('.direction-video-button');
+                thisButton.trigger('click');
+            });
+
+            // Runs when the video button is clicked.
+            $('body').on('click', '.direction-video-button', function(e) {
+                var thisButton = $(this);
+                directionID = thisButton.data('id');
+
+                e.preventDefault();
+
+                // If the frame already exists, re-open it.
+                if ( direction_video_frame ) {
+                    direction_video_frame.open();
+                    return;
+                }
+
+                // Sets up the media library frame
+                direction_video_frame = wp.media.frames.direction_video_frame = wp.media({
+                    title: cooked_admin_functions_js_vars.i18n_video_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_video_button },
+                    library: { type: 'video' }
+                });
+
+                // Runs when a video is selected.
+                direction_video_frame.on('select', function() {
+                    var media_attachment = direction_video_frame.state().get('selection').first().toJSON();
+
+                    var $videoBlock = $('.direction-video-button[data-id="' + directionID + '"]').closest('.cooked-direction-video');
+                    $videoBlock.find('.cooked-direction-video-preview').attr('src', media_attachment.url);
+                    $videoBlock.find('input[data-direction-part="video"]').val( media_attachment.id );
+                    $videoBlock.addClass('cooked-has-video');
+                    $('.direction-video-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_video_change );
+                });
+
+                // Opens the media library frame.
+                direction_video_frame.open();
             });
         }
 

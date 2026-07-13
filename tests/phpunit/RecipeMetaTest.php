@@ -45,4 +45,24 @@ class RecipeMetaTest extends TestCase {
         $result = Cooked_Recipe_Meta::meta_cleanup($input);
         $this->assertArrayHasKey('ingredients', $result);
     }
+
+    public function test_meta_cleanup_preserves_direction_video_field() {
+        $input = [
+            'directions' => [
+                ['content' => 'Mix ingredients', 'video' => '42'],
+            ]
+        ];
+        $result = Cooked_Recipe_Meta::meta_cleanup($input);
+        $this->assertSame('42', $result['directions'][0]['video']);
+    }
+
+    public function test_meta_cleanup_sanitizes_direction_video_field() {
+        $input = [
+            'directions' => [
+                ['content' => 'Mix', 'video' => '<script>alert(1)</script>'],
+            ]
+        ];
+        $result = Cooked_Recipe_Meta::meta_cleanup($input);
+        $this->assertStringNotContainsString('<script>', $result['directions'][0]['video']);
+    }
 }

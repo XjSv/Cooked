@@ -85,6 +85,11 @@ Version 1.15.0 adds metric/imperial measurement system switcher, allergen suppor
 
 == Changelog ==
 
+= 1.16.0 =
+* **NEW:** Added video clips to recipe direction steps. Attach a video to any direction step using the WordPress Media Library, with square preview thumbnails in the admin and 16:9 responsive video output on the frontend.
+* **TWEAK:** Responsive admin layout improvements.
+* **TWEAK:** Increased direction textarea height to 250px. Meta box title changed from "Settings" to "Cooked Settings".
+
 = 1.15.0 =
 * **NEW:** Metric/Imperial measurement system switcher. Convert ingredient units between systems with a new toggle alongside the servings switcher. Option available in settings to enable/disable the switcher.
 * **NEW:** Added allergen support. Mark up to 14 major allergens (FDA + EU) on a recipe via a new sidebar meta box. Allergen icons are shown on recipe cards (option available in settings to enable/disable) and can be added to single recipes via `[cooked-info include="allergens"]`.

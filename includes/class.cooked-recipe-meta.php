@@ -115,7 +115,7 @@ class Cooked_Recipe_Meta {
         $post_types = apply_filters( 'cp_recipe_metabox_post_types' , ['cp_recipe'] );
 
         if ( in_array( $post_type, $post_types ) ) {
-            add_meta_box( 'cooked_recipe_settings', __( 'Settings', 'cooked' ), [&$this, 'render_recipe_meta_box'], $post_type, 'normal', 'high' );
+            add_meta_box( 'cooked_recipe_settings', __( 'Cooked Settings', 'cooked' ), [&$this, 'render_recipe_meta_box'], $post_type, 'normal', 'high' );
         }
     }
 
@@ -917,6 +917,17 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <div class="cooked-direction-content">
                                     <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][content]"><?php echo !empty($value['content']) ? esc_html($value['content']) : ''; ?></textarea>
                                 </div>
+                                <div class="cooked-direction-video<?php echo ( !empty($value['video']) ? ' cooked-has-video' : '' ); ?>">
+                                    <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][video]" value="<?php echo !empty($value['video']) ? esc_attr($value['video']) : ''; ?>" />
+                                    <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr($dir_key); ?>" class="button direction-video-button" value="<?php echo !empty($value['video']) ? __( 'Change Video', 'cooked' ) : __( 'Add Video', 'cooked' ); ?>" />
+                                    <?php if ( !empty($value['video']) ): ?>
+                                        <video class="cooked-direction-video-preview" src="<?php echo esc_url(wp_get_attachment_url($value['video'])); ?>" preload="metadata" playsinline></video>
+                                    <?php else: ?>
+                                        <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
+                                    <?php endif; ?>
+                                    <div class="cooked-direction-video-placeholder"></div>
+                                    <a href="#" data-id="<?php echo esc_attr($dir_key); ?>" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                                </div>
                                 <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                             </div>
 
@@ -977,7 +988,7 @@ function cooked_render_recipe_fields( $post_id ) {
                                         'teeny' => true,
                                         'media_buttons' => false,
                                         'wpautop' => false,
-                                        'editor_height' => 100,
+                                        'editor_height' => 250,
                                         'textarea_name' => '_recipe_settings[directions][' . $random_key . '][content]',
                                         'quicktags' => true
                                     ]);
@@ -985,6 +996,13 @@ function cooked_render_recipe_fields( $post_id ) {
                             <?php else: ?>
                                 <textarea id="direction-<?php echo $random_key; ?>-content" data-direction-part="content" name="" data-id="<?php echo $random_key; ?>"></textarea>
                             <?php endif; ?>
+                        </div>
+                        <div class="cooked-direction-video">
+                            <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo $random_key; ?>][video]" value="" />
+                            <input data-direction-part="video_button" type="button" data-id="<?php echo $random_key; ?>" class="button direction-video-button" value="<?php _e( 'Add Video', 'cooked' ); ?>" />
+                            <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
+                            <div class="cooked-direction-video-placeholder"></div>
+                            <a href="#" data-id="<?php echo $random_key; ?>" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
                         </div>
                         <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                     </div>
@@ -1016,6 +1034,13 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
                     <div class="cooked-direction-content">
                         <textarea id="" data-direction-part="content" name=""></textarea>
+                    </div>
+                    <div class="cooked-direction-video">
+                        <input data-direction-part="video" type="hidden" name="" value="" />
+                        <input data-direction-part="video_button" type="button" data-id="" class="button direction-video-button" value="<?php _e( 'Add Video', 'cooked' ); ?>" />
+                        <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
+                        <div class="cooked-direction-video-placeholder"></div>
+                        <a href="#" data-id="" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
                     </div>
                     <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                 </div>

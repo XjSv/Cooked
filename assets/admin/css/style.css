@@ -53,7 +53,7 @@ body.post-type-cp_recipe .mce-fullscreen {
 #cooked-settings-wrap.is-stuck { position:static !important; }
 #cooked-settings-wrap .cooked-settings-update-button { position:absolute; top:30px; right:30px; }
 #cooked-settings-wrap .cooked-settings-update-button > .button-primary { box-shadow:none; border:none; }
-#cooked-settings-wrap.is-stuck .cooked-settings-update-button { position:fixed; top:40px; right:11px; z-index:100001; }
+#cooked-settings-wrap.is-stuck .cooked-settings-update-button { position:fixed; top:35px; right:11px; z-index:100001; }
 
 
 #cooked-recipe-tabs { list-style:none; padding:0; margin:0; position:absolute; top:0; left:0; width:100%; }
@@ -364,6 +364,14 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-directions-builder .cooked-direction-block.cooked-direction-heading > div input[type="text"] { padding:0px 7px; font-size:16px; background:#f9f9f9; font-weight:600; top:0; margin:0; }
 #cooked-directions-builder .cooked-direction-block .cooked-delete-direction { top:16px; }
 #cooked-directions-builder .cooked-direction-block.cooked-direction-heading .cooked-delete-direction { top:14px; }
+
+/* Settings image field */
+.cooked-settings-image-field { position:relative; display:inline-block; max-width:150px; }
+.cooked-settings-image-field .cooked-settings-image-preview-img { display:none; width:100%; height:auto; margin:10px 0 0; border-radius:3px; }
+.cooked-settings-image-field .cooked-settings-image-remove { display:none; position:absolute; top:50px; right:0; padding:10px; background:rgba(0,0,0,0.25); color:#fff; border-radius: 3px; }
+.cooked-settings-image-field.cooked-has-image .cooked-settings-image-remove { display:inline-block; }
+.cooked-settings-image-field.cooked-has-image .cooked-settings-image-remove:hover { background:#ff0100; }
+.cooked-settings-image-field.cooked-has-image .cooked-settings-image-preview-img { display:block; }
 
 /* Direction Video */
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-video .cooked-direction-video-preview { display:none; width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:3px; cursor:pointer; }

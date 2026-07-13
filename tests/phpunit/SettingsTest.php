@@ -35,6 +35,14 @@ class SettingsTest extends TestCase {
         $this->assertArrayHasKey('main_color', $tabs['design']['fields']);
     }
 
+    public function test_tabs_fields_design_has_default_recipe_image() {
+        $tabs = Cooked_Settings::tabs_fields();
+        $field = $tabs['design']['fields']['default_recipe_image'];
+
+        $this->assertSame('image_field', $field['type']);
+        $this->assertSame(0, $field['default']);
+    }
+
     public function test_tabs_fields_has_permalinks_tab() {
         $tabs = Cooked_Settings::tabs_fields();
         $this->assertArrayHasKey('permalinks', $tabs);

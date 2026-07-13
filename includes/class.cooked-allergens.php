@@ -127,6 +127,20 @@ class Cooked_Allergens {
         $selected = isset( $recipe_settings['allergens'] ) && is_array( $recipe_settings['allergens'] )
             ? $recipe_settings['allergens']
             : [];
+        self::render_field_checkboxes( $selected );
+    }
+
+    /**
+     * Render allergen checkbox field markup (admin metabox and front-end form).
+     *
+     * @since 1.15.0
+     * @param array $selected Selected allergen storage keys.
+     */
+    public static function render_field_checkboxes( $selected = [] ) {
+        if ( ! is_array( $selected ) ) {
+            $selected = [];
+        }
+
         $allergens = self::get_allergens();
         ?>
         <div class="cooked-allergens-checkboxes">
@@ -144,6 +158,23 @@ class Cooked_Allergens {
             <?php endforeach; ?>
         </div>
         <?php
+    }
+
+    /**
+     * Whitelist selected allergen keys against known definitions.
+     *
+     * @since 1.15.0
+     * @param array $selected Submitted allergen keys.
+     * @return array
+     */
+    public static function sanitize_selected( $selected ) {
+        if ( ! is_array( $selected ) ) {
+            return [];
+        }
+
+        $valid_keys = array_keys( self::get_allergens() );
+
+        return array_values( array_intersect( $selected, $valid_keys ) );
     }
 
     /**

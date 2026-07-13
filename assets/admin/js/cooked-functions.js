@@ -464,6 +464,53 @@ var cookedSortableTouchHandler = function(event) {
                     window.scrollTo(0,0);
                 }
             });
+
+            var settings_image_frame;
+
+            $_CookedSettingsPanel.on('click', '.cooked-settings-image-remove', function(e) {
+                e.preventDefault();
+
+                var $field = $(this).closest('.cooked-settings-image-field');
+
+                $field.removeClass('cooked-has-image');
+                $field.find('.cooked-settings-image-preview-img').attr('src', '').removeAttr('srcset').removeAttr('sizes');
+                $field.find('.cooked-settings-image-input').val('0');
+                $field.find('.cooked-settings-image-button').val(cooked_admin_functions_js_vars.i18n_image_title);
+            });
+
+            $_CookedSettingsPanel.on('click', '.cooked-settings-image-button', function(e) {
+                e.preventDefault();
+
+                var $button = $(this);
+                var $field = $button.closest('.cooked-settings-image-field');
+
+                if (settings_image_frame) {
+                    settings_image_frame.off('select');
+                }
+
+                settings_image_frame = wp.media({
+                    title: cooked_admin_functions_js_vars.i18n_image_title,
+                    button: { text: cooked_admin_functions_js_vars.i18n_image_button },
+                    library: { type: 'image' }
+                });
+
+                settings_image_frame.on('select', function() {
+                    var media_attachment = settings_image_frame.state().get('selection').first().toJSON();
+                    var thumbUrl = media_attachment.sizes && media_attachment.sizes.thumbnail
+                        ? media_attachment.sizes.thumbnail.url
+                        : media_attachment.url;
+
+                    $field.addClass('cooked-has-image');
+                    $field.find('.cooked-settings-image-preview-img')
+                        .attr('src', thumbUrl)
+                        .removeAttr('srcset')
+                        .removeAttr('sizes');
+                    $field.find('.cooked-settings-image-input').val(media_attachment.id);
+                    $button.val(cooked_admin_functions_js_vars.i18n_image_change);
+                });
+
+                settings_image_frame.open();
+            });
         }
 
         if ($_CookedIngredientBuilder.length) {

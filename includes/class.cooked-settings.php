@@ -82,6 +82,14 @@ class Cooked_Settings {
                                 });
                             }
                         }
+                    } elseif ( $field['type'] === 'image_field' ) {
+                        $image_id = isset( $settings[ $field_name ] ) ? absint( $settings[ $field_name ] ) : 0;
+
+                        if ( $image_id && ! wp_attachment_is_image( $image_id ) ) {
+                            $image_id = 0;
+                        }
+
+                        $settings[ $field_name ] = $image_id;
                     }
                 }
             }
@@ -385,6 +393,12 @@ class Cooked_Settings {
                             ]
                         )
                     ],
+                    'default_recipe_image' => [
+                        'title' => __( 'Default Recipe Image', 'cooked' ),
+                        'desc' => __( 'Used as the featured image for recipes that do not have one set.', 'cooked' ),
+                        'type' => 'image_field',
+                        'default' => 0,
+                    ],
                     'main_color' => [
                         'title' => __('Main Color', 'cooked'),
                         'desc' => __('Used on buttons, cooking timer, etc.', 'cooked'),
@@ -671,6 +685,30 @@ class Cooked_Settings {
         echo '<p>';
             echo '<input class="cooked-color-field" type="text"' . ( $default ? ' data-default-color="' . esc_attr( $default ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '">';
         echo '</p>';
+    }
+
+    public static function field_image_field( $field_name, $default ) {
+        global $_cooked_settings;
+
+        $attachment_id = isset( $_cooked_settings[ $field_name ] ) ? absint( $_cooked_settings[ $field_name ] ) : 0;
+        $has_image = $attachment_id && wp_attachment_is_image( $attachment_id );
+        $preview_id = 'cooked-settings-image-' . esc_attr( $field_name ) . '-src';
+
+        echo '<div class="cooked-settings-image-field' . ( $has_image ? ' cooked-has-image' : '' ) . '">';
+            echo '<input type="hidden" class="cooked-settings-image-input" name="cooked_settings[' . esc_attr( $field_name ) . ']" id="cooked-settings-image-' . esc_attr( $field_name ) . '" value="' . esc_attr( $attachment_id ) . '" />';
+            echo '<input type="button" class="button cooked-settings-image-button" value="' . esc_attr( $has_image ? __( 'Change Image', 'cooked' ) : __( 'Add Image', 'cooked' ) ) . '" />';
+
+            if ( $has_image ) {
+                echo wp_get_attachment_image( $attachment_id, 'thumbnail', false, [
+                    'class' => 'cooked-settings-image-preview-img',
+                    'id' => $preview_id,
+                ] );
+            } else {
+                echo '<img class="cooked-settings-image-preview-img" id="' . esc_attr( $preview_id ) . '" src="" alt="" />';
+            }
+
+            echo '<a href="#" class="cooked-settings-image-remove"><i class="cooked-icon cooked-icon-times"></i></a>';
+        echo '</div>';
     }
 
     public static function field_checkboxes($field_name, $options, $color = false, $field = []) {

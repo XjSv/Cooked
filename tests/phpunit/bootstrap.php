@@ -124,6 +124,10 @@ function has_post_thumbnail( $post_id = 0 ) { return false; }
 function get_the_post_thumbnail( $post_id = 0, $size = 'post-thumbnail', $attr = [] ) { return ''; }
 function get_the_post_thumbnail_url( $post_id = 0, $size = 'post-thumbnail' ) { return ''; }
 function get_post( $post_id = null, $output = OBJECT, $filter = 'raw' ) {
+    if ( is_object( $post_id ) ) {
+        return $post_id;
+    }
+
     return (object) [
         'ID' => $post_id,
         'post_title' => 'Test Recipe',
@@ -252,7 +256,7 @@ function get_the_terms( $post_id, $taxonomy ) { return [ (object) [ 'term_id' =>
 function get_avatar( $id_or_email, $size = 96, $default = '', $alt = '' ) { return '<img src="avatar.jpg" />'; }
 function get_avatar_url( $id_or_email, $args = [] ) { return 'http://example.com/avatar.jpg'; }
 function wp_get_attachment_image_src( $attachment_id, $size = 'thumbnail', $icon = false ) { return false; }
-function wp_attachment_is_image( $attachment_id ) { return false; }
+function wp_attachment_is_image( $attachment_id ) { return $attachment_id > 0; }
 function taxonomy_exists( $taxonomy ) { return true; }
 function wp_enqueue_style( $handle, $src = '', $deps = [], $ver = false, $media = 'all' ) { return true; }
 function wp_enqueue_script( $handle, $src = '', $deps = [], $ver = false, $in_footer = false ) { return true; }

@@ -45,11 +45,13 @@ $dm = function ( $selectors ) {
 <?php echo $dm( '.cooked-recipe-info span.cooked-print > a, .cooked-recipe-info span.cooked-fsm-button' ); ?> { color:rgba(255,255,255,0.5); }
 <?php echo $dm( '.cooked-recipe-info span.cooked-print > a:hover, .cooked-recipe-info span.cooked-fsm-button:hover' ); ?> { color:#fff; }
 <?php echo $dm( '.cooked-recipe-info span.cooked-time-icon, .cooked-recipe-info span.cooked-servings-icon' ); ?> { color:#fff; opacity:0.5; }
+<?php echo $dm( '.single-cp_recipe .cooked-recipe-ingredients' ); ?> { border-color:rgba(255,255,255,0.25); }
+<?php echo $dm( '.single-cp_recipe .cooked-recipe-directions' ); ?> { border-color:rgba(255,255,255,0.25); }
 <?php echo $dm( '.cooked-recipe-ingredients .cooked-ingredient-checkbox' ); ?> { border-color:rgba(255,255,255,0.25); color:#fff; }
 <?php echo $dm( '.cooked-recipe-ingredients .cooked-ingredient-checkbox:hover' ); ?> { border-color:rgba(255,255,255,0.5); }
 <?php echo $dm( '.cooked-nutrition-label' ); ?> { background:rgba(0,0,0,0.25); border:none; border-radius:5px; }
 <?php echo $dm( '.cooked-nutrition-label .cooked-nutrition-title' ); ?> { color:#fff; }
-<?php echo $dm( '.cooked-nutrition-label .cooked-nut-hr' ); ?> { border-color:rgba(255,255,255,0.15); }
+<?php echo $dm( '.single-cp_recipe .cooked-nutrition-label .cooked-nut-hr' ); ?> { border-color:rgba(255,255,255,0.15); }
 <?php echo $dm( '.cooked-nutrition-label dt.cooked-nut-spacer, .cooked-nutrition-label dl.cooked-nut-spacer' ); ?> { background:rgba(255,255,255,0.15); }
 <?php echo $dm( '.cooked-nutrition-label dt, .cooked-nutrition-label dl.cooked-nut-bottom dt, .cooked-nutrition-label dl.cooked-nut-bottom dt:nth-last-child(2):nth-child(2n)' ); ?> { border-color:rgba(255,255,255,0.15); }
 <?php echo $dm( '.cooked-recipe-card' ); ?> { background:rgba(0,0,0,0.25); box-shadow:none !important; }
@@ -67,6 +69,10 @@ $dm = function ( $selectors ) {
 <?php echo $dm( '#cooked-timers-wrap .cooked-timer-block.cooked-paused' ); ?> { background:rgba(255,255,255,0.05); }
 <?php echo $dm( '#cooked-timers-wrap .cooked-timer-block.cooked-paused .cooked-timer-obj' ); ?> { color:rgba(255,255,255,0.5); }
 <?php echo $dm( '#cooked-timers-wrap .cooked-timer-block .cooked-progress' ); ?> { background:rgba(255,255,255,0.15); }
+<?php
+echo $dm( '.cooked-related-recipes-empty' ); ?> { background:rgba(255, 255,255,0.25); color:#fff; }
+<?php
+echo $dm( '.cooked-recipe-search select.cooked-sortby-select option' ); ?> { background:rgba(79, 79, 79, 1); color:#fff; }
 <?php
 
 endif;

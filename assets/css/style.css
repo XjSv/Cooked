@@ -1770,7 +1770,8 @@ body .cooked-pagination-numbered > a:hover {
 .cooked-fsm .cooked-close-fsm {
     color: #fff;
     position: absolute;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
     right: 1.25rem;
 }
 .cooked-fsm h2 {

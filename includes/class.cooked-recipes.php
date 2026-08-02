@@ -26,7 +26,6 @@ class Cooked_Recipes {
         add_filter( 'parse_query', [&$this, 'custom_taxonomy_in_query'], 10 );
 
         add_action( 'template_redirect', [&$this, 'print_recipe_template'], 10 );
-        add_filter( 'body_class', [&$this, 'print_view_body_class'] );
         add_action( 'cooked_check_recipe_query', [&$this, 'check_recipe_query'], 10 );
         add_action( 'pre_get_posts', [&$this, 'cooked_pre_get_posts'], 10, 1 );
         add_action( 'restrict_manage_posts', [&$this, 'filter_recipes_by_taxonomy'], 10 );
@@ -375,118 +374,40 @@ class Cooked_Recipes {
 
     public function print_recipe_template() {
         if ( is_singular('cp_recipe') && isset($_GET['print']) ):
-            add_action( 'wp_enqueue_scripts', [__CLASS__, 'print_enqueues'], 99 );
-            add_action( 'wp_head', [__CLASS__, 'print_view_robots'], 1 );
-            if ( did_action( 'wp_enqueue_scripts' ) ) {
-                self::print_enqueues();
-            }
             load_template( COOKED_DIR . 'templates/front/recipe-print.php', false);
             exit;
         endif;
     }
 
-    public static function is_print_view() {
-        return is_singular( 'cp_recipe' ) && isset( $_GET['print'] );
-    }
-
-    public static function print_enqueues() {
-        static $done = false;
-        if ( $done || ! self::is_print_view() ) {
-            return;
-        }
-        $done = true;
-
-        $min = COOKED_DEV ? '' : '.min';
-        wp_enqueue_style( 'cooked-print', COOKED_URL . 'assets/css/print' . $min . '.css', [], COOKED_VERSION, 'screen,print' );
-        wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION, 'screen,print' );
-        wp_dequeue_style( 'cooked-essentials' );
-        wp_dequeue_style( 'cooked-styling' );
-
-        $hide_css = self::print_view_hide_css();
-        if ( $hide_css ) {
-            wp_add_inline_style( 'cooked-print', $hide_css );
-        }
-    }
-
-    public static function print_view_robots() {
-        if ( ! self::is_print_view() ) {
-            return;
-        }
-        echo '<meta name="robots" content="noindex,nofollow">' . "\n";
-    }
-
-    public function print_view_body_class( $classes ) {
-        if ( ! self::is_print_view() ) {
-            return $classes;
-        }
-
+    public static function print_logo() {
         global $_cooked_settings;
-
-        $classes[] = 'cooked-print-view';
 
         $print_view_options = isset( $_cooked_settings['print_view_display_options'] ) && is_array( $_cooked_settings['print_view_display_options'] )
             ? $_cooked_settings['print_view_display_options']
             : [];
 
-        if ( ! in_array( 'site_header', $print_view_options, true ) ) {
-            $classes[] = 'cooked-print-hide-header';
+        if ( ! in_array( 'site_logo', $print_view_options, true ) ) {
+            return;
         }
 
-        if ( ! in_array( 'site_footer', $print_view_options, true ) ) {
-            $classes[] = 'cooked-print-hide-footer';
-        }
+        echo '<div id="cooked-print-logo">';
 
-        return apply_filters( 'cooked_print_body_classes', $classes );
-    }
-
-    public static function print_view_hide_css() {
-        $header_selectors = apply_filters(
-            'cooked_print_header_hide_selectors',
-            [
-                'header',
-                '#masthead',
-                '.site-header',
-                '#header',
-                '.header',
-                '.wp-block-template-part-site-header',
-            ]
-        );
-
-        $footer_selectors = apply_filters(
-            'cooked_print_footer_hide_selectors',
-            [
-                'footer',
-                '#colophon',
-                '.site-footer',
-                '#footer',
-                '.footer',
-                '.wp-block-template-part-site-footer',
-            ]
-        );
-
-        $css = '';
-
-        if ( ! empty( $header_selectors ) ) {
-            $header_rules = array_map(
-                function ( $selector ) {
-                    return 'body.cooked-print-hide-header ' . trim( $selector );
-                },
-                $header_selectors
+        $logo_id = get_theme_mod( 'custom_logo' );
+        if ( $logo_id ) {
+            echo wp_get_attachment_image(
+                $logo_id,
+                'full',
+                false,
+                [
+                    'alt' => get_bloginfo( 'name' ),
+                    'class' => 'cooked-print-logo-image',
+                ]
             );
-            $css .= implode( ",\n", $header_rules ) . " { display:none !important; }\n";
+        } else {
+            echo '<span class="cooked-print-logo-text">' . esc_html( get_bloginfo( 'name' ) ) . '</span>';
         }
 
-        if ( ! empty( $footer_selectors ) ) {
-            $footer_rules = array_map(
-                function ( $selector ) {
-                    return 'body.cooked-print-hide-footer ' . trim( $selector );
-                },
-                $footer_selectors
-            );
-            $css .= implode( ",\n", $footer_rules ) . " { display:none !important; }\n";
-        }
-
-        return $css;
+        echo '</div>';
     }
 
     public static function vendor_checks( $content ) {

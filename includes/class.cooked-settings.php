@@ -333,6 +333,18 @@ class Cooked_Settings {
                             ]
                         )
                     ],
+                    'print_view_display_options' => [
+                        'title' => __('Print View', 'cooked'),
+                        'desc' => __('When enabled, the website logo will appear at the top of the recipe print screen.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'default' => [],
+                        'options' => apply_filters(
+                            'cooked_print_view_display_options',
+                            [
+                                'site_logo' => __('Show Website Logo', 'cooked'),
+                            ]
+                        )
+                    ],
                     'carb_format' => [
                         'title' => __('Carbs Format', 'cooked'),
                         'desc' => __('You can display carbs as "Total" or "Net".', 'cooked'),

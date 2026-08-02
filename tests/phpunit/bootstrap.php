@@ -29,9 +29,44 @@ function esc_html_x( $text, $context, $domain = 'default' ) { return $text; }
 /**
  * Filter and action stubs
  */
-function apply_filters( $tag, $value, ...$args ) { return $value; }
-function add_filter( $tag, $callback, $priority = 10, $accepted_args = 1 ) { return true; }
-function remove_filter( $tag, $callback, $priority = 10 ) { return true; }
+$GLOBALS['_cooked_test_filters'] = [];
+
+function apply_filters( $tag, $value, ...$args ) {
+    if ( empty( $GLOBALS['_cooked_test_filters'][ $tag ] ) ) {
+        return $value;
+    }
+
+    ksort( $GLOBALS['_cooked_test_filters'][ $tag ] );
+
+    foreach ( $GLOBALS['_cooked_test_filters'][ $tag ] as $callbacks ) {
+        foreach ( $callbacks as $callback ) {
+            $value = call_user_func_array( $callback, array_merge( [ $value ], $args ) );
+        }
+    }
+
+    return $value;
+}
+
+function add_filter( $tag, $callback, $priority = 10, $accepted_args = 1 ) {
+    $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ][] = $callback;
+    return true;
+}
+
+function remove_filter( $tag, $callback, $priority = 10 ) {
+    if ( empty( $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ] ) ) {
+        return false;
+    }
+
+    foreach ( $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ] as $index => $registered_callback ) {
+        if ( $registered_callback === $callback ) {
+            unset( $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ][ $index ] );
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function add_action( $tag, $callback, $priority = 10, $accepted_args = 1 ) { return true; }
 function do_action( $tag, ...$args ) { return; }
 function remove_action( $tag, $callback, $priority = 10 ) { return true; }

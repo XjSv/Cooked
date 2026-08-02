@@ -25,7 +25,6 @@ class Cooked_Settings {
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
         add_action( 'admin_notices', [ &$this, 'browse_page_missing_notice' ] );
-        add_action( 'admin_notices', [ &$this, 'pixwell_dark_mode_notice' ] );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -135,32 +134,6 @@ class Cooked_Settings {
         }
     }
 
-    public function pixwell_dark_mode_notice() {
-        if ( ! function_exists( 'pixwell_dark_mode' ) || ! pixwell_dark_mode() ) {
-            return;
-        }
-
-        if ( ! current_user_can( 'manage_options' ) ) {
-            return;
-        }
-
-        $_cooked_settings = self::get();
-        $mode             = self::normalize_dark_mode( isset( $_cooked_settings['dark_mode'] ) ? $_cooked_settings['dark_mode'] : 'off' );
-
-        if ( 'enabled' !== $mode ) {
-            return;
-        }
-
-        $settings_url = trailingslashit( admin_url() ) . 'admin.php?page=cooked_settings#design';
-        $class        = 'notice notice-warning is-dismissible';
-        $message      = sprintf(
-            __( 'Pixwell has a frontend dark mode toggle. Consider switching Cooked %s to <strong>Auto</strong> so recipe styles follow the visitor\'s theme choice.', 'cooked' ),
-            '<a href="' . esc_url( $settings_url ) . '">' . __( 'Dark Mode', 'cooked' ) . '</a>'
-        );
-
-        printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
-    }
-
     public static function reset() {
         global $_cooked_settings;
         $_cooked_settings = Cooked_Settings::get();
@@ -233,11 +206,7 @@ class Cooked_Settings {
         $mode     = self::normalize_dark_mode( isset( $settings['dark_mode'] ) ? $settings['dark_mode'] : 'off' );
 
         if ( 'auto' === $mode ) {
-            $scope = apply_filters( 'cooked_dark_mode_auto_scope', '' );
-
-            if ( '' === $scope && function_exists( 'pixwell_dark_mode' ) && pixwell_dark_mode() ) {
-                $scope = "body[data-theme='dark']";
-            }
+            $scope = apply_filters( 'cooked_dark_mode_auto_scope', '[data-theme="dark"]' );
 
             return $scope ? $scope : false;
         }
@@ -487,7 +456,10 @@ class Cooked_Settings {
                 'fields' => [
                     'dark_mode' => [
                         'title' => __('Dark Mode', 'cooked'),
-                        'desc' => __('Choose how Cooked styles recipes on dark backgrounds. Auto matches themes with a visitor-controlled dark mode toggle (e.g. Pixwell).', 'cooked'),
+                        'desc' => apply_filters(
+                            'cooked_dark_mode_field_desc',
+                            __( 'Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off.', 'cooked' )
+                        ),
                         'type' => 'select',
                         'default' => 'off',
                         'options' => apply_filters(

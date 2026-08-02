@@ -1265,12 +1265,12 @@ class Cooked_Recipes {
                 echo '<' . $element . ' class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</' . $element . '>';
             }
 
-        } elseif (isset($dir['content']) && $dir['content'] || isset($dir['image']) && $dir['image'] || isset($dir['video']) && $dir['video']) {
+        } elseif ( !empty($dir['content']) || !empty($dir['image']) || !empty($dir['video']) ) {
 
             $dir_image_size = apply_filters( 'cooked_direction_image_size', 'large' );
-            $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size, false, ['title' => esc_attr(get_the_title($dir['image']))] ) : '';
+            $image = !empty($dir['image']) ? wp_get_attachment_image( $dir['image'], $dir_image_size, false, ['title' => esc_attr(get_the_title($dir['image']))] ) : '';
             $content = !empty($dir['content']) ? Cooked_Recipes::format_content($dir['content']) : '';
-            $video = isset($dir['video']) && $dir['video'] ? wp_get_attachment_url($dir['video']) : '';
+            $video = !empty($dir['video']) ? wp_get_attachment_url($dir['video']) : '';
 
             $image = apply_filters('cooked_direction_image_html', $image, $atts);
 

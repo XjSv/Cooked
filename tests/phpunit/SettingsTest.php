@@ -63,4 +63,83 @@ class SettingsTest extends TestCase {
         $settings = Cooked_Settings::get();
         $this->assertIsArray($settings);
     }
+
+    public function test_dark_mode_options_include_auto() {
+        $tabs = Cooked_Settings::tabs_fields();
+        $field = $tabs['design']['fields']['dark_mode'];
+        $options = $field['options'];
+
+        $this->assertSame('select', $field['type']);
+        $this->assertSame('off', $field['default']);
+        $this->assertArrayHasKey('off', $options);
+        $this->assertArrayHasKey('enabled', $options);
+        $this->assertArrayHasKey('auto', $options);
+    }
+
+    public function test_normalize_dark_mode_accepts_legacy_arrays() {
+        $this->assertSame('off', Cooked_Settings::normalize_dark_mode([]));
+        $this->assertSame('enabled', Cooked_Settings::normalize_dark_mode(['enabled']));
+        $this->assertSame('auto', Cooked_Settings::normalize_dark_mode(['auto']));
+        $this->assertSame('auto', Cooked_Settings::normalize_dark_mode(['enabled', 'auto']));
+    }
+
+    public function test_get_dark_mode_scope_returns_false_when_off() {
+        update_option('cooked_settings', ['dark_mode' => 'off']);
+
+        $this->assertFalse(Cooked_Settings::get_dark_mode_scope());
+    }
+
+    public function test_get_dark_mode_scope_returns_empty_string_when_forced_on() {
+        update_option('cooked_settings', ['dark_mode' => 'enabled']);
+
+        $this->assertSame('', Cooked_Settings::get_dark_mode_scope());
+    }
+
+    public function test_get_dark_mode_scope_returns_default_selector_when_auto() {
+        update_option('cooked_settings', ['dark_mode' => 'auto']);
+
+        $this->assertSame('[data-theme="dark"]', Cooked_Settings::get_dark_mode_scope());
+    }
+
+    public function test_prefix_dark_mode_css_returns_false_when_off() {
+        update_option('cooked_settings', ['dark_mode' => 'off']);
+
+        $this->assertFalse(Cooked_Settings::prefix_dark_mode_css('.cooked-fsm'));
+    }
+
+    public function test_prefix_dark_mode_css_returns_selector_when_forced_on() {
+        update_option('cooked_settings', ['dark_mode' => 'enabled']);
+
+        $this->assertSame('.cooked-fsm', Cooked_Settings::prefix_dark_mode_css('.cooked-fsm'));
+    }
+
+    public function test_prefix_dark_mode_css_prefixes_with_default_auto_scope() {
+        update_option('cooked_settings', ['dark_mode' => 'auto']);
+
+        $prefixed = Cooked_Settings::prefix_dark_mode_css('.cooked-fsm, .cooked-recipe-card');
+
+        $this->assertSame(
+            '[data-theme="dark"] .cooked-fsm, [data-theme="dark"] .cooked-recipe-card',
+            $prefixed
+        );
+    }
+
+    public function test_prefix_dark_mode_css_respects_auto_scope_filter() {
+        update_option('cooked_settings', ['dark_mode' => 'auto']);
+
+        $callback = function () {
+            return 'body.dark-mode';
+        };
+
+        add_filter('cooked_dark_mode_auto_scope', $callback);
+
+        $prefixed = Cooked_Settings::prefix_dark_mode_css('.cooked-fsm, .cooked-recipe-card');
+
+        remove_filter('cooked_dark_mode_auto_scope', $callback);
+
+        $this->assertSame(
+            'body.dark-mode .cooked-fsm, body.dark-mode .cooked-recipe-card',
+            $prefixed
+        );
+    }
 }

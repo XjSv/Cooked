@@ -291,6 +291,7 @@ final class Cooked_Plugin {
             self::$instance->elementor = new Cooked_Elementor();
             self::$instance->extra = new Cooked_Plugin_Extra();
             self::$instance->multilingual = new Cooked_Multilingual();
+            self::$instance->pixwell = new Cooked_Pixwell();
 
             self::$instance->module_setup();
 
@@ -495,6 +496,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-plugin-extra.php';
         require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
         require_once COOKED_DIR . 'includes/class.cooked-allergens.php';
+        require_once COOKED_DIR . 'includes/class.cooked-pixwell.php';
 
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             require_once COOKED_DIR . 'includes/class.cooked-cli.php';

@@ -88,7 +88,13 @@ Version 1.15.0 adds metric/imperial measurement system switcher, allergen suppor
 = 1.16.0 =
 * **NEW:** Added video clips to recipe direction steps. Attach a video to any direction step using the WordPress Media Library, with square preview thumbnails in the admin and 16:9 responsive video output on the frontend.
 * **TWEAK:** Responsive admin layout improvements.
-* **TWEAK:** Increased direction textarea height to 250px. Meta box title changed from "Settings" to "Cooked Settings".
+* **TWEAK:** Increased direction textarea height.
+* **TWEAK:** Meta box title changed from "Settings" to "Cooked Settings".
+* **NEW:** Dark Mode setting now supports Off, On, and Auto. Auto follows theme dark mode toggles, with dedicated Pixwell compatibility (admin notice and settings tip when Pixwell's dark mode is enabled).
+* **FIX:** Fixed the Recipe Category widget "Hide Empty" option, and Recipe Search widget "Hide Browse" / "Hide Sorting" options not saving.
+* **FIX:** Fixed settings "Save" button alignment.
+* **NEW:** Added a Default Recipe Image option in settings, used as the featured image for recipes that do not have one set.
+* **NEW:** Added a "Show Website Logo" option to the Print View settings. When enabled, the site logo (or site name) appears at the top of the recipe print screen.
 
 = 1.15.0 =
 * **NEW:** Metric/Imperial measurement system switcher. Convert ingredient units between systems with a new toggle alongside the servings switcher. Option available in settings to enable/disable the switcher.

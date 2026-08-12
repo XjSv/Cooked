@@ -6,7 +6,7 @@ const main = '#basil-main .basil-main-template';
 test.describe('Browse filters accessibility (anonymous user)', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('browse filter panel — no accessibility violations', async ({ page }) => {
+  test('browse filter panel - no accessibility violations', async ({ page }) => {
     await page.goto('/browse-recipes', { waitUntil: 'networkidle' });
     await page.locator(`${main} .cooked-recipe-search`).waitFor();
     await page.locator(`${main} .cooked-browse-select`).click();
@@ -14,7 +14,7 @@ test.describe('Browse filters accessibility (anonymous user)', () => {
     await expectAccessible(page);
   });
 
-  test('browse category bread — no accessibility violations', async ({ page }) => {
+  test('browse category bread - no accessibility violations', async ({ page }) => {
     await page.goto('/browse-recipes', { waitUntil: 'networkidle' });
     await page.locator(`${main} .cooked-recipe-search`).waitFor();
     await page.locator(`${main} .cooked-browse-select`).click();

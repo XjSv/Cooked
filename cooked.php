@@ -6,6 +6,7 @@
  * Author:              Gora Tech
  * Author URI: 	        https://goratech.dev
  * Version: 		    1.15.0
+ * Version: 		    1.16.0
  * Text Domain: 	    cooked
  * Domain Path: 	    /languages
  * License:     	    GPLv2 or later
@@ -41,6 +42,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 
 define( 'COOKED_DEV', false );
 define( 'COOKED_VERSION', '1.15.0' );
+define( 'COOKED_VERSION', '1.16.0' );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
 

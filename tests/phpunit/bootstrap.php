@@ -11,7 +11,7 @@
 
 define( 'ABSPATH', __DIR__ . '/../../' );
 define( 'COOKED_DIR', __DIR__ . '/../../' );
-define( 'COOKED_VERSION', '1.15.0' );
+define( 'COOKED_VERSION', '1.16.0' );
 define( 'COOKED_DEV', false );
 define( 'COOKED_URL', 'http://example.com/wp-content/plugins/cooked/' );
 define( 'OBJECT', 'OBJECT' );

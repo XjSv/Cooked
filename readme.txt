@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 5.0.0
 Tested up to: 7.0
-Stable tag: 1.15.0
+Stable tag: 1.6.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -81,16 +81,27 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.15.0 adds metric/imperial measurement system switcher, allergen support, and other improvements.
+Version 1.16.0 adds video clips to recipe direction steps, Off/On/Auto Dark Mode, a default recipe image option, and other improvements.
 
 == Changelog ==
+
+= 1.16.0 =
+* **NEW:** Added video clips to recipe direction steps. Attach a video to any direction step using the WordPress Media Library, with square preview thumbnails in the admin and 16:9 responsive video output on the frontend.
+* **TWEAK:** Responsive admin layout improvements.
+* **TWEAK:** Increased direction textarea height.
+* **TWEAK:** Meta box title changed from "Settings" to "Cooked Settings".
+* **NEW:** Dark Mode setting now supports Off, On, and Auto. Auto follows theme dark mode toggles, with dedicated Pixwell compatibility (admin notice and settings tip when Pixwell's dark mode is enabled).
+* **FIX:** Fixed the Recipe Category widget "Hide Empty" option, and Recipe Search widget "Hide Browse" / "Hide Sorting" options not saving.
+* **FIX:** Fixed settings "Save" button alignment.
+* **NEW:** Added a Default Recipe Image option in settings, used as the featured image for recipes that do not have one set.
+* **NEW:** Added a "Show Website Logo" option to the Print View settings. When enabled, the site logo (or site name) appears at the top of the recipe print screen.
 
 = 1.15.0 =
 * **NEW:** Metric/Imperial measurement system switcher. Convert ingredient units between systems with a new toggle alongside the servings switcher. Option available in settings to enable/disable the switcher.
 * **NEW:** Added allergen support. Mark up to 14 major allergens (FDA + EU) on a recipe via a new sidebar meta box. Allergen icons are shown on recipe cards (option available in settings to enable/disable) and can be added to single recipes via `[cooked-info include="allergens"]`.
-* **TWEAK:** Added [cooked-recipe-card] documentation in the recipe "Shortcodes" tab.
-* **FIX:** Fix to prevent website from crashing if [cooked-recipe id="3587"] shortcode is used in recipe template with the same ID as the recipe.
-* **NEW:** Add a wrapping class to recipe output from the [cooked-recipe] shortcode for easier styling.
+* **TWEAK:** Added `[cooked-recipe-card]` documentation in the recipe "Shortcodes" tab.
+* **FIX:** Fix to prevent website from crashing if `[cooked-recipe id="3587"]` shortcode is used in recipe template with the same ID as the recipe.
+* **NEW:** Add a wrapping class to recipe output from the `[cooked-recipe]` shortcode for easier styling.
 * **FIX:** Fixed issue with measurement units not translating in nutrient facts.
 * **FIX:** Fixed invalid recipe schema when servings were left empty, which caused critical errors in Google Search Console. Servings now default to 1 when not set.
 * **FIX:** Fixed recipe queries ignoring the limit, which could load all recipes and cause performance issues on large sites.

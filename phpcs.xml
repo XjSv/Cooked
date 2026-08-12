@@ -55,6 +55,7 @@
 		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing"/>
 		<exclude name="Modernize.FunctionCalls.Dirname.Nested"/>
 		-->
+        <exclude name="PEAR.Files.IncludingFile.UseRequire" />
 	</rule>
 
 	<!-- Let's also check that everything is properly documented. -->
@@ -86,6 +87,10 @@
 		<exclude-pattern>*.php</exclude-pattern>
 	</rule>
 
+    <rule ref="Squiz.Commenting.FileComment">
+        <exclude-pattern>includes/</exclude-pattern>
+    </rule>
+
 	<!-- Custom capabilities -->
 	<rule ref="WordPress.WP.Capabilities">
 		<properties>
@@ -106,5 +111,4 @@
 		</properties>
 	</rule>
 
-		
 </ruleset>

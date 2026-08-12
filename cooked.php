@@ -5,7 +5,7 @@
  * Description: 	    A recipe plugin for WordPress.
  * Author:              Gora Tech
  * Author URI: 	        https://goratech.dev
- * Version: 		    1.15.0
+ * Version: 		    1.16.0
  * Text Domain: 	    cooked
  * Domain Path: 	    /languages
  * License:     	    GPLv2 or later
@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 define( 'COOKED_DEV', false );
-define( 'COOKED_VERSION', '1.15.0' );
+define( 'COOKED_VERSION', '1.16.0' );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
 
@@ -291,6 +291,7 @@ final class Cooked_Plugin {
             self::$instance->elementor = new Cooked_Elementor();
             self::$instance->extra = new Cooked_Plugin_Extra();
             self::$instance->multilingual = new Cooked_Multilingual();
+            self::$instance->pixwell = new Cooked_Pixwell();
 
             self::$instance->module_setup();
 
@@ -495,6 +496,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-plugin-extra.php';
         require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
         require_once COOKED_DIR . 'includes/class.cooked-allergens.php';
+        require_once COOKED_DIR . 'includes/class.cooked-pixwell.php';
 
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             require_once COOKED_DIR . 'includes/class.cooked-cli.php';

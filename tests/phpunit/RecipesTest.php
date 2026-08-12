@@ -61,4 +61,51 @@ class RecipesTest extends TestCase {
         $result = Cooked_Recipes::get_c2_recipe_meta(1);
         $this->assertSame([], $result);
     }
+
+    public function test_filter_default_recipe_thumbnail_returns_existing_thumbnail() {
+        $result = Cooked_Recipes::filter_default_recipe_thumbnail( 42, 1 );
+        $this->assertSame( 42, $result );
+    }
+
+    public function test_filter_default_recipe_thumbnail_returns_default_for_recipe_without_thumbnail() {
+        unset( $GLOBALS['_cooked_settings'] );
+        $GLOBALS['_cooked_test_options']['cooked_settings'] = [
+            'default_recipe_image' => 99,
+        ];
+
+        $result = Cooked_Recipes::filter_default_recipe_thumbnail( 0, (object) [
+            'ID' => 1,
+            'post_type' => 'cp_recipe',
+        ] );
+
+        $this->assertSame( 99, $result );
+    }
+
+    public function test_filter_default_recipe_thumbnail_returns_original_for_non_recipe_post() {
+        unset( $GLOBALS['_cooked_settings'] );
+        $GLOBALS['_cooked_test_options']['cooked_settings'] = [
+            'default_recipe_image' => 99,
+        ];
+
+        $result = Cooked_Recipes::filter_default_recipe_thumbnail( 0, (object) [
+            'ID' => 1,
+            'post_type' => 'post',
+        ] );
+
+        $this->assertSame( 0, $result );
+    }
+
+    public function test_filter_default_recipe_thumbnail_returns_original_when_no_default_set() {
+        unset( $GLOBALS['_cooked_settings'] );
+        $GLOBALS['_cooked_test_options']['cooked_settings'] = [
+            'default_recipe_image' => 0,
+        ];
+
+        $result = Cooked_Recipes::filter_default_recipe_thumbnail( 0, (object) [
+            'ID' => 1,
+            'post_type' => 'cp_recipe',
+        ] );
+
+        $this->assertSame( 0, $result );
+    }
 }

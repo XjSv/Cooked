@@ -82,9 +82,21 @@ class Cooked_Settings {
                                 });
                             }
                         }
+                    } elseif ( $field['type'] === 'image_field' ) {
+                        $image_id = isset( $settings[ $field_name ] ) ? absint( $settings[ $field_name ] ) : 0;
+
+                        if ( $image_id && ! wp_attachment_is_image( $image_id ) ) {
+                            $image_id = 0;
+                        }
+
+                        $settings[ $field_name ] = $image_id;
                     }
                 }
             }
+        }
+
+        if ( isset( $settings['dark_mode'] ) ) {
+            $settings['dark_mode'] = self::normalize_dark_mode( $settings['dark_mode'] );
         }
 
         return $settings;
@@ -149,7 +161,89 @@ class Cooked_Settings {
             }
         }
 
+        if ( isset( $_cooked_settings['dark_mode'] ) ) {
+            $_cooked_settings['dark_mode'] = self::normalize_dark_mode( $_cooked_settings['dark_mode'] );
+        }
+
         return apply_filters( 'cooked_get_settings', $_cooked_settings );
+    }
+
+    /**
+     * Normalize dark mode setting to off|enabled|auto.
+     *
+     * Accepts legacy checkbox arrays (e.g. ['enabled']) and the current select string.
+     *
+     * @param mixed $mode Raw dark_mode setting value.
+     * @return string One of: off, enabled, auto.
+     */
+    public static function normalize_dark_mode( $mode ) {
+        if ( is_array( $mode ) ) {
+            if ( in_array( 'auto', $mode, true ) ) {
+                return 'auto';
+            }
+            if ( in_array( 'enabled', $mode, true ) ) {
+                return 'enabled';
+            }
+            return 'off';
+        }
+
+        $mode = is_string( $mode ) ? $mode : 'off';
+
+        if ( in_array( $mode, [ 'off', 'enabled', 'auto' ], true ) ) {
+            return $mode;
+        }
+
+        return 'off';
+    }
+
+    /**
+     * Dark mode CSS scope for dynamic styles.
+     *
+     * @return string|false Empty string when dark mode is forced on; theme selector when auto; false when off.
+     */
+    public static function get_dark_mode_scope() {
+        $settings = self::get();
+        $mode     = self::normalize_dark_mode( isset( $settings['dark_mode'] ) ? $settings['dark_mode'] : 'off' );
+
+        if ( 'auto' === $mode ) {
+            $scope = apply_filters( 'cooked_dark_mode_auto_scope', '[data-theme="dark"]' );
+
+            return $scope ? $scope : false;
+        }
+
+        if ( 'enabled' === $mode ) {
+            return '';
+        }
+
+        return false;
+    }
+
+    /**
+     * Prefix a comma-separated CSS selector list with the dark mode scope.
+     *
+     * @param string $selectors Comma-separated CSS selectors.
+     * @return string|false Prefixed selectors, or false when dark mode is off.
+     */
+    public static function prefix_dark_mode_css( $selectors ) {
+        $scope = self::get_dark_mode_scope();
+
+        if ( false === $scope ) {
+            return false;
+        }
+
+        if ( '' === $scope ) {
+            return $selectors;
+        }
+
+        $parts = array_map( 'trim', explode( ',', $selectors ) );
+        $parts = array_map(
+            function ( $part ) use ( $scope ) {
+                return $scope . ' ' . $part;
+            },
+            $parts
+        );
+
+        return implode( ', ', $parts );
     }
 
     public static function tabs_fields() {
@@ -236,6 +330,18 @@ class Cooked_Settings {
                                 'timing_cook' => __('Cook Time', 'cooked'),
                                 'timing_total' => __('Total Time', 'cooked'),
                                 'servings' => __('Servings', 'cooked')
+                            ]
+                        )
+                    ],
+                    'print_view_display_options' => [
+                        'title' => __('Print View', 'cooked'),
+                        'desc' => __('When enabled, the website logo will appear at the top of the recipe print screen.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'default' => [],
+                        'options' => apply_filters(
+                            'cooked_print_view_display_options',
+                            [
+                                'site_logo' => __('Show Website Logo', 'cooked'),
                             ]
                         )
                     ],
@@ -362,13 +468,18 @@ class Cooked_Settings {
                 'fields' => [
                     'dark_mode' => [
                         'title' => __('Dark Mode', 'cooked'),
-                        'desc' => __('If your site has a dark background, you should enable "Dark Mode" so that Cooked can match this style.', 'cooked'),
-                        'type' => 'checkboxes',
-                        'default' => [],
+                        'desc' => apply_filters(
+                            'cooked_dark_mode_field_desc',
+                            __( 'Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off.', 'cooked' )
+                        ),
+                        'type' => 'select',
+                        'default' => 'off',
                         'options' => apply_filters(
                             'cooked_dark_mode_options',
                             [
-                                'enabled' => __('Enable "Dark Mode"', 'cooked'),
+                                'off'     => __('Off', 'cooked'),
+                                'enabled' => __('On', 'cooked'),
+                                'auto'    => __('Auto (match theme dark mode)', 'cooked'),
                             ]
                         )
                     ],
@@ -384,6 +495,12 @@ class Cooked_Settings {
                                 'hidden' => __('Hide Author Images', 'cooked'),
                             ]
                         )
+                    ],
+                    'default_recipe_image' => [
+                        'title' => __( 'Default Recipe Image', 'cooked' ),
+                        'desc' => __( 'Used as the featured image for recipes that do not have one set.', 'cooked' ),
+                        'type' => 'image_field',
+                        'default' => 0,
                     ],
                     'main_color' => [
                         'title' => __('Main Color', 'cooked'),
@@ -671,6 +788,30 @@ class Cooked_Settings {
         echo '<p>';
             echo '<input class="cooked-color-field" type="text"' . ( $default ? ' data-default-color="' . esc_attr( $default ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '">';
         echo '</p>';
+    }
+
+    public static function field_image_field( $field_name, $default ) {
+        global $_cooked_settings;
+
+        $attachment_id = isset( $_cooked_settings[ $field_name ] ) ? absint( $_cooked_settings[ $field_name ] ) : 0;
+        $has_image = $attachment_id && wp_attachment_is_image( $attachment_id );
+        $preview_id = 'cooked-settings-image-' . esc_attr( $field_name ) . '-src';
+
+        echo '<div class="cooked-settings-image-field' . ( $has_image ? ' cooked-has-image' : '' ) . '">';
+            echo '<input type="hidden" class="cooked-settings-image-input" name="cooked_settings[' . esc_attr( $field_name ) . ']" id="cooked-settings-image-' . esc_attr( $field_name ) . '" value="' . esc_attr( $attachment_id ) . '" />';
+            echo '<input type="button" class="button cooked-settings-image-button" value="' . esc_attr( $has_image ? __( 'Change Image', 'cooked' ) : __( 'Add Image', 'cooked' ) ) . '" />';
+
+            if ( $has_image ) {
+                echo wp_get_attachment_image( $attachment_id, 'thumbnail', false, [
+                    'class' => 'cooked-settings-image-preview-img',
+                    'id' => $preview_id,
+                ] );
+            } else {
+                echo '<img class="cooked-settings-image-preview-img" id="' . esc_attr( $preview_id ) . '" src="" alt="" />';
+            }
+
+            echo '<a href="#" class="cooked-settings-image-remove"><i class="cooked-icon cooked-icon-times"></i></a>';
+        echo '</div>';
     }
 
     public static function field_checkboxes($field_name, $options, $color = false, $field = []) {

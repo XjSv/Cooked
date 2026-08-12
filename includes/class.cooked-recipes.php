@@ -31,6 +31,37 @@ class Cooked_Recipes {
         add_action( 'restrict_manage_posts', [&$this, 'filter_recipes_by_taxonomy'], 10 );
 
         add_filter('get_canonical_url', [&$this, 'modify_browse_page_canonical_url'], 20, 2);
+        add_filter( 'post_thumbnail_id', [ __CLASS__, 'filter_default_recipe_thumbnail' ], 10, 2 );
+    }
+
+    public static function filter_default_recipe_thumbnail( $thumbnail_id, $post ) {
+        if ( $thumbnail_id ) {
+            return $thumbnail_id;
+        }
+
+        if ( is_admin() && ! wp_doing_ajax() ) {
+            return $thumbnail_id;
+        }
+
+        $post = get_post( $post );
+
+        if ( ! $post || $post->post_type !== 'cp_recipe' ) {
+            return $thumbnail_id;
+        }
+
+        global $_cooked_settings;
+
+        if ( empty( $_cooked_settings ) ) {
+            $_cooked_settings = Cooked_Settings::get();
+        }
+
+        $default_image_id = isset( $_cooked_settings['default_recipe_image'] ) ? absint( $_cooked_settings['default_recipe_image'] ) : 0;
+
+        if ( $default_image_id && wp_attachment_is_image( $default_image_id ) ) {
+            return $default_image_id;
+        }
+
+        return $thumbnail_id;
     }
 
     public static function get( $args = false, $single = false, $ids_only = false, $limit = false, $ids_and_titles_only = false, $post_status = 'publish' ) {
@@ -346,6 +377,37 @@ class Cooked_Recipes {
             load_template( COOKED_DIR . 'templates/front/recipe-print.php', false);
             exit;
         endif;
+    }
+
+    public static function print_logo() {
+        global $_cooked_settings;
+
+        $print_view_options = isset( $_cooked_settings['print_view_display_options'] ) && is_array( $_cooked_settings['print_view_display_options'] )
+            ? $_cooked_settings['print_view_display_options']
+            : [];
+
+        if ( ! in_array( 'site_logo', $print_view_options, true ) ) {
+            return;
+        }
+
+        echo '<div id="cooked-print-logo">';
+
+        $logo_id = get_theme_mod( 'custom_logo' );
+        if ( $logo_id ) {
+            echo wp_get_attachment_image(
+                $logo_id,
+                'full',
+                false,
+                [
+                    'alt' => get_bloginfo( 'name' ),
+                    'class' => 'cooked-print-logo-image',
+                ]
+            );
+        } else {
+            echo '<span class="cooked-print-logo-text">' . esc_html( get_bloginfo( 'name' ) ) . '</span>';
+        }
+
+        echo '</div>';
     }
 
     public static function vendor_checks( $content ) {
@@ -1124,11 +1186,12 @@ class Cooked_Recipes {
                 echo '<' . $element . ' class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</' . $element . '>';
             }
 
-        } elseif (isset($dir['content']) && $dir['content'] || isset($dir['image']) && $dir['image']) {
+        } elseif ( !empty($dir['content']) || !empty($dir['image']) || !empty($dir['video']) ) {
 
             $dir_image_size = apply_filters( 'cooked_direction_image_size', 'large' );
-            $image = isset($dir['image']) && $dir['image'] ? wp_get_attachment_image( $dir['image'], $dir_image_size, false, ['title' => esc_attr(get_the_title($dir['image']))] ) : '';
+            $image = !empty($dir['image']) ? wp_get_attachment_image( $dir['image'], $dir_image_size, false, ['title' => esc_attr(get_the_title($dir['image']))] ) : '';
             $content = !empty($dir['content']) ? Cooked_Recipes::format_content($dir['content']) : '';
+            $video = !empty($dir['video']) ? wp_get_attachment_url($dir['video']) : '';
 
             $image = apply_filters('cooked_direction_image_html', $image, $atts);
 
@@ -1140,7 +1203,7 @@ class Cooked_Recipes {
 
                 echo '<div id="cooked-single-direction-step-'. $number .'" class="cooked-single-direction cooked-direction' . ($image ? ' cooked-direction-has-image' : '') . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . $step_string . '"' : '' ) . '>';
                     echo $number ? '<span class="cooked-direction-number">' . esc_html($number) . '</span>' : '';
-                    echo '<div class="cooked-dir-content">' . do_shortcode($content) . ($image ? wpautop($image) : '') . '</div>';
+                    echo '<div class="cooked-dir-content">' . do_shortcode($content) . ($image ? wpautop($image) : '') . ($video ? '<video class="cooked-direction-video" src="' . esc_url($video) . '" controls preload="metadata" playsinline></video>' : '') . '</div>';
                 echo '</div>';
             }
         }

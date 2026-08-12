@@ -2,7 +2,10 @@
   "core": null,
   "phpVersion": "7.4",
   "themes": ["WordPress/twentytwentyfive"],
-  "plugins": ["."],
+  "plugins": [],
+  "mappings": {
+    "wp-content/plugins/cooked": "."
+  },
   "port": 8888,
   "testsEnvironment": false,
   "config": {
@@ -12,5 +15,8 @@
     "SCRIPT_DEBUG": true,
     "WP_ENVIRONMENT_TYPE": "local",
     "DISALLOW_FILE_EDIT": false
+  },
+  "lifecycleScripts": {
+    "afterStart": "wp-env run cli bash -c 'curl -fsSL -o /tmp/wp-cli.phar https://github.com/wp-cli/builds/raw/gh-pages/phar/wp-cli.phar && chmod +x /tmp/wp-cli.phar && sudo cp /tmp/wp-cli.phar /usr/local/bin/wp && sudo chmod +x /usr/local/bin/wp'"
   }
 }

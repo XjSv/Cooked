@@ -11,7 +11,7 @@
 
 define( 'ABSPATH', __DIR__ . '/../../' );
 define( 'COOKED_DIR', __DIR__ . '/../../' );
-define( 'COOKED_VERSION', '1.15.0' );
+define( 'COOKED_VERSION', '1.16.0' );
 define( 'COOKED_DEV', false );
 define( 'COOKED_URL', 'http://example.com/wp-content/plugins/cooked/' );
 define( 'OBJECT', 'OBJECT' );
@@ -29,9 +29,44 @@ function esc_html_x( $text, $context, $domain = 'default' ) { return $text; }
 /**
  * Filter and action stubs
  */
-function apply_filters( $tag, $value, ...$args ) { return $value; }
-function add_filter( $tag, $callback, $priority = 10, $accepted_args = 1 ) { return true; }
-function remove_filter( $tag, $callback, $priority = 10 ) { return true; }
+$GLOBALS['_cooked_test_filters'] = [];
+
+function apply_filters( $tag, $value, ...$args ) {
+    if ( empty( $GLOBALS['_cooked_test_filters'][ $tag ] ) ) {
+        return $value;
+    }
+
+    ksort( $GLOBALS['_cooked_test_filters'][ $tag ] );
+
+    foreach ( $GLOBALS['_cooked_test_filters'][ $tag ] as $callbacks ) {
+        foreach ( $callbacks as $callback ) {
+            $value = call_user_func_array( $callback, array_merge( [ $value ], $args ) );
+        }
+    }
+
+    return $value;
+}
+
+function add_filter( $tag, $callback, $priority = 10, $accepted_args = 1 ) {
+    $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ][] = $callback;
+    return true;
+}
+
+function remove_filter( $tag, $callback, $priority = 10 ) {
+    if ( empty( $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ] ) ) {
+        return false;
+    }
+
+    foreach ( $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ] as $index => $registered_callback ) {
+        if ( $registered_callback === $callback ) {
+            unset( $GLOBALS['_cooked_test_filters'][ $tag ][ $priority ][ $index ] );
+            return true;
+        }
+    }
+
+    return false;
+}
+
 function add_action( $tag, $callback, $priority = 10, $accepted_args = 1 ) { return true; }
 function do_action( $tag, ...$args ) { return; }
 function remove_action( $tag, $callback, $priority = 10 ) { return true; }
@@ -124,6 +159,10 @@ function has_post_thumbnail( $post_id = 0 ) { return false; }
 function get_the_post_thumbnail( $post_id = 0, $size = 'post-thumbnail', $attr = [] ) { return ''; }
 function get_the_post_thumbnail_url( $post_id = 0, $size = 'post-thumbnail' ) { return ''; }
 function get_post( $post_id = null, $output = OBJECT, $filter = 'raw' ) {
+    if ( is_object( $post_id ) ) {
+        return $post_id;
+    }
+
     return (object) [
         'ID' => $post_id,
         'post_title' => 'Test Recipe',
@@ -252,7 +291,7 @@ function get_the_terms( $post_id, $taxonomy ) { return [ (object) [ 'term_id' =>
 function get_avatar( $id_or_email, $size = 96, $default = '', $alt = '' ) { return '<img src="avatar.jpg" />'; }
 function get_avatar_url( $id_or_email, $args = [] ) { return 'http://example.com/avatar.jpg'; }
 function wp_get_attachment_image_src( $attachment_id, $size = 'thumbnail', $icon = false ) { return false; }
-function wp_attachment_is_image( $attachment_id ) { return false; }
+function wp_attachment_is_image( $attachment_id ) { return $attachment_id > 0; }
 function taxonomy_exists( $taxonomy ) { return true; }
 function wp_enqueue_style( $handle, $src = '', $deps = [], $ver = false, $media = 'all' ) { return true; }
 function wp_enqueue_script( $handle, $src = '', $deps = [], $ver = false, $in_footer = false ) { return true; }

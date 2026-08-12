@@ -1,6 +1,7 @@
 <?php
 
 $_cooked_settings = Cooked_Settings::get();
+$_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 
 ?>@media screen and ( max-width: <?php echo esc_html( $_cooked_settings['responsive_breakpoint_1'] ); ?>px ) {
 
@@ -75,10 +76,11 @@ $_cooked_settings = Cooked_Settings::get();
 	.cooked-fsm .cooked-fsm-ingredients.cooked-active,
 	.cooked-fsm .cooked-fsm-directions-wrap.cooked-active { display:block; }
 
-	<?php if ( isset($_cooked_settings['dark_mode']) && in_array('enabled', $_cooked_settings['dark_mode']) ):
+	<?php if ( false !== $_cooked_dark_css_scope ):
 
-	?>.cooked-fsm .cooked-fsm-ingredients,
-	.cooked-fsm .cooked-fsm-directions-wrap { background:#000; color:#fff; }<?php
+	$_cooked_fsm_dark_selectors = Cooked_Settings::prefix_dark_mode_css( '.cooked-fsm .cooked-fsm-ingredients, .cooked-fsm .cooked-fsm-directions-wrap' );
+
+	?><?php echo $_cooked_fsm_dark_selectors; ?> { background:#000; color:#fff; }<?php
 
 	endif; ?>
 

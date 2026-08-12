@@ -6,7 +6,7 @@ const main = '#basil-main .basil-main-template';
 test.describe('Browse recipes accessibility (anonymous user)', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
 
-  test('browse recipes — no accessibility violations', async ({ page }) => {
+  test('browse recipes - no accessibility violations', async ({ page }) => {
     await page.goto('/browse-recipes', { waitUntil: 'networkidle' });
     await page.locator(`${main} .cooked-recipe-search`).waitFor();
     await expectAccessible(page);

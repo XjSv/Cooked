@@ -993,7 +993,7 @@ body .cooked-nutrition-label .cooked-nutrition-facts-powered-by-edamam img {
     font-size: 0.75rem;
     position: absolute;
     top: 50%;
-    right: 1.5rem;
+    right: .75rem;
     line-height: 1.25rem;
     height: 1.25rem;
     margin-top: -0.5rem;
@@ -1770,7 +1770,8 @@ body .cooked-pagination-numbered > a:hover {
 .cooked-fsm .cooked-close-fsm {
     color: #fff;
     position: absolute;
-    top: 0;
+    top: 50%;
+    transform: translateY(-50%);
     right: 1.25rem;
 }
 .cooked-fsm h2 {

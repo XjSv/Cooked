@@ -18,7 +18,7 @@ const test = base.extend({
 });
 
 test.describe('Add recipe form accessibility (contributor user)', () => {
-  test('add recipe form — no accessibility violations', async ({ contribContext }) => {
+  test('add recipe form - no accessibility violations', async ({ contribContext }) => {
     const contribPage = await contribContext.newPage();
     await contribPage.goto('/profile/add/', { waitUntil: 'networkidle' });
     await contribPage.locator(`${main} input[name="_recipe_settings[post_title]"]`).waitFor();

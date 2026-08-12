@@ -60,8 +60,7 @@ test.describe('Create a new complete recipe (admin)', () => {
     await adminPage.locator('input[name="newtag[cp_recipe_tags]"]').fill('butter, egg, flour');
     await adminPage.locator('.button.tagadd').first().click();
 
-    // Click the Set featured image link
-    await adminPage.getByRole('link', { name: 'Set featured image' }).click();
+    await adminPage.locator('#set-post-thumbnail').click();
 
     // Wait for the media modal to appear
     await adminPage.waitForSelector('.media-modal-content');

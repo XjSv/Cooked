@@ -41,7 +41,7 @@ test.describe('Recipe ratings accessibility', () => {
   test.describe('anonymous user', () => {
     test.use({ storageState: { cookies: [], origins: [] } });
 
-    test('recipe ratings — no accessibility violations', async ({ page }) => {
+    test('recipe ratings - no accessibility violations', async ({ page }) => {
       await page.goto(`/?post_type=cp_recipe&p=${STABLE_RECIPE_ID}`, { waitUntil: 'networkidle' });
       await page.locator(`${main} .cooked-recipe-info, ${main} .cooked-recipe-ingredients`).first().waitFor();
       await page.locator(`${main} .cooked-rating-stars`).first().waitFor();

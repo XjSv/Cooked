@@ -1,8 +1,8 @@
 === Cooked - Recipe Management ===
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
-Requires at least: 5.0.0
-Tested up to: 7.0
+Requires at least: 6.8
+Tested up to: 7.1
 Stable tag: 1.16.0
 Requires PHP: 7.4
 License: GPLv2 or later

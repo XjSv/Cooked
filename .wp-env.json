@@ -2,7 +2,9 @@
   "core": null,
   "phpVersion": "7.4",
   "themes": ["WordPress/twentytwentyfive"],
-  "plugins": [],
+  "plugins": [
+    "https://downloads.wordpress.org/plugin/plugin-check.zip"
+  ],
   "mappings": {
     "wp-content/plugins/cooked": "."
   },

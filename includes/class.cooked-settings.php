@@ -127,6 +127,7 @@ class Cooked_Settings {
             $class = 'notice notice-warning is-dismissible';
             $message = sprintf(
                 '<strong>' . __( 'Cooked Plugin Setup', 'cooked' ) . '</strong> ' .
+                /* translators: %s: Browse/Search Recipes Page link */
                 __( 'To display your recipes properly, please set up your %s.', 'cooked' ),
                 '<a href="' . trailingslashit( admin_url() ) . 'admin.php?page=cooked_settings#recipe_settings">' . __( 'Browse/Search Recipes Page', 'cooked' ) . '</a>'
             );

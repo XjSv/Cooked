@@ -204,9 +204,11 @@ class Cooked_Updates {
             }
         }
         if ( ! isset( $allowed[ $tool_name ] ) ) {
+            /* translators: %s: site health tool name */
             return new \WP_Error( 'cooked_tool_invalid', sprintf( __( 'Unknown tool: %s.', 'cooked' ), $tool_name ) );
         }
         if ( ! method_exists( __CLASS__, $tool_name ) ) {
+            /* translators: %s: PHP method name */
             return new \WP_Error( 'cooked_tool_missing', sprintf( __( 'Tool method %s does not exist.', 'cooked' ), $tool_name ) );
         }
 

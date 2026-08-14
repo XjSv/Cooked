@@ -450,6 +450,7 @@ class Cooked_Ajax {
         if ($results['success'] > 0) {
             wp_send_json_success([
                 'message' => sprintf(
+                    /* translators: %d: number of recipes imported */
                     __('Successfully imported %d recipe(s).', 'cooked'),
                     $results['success']
                 ),

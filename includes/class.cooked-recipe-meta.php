@@ -214,6 +214,7 @@ class Cooked_Recipe_Meta {
         printf(
             '<div class="notice notice-warning is-dismissible"><p>%s</p></div>',
             sprintf(
+                /* translators: %s: recipe embed shortcode */
                 __( 'This recipe is set up to include itself in the Recipe Template (containing shortcode %s), which can break the page. Remove the embed that references this same recipe.', 'cooked' ),
                 $shortcode
             )

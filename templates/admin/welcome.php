@@ -10,9 +10,9 @@
 					echo sprintf( __( 'Thanks for using %s!', 'cooked'), 'Cooked' );
 				?></h1>
                 <?php
-					/* translators: referring to "Cooked", "Settings" and "Documentation" */
 					echo wpautop(
 						sprintf(
+							/* translators: 1: plugin name, 2: Settings link, 3: documentation link, 4: Discord link */
 							__('If this is your first time using %1$s, head over to the %2$s page for some initial configuration. You can also check out the %3$s if you get stuck or contact me on %4$s. If you just recently updated, you can find out what\'s new below.', 'cooked'),
 							'Cooked',
 							'<a href="' . untrailingslashit( admin_url() ) . '/admin.php?page=cooked_settings">' . __( 'Settings', 'cooked' ) . '</a>',

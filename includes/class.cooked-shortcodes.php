@@ -356,6 +356,7 @@ class Cooked_Shortcodes {
     private static function recipe_embed_blocked_message( $recipe_id ) {
         $shortcode = '[cooked-recipe id="' . intval( $recipe_id ) . '"]';
         $message = '<em>' . sprintf(
+            /* translators: %s: recipe embed shortcode */
             __( 'This recipe could not be displayed because it is set up to include itself (containing shortcode %s). Remove the duplicate recipe embed from the Recipe Template.', 'cooked' ),
             $shortcode
         ) . '</em>';
@@ -1193,8 +1194,10 @@ class Cooked_Shortcodes {
             // Check if it's a different post type
             $post_check = get_post($recipe_id);
             if ($post_check && $post_check->post_type !== 'cp_recipe') {
+                /* translators: %d: post ID */
                 $error_msg .= ' ' . sprintf(__('The specified ID (%d) is not a recipe.', 'cooked'), $recipe_id);
             } elseif (!$post_check) {
+                /* translators: %d: post ID */
                 $error_msg .= ' ' . sprintf(__('No post found with ID %d.', 'cooked'), $recipe_id);
             }
             return '<p class="cooked-related-recipes-error">' . esc_html($error_msg) . '</p>';

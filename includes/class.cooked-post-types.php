@@ -446,8 +446,8 @@ class Cooked_Post_Types {
         $post_types = apply_filters( 'cooked_post_types', [
                 'cp_recipe' => [
                     'labels' => [
-                        'name' => _x('Recipes', 'cooked'),
-                        'singular_name' => _x('Recipe', 'cooked'),
+                        'name' => _x( 'Recipes', 'post type general name', 'cooked' ),
+                        'singular_name' => _x( 'Recipe', 'post type singular name', 'cooked' ),
                         'menu_name' => __('Recipes', 'cooked'),
                         'name_admin_bar' => __('Recipe', 'cooked'),
                         'add_new' => __('Add New', 'cooked'),

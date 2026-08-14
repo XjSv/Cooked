@@ -80,6 +80,7 @@ class Cooked_SEO {
 
                     $directions[] = [
                         '@type' => 'HowToStep',
+                        /* translators: %d: step number */
                         'name' => sprintf(__('Step %d', 'cooked'), $number),
                         'text' => $direction_cleaned,
                         'url' => get_permalink($rpost) . '#cooked-single-direction-step-' . $number,

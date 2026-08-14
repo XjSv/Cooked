@@ -6,12 +6,12 @@ test.describe('Search Browse Recipes (anonymous user)', () => {
   test('Search recipes by title (beef)', async ({ page }) => {
     await page.goto('/browse-recipes', { waitUntil: 'networkidle' });
 
-    await expect(page.locator('.basil-main-template .cooked-recipe-search')).toBeDefined();
+    await expect(page.locator('.cooked-recipe-search:not(.cooked-search-compact)')).toBeDefined();
 
-    await page.fill('.basil-main-template .cooked-browse-search', 'beef');
+    await page.fill('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search', 'beef');
 
     await page.evaluate(() => {
-      document.querySelector('.basil-main-template .cooked-browse-search').closest('form').dispatchEvent(new Event('submit'));
+      document.querySelector('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search').closest('form').dispatchEvent(new Event('submit'));
     });
 
     await page.waitForURL('**/browse-recipes/search/beef/sort/date_desc');
@@ -25,12 +25,12 @@ test.describe('Search Browse Recipes (anonymous user)', () => {
   test('Search recipes by title (chicken)', async ({ page }) => {
     await page.goto('/browse-recipes', { waitUntil: 'networkidle' });
 
-    await expect(page.locator('.basil-main-template .cooked-recipe-search')).toBeDefined();
+    await expect(page.locator('.cooked-recipe-search:not(.cooked-search-compact)')).toBeDefined();
 
-    await page.fill('.basil-main-template .cooked-browse-search', 'chicken');
+    await page.fill('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search', 'chicken');
 
     await page.evaluate(() => {
-      document.querySelector('.basil-main-template .cooked-browse-search').closest('form').dispatchEvent(new Event('submit'));
+      document.querySelector('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search').closest('form').dispatchEvent(new Event('submit'));
     });
 
     await page.waitForURL('**/browse-recipes/search/chicken/sort/date_desc');

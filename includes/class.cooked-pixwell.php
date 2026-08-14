@@ -55,9 +55,9 @@ class Cooked_Pixwell {
         ?>
         <div class="notice notice-warning is-dismissible">
             <p>
-                <?php _e( 'Pixwell\'s dark mode toggle is enabled on your site. To keep recipe styles in sync when visitors use it, go to', 'cooked' ); ?>
-                <a href="<?php echo esc_url( $settings_url ); ?>"><?php _e( 'Cooked → Settings → Design', 'cooked' ); ?></a>
-                <?php _e( ' and set Dark Mode to <strong>Auto</strong>.', 'cooked' ); ?>
+                <?php esc_html_e( 'Pixwell\'s dark mode toggle is enabled on your site. To keep recipe styles in sync when visitors use it, go to', 'cooked' ); ?>
+                <a href="<?php echo esc_url( $settings_url ); ?>"><?php esc_html_e( 'Cooked → Settings → Design', 'cooked' ); ?></a>
+                <?php echo wp_kses( __( ' and set Dark Mode to <strong>Auto</strong>.', 'cooked' ), [ 'strong' => [] ] ); ?>
             </p>
         </div>
         <?php

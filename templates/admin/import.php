@@ -3,7 +3,7 @@
         <form action="options.php" method="post">
 
         <div class="cooked-settings-header">
-            <i class="cooked-icon cooked-icon-cooked-icon"></i>&nbsp;&nbsp;<?php _e('Cooked Import','cooked'); ?>
+            <i class="cooked-icon cooked-icon-cooked-icon"></i>&nbsp;&nbsp;<?php esc_html_e('Cooked Import','cooked'); ?>
         </div>
         <div id="cooked-settings-panel" class="wrap"><?php
             require_once COOKED_DIR . 'includes/class.cooked-import.php';

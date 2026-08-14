@@ -62,17 +62,17 @@ class Cooked_Enqueues {
         wp_enqueue_style('cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION);
         wp_enqueue_style('cooked-styling', COOKED_URL . 'assets/css/style' . $min . '.css', [], COOKED_VERSION );
         wp_register_style('cooked-fotorama', COOKED_URL . 'assets/css/fotorama/fotorama.min.css', [], '4.6.4');
-        wp_register_script('cooked-fotorama', COOKED_URL . 'assets/js/fotorama/fotorama' . $min . '.js', ['jquery'], '4.6.4');
-        wp_register_script('cooked-timer', COOKED_URL . 'assets/js/timer/jquery.simple.timer' . $min . '.js', ['jquery'], '0.0.5');
-        wp_register_script('cooked-nosleep', COOKED_URL . 'assets/js/nosleep/NoSleep' . $min . '.js', [], '0.12.0');
+        wp_register_script('cooked-fotorama', COOKED_URL . 'assets/js/fotorama/fotorama' . $min . '.js', ['jquery'], '4.6.4', true);
+        wp_register_script('cooked-timer', COOKED_URL . 'assets/js/timer/jquery.simple.timer' . $min . '.js', ['jquery'], '0.0.5', true);
+        wp_register_script('cooked-nosleep', COOKED_URL . 'assets/js/nosleep/NoSleep' . $min . '.js', [], '0.12.0', true);
 
         // Compatibility with the Bridge Theme.
         if (!defined('QODE_ROOT')) {
-            wp_register_script('cooked-appear', COOKED_URL . 'assets/js/appear/jquery.appear' . $min . '.js', ['jquery'], '0.3.6');
+            wp_register_script('cooked-appear', COOKED_URL . 'assets/js/appear/jquery.appear' . $min . '.js', ['jquery'], '0.3.6', true);
         }
 
         wp_enqueue_script('wp-sanitize');
-        wp_register_script('cooked-functions', COOKED_URL . 'assets/js/cooked-functions' . $min . '.js', ['jquery', 'wp-sanitize'], COOKED_VERSION);
+        wp_register_script('cooked-functions', COOKED_URL . 'assets/js/cooked-functions' . $min . '.js', ['jquery', 'wp-sanitize'], COOKED_VERSION, true);
         wp_localize_script('cooked-functions', 'cooked_functions_i18n_js_vars', $cooked_i18n_js_vars);
         wp_add_inline_script( 'cooked-functions', 'const cooked_functions_js_vars = ' . json_encode( $cooked_js_vars ) . ';', 'before' );
     }

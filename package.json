@@ -27,6 +27,9 @@
     "lint": "./vendor/bin/phpcs --standard=phpcs.xml .",
     "lint-fix": "./vendor/bin/phpcbf --standard=phpcs.xml .",
     "test:php": "./vendor/bin/phpunit",
+    "test:e2e:install": "bunx playwright install chromium",
+    "test:e2e": "bunx playwright test --config tests/playwright/playwright.config.ts",
+    "test:e2e:a11y": "bunx playwright test --config tests/playwright/playwright.config.ts tests/playwright/tests/accessibility",
     "icons:embed": "bun scripts/embed-icons-font.js",
     "bundle": "bun run gulp build && bun run i18n && composer install --no-dev && bunx bestzip build/cooked.zip cooked.php LICENSE readme.txt wpml-config.xml assets/ includes/ languages/ sample-data/ templates/ vendor/"
   },
@@ -54,9 +57,11 @@
   },
   "homepage": "https://github.com/XjSv/Cooked#readme",
   "devDependencies": {
+    "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.62.1",
     "@types/node": "^26.2.0",
-    "@wordpress/e2e-test-utils-playwright": "^1.52.0",
+    "@wordpress/e2e-test-utils-playwright": "^1.53.0",
+    "dotenv": "^17.4.2",
     "gulp": "^5.0.1",
     "gulp-clean-css": "^4.3.0",
     "gulp-rename": "^2.1.0",
@@ -64,7 +69,7 @@
     "gulp-uglify": "^3.0.2",
     "playwright": "^1.62.1",
     "sass": "^1.102.0",
-    "@wordpress/env": "^11.12.0",
+    "@wordpress/env": "^11.13.0",
     "bestzip": "^3.0.2"
   }
 }

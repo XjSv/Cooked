@@ -1,94 +1,55 @@
-import 'dotenv/config';
+import path from 'path';
+import dotenv from 'dotenv';
 import { defineConfig, devices } from '@playwright/test';
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
+dotenv.config({ path: path.resolve(__dirname, '.env'), quiet: true });
+
+function getBaseURL(): string {
+  if (process.env.WP_BASE_URL) {
+    return process.env.WP_BASE_URL;
+  }
+  if (process.env.DDEV_HOSTNAME || process.env.IS_DDEV_PROJECT) {
+    return 'https://dev.mimisrecipes.ddev.site';
+  }
+  return 'http://localhost:8888';
+}
+
 export default defineConfig({
   testDir: './tests',
-  /* Run tests in files in parallel */
+  outputDir: path.join(__dirname, 'test-results'),
+  globalSetup: require.resolve('./global-setup.ts'),
   fullyParallel: false,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: true,
-  /* Retry on CI only */
-  retries: 0,
-  /* Opt out of parallel tests on CI. */
+  retries: process.env.CI ? 1 : 0,
   workers: 1,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['list'],
-    ['html', { open: 'never' }],
+    ['html', { open: 'never', outputFolder: path.join(__dirname, 'playwright-report') }],
     ['./reporters/a11y-reporter.ts'],
   ],
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
-    /* Base URL to use in actions like `await page.goto('/')`. */
-    // baseURL: process.env.WP_BASE_URL || 'https://dev.mimisrecipes.ddev.site',
-    baseURL: 'https://dev.mimisrecipes.ddev.site',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
-    // Populates context with given storage state.
-    //storageState: 'state.json',
+    baseURL: getBaseURL(),
     ignoreHTTPSErrors: true,
-
-    /* Timeout settings */
+    trace: 'on-first-retry',
     actionTimeout: 30000,
     navigationTimeout: 30000,
   },
-
-  /* Global test timeout */
   timeout: 60000,
-
-  /* Configure projects for major browsers */
+  webServer: {
+    command: 'echo "Using existing WordPress server"',
+    reuseExistingServer: true,
+    ignoreHTTPSErrors: true,
+    timeout: 120000,
+  },
   projects: [
     {
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
+        launchOptions: {
+          args: ['--disable-dev-shm-usage'],
+        },
       },
     },
-
-    // {
-    //   name: 'firefox',
-    //   use: { ...devices['Desktop Firefox'] },
-    // },
-
-    // {
-    //   name: 'webkit',
-    //   use: { ...devices['Desktop Safari'] },
-    // },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
-
-  /* Run your local dev server before starting the tests */
-  webServer: {
-    // command: 'npm run start',
-    command: 'echo "Using DDEV server"',
-    // url: 'http://127.0.0.1:9323',
-    // url: 'https://dev.mimisrecipes.ddev.site',
-    reuseExistingServer: true,
-    ignoreHTTPSErrors: true,
-    // Add timeout to give server more time to respond
-    timeout: 120000,
-  },
 });

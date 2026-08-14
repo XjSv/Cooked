@@ -1,6 +1,6 @@
-import { test as base, expect, Page } from '@playwright/test';
-import { ensureValidAuth, getAuthPath } from '../../utils/auth';
-import { execSync } from 'child_process';
+import { test, expect } from '../../utils/fixtures';
+import { Page } from '@playwright/test';
+import { deletePostsByTitle } from '../../utils/wp-cli';
 import path from 'path';
 
 const TEST_DATA_DIR = path.resolve(__dirname, '../../../test_data');
@@ -15,26 +15,11 @@ const LARGE_CSV_TITLES = [
 
 const allImportedTitles: string[] = [];
 
-const test = base.extend({
-  adminContext: async ({ browser }, use) => {
-    const context = await browser.newContext({
-      storageState: getAuthPath('mtresova')
-    });
-    const page = await context.newPage();
-    await ensureValidAuth(page, 'mtresova', 'password');
-    await use(context);
-    await page.close();
-    await context.close();
-  }
-});
-
 async function importCsvFile(adminPage: Page, csvFileName: string) {
   await adminPage.goto('/wp-admin/admin.php?page=cooked_import', { waitUntil: 'networkidle' });
 
-  // Click the anchor inside the CSV Import tab li to trigger jQuery handler
   await adminPage.locator('#cooked-settings-tab-csv_import a').click();
 
-  // Wait for the tab content panel to become visible
   await expect(adminPage.locator('#cooked-settings-tab-content-csv_import')).toBeVisible({ timeout: 10000 });
 
   const csvPath = path.join(TEST_DATA_DIR, csvFileName);
@@ -108,24 +93,9 @@ test.describe('CSV Import (admin)', () => {
   });
 });
 
-test.afterAll(async () => {
+test.afterAll(() => {
   const allTitles = [...SMALL_CSV_TITLES, ...MEDIUM_CSV_TITLES, ...LARGE_CSV_TITLES];
   for (const title of allTitles) {
-    try {
-      const result = execSync(
-        `wp post list --post_type=cp_recipe --post_status=draft --field=ID --title="${title}" 2>/dev/null`,
-        { encoding: 'utf-8' }
-      ).trim();
-
-      if (result) {
-        const ids = result.split('\n').filter(id => id.trim());
-        for (const id of ids) {
-          console.log(`Cleaning up: Deleting recipe "${title}" (ID: ${id})`);
-          execSync(`wp post delete ${id} --force`);
-        }
-      }
-    } catch (error) {
-      console.error(`Failed to clean up recipe "${title}":`, error);
-    }
+    deletePostsByTitle(title);
   }
 });

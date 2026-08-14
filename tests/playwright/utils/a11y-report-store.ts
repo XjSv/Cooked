@@ -12,7 +12,7 @@ export interface A11yScanRecord {
   scannedAt: string;
 }
 
-const REPORT_ROOT = path.join(process.cwd(), 'test-results');
+const REPORT_ROOT = path.join(__dirname, '../test-results');
 export const SCAN_DIR = path.join(REPORT_ROOT, 'a11y-scans');
 export const HTML_REPORT = path.join(REPORT_ROOT, 'a11y-report.html');
 export const JSON_REPORT = path.join(REPORT_ROOT, 'a11y-report.json');

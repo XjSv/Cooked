@@ -11,12 +11,17 @@
 # Dev dependencies
 node_modules/
 vendor
+.env
 
 # Tests
+tests/playwright/test-results/
+tests/playwright/playwright-report/
+tests/playwright/.cache/
 tests/test-results/
 tests/playwright-report/
 tests/blob-report/
-tests/playwright/.cache/
+playwright-report/
+test-results/
 tests/.auth/
 tests/phpunit/.cache
 

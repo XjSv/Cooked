@@ -40,6 +40,21 @@ export function wpCliArgs(args: string[]): string {
   }).trim();
 }
 
+export function getCookedSettings(): Record<string, unknown> {
+  try {
+    return JSON.parse(wpCliArgs(['option', 'get', 'cooked_settings', '--format=json'])) as Record<
+      string,
+      unknown
+    >;
+  } catch {
+    return {};
+  }
+}
+
+export function setCookedSettings(settings: Record<string, unknown>): void {
+  wpCliArgs(['option', 'update', 'cooked_settings', JSON.stringify(settings), '--format=json']);
+}
+
 export function deletePostsByTitle(title: string, status = 'draft'): void {
   try {
     const result = wpCli(

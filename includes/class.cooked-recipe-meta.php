@@ -1156,7 +1156,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
                                 foreach ( $nutrition_facts as $slug => $nf ):
                                     echo '<li>';
-                                    echo '<strong>' . esc_html($nf['name']) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '_measurement">' . esc_html__( $nf['measurement'], 'cooked' ) . '</strong>' : '' );
+                                    echo '<strong>' . esc_html($nf['name']) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '_measurement">' . esc_html( $nf['measurement'] ) . '</strong>' : '' );
                                     echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($nf['pdv']) . '" data-labeltype="' . esc_html($slug) . '">0</span>%</strong>' : '' );
 
                                     if ( isset($nf['subs']) ):
@@ -1164,16 +1164,16 @@ function cooked_render_recipe_fields( $post_id ) {
                                             echo '<ul>';
                                                 if ($sub_slug === 'trans_fat'):
                                                     echo '<li>';
-                                                        echo $sub_nf['nutrition_info_name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html__( $sub_nf['measurement'], 'cooked' ) . '</strong>' : '' );
+                                                        echo $sub_nf['nutrition_info_name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
                                                     echo '</li>';
                                                 elseif ($sub_slug === 'added_sugars'):
                                                     echo '<ul><li>';
-                                                        echo __('Includes', 'cooked') . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html__( $sub_nf['measurement'], 'cooked' ) . '</strong>' : '' ) . ' ' . esc_html($sub_nf['name']);
+                                                        echo __('Includes', 'cooked') . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' ) . ' ' . esc_html($sub_nf['name']);
                                                         echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($sub_nf['pdv']) . '" data-labeltype="' . esc_attr($sub_slug) . '">0</span>%</strong>' : '' );
                                                     echo '</li></ul>';
                                                 else:
                                                     echo '<li>';
-                                                    echo $sub_nf['name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html__( $sub_nf['measurement'], 'cooked' ) . '</strong>' : '' );
+                                                    echo $sub_nf['name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
                                                     echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($sub_nf['pdv']) . '" data-labeltype="' . esc_attr($sub_slug) . '">0</span>%</strong>' : '' );
                                                     echo '</li>';
                                                 endif;
@@ -1190,7 +1190,7 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <?php $nutrition_facts = $_nutrition_facts['bottom'];
                                 foreach ( $nutrition_facts as $slug => $nf ):
                                     echo '<li>';
-                                        echo $nf['name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html__( $nf['measurement'], 'cooked' ) . '</strong>' : '' );
+                                        echo $nf['name'] . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html( $nf['measurement'] ) . '</strong>' : '' );
                                         echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($nf['pdv']) . '" data-labeltype="' . esc_attr($slug) . '">0</span>%</strong>' : '' );
                                     echo '</li>';
                                 endforeach; ?>

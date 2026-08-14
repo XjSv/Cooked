@@ -159,7 +159,10 @@ body.post-type-cp_recipe .mce-fullscreen {
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block h3.cooked-settings-title { width:100%; color:#333; }
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid { background:#fff; border:2px solid #0aa780; box-shadow:none; border-radius:5px; }
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid > .cooked-settings-title { color:#0aa780; }
-#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired { border:2px solid #ca4a20; }
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired,
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid { border:2px solid #ca4a20; }
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired > .cooked-settings-title,
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid > .cooked-settings-title { color:#ca4a20; }
 
 /* Heading Element Styles */
 #cooked-ingredients-builder .cooked-ingredient-block:hover > .cooked-heading-name,

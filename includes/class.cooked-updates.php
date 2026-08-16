@@ -58,6 +58,7 @@ class Cooked_Updates {
     public function __construct() {
         // Add action to check version and update settings at the end of page load.
         add_action( 'shutdown', [__CLASS__, 'init'] );
+        add_action( 'init', [ __CLASS__, 'maybe_heal_rewrite_rules' ], 99 );
     }
 
     /**
@@ -407,25 +408,39 @@ class Cooked_Updates {
     }
 
     /**
-     * Queue a one-shot rewrite flush when browse-page pretty permalinks are missing
+     * Soft-flush rewrite rules when any rule registered this request is missing
+     * from the stored rewrite_rules option.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function maybe_heal_rewrite_rules() {
+        if ( self::registered_rewrite_rules_missing() ) {
+            self::update_rewrite_rules();
+        }
+    }
+
+    /**
+     * Queue a one-shot rewrite flush when registered rewrite rules are missing
      * from the stored rewrite_rules option.
      *
      * @since 1.16.0
      * @return void
      */
     public static function maybe_queue_rewrite_flush() {
-        if ( self::browse_rewrite_rules_missing() ) {
+        if ( self::registered_rewrite_rules_missing() ) {
             update_option( 'cooked_flush_rewrite_rules', '1' );
         }
     }
 
     /**
-     * Whether stored rewrite rules are missing Cooked browse-page mappings.
+     * Whether the stored rewrite_rules option is missing any rewrite rule
+     * registered this request via add_rewrite_rule().
      *
      * @since 1.16.0
      * @return bool
      */
-    public static function browse_rewrite_rules_missing() {
+    public static function registered_rewrite_rules_missing() {
         if ( function_exists( 'wp_installing' ) && wp_installing() ) {
             return false;
         }
@@ -434,36 +449,55 @@ class Cooked_Updates {
             return false;
         }
 
-        $browse_pages = Cooked_Multilingual::get_all_browse_pages();
-        if ( empty( $browse_pages ) ) {
+        $registered = self::registered_extra_rewrite_rules();
+        if ( empty( $registered ) ) {
             return false;
         }
 
-        $rules = get_option( 'rewrite_rules' );
-        if ( ! is_array( $rules ) || empty( $rules ) ) {
+        $stored = get_option( 'rewrite_rules' );
+        if ( ! is_array( $stored ) || empty( $stored ) ) {
             return true;
         }
 
-        foreach ( $browse_pages as $page_data ) {
-            $page_id = isset( $page_data['id'] ) ? (int) $page_data['id'] : 0;
-            if ( ! $page_id ) {
+        foreach ( $registered as $regex => $query ) {
+            if ( array_key_exists( $regex, $stored ) ) {
                 continue;
             }
 
-            $found = false;
-            foreach ( $rules as $query ) {
-                if ( is_string( $query ) && preg_match( '/[?&]page_id=' . $page_id . '(?:&|$)/', $query ) ) {
-                    $found = true;
-                    break;
-                }
+            if ( is_string( $query ) && in_array( $query, $stored, true ) ) {
+                continue;
             }
 
-            if ( ! $found ) {
-                return true;
-            }
+            return true;
         }
 
         return false;
+    }
+
+    /**
+     * Rewrite rules added this request with add_rewrite_rule().
+     *
+     * @since 1.16.0
+     * @return array
+     */
+    private static function registered_extra_rewrite_rules() {
+        global $wp_rewrite;
+
+        if ( ! is_object( $wp_rewrite ) ) {
+            return [];
+        }
+
+        $rules = [];
+
+        if ( ! empty( $wp_rewrite->extra_rules_top ) && is_array( $wp_rewrite->extra_rules_top ) ) {
+            $rules = $wp_rewrite->extra_rules_top;
+        }
+
+        if ( ! empty( $wp_rewrite->extra_rules ) && is_array( $wp_rewrite->extra_rules ) ) {
+            $rules = array_merge( $rules, $wp_rewrite->extra_rules );
+        }
+
+        return $rules;
     }
 
     /**

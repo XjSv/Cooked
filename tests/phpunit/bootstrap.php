@@ -474,6 +474,9 @@ function register_uninstall_hook( $file, $callback ) {}
  */
 $GLOBALS['_cooked_test_flush_rewrite_count'] = 0;
 $GLOBALS['_cooked_test_flush_rewrite_hard'] = [];
+$GLOBALS['_cooked_test_activation_hooks'] = [];
+$GLOBALS['_cooked_test_deactivation_hooks'] = [];
+$GLOBALS['_cooked_test_flush_rewrite_hard'] = [];
 
 function flush_rewrite_rules( $hard = true ) {
     $GLOBALS['_cooked_test_flush_rewrite_count']++;
@@ -756,9 +759,13 @@ function remove_role( $role ) {
     return true;
 }
 
-function register_activation_hook( $file, $callback ) {}
+function register_activation_hook( $file, $callback ) {
+    $GLOBALS['_cooked_test_activation_hooks'][] = $file;
+}
 
-function register_deactivation_hook( $file, $callback ) {}
+function register_deactivation_hook( $file, $callback ) {
+    $GLOBALS['_cooked_test_deactivation_hooks'][] = $file;
+}
 
 function add_image_size( $name, $width = 0, $height = 0, $crop = false ) {
     return true;

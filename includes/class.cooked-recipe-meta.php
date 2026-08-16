@@ -134,8 +134,8 @@ class Cooked_Recipe_Meta {
         // Check if our nonce is set.
         if ( !isset( $_POST['cooked_recipe_custom_box_nonce'] ) ) return $post_id;
 
-        // Verify that the nonce is valid.
-        if ( ! wp_verify_nonce( $_POST['cooked_recipe_custom_box_nonce'], 'cooked_recipe_custom_box' ) ) return $post_id;
+        $nonce = wp_unslash( $_POST['cooked_recipe_custom_box_nonce'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
+        if ( ! wp_verify_nonce( $nonce, 'cooked_recipe_custom_box' ) ) return $post_id;
 
         /*
          * If this is an autosave, our form has not been submitted,
@@ -149,6 +149,7 @@ class Cooked_Recipe_Meta {
         global $recipe_settings;
 
         /* OK, it's safe for us to validate/sanitize the data now. */
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized in meta_cleanup().
         $recipe_settings = isset($_POST['_recipe_settings']) ? self::meta_cleanup( wp_unslash( $_POST['_recipe_settings'] ) ) : [];
 
         if ( isset( $recipe_settings['content'] ) ) {

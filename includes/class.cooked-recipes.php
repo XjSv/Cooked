@@ -222,7 +222,9 @@ class Cooked_Recipes {
         global $_cooked_settings, $recipe_query;
 
         if ( !isset($recipe_query['cp_recipe_category']) ):
-            $recipe_query['cp_recipe_category'] = ( isset($_GET['cp_recipe_category']) && $_GET['cp_recipe_category'] ? intval($_GET['cp_recipe_category']) : ( isset($_cooked_settings['browse_default_cp_recipe_category']) && $_cooked_settings['browse_default_cp_recipe_category'] ? $_cooked_settings['browse_default_cp_recipe_category'] : false ) );
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only browse category filter.
+            $requested_category = isset( $_GET['cp_recipe_category'] ) ? absint( wp_unslash( $_GET['cp_recipe_category'] ) ) : 0;
+            $recipe_query['cp_recipe_category'] = $requested_category ? $requested_category : ( isset($_cooked_settings['browse_default_cp_recipe_category']) && $_cooked_settings['browse_default_cp_recipe_category'] ? $_cooked_settings['browse_default_cp_recipe_category'] : false );
         endif;
     }
 
@@ -373,6 +375,7 @@ class Cooked_Recipes {
     }
 
     public function print_recipe_template() {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( is_singular('cp_recipe') && isset($_GET['print']) ):
             load_template( COOKED_DIR . 'templates/front/recipe-print.php', false);
             exit;
@@ -437,7 +440,8 @@ class Cooked_Recipes {
             foreach ( $taxonomies as $taxonomy ):
                 if ( is_array($cooked_taxonomies_shown) && !in_array( $taxonomy, $cooked_taxonomies_shown ) || !is_array($cooked_taxonomies_shown) ):
                     $cooked_taxonomies_shown[] = $taxonomy;
-                    $selected = isset($_GET[$taxonomy]) ? sanitize_title($_GET[$taxonomy]) : '';
+                    // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin taxonomy filter.
+                    $selected = isset( $_GET[ $taxonomy ] ) ? absint( wp_unslash( $_GET[ $taxonomy ] ) ) : '';
                     $info_taxonomy = get_taxonomy($taxonomy);
                     $taxonomy_label = $info_taxonomy->label;
 
@@ -927,6 +931,7 @@ class Cooked_Recipes {
     public static function measurement_system_switcher() {
         global $_cooked_settings, $post;
         $switcher_enabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'enable_measurement_switcher', $_cooked_settings['advanced'] ) ? true : false );
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         $printing = ( is_singular('cp_recipe') && isset($_GET['print']) );
 
         if ( !$printing && $switcher_enabled ):
@@ -953,6 +958,7 @@ class Cooked_Recipes {
     public static function serving_size_switcher( $servings ) {
         global $_cooked_settings, $post;
         $switcher_disabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_servings_switcher', $_cooked_settings['advanced'] ) ? true : false );
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         $printing = ( is_singular('cp_recipe') && isset($_GET['print']) );
 
         if ( !$printing && !$switcher_disabled ):
@@ -1288,7 +1294,7 @@ class Cooked_Recipes {
                                     $term = get_term( $key );
                                     $term_link = ( !empty($term) ? get_term_link( $term ) : false );
                                     $term_name = apply_filters( 'cooked_term_name', $term->name, $term->ID, $term->taxonomy );
-                                    echo ( $term_link ? ( isset($active_taxonomy) && $active_taxonomy == $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url($term_link) . '">' . esc_html($term_name) . '</a>' . ( isset($active_taxonomy) && $active_taxonomy == $val ? '</strong>' : '' ) : '' );
+                                    echo ( $term_link ? ( isset($active_taxonomy) && $active_taxonomy == $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url($term_link) . '">' . wp_kses_post($term_name) . '</a>' . ( isset($active_taxonomy) && $active_taxonomy == $val ? '</strong>' : '' ) : '' );
                                     $total_taxonomies++;
                                     $sub_terms_array = Cooked_Settings::terms_array( 'cp_recipe_category', false, false, true, false, $key );
                                     if ( !empty($sub_terms_array) ):
@@ -1297,7 +1303,7 @@ class Cooked_Recipes {
                                                 $sub_term = get_term( $sub_key );
                                                 $sub_term_link = ( !empty($sub_term) ? get_term_link( $sub_term ) : false );
                                                 $sub_term_name = apply_filters( 'cooked_term_name', $sub_term->name, $sub_term->ID, $sub_term->taxonomy );
-                                                echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset($active_taxonomy) && $active_taxonomy == $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url($sub_term_link) . '">' . esc_html($sub_term_name) . '</a>' . ( isset($active_taxonomy) && $active_taxonomy == $sub_val ? '</strong>' : '' ) . '</span>' : '' );
+                                                echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset($active_taxonomy) && $active_taxonomy == $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url($sub_term_link) . '">' . wp_kses_post($sub_term_name) . '</a>' . ( isset($active_taxonomy) && $active_taxonomy == $sub_val ? '</strong>' : '' ) . '</span>' : '' );
                                                 $total_taxonomies++;
                                             endif;
                                         endforeach;

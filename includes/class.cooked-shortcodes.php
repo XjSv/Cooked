@@ -170,9 +170,11 @@ class Cooked_Shortcodes {
         if ( is_admin() ) return false;
 
         $author_query_var = sanitize_key( get_query_var( 'recipe_author', false ) );
-        if ( !$author_query_var && isset( $_GET['recipe_author'] ) ) {
-            $author_query_var = sanitize_key( $_GET['recipe_author'] );
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only browse author filter.
+        if ( ! $author_query_var && isset( $_GET['recipe_author'] ) ) {
+            $author_query_var = sanitize_key( wp_unslash( $_GET['recipe_author'] ) );
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         // Shortcode Attributes
         $atts = shortcode_atts( apply_filters( 'cooked_browse_shortcode_default_attributes', [

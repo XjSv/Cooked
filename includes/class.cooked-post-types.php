@@ -217,8 +217,13 @@ class Cooked_Post_Types {
         $_cooked_settings = Cooked_Settings::get();
         $_cooked_taxonomies = Cooked_Taxonomies::get();
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only Settings API query vars.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+
         // Security check: Only allow settings update from admin area with proper permissions
-        if (!empty($_GET['settings-updated']) && is_admin() && current_user_can('manage_options') && isset($_GET['page']) && $_GET['page'] === 'cooked_settings') {
+        if ( $settings_updated && is_admin() && current_user_can('manage_options') && $page === 'cooked_settings' ) {
             // Recipe Permalink
             $permalink_parts = explode( '/', $_cooked_settings['recipe_permalink'] );
             if ( isset( $permalink_parts[1] ) ):
@@ -305,8 +310,6 @@ class Cooked_Post_Types {
                 register_post_type( $slug, $args );
             }
         }
-
-        Cooked_Updates::maybe_queue_rewrite_flush();
     }
 
     /**
@@ -446,6 +449,7 @@ class Cooked_Post_Types {
         $has_archive_slug = sanitize_title_with_dashes( __('Recipe Archive', 'cooked') );
         $exclude_from_search = false;
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( !isset($_GET['print']) && isset( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ) {
             $public_recipes = false;
             $has_archive_slug = false;

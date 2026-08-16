@@ -234,7 +234,9 @@ class Cooked_Multilingual {
      */
     public function translation_notice() {
         // Only show on Cooked settings page
-        if ( ! isset( $_GET['page'] ) || $_GET['page'] !== 'cooked_settings' ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin page query var.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        if ( $page !== 'cooked_settings' ) {
             return;
         }
 

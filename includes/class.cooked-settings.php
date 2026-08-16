@@ -107,7 +107,12 @@ class Cooked_Settings {
     }
 
     function cooked_settings_saved_admin_notice() {
-        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] && isset($_GET['page']) && $_GET['page'] === 'cooked_settings') {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only Settings API query vars.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+        if ( $settings_updated && $page === 'cooked_settings' ) {
             add_settings_error(
                 'cooked_settings_group',
                 'cooked_settings_updated',
@@ -119,7 +124,9 @@ class Cooked_Settings {
 
     function browse_page_missing_notice() {
         // Only show on admin pages, not on the Cooked settings page itself
-        if ( isset($_GET['page']) && $_GET['page'] === 'cooked_settings' ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin page query var.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        if ( $page === 'cooked_settings' ) {
             return;
         }
 

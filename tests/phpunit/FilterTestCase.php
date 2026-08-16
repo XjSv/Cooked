@@ -54,6 +54,11 @@ class FilterTestCase extends TestCase {
         unset( $GLOBALS['_cooked_test_logged_in'] );
         unset( $GLOBALS['cooked_modified_where'] );
         $GLOBALS['_cooked_settings'] = [];
+        $GLOBALS['_cooked_test_flush_rewrite_count'] = 0;
+        $GLOBALS['_cooked_test_flush_rewrite_hard'] = [];
+        if ( class_exists( 'Cooked_Updates' ) ) {
+            Cooked_Updates::reset_rewrite_flush_state();
+        }
     }
 
     protected function with_filter( $tag, $callback, $run, $accepted_args = 10 ) {

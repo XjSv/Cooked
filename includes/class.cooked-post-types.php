@@ -21,6 +21,7 @@ class Cooked_Post_Types {
 
     function __construct() {
         register_activation_hook( COOKED_PLUGIN_FILE, [&$this, 'activation'] );
+        register_deactivation_hook( COOKED_PLUGIN_FILE, [ __CLASS__, 'deactivation' ] );
 
         add_action( 'init', [&$this, 'init'] );
         add_filter( 'admin_init', [&$this, 'init_roles'] );
@@ -196,6 +197,10 @@ class Cooked_Post_Types {
         flush_rewrite_rules();
     }
 
+    public static function deactivation() {
+        delete_option( 'rewrite_rules' );
+    }
+
     public static function init_roles() {
         // Clean up for any old caps or caps that were inserted incorrectly.
         if ( $role_object = get_role( 'subscriber' ) ) {
@@ -300,6 +305,8 @@ class Cooked_Post_Types {
                 register_post_type( $slug, $args );
             }
         }
+
+        Cooked_Updates::maybe_queue_rewrite_flush();
     }
 
     /**

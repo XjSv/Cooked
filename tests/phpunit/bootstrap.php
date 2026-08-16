@@ -164,6 +164,18 @@ function load_plugin_textdomain( $domain, $deprecated, $plugin_rel_path ) { retu
 function wpautop( $pee, $br = true ) { return $pee; }
 function make_clickable( $text ) { return $text; }
 function wp_unslash( $value ) { return is_string( $value ) ? stripslashes( $value ) : $value; }
+function rest_sanitize_boolean( $value ) {
+	if ( is_bool( $value ) ) {
+		return $value;
+	}
+	if ( is_string( $value ) ) {
+		$value = strtolower( $value );
+		if ( in_array( $value, [ 'false', '0', 'no', 'off', '' ], true ) ) {
+			return false;
+		}
+	}
+	return (bool) $value;
+}
 
 /**
  * Shortcode stubs
@@ -460,7 +472,13 @@ function register_uninstall_hook( $file, $callback ) {}
 /**
  * Flush rewrite rules stub
  */
-function flush_rewrite_rules( $hard = true ) {}
+$GLOBALS['_cooked_test_flush_rewrite_count'] = 0;
+$GLOBALS['_cooked_test_flush_rewrite_hard'] = [];
+
+function flush_rewrite_rules( $hard = true ) {
+    $GLOBALS['_cooked_test_flush_rewrite_count']++;
+    $GLOBALS['_cooked_test_flush_rewrite_hard'][] = $hard;
+}
 
 /**
  * Additional WP stubs needed by various tests
@@ -739,6 +757,8 @@ function remove_role( $role ) {
 }
 
 function register_activation_hook( $file, $callback ) {}
+
+function register_deactivation_hook( $file, $callback ) {}
 
 function add_image_size( $name, $width = 0, $height = 0, $crop = false ) {
     return true;

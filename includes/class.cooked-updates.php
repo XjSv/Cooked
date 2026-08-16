@@ -46,6 +46,13 @@ class Cooked_Updates {
     private static $cooked_settings_saved;
 
     /**
+     * Whether rewrite rules were already flushed this request.
+     *
+     * @var bool
+     */
+    private static $rewrite_rules_flushed = false;
+
+    /**
      * Initialize the updates system
      */
     public function __construct() {
@@ -78,6 +85,8 @@ class Cooked_Updates {
         if ( self::needs_update() ) {
             self::run_updates();
         }
+
+        self::maybe_flush_queued_rewrite_rules();
     }
 
     /**
@@ -107,6 +116,8 @@ class Cooked_Updates {
 
         // Run version-specific updates
         self::run_version_updates();
+
+        self::update_rewrite_rules();
 
         // Update both version numbers.
         update_option( 'cooked_settings_version', self::$current_version );
@@ -396,12 +407,102 @@ class Cooked_Updates {
     }
 
     /**
+     * Queue a one-shot rewrite flush when browse-page pretty permalinks are missing
+     * from the stored rewrite_rules option.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function maybe_queue_rewrite_flush() {
+        if ( self::browse_rewrite_rules_missing() ) {
+            update_option( 'cooked_flush_rewrite_rules', '1' );
+        }
+    }
+
+    /**
+     * Whether stored rewrite rules are missing Cooked browse-page mappings.
+     *
+     * @since 1.16.0
+     * @return bool
+     */
+    public static function browse_rewrite_rules_missing() {
+        if ( function_exists( 'wp_installing' ) && wp_installing() ) {
+            return false;
+        }
+
+        if ( ! get_option( 'permalink_structure' ) ) {
+            return false;
+        }
+
+        $browse_pages = Cooked_Multilingual::get_all_browse_pages();
+        if ( empty( $browse_pages ) ) {
+            return false;
+        }
+
+        $rules = get_option( 'rewrite_rules' );
+        if ( ! is_array( $rules ) || empty( $rules ) ) {
+            return true;
+        }
+
+        foreach ( $browse_pages as $page_data ) {
+            $page_id = isset( $page_data['id'] ) ? (int) $page_data['id'] : 0;
+            if ( ! $page_id ) {
+                continue;
+            }
+
+            $found = false;
+            foreach ( $rules as $query ) {
+                if ( is_string( $query ) && preg_match( '/[?&]page_id=' . $page_id . '(?:&|$)/', $query ) ) {
+                    $found = true;
+                    break;
+                }
+            }
+
+            if ( ! $found ) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Soft-flush rewrite rules when a previous request queued it.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function maybe_flush_queued_rewrite_rules() {
+        if ( ! get_option( 'cooked_flush_rewrite_rules' ) ) {
+            return;
+        }
+
+        self::update_rewrite_rules();
+        delete_option( 'cooked_flush_rewrite_rules' );
+    }
+
+    /**
+     * Reset per-request flush state. Used by tests.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function reset_rewrite_flush_state() {
+        self::$rewrite_rules_flushed = false;
+    }
+
+    /**
      * Update rewrite rules if needed
      *
      * @since 1.11.2
      */
     private static function update_rewrite_rules() {
-        flush_rewrite_rules();
+        if ( self::$rewrite_rules_flushed ) {
+            return;
+        }
+
+        flush_rewrite_rules( false );
+        self::$rewrite_rules_flushed = true;
         if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( 'Cooked: Flushed rewrite rules due to version update.' );

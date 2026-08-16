@@ -56,7 +56,11 @@ class Cooked_Settings {
         $list_id_counter = 0;
         $_cooked_settings = Cooked_Settings::get();
         register_setting( 'cooked_settings_group', 'cooked_settings', ['sanitize_callback' => [__CLASS__, 'sanitize_settings']] );
-        register_setting( 'cooked_settings_group', 'cooked_settings_saved' );
+        register_setting( 'cooked_settings_group', 'cooked_settings_saved', ['sanitize_callback' => [__CLASS__, 'sanitize_saved_flag']] );
+    }
+
+    public static function sanitize_saved_flag( $value ) {
+        return rest_sanitize_boolean( $value );
     }
 
     // Add this new method to handle settings sanitization.

@@ -25,8 +25,12 @@ class Cooked_Import {
     }
 
     public static function init() {
-        register_setting( 'cooked_import_group', 'cooked_import' );
-        register_setting( 'cooked_import_group', 'cooked_import_saved' );
+        register_setting( 'cooked_import_group', 'cooked_import', ['sanitize_callback' => [__CLASS__, 'sanitize_saved_flag']] );
+        register_setting( 'cooked_import_group', 'cooked_import_saved', ['sanitize_callback' => [__CLASS__, 'sanitize_saved_flag']] );
+    }
+
+    public static function sanitize_saved_flag( $value ) {
+        return rest_sanitize_boolean( $value );
     }
 
     public static function tabs_fields() {

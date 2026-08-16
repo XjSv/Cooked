@@ -95,7 +95,7 @@ class Cooked_Post_Types {
     function custom_columns_data( $column, $post_id ) {
         if ( $column == 'featured_image' ):
             echo '<span class="cooked-admin-recipes-list-image">';
-                echo the_post_thumbnail( 'thumbnail' );
+                echo wp_kses_post( get_the_post_thumbnail( $post_id, 'thumbnail' ) );
             echo '</span>';
         endif;
     }
@@ -164,9 +164,15 @@ class Cooked_Post_Types {
             <meta property="og:description" content="<?php echo esc_attr( $description ); ?>">
             <meta property="og:image" content="<?php echo esc_attr( $image_url ); ?>">
             <meta property="og:locale" content="<?php echo esc_attr( get_locale() ); ?>">
-            <meta property="og:url" content="<?php echo get_permalink( $post->ID ); ?>"><?php
+            <meta property="og:url" content="<?php echo esc_url( get_permalink( $post->ID ) ); ?>"><?php
 
-            echo ob_get_clean();
+            echo wp_kses( ob_get_clean(), [
+                'meta' => [
+                    'name' => true,
+                    'content' => true,
+                    'property' => true,
+                ],
+            ] );
         }
     }
 

@@ -71,7 +71,7 @@
                                         endif;
 
                                         echo $conditional_requirement ? '<transition name="fade">' : '';
-                                        echo '<div' . $conditional_requirement . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
+                                        echo '<div' . wp_kses( $conditional_requirement, array() ) . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
                                             echo !$notitle ? '<h3 class="cooked-settings-title">' . wp_kses_post( $field['title'] ) . '</h3>' : '';
                                             echo isset($field['desc']) && $field['desc'] ? '<p>' . wp_kses_post( $field['desc'] ). '</p>' : '';
                                             $Cooked_Import->$field_type( $name, $field_options, $color, $field );
@@ -109,7 +109,7 @@
                 var vm = new Vue({
                     el: '#cooked-settings-panel',
                     data: {
-                        <?php echo implode( ',', $conditional_requirements_js ); ?>
+                        <?php echo wp_kses( implode( ',', $conditional_requirements_js ), array() ); ?>
                     }
                 });
             </script>

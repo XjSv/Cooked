@@ -87,7 +87,7 @@ class Cooked_Admin_Menus {
     // Settings Panel
     public function cooked_settings_page() {
         if (!current_user_can('edit_cooked_settings')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'cooked'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'cooked'));
         }
 
         include COOKED_DIR . 'templates/admin/settings.php';
@@ -96,7 +96,7 @@ class Cooked_Admin_Menus {
     // Import Page
     public function cooked_import_page() {
         if (!current_user_can('edit_cooked_settings')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'cooked'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'cooked'));
         }
 
         include COOKED_DIR . 'templates/admin/import.php';
@@ -105,7 +105,7 @@ class Cooked_Admin_Menus {
     // Welcome Page
     public function cooked_welcome_content() {
         if (!current_user_can('edit_cooked_settings')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'cooked'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'cooked'));
         }
 
         include COOKED_DIR . 'templates/admin/welcome.php';
@@ -114,7 +114,7 @@ class Cooked_Admin_Menus {
     // Cooked Pro
     public function cooked_pro() {
         if (!current_user_can('edit_cooked_settings')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'cooked'));
+            wp_die(esc_html__('You do not have sufficient permissions to access this page.', 'cooked'));
         }
 
         include COOKED_DIR . 'templates/admin/pro.php';

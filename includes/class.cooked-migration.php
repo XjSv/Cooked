@@ -87,7 +87,7 @@ class Cooked_Migration {
             if ($total > 0) {
                 $class = 'notice notice-error';
                 /* translators: for displaying singular or plural versions depending on the number of recipes. */
-                $message = sprintf( esc_html( _n( 'There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe.', 'There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes.', $total, 'cooked' ) ), '<strong>' . number_format( $total ) . '</strong>', '<strong><a href="' . esc_url( add_query_arg(['page' => 'cooked_settings', 'cm' => '1'], admin_url( 'admin.php' ) ) ) . '#migration">' . __( 'click here', 'cooked' ) . '</a></strong>' );
+                $message = sprintf( esc_html( _n( 'There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe.', 'There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes.', $total, 'cooked' ) ), '<strong>' . number_format( $total ) . '</strong>', '<strong><a href="' . esc_url( add_query_arg(['page' => 'cooked_settings', 'cm' => '1'], esc_url( admin_url( 'admin.php' ) ) ) ) . '#migration">' . __( 'click here', 'cooked' ) . '</a></strong>' );
                 printf('<div class="%1$s" style="padding:10px 20px"><p style="font-size:1.2em">%2$s</p></div>', esc_attr($class), wp_kses_post($message));
             }
         }

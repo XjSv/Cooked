@@ -114,8 +114,10 @@ class Cooked_Updates {
             update_option( 'cooked_pro_settings_version', self::$current_pro_version );
         }
 
-        // Log the update
-        error_log( sprintf( 'Cooked: Updated from version %s to %s', $old_version, self::$current_version ) );
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( sprintf( 'Cooked: Updated from version %s to %s', $old_version, self::$current_version ) );
+        }
     }
 
     /**
@@ -131,7 +133,10 @@ class Cooked_Updates {
                         try {
                             call_user_func( [__CLASS__, $method] );
                         } catch ( Exception $e ) {
-                            error_log( sprintf( 'Cooked: Error running update method %s: %s', $method, $e->getMessage() ) );
+                            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                                error_log( sprintf( 'Cooked: Error running update method %s: %s', $method, $e->getMessage() ) );
+                            }
                         }
                     }
                 }
@@ -329,7 +334,8 @@ class Cooked_Updates {
         }
 
         // Log the update if any recipes were modified
-        if ( $updated_count > 0 ) {
+        if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( sprintf( 'Cooked: Fixed line endings in %d recipes for WordPress exporter/importer compatibility.', $updated_count ) );
         }
     }
@@ -347,7 +353,10 @@ class Cooked_Updates {
         delete_option( 'cooked_related_version' );
         delete_option( 'cooked_related_calculation_last' );
 
-        error_log( 'Cooked: Purged legacy related-recipes cache and options.' );
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( 'Cooked: Purged legacy related-recipes cache and options.' );
+        }
     }
 
     /**
@@ -380,7 +389,8 @@ class Cooked_Updates {
             $updated_count++;
         }
 
-        if ( $updated_count > 0 ) {
+        if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( sprintf( 'Cooked: Removed legacy recipes key from %d user(s) cooked_user_meta.', $updated_count ) );
         }
     }
@@ -392,7 +402,10 @@ class Cooked_Updates {
      */
     private static function update_rewrite_rules() {
         flush_rewrite_rules();
-        error_log( 'Cooked: Flushed rewrite rules due to version update.' );
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( 'Cooked: Flushed rewrite rules due to version update.' );
+        }
     }
 
 }

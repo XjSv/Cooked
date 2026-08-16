@@ -2,16 +2,16 @@
     <div class="wrap about-wrap">
         <div id="cooked-welcome-panel" class="cooked-welcome-panel">
 
-            <img src="<?php echo COOKED_URL; ?>/assets/admin/images/pro-banner.png" class="cooked-welcome-banner">
+            <img src="<?php echo esc_url( COOKED_URL . '/assets/admin/images/pro-banner.png' ); ?>" class="cooked-welcome-banner">
 
             <div class="cooked-welcome-panel-intro">
                 <h1><?php
                     /* translators: referring to "Cooked Pro" */
-                    echo sprintf( __('Ready for %s?','cooked'), 'Cooked Pro' );
+                    echo sprintf( esc_html__('Ready for %s?','cooked'), 'Cooked Pro' );
                 ?></h1>
                 <?php
                     /* translators: referring to "Cooked Pro" */
-                    echo wpautop( sprintf( __( 'The %s upgrade adds loads of new features like ratings, favorites, user profiles, automatic nutrition information and more. Check out the list below for all of the details.', 'cooked' ), 'Cooked Pro' ) );
+                    echo wp_kses_post( wpautop( sprintf( esc_html__( 'The %s upgrade adds loads of new features like ratings, favorites, user profiles, automatic nutrition information and more. Check out the list below for all of the details.', 'cooked' ), 'Cooked Pro' ) ) );
                 ?>
             </div>
 
@@ -45,11 +45,11 @@
                         <div class="cooked-welcome-bottom">
                             <a href="https://cooked.pro/" target="_blank" class="cooked-pro-button"><?php
                                 /* translators: referring to "Cooked Pro" */
-                                echo sprintf( __( "Get %s","cooked" ), "Cooked Pro" );
+                                echo sprintf( esc_html__( "Get %s","cooked" ), "Cooked Pro" );
                             ?></a>
                             <span class="cooked-coupon-code"><?php
                                 /* translators: referring to the "COOKED10" coupon code to get "10%" off Cooked Pro */
-                                echo sprintf( __( 'Use coupon code %1$s for %2$s off!', 'cooked' ), '<strong>COOKED10</strong>', '<strong>10%</strong>' );
+                                echo wp_kses_post( sprintf( __( 'Use coupon code %1$s for %2$s off!', 'cooked' ), '<strong>COOKED10</strong>', '<strong>10%</strong>' ) );
                             ?></span>
                         </div>
                     </div>

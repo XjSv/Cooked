@@ -29,7 +29,7 @@ class Cooked_Widget_Search extends WP_Widget {
 
         echo wp_kses_post( $args['before_widget'] );
         if ( ! empty( $instance['title'] ) ) {
-            echo wp_kses_post( $args['before_title'] ) . apply_filters( 'widget_title', $instance['title'] ) . wp_kses_post( $args['after_title'] );
+            echo wp_kses_post( $args['before_title'] ) . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . wp_kses_post( $args['after_title'] );
         }
         $size = isset($instance['size']) && $instance['size'] == 'compact' ? ' compact="true"' : '';
         $browse = isset($instance['hide_browse']) && $instance['hide_browse'] ? ' hide_browse="true"' : '';

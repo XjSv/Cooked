@@ -203,35 +203,35 @@ class Cooked_Import {
 
         if ($total > 0) {
             echo '<p>';
-                echo '<input id="cooked-import-button" type="button" class="button-secondary" data-import-type="' . esc_attr( $import_type ) . '" name="begin_cooked_migration" value="' . __( 'Begin Import', 'cooked' ) . '">';
+                echo '<input id="cooked-import-button" type="button" class="button-secondary" data-import-type="' . esc_attr( $import_type ) . '" name="begin_cooked_migration" value="' . esc_attr__( 'Begin Import', 'cooked' ) . '">';
             echo '</p>';
             echo '<p>';
                 echo '<span id="cooked-import-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-import-progress-text" class="cooked-progress-text">0 / ' . esc_html( $total ) . '</span>';
             echo '</p>';
-            echo '<p id="cooked-import-completed"><strong>Import Complete!</strong> You can now <a href="' . esc_url( add_query_arg(['page' => 'cooked_import'], admin_url( 'admin.php' ) ) ) . '">' . __( 'reload', 'cooked' ) . '</a> the import screen.</p>';
+            echo '<p id="cooked-import-completed"><strong>Import Complete!</strong> You can now <a href="' . esc_url( add_query_arg(['page' => 'cooked_import'], esc_url( admin_url( 'admin.php' ) ) ) ) . '">' . esc_html__( 'reload', 'cooked' ) . '</a> the import screen.</p>';
         }
     }
 
     public static function field_message( $name, $field_options, $color, $field ) {
-        echo '<p>' . $field['message'] . '</p>';
+        echo '<p>' . wp_kses_post( $field['message'] ) . '</p>';
     }
 
     public static function field_csv_upload( $name, $field_options, $color, $field ) {
-        echo '<p class="cooked-import-note"><strong>' . __( 'Download sample CSV files:', 'cooked' ) . '</strong> ';
-        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-small.csv' ) . '" download>' . __( 'Small (1 recipe)', 'cooked' ) . '</a>, ';
-        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-medium.csv' ) . '" download>' . __( 'Medium (3 recipes)', 'cooked' ) . '</a>, ';
-        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-large.csv' ) . '" download>' . __( 'Large (10 recipes)', 'cooked' ) . '</a></p>';
+        echo '<p class="cooked-import-note"><strong>' . esc_html__( 'Download sample CSV files:', 'cooked' ) . '</strong> ';
+        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-small.csv' ) . '" download>' . esc_html__( 'Small (1 recipe)', 'cooked' ) . '</a>, ';
+        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-medium.csv' ) . '" download>' . esc_html__( 'Medium (3 recipes)', 'cooked' ) . '</a>, ';
+        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-large.csv' ) . '" download>' . esc_html__( 'Large (10 recipes)', 'cooked' ) . '</a></p>';
         echo '<form id="cooked-csv-import-form" enctype="multipart/form-data">';
         echo '<p>';
         echo '<input type="file" id="cooked-csv-file" name="csv_file" accept=".csv" required>';
         echo '</p>';
         echo '<p>';
-        echo '<input id="cooked-csv-import-button" type="button" class="button-primary" value="' . __( 'Upload and Import CSV', 'cooked' ) . '">';
+        echo '<input id="cooked-csv-import-button" type="button" class="button-primary" value="' . esc_attr__( 'Upload and Import CSV', 'cooked' ) . '">';
         echo '</p>';
         echo '<p>';
         echo '<span id="cooked-csv-import-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-csv-import-progress-text" class="cooked-progress-text"></span>';
         echo '</p>';
-        echo '<p id="cooked-csv-import-completed" style="display:none;"><strong>' . __( 'Import Complete!', 'cooked' ) . '</strong> ' . __( 'You can now', 'cooked' ) . ' <a href="' . esc_url( add_query_arg(['page' => 'cooked_import'], admin_url( 'admin.php' ) ) ) . '">' . __( 'reload', 'cooked' ) . '</a> ' . __( 'the import screen or', 'cooked' ) . ' <a href="' . esc_url( admin_url( 'edit.php?post_type=cp_recipe' ) ) . '">' . __( 'view your recipes', 'cooked' ) . '</a>.</p>';
+        echo '<p id="cooked-csv-import-completed" style="display:none;"><strong>' . esc_html__( 'Import Complete!', 'cooked' ) . '</strong> ' . esc_html__( 'You can now', 'cooked' ) . ' <a href="' . esc_url( add_query_arg(['page' => 'cooked_import'], admin_url( 'admin.php' ) ) ) . '">' . esc_html__( 'reload', 'cooked' ) . '</a> ' . esc_html__( 'the import screen or', 'cooked' ) . ' <a href="' . esc_url( admin_url( 'edit.php?post_type=cp_recipe' ) ) . '">' . esc_html__( 'view your recipes', 'cooked' ) . '</a>.</p>';
         echo '<div id="cooked-csv-import-errors" style="display:none; color: #d63638; margin-top: 10px;"></div>';
         echo '</form>';
     }

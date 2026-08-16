@@ -719,7 +719,7 @@ class Cooked_Measurements {
                 return 'PT0H'.intval( $minutes ).'M';
             else:
                 /* translators: singular and plural number of minutes (shorthand) */
-                echo self::singular_plural( sprintf( __( '%d min','cooked' ), number_format_i18n($minutes) ), sprintf( __( '%d mins','cooked' ), number_format_i18n($minutes) ), $minutes );
+                echo esc_html( self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes) ), $minutes ) );
             endif;
         elseif ( $minutes < 1440 ):
             $hours = floor( $minutes / 60 );
@@ -728,9 +728,9 @@ class Cooked_Measurements {
                 return 'PT'.intval( $hours ).'H'.( $minutes_left ? intval( $minutes_left ) : 0 ).'M';
             else:
                 /* translators: singular and plural number of hours (shorthand) */
-                echo self::singular_plural( sprintf( __( '%d hr','cooked' ), number_format_i18n($hours) ), sprintf( __( '%d hrs','cooked' ), number_format_i18n($hours) ), $hours );
+                echo esc_html( self::singular_plural( sprintf( esc_html__( '%d hr','cooked' ), number_format_i18n($hours) ), sprintf( esc_html__( '%d hrs','cooked' ), number_format_i18n($hours) ), $hours ) );
                 /* translators: singular and plural number of minutes (shorthand) */
-                echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( __( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( __( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
+                echo ( $minutes_left ? '&nbsp;' . esc_html( self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) ) : '' );
             endif;
         else:
             $days = floor( $minutes / 24 / 60 );
@@ -744,11 +744,11 @@ class Cooked_Measurements {
                 return 'P'.intval( $days ).'DT'.( $hours_left ? intval( $hours_left ) : 0 ).'H'.( $minutes_left ? intval( $minutes_left ) : 0 ).'M';
             else:
                 /* translators: singular and plural number of days */
-                echo self::singular_plural( sprintf( __( '%d day','cooked' ), number_format_i18n($days) ), sprintf( __( '%d days','cooked' ), number_format_i18n($days) ), $days );
+                echo esc_html( self::singular_plural( sprintf( esc_html__( '%d day','cooked' ), number_format_i18n($days) ), sprintf( esc_html__( '%d days','cooked' ), number_format_i18n($days) ), $days ) );
                 /* translators: singular and plural number of hours (shorthand) */
-                echo ( $hours_left ? '&nbsp;' . self::singular_plural( sprintf( __( '%d hr','cooked' ), number_format_i18n($hours_left) ), sprintf( __( '%d hrs','cooked' ), number_format_i18n($hours_left) ), $hours_left ) : '' );
+                echo ( $hours_left ? '&nbsp;' . esc_html( self::singular_plural( sprintf( esc_html__( '%d hr','cooked' ), number_format_i18n($hours_left) ), sprintf( esc_html__( '%d hrs','cooked' ), number_format_i18n($hours_left) ), $hours_left ) ) : '' );
                 /* translators: singular and plural number of minutes (shorthand) */
-                echo ( $minutes_left ? '&nbsp;' . self::singular_plural( sprintf( __( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( __( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) : '' );
+                echo ( $minutes_left ? '&nbsp;' . esc_html( self::singular_plural( sprintf( esc_html__( '%d min','cooked' ), number_format_i18n($minutes_left) ), sprintf( esc_html__( '%d mins','cooked' ), number_format_i18n($minutes_left) ), $minutes_left ) ) : '' );
             endif;
         endif;
 

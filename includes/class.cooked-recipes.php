@@ -285,7 +285,7 @@ class Cooked_Recipes {
 
                     echo '<div class="cooked-srl-single' . esc_attr( $has_image_class ) . '" style="width:100%; max-width:' . esc_attr( $width ) . '">';
 
-                        echo has_post_thumbnail($rid) && !$hide_image ? '<div class="cooked-srl-image"><a href="' . esc_url( get_permalink($rid) ) . '">' . get_the_post_thumbnail( $rid, 'thumbnail' ) . '</a></div>' : '';
+                        echo has_post_thumbnail($rid) && !$hide_image ? '<div class="cooked-srl-image"><a href="' . esc_url( get_permalink($rid) ) . '">' . wp_kses_post( get_the_post_thumbnail( $rid, 'thumbnail' ) ) . '</a></div>' : '';
 
                         echo '<div class="cooked-srl-content">';
 
@@ -295,7 +295,7 @@ class Cooked_Recipes {
                                 echo '<div class="cooked-srl-author">';
                                     $author = $recipe['author'];
                                     /* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */
-                                    echo sprintf( __( 'By %s', 'cooked' ), '<strong>' . wp_kses_post( $author['name'] ) . '</strong>' );
+                                    echo sprintf( esc_html__( 'By %s', 'cooked' ), '<strong>' . wp_kses_post( $author['name'] ) . '</strong>' );
                                 echo '</div>';
                             endif;
 
@@ -329,7 +329,7 @@ class Cooked_Recipes {
 
             do_action( 'cooked_recipe_grid_before_image', $recipe );
 
-            echo has_post_thumbnail($rid) && !$hide_image ? '<span class="cooked-recipe-card-image" style="background-image:url(' . get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) . ');"></span>' : '';
+            echo has_post_thumbnail($rid) && !$hide_image ? '<span class="cooked-recipe-card-image" style="background-image:url(' . esc_url( get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) ) . ');"></span>' : '';
 
             //do_action( 'cooked_recipe_grid_after_image', $recipe );
 
@@ -349,7 +349,7 @@ class Cooked_Recipes {
                     echo '<span class="cooked-recipe-card-author">';
                         $author = $recipe['author'];
                         /* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */
-                        echo sprintf( __( 'By %s', 'cooked' ), '<strong>' . $author['name'] . '</strong>' );
+                        echo wp_kses_post( sprintf( __( 'By %s', 'cooked' ), '<strong>' . esc_html( $author['name'] ) . '</strong>' ) );
                     echo '</span>';
                 endif;
 
@@ -938,13 +938,13 @@ class Cooked_Recipes {
             ];
             $current_label = isset( $labels[ $current ] ) ? $labels[ $current ] : $labels[''];
             echo '<span class="cooked-measurement-system"><span class="cooked-measurement-system-icon"><i class="cooked-icon cooked-icon-gear"></i></span>';
-                echo '<strong class="cooked-meta-title">' . __( 'Units', 'cooked' ) . '</strong>';
+                echo '<strong class="cooked-meta-title">' . esc_html__( 'Units', 'cooked' ) . '</strong>';
                 echo '<a aria-label="' . esc_attr( $current_label ) . '" href="#">' . esc_html( $current_label ) . '</a>';
-                echo '<label for="cooked-measurement-system-changer" class="screen-reader-text">' . __( 'Measurement System', 'cooked' ) . '</label>';
+                echo '<label for="cooked-measurement-system-changer" class="screen-reader-text">' . esc_html__( 'Measurement System', 'cooked' ) . '</label>';
                 echo '<select id="cooked-measurement-system-changer" name="measurement_system" class="cooked-measurement-system-changer">';
-                    echo '<option value=""' . selected( $current, '', false ) . '>' . __( 'Default', 'cooked' ) . '</option>';
-                    echo '<option value="metric"' . selected( $current, 'metric', false ) . '>' . __( 'Metric', 'cooked' ) . '</option>';
-                    echo '<option value="imperial"' . selected( $current, 'imperial', false ) . '>' . __( 'Imperial', 'cooked' ) . '</option>';
+                    echo '<option value=""' . selected( $current, '', false ) . '>' . esc_html__( 'Default', 'cooked' ) . '</option>';
+                    echo '<option value="metric"' . selected( $current, 'metric', false ) . '>' . esc_html__( 'Metric', 'cooked' ) . '</option>';
+                    echo '<option value="imperial"' . selected( $current, 'imperial', false ) . '>' . esc_html__( 'Imperial', 'cooked' ) . '</option>';
                 echo '</select>';
             echo '</span>';
         endif;
@@ -993,22 +993,22 @@ class Cooked_Recipes {
         endif;
 
         echo '<span class="cooked-servings"><span class="cooked-servings-icon"><i class="cooked-icon cooked-icon-recipe-icon"></i></span>';
-        echo '<strong class="cooked-meta-title">' . __('Yields','cooked') . '</strong>';
+        echo '<strong class="cooked-meta-title">' . esc_html__('Yields','cooked') . '</strong>';
             if ( !$printing && !$switcher_disabled ):
 
                 /* translators: singular and plural "serving" sizes */
                 $servings_string = sprintf( esc_html( _n( '%s Serving', '%s Servings', $servings, 'cooked' ) ), $servings );
 
-                echo '<a aria-label="' . $servings_string . '" href="#">' . $servings_string . '</a>';
-                echo '<label for="cooked-servings-changer" class="screen-reader-text">' . __('Servings', 'cooked') . '</label>';
+                echo '<a aria-label="' . esc_attr( $servings_string ) . '" href="#">' . esc_html( $servings_string ) . '</a>';
+                echo '<label for="cooked-servings-changer" class="screen-reader-text">' . esc_html__('Servings', 'cooked') . '</label>';
                 echo '<select id="cooked-servings-changer" name="servings" class="cooked-servings-changer">';
                     foreach ( $servings_array as $stype ):
-                        echo '<option value="' . $stype['value'] . '"' . ( $stype['value'] == $servings ? ' selected' : '' ) . '>' . esc_attr( $stype['name'] ) . '</option>';
+                        echo '<option value="' . esc_attr( $stype['value'] ) . '"' . ( $stype['value'] == $servings ? ' selected' : '' ) . '>' . esc_html( $stype['name'] ) . '</option>';
                     endforeach;
                 echo '</select>';
             else:
                 /* translators: singular and plural "serving" sizes */
-                echo '<span>' . sprintf( esc_html( _n( '%s Serving', '%s Servings', $servings, 'cooked' ) ), $servings ) . '</span>';
+                echo '<span>' . esc_html( sprintf( _n( '%s Serving', '%s Servings', $servings, 'cooked' ), $servings ) ) . '</span>';
             endif;
         echo '</span>';
 
@@ -1035,7 +1035,7 @@ class Cooked_Recipes {
                     ? ($ing['section_heading_element'] === 'div' ? $default_element : $ing['section_heading_element'])
                     : $default_element;
 
-                echo '<' . $element . ' class="cooked-single-ingredient cooked-heading">' . esc_html($ing['section_heading_name']) . '</' . $element . '>';
+                echo '<' . tag_escape( $element ) . ' class="cooked-single-ingredient cooked-heading">' . esc_html($ing['section_heading_name']) . '</' . tag_escape( $element ) . '>';
             }
 
         } elseif ( isset($ing['name']) && $ing['name'] ) {
@@ -1154,7 +1154,7 @@ class Cooked_Recipes {
 
                     if ( $sub_name ) {
                         echo '<span class="cooked-ingredient-substitution">';
-                            echo ' <span class="cooked-ing-sub-label">' . __('or', 'cooked') . '</span> ';
+                            echo ' <span class="cooked-ing-sub-label">' . esc_html__('or', 'cooked') . '</span> ';
                             echo ( $sub_amount ? '<span class="cooked-ing-amount" data-decimal="' . esc_html($sub_float_amount) . '">' . wp_kses_post($sub_amount) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( $sub_measurement ) . '</span> ' : '' );
                             echo '<span class="cooked-ing-name">' . wp_kses_post( $sub_name ) . '</span>';
                         echo '</span>';
@@ -1164,7 +1164,7 @@ class Cooked_Recipes {
         }
 
         $ing_html = ob_get_clean();
-        echo apply_filters( 'cooked_single_ingredient_html', $ing_html, $ing, $checkboxes, $plain_text );
+        echo wp_kses_post( apply_filters( 'cooked_single_ingredient_html', $ing_html, $ing, $checkboxes, $plain_text ) );
     }
 
     public static function single_direction($dir, $number = false, $plain_text = false, $step = false, $atts = false) {
@@ -1183,7 +1183,7 @@ class Cooked_Recipes {
                     ? ($dir['section_heading_element'] === 'div' ? $default_element : $dir['section_heading_element'])
                     : $default_element;
 
-                echo '<' . $element . ' class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</' . $element . '>';
+                echo '<' . tag_escape( $element ) . ' class="cooked-single-direction cooked-heading">' . esc_html($dir['section_heading_name']) . '</' . tag_escape( $element ) . '>';
             }
 
         } elseif ( !empty($dir['content']) || !empty($dir['image']) || !empty($dir['video']) ) {
@@ -1201,9 +1201,9 @@ class Cooked_Recipes {
                 /* translators: singular and plural "steps" */
                 $step_string = sprintf( __( 'Step %d', 'cooked' ), $step );
 
-                echo '<div id="cooked-single-direction-step-'. $number .'" class="cooked-single-direction cooked-direction' . ($image ? ' cooked-direction-has-image' : '') . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . $step_string . '"' : '' ) . '>';
+                echo '<div id="cooked-single-direction-step-'. esc_attr( $number ) .'" class="cooked-single-direction cooked-direction' . ($image ? ' cooked-direction-has-image' : '') . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . esc_attr( $step_string ) . '"' : '' ) . '>';
                     echo $number ? '<span class="cooked-direction-number">' . esc_html($number) . '</span>' : '';
-                    echo '<div class="cooked-dir-content">' . do_shortcode($content) . ($image ? wpautop($image) : '') . ($video ? '<video class="cooked-direction-video" src="' . esc_url($video) . '" controls preload="metadata" playsinline></video>' : '') . '</div>';
+                    echo '<div class="cooked-dir-content">' . do_shortcode($content) . ($image ? wp_kses_post( wpautop($image) ) : '') . ($video ? '<video class="cooked-direction-video" src="' . esc_url($video) . '" controls preload="metadata" playsinline></video>' : '') . '</div>';
                 echo '</div>';
             }
         }
@@ -1259,7 +1259,7 @@ class Cooked_Recipes {
 
                 echo '<div class="cooked-field-wrap cooked-field-wrap-select' . ( isset($active_taxonomy) ? ' cooked-taxonomy-selected' : '' ) . '">';
                 echo '<span class="cooked-browse-select">';
-                echo '<span class="cooked-field-title">' . ( isset($active_taxonomy) ? esc_html( $active_taxonomy ) : __('Browse','cooked') ) . '</span>';
+                echo '<span class="cooked-field-title">' . ( isset($active_taxonomy) ? esc_html( $active_taxonomy ) : esc_html__('Browse','cooked') ) . '</span>';
                 echo '<span class="cooked-browse-select-block cooked-clearfix">';
 
             endif;
@@ -1280,9 +1280,9 @@ class Cooked_Recipes {
                 $terms_array = Cooked_Settings::terms_array( 'cp_recipe_category', false, __('No categories','cooked'), true, true, false );
                 if ( !empty($terms_array) ):
                     echo '<span class="cooked-tax-column">';
-                        echo '<span class="cooked-tax-column-title">' . __('Categories','cooked') . '</span>';
+                        echo '<span class="cooked-tax-column-title">' . esc_html__('Categories','cooked') . '</span>';
                         echo '<div class="cooked-tax-scrollable">';
-                            echo ( $view_all_recipes_url ? '<a href="' . esc_url( $view_all_recipes_url ) . '">' . __( 'All Categories','cooked' ) . '</a>' : '' );
+                            echo ( $view_all_recipes_url ? '<a href="' . esc_url( $view_all_recipes_url ) . '">' . esc_html__( 'All Categories','cooked' ) . '</a>' : '' );
                             foreach ( $terms_array as $key => $val ):
                                 if ( $key ):
                                     $term = get_term( $key );
@@ -1351,11 +1351,11 @@ class Cooked_Recipes {
 
                 echo '<div class="cooked-fields-wrap cooked-' . esc_attr( $tax_col_count ) . '-search-fields">';
 
-                    echo !$options['hide_browse'] && $taxonomy_search_fields ? $taxonomy_search_fields : '';
+                    echo !$options['hide_browse'] && $taxonomy_search_fields ? wp_kses_post( $taxonomy_search_fields ) : '';
 
-                    echo '<input aria-label="' . __('Find a recipe...', 'cooked') . '" class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( !empty($cooked_search_s) ? $cooked_search_s : '' ) . '" placeholder="' . __('Find a recipe...','cooked') . '" />';
+                    echo '<input aria-label="' . esc_attr__('Find a recipe...', 'cooked') . '" class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( !empty($cooked_search_s) ? esc_attr( $cooked_search_s ) : '' ) . '" placeholder="' . esc_attr__('Find a recipe...','cooked') . '" />';
 
-                    echo '<a aria-label="' . __('Search', 'cooked') . '" href="#" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search"></i></a>';
+                    echo '<a aria-label="' . esc_attr__('Search', 'cooked') . '" href="#" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search"></i></a>';
 
                 echo '</div>';
 

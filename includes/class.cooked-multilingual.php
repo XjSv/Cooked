@@ -267,7 +267,7 @@ class Cooked_Multilingual {
                 $plugin_name
             ) . '</em>';
 
-            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message );
+            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
         }
     }
 }

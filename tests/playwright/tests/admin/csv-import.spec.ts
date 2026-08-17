@@ -1,6 +1,6 @@
 import { test, expect } from '../../utils/fixtures';
 import { Page } from '@playwright/test';
-import { deletePostsByTitle } from '../../utils/wp-cli';
+import { deletePostsByTitle, deleteTerm, findTermIdByName } from '../../utils/wp-cli';
 import path from 'path';
 
 const TEST_DATA_DIR = path.resolve(__dirname, '../../../test_data');
@@ -12,8 +12,59 @@ const LARGE_CSV_TITLES = [
   'Banana Bread', 'Chicken Tikka Masala', 'Caprese Salad',
   'Beef and Broccoli Stir Fry', 'Apple Pie', 'Greek Salad', 'Chicken Noodle Soup'
 ];
+const ALL_CSV_TITLES = [...SMALL_CSV_TITLES, ...MEDIUM_CSV_TITLES, ...LARGE_CSV_TITLES];
+
+const CSV_TERMS: Record<string, string[]> = {
+  cp_recipe_category: ['Breakfast', 'Desserts', 'Main Dishes', 'Salads', 'Soups'],
+  cp_recipe_cuisine: ['American', 'Asian', 'French', 'Indian', 'Italian', 'Mediterranean', 'Russian'],
+  cp_recipe_cooking_method: ['baking', 'no-cook', 'roasting', 'stir-frying', 'stovetop'],
+  cp_recipe_tags: [
+    'apple', 'baking', 'banana', 'beef', 'bread', 'breakfast', 'broccoli', 'buddha bowl',
+    'cake', 'caesar', 'caprese', 'cheese', 'chicken', 'chocolate', 'classic', 'comfort',
+    'comfort food', 'cookies', 'curry', 'decadent', 'eggs', 'feta', 'fresh', 'greek',
+    'healthy', 'indian', 'lasagna', 'mozzarella', 'noodles', 'olives', 'pasta', 'pie',
+    'quinoa', 'quick', 'romaine', 'salad', 'simple', 'soup', 'spicy', 'stir fry',
+    'stroganoff', 'tomato', 'vegetarian',
+  ],
+};
 
 const allImportedTitles: string[] = [];
+
+let preexistingTermIds = new Set<string>();
+
+function termIdKey(taxonomy: string, id: number): string {
+  return `${taxonomy}:${id}`;
+}
+
+function recordPreexistingCsvTermIds(): Set<string> {
+  const preexisting = new Set<string>();
+  for (const [taxonomy, names] of Object.entries(CSV_TERMS)) {
+    for (const name of names) {
+      const id = findTermIdByName(taxonomy, name);
+      if (id) {
+        preexisting.add(termIdKey(taxonomy, id));
+      }
+    }
+  }
+  return preexisting;
+}
+
+function deleteCreatedCsvTerms(preexisting: Set<string>): void {
+  for (const [taxonomy, names] of Object.entries(CSV_TERMS)) {
+    for (const name of names) {
+      const id = findTermIdByName(taxonomy, name);
+      if (id && !preexisting.has(termIdKey(taxonomy, id))) {
+        deleteTerm(taxonomy, id);
+      }
+    }
+  }
+}
+
+function deleteCsvRecipes(): void {
+  for (const title of ALL_CSV_TITLES) {
+    deletePostsByTitle(title);
+  }
+}
 
 async function importCsvFile(adminPage: Page, csvFileName: string) {
   await adminPage.goto('/wp-admin/admin.php?page=cooked_import', { waitUntil: 'networkidle' });
@@ -33,6 +84,15 @@ async function importCsvFile(adminPage: Page, csvFileName: string) {
 }
 
 test.describe('CSV Import (admin)', () => {
+  test.beforeAll(() => {
+    deleteCsvRecipes();
+    preexistingTermIds = recordPreexistingCsvTermIds();
+  });
+
+  test.afterAll(() => {
+    deleteCsvRecipes();
+    deleteCreatedCsvTerms(preexistingTermIds);
+  });
 
   test('Import small CSV (1 recipe)', async ({ adminContext }) => {
     const adminPage = await adminContext.newPage();
@@ -91,11 +151,4 @@ test.describe('CSV Import (admin)', () => {
     await expect(adminPage.locator('input[name="_recipe_settings[cook_time]"]')).toHaveValue('12');
     await expect(adminPage.locator('select[name="_recipe_settings[difficulty_level]"]')).toHaveValue('1');
   });
-});
-
-test.afterAll(() => {
-  const allTitles = [...SMALL_CSV_TITLES, ...MEDIUM_CSV_TITLES, ...LARGE_CSV_TITLES];
-  for (const title of allTitles) {
-    deletePostsByTitle(title);
-  }
 });

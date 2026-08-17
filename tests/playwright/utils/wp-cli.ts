@@ -82,6 +82,31 @@ export function deletePost(id: string | number): void {
   }
 }
 
+export function findTermIdByName(taxonomy: string, name: string): number | null {
+  if (!taxonomy || !name) {
+    return null;
+  }
+  try {
+    const json = wpCliArgs(['term', 'get', taxonomy, name, '--by=name', '--format=json']);
+    const term = JSON.parse(json) as { term_id: number | string };
+    const id = Number(term.term_id);
+    return id > 0 ? id : null;
+  } catch {
+    return null;
+  }
+}
+
+export function deleteTerm(taxonomy: string, id: number): void {
+  if (!taxonomy || !id) {
+    return;
+  }
+  try {
+    wpCliArgs(['term', 'delete', taxonomy, String(id)]);
+  } catch {
+    // already deleted, or taxonomy is not registered
+  }
+}
+
 export function userExists(login: string): boolean {
   try {
     wpCli(`wp user get ${login} --field=ID`);

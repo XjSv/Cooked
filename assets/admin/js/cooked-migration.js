@@ -26,7 +26,8 @@
                     var ajax__bulk_migrate_recipes = $.post(
                         cooked_migration_js_vars.ajax_url,
                         {
-                            action: 'cooked_get_migrate_ids'
+                            action: 'cooked_get_migrate_ids',
+                            nonce: cooked_migration_js_vars.cooked_import_nonce
                         },
                         function (json_recipe_ids) {
                             if (json_recipe_ids) {
@@ -60,7 +61,8 @@
                         cooked_migration_js_vars.ajax_url,
                         {
                             action: 'cooked_get_import_ids',
-                            import_type: import_type
+                            import_type: import_type,
+                            nonce: cooked_migration_js_vars.cooked_import_nonce
                         },
                         function (json_recipe_ids) {
                             if (json_recipe_ids) {
@@ -117,6 +119,7 @@
 
                 var formData = new FormData();
                 formData.append('action', 'cooked_upload_csv');
+                formData.append('nonce', cooked_migration_js_vars.cooked_import_nonce);
                 formData.append('csv_file', file);
 
                 // Show progress
@@ -144,7 +147,8 @@
                                 cooked_migration_js_vars.ajax_url,
                                 {
                                     action: 'cooked_process_csv',
-                                    transient_key: response.data.transient_key
+                                    transient_key: response.data.transient_key,
+                                    nonce: cooked_migration_js_vars.cooked_import_nonce
                                 },
                                 function(processResponse) {
                                     if (processResponse.success) {
@@ -267,7 +271,8 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
             cooked_migration_js_vars.ajax_url,
             {
                 action: 'cooked_migrate_recipes',
-                recipe_ids: recipe_ids
+                recipe_ids: recipe_ids,
+                nonce: cooked_migration_js_vars.cooked_import_nonce
             },
             function( new_recipe_ids ) {
                 if ( new_recipe_ids && new_recipe_ids != 'false' && new_recipe_ids != false ){
@@ -348,7 +353,8 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
             {
                 action: 'cooked_import_recipes',
                 recipe_ids: recipe_ids,
-                import_type: import_type
+                import_type: import_type,
+                nonce: cooked_migration_js_vars.cooked_import_nonce
             },
             function (new_recipe_ids) {
                 if (new_recipe_ids && new_recipe_ids != 'false' && new_recipe_ids != false) {

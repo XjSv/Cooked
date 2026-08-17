@@ -170,6 +170,7 @@ class Cooked_Admin_Enqueues {
                     'i18n_last_calculated' => __( 'Last: %1$s · %2$s recipes', 'cooked' ),
                     'wp_editor_roles_allowed' => esc_attr($wp_editor_roles_allowed),
                     'cooked_bulk_add_nonce' => wp_create_nonce( 'cooked_bulk_add' ),
+                    'cooked_import_nonce' => wp_create_nonce( 'cooked_admin_import' ),
                     'i18n_bulk_add_ingredients' => __( 'Bulk Add Ingredients', 'cooked' ),
                     'i18n_bulk_add_directions' => __( 'Bulk Add Directions', 'cooked' ),
                     'i18n_bulk_add_placeholder_ingredients' => __( "2 cups flour\n1 tsp salt\n1/2 cup sugar\n3 large eggs", 'cooked' ),

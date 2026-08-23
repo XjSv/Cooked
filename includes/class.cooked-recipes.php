@@ -239,7 +239,7 @@ class Cooked_Recipes {
                 // Modified WHERE
                 $sql['where'] = sprintf(
                     " AND ( %s OR %s ) ",
-                    apply_filters( 'cooked_query_where_filter', $wpdb->prepare( "{$wpdb->posts}.post_title like '%%%s%%'", $wpdb->esc_like( $title ) ) ),
+                    apply_filters( 'cooked_query_where_filter', $wpdb->prepare( "{$wpdb->posts}.post_title LIKE %s", '%' . $wpdb->esc_like( $title ) . '%' ) ),
                     mb_substr( $sql['where'], 5, mb_strlen( $sql['where'] ) )
                 );
 
@@ -922,7 +922,6 @@ class Cooked_Recipes {
 
         endforeach;
 
-        wp_reset_query();
         wp_reset_postdata();
 
         return $gallery_types;

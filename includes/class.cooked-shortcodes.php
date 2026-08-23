@@ -140,9 +140,10 @@ class Cooked_Shortcodes {
         );
 
         $desc = esc_attr($atts['desc']);
-        $seconds = $atts['seconds'];
-        $minutes = $atts['minutes'] ? $atts['minutes'] * 60 : $atts['length'] * 60;
-        $hours = $atts['hours'] * 60 * 60;
+        $seconds = floatval( $atts['seconds'] );
+        $minutes_value = floatval( $atts['minutes'] );
+        $minutes = $minutes_value ? $minutes_value * 60 : floatval( $atts['length'] ) * 60;
+        $hours = floatval( $atts['hours'] ) * 60 * 60;
         $seconds = $seconds + $minutes + $hours;
 
         if (!$cooked_timer_identifier) {

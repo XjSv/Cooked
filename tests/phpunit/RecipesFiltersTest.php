@@ -134,6 +134,29 @@ class RecipesFiltersTest extends FilterTestCase {
         $this->assertSame( 'filtered_gallery', $GLOBALS['_cooked_test_last_query']['meta_key'] );
     }
 
+    public function test_gallery_types_restores_global_post_after_inner_query() {
+        $main_post = (object) [
+            'ID'         => 10,
+            'post_title' => 'Recipe Being Edited',
+        ];
+        $GLOBALS['post']     = $main_post;
+        $GLOBALS['wp_query'] = (object) [
+            'query' => [],
+            'post'  => $main_post,
+        ];
+        $GLOBALS['_cooked_test_query_posts'] = [
+            (object) [
+                'ID'         => 50,
+                'post_title' => 'Envira Gallery 50',
+            ],
+        ];
+        $GLOBALS['_cooked_test_titles'][50] = 'Envira Gallery 50';
+
+        Cooked_Recipes::gallery_types();
+
+        $this->assertSame( 10, (int) $GLOBALS['post']->ID );
+    }
+
     public function test_cooked_servings_switcher_options_appear_in_html() {
         $html = $this->with_filter(
             'cooked_servings_switcher_options',
@@ -479,6 +502,21 @@ class RecipesFiltersTest extends FilterTestCase {
         );
 
         $this->assertStringContainsString( 'FILTERED', $sql['where'] );
+    }
+
+    public function test_cooked_pre_get_posts_uses_like_placeholder_with_esc_like() {
+        $q = new WP_Query();
+        $q->set( '_cooked_title', 'pasta_bowl%' );
+
+        Cooked_Recipes::cooked_pre_get_posts( $q );
+        $sql = apply_filters(
+            'get_meta_sql',
+            [ 'where' => ' AND extra_clause' ]
+        );
+
+        $this->assertStringNotContainsString( '%%%s%%', $sql['where'] );
+        $this->assertStringContainsString( "LIKE '%pasta\\_bowl\\%%'", $sql['where'] );
+        $this->assertStringContainsString( 'extra_clause', $sql['where'] );
     }
 
     public function test_cooked_recipe_content_filter_changes_singular_content() {

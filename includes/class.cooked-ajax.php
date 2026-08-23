@@ -449,7 +449,7 @@ class Cooked_Ajax {
 
         // Clean up
         if (file_exists($file_path)) {
-            @unlink($file_path);
+            wp_delete_file($file_path);
         }
         delete_transient($transient_key);
 

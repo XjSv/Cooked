@@ -535,6 +535,7 @@ final class Cooked_Plugin {
             load_textdomain( 'cooked', $lang_file_ext );
         } else {
             // Load the default language files.
+            // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Bundled /languages .mo files.
             load_plugin_textdomain( 'cooked', false, COOKED_FOLDER . '/languages' );
         }
     }

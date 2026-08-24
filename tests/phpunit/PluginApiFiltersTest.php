@@ -327,6 +327,23 @@ class PluginApiFiltersTest extends FilterTestCase {
         $this->assertContains( 'page', $screens );
     }
 
+    public function test_cooked_recipe_metabox_post_types_registers_meta_box() {
+        $meta = new Cooked_Recipe_Meta();
+
+        $this->with_filter(
+            'cooked_recipe_metabox_post_types',
+            function () {
+                return [ 'cp_recipe', 'page' ];
+            },
+            function () use ( $meta ) {
+                $meta->add_recipe_meta_box( 'page' );
+            }
+        );
+
+        $screens = array_column( $GLOBALS['_cooked_test_meta_boxes'], 'screen' );
+        $this->assertContains( 'page', $screens );
+    }
+
     public function test_cooked_recipe_admin_tabs_can_add_a_tab() {
         $GLOBALS['_cooked_test_post_meta'][1]['_recipe_settings'] = [
             'cooked_version' => COOKED_VERSION,

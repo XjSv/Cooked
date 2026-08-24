@@ -112,7 +112,10 @@ class Cooked_Recipe_Meta {
      */
     public function add_recipe_meta_box( $post_type ) {
         // Limit meta box to Cooked Recipes.
-        $post_types = apply_filters( 'cp_recipe_metabox_post_types' , ['cp_recipe'] );
+        $post_types = apply_filters(
+            'cooked_recipe_metabox_post_types',
+            apply_filters( 'cp_recipe_metabox_post_types', [ 'cp_recipe' ] )
+        );
 
         if ( in_array( $post_type, $post_types ) ) {
             add_meta_box( 'cooked_recipe_settings', __( 'Cooked Settings', 'cooked' ), [&$this, 'render_recipe_meta_box'], $post_type, 'normal', 'high' );

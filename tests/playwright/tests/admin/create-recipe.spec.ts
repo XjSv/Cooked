@@ -1,8 +1,17 @@
 import { test, expect } from '../../utils/fixtures';
-import { deletePost } from '../../utils/wp-cli';
+import { deletePost, getCookedSettings, setCookedSettings } from '../../utils/wp-cli';
 
 var postId: number;
 var title: string;
+const seoDescription = 'you\'ll love this "recipe"';
+let originalSettings: Record<string, unknown> | null = null;
+
+function withoutDisableMetaTags(settings: Record<string, unknown>): Record<string, unknown> {
+  const advanced = Array.isArray(settings.advanced)
+    ? (settings.advanced as unknown[]).map(String).filter((item) => item !== 'disable_meta_tags')
+    : [];
+  return { ...settings, advanced };
+}
 
 declare global {
   interface Window {
@@ -17,6 +26,11 @@ declare global {
 
 test.describe.configure({ mode: 'serial' });
 
+test.beforeAll(() => {
+  originalSettings = getCookedSettings();
+  setCookedSettings(withoutDisableMetaTags(originalSettings));
+});
+
 test.describe('Create a new complete recipe (admin)', () => {
   test('Create a new recipe (admin)', async ({ adminContext }) => {
     const adminPage = await adminContext.newPage();
@@ -29,6 +43,10 @@ test.describe('Create a new complete recipe (admin)', () => {
 
     await adminPage.fill('input[name="_recipe_settings[prep_time]"]', '15');
     await adminPage.fill('input[name="_recipe_settings[cook_time]"]', '30');
+
+    const seoField = adminPage.locator('textarea[name="_recipe_settings[seo_description]"]');
+    await expect(seoField).toBeVisible();
+    await seoField.fill(seoDescription);
 
     await adminPage.click('#cooked-recipe-tab-nutrition', { force: true });
     await adminPage.fill('input[name="_recipe_settings[nutrition][servings]"]', '4');
@@ -91,6 +109,10 @@ test.describe('Create a new complete recipe (admin)', () => {
     postId = postIdMatch ? parseInt(postIdMatch[1]) : 0;
 
     expect(postId).toBeTruthy();
+
+    const savedSeoField = adminPage.locator('textarea[name="_recipe_settings[seo_description]"]');
+    await expect(savedSeoField).toHaveValue(seoDescription);
+    await expect(savedSeoField).not.toHaveValue(/&quot;|&#039;|&amp;/);
   });
 
   test('View the recipe (frontend)', async ({ adminContext }) => {
@@ -111,6 +133,10 @@ test.describe('Create a new complete recipe (admin)', () => {
 
     await expect(adminPage.getByText(title)).toBeDefined();
 
+    await expect(adminPage.locator('textarea[name="_recipe_settings[seo_description]"]')).toHaveValue(
+      seoDescription
+    );
+
     await adminPage.getByLabel('Recipe title ...').fill('Test Recipe Playwright - Edited - ' + Date.now());
 
     await adminPage.getByRole('button', { name: 'Update', exact: true }).click();
@@ -126,4 +152,7 @@ test.describe('Create a new complete recipe (admin)', () => {
 
 test.afterAll(() => {
   deletePost(postId);
+  if (originalSettings) {
+    setCookedSettings(originalSettings);
+  }
 });

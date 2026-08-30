@@ -122,4 +122,32 @@ class RecipeMetaTest extends TestCase {
         $this->assertStringNotContainsString( '&quot;', $result['post_title'] );
         $this->assertStringNotContainsString( '&amp;', $result['post_title'] );
     }
+
+    public function test_meta_cleanup_seo_description_does_not_htmlentities() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'seo_description' => 'you\'ll love this "recipe"',
+        ] );
+
+        $this->assertSame( 'you\'ll love this "recipe"', $result['seo_description'] );
+        $this->assertStringNotContainsString( '&quot;', $result['seo_description'] );
+        $this->assertStringNotContainsString( '&#039;', $result['seo_description'] );
+        $this->assertStringNotContainsString( '&amp;', $result['seo_description'] );
+    }
+
+    public function test_meta_cleanup_seo_description_decodes_existing_entities() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'seo_description' => 'you&#039;ll love this &quot;recipe&quot;',
+        ] );
+
+        $this->assertSame( 'you\'ll love this "recipe"', $result['seo_description'] );
+    }
+
+    public function test_meta_cleanup_seo_description_strips_tags() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'seo_description' => '<b>Yum</b> & more',
+        ] );
+
+        $this->assertSame( 'Yum & more', $result['seo_description'] );
+        $this->assertStringNotContainsString( '<b>', $result['seo_description'] );
+    }
 }

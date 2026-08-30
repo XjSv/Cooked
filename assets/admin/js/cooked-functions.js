@@ -364,7 +364,6 @@ var cookedSortableTouchHandler = function(event) {
             $_CookedRecipeTab.on('click', function(e) {
                 e.preventDefault();
                 $_CookedRecipeTab.removeClass('active');
-                window.scrollTo(0, 0);
 
                 var thisTab = $(this),
                     thisTabID = thisTab.attr('id').split('cooked-recipe-tab-')[1];

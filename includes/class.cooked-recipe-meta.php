@@ -49,6 +49,9 @@ class Cooked_Recipe_Meta {
                             $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
                             $_recipe_settings[$key] = wp_strip_all_tags( $decoded_val );
                         }
+                    } elseif ( $key === 'seo_description' ) {
+                        $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                        $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                     } else {
                         if ($key === "post_title") {
                             // Decode HTML entities first so wp_kses_post can see actual HTML tags
@@ -163,6 +166,9 @@ class Cooked_Recipe_Meta {
         }
         if ( isset( $recipe_settings['notes'] ) ) {
             $recipe_settings['notes'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['notes'] );
+        }
+        if ( isset( $recipe_settings['seo_description'] ) ) {
+            $recipe_settings['seo_description'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['seo_description'] );
         }
 
         // Directions

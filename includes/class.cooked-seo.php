@@ -115,7 +115,7 @@ class Cooked_SEO {
 
         $description = '';
         if (!empty($recipe['seo_description'])):
-            $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe['seo_description']) ); ;
+            $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', wp_specialchars_decode( $recipe['seo_description'], ENT_QUOTES ) ) );
         elseif (!empty($recipe['excerpt'])):
             $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe['excerpt']) );
         elseif (!empty($recipe['title'])):

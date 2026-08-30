@@ -574,7 +574,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 <?php if ( !isset($_cooked_settings['advanced']) || empty($_cooked_settings['advanced']) || !in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) ): ?>
                     <div class="recipe-setting-block">
                         <h3 class="cooked-settings-title"><?php esc_html_e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( esc_html__( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
-                        <p><textarea name="_recipe_settings[seo_description]"><?php echo isset($recipe_settings['seo_description']) ? esc_textarea( $recipe_settings['seo_description'] ) : ''; ?></textarea></p>
+                        <p><textarea name="_recipe_settings[seo_description]"><?php echo isset($recipe_settings['seo_description']) ? esc_textarea( wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) : ''; ?></textarea></p>
                     </div>
                 <?php endif; ?>
 

@@ -517,7 +517,16 @@ function wp_insert_post( $postarr = [], $wp_error = false, $fire_after_hooks = t
 function register_setting( $option_group, $option_name, $args = [] ) { return true; }
 function wp_create_nonce( $action = -1 ) { return 'test_nonce'; }
 function wp_verify_nonce( $nonce, $action = -1 ) { return true; }
-function current_user_can( $capability, ...$args ) { return true; }
+function check_ajax_referer( $action = -1, $query_arg = false, $die = true ) { return 1; }
+function wp_die( $message = '', $title = '', $args = [] ) {
+    $GLOBALS['_cooked_test_wp_die'][] = [ $message, $title, $args ];
+}
+function current_user_can( $capability, ...$args ) {
+    if ( isset( $GLOBALS['_cooked_test_current_user_can'] ) && is_callable( $GLOBALS['_cooked_test_current_user_can'] ) ) {
+        return (bool) call_user_func_array( $GLOBALS['_cooked_test_current_user_can'], array_merge( [ $capability ], $args ) );
+    }
+    return true;
+}
 function wp_nonce_field( $action = -1, $name = '_wpnonce', $referer = true, $echo = true ) { return '<input type="hidden" name="' . $name . '" value="test_nonce" />'; }
 function wp_doing_ajax() { return false; }
 function wp_doing_cron() { return false; }
@@ -833,6 +842,7 @@ require_once COOKED_DIR . 'includes/class.cooked-enqueues.php';
 require_once COOKED_DIR . 'includes/class.cooked-users.php';
 require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
 require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
+require_once COOKED_DIR . 'includes/class.cooked-ajax.php';
 require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';
 require_once COOKED_DIR . 'includes/class.cooked-updates.php';
 require_once COOKED_DIR . 'includes/class.cooked-seo.php';

@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 6.8
 Tested up to: 7.1
-Stable tag: 1.16.0
+Stable tag: 1.16.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -81,9 +81,18 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.16.0 adds video clips to recipe direction steps, Off/On/Auto Dark Mode, a default recipe image option, and other improvements.
+Version 1.16.1 fixes recipe editor bugs, a security issue, and Plugin Check issues.
 
 == Changelog ==
+
+= 1.16.1 =
+* **FIX:** Fixed the 'Bulk Add' direction functionality when adding a [cooked-timer] or quotes.
+* **TWEAK:** Removed the scroll to top when clicking recipe edit tabs.
+* **FIX:** Fixed an encoding issue with SEO Description field.
+* **FIX:** Fixed a bug with recipe edit tabs on screens under 1440px.
+* **FIX:** Fixed the fullscreen mode not displaying correctly on WYSIWYG fields when in recipe edit.
+* **FIX:** Fixed Contributor+ IDOR/CSRF on recipe migrate and import AJAX reported in Patchstack.
+* **FIX:** Various Plugin Check (PCP) fixes.
 
 = 1.16.0 =
 * **NEW:** Added video clips to recipe direction steps. Attach a video to any direction step using the WordPress Media Library, with square preview thumbnails in the admin and 16:9 responsive video output on the frontend.

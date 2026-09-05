@@ -1,6 +1,6 @@
 {
   "name": "cooked",
-  "version": "1.16.0",
+  "version": "1.16.1",
   "description": "Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.",
   "main": "index.js",
   "engines": {
@@ -58,18 +58,18 @@
   "homepage": "https://github.com/XjSv/Cooked#readme",
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
-    "@playwright/test": "^1.62.1",
-    "@types/node": "^26.2.0",
-    "@wordpress/e2e-test-utils-playwright": "^1.53.0",
+    "@playwright/test": "^1.63.0",
+    "@types/node": "^26.4.1",
+    "@wordpress/e2e-test-utils-playwright": "^1.54.0",
     "dotenv": "^17.4.2",
     "gulp": "^5.0.1",
     "gulp-clean-css": "^4.3.0",
     "gulp-rename": "^2.1.0",
     "gulp-sass": "^6.0.1",
     "gulp-uglify": "^3.0.2",
-    "playwright": "^1.62.1",
-    "sass": "^1.102.0",
-    "@wordpress/env": "^11.13.0",
-    "bestzip": "^3.0.2"
+    "playwright": "^1.63.0",
+    "sass": "^1.104.0",
+    "@wordpress/env": "^11.14.0",
+    "bestzip": "^3.0.3"
   }
 }

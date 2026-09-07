@@ -3010,14 +3010,14 @@ msgstr "Utilisée comme image mise en avant pour les recettes qui n’en ont pas
 
 #: includes/class.cooked-measurements.php:214
 msgid "g"
-msgstr ""
+msgstr "g"
 
 #: includes/class.cooked-post-types.php:466
 msgctxt "post type general name"
 msgid "Recipes"
-msgstr ""
+msgstr "Recettes"
 
 #: includes/class.cooked-post-types.php:467
 msgctxt "post type singular name"
 msgid "Recipe"
-msgstr ""
+msgstr "Recette"

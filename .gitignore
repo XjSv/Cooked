@@ -24,6 +24,10 @@ playwright-report/
 test-results/
 tests/.auth/
 tests/phpunit/.cache
+tests/backstop/backstop_data/bitmaps_test/
+tests/backstop/backstop_data/html_report/
+tests/backstop/backstop_data/ci_report/
+tests/backstop/backstop_data/json_report/
 
 # Build
 build/*

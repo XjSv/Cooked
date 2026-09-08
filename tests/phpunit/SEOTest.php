@@ -85,4 +85,36 @@ class SEOTest extends TestCase {
         $this->assertArrayHasKey( 'recipeInstructions', $result );
         $this->assertArrayHasKey( 'nutrition', $result );
     }
+
+    public function test_schema_values_uses_unencoded_seo_description() {
+        $GLOBALS['_cooked_settings']['advanced'] = [];
+        $GLOBALS['_cooked_settings']['recipe_taxonomies'] = [ 'cp_recipe_category' ];
+        $recipe = [
+            'id' => 1,
+            'title' => 'Test Recipe',
+            'seo_description' => 'you\'ll love this "recipe"',
+            'ingredients' => [],
+            'directions' => [],
+            'nutrition' => [],
+        ];
+        $result = Cooked_SEO::schema_values( $recipe );
+        $this->assertSame( 'you\'ll love this "recipe"', $result['description'] );
+        $this->assertStringNotContainsString( '&quot;', $result['description'] );
+        $this->assertStringNotContainsString( '&#039;', $result['description'] );
+    }
+
+    public function test_schema_values_decodes_encoded_seo_description() {
+        $GLOBALS['_cooked_settings']['advanced'] = [];
+        $GLOBALS['_cooked_settings']['recipe_taxonomies'] = [ 'cp_recipe_category' ];
+        $recipe = [
+            'id' => 1,
+            'title' => 'Test Recipe',
+            'seo_description' => 'you&#039;ll love this &quot;recipe&quot;',
+            'ingredients' => [],
+            'directions' => [],
+            'nutrition' => [],
+        ];
+        $result = Cooked_SEO::schema_values( $recipe );
+        $this->assertSame( 'you\'ll love this "recipe"', $result['description'] );
+    }
 }

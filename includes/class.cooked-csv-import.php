@@ -46,7 +46,7 @@ class Cooked_CSV_Import {
 		/**
 		 * Open and parse CSV file
 		 */
-		$handle = fopen( $file_path, 'r' );
+		$handle = fopen( $file_path, 'r' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- CSV row streaming.
 		if ( false === $handle ) {
 			$results['errors'][] = __( 'Could not open CSV file.', 'cooked' );
 			return $results;
@@ -58,7 +58,7 @@ class Cooked_CSV_Import {
 		$headers = fgetcsv( $handle );
 		if ( false === $headers || empty( $headers ) ) {
 			$results['errors'][] = __( 'CSV file is empty or invalid.', 'cooked' );
-			fclose( $handle );
+			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- CSV row streaming.
 			return $results;
 		}
 
@@ -73,7 +73,7 @@ class Cooked_CSV_Import {
 		 */
 		if ( ! in_array( 'title', $headers ) ) {
 			$results['errors'][] = __( 'CSV file must contain a "title" column.', 'cooked' );
-			fclose( $handle );
+			fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- CSV row streaming.
 			return $results;
 		}
 
@@ -120,6 +120,7 @@ class Cooked_CSV_Import {
 				}
 			} catch ( Exception $e ) {
 				$error_msg           = $e->getMessage();
+				/* translators: 1: CSV row number, 2: error message */
 				$results['errors'][] = sprintf( __( 'Row %1$d: %2$s', 'cooked' ), $row_number, $error_msg );
 
 				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
@@ -131,7 +132,7 @@ class Cooked_CSV_Import {
 			}
 		}
 
-		fclose( $handle );
+		fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- CSV row streaming.
 		return $results;
 	}
 

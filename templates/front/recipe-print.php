@@ -27,7 +27,7 @@ Cooked_Recipes::print_logo();
 Cooked_Functions::print_options();
 
 echo '<h1 id="printTitle">' . esc_html( get_the_title() ) . '</h1>';
-echo wpautop( do_shortcode( Cooked_Recipes::print_content() ) );
+echo wp_kses_post( wpautop( do_shortcode( Cooked_Recipes::print_content() ) ) );
 
 Cooked_Functions::print_options_js();
 

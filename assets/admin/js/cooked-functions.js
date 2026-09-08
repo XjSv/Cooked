@@ -364,7 +364,6 @@ var cookedSortableTouchHandler = function(event) {
             $_CookedRecipeTab.on('click', function(e) {
                 e.preventDefault();
                 $_CookedRecipeTab.removeClass('active');
-                window.scrollTo(0, 0);
 
                 var thisTab = $(this),
                     thisTabID = thisTab.attr('id').split('cooked-recipe-tab-')[1];
@@ -1304,7 +1303,7 @@ function cooked_init_bulk_add($) {
         for (var i = 0; i < lines.length; i++) {
             var $row = $('<div class="cooked-bulk-add-preview-row"></div>');
             var $cb = $('<label class="cooked-bulk-add-heading-toggle"><input type="checkbox" data-index="' + i + '" /><span>' + jsVars.i18n_bulk_add_section_heading + '</span></label>');
-            var $text = $('<input type="text" class="cooked-bulk-add-preview-text" data-index="' + i + '" value="' + escHtml(lines[i]) + '" />');
+            var $text = $('<input type="text" class="cooked-bulk-add-preview-text" data-index="' + i + '" />').val(lines[i]);
             $row.append($cb).append($text);
             $previewList.append($row);
         }
@@ -1342,9 +1341,9 @@ function cooked_init_bulk_add($) {
             var $headingLbl = $('<span class="cooked-bulk-add-heading-line-label"></span>').text(jsVars.i18n_bulk_add_heading_line_label);
             var $lineInput = $('<input type="text" class="cooked-bulk-add-preview-text" data-index="' + i + '" />').val(lines[i]);
             $headingWrap.append($headingLbl).append($lineInput);
-            var $amt = $('<input type="text" class="cooked-bulk-add-parsed-amount" data-index="' + i + '" value="' + escHtml(p.amount) + '" />');
-            var $unit = $('<input type="text" class="cooked-bulk-add-parsed-unit" data-index="' + i + '" value="' + escHtml(p.measurement) + '" />');
-            var $name = $('<input type="text" class="cooked-bulk-add-parsed-name" data-index="' + i + '" value="' + escHtml(p.name) + '" />');
+            var $amt = $('<input type="text" class="cooked-bulk-add-parsed-amount" data-index="' + i + '" />').val(p.amount);
+            var $unit = $('<input type="text" class="cooked-bulk-add-parsed-unit" data-index="' + i + '" />').val(p.measurement);
+            var $name = $('<input type="text" class="cooked-bulk-add-parsed-name" data-index="' + i + '" />').val(p.name);
             $row.append($cb).append($headingWrap).append($amt).append($unit).append($name);
             $previewList.append($row);
         }

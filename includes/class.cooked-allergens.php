@@ -271,7 +271,7 @@ class Cooked_Allergens {
         }
 
         $recipe_settings = Cooked_Recipes::get_settings( $recipe['id'] );
-        echo self::render( $recipe_settings );
+        echo wp_kses_post( self::render( $recipe_settings ) );
     }
 
     /**
@@ -361,8 +361,8 @@ class Cooked_Allergens {
         }
 
         echo '<span class="cooked-allergens-info">';
-        echo '<strong class="cooked-meta-title">' . __( 'Allergens', 'cooked' ) . '</strong>';
-        echo $html;
+        echo '<strong class="cooked-meta-title">' . esc_html__( 'Allergens', 'cooked' ) . '</strong>';
+        echo wp_kses_post( $html );
         echo '</span>';
     }
 

@@ -16,13 +16,13 @@ if ( is_array($recipe_classes) && !empty($recipe_classes) ) {
 	$recipe_classes = [];
 }
 
-echo '<article class="' . implode( ' ', $recipe_classes ) . ' cooked-recipe-card cooked-recipe-card-modern-centered">';
+echo '<article class="' . esc_attr( implode( ' ', $recipe_classes ) ) . ' cooked-recipe-card cooked-recipe-card-modern-centered">';
 
     do_action( 'cooked_recipe_grid_before_recipe', $recipe );
 
     do_action( 'cooked_recipe_grid_before_image', $recipe );
 
-    echo has_post_thumbnail( $recipe['id'] ) ? '<a href="' . esc_url( get_permalink( $recipe['id'] ) ) . '" class="cooked-recipe-card-image" style="background-image:url(' . get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) . ');"></a>' : '<span class="cooked-recipe-image-empty"></span>';
+    echo has_post_thumbnail( $recipe['id'] ) ? '<a href="' . esc_url( get_permalink( $recipe['id'] ) ) . '" class="cooked-recipe-card-image" style="background-image:url(' . esc_url( get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) ) . ');"></a>' : '<span class="cooked-recipe-image-empty"></span>';
 
     do_action( 'cooked_recipe_grid_after_image', $recipe );
 
@@ -44,7 +44,7 @@ echo '<article class="' . implode( ' ', $recipe_classes ) . ' cooked-recipe-card
             echo '<span class="cooked-recipe-card-author">';
                 $author = $recipe['author'];
                 /* translators: referring to the author (ex: By John Smith) */
-                echo sprintf( __( 'By %s', 'cooked' ), '<strong>' . $author['name'] . '</strong>' );
+                echo wp_kses_post( sprintf( __( 'By %s', 'cooked' ), '<strong>' . esc_html( $author['name'] ) . '</strong>' ) );
             echo '</span>';
         endif;
 

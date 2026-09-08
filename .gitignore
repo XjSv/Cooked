@@ -11,17 +11,29 @@
 # Dev dependencies
 node_modules/
 vendor
+.env
 
 # Tests
+tests/playwright/test-results/
+tests/playwright/playwright-report/
+tests/playwright/.cache/
 tests/test-results/
 tests/playwright-report/
 tests/blob-report/
-tests/playwright/.cache/
+playwright-report/
+test-results/
 tests/.auth/
 tests/phpunit/.cache
+tests/backstop/backstop_data/bitmaps_test/
+tests/backstop/backstop_data/html_report/
+tests/backstop/backstop_data/ci_report/
+tests/backstop/backstop_data/json_report/
 
 # Build
 build/*
 
 # WordPress
 wordpress/
+
+# Python
+__pycache__/

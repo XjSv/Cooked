@@ -46,11 +46,19 @@ class Cooked_Updates {
     private static $cooked_settings_saved;
 
     /**
+     * Whether rewrite rules were already flushed this request.
+     *
+     * @var bool
+     */
+    private static $rewrite_rules_flushed = false;
+
+    /**
      * Initialize the updates system
      */
     public function __construct() {
         // Add action to check version and update settings at the end of page load.
         add_action( 'shutdown', [__CLASS__, 'init'] );
+        add_action( 'init', [ __CLASS__, 'maybe_heal_rewrite_rules' ], 99 );
     }
 
     /**
@@ -78,6 +86,8 @@ class Cooked_Updates {
         if ( self::needs_update() ) {
             self::run_updates();
         }
+
+        self::maybe_flush_queued_rewrite_rules();
     }
 
     /**
@@ -108,14 +118,18 @@ class Cooked_Updates {
         // Run version-specific updates
         self::run_version_updates();
 
+        self::update_rewrite_rules();
+
         // Update both version numbers.
         update_option( 'cooked_settings_version', self::$current_version );
         if ( defined('COOKED_PRO_VERSION') ) {
             update_option( 'cooked_pro_settings_version', self::$current_pro_version );
         }
 
-        // Log the update
-        error_log( sprintf( 'Cooked: Updated from version %s to %s', $old_version, self::$current_version ) );
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( sprintf( 'Cooked: Updated from version %s to %s', $old_version, self::$current_version ) );
+        }
     }
 
     /**
@@ -131,7 +145,10 @@ class Cooked_Updates {
                         try {
                             call_user_func( [__CLASS__, $method] );
                         } catch ( Exception $e ) {
-                            error_log( sprintf( 'Cooked: Error running update method %s: %s', $method, $e->getMessage() ) );
+                            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+                                error_log( sprintf( 'Cooked: Error running update method %s: %s', $method, $e->getMessage() ) );
+                            }
                         }
                     }
                 }
@@ -204,9 +221,11 @@ class Cooked_Updates {
             }
         }
         if ( ! isset( $allowed[ $tool_name ] ) ) {
+            /* translators: %s: site health tool name */
             return new \WP_Error( 'cooked_tool_invalid', sprintf( __( 'Unknown tool: %s.', 'cooked' ), $tool_name ) );
         }
         if ( ! method_exists( __CLASS__, $tool_name ) ) {
+            /* translators: %s: PHP method name */
             return new \WP_Error( 'cooked_tool_missing', sprintf( __( 'Tool method %s does not exist.', 'cooked' ), $tool_name ) );
         }
 
@@ -327,7 +346,8 @@ class Cooked_Updates {
         }
 
         // Log the update if any recipes were modified
-        if ( $updated_count > 0 ) {
+        if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( sprintf( 'Cooked: Fixed line endings in %d recipes for WordPress exporter/importer compatibility.', $updated_count ) );
         }
     }
@@ -345,7 +365,10 @@ class Cooked_Updates {
         delete_option( 'cooked_related_version' );
         delete_option( 'cooked_related_calculation_last' );
 
-        error_log( 'Cooked: Purged legacy related-recipes cache and options.' );
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( 'Cooked: Purged legacy related-recipes cache and options.' );
+        }
     }
 
     /**
@@ -378,9 +401,128 @@ class Cooked_Updates {
             $updated_count++;
         }
 
-        if ( $updated_count > 0 ) {
+        if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( sprintf( 'Cooked: Removed legacy recipes key from %d user(s) cooked_user_meta.', $updated_count ) );
         }
+    }
+
+    /**
+     * Soft-flush rewrite rules when any rule registered this request is missing
+     * from the stored rewrite_rules option.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function maybe_heal_rewrite_rules() {
+        if ( self::registered_rewrite_rules_missing() ) {
+            self::update_rewrite_rules();
+        }
+    }
+
+    /**
+     * Queue a one-shot rewrite flush when registered rewrite rules are missing
+     * from the stored rewrite_rules option.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function maybe_queue_rewrite_flush() {
+        if ( self::registered_rewrite_rules_missing() ) {
+            update_option( 'cooked_flush_rewrite_rules', '1' );
+        }
+    }
+
+    /**
+     * Whether the stored rewrite_rules option is missing any rewrite rule
+     * registered this request via add_rewrite_rule().
+     *
+     * @since 1.16.0
+     * @return bool
+     */
+    public static function registered_rewrite_rules_missing() {
+        if ( function_exists( 'wp_installing' ) && wp_installing() ) {
+            return false;
+        }
+
+        if ( ! get_option( 'permalink_structure' ) ) {
+            return false;
+        }
+
+        $registered = self::registered_extra_rewrite_rules();
+        if ( empty( $registered ) ) {
+            return false;
+        }
+
+        $stored = get_option( 'rewrite_rules' );
+        if ( ! is_array( $stored ) || empty( $stored ) ) {
+            return true;
+        }
+
+        foreach ( $registered as $regex => $query ) {
+            if ( array_key_exists( $regex, $stored ) ) {
+                continue;
+            }
+
+            if ( is_string( $query ) && in_array( $query, $stored, true ) ) {
+                continue;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Rewrite rules added this request with add_rewrite_rule().
+     *
+     * @since 1.16.0
+     * @return array
+     */
+    private static function registered_extra_rewrite_rules() {
+        global $wp_rewrite;
+
+        if ( ! is_object( $wp_rewrite ) ) {
+            return [];
+        }
+
+        $rules = [];
+
+        if ( ! empty( $wp_rewrite->extra_rules_top ) && is_array( $wp_rewrite->extra_rules_top ) ) {
+            $rules = $wp_rewrite->extra_rules_top;
+        }
+
+        if ( ! empty( $wp_rewrite->extra_rules ) && is_array( $wp_rewrite->extra_rules ) ) {
+            $rules = array_merge( $rules, $wp_rewrite->extra_rules );
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Soft-flush rewrite rules when a previous request queued it.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function maybe_flush_queued_rewrite_rules() {
+        if ( ! get_option( 'cooked_flush_rewrite_rules' ) ) {
+            return;
+        }
+
+        self::update_rewrite_rules();
+        delete_option( 'cooked_flush_rewrite_rules' );
+    }
+
+    /**
+     * Reset per-request flush state. Used by tests.
+     *
+     * @since 1.16.0
+     * @return void
+     */
+    public static function reset_rewrite_flush_state() {
+        self::$rewrite_rules_flushed = false;
     }
 
     /**
@@ -389,8 +531,16 @@ class Cooked_Updates {
      * @since 1.11.2
      */
     private static function update_rewrite_rules() {
-        flush_rewrite_rules();
-        error_log( 'Cooked: Flushed rewrite rules due to version update.' );
+        if ( self::$rewrite_rules_flushed ) {
+            return;
+        }
+
+        flush_rewrite_rules( false );
+        self::$rewrite_rules_flushed = true;
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( 'Cooked: Flushed rewrite rules due to version update.' );
+        }
     }
 
 }

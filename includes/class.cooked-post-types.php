@@ -21,6 +21,7 @@ class Cooked_Post_Types {
 
     function __construct() {
         register_activation_hook( COOKED_PLUGIN_FILE, [&$this, 'activation'] );
+        register_deactivation_hook( COOKED_PLUGIN_FILE, [ __CLASS__, 'deactivation' ] );
 
         add_action( 'init', [&$this, 'init'] );
         add_filter( 'admin_init', [&$this, 'init_roles'] );
@@ -95,7 +96,7 @@ class Cooked_Post_Types {
     function custom_columns_data( $column, $post_id ) {
         if ( $column == 'featured_image' ):
             echo '<span class="cooked-admin-recipes-list-image">';
-                echo the_post_thumbnail( 'thumbnail' );
+                echo wp_kses_post( get_the_post_thumbnail( $post_id, 'thumbnail' ) );
             echo '</span>';
         endif;
     }
@@ -150,7 +151,7 @@ class Cooked_Post_Types {
 
             $description = '';
             if (!empty($recipe_settings['seo_description'])):
-                $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe_settings['seo_description']) ); ;
+                $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) );
             elseif (!empty($recipe_settings['excerpt'])):
                 $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe_settings['excerpt']) );
             elseif (!empty($recipe_settings['title'])):
@@ -164,9 +165,15 @@ class Cooked_Post_Types {
             <meta property="og:description" content="<?php echo esc_attr( $description ); ?>">
             <meta property="og:image" content="<?php echo esc_attr( $image_url ); ?>">
             <meta property="og:locale" content="<?php echo esc_attr( get_locale() ); ?>">
-            <meta property="og:url" content="<?php echo get_permalink( $post->ID ); ?>"><?php
+            <meta property="og:url" content="<?php echo esc_url( get_permalink( $post->ID ) ); ?>"><?php
 
-            echo ob_get_clean();
+            echo wp_kses( ob_get_clean(), [
+                'meta' => [
+                    'name' => true,
+                    'content' => true,
+                    'property' => true,
+                ],
+            ] );
         }
     }
 
@@ -190,6 +197,10 @@ class Cooked_Post_Types {
         flush_rewrite_rules();
     }
 
+    public static function deactivation() {
+        delete_option( 'rewrite_rules' );
+    }
+
     public static function init_roles() {
         // Clean up for any old caps or caps that were inserted incorrectly.
         if ( $role_object = get_role( 'subscriber' ) ) {
@@ -206,8 +217,13 @@ class Cooked_Post_Types {
         $_cooked_settings = Cooked_Settings::get();
         $_cooked_taxonomies = Cooked_Taxonomies::get();
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only Settings API query vars.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+
         // Security check: Only allow settings update from admin area with proper permissions
-        if (!empty($_GET['settings-updated']) && is_admin() && current_user_can('manage_options') && isset($_GET['page']) && $_GET['page'] === 'cooked_settings') {
+        if ( $settings_updated && is_admin() && current_user_can('manage_options') && $page === 'cooked_settings' ) {
             // Recipe Permalink
             $permalink_parts = explode( '/', $_cooked_settings['recipe_permalink'] );
             if ( isset( $permalink_parts[1] ) ):
@@ -433,6 +449,7 @@ class Cooked_Post_Types {
         $has_archive_slug = sanitize_title_with_dashes( __('Recipe Archive', 'cooked') );
         $exclude_from_search = false;
 
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( !isset($_GET['print']) && isset( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ) {
             $public_recipes = false;
             $has_archive_slug = false;
@@ -446,8 +463,8 @@ class Cooked_Post_Types {
         $post_types = apply_filters( 'cooked_post_types', [
                 'cp_recipe' => [
                     'labels' => [
-                        'name' => _x('Recipes', 'cooked'),
-                        'singular_name' => _x('Recipe', 'cooked'),
+                        'name' => _x( 'Recipes', 'post type general name', 'cooked' ),
+                        'singular_name' => _x( 'Recipe', 'post type singular name', 'cooked' ),
                         'menu_name' => __('Recipes', 'cooked'),
                         'name_admin_bar' => __('Recipe', 'cooked'),
                         'add_new' => __('Add New', 'cooked'),

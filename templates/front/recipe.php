@@ -30,10 +30,12 @@ if ( is_feed() && !is_admin() || is_singular() && !is_admin() ):
 	global $wp_embed;
 	$recipe_content = $wp_embed->autoembed( $recipe_content );
 	$recipe_content .= Cooked_Recipes::get_fsm_markup( $recipe_id, $recipe_settings );
-
-	$recipe_content .= isset($recipe_seo_content) ? $recipe_seo_content : '';
 else:
  	$recipe_content = strip_shortcodes( $recipe_content );
 endif;
 
-echo apply_filters( 'cooked_recipe_content', $recipe_content, $recipe_id );
+echo wp_kses_post( apply_filters( 'cooked_recipe_content', $recipe_content, $recipe_id ) );
+
+if ( ! empty( $recipe_seo_content ) ) {
+	echo $recipe_seo_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON-LD from wp_json_encode.
+}

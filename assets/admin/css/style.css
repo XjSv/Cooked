@@ -30,9 +30,21 @@ td.column-featured_image { width:50px; text-align:center; }
 body.post-type-cp_recipe #titlediv #title { box-shadow:none; -moz-border-radius:3px; -webkit-border-radius:3px; border-radius:3px; padding:0 12px; font-weight:400; font-size:19px; letter-spacing:0; height:44px; }
 body.post-type-cp_recipe #titlediv #title-prompt-text { font-size:15px; color:#888; font-weight:400; letter-spacing:0; padding:12px 15px; }
 
-/* TinyMCE fullscreen above admin menu and Cooked sticky UI */
-body.post-type-cp_recipe .mce-fullscreen {
-  z-index: 100100 !important;
+body.mce-fullscreen #cooked-recipe-tabs {
+  z-index: auto;
+}
+
+body.mce-fullscreen #adminmenumain {
+  display: none;
+}
+
+body.mce-fullscreen #cooked_recipe_settings .wp-editor-wrap:not(:has(.mce-fullscreen)),
+body.mce-fullscreen #cooked-directions-builder .cooked-direction-block:not(:has(.mce-fullscreen)) {
+  visibility: hidden;
+}
+
+body.mce-fullscreen div.mce-tinymce.mce-fullscreen {
+  z-index: 100010;
 }
 
 #cooked-settings-prewrap { display:flex; justify-content:center; }
@@ -56,7 +68,18 @@ body.post-type-cp_recipe .mce-fullscreen {
 #cooked-settings-wrap.is-stuck .cooked-settings-update-button { position:fixed; top:35px; right:11px; z-index:100001; }
 
 
-#cooked-recipe-tabs { list-style:none; padding:0; margin:0; position:absolute; top:0; left:0; width:100%; }
+#cooked-recipe-tabs {
+  list-style:none;
+  padding:0;
+  margin:0;
+  position:sticky;
+  top: var(--wp-admin--admin-bar--height, 0px);
+  z-index: 1000;
+  width:100%;
+}
+#cooked_recipe_settings.stuck #cooked-recipe-tabs {
+  box-shadow: 0 3px 50px rgba(0,0,0,0.25);
+}
 #cooked-recipe-tabs li { font-size:0.9rem; line-height:3rem; height:3rem; font-weight:500; display:inline-block; padding:0 1.25rem; margin:0; color:#fff; }
 #cooked-recipe-tabs li:hover { cursor:pointer; }
 #cooked-recipe-tabs li.active,
@@ -66,18 +89,7 @@ body.post-type-cp_recipe .mce-fullscreen {
 #cooked-recipe-tabs li.cooked-loading:hover { background:none; color:#fff; }
 #cooked_recipe_settings.cooked-loading #cooked-recipe-tabs li.cooked-loading { opacity:1; }
 
-#cooked_recipe_settings .inside { padding-top:60px; margin: 0}
-#cooked_recipe_settings.stuck #cooked-recipe-tabs {
-  position: fixed;
-  width: auto;
-  top: 32px;
-  left: 23px;
-  z-index: 100000;
-  margin-left: 160px;
-  box-shadow: 0 3px 50px rgba(0,0,0,0.25);
-}
-
-#cooked_recipe_settings.stuck #cooked-recipe-tabs li.cooked-loading { right:160px; }
+#cooked_recipe_settings .inside { padding: 0; margin: 0}
 
 .cooked-recipe-tab-content-wrapper .cooked-recipe-tab-content { display:none; }
 .cooked-recipe-tab-content-wrapper .cooked-recipe-tab-content:first-child { display:block; }
@@ -159,7 +171,10 @@ body.post-type-cp_recipe .mce-fullscreen {
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block h3.cooked-settings-title { width:100%; color:#333; }
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid { background:#fff; border:2px solid #0aa780; box-shadow:none; border-radius:5px; }
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid > .cooked-settings-title { color:#0aa780; }
-#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired { border:2px solid #ca4a20; }
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired,
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid { border:2px solid #ca4a20; }
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired > .cooked-settings-title,
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid > .cooked-settings-title { color:#ca4a20; }
 
 /* Heading Element Styles */
 #cooked-ingredients-builder .cooked-ingredient-block:hover > .cooked-heading-name,
@@ -424,7 +439,6 @@ body .button.button-cooked-reset:hover { color:#555; }
     overflow-x: auto;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    top: 0;
     width: 100%;
   }
   #cooked-recipe-tabs::-webkit-scrollbar {
@@ -432,13 +446,6 @@ body .button.button-cooked-reset:hover { color:#555; }
   }
   #cooked-recipe-tabs li {
     float: none;
-  }
-  #cooked_recipe_settings.stuck #cooked-recipe-tabs {
-    position: fixed;
-    top: 32px;
-    left: 0;
-    width: 100%;
-    margin-left: 0;
   }
 }
 
@@ -753,19 +760,7 @@ body .button.button-cooked-reset:hover { color:#555; }
   #cooked-recipe-tabs li .cooked-icon { display:none; }
 }
 
-@media screen and ( max-width: 960px ) {
-  #cooked_recipe_settings.stuck #cooked-recipe-tabs { margin-left:36px; }
-}
-
 @media screen and ( max-width: 768px ) {
-  #cooked_recipe_settings.stuck #cooked-recipe-tabs {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    margin-left: 0;
-    box-shadow: 0 3px 50px rgba(0,0,0,0.25);
-  }
   #cooked_recipe_settings .cooked-clearfix:has(> .cooked-setting-column-14) {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -784,6 +779,9 @@ body .button.button-cooked-reset:hover { color:#555; }
 }
 
 @media screen and ( max-width: 600px ) {
+  #cooked-recipe-tabs {
+    top: 0;
+  }
   #cooked_recipe_settings .recipe-setting-block h3.cooked-settings-title {
     display: flex;
     flex-wrap: wrap;
@@ -908,10 +906,6 @@ body .button.button-cooked-reset:hover { color:#555; }
 @media screen and ( max-width: 500px ) {
     #cooked_recipe_settings .cooked-clearfix:has(> .cooked-setting-column-14) {
         grid-template-columns: 1fr;
-    }
-
-    #cooked_recipe_settings.stuck #cooked-recipe-tabs {
-        width: 100%;
     }
 }
 

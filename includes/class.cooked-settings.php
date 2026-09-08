@@ -56,7 +56,11 @@ class Cooked_Settings {
         $list_id_counter = 0;
         $_cooked_settings = Cooked_Settings::get();
         register_setting( 'cooked_settings_group', 'cooked_settings', ['sanitize_callback' => [__CLASS__, 'sanitize_settings']] );
-        register_setting( 'cooked_settings_group', 'cooked_settings_saved' );
+        register_setting( 'cooked_settings_group', 'cooked_settings_saved', ['sanitize_callback' => [__CLASS__, 'sanitize_saved_flag']] );
+    }
+
+    public static function sanitize_saved_flag( $value ) {
+        return rest_sanitize_boolean( $value );
     }
 
     // Add this new method to handle settings sanitization.
@@ -103,7 +107,12 @@ class Cooked_Settings {
     }
 
     function cooked_settings_saved_admin_notice() {
-        if (isset($_GET['settings-updated']) && $_GET['settings-updated'] && isset($_GET['page']) && $_GET['page'] === 'cooked_settings') {
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only Settings API query vars.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
+
+        if ( $settings_updated && $page === 'cooked_settings' ) {
             add_settings_error(
                 'cooked_settings_group',
                 'cooked_settings_updated',
@@ -115,7 +124,9 @@ class Cooked_Settings {
 
     function browse_page_missing_notice() {
         // Only show on admin pages, not on the Cooked settings page itself
-        if ( isset($_GET['page']) && $_GET['page'] === 'cooked_settings' ) {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin page query var.
+        $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        if ( $page === 'cooked_settings' ) {
             return;
         }
 
@@ -127,10 +138,11 @@ class Cooked_Settings {
             $class = 'notice notice-warning is-dismissible';
             $message = sprintf(
                 '<strong>' . __( 'Cooked Plugin Setup', 'cooked' ) . '</strong> ' .
+                /* translators: %s: Browse/Search Recipes Page link */
                 __( 'To display your recipes properly, please set up your %s.', 'cooked' ),
-                '<a href="' . trailingslashit( admin_url() ) . 'admin.php?page=cooked_settings#recipe_settings">' . __( 'Browse/Search Recipes Page', 'cooked' ) . '</a>'
+                '<a href="' . trailingslashit( esc_url( admin_url() ) ) . 'admin.php?page=cooked_settings#recipe_settings">' . __( 'Browse/Search Recipes Page', 'cooked' ) . '</a>'
             );
-            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), $message );
+            printf( '<div class="%1$s"><p>%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
         }
     }
 
@@ -232,7 +244,7 @@ class Cooked_Settings {
         }
 
         if ( '' === $scope ) {
-            return $selectors;
+            return wp_kses( $selectors, [] );
         }
 
         $parts = array_map( 'trim', explode( ',', $selectors ) );
@@ -243,15 +255,15 @@ class Cooked_Settings {
             $parts
         );
 
-        return implode( ', ', $parts );
+        return wp_kses( implode( ', ', $parts ), [] );
     }
 
     public static function tabs_fields() {
         $pages_array = self::pages_array( __('Choose a page...','cooked'), __('No pages','cooked') );
         $categories_array = self::terms_array( 'cp_recipe_category', __('No default', 'cooked'), __('No categories', 'cooked') );
         $recipes_per_page_array = self::per_page_array();
-        $recipe_archive_slug    = sanitize_title_with_dashes( __( 'Recipe Archive', 'cooked' ) );
-        $recipe_archive_url     = home_url( '/' . $recipe_archive_slug . '/' );
+        $recipe_archive_slug = sanitize_title_with_dashes( __( 'Recipe Archive', 'cooked' ) );
+        $recipe_archive_url = home_url( '/' . $recipe_archive_slug . '/' );
 
         // Dynamically load roles.
         $role_options = [];
@@ -284,7 +296,7 @@ class Cooked_Settings {
                     'recipes_per_page' => [
                         'title' => __('Recipes Per Page', 'cooked'),
                         /* translators: a description on how to choose the default number of recipes per page. */
-                        'desc' => sprintf(__('Choose the default (set via the %s panel) or choose a different number here.', 'cooked'), '<a href="' . trailingslashit(get_admin_url()) . 'options-reading.php">' . __('Settings > Reading', 'cooked') . '</a>'),
+                        'desc' => sprintf(__('Choose the default (set via the %s panel) or choose a different number here.', 'cooked'), '<a href="' . trailingslashit( esc_url( get_admin_url() ) ) . 'options-reading.php">' . __('Settings > Reading', 'cooked') . '</a>'),
                         'type' => 'select',
                         'default' => 9,
                         'options' => $recipes_per_page_array
@@ -335,7 +347,7 @@ class Cooked_Settings {
                     ],
                     'print_view_display_options' => [
                         'title' => __('Print View', 'cooked'),
-                        'desc' => __('When enabled, the website logo will appear at the top of the recipe print screen.', 'cooked'),
+                        'desc' => esc_html__('When enabled, the website logo will appear at the top of the recipe print screen.', 'cooked'),
                         'type' => 'checkboxes',
                         'default' => [],
                         'options' => apply_filters(
@@ -672,8 +684,8 @@ class Cooked_Settings {
 
                 $combined_extras = $is_disabled . $conditional_value;
 
-                if ( $conditional_requirement ): echo '<transition name="fade"><span class="conditional-requirement"' . esc_attr( $conditional_requirement ) . '>'; endif;
-                echo '<input' . $combined_extras . ' type="radio" id="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] == $value || isset( $_cooked_settings[$field_name][0] ) && $_cooked_settings[$field_name][0] == $value ? ' checked' : '' ) . '/>';
+                if ( $conditional_requirement ): echo '<transition name="fade"><span class="conditional-requirement"' . wp_kses( $conditional_requirement, [] ) . '>'; endif;
+                echo '<input' . wp_kses( $combined_extras, array() ) . ' type="radio" id="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] == $value || isset( $_cooked_settings[$field_name][0] ) && $_cooked_settings[$field_name][0] == $value ? ' checked' : '' ) . '/>';
                 echo '&nbsp;<label for="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' . wp_kses_post( $name ) . '</label>';
                 echo '<br>';
                 if ( $conditional_requirement ): echo '</span></transition>'; endif;
@@ -693,7 +705,7 @@ class Cooked_Settings {
         }
 
         echo '<p>';
-            echo '<select' . $is_disabled . ' name="cooked_settings[' . esc_attr( $field_name ) . ']">';
+            echo '<select' . esc_attr( $is_disabled ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']">';
             foreach ( $options as $value => $name) {
                 echo '<option value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] == $value ? ' selected' : '' ) . '>' . esc_attr( $name ) . '</option>';
             }
@@ -721,12 +733,12 @@ class Cooked_Settings {
 
             if ($total > 0) {
                 echo '<p>';
-                    echo '<input id="cooked-migration-button" type="button" class="button-secondary" name="begin_cooked_migration" value="' . __( 'Begin Migration', 'cooked' ) . '">';
+                    echo '<input id="cooked-migration-button" type="button" class="button-secondary" name="begin_cooked_migration" value="' . esc_attr__( 'Begin Migration', 'cooked' ) . '">';
                 echo '</p>';
                 echo '<p>';
                     echo '<span id="cooked-migration-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-migration-progress-text" class="cooked-progress-text">0 / ' . esc_html( $total ) . '</span>';
                 echo '</p>';
-                echo '<p id="cooked-migration-completed"><strong>Migration Complete!</strong> You can now <a href="' . esc_url( add_query_arg(['page' => 'cooked_settings'], admin_url( 'admin.php' ) ) ) . '">' . __( 'reload', 'cooked' ) . '</a> the settings screen.</p>';
+                echo '<p id="cooked-migration-completed"><strong>Migration Complete!</strong> You can now <a href="' . esc_url( add_query_arg(['page' => 'cooked_settings'], esc_url( admin_url( 'admin.php' ) ) ) ) . '">' . esc_html__( 'reload', 'cooked' ) . '</a> the settings screen.</p>';
             }
         }
     }
@@ -770,7 +782,7 @@ class Cooked_Settings {
         }
 
         echo '<p class="cooked-permalink-field-wrapper">';
-            echo '<span>' . $browse_page_url . '</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
+            echo '<span>' . esc_url( $browse_page_url ) . '</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] ? esc_attr( $_cooked_settings[$field_name] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
         echo '</p>';
     }
 
@@ -799,7 +811,7 @@ class Cooked_Settings {
 
         echo '<div class="cooked-settings-image-field' . ( $has_image ? ' cooked-has-image' : '' ) . '">';
             echo '<input type="hidden" class="cooked-settings-image-input" name="cooked_settings[' . esc_attr( $field_name ) . ']" id="cooked-settings-image-' . esc_attr( $field_name ) . '" value="' . esc_attr( $attachment_id ) . '" />';
-            echo '<input type="button" class="button cooked-settings-image-button" value="' . esc_attr( $has_image ? __( 'Change Image', 'cooked' ) : __( 'Add Image', 'cooked' ) ) . '" />';
+            echo '<input type="button" class="button cooked-settings-image-button" value="' . esc_attr( $has_image ? esc_html__( 'Change Image', 'cooked' ) : esc_html__( 'Add Image', 'cooked' ) ) . '" />';
 
             if ( $has_image ) {
                 echo wp_get_attachment_image( $attachment_id, 'thumbnail', false, [
@@ -865,11 +877,11 @@ class Cooked_Settings {
 
                 if ($is_disabled) {
                     echo '<input type="hidden" name="cooked_settings[' . esc_attr($field_name) . '][]" value="' . esc_attr($value) . '">';
-                    echo '<input' . $combined_extras . ' class="cooked-switch' . ($color ? '-' . esc_attr($color) : '') .
+                    echo '<input' . wp_kses( $combined_extras, array() ) . ' class="cooked-switch' . ($color ? '-' . esc_attr($color) : '') .
                          '" type="checkbox" id="checkbox-group-' . esc_attr($field_name) . '-' . esc_attr($value) .
                          '"' . ($is_checked ? ' checked' : '') . '/>';
                 } else {
-                    echo '<input' . $combined_extras . ' class="cooked-switch' . ($color ? '-' . esc_attr($color) : '') .
+                    echo '<input' . wp_kses( $combined_extras, array() ) . ' class="cooked-switch' . ($color ? '-' . esc_attr($color) : '') .
                          '" type="checkbox" id="checkbox-group-' . esc_attr($field_name) . '-' . esc_attr($value) .
                          '" name="cooked_settings[' . esc_attr($field_name) . '][]" value="' . esc_attr($value) .
                          '"' . ($is_checked ? ' checked' : '') . '/>';

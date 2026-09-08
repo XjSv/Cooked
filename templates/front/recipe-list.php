@@ -32,11 +32,11 @@ else:
 
         $hide_avatars = ( isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false );
         echo '<div class="cooked-author-list-heading' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
-            echo ( isset($author['profile_photo']) && $author['profile_photo'] ? ( !$hide_avatars ? '<span class="cooked-author-avatar">' . esc_html( $author['profile_photo'] ) . '</span>' : '' ) : '' );
+            echo ( isset($author['profile_photo']) && $author['profile_photo'] ? ( !$hide_avatars ? '<span class="cooked-author-avatar">' . wp_kses_post( $author['profile_photo'] ) . '</span>' : '' ) : '' );
             /* translators: referring to the author (ex: Recipes by John Smith) */
-			echo '<strong class="cooked-meta-title">' . sprintf( __('Recipes by %s','cooked'), $author['name'] ) . '</strong>';
+			echo '<strong class="cooked-meta-title">' . sprintf( esc_html__('Recipes by %s','cooked'), esc_html( $author['name'] ) ) . '</strong>';
             $browse_page_id = Cooked_Multilingual::get_browse_page_id();
-            echo ( $browse_page_id ? '<br><a href="' . get_permalink( $browse_page_id ) . '">' . __( 'View all recipes','cooked' ) . '</a>' : '' );
+            echo ( $browse_page_id ? '<br><a href="' . esc_url( get_permalink( $browse_page_id ) ) . '">' . esc_html__( 'View all recipes','cooked' ) . '</a>' : '' );
         echo '</div>';
 
 	elseif ( $atts['search'] === 'true' ):
@@ -97,7 +97,7 @@ else:
 		echo '</section>';
 
 		if ( $atts['pagination'] === 'true' ):
-			echo Cooked_Recipes::pagination( $recipes['raw'], $recipe_args );
+			echo wp_kses_post( Cooked_Recipes::pagination( $recipes['raw'], $recipe_args ) );
 		endif;
 
 		wp_enqueue_script( 'cooked-appear' );

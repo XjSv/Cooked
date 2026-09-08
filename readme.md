@@ -92,12 +92,18 @@ bun run destroy:ddev # remove env and wordpress/
 
 #### Generating language files
 Run with wp-env or DDEV started. The script detects which environment you use.
+
+Add or change French strings in `bin/fix_fr_translations_data.py`, then:
+
 ``` bash
-bun run i18n              # make .pot, update .po, compile .mo
+bun run i18n              # make .pot, update all .po files, apply French, compile .mo
 bun run i18n:make-pot     # generate cooked.pot only
-bun run i18n:update-po    # update .po from .pot
-bun run i18n:make-mo      # compile .po to .mo
+bun run i18n:update-po    # update all .po files in languages/ from the .pot
+bun run i18n:apply-fr     # copy French from the data file into cooked-fr_FR.po
+bun run i18n:make-mo      # compile all .po files in languages/ to .mo
 ```
+
+`bun run i18n` prints any French strings still empty after applying the data file (`MISSING:`). Add those msgids to the data file and run `i18n` again.
 #### Compiling assets (JS/CSS)
 ``` bash
 bun run build   # one-off build

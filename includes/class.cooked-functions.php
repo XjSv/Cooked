@@ -124,17 +124,17 @@ class Cooked_Functions {
 
         echo '<div id="cooked-print-options" class="cooked-clearfix">';
 
-            echo '<button class="cooked-button" onclick="window.print();">' . __( 'Print','cooked') . '</button>';
-            echo '<h3>' . __( 'Print Options:','cooked') . '</h3>';
+            echo '<button class="cooked-button" onclick="window.print();">' . esc_html__( 'Print','cooked') . '</button>';
+            echo '<h3>' . esc_html__( 'Print Options:','cooked') . '</h3>';
 
-            echo '<input id="print_options_title" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_title'] ) ? $default_print_options['print_options_title'] : '' ) . ' /> <label for="print_options_title">' . __('Title','cooked') . '</label>';
-            echo '<input id="print_options_info" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_info'] ) ? $default_print_options['print_options_info'] : '' ) . ' /> <label for="print_options_info">' . __('Information','cooked') . '</label>';
-            echo '<input id="print_options_excerpt" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_excerpt'] ) ? $default_print_options['print_options_excerpt'] : '' ) . ' /> <label for="print_options_excerpt">' . __('Excerpt','cooked') . '</label>';
-            echo '<input id="print_options_images" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_images'] ) ? $default_print_options['print_options_images'] : '' ) . ' /> <label for="print_options_images">' . __('Images','cooked') . '</label>';
-            echo '<input id="print_options_ingredients" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_ingredients'] ) ? $default_print_options['print_options_ingredients'] : '' ) . ' /> <label for="print_options_ingredients">' . __('Ingredients','cooked') . '</label>';
-            echo '<input id="print_options_directions" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_directions'] ) ? $default_print_options['print_options_directions'] : '' ) . ' /> <label for="print_options_directions">' . __('Directions','cooked') . '</label>';
-            echo '<input id="print_options_notes" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_notes'] ) ? $default_print_options['print_options_notes'] : '' ) . ' /> <label for="print_options_notes">' . __('Notes','cooked') . '</label>';
-            echo '<input id="print_options_nutrition" type="checkbox" name="print_options" value="1" ' . ( isset( $default_print_options['print_options_nutrition'] ) ? $default_print_options['print_options_nutrition'] : '' ) . ' /> <label for="print_options_nutrition">' . __('Nutrition','cooked') . '</label>';
+            echo '<input id="print_options_title" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_title'] ) ? $default_print_options['print_options_title'] : '' ) . ' /> <label for="print_options_title">' . esc_html__('Title','cooked') . '</label>';
+            echo '<input id="print_options_info" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_info'] ) ? $default_print_options['print_options_info'] : '' ) . ' /> <label for="print_options_info">' . esc_html__('Information','cooked') . '</label>';
+            echo '<input id="print_options_excerpt" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_excerpt'] ) ? $default_print_options['print_options_excerpt'] : '' ) . ' /> <label for="print_options_excerpt">' . esc_html__('Excerpt','cooked') . '</label>';
+            echo '<input id="print_options_images" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_images'] ) ? $default_print_options['print_options_images'] : '' ) . ' /> <label for="print_options_images">' . esc_html__('Images','cooked') . '</label>';
+            echo '<input id="print_options_ingredients" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_ingredients'] ) ? $default_print_options['print_options_ingredients'] : '' ) . ' /> <label for="print_options_ingredients">' . esc_html__('Ingredients','cooked') . '</label>';
+            echo '<input id="print_options_directions" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_directions'] ) ? $default_print_options['print_options_directions'] : '' ) . ' /> <label for="print_options_directions">' . esc_html__('Directions','cooked') . '</label>';
+            echo '<input id="print_options_notes" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_notes'] ) ? $default_print_options['print_options_notes'] : '' ) . ' /> <label for="print_options_notes">' . esc_html__('Notes','cooked') . '</label>';
+            echo '<input id="print_options_nutrition" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_nutrition'] ) ? $default_print_options['print_options_nutrition'] : '' ) . ' /> <label for="print_options_nutrition">' . esc_html__('Nutrition','cooked') . '</label>';
 
         echo '</div>';
     }

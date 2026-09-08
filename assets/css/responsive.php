@@ -80,7 +80,7 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 
 	$_cooked_fsm_dark_selectors = Cooked_Settings::prefix_dark_mode_css( '.cooked-fsm .cooked-fsm-ingredients, .cooked-fsm .cooked-fsm-directions-wrap' );
 
-	?><?php echo $_cooked_fsm_dark_selectors; ?> { background:#000; color:#fff; }<?php
+	?><?php echo wp_kses( $_cooked_fsm_dark_selectors, [] ); ?> { background:#000; color:#fff; }<?php
 
 	endif; ?>
 

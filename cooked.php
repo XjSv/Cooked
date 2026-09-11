@@ -242,6 +242,14 @@ final class Cooked_Plugin {
     public $extra;
 
     /**
+     * Cooked Pixwell Theme Support Object.
+     *
+     * @var object|Cooked_Pixwell
+     * @since 1.16.0
+     */
+    public $pixwell;
+
+    /**
      * Main Cooked_Plugin Instance.
      *
      * Insures that only one instance of Cooked_Plugin exists in memory at any one

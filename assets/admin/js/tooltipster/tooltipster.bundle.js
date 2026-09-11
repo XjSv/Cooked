@@ -3,6 +3,9 @@
  * A rockin' custom tooltip jQuery plugin
  * Developed by Caleb Jacob and Louis Ameline
  * MIT license
+ *
+ * Fork: data-tooltip-content uses $(document).find() so the attribute is
+ * never passed to $() as HTML (CodeQL js/xss-through-dom).
  */
 (function (root, factory) {
   if (typeof define === 'function' && define.amd) {
@@ -535,7 +538,7 @@ $.Tooltipster.prototype = {
 					$el;
 				
 				if (selector){
-					$el = $(selector);
+					$el = $(document).find(selector);
 				}
 				
 				if ($el && $el[0]) {

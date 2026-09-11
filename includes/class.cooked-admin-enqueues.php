@@ -194,7 +194,7 @@ class Cooked_Admin_Enqueues {
                 wp_enqueue_style( 'wp-color-picker' );
 
                 // Tooltipster
-                wp_enqueue_script('cooked-tooltipster', COOKED_URL . 'assets/admin/js/tooltipster/tooltipster.bundle.min.js', ['jquery'], COOKED_VERSION, true );
+                wp_enqueue_script('cooked-tooltipster', COOKED_URL . 'assets/admin/js/tooltipster/tooltipster.bundle' . $min . '.js', ['jquery'], COOKED_VERSION, true );
                 wp_enqueue_style('cooked-tooltipster-core', COOKED_URL . 'assets/admin/css/tooltipster/tooltipster.bundle.min.css', [], COOKED_VERSION, 'screen' );
                 wp_enqueue_style('cooked-tooltipster-theme', COOKED_URL . 'assets/admin/css/tooltipster/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-cooked' . $min . '.css', [], COOKED_VERSION, 'screen' );
 

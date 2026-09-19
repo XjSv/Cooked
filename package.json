@@ -64,7 +64,7 @@
     "@axe-core/playwright": "^4.13.0",
     "@playwright/test": "^1.63.0",
     "@types/node": "^26.4.1",
-    "@wordpress/e2e-test-utils-playwright": "^1.54.0",
+    "@wordpress/e2e-test-utils-playwright": "^2.0.0",
     "@wordpress/env": "^11.14.0",
     "backstopjs": "^6.3.25",
     "bestzip": "^3.0.3",

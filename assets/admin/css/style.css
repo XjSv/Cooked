@@ -266,6 +266,33 @@ body.post-type-cp_recipe .switchery-small > small,
 .cooked-tooltip-buttons .cooked-icon-spin { margin-top:10px; font-size:15px; }
 .cooked-tooltip-buttons .cooked-saved-default { height:28px; line-height:28px; font-weight:bold; font-size:15px; color:#888; }
 
+/* @sohrabi/tooltip theme (vendored — see assets/vendor/tooltip/README.md).
+ * Padding and alignment need !important: the library applies its own
+ * values inline and offers no options for them. */
+.sohrabi-tooltip.cooked-tooltip-theme {
+	border:1px solid #ccc;
+	box-shadow:0 3px 8px rgba(0,0,0,.12);
+	font-size:12px;
+	line-height:1.6;
+	padding:15px 18px !important;
+	text-align:left !important;
+}
+.sohrabi-tooltip.cooked-tooltip-theme strong { color:#07a780; display:block; margin:0 0 2px; }
+.sohrabi-tooltip.cooked-tooltip-theme strong.cooked-tooltip-heading { display:block; font-size:15px; margin:0 0 5px; }
+
+/* Arrow pointing down at the trigger (only when the tooltip sits above it). */
+.sohrabi-tooltip.cooked-tooltip-theme[data-position='top']::before,
+.sohrabi-tooltip.cooked-tooltip-theme[data-position='top']::after {
+	content:'';
+	position:absolute;
+	left:50%;
+	transform:translateX(-50%);
+	border-style:solid;
+	border-color:transparent;
+}
+.sohrabi-tooltip.cooked-tooltip-theme[data-position='top']::before { bottom:-8px; border-width:8px 8px 0; border-top-color:#ccc; }
+.sohrabi-tooltip.cooked-tooltip-theme[data-position='top']::after { bottom:-6px; border-width:7px 7px 0; border-top-color:#fff; }
+
 .cooked-progress { display:none; position:relative; background:#eee; width:100%; height:6px; padding:0; border-radius:3px; margin:10px 0 0 0; }
 .cooked-progress-text { display:none; font-size:10px; color:#aaa; padding:2px 0 5px; }
 .cooked-progress.cooked-active, .cooked-progress-text.cooked-active { display:block; }
@@ -297,6 +324,11 @@ body.post-type-cp_recipe .switchery-small > small,
 /* Save as Default */
 #cooked_recipe_settings .cooked-layout-save-default { position:relative; top:-2px; z-index:10; margin:0 0 0 15px; padding:0 8px 1px; }
 #cooked_recipe_settings .cooked-layout-load-default { position:relative; top:-2px; z-index:10; margin:0 0 0 10px; padding:0 8px 1px; }
+.cooked-save-default-panel { background:#fff; border:1px solid #ccc; border-radius:3px; box-shadow:0 3px 8px rgba(0,0,0,.12); box-sizing:border-box; color:#666; font-size:12px; line-height:1.6; margin:10px 0 0; max-width:320px; padding:15px 18px; }
+.cooked-save-default-panel[hidden] { display:none; }
+.cooked-save-default-panel .cooked-tooltip-heading { color:#07a780; display:block; font-size:15px; margin:0 0 5px; }
+.cooked-save-default-panel p { margin:0 0 5px; }
+.cooked-save-default-panel .cooked-tooltip-buttons { display:block; padding:12px 0 5px; }
 body .button.button-cooked-reset { color:#999; }
 body .button.button-cooked-reset:hover { color:#555; }
 
@@ -431,9 +463,7 @@ body .button.button-cooked-reset:hover { color:#555; }
     right: auto;
     top: auto;
   }
-  #cooked_recipe_settings .cooked-recipe-tab-content {
-    padding: 0px 0px 15px 0px;
-  }
+
   #cooked-recipe-tabs {
     white-space: nowrap;
     overflow-x: auto;
@@ -446,6 +476,12 @@ body .button.button-cooked-reset:hover { color:#555; }
   }
   #cooked-recipe-tabs li {
     float: none;
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  #cooked_recipe_settings .cooked-recipe-tab-content {
+    padding: 10px;
   }
 }
 

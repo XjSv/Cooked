@@ -29,6 +29,9 @@ tests/backstop/backstop_data/html_report/
 tests/backstop/backstop_data/ci_report/
 tests/backstop/backstop_data/json_report/
 
+# Assets
+!assets/vendor
+
 # Build
 build/*
 

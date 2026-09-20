@@ -280,17 +280,6 @@ body.post-type-cp_recipe .switchery-small > small,
 .sohrabi-tooltip.cooked-tooltip-theme strong { color:#07a780; display:block; margin:0 0 2px; }
 .sohrabi-tooltip.cooked-tooltip-theme strong.cooked-tooltip-heading { display:block; font-size:15px; margin:0 0 5px; }
 
-/* Fade-in on open. Re-triggers every time the library flips display:none → block.
- * Opacity-only on purpose: a scale transform would shrink the box while the
- * library measures it, throwing off positioning. */
-@keyframes cooked-tooltip-zoom {
-	from { opacity:0; }
-	to { opacity:1; }
-}
-.sohrabi-tooltip.cooked-tooltip-theme {
-	animation:cooked-tooltip-zoom .15s ease;
-}
-
 /* Arrow pointing down at the trigger (only when the tooltip sits above it). */
 .sohrabi-tooltip.cooked-tooltip-theme[data-position='top']::before,
 .sohrabi-tooltip.cooked-tooltip-theme[data-position='top']::after {

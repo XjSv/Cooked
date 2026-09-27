@@ -711,7 +711,35 @@ class Cooked_Measurements {
         return $fraction_array;
     }
 
+    /**
+     * Coerce a stored cook/prep/total time to minutes.
+     *
+     * @param mixed $value Raw time value.
+     * @return int|float Minutes, or 0.
+     */
+    public static function normalize_minutes( $value ) {
+        if ( ! is_scalar( $value ) || is_bool( $value ) || '' === $value ) {
+            return 0;
+        }
+
+        if ( is_numeric( $value ) ) {
+            $minutes = (float) $value;
+        } elseif ( is_string( $value ) && preg_match( '/-?\d+(?:[.,]\d+)?/', $value, $matches ) ) {
+            $minutes = (float) str_replace( ',', '.', $matches[0] );
+        } else {
+            return 0;
+        }
+
+        if ( $minutes < 0 ) {
+            return 0;
+        }
+
+        return $minutes == (int) $minutes ? (int) $minutes : $minutes;
+    }
+
     public static function time_format( $minutes, $format = 'default' ) {
+        $minutes = self::normalize_minutes( $minutes );
+
         ob_start();
 
         if ( $minutes < 60 ):

@@ -31,6 +31,7 @@ class Cooked_Related_Recipes {
     public static function get_default_atts() {
         $default_atts = [
             'id'                    => false,
+            'include_ids'           => false,
             'title'                 => __( 'Related Recipes', 'cooked' ),
             'limit'                 => 4,
             'columns'               => 2,
@@ -72,64 +73,68 @@ class Cooked_Related_Recipes {
     }
 
     /**
-     * Find related recipes: one WP_Query with tax_query (all taxonomies OR) and orderby rand.
+     * Find related recipes: pinned include_ids first, then one WP_Query with
+     * tax_query (all taxonomies OR) and orderby rand to fill remaining slots.
      *
      * @param array $source_recipe Source recipe data.
      * @param array $atts          Shortcode attributes.
      * @return array [ ['id' => int], ... ]
      */
     public static function find_related_recipes( $source_recipe, $atts ) {
-        $recipe_id = $source_recipe['id'];
-        $limit = isset( $atts['limit'] ) ? max( 1, (int) $atts['limit'] ) : 4;
+        $recipe_id   = $source_recipe['id'];
+        $limit       = isset( $atts['limit'] ) ? max( 1, (int) $atts['limit'] ) : 4;
+        $include_ids = array_slice( self::parse_include_ids( $atts, $recipe_id ), 0, $limit );
+        $remaining   = $limit - count( $include_ids );
+        $related_ids = [];
 
-        // Build OR clause for each taxonomy that is enabled via match_* and where the source recipe has terms.
-        $clauses = [];
-        $taxonomy_atts = [
-            'cp_recipe_category'       => 'match_categories',
-            'cp_recipe_cuisine'        => 'match_cuisines',
-            'cp_recipe_cooking_method' => 'match_cooking_methods',
-            'cp_recipe_tags'           => 'match_tags',
-            'cp_recipe_diet'           => 'match_diets',
-        ];
-        foreach ( $taxonomy_atts as $taxonomy => $att_key ) {
-            if ( empty( $atts[ $att_key ] ) || $atts[ $att_key ] === 'false' ) {
-                continue;
+        if ( $remaining > 0 ) {
+            $clauses = [];
+            $taxonomy_atts = [
+                'cp_recipe_category'       => 'match_categories',
+                'cp_recipe_cuisine'        => 'match_cuisines',
+                'cp_recipe_cooking_method' => 'match_cooking_methods',
+                'cp_recipe_tags'           => 'match_tags',
+                'cp_recipe_diet'           => 'match_diets',
+            ];
+            foreach ( $taxonomy_atts as $taxonomy => $att_key ) {
+                if ( ! isset( $atts[ $att_key ] ) || ! wp_validate_boolean( $atts[ $att_key ] ) ) {
+                    continue;
+                }
+                $terms = self::get_recipe_terms( $recipe_id, $taxonomy );
+                if ( ! empty( $terms ) ) {
+                    $clauses[] = [ 'taxonomy' => $taxonomy, 'field' => 'term_id', 'terms' => $terms ];
+                }
             }
-            $terms = self::get_recipe_terms( $recipe_id, $taxonomy );
-            if ( ! empty( $terms ) ) {
-                $clauses[] = [ 'taxonomy' => $taxonomy, 'field' => 'term_id', 'terms' => $terms ];
+
+            if ( empty( $clauses ) && empty( $include_ids ) ) {
+                return [];
+            }
+
+            if ( ! empty( $clauses ) ) {
+                $query_args = [
+                    'post_type'      => 'cp_recipe',
+                    'post_status'    => 'publish',
+                    'post__not_in'   => array_merge( [ $recipe_id ], $include_ids ),
+                    'posts_per_page' => $remaining,
+                    'orderby'        => 'rand',
+                    'fields'         => 'ids',
+                    'tax_query'      => array_merge( [ 'relation' => 'OR' ], $clauses ),
+                ];
+
+                $current_language = false;
+                if ( class_exists( 'Cooked_Multilingual' ) && Cooked_Multilingual::is_multilingual_active() ) {
+                    $current_language = Cooked_Multilingual::get_current_language();
+                }
+                $query_args = apply_filters( 'cooked_related_recipes_query_args', $query_args, $current_language );
+
+                $query       = new \WP_Query( $query_args );
+                $related_ids = ! empty( $query->posts ) ? $query->posts : [];
+                wp_reset_postdata();
             }
         }
-
-        if ( empty( $clauses ) ) {
-            return [];
-        }
-
-        $tax_query = array_merge( [ 'relation' => 'OR' ], $clauses );
-
-        $query_args = [
-            'post_type'      => 'cp_recipe',
-            'post_status'    => 'publish',
-            'post__not_in'   => [ $recipe_id ],
-            'posts_per_page' => $limit,
-            'orderby'        => 'rand',
-            'fields'         => 'ids',
-        ];
-
-        $query_args['tax_query'] = $tax_query;
-
-        $current_language = false;
-        if ( class_exists( 'Cooked_Multilingual' ) && Cooked_Multilingual::is_multilingual_active() ) {
-            $current_language = Cooked_Multilingual::get_current_language();
-        }
-        $query_args = apply_filters( 'cooked_related_recipes_query_args', $query_args, $current_language );
-
-        $query = new \WP_Query( $query_args );
-        $ids = ! empty( $query->posts ) ? $query->posts : [];
-        wp_reset_postdata();
 
         $result = [];
-        foreach ( $ids as $id ) {
+        foreach ( array_merge( $include_ids, $related_ids ) as $id ) {
             $result[] = [ 'id' => (int) $id ];
         }
 
@@ -143,6 +148,36 @@ class Cooked_Related_Recipes {
          * @param array $atts         Shortcode attributes.
          */
         return apply_filters( 'cooked_related_recipes_result', $result, $source_recipe, $atts );
+    }
+
+    /**
+     * Parse include_ids into unique positive IDs, excluding the source recipe.
+     *
+     * @param array $atts      Shortcode attributes.
+     * @param int   $recipe_id Source recipe ID.
+     * @return int[]
+     */
+    private static function parse_include_ids( $atts, $recipe_id ) {
+        if ( empty( $atts['include_ids'] ) ) {
+            return [];
+        }
+
+        $raw = $atts['include_ids'];
+        if ( ! is_array( $raw ) ) {
+            $raw = explode( ',', str_replace( ' ', '', (string) $raw ) );
+        }
+
+        $ids       = [];
+        $recipe_id = (int) $recipe_id;
+        foreach ( $raw as $id ) {
+            $id = absint( $id );
+            if ( ! $id || $id === $recipe_id || in_array( $id, $ids, true ) ) {
+                continue;
+            }
+            $ids[] = $id;
+        }
+
+        return $ids;
     }
 
     /**

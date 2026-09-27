@@ -52,6 +52,9 @@ class Cooked_Recipe_Meta {
                     } elseif ( $key === 'seo_description' ) {
                         $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
                         $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
+                    } elseif ( in_array( $key, [ 'prep_time', 'cook_time', 'total_time' ], true ) ) {
+                        $minutes = Cooked_Measurements::normalize_minutes( $val );
+                        $_recipe_settings[ $key ] = $minutes ? $minutes : '';
                     } else {
                         if ($key === "post_title") {
                             // Decode HTML entities first so wp_kses_post can see actual HTML tags
@@ -1690,15 +1693,22 @@ function cooked_render_recipe_fields( $post_id ) {
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
+                                <p class="cooked-bm-5"><strong>"include_ids"</strong></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Comma-separated recipe IDs to pin at the start of the grid. Remaining slots are filled with related recipes.','cooked'); ?></p>
+                                <div class="cooked-bm-20 cooked-block">
+                                    <input class='cooked-shortcode-field' type='text' readonly value='include_ids="101,102"' />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="cooked-clearfix">
+                            <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"title"</strong></p>
                                 <p class="cooked-bm-10"><?php esc_html_e( 'Set the heading text for the related recipes section.','cooked'); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='title="You May Also Like"' />
                                 </div>
                             </div>
-                        </div>
-
-                        <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"limit"</strong></p>
                                 <p class="cooked-bm-10"><?php esc_html_e( 'Number of recipes to display (default: 4).','cooked'); ?></p>
@@ -1706,6 +1716,9 @@ function cooked_render_recipe_fields( $post_id ) {
                                     <input class='cooked-shortcode-field' type='text' readonly value='limit="4"' />
                                 </div>
                             </div>
+                        </div>
+
+                        <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"columns"</strong></p>
                                 <p class="cooked-bm-10"><?php esc_html_e( 'Number of columns in the grid (default: 2).','cooked'); ?></p>
@@ -1758,6 +1771,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
                             <strong>id</strong> (<?php esc_html_e( 'Recipe ID','cooked' ); ?>)<br>
+                            <strong>include_ids</strong> (<?php esc_html_e( 'Pinned recipe IDs','cooked' ); ?>)<br>
                             <strong>title</strong> (<?php esc_html_e( 'Section heading','cooked' ); ?>)<br>
                             <strong>limit</strong> (<?php esc_html_e( 'Number of recipes','cooked' ); ?>)<br>
                             <strong>columns</strong> (<?php esc_html_e( 'Grid columns','cooked' ); ?>)<br>
@@ -1768,7 +1782,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         </p>
                         <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Example','cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <code>[cooked-related-recipes limit="4" columns="2" title="Related Recipes"]</code>
+                            <code>[cooked-related-recipes include_ids="101,102" limit="4" columns="2" title="Related Recipes"]</code>
                         </p>
                     </div>
 

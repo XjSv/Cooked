@@ -101,8 +101,8 @@ class Cooked_SEO {
             endif;
         endif;
 
-        $cook_time = isset($recipe['cook_time']) && $recipe['cook_time'] ? esc_html( $recipe['cook_time'] ) : 0;
-        $prep_time = isset($recipe['prep_time']) && $recipe['prep_time'] ? esc_html( $recipe['prep_time'] ) : 0;
+        $cook_time = isset($recipe['cook_time']) ? Cooked_Measurements::normalize_minutes( $recipe['cook_time'] ) : 0;
+        $prep_time = isset($recipe['prep_time']) ? Cooked_Measurements::normalize_minutes( $recipe['prep_time'] ) : 0;
         $total_time = $cook_time + $prep_time;
 
         $unsaturatedFatAmount = (isset($recipe['nutrition']['monounsaturated_fat']) && $recipe['nutrition']['monounsaturated_fat'] ? $recipe['nutrition']['monounsaturated_fat'] : 0) + (isset($recipe['nutrition']['polyunsaturated_fat']) && $recipe['nutrition']['polyunsaturated_fat'] ? $recipe['nutrition']['polyunsaturated_fat'] : 0);

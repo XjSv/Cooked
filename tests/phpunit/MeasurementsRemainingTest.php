@@ -48,6 +48,20 @@ class MeasurementsRemainingTest extends TestCase {
         $this->assertSame( 'PT0H0M', $result );
     }
 
+    public function test_normalize_minutes_reads_leading_number_from_string() {
+        $this->assertSame( 5, Cooked_Measurements::normalize_minutes( '5 minutes' ) );
+        $this->assertSame( 15, Cooked_Measurements::normalize_minutes( '15' ) );
+        $this->assertSame( 1.5, Cooked_Measurements::normalize_minutes( '1.5' ) );
+        $this->assertSame( 0, Cooked_Measurements::normalize_minutes( '' ) );
+        $this->assertSame( 0, Cooked_Measurements::normalize_minutes( 'minutes' ) );
+        $this->assertSame( 0, Cooked_Measurements::normalize_minutes( null ) );
+    }
+
+    public function test_time_format_accepts_string_minutes() {
+        $this->assertSame( 'PT0H5M', Cooked_Measurements::time_format( '5 minutes', 'iso' ) );
+        $this->assertSame( '5 mins', Cooked_Measurements::time_format( '5 minutes' ) );
+    }
+
     public function test_format_amount_decimal_format() {
         $result = $this->measurements->format_amount( 1.5, 'decimal' );
         $this->assertSame( '1.50', $result );

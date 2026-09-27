@@ -117,4 +117,22 @@ class SEOTest extends TestCase {
         $result = Cooked_SEO::schema_values( $recipe );
         $this->assertSame( 'you\'ll love this "recipe"', $result['description'] );
     }
+
+    public function test_schema_values_normalizes_string_cook_times() {
+        $GLOBALS['_cooked_settings']['advanced'] = [];
+        $GLOBALS['_cooked_settings']['recipe_taxonomies'] = [ 'cp_recipe_category' ];
+        $recipe = [
+            'id' => 1,
+            'title' => 'Test Recipe',
+            'cook_time' => '5 minutes',
+            'prep_time' => 15,
+            'ingredients' => [],
+            'directions' => [],
+            'nutrition' => [ 'servings' => 4 ],
+        ];
+        $result = Cooked_SEO::schema_values( $recipe );
+        $this->assertSame( 'PT0H5M', $result['cookTime'] );
+        $this->assertSame( 'PT0H15M', $result['prepTime'] );
+        $this->assertSame( 'PT0H20M', $result['totalTime'] );
+    }
 }

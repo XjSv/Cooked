@@ -58,7 +58,6 @@ var cookedSortableTouchHandler = function(event) {
             $_CookedRecipeSaveDefault		= $('.cooked-layout-save-default'),
             $_CookedShortcodeField 			= $('.cooked-shortcode-field'),
             $_CookedIngredientBuilder		= $('#cooked-ingredients-builder'),
-            $_CookedAutoNutritionButton		= $('.cooked-auto-nutrition-button'),
             $_CookedDirectionBuilder		= $('#cooked-directions-builder'),
             $_CookedRecipeGallery			= $('#cooked-recipe-image-gallery'),
             $_CookedNutritionFactsTab		= $('#cooked-recipe-tab-content-nutrition'),
@@ -579,25 +578,6 @@ var cookedSortableTouchHandler = function(event) {
                 }
             });
 
-            if ($_CookedAutoNutritionButton.length) {
-                $_CookedIngredientBuilder.on('change', 'input[data-ingredient-part="name"]', function(e) {
-                    var ingredient_name_value = false;
-
-                    $_CookedIngredientBuilder.find('input[data-ingredient-part="name"]').each(function() {
-                        if ($(this).val() != '') {
-                            ingredient_name_value = true;
-                            return false; // Break the loop
-                        }
-                    });
-
-                    if (ingredient_name_value) {
-                        $_CookedAutoNutritionButton.prop('disabled', false);
-                    } else {
-                        $_CookedAutoNutritionButton.prop('disabled', true);
-                    }
-                });
-            }
-
             $_CookedIngredientBuilder.on('keyup', 'input[data-ingredient-part="url"]', function(e) {
                 var thisVal = $(this).val(),
                     parentBlock = $(this).parents('.recipe-setting-block');
@@ -1019,8 +999,7 @@ function init_nutrition_facts( nutritionTab ) {
 function cooked_reset_ingredient_builder() {
     var ingredientBlocks = jQuery('.cooked-ingredient-block'),
         total_ingredients_blocks = 0,
-        total_blocks = 0,
-        ingredientNameValue = false;
+        total_blocks = 0;
 
     if (ingredientBlocks.length > 0) {
         ingredientBlocks.each(function() {
@@ -1042,29 +1021,12 @@ function cooked_reset_ingredient_builder() {
                 }
             });
         });
-
-        if ($_CookedAutoNutritionButton.length) {
-            jQuery('input[data-ingredient-part="name"]').each(function() {
-                if (jQuery(this).val() != '') {
-                    ingredientNameValue = true;
-                    return false; // Break the loop
-                }
-            });
-        }
     }
 
     if (total_ingredients_blocks) {
         jQuery('.cooked-ingredient-headers').show();
-        if ($_CookedAutoNutritionButton.length) {
-            if (ingredientNameValue) {
-                $_CookedAutoNutritionButton.prop('disabled', false);
-            } else {
-                $_CookedAutoNutritionButton.prop('disabled', true);
-            }
-        }
     } else {
         jQuery('.cooked-ingredient-headers').hide();
-        if ($_CookedAutoNutritionButton.length) $_CookedAutoNutritionButton.prop('disabled', true);
     }
 
     if (total_blocks) {

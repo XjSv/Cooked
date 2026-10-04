@@ -146,9 +146,11 @@ var cookedSortableTouchHandler = function(event) {
             }
         }
 
-        // Save as Default (click-toggle panel, see #cooked-save-default-panel)
+        // Save as Default (click-toggle popover anchored to the button, see #cooked-save-default-panel)
         if ($_CookedRecipeSaveDefault.length) {
-            var $_CookedSaveDefaultPanel = $('#cooked-save-default-panel');
+            var $_CookedSaveDefaultPanel = $('#cooked-save-default-panel'),
+                saveDefaultPanelArrow = $('<div class="cooked-tooltip-arrow" />').appendTo($_CookedSaveDefaultPanel)[0],
+                saveDefaultPanelCleanup = null;
 
             var cooked_toggle_save_default_panel = function(show) {
                 if (!$_CookedSaveDefaultPanel.length) {
@@ -157,6 +159,22 @@ var cookedSortableTouchHandler = function(event) {
 
                 $_CookedSaveDefaultPanel.prop('hidden', !show);
                 $_CookedRecipeSaveDefault.attr('aria-expanded', show ? 'true' : 'false');
+
+                if (saveDefaultPanelCleanup) {
+                    saveDefaultPanelCleanup();
+                    saveDefaultPanelCleanup = null;
+                }
+                // Without Floating UI the panel still opens, just in the normal flow.
+                if (show && window.FloatingUICore && window.FloatingUIDOM) {
+                    var reference = $_CookedRecipeSaveDefault[0],
+                        panel = $_CookedSaveDefaultPanel[0];
+
+                    saveDefaultPanelCleanup = window.FloatingUIDOM.autoUpdate(reference, panel, function() {
+                        cooked_position_floating(reference, panel, saveDefaultPanelArrow, ['top', 'bottom'], function() {
+                            return !panel.hidden;
+                        });
+                    });
+                }
             };
 
             $_CookedRecipeSaveDefault.on('click', function(e) {
@@ -310,18 +328,111 @@ var cookedSortableTouchHandler = function(event) {
             });
         }
 
-        // Cooked Tooltips (@sohrabi/tooltip, vendored — see assets/vendor/tooltip/README.md).
-        // Elements carry their content in data-tooltip; the library delegates
-        // globally, so one init covers present and future elements.
-        if ($_CookedTooltips.length && typeof window.initTooltip === 'function') {
-            window.initTooltip({
-                allowHTML			: true,
-                backgroundColor		: '#ffffff',
-                borderRadius		: '3px',
-                className			: 'cooked-tooltip-theme',
-                color				: '#666666',
-                maxWidth			: '275px'
-            });
+        // Cooked Tooltips (Floating UI, vendored — see assets/vendor/floating-ui/README.md).
+        // .cooked-tooltip elements carry their (HTML) content in data-tooltip and an optional
+        // comma-separated placement preference in data-positions, e.g. "top,bottom".
+        // Handlers are delegated, so one setup covers present and future elements.
+        if ($_CookedTooltips.length && window.FloatingUICore && window.FloatingUIDOM) {
+            var FloatingUI = window.FloatingUIDOM,
+                tooltip = document.createElement('div'),
+                tooltipContent = document.createElement('div'),
+                tooltipArrow = document.createElement('div'),
+                tooltipReference = null,
+                tooltipDescribedBy = null,
+                tooltipReasons = {},
+                tooltipCleanup = null;
+
+            tooltip.id = 'cooked-tooltip-floating';
+            tooltip.className = 'cooked-tooltip-floating';
+            tooltip.setAttribute('role', 'tooltip');
+            tooltip.hidden = true;
+            tooltipArrow.className = 'cooked-tooltip-arrow';
+            tooltip.appendChild(tooltipContent);
+            tooltip.appendChild(tooltipArrow);
+            document.body.appendChild(tooltip);
+
+            var tooltipPlacements = function(el) {
+                var placements = [];
+                String(el.getAttribute('data-positions') || '').split(',').forEach(function(placement) {
+                    placement = placement.trim().toLowerCase();
+                    if (/^(top|right|bottom|left)(-start|-end)?$/.test(placement) && placements.indexOf(placement) === -1) {
+                        placements.push(placement);
+                    }
+                });
+                return placements.length ? placements : ['bottom'];
+            };
+
+            var hideTooltip = function() {
+                if (tooltipCleanup) {
+                    tooltipCleanup();
+                    tooltipCleanup = null;
+                }
+                if (tooltipReference) {
+                    if (tooltipDescribedBy === null) {
+                        tooltipReference.removeAttribute('aria-describedby');
+                    } else {
+                        tooltipReference.setAttribute('aria-describedby', tooltipDescribedBy);
+                    }
+                }
+                tooltipReference = null;
+                tooltipDescribedBy = null;
+                tooltipReasons = {};
+                tooltip.hidden = true;
+            };
+
+            var updateTooltip = function() {
+                var reference = tooltipReference;
+                if (!reference || !reference.isConnected) {
+                    hideTooltip();
+                    return;
+                }
+
+                cooked_position_floating(reference, tooltip, tooltipArrow, tooltipPlacements(reference), function() {
+                    // A newer show/hide may have happened while this was computing.
+                    return tooltipReference === reference;
+                });
+            };
+
+            var showTooltip = function(el, reason) {
+                var content = el.getAttribute('data-tooltip');
+                if (!content) {
+                    return;
+                }
+                if (tooltipReference !== el) {
+                    hideTooltip();
+                    tooltipReference = el;
+                    tooltipDescribedBy = el.getAttribute('aria-describedby');
+                    el.setAttribute('aria-describedby', tooltipDescribedBy ? tooltipDescribedBy + ' ' + tooltip.id : tooltip.id);
+                }
+                tooltipReasons[reason] = true;
+                tooltipContent.innerHTML = content;
+                tooltip.hidden = false;
+                if (!tooltipCleanup) {
+                    tooltipCleanup = FloatingUI.autoUpdate(el, tooltip, updateTooltip);
+                }
+            };
+
+            // Hover and focus each keep the tooltip open; it hides once neither does.
+            var releaseTooltip = function(el, reason) {
+                if (tooltipReference !== el) {
+                    return;
+                }
+                delete tooltipReasons[reason];
+                if ($.isEmptyObject(tooltipReasons)) {
+                    hideTooltip();
+                }
+            };
+
+            $(document)
+                .on('mouseenter', '.cooked-tooltip[data-tooltip]', function() { showTooltip(this, 'hover'); })
+                .on('mouseleave', '.cooked-tooltip[data-tooltip]', function() { releaseTooltip(this, 'hover'); })
+                .on('focusin', '.cooked-tooltip[data-tooltip]', function() { showTooltip(this, 'focus'); })
+                .on('focusout', '.cooked-tooltip[data-tooltip]', function() { releaseTooltip(this, 'focus'); })
+                .on('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        hideTooltip();
+                    }
+                });
         }
 
         // Cooked Shortcode Fields
@@ -922,6 +1033,44 @@ var cookedSortableTouchHandler = function(event) {
 
 var cooked_recipe_update_counter = 0;
 var cooked_bulk_per_page = 20;
+
+/**
+ * Positions a floating element (tooltip or popover) next to its reference with
+ * Floating UI: first placement preferred, the rest as flip fallbacks. Sets
+ * data-placement on the floating element and moves its arrow to the right side.
+ * isCurrent() lets callers drop a result that arrives after they closed.
+ */
+function cooked_position_floating(reference, floating, arrow, placements, isCurrent) {
+    var FloatingUI = window.FloatingUIDOM,
+        arrowSides = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' };
+
+    return FloatingUI.computePosition(reference, floating, {
+        placement: placements[0],
+        strategy: 'fixed',
+        middleware: [
+            FloatingUI.offset(10),
+            FloatingUI.flip({ fallbackPlacements: placements.length > 1 ? placements.slice(1) : undefined, padding: 4 }),
+            FloatingUI.shift({ padding: 4 }),
+            FloatingUI.arrow({ element: arrow, padding: 6 })
+        ]
+    }).then(function(position) {
+        if (isCurrent && !isCurrent()) {
+            return;
+        }
+        var side = position.placement.split('-')[0],
+            arrowData = position.middlewareData.arrow || {};
+
+        floating.setAttribute('data-placement', side);
+        floating.style.left = position.x + 'px';
+        floating.style.top = position.y + 'px';
+
+        arrow.style.left = arrowData.x != null ? arrowData.x + 'px' : '';
+        arrow.style.top = arrowData.y != null ? arrowData.y + 'px' : '';
+        arrow.style.right = '';
+        arrow.style.bottom = '';
+        arrow.style[arrowSides[side]] = '-6px';
+    });
+}
 
 /** Applies default recipe content in paginated AJAX batches and updates the progress UI. */
 function cooked_set_default_template(page, total_recipes, content, nonce) {

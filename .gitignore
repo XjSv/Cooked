@@ -10,7 +10,7 @@
 
 # Dev dependencies
 node_modules/
-vendor
+/vendor
 .env
 
 # Tests
@@ -28,9 +28,6 @@ tests/backstop/backstop_data/bitmaps_test/
 tests/backstop/backstop_data/html_report/
 tests/backstop/backstop_data/ci_report/
 tests/backstop/backstop_data/json_report/
-
-# Assets
-!assets/vendor
 
 # Build
 build/*

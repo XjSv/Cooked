@@ -13,7 +13,7 @@
  * Requires at least:   6.8
  * Tested up to:        7.1
  * Requires PHP:        7.4
- * Contributors:        xjsv, boxystudio
+ * Contributors:        xjsv, mgiannopoulos24, boxystudio
  * Tags:                recipe, recipes, food, cooking, nutrition
  *
  * Cooked is free software: you can redistribute it and/or modify

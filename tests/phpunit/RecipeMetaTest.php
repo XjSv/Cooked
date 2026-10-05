@@ -74,20 +74,32 @@ class RecipeMetaTest extends TestCase {
 
     public function test_meta_cleanup_encodes_plain_fields_once() {
         $result = Cooked_Recipe_Meta::meta_cleanup( [
-            'prep_time' => 'a & b',
+            'title' => 'a & b',
         ] );
 
-        $this->assertSame( 'a &amp; b', $result['prep_time'] );
-        $this->assertStringNotContainsString( '&amp;amp;', $result['prep_time'] );
+        $this->assertSame( 'a &amp; b', $result['title'] );
+        $this->assertStringNotContainsString( '&amp;amp;', $result['title'] );
     }
 
     public function test_meta_cleanup_twice_double_encodes_plain_fields() {
         $once = Cooked_Recipe_Meta::meta_cleanup( [
-            'prep_time' => 'a & b',
+            'title' => 'a & b',
         ] );
         $twice = Cooked_Recipe_Meta::meta_cleanup( $once );
 
-        $this->assertSame( 'a &amp;amp; b', $twice['prep_time'] );
+        $this->assertSame( 'a &amp;amp; b', $twice['title'] );
+    }
+
+    public function test_meta_cleanup_normalizes_string_times() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'cook_time'  => '5 minutes',
+            'prep_time'  => '15',
+            'total_time' => '',
+        ] );
+
+        $this->assertSame( 5, $result['cook_time'] );
+        $this->assertSame( 15, $result['prep_time'] );
+        $this->assertSame( '', $result['total_time'] );
     }
 
     public function test_meta_cleanup_strips_excerpt_html_without_editor_role() {

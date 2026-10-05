@@ -355,4 +355,33 @@ class ShortcodesFiltersTest extends FilterTestCase {
 
         $this->assertSame( [ 99 ], $seen_ids );
     }
+
+    public function test_cooked_info_cook_time_accepts_string_minutes() {
+        $GLOBALS['_cooked_settings']['recipe_info_display_options'] = [ 'timing_cook' ];
+
+        $html = $this->capture_output(
+            function () {
+                Cooked_Shortcodes::cooked_info_cook_time( [ 'cook_time' => '5 minutes' ] );
+            }
+        );
+
+        $this->assertStringContainsString( 'cooked-cook-time', $html );
+        $this->assertStringContainsString( '5 mins', $html );
+    }
+
+    public function test_cooked_info_total_time_adds_string_minutes() {
+        $GLOBALS['_cooked_settings']['recipe_info_display_options'] = [ 'timing_total' ];
+
+        $html = $this->capture_output(
+            function () {
+                Cooked_Shortcodes::cooked_info_total_time( [
+                    'prep_time' => '15 mins',
+                    'cook_time' => '5 minutes',
+                ] );
+            }
+        );
+
+        $this->assertStringContainsString( 'cooked-total-time', $html );
+        $this->assertStringContainsString( '20 mins', $html );
+    }
 }

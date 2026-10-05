@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 6.8
 Tested up to: 7.1
-Stable tag: 1.16.1
+Stable tag: 1.16.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -81,9 +81,14 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.16.1 fixes recipe editor bugs, a security issue, and Plugin Check issues.
+Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a new include_ids attribute to the cooked-related-recipes shortcode.
 
 == Changelog ==
+
+= 1.16.2 =
+* **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).
+* **NEW:** Added include_ids attribute to cooked-related-recipes shortcode to display related recipes by specific IDs.
+* **FIX:** Fixed a bug where if cooking time is a string a fatal error is thrown.
 
 = 1.16.1 =
 * **FIX:** Fixed the 'Bulk Add' direction functionality when adding a [cooked-timer] or quotes.

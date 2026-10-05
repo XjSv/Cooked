@@ -139,12 +139,14 @@ class Cooked_Shortcodes {
             ], $atts
         );
 
-        $desc = esc_attr($atts['desc']);
         $seconds = floatval( $atts['seconds'] );
         $minutes_value = floatval( $atts['minutes'] );
         $minutes = $minutes_value ? $minutes_value * 60 : floatval( $atts['length'] ) * 60;
         $hours = floatval( $atts['hours'] ) * 60 * 60;
         $seconds = $seconds + $minutes + $hours;
+
+        $content = (string) $content;
+        $desc = '' !== (string) $atts['desc'] ? wp_strip_all_tags( (string) $atts['desc'] ) : wp_strip_all_tags( $content );
 
         if (!$cooked_timer_identifier) {
             $cooked_timer_identifier = 1;
@@ -153,11 +155,10 @@ class Cooked_Shortcodes {
         }
 
         $timer_id = md5( $seconds . $desc . $content ) . '_' . $cooked_timer_identifier;
-        $desc = $desc ? wp_strip_all_tags( $desc ) : wp_strip_all_tags( $content );
 
         wp_enqueue_script( 'cooked-timer' );
 
-        return '<span class="cooked-timer"><a aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . ( $desc ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
+        return '<span class="cooked-timer"><a aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . esc_attr( $desc ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
     }
 
     public function cooked_browse_shortcode( $sc_atts, $content = null ) {
@@ -732,7 +733,7 @@ class Cooked_Shortcodes {
         global $_cooked_settings;
 
         if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_prep',$_cooked_settings['recipe_info_display_options'])) {
-            $prep_time = isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0;
+            $prep_time = isset($recipe['prep_time']) ? Cooked_Measurements::normalize_minutes( $recipe['prep_time'] ) : 0;
             echo $prep_time ? '<span class="cooked-prep-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . esc_html__('Prep Time','cooked') . '</strong>' . wp_kses_post( Cooked_Measurements::time_format( $prep_time ) ) . '</span>' : '';
         }
     }
@@ -741,7 +742,7 @@ class Cooked_Shortcodes {
         global $_cooked_settings;
 
         if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_cook', $_cooked_settings['recipe_info_display_options'])) {
-            $cook_time = isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0;
+            $cook_time = isset($recipe['cook_time']) ? Cooked_Measurements::normalize_minutes( $recipe['cook_time'] ) : 0;
             echo $cook_time ? '<span class="cooked-cook-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . esc_html__('Cook Time','cooked') . '</strong>' . wp_kses_post( Cooked_Measurements::time_format( $cook_time ) ) . '</span>' : '';
         }
     }
@@ -750,13 +751,13 @@ class Cooked_Shortcodes {
         global $_cooked_settings;
 
         if (!empty($_cooked_settings['recipe_info_display_options']) && in_array('timing_total',$_cooked_settings['recipe_info_display_options'])) {
-            $total_time = isset($recipe['total_time']) ? esc_html( $recipe['total_time'] ) : 0;
+            $total_time = isset($recipe['total_time']) ? Cooked_Measurements::normalize_minutes( $recipe['total_time'] ) : 0;
 
             if ( $total_time ) {
                 echo $total_time ? '<span class="cooked-total-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . esc_html__('Total Time','cooked') . '</strong>' . wp_kses_post( Cooked_Measurements::time_format( $total_time ) ) . '</span>' : '';
             } else {
-                $prep_time = isset($recipe['prep_time']) ? esc_html( $recipe['prep_time'] ) : 0;
-                $cook_time = isset($recipe['cook_time']) ? esc_html( $recipe['cook_time'] ) : 0;
+                $prep_time = isset($recipe['prep_time']) ? Cooked_Measurements::normalize_minutes( $recipe['prep_time'] ) : 0;
+                $cook_time = isset($recipe['cook_time']) ? Cooked_Measurements::normalize_minutes( $recipe['cook_time'] ) : 0;
 
                 if ( $prep_time && $cook_time ) {
                     $total_time = $prep_time + $cook_time;
@@ -1245,9 +1246,9 @@ class Cooked_Shortcodes {
 
         // Display recipes in grid
         $columns = intval($atts['columns']);
-        $hide_image = $atts['hide_image'] && $atts['hide_image'] !== 'false';
-        $hide_excerpt = $atts['hide_excerpt'] && $atts['hide_excerpt'] !== 'false';
-        $hide_author = $atts['hide_author'] && $atts['hide_author'] !== 'false';
+        $hide_image = wp_validate_boolean( $atts['hide_image'] );
+        $hide_excerpt = wp_validate_boolean( $atts['hide_excerpt'] );
+        $hide_author = wp_validate_boolean( $atts['hide_author'] );
 
         echo '<div class="cooked-related-recipes-grid cooked-recipe-grid cooked-columns-' . esc_attr($columns) . '">';
 

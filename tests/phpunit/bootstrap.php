@@ -565,6 +565,16 @@ function wp_get_attachment_image_src( $attachment_id, $size = 'thumbnail', $icon
 }
 function wp_attachment_is_image( $attachment_id ) { return $attachment_id > 0; }
 function taxonomy_exists( $taxonomy ) { return true; }
+
+function wp_validate_boolean( $value ) {
+    if ( is_bool( $value ) ) {
+        return $value;
+    }
+    if ( is_string( $value ) && 'false' === strtolower( $value ) ) {
+        return false;
+    }
+    return (bool) $value;
+}
 function wp_enqueue_style( $handle, $src = '', $deps = [], $ver = false, $media = 'all' ) { return true; }
 function wp_enqueue_script( $handle, $src = '', $deps = [], $ver = false, $in_footer = false ) { return true; }
 function wp_register_style( $handle, $src, $deps = [], $ver = false, $media = 'all' ) { return true; }

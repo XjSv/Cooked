@@ -3,7 +3,7 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 6.8
 Tested up to: 7.1
-Stable tag: 1.16.1
+Stable tag: 1.16.2
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -81,9 +81,12 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.16.1 fixes recipe editor bugs, a security issue, and Plugin Check issues.
+Version 1.16.2 escapes the cooking timer description to prevent stored XSS.
 
 == Changelog ==
+
+= 1.16.2 =
+* **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).
 
 = 1.16.1 =
 * **FIX:** Fixed the 'Bulk Add' direction functionality when adding a [cooked-timer] or quotes.

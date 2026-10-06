@@ -54,6 +54,14 @@ class ShortcodesTimerTest extends TestCase {
         $this->assertStringContainsString( 'data-seconds="0"', $output );
     }
 
+    public function test_inner_content_quote_cannot_break_out_of_data_desc() {
+        $payload = '" onmouseover=alert("WFPROOFa1b2c3d4")//';
+        $output = $this->timer_without_warning( [], $payload );
+
+        $this->assertStringContainsString( 'data-desc="&quot; onmouseover=alert(&quot;WFPROOFa1b2c3d4&quot;)//"', $output );
+        $this->assertStringNotContainsString( 'data-desc="' . $payload . '"', $output );
+    }
+
     /**
      * @param array<string, mixed> $atts
      */

@@ -139,12 +139,14 @@ class Cooked_Shortcodes {
             ], $atts
         );
 
-        $desc = esc_attr($atts['desc']);
         $seconds = floatval( $atts['seconds'] );
         $minutes_value = floatval( $atts['minutes'] );
         $minutes = $minutes_value ? $minutes_value * 60 : floatval( $atts['length'] ) * 60;
         $hours = floatval( $atts['hours'] ) * 60 * 60;
         $seconds = $seconds + $minutes + $hours;
+
+        $content = (string) $content;
+        $desc = '' !== (string) $atts['desc'] ? wp_strip_all_tags( (string) $atts['desc'] ) : wp_strip_all_tags( $content );
 
         if (!$cooked_timer_identifier) {
             $cooked_timer_identifier = 1;
@@ -153,11 +155,10 @@ class Cooked_Shortcodes {
         }
 
         $timer_id = md5( $seconds . $desc . $content ) . '_' . $cooked_timer_identifier;
-        $desc = $desc ? wp_strip_all_tags( $desc ) : wp_strip_all_tags( $content );
 
         wp_enqueue_script( 'cooked-timer' );
 
-        return '<span class="cooked-timer"><a aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . ( $desc ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
+        return '<span class="cooked-timer"><a aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . esc_attr( $desc ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
     }
 
     public function cooked_browse_shortcode( $sc_atts, $content = null ) {

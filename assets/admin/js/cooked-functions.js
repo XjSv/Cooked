@@ -150,47 +150,75 @@ var cookedSortableTouchHandler = function(event) {
         if ($_CookedRecipeSaveDefault.length) {
             var $_CookedSaveDefaultPanel = $('#cooked-save-default-panel'),
                 saveDefaultPanelArrow = $('<div class="cooked-tooltip-arrow" />').appendTo($_CookedSaveDefaultPanel)[0],
+                saveDefaultPanelFloating = !!(window.FloatingUICore && window.FloatingUIDOM),
                 saveDefaultPanelCleanup = null;
+
+            // With Floating UI the panel grows open like the tooltips: it becomes the
+            // positioned shell and its contents (arrow included) move into the bubble.
+            if (saveDefaultPanelFloating) {
+                $_CookedSaveDefaultPanel.addClass('cooked-tooltip-shell').wrapInner('<div class="cooked-tooltip-bubble" />');
+            }
+
+            // While closing, the panel is still visible but already counts as closed.
+            var cooked_save_default_panel_is_open = function() {
+                if (!$_CookedSaveDefaultPanel.length) {
+                    return false;
+                }
+                return saveDefaultPanelFloating ? $_CookedSaveDefaultPanel.hasClass('cooked-tooltip-open') : !$_CookedSaveDefaultPanel.prop('hidden');
+            };
 
             var cooked_toggle_save_default_panel = function(show) {
                 if (!$_CookedSaveDefaultPanel.length) {
                     return;
                 }
 
-                $_CookedSaveDefaultPanel.prop('hidden', !show);
+                var reference = $_CookedRecipeSaveDefault[0],
+                    panel = $_CookedSaveDefaultPanel[0];
+
                 $_CookedRecipeSaveDefault.attr('aria-expanded', show ? 'true' : 'false');
 
-                if (saveDefaultPanelCleanup) {
-                    saveDefaultPanelCleanup();
-                    saveDefaultPanelCleanup = null;
+                // Without Floating UI the panel opens and closes instantly, in the normal flow.
+                if (!saveDefaultPanelFloating) {
+                    panel.hidden = !show;
+                    return;
                 }
-                // Without Floating UI the panel still opens, just in the normal flow.
-                if (show && window.FloatingUICore && window.FloatingUIDOM) {
-                    var reference = $_CookedRecipeSaveDefault[0],
-                        panel = $_CookedSaveDefaultPanel[0];
 
-                    saveDefaultPanelCleanup = window.FloatingUIDOM.autoUpdate(reference, panel, function() {
-                        cooked_position_floating(reference, panel, saveDefaultPanelArrow, ['top', 'bottom'], function() {
-                            return !panel.hidden;
+                if (show) {
+                    panel.hidden = false;
+                    if (!saveDefaultPanelCleanup) {
+                        saveDefaultPanelCleanup = window.FloatingUIDOM.autoUpdate(reference, panel, function() {
+                            cooked_position_floating(reference, panel, saveDefaultPanelArrow, ['top', 'bottom'], function() {
+                                return !panel.hidden;
+                            });
                         });
+                    }
+                    cooked_grow_open(panel);
+                } else if (cooked_save_default_panel_is_open()) {
+                    // Keep positioning while it scales down, then hide.
+                    cooked_grow_close(panel, function() {
+                        if (saveDefaultPanelCleanup) {
+                            saveDefaultPanelCleanup();
+                            saveDefaultPanelCleanup = null;
+                        }
+                        panel.hidden = true;
                     });
                 }
             };
 
             $_CookedRecipeSaveDefault.on('click', function(e) {
                 e.preventDefault();
-                cooked_toggle_save_default_panel($_CookedSaveDefaultPanel.prop('hidden'));
+                cooked_toggle_save_default_panel(!cooked_save_default_panel_is_open());
             });
 
             $_CookedRecipeSaveDefault.on('keydown', function(e) {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    cooked_toggle_save_default_panel($_CookedSaveDefaultPanel.prop('hidden'));
+                    cooked_toggle_save_default_panel(!cooked_save_default_panel_is_open());
                 }
             });
 
             $(document).on('click', function(e) {
-                if (!$_CookedSaveDefaultPanel.length || $_CookedSaveDefaultPanel.prop('hidden')) {
+                if (!cooked_save_default_panel_is_open()) {
                     return;
                 }
 
@@ -200,7 +228,7 @@ var cookedSortableTouchHandler = function(event) {
             });
 
             $(document).on('keydown', function(e) {
-                if (e.key === 'Escape' && $_CookedSaveDefaultPanel.length && !$_CookedSaveDefaultPanel.prop('hidden')) {
+                if (e.key === 'Escape' && cooked_save_default_panel_is_open()) {
                     cooked_toggle_save_default_panel(false);
                     $_CookedRecipeSaveDefault.focus();
                 }
@@ -333,22 +361,31 @@ var cookedSortableTouchHandler = function(event) {
         // comma-separated placement preference in data-positions, e.g. "top,bottom".
         // Handlers are delegated, so one setup covers present and future elements.
         if ($_CookedTooltips.length && window.FloatingUICore && window.FloatingUIDOM) {
+            // One shared tooltip: an outer shell that Floating UI positions and an inner
+            // bubble (content and arrow) that grows open and closed.
+            // tooltipReference is the trigger the tooltip is for; tooltipAnchor is the one
+            // it is placed against, which outlives the reference while the close plays.
             var FloatingUI = window.FloatingUIDOM,
                 tooltip = document.createElement('div'),
+                tooltipBubble = document.createElement('div'),
                 tooltipContent = document.createElement('div'),
                 tooltipArrow = document.createElement('div'),
                 tooltipReference = null,
+                tooltipAnchor = null,
                 tooltipDescribedBy = null,
                 tooltipReasons = {},
+                tooltipOpenTimer = null,
                 tooltipCleanup = null;
 
             tooltip.id = 'cooked-tooltip-floating';
             tooltip.className = 'cooked-tooltip-floating';
             tooltip.setAttribute('role', 'tooltip');
             tooltip.hidden = true;
+            tooltipBubble.className = 'cooked-tooltip-bubble';
             tooltipArrow.className = 'cooked-tooltip-arrow';
-            tooltip.appendChild(tooltipContent);
-            tooltip.appendChild(tooltipArrow);
+            tooltipBubble.appendChild(tooltipContent);
+            tooltipBubble.appendChild(tooltipArrow);
+            tooltip.appendChild(tooltipBubble);
             document.body.appendChild(tooltip);
 
             var tooltipPlacements = function(el) {
@@ -362,11 +399,20 @@ var cookedSortableTouchHandler = function(event) {
                 return placements.length ? placements : ['bottom'];
             };
 
-            var hideTooltip = function() {
+            var finishHideTooltip = function() {
                 if (tooltipCleanup) {
                     tooltipCleanup();
                     tooltipCleanup = null;
                 }
+                tooltipAnchor = null;
+                tooltip.hidden = true;
+            };
+
+            // animate: grow closed (hover/focus leaving, Escape). Otherwise hide at once,
+            // cancelling any open or close in progress.
+            var hideTooltip = function(animate) {
+                clearTimeout(tooltipOpenTimer);
+                tooltipOpenTimer = null;
                 if (tooltipReference) {
                     if (tooltipDescribedBy === null) {
                         tooltipReference.removeAttribute('aria-describedby');
@@ -377,38 +423,73 @@ var cookedSortableTouchHandler = function(event) {
                 tooltipReference = null;
                 tooltipDescribedBy = null;
                 tooltipReasons = {};
-                tooltip.hidden = true;
+
+                if (!animate || !tooltipAnchor) {
+                    cooked_grow_cancel(tooltip);
+                    tooltip.classList.remove('cooked-tooltip-open');
+                    finishHideTooltip();
+                } else if (tooltip.classList.contains('cooked-tooltip-open')) {
+                    cooked_grow_close(tooltip, finishHideTooltip);
+                }
+                // Otherwise it is already closing.
             };
 
             var updateTooltip = function() {
-                var reference = tooltipReference;
-                if (!reference || !reference.isConnected) {
-                    hideTooltip();
+                var anchor = tooltipAnchor;
+                if (!anchor || !anchor.isConnected) {
+                    hideTooltip(false);
                     return;
                 }
 
-                cooked_position_floating(reference, tooltip, tooltipArrow, tooltipPlacements(reference), function() {
+                cooked_position_floating(anchor, tooltip, tooltipArrow, tooltipPlacements(anchor), function() {
                     // A newer show/hide may have happened while this was computing.
-                    return tooltipReference === reference;
+                    return tooltipAnchor === anchor;
                 });
             };
 
+            var openTooltip = function(el) {
+                tooltipOpenTimer = null;
+                if (!el.isConnected) {
+                    hideTooltip(false);
+                    return;
+                }
+                tooltipContent.innerHTML = el.getAttribute('data-tooltip');
+                tooltipAnchor = el;
+                tooltip.hidden = false;
+                if (!tooltipCleanup) {
+                    tooltipCleanup = FloatingUI.autoUpdate(el, tooltip, updateTooltip);
+                }
+                cooked_grow_open(tooltip);
+            };
+
+            // Hover opens after 100ms (Tooltipster's delay); leaving sooner shows nothing.
+            // Focus opens at once.
             var showTooltip = function(el, reason) {
                 var content = el.getAttribute('data-tooltip');
                 if (!content) {
                     return;
                 }
-                if (tooltipReference !== el) {
-                    hideTooltip();
-                    tooltipReference = el;
-                    tooltipDescribedBy = el.getAttribute('aria-describedby');
-                    el.setAttribute('aria-describedby', tooltipDescribedBy ? tooltipDescribedBy + ' ' + tooltip.id : tooltip.id);
-                }
                 tooltipReasons[reason] = true;
-                tooltipContent.innerHTML = content;
-                tooltip.hidden = false;
-                if (!tooltipCleanup) {
-                    tooltipCleanup = FloatingUI.autoUpdate(el, tooltip, updateTooltip);
+                if (tooltipReference === el) {
+                    if (tooltipOpenTimer && reason !== 'hover') {
+                        clearTimeout(tooltipOpenTimer);
+                        openTooltip(el);
+                    } else if (!tooltipOpenTimer) {
+                        tooltipContent.innerHTML = content;
+                    }
+                    return;
+                }
+
+                hideTooltip(false);
+                tooltipReasons[reason] = true;
+                tooltipReference = el;
+                tooltipDescribedBy = el.getAttribute('aria-describedby');
+                el.setAttribute('aria-describedby', tooltipDescribedBy ? tooltipDescribedBy + ' ' + tooltip.id : tooltip.id);
+
+                if (reason === 'hover') {
+                    tooltipOpenTimer = setTimeout(function() { openTooltip(el); }, 100);
+                } else {
+                    openTooltip(el);
                 }
             };
 
@@ -419,7 +500,7 @@ var cookedSortableTouchHandler = function(event) {
                 }
                 delete tooltipReasons[reason];
                 if ($.isEmptyObject(tooltipReasons)) {
-                    hideTooltip();
+                    hideTooltip(true);
                 }
             };
 
@@ -430,7 +511,7 @@ var cookedSortableTouchHandler = function(event) {
                 .on('focusout', '.cooked-tooltip[data-tooltip]', function() { releaseTooltip(this, 'focus'); })
                 .on('keydown', function(e) {
                     if (e.key === 'Escape') {
-                        hideTooltip();
+                        hideTooltip(true);
                     }
                 });
         }
@@ -1070,6 +1151,51 @@ function cooked_position_floating(reference, floating, arrow, placements, isCurr
         arrow.style.bottom = '';
         arrow.style[arrowSides[side]] = '-6px';
     });
+}
+
+/**
+ * Grow animation for a floating shell (Tooltipster's "grow"): the shell's
+ * .cooked-tooltip-bubble scales from 0 to 1 via .cooked-tooltip-open (see the
+ * admin stylesheet). The shell must already be visible. Also used by Cooked Pro.
+ */
+function cooked_grow_open(shell) {
+    cooked_grow_cancel(shell);
+    shell.classList.remove('cooked-tooltip-open');
+    void shell.offsetWidth; // Commit scale(0) so the transition plays.
+    shell.classList.add('cooked-tooltip-open');
+}
+
+/**
+ * Scales the bubble back down, then calls done() (on transitionend, or after
+ * 400ms if that never fires). cooked_grow_open() and cooked_grow_cancel() stop it.
+ */
+function cooked_grow_close(shell, done) {
+    var bubble = shell.querySelector('.cooked-tooltip-bubble'),
+        timer = null,
+        finish = function(e) {
+            if (e && (e.target !== bubble || e.propertyName !== 'transform')) {
+                return;
+            }
+            cooked_grow_cancel(shell);
+            done();
+        };
+
+    cooked_grow_cancel(shell);
+    shell.classList.remove('cooked-tooltip-open');
+    bubble.addEventListener('transitionend', finish);
+    timer = setTimeout(finish, 400);
+    shell.cookedGrowCancel = function() {
+        clearTimeout(timer);
+        bubble.removeEventListener('transitionend', finish);
+        shell.cookedGrowCancel = null;
+    };
+}
+
+/** Stops a pending cooked_grow_close() without calling its done(). */
+function cooked_grow_cancel(shell) {
+    if (shell.cookedGrowCancel) {
+        shell.cookedGrowCancel();
+    }
 }
 
 /** Applies default recipe content in paginated AJAX batches and updates the progress UI. */

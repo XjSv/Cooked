@@ -267,19 +267,31 @@ body.post-type-cp_recipe .switchery-small > small,
 .cooked-tooltip-buttons .cooked-saved-default { height:28px; line-height:28px; font-weight:bold; font-size:15px; color:#888; }
 
 /* Tooltips (Floating UI, vendored — see assets/vendor/floating-ui/README.md).
- * Positioned by cooked-functions.js; data-placement holds the resolved side. */
-.cooked-tooltip-floating { position:fixed; top:0; left:0; z-index:2001; box-sizing:border-box; width:max-content; max-width:275px; padding:15px 18px; background:#fff; border:1px solid #ccc; border-radius:3px; box-shadow:0 3px 8px rgba(0,0,0,.12); color:#666; font-size:12px; line-height:1.6; text-align:left; white-space:normal; pointer-events:none; }
+ * Positioned by cooked-functions.js; data-placement holds the resolved side.
+ * Headings never wrap; min-width lets a heading longer than the 275px cap widen the bubble instead of overflowing it. */
+.cooked-tooltip-floating { position:fixed; top:0; left:0; z-index:2001; box-sizing:border-box; width:max-content; max-width:275px; min-width:min-content; color:#666; font-size:12px; line-height:1.6; text-align:left; white-space:normal; pointer-events:none; }
+.cooked-tooltip-floating > .cooked-tooltip-bubble { box-sizing:border-box; padding:15px 18px; background:#fff; border:1px solid #ccc; border-radius:3px; box-shadow:0 3px 8px rgba(0,0,0,.12); }
 .cooked-tooltip-floating[hidden] { display:none; }
 .cooked-tooltip-floating strong { color:#07a780; display:block; margin:0 0 2px; }
-.cooked-tooltip-floating strong.cooked-tooltip-heading { display:block; font-size:15px; margin:0 0 5px; }
+.cooked-tooltip-floating strong.cooked-tooltip-heading { display:block; font-size:15px; margin:0 0 5px; white-space:nowrap; }
+/* Grow open/close animation (based on Tooltipster's grow, eased and fading). Floating UI positions and measures the
+/* Grow (Tooltipster's open/close animation). Floating UI positions and measures the
+ * outer shell; only the inner bubble scales, so flip, shift and the arrow see the full box.
+ * The arrow sits inside the bubble and scales with it. Also used by Cooked Pro. */
+.cooked-tooltip-bubble { position:relative; opacity:0; transform:scale(0); transform-origin:center; transition:transform 400ms cubic-bezier(.22,.61,.36,1), opacity 400ms cubic-bezier(.22,.61,.36,1); }
+.cooked-tooltip-open > .cooked-tooltip-bubble { opacity:1; transform:scale(1); }
 
 /* Arrow (tooltips and the Save as Default panel): a rotated square bordered on the two sides facing the trigger. */
 .cooked-tooltip-arrow { position:absolute; width:10px; height:10px; background:#fff; border:0 solid #ccc; transform:rotate(45deg); }
 .cooked-save-default-panel:not([data-placement]) .cooked-tooltip-arrow { display:none; }
-[data-placement='top'] > .cooked-tooltip-arrow { border-width:0 1px 1px 0; }
-[data-placement='bottom'] > .cooked-tooltip-arrow { border-width:1px 0 0 1px; }
-[data-placement='left'] > .cooked-tooltip-arrow { border-width:1px 1px 0 0; }
-[data-placement='right'] > .cooked-tooltip-arrow { border-width:0 0 1px 1px; }
+[data-placement='top'] > .cooked-tooltip-arrow,
+[data-placement='top'] > .cooked-tooltip-bubble > .cooked-tooltip-arrow { border-width:0 1px 1px 0; }
+[data-placement='bottom'] > .cooked-tooltip-arrow,
+[data-placement='bottom'] > .cooked-tooltip-bubble > .cooked-tooltip-arrow { border-width:1px 0 0 1px; }
+[data-placement='left'] > .cooked-tooltip-arrow,
+[data-placement='left'] > .cooked-tooltip-bubble > .cooked-tooltip-arrow { border-width:1px 1px 0 0; }
+[data-placement='right'] > .cooked-tooltip-arrow,
+[data-placement='right'] > .cooked-tooltip-bubble > .cooked-tooltip-arrow { border-width:0 0 1px 1px; }
 
 .cooked-progress { display:none; position:relative; background:#eee; width:100%; height:6px; padding:0; border-radius:3px; margin:10px 0 0 0; }
 .cooked-progress-text { display:none; font-size:10px; color:#aaa; padding:2px 0 5px; }
@@ -315,8 +327,11 @@ body.post-type-cp_recipe .switchery-small > small,
 .cooked-save-default-panel { background:#fff; border:1px solid #ccc; border-radius:3px; box-shadow:0 3px 8px rgba(0,0,0,.12); box-sizing:border-box; color:#666; font-size:12px; line-height:1.6; margin:10px 0 0; max-width:320px; padding:15px 18px; }
 .cooked-save-default-panel[hidden] { display:none; }
 /* Once Floating UI places it (data-placement set), the panel floats by the button like a tooltip. */
-.cooked-save-default-panel[data-placement] { position:fixed; top:0; left:0; z-index:2001; width:max-content; max-width:275px; margin:0; }
-.cooked-save-default-panel .cooked-tooltip-heading { color:#07a780; display:block; font-size:15px; margin:0 0 5px; }
+.cooked-save-default-panel[data-placement] { position:fixed; top:0; left:0; z-index:2001; width:max-content; max-width:275px; min-width:min-content; margin:0; }
+/* With Floating UI, cooked-functions.js wraps the contents in a .cooked-tooltip-bubble that grows open. */
+.cooked-save-default-panel.cooked-tooltip-shell { background:none; border:0; border-radius:0; box-shadow:none; padding:0; }
+.cooked-save-default-panel > .cooked-tooltip-bubble { box-sizing:border-box; padding:15px 18px; background:#fff; border:1px solid #ccc; border-radius:3px; box-shadow:0 3px 8px rgba(0,0,0,.12); }
+.cooked-save-default-panel .cooked-tooltip-heading { color:#07a780; display:block; font-size:15px; margin:0 0 5px; white-space:nowrap; }
 .cooked-save-default-panel p { margin:0 0 5px; }
 .cooked-save-default-panel .cooked-tooltip-buttons { display:block; padding:12px 0 5px; }
 body .button.button-cooked-reset { color:#999; }

@@ -19,6 +19,6 @@
     "DISALLOW_FILE_EDIT": false
   },
   "lifecycleScripts": {
-    "afterStart": "wp-env run cli bash -c 'curl -fsSL -o /tmp/wp-cli.phar https://github.com/wp-cli/builds/raw/gh-pages/phar/wp-cli.phar && chmod +x /tmp/wp-cli.phar && sudo cp /tmp/wp-cli.phar /usr/local/bin/wp && sudo chmod +x /usr/local/bin/wp'"
+    "afterStart": "wp-env run cli bash -c 'curl -fsSL -o /tmp/wp-cli.phar https://github.com/wp-cli/builds/raw/gh-pages/phar/wp-cli.phar && chmod +x /tmp/wp-cli.phar && sudo cp /tmp/wp-cli.phar /usr/local/bin/wp && sudo chmod +x /usr/local/bin/wp' && wp-env run cli wp plugin activate cooked"
   }
 }

@@ -275,7 +275,6 @@ body.post-type-cp_recipe .switchery-small > small,
 .cooked-tooltip-floating strong { color:#07a780; display:block; margin:0 0 2px; }
 .cooked-tooltip-floating strong.cooked-tooltip-heading { display:block; font-size:15px; margin:0 0 5px; white-space:nowrap; }
 /* Grow open/close animation (based on Tooltipster's grow, eased and fading). Floating UI positions and measures the
-/* Grow (Tooltipster's open/close animation). Floating UI positions and measures the
  * outer shell; only the inner bubble scales, so flip, shift and the arrow see the full box.
  * The arrow sits inside the bubble and scales with it. Also used by Cooked Pro. */
 .cooked-tooltip-bubble { position:relative; opacity:0; transform:scale(0); transform-origin:center; transition:transform 400ms cubic-bezier(.22,.61,.36,1), opacity 400ms cubic-bezier(.22,.61,.36,1); }

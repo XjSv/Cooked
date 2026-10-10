@@ -235,88 +235,87 @@ var cookedSortableTouchHandler = function(event) {
             });
 
             // Save as Default panel buttons.
-                    $('.cooked-save-default-all').on('click', function(e) {
-                        e.preventDefault();
+            $('.cooked-save-default-all').on('click', function(e) {
+                e.preventDefault();
 
-                        var thisButton = $(this),
-                            cooked_save_default_nonce = thisButton.data('nonce'),
-                            cooked_save_default_bulk_nonce = thisButton.data('bulk-nonce'),
-                            thisContainer = thisButton.parent(),
-                            confirm_save = confirm(cooked_admin_functions_js_vars.i18n_confirm_save_default_all),
-                            recipe_editor_textarea = $( "#_recipe_settings_content" ),
-                            recipe_editor = tinymce.get('_recipe_settings_content');
+                var thisButton = $(this),
+                    cooked_save_default_nonce = thisButton.data('nonce'),
+                    cooked_save_default_bulk_nonce = thisButton.data('bulk-nonce'),
+                    thisContainer = thisButton.parent(),
+                    confirm_save = confirm(cooked_admin_functions_js_vars.i18n_confirm_save_default_all),
+                    recipe_editor_textarea = $( "#_recipe_settings_content" ),
+                    recipe_editor = tinymce.get('_recipe_settings_content');
 
-                        if (recipe_editor === null) {
-                            var recipe_editor_content = recipe_editor_textarea.val();
-                        } else {
-                            var recipe_editor_content = recipe_editor.getContent();
-                        }
+                if (recipe_editor === null) {
+                    var recipe_editor_content = recipe_editor_textarea.val();
+                } else {
+                    var recipe_editor_content = recipe_editor.getContent();
+                }
 
-                        if (confirm_save && !thisButton.hasClass('disabled')) {
-                            thisContainer.find('.button, .button-primary').addClass('disabled');
+                if (confirm_save && !thisButton.hasClass('disabled')) {
+                    thisContainer.find('.button, .button-primary').addClass('disabled');
 
+                    $.post(
+                        cooked_admin_functions_js_vars.ajax_url,
+                        {
+                            action: 'cooked_save_default',
+                            'default_content': recipe_editor_content,
+                            nonce: cooked_save_default_nonce
+                        },
+                        function() {
                             $.post(
                                 cooked_admin_functions_js_vars.ajax_url,
                                 {
-                                    action: 'cooked_save_default',
-                                    'default_content': recipe_editor_content,
-                                    nonce: cooked_save_default_nonce
+                                    action: 'cooked_get_recipe_count',
+                                    nonce: cooked_save_default_bulk_nonce
                                 },
-                                function() {
-                                    $.post(
-                                        cooked_admin_functions_js_vars.ajax_url,
-                                        {
-                                            action: 'cooked_get_recipe_count',
-                                            nonce: cooked_save_default_bulk_nonce
-                                        },
-                                        function(response) {
-                                            thisButton.removeClass("button-primary").addClass("button");
+                                function(response) {
+                                    thisButton.removeClass("button-primary").addClass("button");
 
-                                            if (response && response.success && response.data.total > 0) {
-                                                cooked_recipe_update_counter = 0;
-                                                cooked_set_default_template(0, response.data.total, recipe_editor_content, cooked_save_default_bulk_nonce);
-                                            }
-                                        },
-                                        'json'
-                                    );
-                                }
+                                    if (response && response.success && response.data.total > 0) {
+                                        cooked_recipe_update_counter = 0;
+                                        cooked_set_default_template(0, response.data.total, recipe_editor_content, cooked_save_default_bulk_nonce);
+                                    }
+                                },
+                                'json'
                             );
                         }
-                    });
+                    );
+                }
+            });
 
-                    $('.cooked-save-default-new').on('click', function(e) {
-                        e.preventDefault();
-                        var thisButton = $(this),
-                            nonce = thisButton.data('nonce'),
-                            thisContainer = thisButton.parent(),
-                            recipe_editor_textarea = $("#_recipe_settings_content"),
-                            recipe_editor = tinymce.get('_recipe_settings_content');
+            $('.cooked-save-default-new').on('click', function(e) {
+                e.preventDefault();
+                var thisButton = $(this),
+                    nonce = thisButton.data('nonce'),
+                    thisContainer = thisButton.parent(),
+                    recipe_editor_textarea = $("#_recipe_settings_content"),
+                    recipe_editor = tinymce.get('_recipe_settings_content');
 
-                        if (recipe_editor === null) {
-                            var recipe_editor_content = recipe_editor_textarea.val();
-                        } else {
-                            var recipe_editor_content = recipe_editor.getContent();
+                if (recipe_editor === null) {
+                    var recipe_editor_content = recipe_editor_textarea.val();
+                } else {
+                    var recipe_editor_content = recipe_editor.getContent();
+                }
+
+                if (!thisButton.hasClass('disabled')) {
+                    thisContainer.find('.button, .button-primary').addClass('disabled');
+                    var ajax__save_default_new = $.post(
+                        cooked_admin_functions_js_vars.ajax_url,
+                        {
+                            action: 'cooked_save_default',
+                            'default_content': recipe_editor_content,
+                            nonce: nonce
+                        },
+                        function(result) {
+                            thisButton.text( cooked_admin_functions_js_vars.i18n_saved );
+                            thisContainer.find('.button-primary').removeClass('disabled');
                         }
-
-                        if (!thisButton.hasClass('disabled')) {
-                            thisContainer.find('.button, .button-primary').addClass('disabled');
-                            var ajax__save_default_new = $.post(
-                                cooked_admin_functions_js_vars.ajax_url,
-                                {
-                                    action: 'cooked_save_default',
-                                    'default_content': recipe_editor_content,
-                                    nonce: nonce
-                                },
-                                function(result) {
-                                    thisButton.text( cooked_admin_functions_js_vars.i18n_saved );
-                                    thisContainer.find('.button-primary').removeClass('disabled');
-                                }
-                            ).fail(function(result) {
-                                //console.log( 'Error: ' + result );
-                            });
-                        }
+                    ).fail(function(result) {
+                        //console.log( 'Error: ' + result );
                     });
-        }
+                }
+            });
 
             $('.cooked-layout-load-default').on('click', function(e) {
                 e.preventDefault();
@@ -348,6 +347,7 @@ var cookedSortableTouchHandler = function(event) {
                         });
                 }
             });
+        }
 
         // Cooked Select Wrappers
         if ($_CookedSelectFields.length) {

@@ -188,15 +188,14 @@ class Cooked_Admin_Enqueues {
                 ];
 
                 // Cooked Admin Style Assets
-                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/admin/js/cooked-functions' . $min . '.js', ['jquery'], COOKED_VERSION, true );
+                // Tooltips (Floating UI, vendored — see assets/vendor/floating-ui/README.md).
+                wp_register_script( 'cooked-floating-ui-core', COOKED_URL . 'assets/vendor/floating-ui/floating-ui.core.umd.min.js', [], '1.8.0', true );
+                wp_register_script( 'cooked-floating-ui-dom', COOKED_URL . 'assets/vendor/floating-ui/floating-ui.dom.umd.min.js', ['cooked-floating-ui-core'], '1.8.0', true );
+
+                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/admin/js/cooked-functions' . $min . '.js', ['jquery', 'cooked-floating-ui-dom'], COOKED_VERSION, true );
                 wp_register_script( 'cooked-migration', COOKED_URL . 'assets/admin/js/cooked-migration' . $min . '.js', ['jquery'], COOKED_VERSION, true );
                 wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/admin/css/style' . $min . '.css', [], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
-
-                // Tooltipster
-                wp_enqueue_script('cooked-tooltipster', COOKED_URL . 'assets/admin/js/tooltipster/tooltipster.bundle' . $min . '.js', ['jquery'], COOKED_VERSION, true );
-                wp_enqueue_style('cooked-tooltipster-core', COOKED_URL . 'assets/admin/css/tooltipster/tooltipster.bundle.min.css', [], COOKED_VERSION, 'screen' );
-                wp_enqueue_style('cooked-tooltipster-theme', COOKED_URL . 'assets/admin/css/tooltipster/plugins/tooltipster/sideTip/themes/tooltipster-sideTip-cooked' . $min . '.css', [], COOKED_VERSION, 'screen' );
 
                 // Cooked Admin Script
                 wp_localize_script('cooked-admin-functions', 'cooked_admin_functions_js_vars', $cooked_js_vars );

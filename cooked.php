@@ -480,7 +480,6 @@ final class Cooked_Plugin {
     private function includes() {
         require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
-        require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
         add_action( 'init', [ 'Cooked_Allergens', 'init' ] );
 

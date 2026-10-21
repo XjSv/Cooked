@@ -1,0 +1,3 @@
+.cooked-recipe-finder + .ts-wrapper .ts-control { overflow:visible !important; }
+.cooked-recipe-finder + .ts-wrapper.multi .ts-control > .item { text-shadow:none; background:#eee; color:#333; border:none; padding:3px 7px 4px; margin:0 0 3px; width:100%; box-sizing:border-box; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:move; }
+.cooked-recipe-finder + .ts-wrapper.multi .ts-control > .item.active { text-shadow:none; background:#f5f5f5; color:#666; border:none; }

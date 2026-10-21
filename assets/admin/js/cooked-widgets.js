@@ -8,15 +8,16 @@
     $('body').on( 'click', '.cooked-recipe-finder-show', function(e) {
         e.preventDefault();
         var thisFinderShowLink = $(this),
-            thisFinderShow = thisFinderShowLink.attr('id');
+            thisFinderID = thisFinderShowLink.attr('id').split( '-SHOW' )[0],
+            thisFinder = document.getElementById( thisFinderID );
 
-        thisFinderShow = thisFinderShow.split( '-SHOW' );
-        thisFinderID = thisFinderShow[0];
-        thisFinder = $( '#' + thisFinderID );
+        if ( ! thisFinder || thisFinder.tomselect ) {
+            return;
+        }
 
         thisFinderShowLink.hide();
 
-        thisFinder.selectize({
+        new TomSelect( thisFinder, {
             plugins: ['drag_drop'],
             valueField: 'id',
             labelField: 'title',
@@ -27,12 +28,8 @@
             hideSelected: true,
             closeAfterSelect: true,
             openOnFocus: false,
-            options: [],
             onInitialize: function() {
-                $( '#' + thisFinderID + '-selectized' ).focus();
-            },
-            onItemAdd: function() {
-                thisFinder.trigger('change');
+                this.focus();
             },
             render: {
                 option: function(item, escape) {
@@ -44,8 +41,6 @@
                 }
             },
             load: function (query, callback) {
-                this.refreshItems();
-                if (!query.length) return callback();
                 $.ajax({
                     url: cooked_widgets_js_vars.rest_url + 'wp/v2/cooked_recipe/',
                     type: 'GET',
@@ -58,22 +53,9 @@
                         callback();
                     },
                     success: function(res) {
-                        var item = {}, items = [];
-                        for (var key in res) {
-                            if (!res.hasOwnProperty(key)) continue;
-                            var obj = res[key];
-                            for (var prop in obj) {
-                                if (!obj.hasOwnProperty(prop)) continue;
-                                if (prop == 'id') {
-                                    var id = obj[prop];
-                                } else if (prop == 'title') {
-                                    var title = obj[prop].rendered;
-                                }
-                            }
-                            item = { id: id, title: title };
-                            items.push( item );
-                        }
-                        callback(items);
+                        callback( $.map( res, function( recipe ) {
+                            return { id: recipe.id, title: recipe.title.rendered };
+                        } ) );
                     }
                 });
             }

@@ -34,18 +34,19 @@ class Enqueues {
             'rest_url' => esc_url(get_rest_url()),
         ];
 
+        $min = COOKED_DEV ? '' : '.min';
+
         // Gonna need jQuery
         wp_enqueue_script( 'jquery' );
 
-        // Selectize (searchable select fields)
-        wp_enqueue_style( 'cooked-selectize', COOKED_URL . 'assets/vendor/selectize/selectize.css', [], '0.12.4' );
-        wp_enqueue_style( 'cooked-selectize-custom', COOKED_URL . 'assets/admin/css/cooked-selectize.css', [], COOKED_VERSION );
-        wp_enqueue_script( 'cooked-selectize', COOKED_URL . 'assets/vendor/selectize/selectize.min.js', ['jquery'], '0.15.2', true );
-        wp_enqueue_script( 'cooked-microplugin', COOKED_URL . 'assets/vendor/microplugin/microplugin.min.js', ['jquery'], '0.0.3', true );
+        // Tom Select (searchable select fields)
+        wp_enqueue_style( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.default' . $min . '.css', [], '2.6.2' );
+        wp_enqueue_style( 'cooked-tom-select-custom', COOKED_URL . 'assets/admin/css/cooked-tom-select.css', [ 'cooked-tom-select' ], COOKED_VERSION );
+        wp_register_script( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.complete' . $min . '.js', [], '2.6.2', true );
 
         // Cooked Widgets JS
-        wp_register_script( 'cooked-widgets', COOKED_URL . 'assets/admin/js/cooked-widgets.js', ['jquery'], COOKED_VERSION, true );
-        wp_localize_script( 'cooked-widgets', 'cooked_js_vars', $cooked_js_vars );
+        wp_register_script( 'cooked-widgets', COOKED_URL . 'assets/admin/js/cooked-widgets.js', ['jquery', 'cooked-tom-select'], COOKED_VERSION, true );
+        wp_localize_script( 'cooked-widgets', 'cooked_widgets_js_vars', $cooked_js_vars );
         wp_enqueue_script( 'cooked-widgets');
     }
 

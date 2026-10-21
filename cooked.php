@@ -490,7 +490,6 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-ajax.php';
         require_once COOKED_DIR . 'includes/class.cooked-functions.php';
         require_once COOKED_DIR . 'includes/class.cooked-widgets.php';
-        require_once COOKED_DIR . 'includes/class.cooked-plugin-extra.php';
         add_action( 'init', [ 'Cooked_Allergens', 'init' ] );
 
         if ( defined( 'WP_CLI' ) && WP_CLI ) {

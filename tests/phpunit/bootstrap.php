@@ -845,7 +845,6 @@ require_once __DIR__ . '/../../src/aliases.php';
  */
 require_once COOKED_DIR . 'includes/class.cooked-functions.php';
 require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
-require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
 require_once COOKED_DIR . 'includes/class.cooked-settings.php';
 require_once COOKED_DIR . 'includes/class.cooked-enqueues.php';
 require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';

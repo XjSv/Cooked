@@ -7,17 +7,19 @@
  * @since       1.12.0
  */
 
+namespace Cooked\Integrations;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Cooked_Multilingual Class
+ * Multilingual Class
  *
  * This class handles multilingual plugin support (Polylang, WPML, etc.).
  *
  * @since 1.12.0
  */
-class Cooked_Multilingual {
+class Multilingual {
 
     /**
      * Constructor

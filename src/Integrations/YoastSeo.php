@@ -1,49 +1,42 @@
 <?php
 /**
- * Cooked Rank Math SEO Support
+ * Cooked Yoast SEO Support
  *
  * @package     Cooked
- * @subpackage  Rank Math SEO Support
+ * @subpackage  Yoast SEO Support
  * @since       1.8.8
 */
+
+namespace Cooked\Integrations;
 
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Cooked_RankMathSEO Class
+ * YoastSeo Class
  *
- * This class handles Rank Math SEO support.
+ * This class handles Yoast SEO support.
  *
  * @since 1.8.8
  */
-class Cooked_RankMathSEO {
+class YoastSeo {
 
     private $variable_registered = false;
 
     public function __construct() {
         if (!$this->variable_registered) {
-            add_action('rank_math/vars/register_extra_replacements', [$this, 'register_rank_math_variables']);
+            add_action('wpseo_register_extra_replacements', [$this, 'cooked_register_extra_yoast_variables']);
         }
 
-        add_filter('rank_math/frontend/canonical', [$this, 'modify_browse_page_canonical_url'], 20, 2);
+        add_filter('wpseo_canonical', [$this, 'modify_browse_page_canonical_url'], 20, 2);
     }
 
-    public function register_rank_math_variables() {
-		rank_math_register_var_replacement(
-			'cooked_recipe_category',
-            [
-                'name'        => __( 'Recipe Category', 'cooked' ),
-                'description' => __( 'Current recipe category being viewed.', 'cooked' ),
-                'variable'    => 'cooked_recipe_category',
-                'example'     => $this->get_cooked_recipe_category(),
-            ],
-            [ $this, 'get_cooked_recipe_category' ]
-		);
+    public function cooked_register_extra_yoast_variables() {
+        wpseo_register_var_replacement( '%%cooked_recipe_category%%', [$this, 'get_cooked_recipe_category'], 'advanced', __( 'Current recipe category being viewed.', 'cooked' ) );
         $this->variable_registered = true;
-	}
+    }
 
-	/**
+    /**
      * Retrieves the current recipe category.
      *
      * @return string
@@ -69,7 +62,7 @@ class Cooked_RankMathSEO {
             return $canonical_url;
         }
 
-        $browse_page_id = Cooked_Multilingual::get_browse_page_id();
+        $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
         // Only modify for browse page with category.
         if (is_page($browse_page_id) &&
@@ -89,5 +82,4 @@ class Cooked_RankMathSEO {
 
         return $canonical_url;
     }
-
 }

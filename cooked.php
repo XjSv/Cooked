@@ -368,12 +368,10 @@ final class Cooked_Plugin {
      */
     public function initialize_plugin_support() {
         if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-            require_once COOKED_DIR . 'includes/class.cooked-yoastseo.php';
             self::$instance->yoastseo = new Cooked_YoastSEO();
         }
 
         if (in_array('seo-by-rank-math/rank-math.php', apply_filters('active_plugins', get_option('active_plugins')))) {
-            require_once COOKED_DIR . 'includes/class.cooked-rankmathseo.php';
             self::$instance->rankmathseo = new Cooked_RankMathSEO();
         }
     }
@@ -496,11 +494,10 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-functions.php';
         require_once COOKED_DIR . 'includes/class.cooked-widgets.php';
         require_once COOKED_DIR . 'includes/class.cooked-plugin-extra.php';
-        require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
         add_action( 'init', [ 'Cooked_Allergens', 'init' ] );
 
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
-            require_once COOKED_DIR . 'includes/class.cooked-cli.php';
+            \WP_CLI::add_command( 'cooked tools', 'Cooked_CLI_Tools_Command' );
         }
     }
 

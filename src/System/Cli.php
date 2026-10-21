@@ -7,6 +7,8 @@
  * @since       1.13.0
  */
 
+namespace Cooked\System;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -18,7 +20,7 @@ if ( ! defined( 'WP_CLI' ) || ! WP_CLI ) {
 /**
  * Run Cooked maintenance and migration tools.
  */
-class Cooked_CLI_Tools_Command {
+class Cli {
 
     /**
      * Run a Cooked migration/maintenance tool by name.
@@ -42,7 +44,7 @@ class Cooked_CLI_Tools_Command {
         }
 
         $tool_name = $args[0];
-        $result = Cooked_Updates::run_tool( $tool_name );
+        $result = \Cooked_Updates::run_tool( $tool_name );
 
         if ( is_wp_error( $result ) ) {
             \WP_CLI::error( $result->get_error_message() );
@@ -62,7 +64,7 @@ class Cooked_CLI_Tools_Command {
      * @param array $assoc_args Associative args.
      */
     public function list_tools( $args, $assoc_args ) {
-        $tools = Cooked_Updates::get_runnable_tools();
+        $tools = \Cooked_Updates::get_runnable_tools();
 
         if ( empty( $tools ) ) {
             \WP_CLI::log( __( 'No tools available.', 'cooked' ) );
@@ -81,5 +83,3 @@ class Cooked_CLI_Tools_Command {
         \WP_CLI\Utils\format_items( 'table', $rows, [ 'id', 'name', 'description' ] );
     }
 }
-
-\WP_CLI::add_command( 'cooked tools', 'Cooked_CLI_Tools_Command' );

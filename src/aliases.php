@@ -31,6 +31,10 @@ spl_autoload_register(
             'Cooked_Gutenberg'            => \Cooked\Integrations\Gutenberg::class,
             'Cooked_Elementor'            => \Cooked\Integrations\Elementor::class,
             'Cooked_Pixwell'              => \Cooked\Integrations\Pixwell::class,
+            'Cooked_Multilingual'         => \Cooked\Integrations\Multilingual::class,
+            'Cooked_YoastSEO'             => \Cooked\Integrations\YoastSeo::class,
+            'Cooked_RankMathSEO'          => \Cooked\Integrations\RankMathSeo::class,
+            'Cooked_CLI_Tools_Command'    => \Cooked\System\Cli::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

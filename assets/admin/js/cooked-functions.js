@@ -598,30 +598,6 @@ var cookedSortableTouchHandler = function(event) {
             });
         }
 
-        // Checkboxes
-        if ( $_CookedSettingsTabs.length || $_CookedRecipeTabs.length ) {
-            var greenSwitches = Array.prototype.slice.call(document.querySelectorAll('.cooked-switch'));
-            var redSwitches = Array.prototype.slice.call(document.querySelectorAll('.cooked-switch-red'));
-            var yellowSwitches = Array.prototype.slice.call(document.querySelectorAll('.cooked-switch-yellow'));
-            var graySwitches = Array.prototype.slice.call(document.querySelectorAll('.cooked-switch-gray'));
-
-            greenSwitches.forEach(function( html ) {
-                var greenSwitchery = new Switchery( html, { color: '#00c086', size: 'small' } );
-            });
-
-            redSwitches.forEach(function( html ) {
-                var redSwitchery = new Switchery( html, { color: '#d44d1f', size: 'small' } );
-            });
-
-            yellowSwitches.forEach(function( html ) {
-                var yellowSwitchery = new Switchery( html, { color: '#ffad18', size: 'small' } );
-            });
-
-            graySwitches.forEach(function( html ) {
-                var graySwitchery = new Switchery( html, { color: '#aaaaaa', size: 'small' } );
-            });
-        }
-
         // Settings Tabs
         if ($_CookedSettingsTabs.length) {
             var CookedSettingsTabHash = window.location.hash;

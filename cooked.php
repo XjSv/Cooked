@@ -40,7 +40,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/src/aliases.php';
 
-define( 'COOKED_DEV', false );
+if ( ! defined( 'COOKED_DEV' ) ) {
+    define( 'COOKED_DEV', false );
+}
 define( 'COOKED_VERSION', '2.0.0' );
 
 /**

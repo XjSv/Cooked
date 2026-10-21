@@ -190,8 +190,6 @@ class Enqueues {
                 wp_enqueue_script( 'jquery-ui-sortable' );
                 wp_enqueue_script( 'jquery-ui-slider' );
 
-                wp_enqueue_style( 'cooked-switchery', COOKED_URL . 'assets/vendor/switchery/switchery.min.css', [], '0.8.2' );
-                wp_enqueue_script( 'cooked-switchery', COOKED_URL . 'assets/vendor/switchery/switchery.min.js', [], '0.8.2', true );
                 wp_enqueue_script( 'cooked-conditions', COOKED_URL . 'assets/admin/js/cooked-conditions.js', [ 'jquery', 'backbone' ], COOKED_VERSION, true );
 
                 $wp_editor_roles_allowed = false;

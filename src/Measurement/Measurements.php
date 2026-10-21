@@ -7,32 +7,34 @@
  * @since       1.0.0
 */
 
+namespace Cooked\Measurement;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 use NXP\MathExecutor;
 
 /**
- * Cooked_Measurements Class
+ * Measurements Class
  *
  * This class handles the Cooked Measurements.
  *
  * @since 1.0.0
  */
-class Cooked_Measurements {
+class Measurements {
 
     public static function get() {
 
         // Use the "cooked_measurements" filter to add your own measurements.
         $measurements = apply_filters('cooked_measurements', [
             'g' => [
-				'singular_abbr' => _x( 'g', 'Grams Abbreviation (Singular)', 'cooked' ),
-				'plural_abbr' => _x( 'g', 'Grams Abbreviation (Plural)', 'cooked' ),
-				'singular' => __( 'gram', 'cooked' ),
-				'plural' => __( 'grams', 'cooked' ),
-				'system' => 'metric',
-				'variations' => [ 'g', 'g.', 'gram', 'grams' ],
-			],
+                'singular_abbr' => _x( 'g', 'Grams Abbreviation (Singular)', 'cooked' ),
+                'plural_abbr' => _x( 'g', 'Grams Abbreviation (Plural)', 'cooked' ),
+                'singular' => __( 'gram', 'cooked' ),
+                'plural' => __( 'grams', 'cooked' ),
+                'system' => 'metric',
+                'variations' => [ 'g', 'g.', 'gram', 'grams' ],
+            ],
             'kg' => [
                 'singular_abbr' => _x('kg', 'Kilograms Abbreviation (Singular)', 'cooked'),
                 'plural_abbr' => _x('kg', 'Kilograms Abbreviation (Plural)', 'cooked'),
@@ -553,7 +555,7 @@ class Cooked_Measurements {
                 try {
                     $mathExecutor = new MathExecutor();
                     return $mathExecutor->execute($expression);
-                } catch (Exception $e) {
+                } catch (\Exception $e) {
                     return 0;
                 }
             } else {

@@ -19,6 +19,7 @@ spl_autoload_register(
     static function ( string $class_name ): void {
         static $aliases = [
             'Cooked_Unit_Converter' => \Cooked\Measurement\UnitConverter::class,
+            'Cooked_Measurements'   => \Cooked\Measurement\Measurements::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

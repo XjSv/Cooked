@@ -36,6 +36,7 @@ spl_autoload_register(
             'Cooked_RankMathSEO'          => \Cooked\Integrations\RankMathSeo::class,
             'Cooked_CLI_Tools_Command'    => \Cooked\System\Cli::class,
             'Cooked_Admin_Menus'          => \Cooked\Admin\Menus::class,
+            'Cooked_Admin_Enqueues'       => \Cooked\Admin\Enqueues::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

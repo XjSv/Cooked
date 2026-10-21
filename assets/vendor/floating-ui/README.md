@@ -13,4 +13,4 @@
 
 Do not edit the `*.umd.min.js` files directly. To update, copy both new UMD builds
 from upstream (keep core and dom on matching versions) and bump the version in
-`includes/class.cooked-admin-enqueues.php` (`cooked-floating-ui-*` handles).
+`src/Admin/Enqueues.php` (`cooked-floating-ui-*` handles).

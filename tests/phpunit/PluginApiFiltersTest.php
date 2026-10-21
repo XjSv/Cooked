@@ -6,9 +6,6 @@ if ( ! class_exists( 'Cooked_Post_Types' ) ) {
 if ( ! class_exists( 'Cooked_Widgets' ) ) {
     require_once COOKED_DIR . 'includes/class.cooked-widgets.php';
 }
-if ( ! class_exists( 'Cooked_Delicious_Recipes' ) ) {
-    require_once COOKED_DIR . 'includes/class.cooked-delicious-recipes.php';
-}
 if ( ! class_exists( 'Cooked_Recipe_Maker_Recipes' ) ) {
     require_once COOKED_DIR . 'includes/class.cooked-recipe-maker.php';
 }

@@ -229,7 +229,6 @@ class Cooked_Ajax {
     public function import_recipes() {
         self::require_settings_ajax( 'cooked_import_recipes' );
 
-        require_once COOKED_DIR . 'includes/class.cooked-delicious-recipes.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipe-maker.php';
 
         $bulk_amount = 10;

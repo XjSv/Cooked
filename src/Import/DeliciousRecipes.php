@@ -7,17 +7,19 @@
  * @since       1.8.2
 */
 
+namespace Cooked\Import;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Cooked_Delicious_Recipes Class
+ * DeliciousRecipes Class
  *
  * This class handles the Delicious Recipes import functionality.
  *
  * @since 1.8.2
  */
-class Cooked_Delicious_Recipes {
+class DeliciousRecipes {
 
     /**
      * The import type.
@@ -59,7 +61,7 @@ class Cooked_Delicious_Recipes {
             ],
         ];
 
-        $_recipes = new WP_Query( $args );
+        $_recipes = new \WP_Query( $args );
 
         if (!empty($_recipes->posts)) {
             foreach ($_recipes->posts as $rid) {
@@ -106,7 +108,7 @@ class Cooked_Delicious_Recipes {
         if (isset($_cooked_settings['default_content'])) {
             $default_content = wp_unslash($_cooked_settings['default_content']);
         } else {
-            $default_content = Cooked_Recipes::default_content();
+            $default_content = \Cooked_Recipes::default_content();
         }
 
         // Insert new post meta data.

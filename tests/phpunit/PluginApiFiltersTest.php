@@ -3,9 +3,6 @@
 if ( ! class_exists( 'Cooked_Post_Types' ) ) {
     require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
 }
-if ( ! class_exists( 'Cooked_Widgets' ) ) {
-    require_once COOKED_DIR . 'includes/class.cooked-widgets.php';
-}
 
 class PluginApiFiltersTest extends FilterTestCase {
 

@@ -117,6 +117,12 @@
                 content.style.display = content.id === 'cooked-settings-tab-content-' + section ? 'block' : 'none';
             } );
             if ( switched.current ) {
+                var content = document.querySelector( '.cooked-admin-content' );
+                if ( content ) {
+                    content.classList.remove( 'is-entering' );
+                    void content.offsetWidth;
+                    content.classList.add( 'is-entering' );
+                }
                 scrollToContent();
             }
             switched.current = true;

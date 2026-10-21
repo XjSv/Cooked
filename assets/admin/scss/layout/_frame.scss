@@ -133,6 +133,7 @@
 }
 
 .cooked-admin-page-tab {
+    transition: color 200ms ease, border-color 200ms ease, padding 150ms ease;
     padding: 14px 0 12px;
     border-bottom: 3px solid transparent;
     color: var(--cooked-color-text);
@@ -182,6 +183,7 @@
 }
 
 #cooked-admin-app .cooked-admin-section.components-button {
+    transition: background-color 200ms ease, color 200ms ease, outline-color 200ms ease;
     display: flex;
     gap: 12px;
     width: 100%;
@@ -204,6 +206,7 @@
 }
 
 .cooked-admin-section .cooked-icon {
+    transition: color 200ms ease;
     width: 18px;
     color: var(--cooked-color-text-muted);
     text-align: center;
@@ -347,4 +350,39 @@
 #cooked-admin-app :focus,
 #cooked-admin-app :focus-visible {
     outline-color: var(--cooked-color-accent-strong);
+}
+
+// Smooth hovers on the frame's buttons and links.
+#cooked-admin-app .components-button,
+#cooked-admin-app a {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, outline-color 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+#cooked-admin-app .cooked-admin-section.components-button:hover:not(.is-active) {
+    background-color: var(--cooked-color-accent-soft);
+}
+
+// Fade the content in when switching sections.
+.cooked-admin-content.is-entering {
+    animation: cooked-section-enter 250ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@keyframes cooked-section-enter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
 }

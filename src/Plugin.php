@@ -242,6 +242,11 @@ final class Plugin {
             add_action( 'init', [self::$instance, 'load_textdomain'] );
             add_action( 'plugins_loaded', [self::$instance, 'check_plugin_update'] );
 
+            if ( COOKED_DEV ) {
+                add_filter( 'style_loader_src', [ self::class, 'dev_asset_version' ] );
+                add_filter( 'script_loader_src', [ self::class, 'dev_asset_version' ] );
+            }
+
             self::$instance->includes();
             self::$instance->roles = new \Cooked_Roles();
             self::$instance->admin_menus = new \Cooked_Admin_Menus();
@@ -465,6 +470,24 @@ final class Plugin {
         if ( defined( 'WP_CLI' ) && WP_CLI ) {
             \WP_CLI::add_command( 'cooked tools', 'Cooked_CLI_Tools_Command' );
         }
+    }
+
+    /**
+     * With COOKED_DEV on, version Cooked's own CSS and JS by their modification time so the
+     * browser picks up every rebuild instead of a cached copy.
+     *
+     * @since 2.0.0
+     * @param string $src Asset URL.
+     * @return string
+     */
+    public static function dev_asset_version( $src ) {
+        if ( ! is_string( $src ) || ! str_starts_with( $src, COOKED_URL ) ) {
+            return $src;
+        }
+
+        $path = COOKED_DIR . strtok( substr( $src, strlen( COOKED_URL ) ), '?' );
+
+        return file_exists( $path ) ? add_query_arg( 'ver', filemtime( $path ), $src ) : $src;
     }
 
     /**

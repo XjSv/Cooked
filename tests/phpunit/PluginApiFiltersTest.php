@@ -1,8 +1,5 @@
 <?php
 
-if ( ! class_exists( 'Cooked_Roles' ) ) {
-    require_once COOKED_DIR . 'includes/class.cooked-roles.php';
-}
 if ( ! class_exists( 'Cooked_Taxonomies' ) ) {
     require_once COOKED_DIR . 'includes/class.cooked-taxonomies.php';
 }

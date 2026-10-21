@@ -7,10 +7,12 @@
  * @since       1.0.0
 */
 
+namespace Cooked\User;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
-class Cooked_Roles {
+class Roles {
 
     public static function add_roles() {
         $caps = apply_filters('cooked_recipe_editor_caps', [
@@ -31,7 +33,7 @@ class Cooked_Roles {
 
         if (class_exists('WP_Roles')) {
             if (!isset($wp_roles)) {
-                $wp_roles = new WP_Roles();
+                $wp_roles = new \WP_Roles();
             }
         }
 
@@ -63,7 +65,7 @@ class Cooked_Roles {
 
         if (class_exists('WP_Roles')) {
             if (!isset($wp_roles)) {
-                $wp_roles = new WP_Roles();
+                $wp_roles = new \WP_Roles();
             }
         }
 
@@ -85,7 +87,7 @@ class Cooked_Roles {
 
         if (class_exists('WP_Roles')) {
             if (!isset($wp_roles)) {
-                $wp_roles = new WP_Roles();
+                $wp_roles = new \WP_Roles();
             }
         }
 

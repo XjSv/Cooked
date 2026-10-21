@@ -144,7 +144,6 @@ class UpdatesTest extends FilterTestCase {
     }
 
     public function test_core_activation_flushes_rewrite_rules() {
-        require_once COOKED_DIR . 'includes/class.cooked-roles.php';
         require_once COOKED_DIR . 'includes/class.cooked-taxonomies.php';
         require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
 

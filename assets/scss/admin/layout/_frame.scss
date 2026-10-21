@@ -23,6 +23,7 @@
 .cooked-admin-frame.components-card > div {
     display: flow-root; // keeps the sticky wrapper's negative margin from collapsing into the card
     overflow: visible;
+    width: 100%; // WordPress Card's Content wrapper has a constrained width; force it to fill the frame
 }
 
 /* Header */
@@ -35,7 +36,8 @@
     z-index: 20;
     margin: -10px -1px 0;
     padding: 10px 1px 0;
-    transition: background-color 150ms ease;
+    // No transition: header height snaps instantly (see comment below), so
+    // a background-color transition here would desync and cause a blink.
 }
 
 .cooked-admin-sticky.is-stuck {
@@ -53,9 +55,11 @@
     box-shadow: 0 0 0 1px var(--cooked-color-border), 0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
+// No transition on the header's padding: is-stuck changes this sticky element's
+// height, and animating it makes scroll anchoring fight it, so the page glides
+// backwards while it plays. Everything in the header snaps together instead.
 .cooked-admin-frame-header.components-card__header {
     padding: 24px 32px;
-    transition: padding 150ms ease;
 }
 
 .cooked-admin-sticky.is-stuck .cooked-admin-frame-header.components-card__header {
@@ -148,8 +152,11 @@
     border-bottom: 1px solid var(--cooked-color-border);
 }
 
+// Padding is not in this transition list: the stuck state tightens it, and if it
+// animates the sticky header's height the scroll glide the frame header had
+// returns here. Colours only.
 .cooked-admin-page-tab {
-    transition: color 200ms ease, border-color 200ms ease, padding 150ms ease;
+    transition: color 200ms ease, border-color 200ms ease;
     padding: 14px 0 12px;
     border-bottom: 3px solid transparent;
     color: var(--cooked-color-text);

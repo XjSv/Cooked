@@ -1,0 +1,461 @@
+/* Settings Columns */
+#cooked_recipe_settings .cooked-setting-column-14 {
+    position: relative;
+    width: 25%;
+    float: left;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+#cooked_recipe_settings .cooked-setting-column-13 {
+    position: relative;
+    width: 33%;
+    float: left;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+#cooked_recipe_settings .cooked-setting-column-23 {
+    position: relative;
+    width: 66%;
+    float: left;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+#cooked_recipe_settings .cooked-setting-column-12 {
+    position: relative;
+    width: 50%;
+    float: left;
+    padding-right: 20px;
+    box-sizing: border-box;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14 input[type="text"],
+#cooked_recipe_settings .cooked-setting-column-13 input[type="text"],
+#cooked_recipe_settings .cooked-setting-column-23 input[type="text"],
+#cooked_recipe_settings .cooked-setting-column-12 input[type="text"],
+#cooked_recipe_settings .recipe-setting-block input[type="text"].cooked-shortcode-field {
+    width: 95%;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14 select,
+#cooked_recipe_settings .cooked-setting-column-13 select,
+#cooked_recipe_settings .cooked-setting-column-23 select,
+#cooked_recipe_settings .cooked-setting-column-12 select,
+#cooked_recipe_settings .cooked-setting-column-14 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-13 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-12 .cooked-select-wrapper {
+    width: 100%;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14.cooked-tb-col {
+    padding: 0;
+}
+
+#cooked-welcome-screen {
+    padding: 15px 50px 0 30px;
+    position: relative;
+}
+
+#cooked-welcome-screen .cooked-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#cooked-welcome-screen .cooked-badge img {
+    border: none;
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 0;
+}
+
+#cooked-welcome-screen .about-text {
+    margin-bottom: 40px;
+    line-height: 1.8;
+    font-size: 17px;
+    margin-right: 260px;
+}
+
+#cooked-welcome-screen .about-wrap {
+    margin: 25px auto 0;
+    max-width: 1000px;
+}
+
+#cooked-welcome-screen .about-wrap h1 {
+    font-size: 2.25rem;
+}
+
+#cooked-welcome-screen .about-wrap p {
+    font-size: 1rem;
+    margin: 0 0 2rem;
+    line-height: 1.7rem;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel {
+    background: #fff;
+    padding: 30px 30px 15px 30px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 4px rgba(0,0,0,.05),0 8px 8px rgba(0,0,0,.05),0 32px 32px rgba(0,0,0,.05),0 64px 64px rgba(0,0,0,.05);
+}
+
+#cooked-welcome-screen #cooked-welcome-panel img.cooked-welcome-banner {
+    border: none;
+    display: block;
+    padding: 0;
+    margin: 0 0 30px;
+    box-sizing: border-box;
+    border-radius: 5px 5px 0 0;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel .cooked-welcome-panel-intro {
+    text-align: center;
+    margin: 0 50px 2rem;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel .cooked-welcome-panel-intro h1 {
+    font-size: 1.75rem;
+    margin: 0 0 1rem;
+    padding: 0;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel .cooked-welcome-panel-intro p {
+    max-width: 600px;
+    font-size: 1.1rem;
+    line-height: 1.8rem;
+    margin: 0 auto 2rem;
+    padding: 0;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel a {
+    text-decoration: none;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column {
+    display: block !important;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column > strong {
+    font-size: 1rem;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 {
+    font-size: 1.75rem;
+    margin: 0 0 1rem;
+    position: relative;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 a {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 a i.fa {
+    position: relative;
+    top: 1px;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h4 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    position: relative;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h4 a {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h4 a i.fa {
+    position: relative;
+    top: 1px;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-full {
+    width: 100%;
+    padding-right: 0;
+    float: none;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-last {
+    width: 70%;
+    padding-right: 0;
+    float: right;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column .fa-external-link {
+    color: #888;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-content {
+    min-height: 1px;
+    padding: 10px 50px 20px;
+    margin: 0;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel .cooked-welcome-panel-column-container {
+    display: flex;
+    justify-content: between !important;
+    padding: 0 !important;
+    flex-wrap: wrap;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column {
+    box-sizing: border-box;
+    padding-right: 2rem;
+    width: 30%;
+}
+
+#cooked-welcome-screen .cooked-pro-features {
+    width: 85%;
+    margin: 0 auto;
+    padding: 0 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list {
+    margin-right: 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list li {
+    line-height: 1.7;
+    position: relative;
+    margin-right: 0;
+    border-top: 1px solid #e5e5e5;
+    padding: 8px 0 4px 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child {
+    border: none;
+    padding-top: 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.new,
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.tweak,
+#cooked-welcome-screen ul.cooked-whatsnew-list em.fix {
+    position: absolute;
+    font-style: normal;
+    display: inline-block;
+    background: #aaa;
+    text-transform: uppercase;
+    top: 11px;
+    left: 0;
+    color: #fff;
+    font-weight: 600;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-align: center;
+    width: 38px;
+    border-radius: 3px;
+    font-size: 10px;
+    line-height: 19px;
+    height: 19px;
+    padding: 0 6px;
+    margin: 0 6px 0 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child strong.new,
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child strong.tweak,
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child em.fix {
+    top: 3px;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.new {
+    background: #56C477;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.tweak {
+    background: #0073aa;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list em.fix {
+    background: #ffad10;
+}
+
+#cooked-welcome-screen ul li.cooked-pro i.cooked-icon {
+    color: #ffad10;
+}
+
+#cooked-welcome-screen ul li.cooked-pro a {
+    font-weight: 600;
+    color: #ffad10;
+}
+
+#cooked-welcome-screen ul li.cooked-pro a:hover {
+    color: #D3910F;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro {
+    margin-bottom: 0;
+    flex: 1 0 auto;
+    width: 33.333%;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro li {
+    padding-left: 0;
+    font-size: 1.15rem;
+    font-weight: 400;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro li i.cooked-icon-star {
+    color: #ffad10;
+    margin: 0 7px 0 0;
+    font-size: 19px;
+    position: relative;
+    top: 1px;
+}
+
+#cooked-welcome-screen .cooked-welcome-bottom {
+    text-align: center;
+    background: #f9f9f9;
+    margin: 30px -80px -15px;
+    border-top: 1px solid #f1f1f1;
+}
+
+#cooked-welcome-screen .cooked-pro-button {
+    display: inline-block;
+    clear: both;
+    text-align: center;
+    width: auto;
+    margin: 30px auto;
+    padding: 20px 25px 21px;
+    font-size: 1.25rem;
+    line-height: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: #ffad10;
+    border-radius: 50px;
+}
+
+#cooked-welcome-screen .cooked-pro-button:hover {
+    background: #e08704;
+}
+
+#cooked-welcome-screen .cooked-coupon-code {
+    color: #4c5e65;
+    display: inline-block;
+    font-size: 17px;
+    padding: 0 0 0 1.5rem;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro {
+    @media screen and (max-width:1050px) {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro:first-child {
+    @media screen and (max-width:1050px) {
+        margin-top: 10px;
+    }
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro li:first-child {
+    @media screen and (max-width:1050px) {
+        border-top: 1px solid #e5e5e5;
+        padding-top: 8px;
+    }
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro:first-child li:first-child {
+    @media screen and (max-width:1050px) {
+        border: none;
+        padding-top: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-pro-features {
+    @media screen and (max-width:870px) {
+        width: 90%;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column {
+    @media screen and (max-width:870px) {
+        padding-right: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-last {
+    @media screen and (max-width:870px) {
+        width: 100%;
+        padding-top: 20px;
+    }
+}
+
+#cooked-welcome-screen .about-wrap {
+    @media screen and (max-width:870px) {
+        margin-top: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel .cooked-welcome-panel-column li {
+    @media screen and (max-width:870px) {
+        display: block;
+    }
+}
+
+#cooked-welcome-screen .cooked-pro-features {
+    @media screen and (max-width:782px) {
+        width: 100%;
+    }
+}
+
+#cooked-welcome-screen {
+    @media screen and (max-width:782px) {
+        padding: 15px 40px 0 30px;
+    }
+}
+
+#cooked-welcome-screen .cooked-badge {
+    @media screen and (max-width:782px) {
+        display: none;
+    }
+}
+
+#cooked-welcome-screen .about-wrap h1,
+#cooked-welcome-screen .about-text {
+    @media screen and (max-width:782px) {
+        margin-right: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 a {
+    @media screen and (max-width:782px) {
+        display: block;
+        position: relative;
+    }
+}
+
+#cooked-welcome-screen #cooked-welcome-panel img.cooked-welcome-banner {
+    @media screen and (max-width:500px) {
+        display: none;
+    }
+}
+
+#cooked-welcome-screen .about-wrap h1 {
+    @media screen and (max-width:500px) {
+        font-size: 1.8rem;
+    }
+}
+
+#cooked-welcome-screen .about-text {
+    @media screen and (max-width:500px) {
+        font-size: 15px;
+    }
+}

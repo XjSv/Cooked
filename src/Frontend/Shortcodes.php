@@ -593,7 +593,7 @@ class Shortcodes {
 
         $html .= '</div>';
 
-        wp_enqueue_style( 'cooked-gallery' );
+        wp_enqueue_style( 'cooked-photoswipe' );
         wp_enqueue_script( 'cooked-gallery' );
 
         return $html;

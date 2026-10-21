@@ -1,0 +1,405 @@
+/* Ingredients Builder */
+#cooked_recipe_settings .cooked-ingredient-headers {
+    display: block;
+    padding: 5px 25px 0 35px;
+}
+
+#cooked_recipe_settings .cooked-ingredient-headers span {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.03rem;
+    text-transform: uppercase;
+    color: #0085ba;
+    box-sizing: border-box;
+    display: inline-block;
+    float: left;
+}
+
+#cooked_recipe_settings .cooked-ingredient-headers span.cooked-ingredient-header-amount {
+    width: 15%;
+}
+
+#cooked_recipe_settings .cooked-ingredient-headers span.cooked-ingredient-header-measurement {
+    width: 20%;
+}
+
+#cooked_recipe_settings .cooked-ingredient-headers span.cooked-ingredient-header-item {
+    width: 65%;
+}
+
+#cooked-ingredients-builder {
+    margin: 0 0 20px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block {
+    display: block;
+    padding: 5px 45px 5px 35px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block:hover {
+    background: #eee;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block input[type="text"],
+#cooked-ingredients-builder .cooked-ingredient-block input[type="number"],
+#cooked-ingredients-builder .cooked-ingredient-block select {
+    margin: 0;
+    display: block;
+    top: 0;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > div {
+    display: inline-block;
+    float: left;
+    box-sizing: border-box;
+    padding-right: 10px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > div input[type="text"] {
+    width: 100%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-amount {
+    width: 15%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-measurement {
+    width: 20%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-measurement .cooked-select-wrapper {
+    width: 100%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-measurement .cooked-select-wrapper select {
+    width: 100%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-substitution-fields > .cooked-ingredient-measurement .cooked-select-wrapper {
+    width: 100%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-substitution-fields > .cooked-ingredient-measurement .cooked-select-wrapper select {
+    width: 100%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-ingredient-name {
+    width: 65%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-name {
+    width: 100%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > div small.cooked-input-ex {
+    display: block;
+    padding: 5px 0 0 2px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block {
+    margin: 0;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block i.cooked-icon-drag {
+    cursor: move;
+    color: #ccc;
+    font-size: 32px;
+    position: absolute;
+    top: 5px;
+    left: 1px;
+    touch-action: none;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block:hover i.cooked-icon-drag {
+    color: #888;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block.ui-sortable-helper {
+    background: #f5f5f5;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block.ui-sortable-placeholder {
+    visibility: visible !important;
+    background: #eee;
+    display: block;
+    width: 100%;
+    height: 43px;
+    border-top: 6px solid #fff;
+    border-bottom: 6px solid #fff;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient {
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    top: 14px;
+    right: 11px;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient .cooked-icon {
+    color: #fff;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-delete-ingredient .cooked-icon {
+    color: #888;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient .cooked-icon:hover {
+    color: #de2020;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-ingredient-heading {
+    margin: 10px 0;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block.cooked-ingredient-heading > div input[type="text"] {
+    padding: 0px 7px;
+    font-size: 16px;
+    background: #f9f9f9;
+    font-weight: 600;
+}
+
+#cooked-directions-builder {
+    margin: 0 0 20px;
+}
+
+#cooked-directions-builder .cooked-direction-block {
+    display: block;
+    padding: 15px 25px 15px 35px;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-heading {
+    padding: 5px 25px 5px 35px;
+}
+
+#cooked-directions-builder .cooked-direction-block:hover {
+    background: #f5f5f5;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-heading:hover {
+    background: #eee;
+}
+
+#cooked-directions-builder .cooked-direction-block textarea {
+    margin: 0;
+    display: block;
+    height: 250px;
+    top: 0;
+}
+
+#cooked-directions-builder .cooked-direction-block > div {
+    display: inline-block;
+    float: left;
+    box-sizing: border-box;
+    padding-right: 15px;
+}
+
+#cooked-directions-builder .cooked-direction-block > div:last-child {
+    padding: 0;
+}
+
+#cooked-directions-builder .cooked-direction-block > div input[type="text"] {
+    width: 100%;
+}
+
+#cooked-directions-builder .cooked-direction-block .mce-statusbar {
+    display: none;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image {
+    width: 135px;
+    position: absolute;
+    top: 15px;
+    left: 35px;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image img {
+    cursor: pointer;
+    display: none;
+    border-radius: 3px;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image .cooked-direction-img-placeholder {
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 3px;
+    width: 100%;
+    padding-bottom: 100%;
+    background: none;
+    border: 2px dashed #ddd;
+    border-radius: 3px;
+    margin-top: 15px;
+}
+
+#cooked-directions-builder .cooked-direction-block:hover > .cooked-direction-image .cooked-direction-img-placeholder {
+    background: none;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image .cooked-direction-img-placeholder:hover {
+    background: #ddd;
+    border: 2px solid #ddd;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image .direction-image-button {
+    width: 100%;
+    text-align: center;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image .remove-image-button {
+    display: none;
+    position: absolute;
+    top: 43px;
+    right: 15px;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image .remove-image-button {
+    display: inline-block;
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image .remove-image-button:hover {
+    background: #ff0100;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 15px 0 0;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-image.cooked-has-image .cooked-direction-img-placeholder {
+    display: none;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-content {
+    width: 100%;
+    padding-left: 175px;
+    padding-right: 175px;
+}
+
+#cooked-directions-builder .cooked-direction-block .cooked-direction-number {
+    opacity: 0.4;
+    position: absolute;
+    display: inline-block;
+    font-weight: 800;
+    top: 17px;
+    left: 35px;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number > .cooked-direction-image {
+    left: 65px;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number > .cooked-direction-content {
+    padding-left: 175px;
+    padding-right: 175px;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-has-number-wide > .cooked-direction-content {
+    padding-left: 185px;
+    padding-right: 175px;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-heading-name {
+    width: 100%;
+}
+
+#cooked-directions-builder .cooked-direction-block {
+    margin: 0;
+}
+
+#cooked-directions-builder .cooked-direction-block i.cooked-icon-drag {
+    cursor: move;
+    color: #ccc;
+    font-size: 32px;
+    position: absolute;
+    top: 13px;
+    left: 1px;
+    touch-action: none;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-heading i.cooked-icon-drag {
+    top: 5px;
+}
+
+#cooked-directions-builder .cooked-direction-block:hover i.cooked-icon-drag {
+    color: #888;
+}
+
+#cooked-directions-builder .cooked-direction-block.ui-sortable-helper {
+    background: #f5f5f5;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#cooked-directions-builder .cooked-direction-block.ui-sortable-placeholder {
+    visibility: visible !important;
+    background: #eee;
+    display: block;
+    width: 100%;
+    height: 280px;
+    border-top: 6px solid #fff;
+    border-bottom: 6px solid #fff;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-heading.ui-sortable-placeholder {
+    height: 43px;
+}
+
+#cooked-directions-builder .cooked-direction-block .cooked-delete-direction {
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    right: 14px;
+}
+
+#cooked-directions-builder .cooked-direction-block .cooked-delete-direction .cooked-icon {
+    color: #fff;
+}
+
+#cooked-directions-builder .cooked-direction-block:hover .cooked-delete-direction .cooked-icon {
+    color: #888;
+}
+
+#cooked-directions-builder .cooked-direction-block .cooked-delete-direction .cooked-icon:hover {
+    color: #de2020;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video {
+    width: 135px;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-heading {
+    margin: 10px 0;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-heading > div input[type="text"] {
+    padding: 0px 7px;
+    font-size: 16px;
+    background: #f9f9f9;
+    font-weight: 600;
+    top: 0;
+    margin: 0;
+}
+
+#cooked-directions-builder .cooked-direction-block .cooked-delete-direction {
+    top: 16px;
+}
+
+#cooked-directions-builder .cooked-direction-block.cooked-direction-heading .cooked-delete-direction {
+    top: 14px;
+}

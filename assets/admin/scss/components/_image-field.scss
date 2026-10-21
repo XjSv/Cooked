@@ -1,0 +1,37 @@
+/* Settings image field */
+.cooked-settings-image-field {
+    position: relative;
+    display: inline-block;
+    max-width: 150px;
+}
+
+.cooked-settings-image-field .cooked-settings-image-preview-img {
+    display: none;
+    width: 100%;
+    height: auto;
+    margin: 10px 0 0;
+    border-radius: 3px;
+}
+
+.cooked-settings-image-field .cooked-settings-image-remove {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+    border-radius: 3px;
+}
+
+.cooked-settings-image-field.cooked-has-image .cooked-settings-image-remove {
+    display: inline-block;
+}
+
+.cooked-settings-image-field.cooked-has-image .cooked-settings-image-remove:hover {
+    background: #ff0100;
+}
+
+.cooked-settings-image-field.cooked-has-image .cooked-settings-image-preview-img {
+    display: block;
+}

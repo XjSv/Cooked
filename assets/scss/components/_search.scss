@@ -1,0 +1,444 @@
+/* Search Box */
+.cooked-recipe-search {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    display: block;
+    border: 1px solid transparent;
+    position: relative;
+}
+
+.cooked-recipe-search .cooked-field-wrap,
+.cooked-recipe-search .cooked-fields-wrap {
+    display: inline-block;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0 1% 0 0;
+}
+
+.cooked-recipe-search .cooked-fields-wrap {
+    margin: 0;
+}
+
+.cooked-recipe-search .cooked-browse-select {
+    display: block;
+    cursor: pointer;
+    position: relative;
+    border-radius: 3px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    font-size: 1rem;
+    line-height: 3rem;
+    height: auto;
+    padding: 0 1rem;
+}
+
+.cooked-recipe-search .cooked-browse-select:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.cooked-recipe-search .cooked-browse-select .cooked-field-title {
+    font-size: 0.9rem;
+    vertical-align: top;
+}
+
+.cooked-recipe-search .cooked-taxonomy-selected {
+    border-radius: 3px;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap {
+    background: #f5f5f5;
+    position: absolute;
+    top: 0;
+    height: 3rem;
+    width: 12rem;
+    display: inline-block;
+    margin: 0 1px 0 0;
+    right: 3.5rem;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap > select {
+    margin: 0;
+    box-shadow: none;
+    position: relative;
+    width: 100%;
+    background: transparent;
+    cursor: pointer;
+    font-size: 0.9rem;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    height: 100%;
+    border-radius: 0;
+    display: inline-block;
+    padding: 0 1.25rem;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap:hover {
+    background: #eee;
+}
+
+.cooked-recipe-search input[type="text"] {
+    margin: 0;
+    vertical-align: initial;
+    box-shadow: none;
+    display: inline-block;
+    box-sizing: border-box;
+    background: #fff;
+    width: 100%;
+    height: 3rem;
+    padding: 0 1rem;
+    font-size: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-right: none;
+}
+
+.cooked-recipe-search .cooked-3-search-fields > *,
+.cooked-recipe-search .cooked-4-search-fields > * {
+    float: left;
+}
+
+.cooked-recipe-search .cooked-field-wrap-select {
+    position: relative;
+}
+
+.cooked-recipe-search .cooked-field-wrap-select:before,
+.cooked-recipe-search .cooked-sortby-wrap:before {
+    content: "\f00b";
+    opacity: 0.25;
+    font-family: "CookedIcons";
+    font-size: 0.75rem;
+    position: absolute;
+    top: 50%;
+    right: .75rem;
+    line-height: 1.25rem;
+    height: 1.25rem;
+    margin-top: -0.5rem;
+}
+
+.cooked-recipe-search .cooked-field-wrap-select:hover:before,
+.cooked-recipe-search .cooked-sortby-wrap:hover:before {
+    opacity: 0.75;
+    margin-top: -0.5rem;
+}
+
+.cooked-recipe-search .cooked-fields-wrap {
+    padding-right: 3.5rem;
+    position: relative;
+}
+
+.cooked-recipe-search .cooked-fields-wrap > .cooked-field-wrap-select {
+    width: 14%;
+}
+
+.cooked-recipe-search .cooked-fields-wrap > .cooked-browse-search {
+    width: 85%;
+    max-width: 85%;
+    margin: 0;
+}
+
+.cooked-recipe-search.cooked-search-no-sorting.cooked-search-no-browse .cooked-fields-wrap > .cooked-browse-search {
+    width: 100%;
+}
+
+.cooked-recipe-search .cooked-browse-search-button {
+    position: absolute;
+    top: 0;
+    right: 1px;
+    width: 3.5rem;
+    text-decoration: none;
+    font-size: 1rem;
+    text-align: center;
+    color: #fff;
+    line-height: 3rem;
+    height: 3rem;
+}
+
+.cooked-recipe-search .cooked-browse-search-button:hover {
+    color: #fff;
+    text-decoration: none;
+}
+
+.cooked-recipe-search .cooked-browse-select-block {
+    display: flex;
+    color: inherit;
+    cursor: default;
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+    box-sizing: border-box;
+    z-index: 99;
+    position: absolute;
+    width: auto;
+    background: #fff;
+    top: 4rem;
+    left: -10px;
+    margin: 0;
+    line-height: 1.5rem;
+    border-radius: 6px;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column {
+    display: block;
+    width: 25%;
+    min-width: 25%;
+    box-sizing: border-box;
+    padding: 0 0.75rem;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div {
+    max-height: 16rem;
+    overflow: auto;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div > span {
+    display: block;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > span,
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div > a {
+    display: block;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > span.cooked-tax-column-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+    padding: 0 10px 0.6rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div > a {
+    line-height: 1.6rem;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div > span.cooked-tax-sub-item {
+    margin-left: 0.75rem;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column i.cooked-icon {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.cooked-recipe-search .cooked-fields-wrap.cooked-1-search-fields .cooked-browse-select-block {
+    width: 170%;
+    padding: 1.5rem;
+}
+
+.cooked-recipe-search .cooked-fields-wrap.cooked-1-search-fields .cooked-browse-select-block .cooked-tax-column {
+    width: 100%;
+    padding: 0;
+}
+
+.cooked-recipe-search .cooked-browse-select.cooked-active .cooked-browse-select-block {
+    visibility: visible;
+    opacity: 1;
+    transform: translate3d(0, -1px, 0);
+}
+
+.cooked-recipe-search .cooked-browse-select-block {
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 4px 4px rgba(0, 0, 0, 0.05), 0 8px 8px rgba(0, 0, 0, 0.05), 0 16px 16px rgba(0, 0, 0, 0.05), 0 32px 32px rgba(0, 0, 0, 0.05), 0 64px 64px rgba(0, 0, 0, 0.05);
+}
+
+.cooked-browse-select-inline-block {
+    display: flex;
+    color: inherit;
+    cursor: default;
+    visibility: visible;
+    opacity: 1;
+    box-sizing: border-box;
+    z-index: 99;
+    position: relative;
+    width: auto;
+    background: #fff;
+    margin: 10px 2px 3rem;
+    line-height: 1.5rem;
+    border-radius: 6px;
+    padding: 1.5rem;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 0.75rem;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > div {
+    max-height: 16rem;
+    overflow: auto;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > div > span {
+    display: block;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > span,
+.cooked-browse-select-inline-block .cooked-tax-column > div > a {
+    display: block;
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > span.cooked-tax-column-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+    padding: 0 10px 0.6rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > div > a {
+    line-height: 1.6rem;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > div > span.cooked-tax-sub-item {
+    margin-left: 0.75rem;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column i.cooked-icon {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.cooked-browse-select-inline-block {
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.15);
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap {
+    padding: 0;
+    display: block;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap > .cooked-browse-search {
+    width: 100%;
+    max-width: 100%;
+    border-right: 1px solid rgba(0, 0, 0, 0.15);
+    margin: 3% 0;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-1-search-fields .cooked-browse-select-block {
+    width: 100%;
+    left: 0;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap > .cooked-field-wrap-select {
+    display: block;
+    width: 100%;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-sortby-wrap {
+    display: block;
+    position: relative;
+    width: 67%;
+    right: auto;
+    top: auto;
+    float: left;
+    margin: 0;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-sortby-wrap > select {
+    position: absolute;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    margin: 0;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-browse-search-button {
+    width: 30%;
+    right: auto;
+    position: relative;
+    display: block;
+    float: right;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-browse-select-block {
+    top: 3rem;
+    left: 0;
+    max-height: 16rem;
+    overflow: auto;
+    transform: translate3d(0, -1px, 0);
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-1-search-fields .cooked-browse-select-block {
+    width: 100%;
+    padding: 1.5rem;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-2-search-fields .cooked-browse-select-block {
+    width: 100%;
+    padding: 1.5rem;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-3-search-fields .cooked-browse-select-block {
+    width: 100%;
+    padding: 1.5rem;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-4-search-fields .cooked-browse-select-block {
+    width: 100%;
+    padding: 1.5rem;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-browse-select-block .cooked-tax-column {
+    float: none;
+    padding: 0 0 1.5rem 0;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-browse-select-block .cooked-tax-column:last-child {
+    padding: 0;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-1-search-fields .cooked-browse-select-block .cooked-tax-column {
+    width: 100%;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-2-search-fields .cooked-browse-select-block .cooked-tax-column {
+    width: 100%;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-3-search-fields .cooked-browse-select-block .cooked-tax-column {
+    width: 100%;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap.cooked-4-search-fields .cooked-browse-select-block .cooked-tax-column {
+    width: 100%;
+}
+
+.cooked-recipe-search.cooked-search-compact.cooked-search-no-sorting .cooked-fields-wrap > .cooked-browse-search {
+    width: 80%;
+    margin: 3% 0;
+}
+
+.cooked-recipe-search.cooked-search-compact.cooked-search-no-sorting .cooked-browse-search-button {
+    width: 20%;
+    margin: 3% 0;
+}
+
+.cooked-recipe-search.cooked-search-compact.cooked-search-no-browse .cooked-fields-wrap > .cooked-browse-search,
+.cooked-recipe-search.cooked-search-compact.cooked-search-no-browse .cooked-browse-search-button {
+    margin: 0 0 3%;
+}
+
+.cooked-recipe-search.cooked-search-compact.cooked-search-no-sorting.cooked-search-no-browse .cooked-fields-wrap > .cooked-browse-search,
+.cooked-recipe-search.cooked-search-compact.cooked-search-no-sorting.cooked-search-no-browse .cooked-browse-search-button {
+    margin: 0;
+}

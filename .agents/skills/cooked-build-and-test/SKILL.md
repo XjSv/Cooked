@@ -51,8 +51,16 @@ Playwright specs live in `tests/playwright/tests/` (`admin`, `browse`, `home`,
   $min = COOKED_DEV ? '' : '.min';
   wp_enqueue_script( 'cooked-my-js', COOKED_URL . 'assets/js/my-file' . $min . '.js', [ 'jquery' ], COOKED_VERSION, true );
   ```
-- A new first-party CSS/JS file needs a minify entry in `gulpfile.js` (`src()`
-  list, `watch()` line, and the `build` series).
+- Styles are SCSS: `assets/scss/` (front end) and `assets/admin/scss/` (admin), each
+  with `abstracts/`, `base/`, `layout/` and `components/` partials and entry files that
+  only `@use` them. Gulp compiles each entry to an expanded `.css` and a `.min.css`;
+  never edit the compiled CSS. New styles go in a partial added to the entry's `@use`
+  list. One declaration per line, 4-space indent, and nest media queries inside the
+  selector (`.x { @media (...) { ... } }`).
+- Colours come from the design tokens in `assets/scss/abstracts/_variables.scss`
+  (`--cooked-color-*` custom properties); use them instead of new hex values.
+- A new first-party JS file needs a minify entry in `gulpfile.js` (`src()` list,
+  `watch()` line, and the `build` series).
 - Third-party libraries go in `assets/vendor/<lib>/`, unmodified, with their
   licence and a README naming the version and source. The enqueue version is the
   library's version, not `COOKED_VERSION`.

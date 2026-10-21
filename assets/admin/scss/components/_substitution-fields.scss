@@ -1,0 +1,39 @@
+/* Substitution Fields */
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields {
+    width: 100%;
+    float: left;
+    clear: both;
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-right: 0;
+    padding-left: 0;
+    margin-left: 0;
+    box-sizing: border-box;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-ingredient-amount {
+    width: 15%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-ingredient-measurement {
+    width: 20%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-ingredient-name {
+    width: 65%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-sub-label {
+    color: #7c7c7c;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields > div {
+    display: inline-block;
+    float: left;
+    box-sizing: border-box;
+    padding-right: 10px;
+}

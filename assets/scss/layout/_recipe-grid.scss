@@ -1,0 +1,72 @@
+/* Recipe List Views */
+body p.cooked-none-found {
+    display: block;
+    margin: 0;
+    padding: 1rem 0 2rem;
+    color: #888;
+    text-align: center;
+    font-style: italic;
+}
+
+/* Recipe Grid */
+.cooked-recipe-grid {
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    position: relative;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 3% -1.5%;
+    width: 103%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.cooked-recipe-grid .cooked-recipe {
+    width: 30.333%;
+    min-width: 30.333%;
+    display: block;
+    box-sizing: border-box;
+    margin: 0 1.5% 3%;
+    padding: 0;
+}
+
+.cooked-recipe-grid .cooked-recipe .cooked-recipe-card-title {
+    cursor: pointer;
+    color: inherit;
+    text-decoration: none;
+}
+
+.cooked-recipe-grid .cooked-recipe .cooked-recipe-card-title:hover {
+    text-decoration: none !important;
+}
+
+.cooked-recipe-grid.cooked-columns-1 .cooked-recipe {
+    width: 97%;
+    min-width: 97%;
+}
+
+.cooked-recipe-grid.cooked-columns-2 .cooked-recipe {
+    width: 47%;
+    min-width: 47%;
+}
+
+.cooked-recipe-grid.cooked-columns-3 .cooked-recipe {
+    width: 30.333%;
+    min-width: 30.333%;
+}
+
+.cooked-recipe-grid.cooked-columns-4 .cooked-recipe {
+    width: 22%;
+    min-width: 22%;
+}
+
+.cooked-recipe-grid.cooked-columns-5 .cooked-recipe {
+    width: 17%;
+    min-width: 17%;
+}
+
+.cooked-recipe-grid.cooked-columns-6 .cooked-recipe {
+    width: 13.666%;
+    min-width: 13.666%;
+}

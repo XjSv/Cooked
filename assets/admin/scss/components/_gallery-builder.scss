@@ -1,0 +1,106 @@
+/* Recipe Gallery */
+#cooked-recipe-image-gallery {
+    margin: 0 -1% 0;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: move;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 18%;
+    height: auto;
+    padding: 0;
+    margin: 0 1% 2% 1%;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item:hover {
+    opacity: 0.9;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-helper,
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-helper:hover {
+    opacity: 0.75;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-placeholder {
+    width: 18%;
+    height: auto;
+    visibility: visible !important;
+    border-radius: 3px;
+    background: #ddd;
+    display: inline-block;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .remove-image-button {
+    border-radius: 0 3px 0 0;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .remove-image-button:hover {
+    background: #ff0100;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .cooked-gallery-edit-button {
+    border-radius: 3px 0 0 0;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .cooked-gallery-edit-button:hover {
+    background: #0084bc;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .cooked-gallery-item-title {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 0 0 3px 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding: 10px 10px 11px;
+    text-align: center;
+    background: #000;
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-size: 12px;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item:hover .cooked-gallery-item-title {
+    background: #000;
+    background: rgba(0,0,0,0.75);
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-helper {
+    -webkit-animation: cooked-wiggle 0.4s infinite;
+    -moz-animation: cooked-wiggle 0.4s infinite;
+    -o-animation: cooked-wiggle 0.4s infinite;
+    animation: cooked-wiggle 0.4s infinite;
+}

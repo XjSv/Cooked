@@ -1,0 +1,221 @@
+/* Cooked Admin Styling
+ * @since 1.0.0
+ */
+
+.cooked-clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+/* Hide the recipe content editor window, but leave it there for Yoast and other SEO plugins to read from */
+#post-body-content #postdivrich {
+    display: none;
+}
+
+body.post-type-cp_recipe .wp-list-table thead th.check-column,
+body.post-type-cp_recipe .wp-list-table tfoot th.check-column {
+    padding: 15px 0 0 7px;
+}
+
+body.post-type-cp_recipe .wp-list-table thead th,
+body.post-type-cp_recipe .wp-list-table tfoot th,
+body.post-type-cp_recipe .wp-list-table thead td,
+body.post-type-cp_recipe .wp-list-table tfoot td {
+    padding: 10px 10px;
+}
+
+body.post-type-cp_recipe .wp-list-table thead th.sortable a,
+body.post-type-cp_recipe .wp-list-table thead th.sorted a,
+body.post-type-cp_recipe .wp-list-table tfoot th.sortable a,
+body.post-type-cp_recipe .wp-list-table tfoot th.sorted a {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+body.post-type-cp_recipe .wp-list-table tbody th.check-column {
+    padding: 15px 0 0 10px;
+}
+
+body.post-type-cp_recipe .wp-list-table tbody th,
+body.post-type-cp_recipe .wp-list-table tbody td {
+    padding: 12px 10px;
+}
+
+body.post-type-cp_recipe .wp-list-table tbody td.column-title strong {
+    margin-top: 6px;
+}
+
+body.post-type-cp_recipe .wp-list-table tbody td.column-title strong .row-title {
+    padding-top: 10px;
+    font-size: 1rem !important;
+}
+
+th.column-featured_image {
+    width: 50px;
+    text-align: center;
+}
+
+td.column-featured_image {
+    width: 50px;
+    text-align: center;
+}
+
+.cooked-admin-recipes-list-image img {
+    width: 49px;
+    height: auto;
+    border-radius: 3px;
+    position: relative;
+    top: 3px;
+}
+
+body.post-type-cp_recipe #titlediv #title {
+    box-shadow: none;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    padding: 0 12px;
+    font-weight: 400;
+    font-size: 19px;
+    letter-spacing: 0;
+    height: 44px;
+}
+
+body.post-type-cp_recipe #titlediv #title-prompt-text {
+    font-size: 15px;
+    color: #888;
+    font-weight: 400;
+    letter-spacing: 0;
+    padding: 12px 15px;
+}
+
+body.mce-fullscreen #cooked-recipe-tabs {
+    z-index: auto;
+}
+
+body.mce-fullscreen #adminmenumain {
+    display: none;
+}
+
+body.mce-fullscreen #cooked_recipe_settings .wp-editor-wrap:not(:has(.mce-fullscreen)),
+body.mce-fullscreen #cooked-directions-builder .cooked-direction-block:not(:has(.mce-fullscreen)) {
+    visibility: hidden;
+}
+
+body.mce-fullscreen div.mce-tinymce.mce-fullscreen {
+    z-index: 100010;
+}
+
+#cooked-settings-prewrap {
+    display: flex;
+    justify-content: center;
+}
+
+#cooked-settings-wrap {
+    position: relative;
+    border-radius: 10px;
+    margin: 40px 40px 40px 20px;
+    max-width: 1200px;
+    min-width: 1000px;
+    background: #fff;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.05), 0 8px 8px rgba(0,0,0,0.05), 0 32px 32px rgba(0,0,0,0.05), 0 64px 64px rgba(0,0,0,0.05);
+}
+
+#cooked-settings-wrap.is-stuck {
+    position: static !important;
+}
+
+#cooked-settings-wrap .cooked-settings-update-button {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+}
+
+#cooked-settings-wrap .cooked-settings-update-button > .button-primary {
+    box-shadow: none;
+    border: none;
+}
+
+#cooked-settings-wrap.is-stuck .cooked-settings-update-button {
+    position: fixed;
+    top: 35px;
+    right: 11px;
+    z-index: 100001;
+}
+
+#cooked-recipe-tabs {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: sticky;
+    top: var(--wp-admin--admin-bar--height, 0px);
+    z-index: 1000;
+    width: 100%;
+}
+
+#cooked_recipe_settings.stuck #cooked-recipe-tabs {
+    box-shadow: 0 3px 50px rgba(0,0,0,0.25);
+}
+
+#cooked-recipe-tabs li {
+    font-size: 0.9rem;
+    line-height: 3rem;
+    height: 3rem;
+    font-weight: 500;
+    display: inline-block;
+    padding: 0 1.25rem;
+    margin: 0;
+    color: #fff;
+}
+
+#cooked-recipe-tabs li:hover {
+    cursor: pointer;
+}
+
+#cooked-recipe-tabs li.active,
+#cooked-recipe-tabs li.active:hover {
+    cursor: default;
+}
+
+#cooked-recipe-tabs li:last-child {
+    border-right: none !important;
+}
+
+#cooked-recipe-tabs li.cooked-loading {
+    opacity: 0;
+    background: none;
+    color: #fff;
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: default;
+    font-size: 14px;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    display: block;
+    line-height: 40px;
+    padding: 0;
+}
+
+#cooked-recipe-tabs li.cooked-loading:hover {
+    background: none;
+    color: #fff;
+}
+
+#cooked_recipe_settings.cooked-loading #cooked-recipe-tabs li.cooked-loading {
+    opacity: 1;
+}
+
+#cooked_recipe_settings .inside {
+    padding: 0;
+    margin: 0;
+}
+
+.cooked-recipe-tab-content-wrapper .cooked-recipe-tab-content {
+    display: none;
+}
+
+.cooked-recipe-tab-content-wrapper .cooked-recipe-tab-content:first-child {
+    display: block;
+}

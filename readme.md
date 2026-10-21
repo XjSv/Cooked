@@ -101,7 +101,16 @@ bun run i18n:make-pot     # generate cooked.pot only
 bun run i18n:update-po    # update all .po files in languages/ from the .pot
 bun run i18n:make-mo      # compile all .po files in languages/ to .mo
 ```
-#### Compiling assets (JS/CSS)
+#### Compiling assets (SCSS/JS)
+Styles are written in SCSS and compiled to `assets/css/` and `assets/admin/css/` (an expanded `.css`, loaded when `COOKED_DEV` is on, and a `.min.css`). Edit the partials, never the compiled CSS:
+
+```
+assets/scss/                 front end: style.scss, print.scss, print-only.scss
+assets/admin/scss/           admin: style.scss, essentials.scss, cooked-tom-select.scss
+  abstracts/_variables.scss  design tokens (CSS custom properties, shared)
+  base/  layout/  components/
+```
+
 ``` bash
 bun run build   # one-off build
 bun run watch   # watch and rebuild on change

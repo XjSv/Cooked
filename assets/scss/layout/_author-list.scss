@@ -1,0 +1,28 @@
+/* Author List Page */
+.cooked-author-list-heading {
+    display: block;
+    margin: 0 0 2rem;
+}
+
+.cooked-author-list-heading .cooked-author-avatar {
+    float: left;
+    width: 3rem;
+    height: auto;
+    display: block;
+    margin: 0 1rem 0 0;
+}
+
+.cooked-author-list-heading .cooked-author-avatar img {
+    display: block;
+    margin: 0;
+}
+
+.cooked-author-list-heading .cooked-meta-title {
+    font-size: 1.25rem;
+    line-height: 1.2rem;
+    margin: 0;
+}
+
+.cooked-author-list-heading a {
+    font-size: 0.9rem;
+}

@@ -66,7 +66,6 @@ class Enqueues {
         wp_register_style('cooked-photoswipe', COOKED_URL . 'assets/vendor/photoswipe/photoswipe.css', [], '5.4.4');
         wp_register_script('cooked-photoswipe', COOKED_URL . 'assets/vendor/photoswipe/photoswipe.umd.min.js', [], '5.4.4', true);
         wp_register_script('cooked-photoswipe-lightbox', COOKED_URL . 'assets/vendor/photoswipe/photoswipe-lightbox.umd.min.js', ['cooked-photoswipe'], '5.4.4', true);
-        wp_register_style('cooked-gallery', COOKED_URL . 'assets/css/cooked-gallery.css', ['cooked-photoswipe'], COOKED_VERSION);
         wp_register_script('cooked-gallery', COOKED_URL . 'assets/js/cooked-gallery.js', ['cooked-photoswipe-lightbox'], COOKED_VERSION, true);
         wp_register_script('cooked-timer', COOKED_URL . 'assets/vendor/jquery-simple-timer/jquery.simple.timer' . $min . '.js', ['jquery'], '0.0.5', true);
         wp_register_script('cooked-nosleep', COOKED_URL . 'assets/vendor/nosleep/NoSleep' . $min . '.js', [], '0.12.0', true);

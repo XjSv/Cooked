@@ -1,0 +1,91 @@
+/* Taxonomy List */
+.cooked-recipe-term-list {
+}
+
+.cooked-recipe-term-list .cooked-term-item a {
+    display: block;
+    padding: 5px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Recipe List */
+.cooked-shortcode-recipe-list {
+    margin: 0 auto 1rem;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-single {
+    box-sizing: border-box;
+    border: none;
+    border-top: 1px solid #ddd;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+    position: relative;
+    display: block;
+    padding: 0.6rem 0 0 0;
+    margin: 0 0 1rem;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-single:hover {
+    border: none;
+    border-top: 1px solid #ddd;
+    border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-single.cooked-srl-has-image {
+    padding-left: 4rem;
+    min-height: 3.75rem;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-image {
+    margin: 0;
+    padding: 0;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-image img {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 3px;
+    position: absolute;
+    top: 0.9rem;
+    left: 0;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-sep {
+    display: none;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-content {
+    line-height: 1.4rem;
+    padding: 0;
+    margin: 0;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-title {
+    line-height: 1.4rem;
+    display: block;
+    font-weight: 600;
+    margin: 0.25rem 0;
+    font-size: 1rem;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-author {
+    line-height: 1.4rem;
+    margin: 0.25rem 0;
+    font-size: 0.9rem;
+    opacity: 0.75;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-single:first-child {
+    border: none;
+    padding-top: 0;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-single:first-child .cooked-srl-image img {
+    top: 0;
+}
+
+.cooked-shortcode-recipe-list .cooked-srl-single.cooked-srl-has-image:first-child {
+    min-height: 3rem;
+}

@@ -132,21 +132,21 @@ Runs build and i18n, then creates `build/cooked.zip` ready for distribution (exc
 
 **PHPCS** — Lint PHP files against WordPress Coding Standards and PHPCompatibility (PHP 8.2+):
 ``` bash
-bun run lint       # check for violations
-bun run lint-fix   # auto-fix violations
+bun run lint:php       # check for violations
+bun run lint:php:fix   # auto-fix violations
 ```
 
 **PHPStan** — Static analysis at level 8 against PHP 8.2:
 ``` bash
-bun run phpstan
+bun run analyze:php
 ```
 
-**PHPUnit** — Run the test suite (26 test classes covering CSV import, recipes, settings, SEO, and more):
+**PHPUnit** — Run the test suite (27 test classes covering CSV import, recipes, settings, SEO, and more):
 ``` bash
 bun run test:php
 ```
 
-Tests are in `tests/phpunit/` with CSV fixtures in `tests/test_data/`. No WordPress install is needed: `tests/phpunit/bootstrap.php` stubs the WordPress functions the tests use.
+PHPUnit tests are grouped by feature under `tests/phpunit/`. No WordPress install is needed: `tests/phpunit/bootstrap.php` stubs the WordPress functions the tests use. Playwright's CSV import tests use the plugin's `sample-data/` directory.
 
 ## Documentation
 

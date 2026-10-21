@@ -3,7 +3,7 @@ import { Page } from '@playwright/test';
 import { deletePostsByTitle, deleteTerm, findTermIdByName } from '../../utils/wp-cli';
 import path from 'path';
 
-const TEST_DATA_DIR = path.resolve(__dirname, '../../../test_data');
+const SAMPLE_DATA_DIR = path.resolve(__dirname, '../../../../sample-data');
 
 const SMALL_CSV_TITLES = ['Chocolate Chip Cookies'];
 const MEDIUM_CSV_TITLES = ['Classic Beef Lasagna', 'Vegetarian Buddha Bowl', 'Chocolate Lava Cake'];
@@ -73,7 +73,7 @@ async function importCsvFile(adminPage: Page, csvFileName: string) {
 
   await expect(adminPage.locator('#cooked-settings-tab-content-csv_import')).toBeVisible({ timeout: 10000 });
 
-  const csvPath = path.join(TEST_DATA_DIR, csvFileName);
+  const csvPath = path.join(SAMPLE_DATA_DIR, csvFileName);
   await adminPage.setInputFiles('#cooked-csv-file', csvPath);
 
   adminPage.once('dialog', dialog => dialog.accept());

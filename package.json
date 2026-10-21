@@ -31,6 +31,7 @@
     "test:e2e:install": "bunx playwright install chromium",
     "test:e2e": "bunx playwright test --config tests/playwright/playwright.config.ts",
     "test:e2e:a11y": "bunx playwright test --config tests/playwright/playwright.config.ts tests/playwright/tests/accessibility",
+    "test:e2e:report": "bunx playwright show-report tests/playwright/playwright-report",
     "test:visual": "backstop test --config=tests/backstop/backstop.config.js",
     "test:visual:ref": "backstop reference --config=tests/backstop/backstop.config.js",
     "test:visual:approve": "backstop approve --config=tests/backstop/backstop.config.js",

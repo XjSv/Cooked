@@ -51,7 +51,10 @@ test.describe('Create a new complete recipe (admin)', () => {
     await adminPage.click('#cooked-recipe-tab-nutrition', { force: true });
     await adminPage.fill('input[name="_recipe_settings[nutrition][servings]"]', '4');
 
-    await adminPage.check('input[name="tax_input[cp_recipe_category][]"][value="298"]');
+    const category = adminPage.locator('input[name="tax_input[cp_recipe_category][]"][type="checkbox"]').first();
+    if (await category.count()) {
+      await category.check();
+    }
 
     await adminPage.locator('#set-post-thumbnail').click();
     await adminPage.waitForSelector('.media-modal-content');

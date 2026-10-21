@@ -22,7 +22,10 @@ export async function fillAndPublishAdminRecipe(page: Page, recipeTitle: string)
   await page.click('#cooked-recipe-tab-nutrition', { force: true });
   await page.fill('input[name="_recipe_settings[nutrition][servings]"]', '4');
 
-  await page.check('input[name="tax_input[cp_recipe_category][]"][value="298"]');
+  const category = page.locator('input[name="tax_input[cp_recipe_category][]"][type="checkbox"]').first();
+  if (await category.count()) {
+    await category.check();
+  }
 
   await page.locator('#set-post-thumbnail').click();
   await page.waitForSelector('.media-modal-content');

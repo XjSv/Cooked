@@ -853,4 +853,4 @@ require_once __DIR__ . '/../../src/aliases.php';
  */
 $GLOBALS['Cooked_Recipes'] = new Cooked_Recipes();
 require_once COOKED_DIR . 'src/functions.php';
-require_once __DIR__ . '/FilterTestCase.php';
+require_once __DIR__ . '/framework/FilterTestCase.php';

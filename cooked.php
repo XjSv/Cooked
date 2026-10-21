@@ -480,7 +480,6 @@ final class Cooked_Plugin {
      * @return void
      */
     private function includes() {
-        require_once COOKED_DIR . 'includes/class.cooked-users.php';
         require_once COOKED_DIR . 'includes/class.cooked-taxonomies.php';
         require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
         require_once COOKED_DIR . 'includes/class.cooked-seo.php';

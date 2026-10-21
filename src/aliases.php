@@ -21,6 +21,7 @@ spl_autoload_register(
             'Cooked_Unit_Converter' => \Cooked\Measurement\UnitConverter::class,
             'Cooked_Measurements'   => \Cooked\Measurement\Measurements::class,
             'Cooked_Roles'          => \Cooked\User\Roles::class,
+            'Cooked_Users'          => \Cooked\User\Users::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

@@ -7,6 +7,8 @@
  * @since       1.0.0
 */
 
+namespace Cooked\User;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -17,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.0.0
  */
-class Cooked_Users {
+class Users {
 
     function __construct() {
         add_action( 'init', [&$this, 'recipe_author_rewrite'], 10 );
@@ -34,7 +36,7 @@ class Cooked_Users {
         $front_page_id = get_option( 'page_on_front' );
 
         // Get all browse page translations for rewrite rules
-        $browse_pages = Cooked_Multilingual::get_all_browse_pages();
+        $browse_pages = \Cooked_Multilingual::get_all_browse_pages();
 
         if ( empty( $browse_pages ) ) {
             return;
@@ -99,7 +101,7 @@ class Cooked_Users {
                     'author' => $user_id
                 ];
 
-                $_user_data['recipes'] = Cooked_Recipes::get( $user_recipe_args, false, true );
+                $_user_data['recipes'] = \Cooked_Recipes::get( $user_recipe_args, false, true );
             }
             return $_user_data;
         } else {
@@ -112,7 +114,7 @@ class Cooked_Users {
 
         global $_cooked_settings;
 
-        $_cooked_settings = !$_cooked_settings || $_cooked_settings && empty($_cooked_settings) ? Cooked_Settings::get() : $_cooked_settings;
+        $_cooked_settings = !$_cooked_settings || $_cooked_settings && empty($_cooked_settings) ? \Cooked_Settings::get() : $_cooked_settings;
 
         if ( !$format && isset($_cooked_settings['author_name_format']) && $_cooked_settings['author_name_format'] ):
             $format = $_cooked_settings['author_name_format'];

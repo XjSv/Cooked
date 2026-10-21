@@ -7,17 +7,19 @@
  * @since       1.8.2
 */
 
+namespace Cooked\Import;
+
 // Exit if accessed directly
 if ( !defined( 'ABSPATH' ) ) exit;
 
 /**
- * Cooked_Import Class
+ * Import Class
  *
  * This class handles the import of recipes from other plugins.
  *
  * @since 1.8.2
  */
-class Cooked_Import {
+class Import {
 
     public function __construct() {
         add_filter( 'admin_init', [&$this, 'init'] );
@@ -34,11 +36,11 @@ class Cooked_Import {
     }
 
     public static function tabs_fields() {
-        $Cooked_Delicious_Recipes = new Cooked_Delicious_Recipes();
+        $Cooked_Delicious_Recipes = new \Cooked_Delicious_Recipes();
         $delicious_recipes = $Cooked_Delicious_Recipes::get_recipes();
         $cooked_delicious_recipes_imported = get_option( 'cooked_delicious_recipes_imported', false );
 
-        $Cooked_Recipe_Maker_Recipes = new Cooked_Recipe_Maker_Recipes();
+        $Cooked_Recipe_Maker_Recipes = new \Cooked_Recipe_Maker_Recipes();
         $wp_recipe_maker_recipes = $Cooked_Recipe_Maker_Recipes::get_recipes();
         $cooked_wp_recipe_maker_imported = get_option( 'cooked_wp_recipe_maker_imported', false );
 

@@ -12,9 +12,6 @@ if ( ! class_exists( 'Cooked_Delicious_Recipes' ) ) {
 if ( ! class_exists( 'Cooked_Recipe_Maker_Recipes' ) ) {
     require_once COOKED_DIR . 'includes/class.cooked-recipe-maker.php';
 }
-if ( ! class_exists( 'Cooked_Import' ) ) {
-    require_once COOKED_DIR . 'includes/class.cooked-import.php';
-}
 
 class PluginApiFiltersTest extends FilterTestCase {
 

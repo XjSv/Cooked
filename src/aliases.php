@@ -24,6 +24,7 @@ spl_autoload_register(
             'Cooked_Users'          => \Cooked\User\Users::class,
             'Cooked_Taxonomies'     => \Cooked\Recipe\Taxonomies::class,
             'Cooked_Allergens'      => \Cooked\Recipe\Allergens::class,
+            'Cooked_Import'         => \Cooked\Import\Import::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

@@ -17,6 +17,7 @@
         CardHeader = wp.components.CardHeader,
         CardBody = wp.components.CardBody,
         ExternalLink = wp.components.ExternalLink,
+        Fragment = wp.element.Fragment,
         NavigableMenu = wp.components.NavigableMenu;
 
     function icon( name ) {
@@ -41,9 +42,12 @@
                 )
             ),
             el( 'div', { className: 'cooked-admin-header-actions' },
-                el( 'span', { className: 'cooked-admin-version' }, vars.version ),
-                el( ExternalLink, { href: vars.docsUrl }, vars.i18n.documentation ),
-                props.canSave && el( Button, { variant: 'primary', onClick: props.onSave }, vars.i18n.save )
+                el( 'span', { className: 'cooked-admin-version' },
+                    el( 'span', { className: 'cooked-admin-version-label' }, vars.i18n.version ),
+                    el( 'strong', null, vars.version )
+                ),
+                el( ExternalLink, { href: vars.docsUrl, className: 'cooked-admin-docs-link' }, vars.i18n.documentation ),
+                props.canSave && el( Button, { variant: 'primary', className: 'cooked-admin-save-button', onClick: props.onSave }, vars.i18n.save )
             )
         );
     }
@@ -56,25 +60,119 @@
                     href: page.url,
                     className: 'cooked-admin-page-tab' + ( page.current ? ' is-active' : '' ) + ( page.highlight ? ' is-highlight' : '' ),
                     'aria-current': page.current ? 'page' : undefined
-                }, page.label );
+                }, page.highlight && icon( 'star' ), page.label );
             } )
         );
     }
 
     function SectionMenu( props ) {
-        return el( NavigableMenu, { className: 'cooked-admin-sections', orientation: 'vertical', 'aria-label': vars.i18n.sections },
-            el( 'p', { className: 'cooked-admin-sections-title' }, vars.i18n.sections ),
-            vars.sections.map( function ( section ) {
-                var active = section.slug === props.active;
-                return el( Button, {
-                    key: section.slug,
-                    className: 'cooked-admin-section' + ( active ? ' is-active' : '' ),
-                    'aria-current': active ? 'true' : undefined,
-                    onClick: function () {
-                        props.onSelect( section.slug );
-                    }
-                }, icon( section.icon ), el( 'span', null, section.name ) );
-            } )
+        var scrollState = useState( { left: false, right: false } ),
+            canScroll = scrollState[0],
+            setCanScroll = scrollState[1],
+            orientationState = useState( window.matchMedia( '(max-width: 540px)' ).matches ? 'horizontal' : 'vertical' ),
+            orientation = orientationState[0],
+            setOrientation = orientationState[1];
+
+        function menu() {
+            var root = document.getElementById( 'cooked-admin-app' );
+            return root ? root.querySelector( '.cooked-admin-sections' ) : null;
+        }
+
+        function updateScrollState() {
+            var scroller = menu();
+            if ( ! scroller ) {
+                return;
+            }
+            var next = {
+                left: scroller.scrollLeft > 1,
+                right: scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 1
+            };
+            setCanScroll( function ( previous ) {
+                return previous.left === next.left && previous.right === next.right ? previous : next;
+            } );
+        }
+
+        function scrollSections( direction ) {
+            var scroller = menu();
+            if ( ! scroller ) {
+                return;
+            }
+            scroller.scrollBy( {
+                left: direction * Math.max( 120, scroller.clientWidth * 0.7 ),
+                behavior: window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth'
+            } );
+        }
+
+        useEffect( function () {
+            var scroller = menu(),
+                resizeObserver = null,
+                narrow = window.matchMedia( '(max-width: 540px)' ),
+                onNarrowChange = function () {
+                    setOrientation( narrow.matches ? 'horizontal' : 'vertical' );
+                    updateScrollState();
+                };
+            if ( ! scroller ) {
+                return;
+            }
+            scroller.addEventListener( 'scroll', updateScrollState, { passive: true } );
+            window.addEventListener( 'resize', updateScrollState );
+            if ( window.ResizeObserver ) {
+                resizeObserver = new window.ResizeObserver( updateScrollState );
+                resizeObserver.observe( scroller );
+            }
+            if ( narrow.addEventListener ) {
+                narrow.addEventListener( 'change', onNarrowChange );
+            } else {
+                narrow.addListener( onNarrowChange );
+            }
+            updateScrollState();
+            return function () {
+                scroller.removeEventListener( 'scroll', updateScrollState );
+                window.removeEventListener( 'resize', updateScrollState );
+                if ( resizeObserver ) {
+                    resizeObserver.disconnect();
+                }
+                if ( narrow.removeEventListener ) {
+                    narrow.removeEventListener( 'change', onNarrowChange );
+                } else {
+                    narrow.removeListener( onNarrowChange );
+                }
+            };
+        }, [] );
+
+        useEffect( function () {
+            updateScrollState();
+        }, [ props.active, orientation ] );
+
+        function arrow( direction, disabled, label ) {
+            return el( 'button', {
+                type: 'button',
+                className: 'cooked-admin-sections-arrow ' + ( direction < 0 ? 'is-left' : 'is-right' ),
+                onClick: function () {
+                    scrollSections( direction );
+                },
+                disabled: disabled,
+                'aria-label': label
+            }, icon( direction < 0 ? 'angle-left' : 'angle-right' ) );
+        }
+
+        return el( Fragment, null,
+            arrow( -1, ! canScroll.left, vars.i18n.sectionsScrollLeft ),
+            el( NavigableMenu, { className: 'cooked-admin-sections', orientation: orientation, 'aria-label': vars.i18n.sections },
+                el( 'p', { className: 'cooked-admin-sections-title' }, vars.i18n.sections ),
+                vars.sections.map( function ( section ) {
+                    var active = section.slug === props.active;
+                    return el( Button, {
+                        key: section.slug,
+                        className: 'cooked-admin-section' + ( active ? ' is-active' : '' ),
+                        'aria-current': active ? 'true' : undefined,
+                        onClick: function () {
+                            props.onSelect( section.slug );
+                        }
+                    }, icon( section.icon ), el( 'span', null, section.name ) );
+                } )
+            ),
+            arrow( 1, ! canScroll.right, vars.i18n.sectionsScrollRight )
         );
     }
 
@@ -102,10 +200,11 @@
             if ( ! window.IntersectionObserver || ! sentinelRef.current ) {
                 return;
             }
-            var adminBar = parseInt( window.getComputedStyle( document.documentElement ).getPropertyValue( '--wp-admin--admin-bar--height' ), 10 ) || 32,
+            var sticky = document.querySelector( '.cooked-admin-sticky' ),
+                stickyTop = sticky ? parseInt( window.getComputedStyle( sticky ).top, 10 ) || 0 : 0,
                 observer = new window.IntersectionObserver( function ( entries ) {
                     stuckState[1]( ! entries[0].isIntersecting );
-                }, { rootMargin: '-' + adminBar + 'px 0px 0px 0px' } );
+                }, { rootMargin: '-' + stickyTop + 'px 0px 0px 0px' } );
             observer.observe( sentinelRef.current );
             return function () {
                 observer.disconnect();
@@ -138,12 +237,13 @@
         function scrollToContent() {
             var body = document.querySelector( '.cooked-admin-body' ),
                 sticky = document.querySelector( '.cooked-admin-sticky' ),
-                adminBar = parseInt( window.getComputedStyle( document.documentElement ).getPropertyValue( '--wp-admin--admin-bar--height' ), 10 ) || 32,
+                stickyTop,
                 top;
             if ( ! body || ! sticky ) {
                 return;
             }
-            top = body.getBoundingClientRect().top + window.scrollY - adminBar - sticky.offsetHeight;
+            stickyTop = parseInt( window.getComputedStyle( sticky ).top, 10 ) || 0;
+            top = body.getBoundingClientRect().top + window.scrollY - stickyTop - sticky.offsetHeight;
             if ( window.scrollY > top ) {
                 window.scrollTo( {
                     top: top,

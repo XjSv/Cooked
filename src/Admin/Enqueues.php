@@ -31,6 +31,22 @@ class Enqueues {
         add_action( 'admin_enqueue_scripts', [ &$this, 'widget_enqueues' ], 11, 1 );
         add_action( 'admin_enqueue_scripts', [ &$this, 'admin_app_enqueues' ], 20, 1 );
         add_action( 'customize_controls_enqueue_scripts', [ &$this, 'enqueue_widgets' ], 10, 1 );
+        add_filter( 'admin_body_class', [ &$this, 'admin_body_class' ] );
+    }
+
+    /**
+     * Adds a dedicated body class on Cooked's settings screen.
+     *
+     * @since 2.0.0
+     * @param string $classes Space-separated list of admin body classes.
+     * @return string
+     */
+    public function admin_body_class( $classes ) {
+        $screen = get_current_screen();
+        if ( $screen && 'recipes_page_cooked_settings' === $screen->id ) {
+            $classes .= ' cooked-settings-page';
+        }
+        return $classes;
     }
 
     /**
@@ -112,13 +128,16 @@ class Enqueues {
 				'sections' => $sections,
 				'pages'    => $pages,
 				'i18n'     => [
-					'title'         => __( 'Cooked', 'cooked' ),
-					'subtitle'      => __( 'Settings', 'cooked' ),
-					'documentation' => __( 'Documentation', 'cooked' ),
-					'save'          => __( 'Update Settings', 'cooked' ),
-					'pages'         => __( 'Cooked pages', 'cooked' ),
-					'sections'      => __( 'Sections', 'cooked' ),
-					'copied'        => __( 'Copied', 'cooked' ),
+					'title'               => __( 'Cooked', 'cooked' ),
+					'subtitle'            => __( 'Settings', 'cooked' ),
+					'documentation'       => __( 'Documentation', 'cooked' ),
+					'save'                => __( 'Update Settings', 'cooked' ),
+					'pages'               => __( 'Cooked pages', 'cooked' ),
+					'sections'            => __( 'Sections', 'cooked' ),
+					'sectionsScrollLeft'  => __( 'Scroll sections left', 'cooked' ),
+					'sectionsScrollRight' => __( 'Scroll sections right', 'cooked' ),
+					'version'             => __( 'Version:', 'cooked' ),
+					'copied'              => __( 'Copied', 'cooked' ),
 				],
 			]
         );

@@ -475,9 +475,7 @@ final class Plugin {
      * @return void
      */
     public function load_textdomain() {
-        // Registers the bundled languages/ folder. WordPress loads translations just in time and
-        // prefers language packs in wp-content/languages/plugins over the bundled files.
-        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Bundled fr_FR has no language pack.
+        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Bundled translations.
         load_plugin_textdomain( 'cooked', false, COOKED_FOLDER . '/languages' );
     }
 }

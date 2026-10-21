@@ -2,9 +2,6 @@
 
 use PHPUnit\Framework\TestCase;
 
-if ( ! class_exists( 'Cooked_Shortcodes' ) ) {
-    require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
-}
 
 class ShortcodesTimerTest extends TestCase {
 

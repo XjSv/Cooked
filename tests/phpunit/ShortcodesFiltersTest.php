@@ -1,8 +1,5 @@
 <?php
 
-if ( ! class_exists( 'Cooked_Shortcodes' ) ) {
-    require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
-}
 
 class Cooked_Filter_Info_Helper {
     public static function cooked_info_sentinel( $recipe ) {

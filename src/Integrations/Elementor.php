@@ -30,7 +30,7 @@ class Elementor {
         if ( did_action( 'elementor/loaded' ) ) {
             add_filter( 'cooked_recipe_content_filter', [&$this, 'elementor_filter'], 15, 4 );
             add_filter( 'cooked_should_update_post_content', [&$this, 'should_update_content'], 10, 2 );
-            // Deprecated. Now handled in pre_do_shortcode_tag filter in class.cooked-shortcodes.php.
+            // Deprecated. Now handled in the pre_do_shortcode_tag filter in src/Frontend/Shortcodes.php.
             // add_action( 'elementor/element/before_section_start', [&$this, 'elementor_is_editing'], 10, 3 );
         }
     }

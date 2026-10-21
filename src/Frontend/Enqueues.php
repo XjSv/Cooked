@@ -65,12 +65,12 @@ class Enqueues {
         wp_enqueue_style('cooked-styling', COOKED_URL . 'assets/css/style' . $min . '.css', [], COOKED_VERSION );
         wp_register_style('cooked-fotorama', COOKED_URL . 'assets/css/fotorama/fotorama.min.css', [], '4.6.4');
         wp_register_script('cooked-fotorama', COOKED_URL . 'assets/js/fotorama/fotorama' . $min . '.js', ['jquery'], '4.6.4', true);
-        wp_register_script('cooked-timer', COOKED_URL . 'assets/js/timer/jquery.simple.timer' . $min . '.js', ['jquery'], '0.0.5', true);
+        wp_register_script('cooked-timer', COOKED_URL . 'assets/vendor/jquery-simple-timer/jquery.simple.timer' . $min . '.js', ['jquery'], '0.0.5', true);
         wp_register_script('cooked-nosleep', COOKED_URL . 'assets/vendor/nosleep/NoSleep' . $min . '.js', [], '0.12.0', true);
 
         // Compatibility with the Bridge Theme.
         if (!defined('QODE_ROOT')) {
-            wp_register_script('cooked-appear', COOKED_URL . 'assets/js/appear/jquery.appear' . $min . '.js', ['jquery'], '0.3.6', true);
+            wp_register_script('cooked-appear', COOKED_URL . 'assets/vendor/jquery-appear/jquery.appear' . $min . '.js', ['jquery'], '0.3.6', true);
         }
 
         wp_enqueue_script('wp-sanitize');

@@ -28,6 +28,9 @@ spl_autoload_register(
             'Cooked_Delicious_Recipes'    => \Cooked\Import\DeliciousRecipes::class,
             'Cooked_Recipe_Maker_Recipes' => \Cooked\Import\RecipeMaker::class,
             'Cooked_CSV_Import'           => \Cooked\Import\CsvImport::class,
+            'Cooked_Gutenberg'            => \Cooked\Integrations\Gutenberg::class,
+            'Cooked_Elementor'            => \Cooked\Integrations\Elementor::class,
+            'Cooked_Pixwell'              => \Cooked\Integrations\Pixwell::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

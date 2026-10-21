@@ -7,17 +7,19 @@
  * @since       1.5.3
 */
 
+namespace Cooked\Integrations;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Cooked_Elementor Class
+ * Elementor Class
  *
  * This class handles Elementor support.
  *
  * @since 1.5.3
  */
-class Cooked_Elementor {
+class Elementor {
 
     public function __construct() {
         add_action( 'plugins_loaded', [&$this, 'init'] );
@@ -54,9 +56,9 @@ class Cooked_Elementor {
 
         if ( $elementor_page ) {
             $og_content = (string) $og_content;
-            if ( Cooked_Recipes::recipe_has_fullscreen( $recipe_id, $layout_content ) ) {
+            if ( \Cooked_Recipes::recipe_has_fullscreen( $recipe_id, $layout_content ) ) {
                 global $recipe_settings;
-                $og_content .= Cooked_Recipes::get_fsm_markup( $recipe_id, $recipe_settings );
+                $og_content .= \Cooked_Recipes::get_fsm_markup( $recipe_id, $recipe_settings );
             }
             return $og_content;
         }

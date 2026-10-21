@@ -7,17 +7,19 @@
  * @since       1.5.2
 */
 
+namespace Cooked\Integrations;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Cooked_Gutenberg Class
+ * Gutenberg Class
  *
  * This class handles the Cooked Recipe Meta Box creation.
  *
  * @since 1.5.2
  */
-class Cooked_Gutenberg {
+class Gutenberg {
 
     public function __construct() {
         add_filter( 'use_block_editor_for_post_type', [&$this, 'gutenberg_support'], 10, 2 );

@@ -7,18 +7,20 @@
  * @since       1.16.0
  */
 
+namespace Cooked\Integrations;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
 /**
- * Cooked_Pixwell Class
+ * Pixwell Class
  *
  * Pixwell-specific dark mode compatibility (admin notice and settings tip).
  * Generic Auto dark mode CSS lives in Cooked_Settings.
  */
-class Cooked_Pixwell {
+class Pixwell {
 
     public function __construct() {
         add_action( 'admin_notices', [ $this, 'forced_dark_mode_notice' ] );
@@ -42,8 +44,8 @@ class Cooked_Pixwell {
             return;
         }
 
-        $_cooked_settings = Cooked_Settings::get();
-        $mode = Cooked_Settings::normalize_dark_mode(
+        $_cooked_settings = \Cooked_Settings::get();
+        $mode = \Cooked_Settings::normalize_dark_mode(
             isset( $_cooked_settings['dark_mode'] ) ? $_cooked_settings['dark_mode'] : 'off'
         );
 

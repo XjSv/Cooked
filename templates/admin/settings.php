@@ -49,10 +49,7 @@
 
                     <?php
 
-                    global $conditions;
-                    $conditions                  = [];
-                    $conditional_requirements_js = [];
-                    $tab_counter                 = 1;
+                    $tab_counter = 1;
 
                     foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
                         echo '<div id="cooked-settings-tab-content-' . esc_attr( $tab_slug ) . '" class="cooked-settings-tab-content">';
@@ -82,19 +79,17 @@
 
                                 if ( isset( $field['conditional_requirement'] ) && $field['conditional_requirement'] ) :
                                     if ( is_array( $field['conditional_requirement'] ) ) :
-                                        $conditional_requirement = ' v-show="' . implode( ' && ', $field['conditional_requirement'] ) . '"';
+                                        $conditional_requirement = ' data-cooked-condition="' . esc_attr( implode( ' ', $field['conditional_requirement'] ) ) . '"';
                                         else :
-                                            $conditional_requirement = ' v-show="' . esc_attr( $field['conditional_requirement'] ) . '"';
+                                            $conditional_requirement = ' data-cooked-condition="' . esc_attr( $field['conditional_requirement'] ) . '"';
                                         endif;
                                     endif;
 
-                                echo ( $conditional_requirement ? '<transition name="fade">' : '' );
                                 echo '<div' . wp_kses( $conditional_requirement, array() ) . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
                                     echo ( ! $notitle ? '<h3 class="cooked-settings-title">' . wp_kses_post( $field['title'] ) . '</h3>' : '' );
                                     echo ( isset( $field['desc'] ) && $field['desc'] ? '<p>' . wp_kses_post( $field['desc'] ) . '</p>' : '' );
                                     $Cooked_Settings->$field_type( $name, $field_options, $color, $field );
                                 echo '</div>';
-                                echo ( $conditional_requirement ? '</transition>' : '' );
 
                                 endif;
 
@@ -116,36 +111,6 @@
         ?>
 
     </div>
-    <?php
-
-    if ( ! empty( $conditions ) ) :
-
-        foreach ( $conditions as $setting_name => $array ) :
-            foreach ( $array as $name => $true_val ) :
-                $val                           = ( isset( $_cooked_settings[ $setting_name ] ) && is_array( $_cooked_settings[ $setting_name ] ) && in_array( $true_val, $_cooked_settings[ $setting_name ], true ) ? 'true' : 'false' );
-                $conditional_requirements_js[] = "'$name':$val";
-            endforeach;
-        endforeach;
-        ?>
-
-        <script type="text/javascript">
-            var vm = new Vue({
-                el: '#cooked-settings-panel',
-                data: {
-                    <?php echo wp_kses( implode( ',', $conditional_requirements_js ), array() ); ?>
-                }
-            });
-        </script>
-
-        <style type="text/css">
-            .fade-enter-active { transition: opacity .5s }
-            .fade-enter, .fade-leave-to { opacity: 0 }
-        </style>
-        <?php
-
-    endif;
-
-    ?>
     </form>
 
 </div></div>

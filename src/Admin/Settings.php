@@ -651,7 +651,7 @@ class Settings {
     }
 
     public static function field_radio( $field_name, $options ) {
-        global $_cooked_settings, $conditions;
+        global $_cooked_settings;
 
         $counter = 1;
 
@@ -667,18 +667,11 @@ class Settings {
                     endif;
 
                     if ( isset($name['conditional_value']) && $name['conditional_value'] ):
-                        $conditional_value = ' v-model="' . esc_attr($name['conditional_value']) . '"';
-                        if ( !in_array( $name['conditional_value'], $conditions ) ):
-                            $conditions[$value] = esc_attr($name['conditional_requirement']);
-                        endif;
+                        $conditional_value = ' data-cooked-condition-value="' . esc_attr($name['conditional_value']) . '"';
                     endif;
 
                     if ( isset($name['conditional_requirement']) && $name['conditional_requirement'] ):
-                        if ( is_array($name['conditional_requirement']) ):
-                            $conditional_requirement = ' v-show="' . implode( ' && ', $name['conditional_requirement'] ) . '"';
-                        else:
-                            $conditional_requirement = ' v-show="' . esc_attr($name['conditional_requirement']) . '"';
-                        endif;
+                        $conditional_requirement = ' data-cooked-condition="' . esc_attr( implode( ' ', (array) $name['conditional_requirement'] ) ) . '"';
                     endif;
 
                     $name = $name['label'];
@@ -686,11 +679,11 @@ class Settings {
 
                 $combined_extras = $is_disabled . $conditional_value;
 
-                if ( $conditional_requirement ): echo '<transition name="fade"><span class="conditional-requirement"' . wp_kses( $conditional_requirement, [] ) . '>'; endif;
+                if ( $conditional_requirement ): echo '<span class="conditional-requirement"' . wp_kses( $conditional_requirement, [] ) . '>'; endif;
                 echo '<input' . wp_kses( $combined_extras, array() ) . ' type="radio" id="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[$field_name] ) && $_cooked_settings[$field_name] == $value || isset( $_cooked_settings[$field_name][0] ) && $_cooked_settings[$field_name][0] == $value ? ' checked' : '' ) . '/>';
                 echo '&nbsp;<label for="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' . wp_kses_post( $name ) . '</label>';
                 echo '<br>';
-                if ( $conditional_requirement ): echo '</span></transition>'; endif;
+                if ( $conditional_requirement ): echo '</span>'; endif;
 
                 $counter++;
             }
@@ -829,7 +822,7 @@ class Settings {
     }
 
     public static function field_checkboxes($field_name, $options, $color = false, $field = []) {
-        global $_cooked_settings, $conditions;
+        global $_cooked_settings;
 
         echo '<p class="cooked-padded">';
             foreach ($options as $value => $name) {
@@ -843,18 +836,11 @@ class Settings {
                     endif;
 
                     if (isset($name['conditional_value']) && $name['conditional_value']):
-                        $conditional_value = ' v-model="' . esc_attr($name['conditional_value']) . '"';
-                        if ( !in_array( $name['conditional_value'], $conditions ) ):
-                            $conditions[$field_name][$name['conditional_value']] = $value;
-                        endif;
+                        $conditional_value = ' data-cooked-condition-value="' . esc_attr($name['conditional_value']) . '"';
                     endif;
 
                     if (isset($name['conditional_requirement']) && $name['conditional_requirement']):
-                        if (is_array($name['conditional_requirement'])):
-                            $conditional_requirement = ' v-show="' . implode( ' && ', $name['conditional_requirement'] ) . '"';
-                        else:
-                            $conditional_requirement = ' v-show="' . esc_attr($name['conditional_requirement']) . '"';
-                        endif;
+                        $conditional_requirement = ' data-cooked-condition="' . esc_attr( implode( ' ', (array) $name['conditional_requirement'] ) ) . '"';
                     endif;
 
                     $name = $name['label'];
@@ -863,7 +849,7 @@ class Settings {
                 $combined_extras = $is_disabled . $conditional_value;
 
                 if ($conditional_requirement) {
-                    echo '<transition name="fade"><span class="conditional-requirement"' . esc_attr($conditional_requirement) . '>';
+                    echo '<span class="conditional-requirement"' . wp_kses( $conditional_requirement, [] ) . '>';
                 }
 
                 // Check if the setting exists at all
@@ -894,7 +880,7 @@ class Settings {
                 echo '<br>';
 
                 if ($conditional_requirement) {
-                    echo '</span></transition>';
+                    echo '</span>';
                 }
             }
         echo '</p>';

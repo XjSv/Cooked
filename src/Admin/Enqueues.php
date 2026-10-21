@@ -24,9 +24,23 @@ class Enqueues {
     public static $admin_colors;
 
     function __construct() {
+        add_action( 'admin_enqueue_scripts', [&$this, 'register_shared_scripts'], 5 );
         add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueues'], 10, 1 );
         add_action( 'admin_enqueue_scripts', [&$this, 'widget_enqueues'], 11, 1 );
         add_action( 'customize_controls_enqueue_scripts', [&$this, 'enqueue_widgets'], 10, 1 );
+    }
+
+    /**
+     * Registers Vue for Cooked Pro's Pending Recipes screen. Cooked itself no longer uses it.
+     *
+     * Runs before Cooked Pro's admin_enqueue_scripts callback, so Pro finds the handle registered
+     * here instead of registering its own copy at the pre-2.0 path.
+     *
+     * @since 2.0.0
+     */
+    public function register_shared_scripts() {
+        $min = COOKED_DEV ? '' : '.min';
+        wp_register_script( 'cooked-vue', COOKED_URL . 'assets/vendor/vue/vue' . $min . '.js', [], '2.7.16', false );
     }
 
     public static function enqueue_widgets() {
@@ -124,7 +138,7 @@ class Enqueues {
 
                 wp_enqueue_style( 'cooked-switchery', COOKED_URL . 'assets/vendor/switchery/switchery.min.css', [], '0.8.2' );
                 wp_enqueue_script( 'cooked-switchery', COOKED_URL . 'assets/vendor/switchery/switchery.min.js', [], '0.8.2', true );
-                wp_enqueue_script( 'cooked-vue', COOKED_URL . 'assets/vendor/vue/vue' . $min . '.js', [], '2.7.16', false );
+                wp_enqueue_script( 'cooked-conditions', COOKED_URL . 'assets/admin/js/cooked-conditions.js', [ 'jquery', 'backbone' ], COOKED_VERSION, true );
 
                 $wp_editor_roles_allowed = false;
                 if ( is_user_logged_in() ) {

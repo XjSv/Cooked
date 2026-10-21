@@ -35,6 +35,7 @@ spl_autoload_register(
             'Cooked_YoastSEO'             => \Cooked\Integrations\YoastSeo::class,
             'Cooked_RankMathSEO'          => \Cooked\Integrations\RankMathSeo::class,
             'Cooked_CLI_Tools_Command'    => \Cooked\System\Cli::class,
+            'Cooked_Admin_Menus'          => \Cooked\Admin\Menus::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

@@ -105,7 +105,7 @@
             var adminBar = parseInt( window.getComputedStyle( document.documentElement ).getPropertyValue( '--wp-admin--admin-bar--height' ), 10 ) || 32,
                 observer = new window.IntersectionObserver( function ( entries ) {
                     stuckState[1]( ! entries[0].isIntersecting );
-                }, { rootMargin: '-' + ( adminBar + 10 ) + 'px 0px 0px 0px' } );
+                }, { rootMargin: '-' + adminBar + 'px 0px 0px 0px' } );
             observer.observe( sentinelRef.current );
             return function () {
                 observer.disconnect();
@@ -163,10 +163,12 @@
             el( 'div', { className: 'cooked-admin-sticky-sentinel', ref: sentinelRef } ),
             el( Card, { className: 'cooked-admin-frame' },
                 el( 'div', { className: 'cooked-admin-sticky' + ( stuckState[0] ? ' is-stuck' : '' ) },
-                    el( CardHeader, { className: 'cooked-admin-frame-header' },
-                        el( Header, { canSave: section !== 'migration' && section !== 'developer', onSave: save } )
-                    ),
-                    el( PageTabs )
+                    el( 'div', { className: 'cooked-admin-sticky-inner' },
+                        el( CardHeader, { className: 'cooked-admin-frame-header' },
+                            el( Header, { canSave: section !== 'migration' && section !== 'developer', onSave: save } )
+                        ),
+                        el( PageTabs )
+                    )
                 ),
                 el( 'div', { className: 'cooked-admin-body' },
                     el( 'div', { className: 'cooked-admin-sidebar' },

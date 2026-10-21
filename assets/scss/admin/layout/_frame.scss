@@ -21,33 +21,36 @@
 }
 
 .cooked-admin-frame.components-card > div {
+    display: flow-root; // keeps the sticky wrapper's negative margin from collapsing into the card
     overflow: visible;
 }
 
 /* Header */
+// The sticky wrapper reserves 10px above the header (balanced by a negative margin, so
+// nothing moves when it sticks). While stuck it paints that gap and the area around the
+// rounded corners in the page colour, so the card behind doesn't show square corners.
 .cooked-admin-sticky {
     position: sticky;
-    top: calc(var(--wp-admin--admin-bar--height, 32px) + 10px);
+    top: var(--wp-admin--admin-bar--height, 32px);
     z-index: 20;
+    margin: -10px -1px 0;
+    padding: 10px 1px 0;
+    transition: background-color 150ms ease;
+}
+
+.cooked-admin-sticky.is-stuck {
+    background: #f0f0f1;
+}
+
+.cooked-admin-sticky-inner {
     border-top: 4px solid var(--cooked-color-accent);
     border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
     background: #fff;
     transition: box-shadow 150ms ease;
 }
 
-// While stuck, cover the 10px gap above the header so content doesn't show through it.
-.cooked-admin-sticky.is-stuck::before {
-    content: "";
-    position: absolute;
-    right: -1px;
-    bottom: calc(100% + 4px);
-    left: -1px;
-    height: 10px;
-    background: #f0f0f1;
-}
-
-.cooked-admin-sticky.is-stuck {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.06);
+.cooked-admin-sticky.is-stuck .cooked-admin-sticky-inner {
+    box-shadow: 0 0 0 1px var(--cooked-color-border), 0 4px 8px rgba(0, 0, 0, 0.06);
 }
 
 .cooked-admin-frame-header.components-card__header {

@@ -43,6 +43,7 @@ spl_autoload_register(
             'Cooked_Updates'              => \Cooked\Admin\Updates::class,
             'Cooked_Settings'             => \Cooked\Admin\Settings::class,
             'Cooked_Shortcodes'           => \Cooked\Frontend\Shortcodes::class,
+            'Cooked_Ajax'                 => \Cooked\System\Ajax::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

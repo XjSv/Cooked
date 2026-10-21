@@ -5,12 +5,14 @@
  * @package     Cooked
  * @subpackage  AJAX-Specific Functions
  * @since       1.0.0
-*/
+ */
 
 namespace Cooked\System;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Ajax Class
@@ -27,41 +29,41 @@ class Ajax {
          */
 
         // Save Default Template
-        add_action( 'wp_ajax_cooked_save_default', [&$this, 'save_default'] );
+        add_action( 'wp_ajax_cooked_save_default', [ &$this, 'save_default' ] );
 
         // Save Default Template in Bulk
-        add_action( 'wp_ajax_cooked_save_default_bulk', [&$this, 'save_default_bulk'] );
+        add_action( 'wp_ajax_cooked_save_default_bulk', [ &$this, 'save_default_bulk' ] );
 
         // Load Default Template
-        add_action( 'wp_ajax_cooked_load_default', [&$this, 'load_default'] );
+        add_action( 'wp_ajax_cooked_load_default', [ &$this, 'load_default' ] );
 
         // Get JSON list of Recipe IDs
-        add_action( 'wp_ajax_cooked_get_recipe_ids', [&$this, 'get_recipe_ids'] );
+        add_action( 'wp_ajax_cooked_get_recipe_ids', [ &$this, 'get_recipe_ids' ] );
 
         // Get Recipe Count
-        add_action( 'wp_ajax_cooked_get_recipe_count', [&$this, 'get_recipe_count'] );
+        add_action( 'wp_ajax_cooked_get_recipe_count', [ &$this, 'get_recipe_count' ] );
 
         // Get JSON list of Recipe IDs, ready for Migration
-        add_action( 'wp_ajax_cooked_get_migrate_ids', [&$this, 'get_migrate_ids'] );
+        add_action( 'wp_ajax_cooked_get_migrate_ids', [ &$this, 'get_migrate_ids' ] );
 
         // Get JSON list of Recipe IDs, ready for Import
-        add_action( 'wp_ajax_cooked_get_import_ids', [&$this, 'get_import_ids']);
+        add_action( 'wp_ajax_cooked_get_import_ids', [ &$this, 'get_import_ids' ] );
 
         // Migrate Recipes
-        add_action( 'wp_ajax_cooked_migrate_recipes', [&$this, 'migrate_recipes'] );
+        add_action( 'wp_ajax_cooked_migrate_recipes', [ &$this, 'migrate_recipes' ] );
 
         // Import Recipes
-        add_action( 'wp_ajax_cooked_import_recipes', [&$this, 'import_recipes']);
+        add_action( 'wp_ajax_cooked_import_recipes', [ &$this, 'import_recipes' ] );
 
         // CSV Import - Upload file
-        add_action( 'wp_ajax_cooked_upload_csv', [&$this, 'upload_csv']);
+        add_action( 'wp_ajax_cooked_upload_csv', [ &$this, 'upload_csv' ] );
 
         // CSV Import - Process file
-        add_action( 'wp_ajax_cooked_process_csv', [&$this, 'process_csv']);
+        add_action( 'wp_ajax_cooked_process_csv', [ &$this, 'process_csv' ] );
 
         // Bulk Add - Parse Ingredients
-        add_action( 'wp_ajax_cooked_parse_bulk_ingredients', [&$this, 'parse_bulk_ingredients'] );
-        add_action( 'wp_ajax_nopriv_cooked_parse_bulk_ingredients', [&$this, 'parse_bulk_ingredients'] );
+        add_action( 'wp_ajax_cooked_parse_bulk_ingredients', [ &$this, 'parse_bulk_ingredients' ] );
+        add_action( 'wp_ajax_nopriv_cooked_parse_bulk_ingredients', [ &$this, 'parse_bulk_ingredients' ] );
     }
 
     private static function recipe_ids_from_json( $json ) {
@@ -102,16 +104,16 @@ class Ajax {
     public function get_migrate_ids() {
         self::require_settings_ajax( 'cooked_migrate_recipes' );
 
-        $old_recipes = get_transient('cooked_classic_recipes');
-        if ($old_recipes != 'complete'):
-            $total = count($old_recipes);
+        $old_recipes = get_transient( 'cooked_classic_recipes' );
+        if ( $old_recipes != 'complete' ) :
+            $total = count( $old_recipes );
 
-            if ($total > 0):
-                echo wp_json_encode($old_recipes);
-            else:
+            if ( $total > 0 ) :
+                echo wp_json_encode( $old_recipes );
+            else :
                 echo 'false';
             endif;
-        else:
+        else :
             echo 'false';
         endif;
 
@@ -123,31 +125,31 @@ class Ajax {
 
         $import_type = isset( $_POST['import_type'] ) ? sanitize_key( wp_unslash( $_POST['import_type'] ) ) : '';
         $import_type = self::sanitize_import_type( $import_type );
-        $recipes = [];
+        $recipes     = [];
 
         if ( $import_type === 'delicious_recipes' ) {
             $args = [
-                'post_type' => 'recipe',
+                'post_type'      => 'recipe',
                 'posts_per_page' => -1,
-                'post_status' => 'any',
-                'fields' => 'ids',
-                'meta_query' => [
+                'post_status'    => 'any',
+                'fields'         => 'ids',
+                'meta_query'     => [
                     [
-                        'key' => 'delicious_recipes_metadata',
+                        'key'     => 'delicious_recipes_metadata',
                         'compare' => 'EXISTS',
                     ],
                 ],
             ];
         } elseif ( $import_type === 'wp_recipe_maker' ) {
             $args = [
-                'post_type' => 'wprm_recipe',
+                'post_type'      => 'wprm_recipe',
                 'posts_per_page' => -1,
-                'post_status' => 'any',
-                'fields' => 'ids',
-                'meta_query' => [
+                'post_status'    => 'any',
+                'fields'         => 'ids',
+                'meta_query'     => [
                     [
-                        'key' => 'wprm_type',
-                        'value' => 'food',
+                        'key'     => 'wprm_type',
+                        'value'   => 'food',
                         'compare' => '=',
                     ],
                 ],
@@ -159,17 +161,17 @@ class Ajax {
 
         $_recipes = new \WP_Query( $args );
 
-        if (!empty($_recipes->posts)) {
-            foreach ($_recipes->posts as $rid) {
+        if ( ! empty( $_recipes->posts ) ) {
+            foreach ( $_recipes->posts as $rid ) {
                 $recipes[] = $rid;
             }
         }
 
-        if (!empty($recipes)) {
-            $total = count($recipes);
+        if ( ! empty( $recipes ) ) {
+            $total = count( $recipes );
 
-            if ($total > 0) {
-                echo wp_json_encode($recipes);
+            if ( $total > 0 ) {
+                echo wp_json_encode( $recipes );
             } else {
                 echo 'false';
             }
@@ -191,7 +193,7 @@ class Ajax {
         }
 
         $leftover_recipe_ids = array_slice( $recipe_ids, $bulk_amount );
-        $recipe_ids = array_slice( $recipe_ids, 0, $bulk_amount );
+        $recipe_ids          = array_slice( $recipe_ids, 0, $bulk_amount );
 
         if ( ! empty( $recipe_ids ) ) {
             foreach ( $recipe_ids as $rid ) {
@@ -209,11 +211,13 @@ class Ajax {
                     $seo_content = apply_filters( 'cooked_seo_recipe_content', '[cooked-excerpt]<h2>' . __( 'Ingredients', 'cooked' ) . '</h2>[cooked-ingredients checkboxes=false]<h2>' . __( 'Directions', 'cooked' ) . '</h2>[cooked-directions numbers=false]' );
                     $seo_content = do_shortcode( $seo_content );
 
-                    wp_update_post( [
-                        'ID' => $rid,
-                        'post_excerpt' => $recipe_excerpt,
-                        'post_content' => $seo_content,
-                    ] );
+                    wp_update_post(
+                        [
+							'ID'           => $rid,
+							'post_excerpt' => $recipe_excerpt,
+							'post_content' => $seo_content,
+						]
+                    );
                 }
             }
 
@@ -231,9 +235,8 @@ class Ajax {
     public function import_recipes() {
         self::require_settings_ajax( 'cooked_import_recipes' );
 
-
         $bulk_amount = 10;
-        $recipe_ids = self::recipe_ids_from_json( isset( $_POST['recipe_ids'] ) ? wp_unslash( $_POST['recipe_ids'] ) : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded then absint in recipe_ids_from_json.
+        $recipe_ids  = self::recipe_ids_from_json( isset( $_POST['recipe_ids'] ) ? wp_unslash( $_POST['recipe_ids'] ) : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded then absint in recipe_ids_from_json.
         $import_type = isset( $_POST['import_type'] ) ? sanitize_key( wp_unslash( $_POST['import_type'] ) ) : '';
         $import_type = self::sanitize_import_type( $import_type );
 
@@ -241,9 +244,9 @@ class Ajax {
             wp_die();
         }
 
-        $expected_type = $import_type === 'delicious_recipes' ? 'recipe' : 'wprm_recipe';
+        $expected_type       = $import_type === 'delicious_recipes' ? 'recipe' : 'wprm_recipe';
         $leftover_recipe_ids = array_slice( $recipe_ids, $bulk_amount );
-        $recipe_ids = array_slice( $recipe_ids, 0, $bulk_amount );
+        $recipe_ids          = array_slice( $recipe_ids, 0, $bulk_amount );
 
         if ( ! empty( $recipe_ids ) ) {
             foreach ( $recipe_ids as $rid ) {
@@ -281,14 +284,14 @@ class Ajax {
         }
 
         $args = [
-            'post_type' => 'cp_recipe',
+            'post_type'      => 'cp_recipe',
             'posts_per_page' => -1,
-            'post_status' => 'any',
-            'fields' => 'ids'
+            'post_status'    => 'any',
+            'fields'         => 'ids',
         ];
 
-        $_recipe_ids = \Cooked_Recipes::get($args, false, true);
-        echo wp_json_encode($_recipe_ids);
+        $_recipe_ids = \Cooked_Recipes::get( $args, false, true );
+        echo wp_json_encode( $_recipe_ids );
         wp_die();
     }
 
@@ -321,7 +324,7 @@ class Ajax {
             wp_send_json_error( [ 'message' => __( 'No default content provided.', 'cooked' ) ] );
         }
 
-        $page = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 0;
+        $page    = isset( $_POST['page'] ) ? absint( wp_unslash( $_POST['page'] ) ) : 0;
         $content = wp_kses_post( wp_unslash( $_POST['default_content'] ) );
 
         $args = [
@@ -334,26 +337,28 @@ class Ajax {
             'order'          => 'ASC',
         ];
 
-        $query = new \WP_Query( $args );
+        $query      = new \WP_Query( $args );
         $recipe_ids = $query->posts;
-        $updated = 0;
+        $updated    = 0;
 
-        foreach ($recipe_ids as $rid) {
-            $recipe_settings = get_post_meta($rid, '_recipe_settings', true);
-            if (!empty($recipe_settings)) {
+        foreach ( $recipe_ids as $rid ) {
+            $recipe_settings = get_post_meta( $rid, '_recipe_settings', true );
+            if ( ! empty( $recipe_settings ) ) {
                 $recipe_settings['content'] = $content;
-                update_post_meta($rid, '_recipe_settings', $recipe_settings);
-                $updated++;
+                update_post_meta( $rid, '_recipe_settings', $recipe_settings );
+                ++$updated;
             }
         }
 
         $processed = ( $page * $per_page ) + count( $recipe_ids );
         $has_more  = $processed < $query->found_posts;
 
-        wp_send_json_success( [
-            'updated'  => $updated,
-            'has_more' => $has_more,
-        ] );
+        wp_send_json_success(
+            [
+				'updated'  => $updated,
+				'has_more' => $has_more,
+			]
+        );
     }
 
     public function save_default() {
@@ -366,7 +371,7 @@ class Ajax {
 
         if ( isset( $_POST['default_content'] ) ) {
             $_cooked_settings['default_content'] = wp_kses_post( wp_unslash( $_POST['default_content'] ) );
-            update_option('cooked_settings', $_cooked_settings);
+            update_option( 'cooked_settings', $_cooked_settings );
         } else {
             echo esc_html__( 'No default content provided.', 'cooked' );
         }
@@ -377,17 +382,17 @@ class Ajax {
     public function load_default() {
         global $_cooked_settings;
 
-        if (!current_user_can('edit_cooked_recipes')) {
+        if ( ! current_user_can( 'edit_cooked_recipes' ) ) {
             wp_die();
         }
 
-        if (isset($_cooked_settings['default_content'])) {
-            $default_content = wp_unslash($_cooked_settings['default_content']);
+        if ( isset( $_cooked_settings['default_content'] ) ) {
+            $default_content = wp_unslash( $_cooked_settings['default_content'] );
         } else {
             $default_content = \Cooked_Recipes::default_content();
         }
 
-        echo wp_kses_post($default_content);
+        echo wp_kses_post( $default_content );
 
         wp_die();
     }
@@ -398,41 +403,43 @@ class Ajax {
     public function upload_csv() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
         if ( ! wp_verify_nonce( $nonce, 'cooked_admin_import' ) || ! current_user_can( 'edit_cooked_settings' ) ) {
-            wp_send_json_error(['message' => __('You do not have permission to import recipes.', 'cooked')]);
+            wp_send_json_error( [ 'message' => __( 'You do not have permission to import recipes.', 'cooked' ) ] );
         }
 
         if ( ! isset( $_FILES['csv_file'] ) || ! isset( $_FILES['csv_file']['error'] ) || UPLOAD_ERR_OK !== (int) $_FILES['csv_file']['error'] ) {
-            wp_send_json_error(['message' => __('File upload failed.', 'cooked')]);
+            wp_send_json_error( [ 'message' => __( 'File upload failed.', 'cooked' ) ] );
         }
 
         $csv_name = isset( $_FILES['csv_file']['name'] ) ? sanitize_file_name( wp_unslash( $_FILES['csv_file']['name'] ) ) : '';
         if ( ! $csv_name ) {
-            wp_send_json_error(['message' => __('File upload failed.', 'cooked')]);
+            wp_send_json_error( [ 'message' => __( 'File upload failed.', 'cooked' ) ] );
         }
         $_FILES['csv_file']['name'] = $csv_name;
 
         // Validate file type
         $file_type = wp_check_filetype( $csv_name );
-        if ($file_type['ext'] !== 'csv') {
-            wp_send_json_error(['message' => __('Invalid file type. Please upload a CSV file.', 'cooked')]);
+        if ( $file_type['ext'] !== 'csv' ) {
+            wp_send_json_error( [ 'message' => __( 'Invalid file type. Please upload a CSV file.', 'cooked' ) ] );
         }
 
         // Use WordPress upload handler
         require_once ABSPATH . 'wp-admin/includes/file.php';
-        $upload = wp_handle_upload($_FILES['csv_file'], ['test_form' => false]);
+        $upload = wp_handle_upload( $_FILES['csv_file'], [ 'test_form' => false ] );
 
-        if (isset($upload['error'])) {
-            wp_send_json_error(['message' => $upload['error']]);
+        if ( isset( $upload['error'] ) ) {
+            wp_send_json_error( [ 'message' => $upload['error'] ] );
         }
 
         // Store file path in transient for processing
         $transient_key = 'cooked_csv_import_' . get_current_user_id() . '_' . time();
-        set_transient($transient_key, $upload['file'], 3600); // 1 hour
+        set_transient( $transient_key, $upload['file'], 3600 ); // 1 hour
 
-        wp_send_json_success([
-            'transient_key' => $transient_key,
-            'file_path' => $upload['file']
-        ]);
+        wp_send_json_success(
+            [
+				'transient_key' => $transient_key,
+				'file_path'     => $upload['file'],
+			]
+        );
     }
 
     /**
@@ -441,41 +448,45 @@ class Ajax {
     public function process_csv() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
         if ( ! wp_verify_nonce( $nonce, 'cooked_admin_import' ) || ! current_user_can( 'edit_cooked_settings' ) ) {
-            wp_send_json_error(['message' => __('You do not have permission to import recipes.', 'cooked')]);
+            wp_send_json_error( [ 'message' => __( 'You do not have permission to import recipes.', 'cooked' ) ] );
         }
 
         $transient_key = isset( $_POST['transient_key'] ) ? sanitize_text_field( wp_unslash( $_POST['transient_key'] ) ) : '';
-        $file_path = get_transient($transient_key);
+        $file_path     = get_transient( $transient_key );
 
-        if (!$file_path || !file_exists($file_path)) {
-            wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
+        if ( ! $file_path || ! file_exists( $file_path ) ) {
+            wp_send_json_error( [ 'message' => __( 'CSV file not found. Please upload again.', 'cooked' ) ] );
         }
 
         // Process the CSV file
-        $results = \Cooked_CSV_Import::import_from_file($file_path);
+        $results = \Cooked_CSV_Import::import_from_file( $file_path );
 
         // Clean up
-        if (file_exists($file_path)) {
-            wp_delete_file($file_path);
+        if ( file_exists( $file_path ) ) {
+            wp_delete_file( $file_path );
         }
-        delete_transient($transient_key);
+        delete_transient( $transient_key );
 
-        if ($results['success'] > 0) {
-            wp_send_json_success([
-                'message' => sprintf(
-                    /* translators: %d: number of recipes imported */
-                    __('Successfully imported %d recipe(s).', 'cooked'),
-                    $results['success']
-                ),
-                'success' => $results['success'],
-                'total' => $results['total'],
-                'errors' => $results['errors']
-            ]);
+        if ( $results['success'] > 0 ) {
+            wp_send_json_success(
+                [
+					'message' => sprintf(
+						/* translators: %d: number of recipes imported */
+						__( 'Successfully imported %d recipe(s).', 'cooked' ),
+						$results['success']
+					),
+					'success' => $results['success'],
+					'total'   => $results['total'],
+					'errors'  => $results['errors'],
+				]
+            );
         } else {
-            wp_send_json_error([
-                'message' => __('No recipes were imported.', 'cooked'),
-                'errors' => $results['errors']
-            ]);
+            wp_send_json_error(
+                [
+					'message' => __( 'No recipes were imported.', 'cooked' ),
+					'errors'  => $results['errors'],
+				]
+            );
         }
     }
 
@@ -504,13 +515,19 @@ class Ajax {
 
         // Sort variations longest-first to avoid partial matches.
         $variation_strings = array_keys( $variations_map );
-        usort( $variation_strings, function( $a, $b ) {
-            return strlen( $b ) - strlen( $a );
-        });
+        usort(
+            $variation_strings,
+            function ( $a, $b ) {
+				return strlen( $b ) - strlen( $a );
+			}
+        );
 
-        $escaped = array_map( function( $v ) {
-            return preg_quote( $v, '/' );
-        }, $variation_strings );
+        $escaped = array_map(
+            function ( $v ) {
+                return preg_quote( $v, '/' );
+            },
+            $variation_strings
+        );
 
         $units_pattern = '/^(' . implode( '|', $escaped ) . ')\.?\s+/iu';
 
@@ -524,24 +541,36 @@ class Ajax {
             $line = trim( sanitize_text_field( $line ) );
 
             if ( '' === $line ) {
-                $parsed[ $index ] = [ 'amount' => '', 'measurement' => '', 'name' => '' ];
+                $parsed[ $index ] = [
+					'amount'      => '',
+					'measurement' => '',
+					'name'        => '',
+				];
                 continue;
             }
 
-            $raw = $line;
-            $amount = '';
+            $raw         = $line;
+            $amount      = '';
             $measurement = '';
 
             $raw = str_replace( "\xE2\x81\x84", '/', $raw );
 
             $fraction_map = [
-                "\xC2\xBC" => '1/4', "\xC2\xBD" => '1/2', "\xC2\xBE" => '3/4',
-                "\xE2\x85\x93" => '1/3', "\xE2\x85\x94" => '2/3',
-                "\xE2\x85\x95" => '1/5', "\xE2\x85\x96" => '2/5',
-                "\xE2\x85\x97" => '3/5', "\xE2\x85\x98" => '4/5',
-                "\xE2\x85\x99" => '1/6', "\xE2\x85\x9A" => '5/6',
-                "\xE2\x85\x9B" => '1/8', "\xE2\x85\x9C" => '3/8',
-                "\xE2\x85\x9D" => '5/8', "\xE2\x85\x9E" => '7/8',
+                "\xC2\xBC"     => '1/4',
+				"\xC2\xBD"     => '1/2',
+				"\xC2\xBE"     => '3/4',
+                "\xE2\x85\x93" => '1/3',
+				"\xE2\x85\x94" => '2/3',
+                "\xE2\x85\x95" => '1/5',
+				"\xE2\x85\x96" => '2/5',
+                "\xE2\x85\x97" => '3/5',
+				"\xE2\x85\x98" => '4/5',
+                "\xE2\x85\x99" => '1/6',
+				"\xE2\x85\x9A" => '5/6',
+                "\xE2\x85\x9B" => '1/8',
+				"\xE2\x85\x9C" => '3/8',
+                "\xE2\x85\x9D" => '5/8',
+				"\xE2\x85\x9E" => '7/8',
             ];
             // "1½" must become "1 1/2", not "11/2".
             foreach ( $fraction_map as $symbol => $replacement ) {
@@ -555,12 +584,12 @@ class Ajax {
             $amount_regex = '/^\s*([\d][\s\/\-\d.,\x{2013}\x{2014}]*)\s*/u';
             if ( preg_match( $amount_regex, $raw, $match ) ) {
                 $amount = trim( $match[1] );
-                $raw = trim( substr( $raw, strlen( $match[0] ) ) );
+                $raw    = trim( substr( $raw, strlen( $match[0] ) ) );
             }
 
             if ( preg_match( $units_pattern, $raw, $match ) ) {
                 $matched_variation = trim( rtrim( $match[1], '.' ) );
-                $matched_lower = strtolower( $matched_variation );
+                $matched_lower     = strtolower( $matched_variation );
 
                 foreach ( $variations_map as $variation => $key ) {
                     if ( strtolower( $variation ) === $matched_lower ) {
@@ -575,9 +604,9 @@ class Ajax {
             $name = trim( $raw );
 
             if ( ! $name ) {
-                $amount = '';
+                $amount      = '';
                 $measurement = '';
-                $name = trim( $line );
+                $name        = trim( $line );
             }
 
             $parsed[ $index ] = [

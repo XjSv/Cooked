@@ -236,11 +236,11 @@ final class Plugin {
      */
     public static function instance() {
         if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \Cooked_Plugin ) ) {
-            self::$instance = new \Cooked_Plugin;
+            self::$instance = new \Cooked_Plugin();
             self::$instance->setup_constants();
 
-            add_action( 'init', [self::$instance, 'load_textdomain'] );
-            add_action( 'plugins_loaded', [self::$instance, 'check_plugin_update'] );
+            add_action( 'init', [ self::$instance, 'load_textdomain' ] );
+            add_action( 'plugins_loaded', [ self::$instance, 'check_plugin_update' ] );
 
             if ( COOKED_DEV ) {
                 add_filter( 'style_loader_src', [ self::class, 'dev_asset_version' ] );
@@ -248,39 +248,39 @@ final class Plugin {
             }
 
             self::$instance->includes();
-            self::$instance->roles = new \Cooked_Roles();
+            self::$instance->roles       = new \Cooked_Roles();
             self::$instance->admin_menus = new \Cooked_Admin_Menus();
 
-            if (is_admin()) {
+            if ( is_admin() ) {
                 self::$instance->admin_enqueues = new \Cooked_Admin_Enqueues();
             } else {
                 self::$instance->enqueues = new \Cooked_Enqueues();
             }
 
-            self::$instance->admin_settings = new \Cooked_Settings();
-            self::$instance->migration = new \Cooked_Migration();
+            self::$instance->admin_settings  = new \Cooked_Settings();
+            self::$instance->migration       = new \Cooked_Migration();
             self::$instance->related_recipes = new \Cooked_Related_Recipes();
-            self::$instance->updates = new \Cooked_Updates();
-            self::$instance->post_types = new \Cooked_Post_Types();
-            self::$instance->recipe_meta = new \Cooked_Recipe_Meta();
-            self::$instance->measurements = new \Cooked_Measurements();
-            self::$instance->users = new \Cooked_Users();
-            self::$instance->recipes = $GLOBALS['Cooked_Recipes'];
-            self::$instance->shortcodes = new \Cooked_Shortcodes();
-            self::$instance->ajax = new \Cooked_Ajax();
-            self::$instance->functions = new \Cooked_Functions();
-            self::$instance->widget = new \Cooked_Widgets();
-            self::$instance->gutenberg = new \Cooked_Gutenberg();
-            self::$instance->elementor = new \Cooked_Elementor();
-            self::$instance->extra = new \Cooked_Plugin_Extra();
-            self::$instance->multilingual = new \Cooked_Multilingual();
-            self::$instance->pixwell = new \Cooked_Pixwell();
+            self::$instance->updates         = new \Cooked_Updates();
+            self::$instance->post_types      = new \Cooked_Post_Types();
+            self::$instance->recipe_meta     = new \Cooked_Recipe_Meta();
+            self::$instance->measurements    = new \Cooked_Measurements();
+            self::$instance->users           = new \Cooked_Users();
+            self::$instance->recipes         = $GLOBALS['Cooked_Recipes'];
+            self::$instance->shortcodes      = new \Cooked_Shortcodes();
+            self::$instance->ajax            = new \Cooked_Ajax();
+            self::$instance->functions       = new \Cooked_Functions();
+            self::$instance->widget          = new \Cooked_Widgets();
+            self::$instance->gutenberg       = new \Cooked_Gutenberg();
+            self::$instance->elementor       = new \Cooked_Elementor();
+            self::$instance->extra           = new \Cooked_Plugin_Extra();
+            self::$instance->multilingual    = new \Cooked_Multilingual();
+            self::$instance->pixwell         = new \Cooked_Pixwell();
 
             self::$instance->module_setup();
 
-            add_action( 'init', [self::$instance, 'initialize_plugin_support'], 10 );
+            add_action( 'init', [ self::$instance, 'initialize_plugin_support' ], 10 );
 
-            do_action('cooked_loaded');
+            do_action( 'cooked_loaded' );
         }
 
         return self::$instance;
@@ -295,10 +295,10 @@ final class Plugin {
     private function module_setup() {
         // Look for Cooked Modules
         $modules = file_exists( COOKED_DIR . 'modules' ) ? scandir( COOKED_DIR . 'modules' ) : false;
-        if ($modules):
-            foreach ($modules as $module_name):
-                if ($module_name !== '.' && $module_name !== '..'):
-                    if ( file_exists( COOKED_DIR . 'modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ):
+        if ( $modules ) :
+            foreach ( $modules as $module_name ) :
+                if ( $module_name !== '.' && $module_name !== '..' ) :
+                    if ( file_exists( COOKED_DIR . 'modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ) :
                         require_once COOKED_DIR . 'modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
                     endif;
                 endif;
@@ -307,11 +307,11 @@ final class Plugin {
 
         // Look for Cooked Modules in Parent Theme
         $parent_theme_folder = trailingslashit( get_template_directory() );
-        $modules = file_exists( $parent_theme_folder . 'cooked-modules' ) ? scandir( $parent_theme_folder . 'cooked-modules' ) : false;
-        if ($modules):
-            foreach ($modules as $module_name):
-                if ($module_name !== '.' && $module_name !== '..'):
-                    if ( file_exists( $parent_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ):
+        $modules             = file_exists( $parent_theme_folder . 'cooked-modules' ) ? scandir( $parent_theme_folder . 'cooked-modules' ) : false;
+        if ( $modules ) :
+            foreach ( $modules as $module_name ) :
+                if ( $module_name !== '.' && $module_name !== '..' ) :
+                    if ( file_exists( $parent_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ) :
                         require_once $parent_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
                     endif;
                 endif;
@@ -320,12 +320,12 @@ final class Plugin {
 
         // Look for Cooked Modules in Child Theme (if one is active)
         $child_theme_folder = trailingslashit( get_stylesheet_directory() );
-        if ($child_theme_folder != $parent_theme_folder):
+        if ( $child_theme_folder != $parent_theme_folder ) :
             $modules = file_exists( $child_theme_folder . 'cooked-modules' ) ? scandir( $child_theme_folder . 'cooked-modules' ) : false;
-            if ($modules):
-                foreach ($modules as $module_name):
-                    if ($module_name !== '.' && $module_name !== '..'):
-                        if ( file_exists( $child_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ):
+            if ( $modules ) :
+                foreach ( $modules as $module_name ) :
+                    if ( $module_name !== '.' && $module_name !== '..' ) :
+                        if ( file_exists( $child_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ) :
                             require_once $child_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
                         endif;
                     endif;
@@ -341,11 +341,11 @@ final class Plugin {
      * @return void
      */
     public function initialize_plugin_support() {
-        if (in_array('wordpress-seo/wp-seo.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+        if ( in_array( 'wordpress-seo/wp-seo.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             self::$instance->yoastseo = new \Cooked_YoastSEO();
         }
 
-        if (in_array('seo-by-rank-math/rank-math.php', apply_filters('active_plugins', get_option('active_plugins')))) {
+        if ( in_array( 'seo-by-rank-math/rank-math.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
             self::$instance->rankmathseo = new \Cooked_RankMathSEO();
         }
     }
@@ -356,14 +356,14 @@ final class Plugin {
      * @since 1.10.0
      */
     public function check_plugin_update() {
-        $current_version = get_option('cooked_version', '0');
+        $current_version = get_option( 'cooked_version', '0' );
 
-        if (version_compare($current_version, COOKED_VERSION, '<')) {
+        if ( version_compare( $current_version, COOKED_VERSION, '<' ) ) {
             // Run migrations
             $this->migration->init();
 
             // Update version in database
-            update_option('cooked_version', COOKED_VERSION);
+            update_option( 'cooked_version', COOKED_VERSION );
         }
     }
 
@@ -425,7 +425,7 @@ final class Plugin {
 
         // Plugin Root File.
         if ( ! defined( 'COOKED_PLUGIN_FILE' ) ) {
-             define( 'COOKED_PLUGIN_FILE', self::main_file() );
+            define( 'COOKED_PLUGIN_FILE', self::main_file() );
         }
 
         // Plugin Folder URL.
@@ -435,7 +435,7 @@ final class Plugin {
 
         // WordPress Ajax URL.
         if ( ! defined( 'COOKED_AJAX_URL' ) ) {
-            define( 'COOKED_AJAX_URL', admin_url('admin-ajax.php') );
+            define( 'COOKED_AJAX_URL', admin_url( 'admin-ajax.php' ) );
         }
 
         // Make sure CAL_GREGORIAN is defined.
@@ -445,12 +445,12 @@ final class Plugin {
 
         // Time Format
         if ( ! defined( 'COOKED_TIME_FORMAT' ) ) {
-            define( 'COOKED_TIME_FORMAT', get_option('time_format','g:ia') );
+            define( 'COOKED_TIME_FORMAT', get_option( 'time_format', 'g:ia' ) );
         }
 
         // Date Format
         if ( ! defined( 'COOKED_DATE_FORMAT' ) ) {
-            define( 'COOKED_DATE_FORMAT', get_option('date_format','F j, Y') );
+            define( 'COOKED_DATE_FORMAT', get_option( 'date_format', 'F j, Y' ) );
         }
     }
 

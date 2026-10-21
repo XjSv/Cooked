@@ -11,7 +11,9 @@
  */
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 function cooked_recipe_shortcodes_content() {
     global $post_id;
@@ -23,7 +25,7 @@ function cooked_recipe_shortcodes_content() {
         <h3 class="cooked-settings-title cooked-bm-0"><?php esc_html_e( 'Display Recipe', 'cooked' ); ?></h3>
         <p class="cooked-bm-10"><?php esc_html_e( 'This shortcode displays the recipe in its entirety, using the "Recipe Template" field in the first tab.', 'cooked' ); ?></p>
         <div class="cooked-bm-20 cooked-block">
-            <input class='cooked-shortcode-field' type='text' readonly value='[cooked-recipe id="<?php echo intval($post_id); ?>"]' />
+            <input class='cooked-shortcode-field' type='text' readonly value='[cooked-recipe id="<?php echo intval( $post_id ); ?>"]' />
         </div>
 
         <hr class="cooked-hr">
@@ -111,7 +113,8 @@ function cooked_recipe_shortcodes_content() {
 
         </div>
 
-    </div><?php
+    </div>
+    <?php
 }
 
 /**
@@ -122,71 +125,75 @@ function cooked_recipe_shortcodes_content() {
  */
 function cooked_render_recipe_fields( $post_id ) {
     global $_cooked_settings;
-    $recipe_settings = get_post_meta( $post_id, '_recipe_settings', true);
+    $recipe_settings = get_post_meta( $post_id, '_recipe_settings', true );
 
     // Backwards Compatibility with Cooked 2.x
-    $c2_recipe_settings = Cooked_Recipes::get_c2_recipe_meta( $post_id );
+    $c2_recipe_settings     = Cooked_Recipes::get_c2_recipe_meta( $post_id );
     $recipe_review_required = false;
 
     // Show the Shortcodes tab if recipe is saved.
-    if ( !empty($recipe_settings) ):
-        add_action('cooked_recipe_shortcodes_after', 'cooked_recipe_shortcodes_content',10);
+    if ( ! empty( $recipe_settings ) ) :
+        add_action( 'cooked_recipe_shortcodes_after', 'cooked_recipe_shortcodes_content', 10 );
     endif;
 
-    if( !isset($recipe_settings['cooked_version']) && !empty($c2_recipe_settings) ):
+    if ( ! isset( $recipe_settings['cooked_version'] ) && ! empty( $c2_recipe_settings ) ) :
         $recipe_review_required = true;
-        $recipe_settings = Cooked_Recipes::sync_c2_recipe_settings($c2_recipe_settings, $post_id);
+        $recipe_settings        = Cooked_Recipes::sync_c2_recipe_settings( $c2_recipe_settings, $post_id );
     endif;
 
-    $recipe_tabs = apply_filters( 'cooked_recipe_admin_tabs', [
-        'content' => [
-            'icon' => 'desktop',
-            'name' => __('Layout', 'cooked'),
-            'conditional' => false,
-            'value' => false
-        ],
-        'ingredients' => [
-            'icon' => 'list',
-            'name' => __('Ingredients', 'cooked'),
-            'conditional' => false,
-            'value' => false
-        ],
-        'directions' => [
-            'icon' => 'directions',
-            'name' => __('Directions', 'cooked'),
-            'conditional' => false,
-            'value' => false
-        ],
-        'nutrition' => [
-            'icon' => 'heart',
-            'name' => __('Nutrition', 'cooked'),
-            'conditional' => false,
-            'value' => false
-        ],
-        'gallery' => [
-            'icon' => 'image',
-            'name' => __('Gallery', 'cooked'),
-            'conditional' => false,
-            'value' => false
-        ],
-        'shortcodes' => [
-            'icon' => 'code',
-            'name' => __('Shortcodes', 'cooked'),
-            'conditional' => false,
-            'value' => false
-        ],
-    ]);
+    $recipe_tabs = apply_filters(
+        'cooked_recipe_admin_tabs',
+        [
+			'content'     => [
+				'icon'        => 'desktop',
+				'name'        => __( 'Layout', 'cooked' ),
+				'conditional' => false,
+				'value'       => false,
+			],
+			'ingredients' => [
+				'icon'        => 'list',
+				'name'        => __( 'Ingredients', 'cooked' ),
+				'conditional' => false,
+				'value'       => false,
+			],
+			'directions'  => [
+				'icon'        => 'directions',
+				'name'        => __( 'Directions', 'cooked' ),
+				'conditional' => false,
+				'value'       => false,
+			],
+			'nutrition'   => [
+				'icon'        => 'heart',
+				'name'        => __( 'Nutrition', 'cooked' ),
+				'conditional' => false,
+				'value'       => false,
+			],
+			'gallery'     => [
+				'icon'        => 'image',
+				'name'        => __( 'Gallery', 'cooked' ),
+				'conditional' => false,
+				'value'       => false,
+			],
+			'shortcodes'  => [
+				'icon'        => 'code',
+				'name'        => __( 'Shortcodes', 'cooked' ),
+				'conditional' => false,
+				'value'       => false,
+			],
+		]
+    );
 
     $measurements = Cooked_Measurements::get();
 
     $wp_editor_roles_allowed = false;
     if ( is_user_logged_in() ) {
-        $user = wp_get_current_user();
-        $user_roles = $user->roles;
+        $user                    = wp_get_current_user();
+        $user_roles              = $user->roles;
         $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && ! empty( array_intersect( $user_roles, $_cooked_settings['recipe_wp_editor_roles'] ) ) ? true : false;
     }
 
-    /* $cooked_page_args = [
+    /*
+    $cooked_page_args = [
         'sort_order' => 'asc',
         'sort_column' => 'post_title',
         'hierarchical' => false,
@@ -195,49 +202,56 @@ function cooked_render_recipe_fields( $post_id ) {
     ];
     $cooked_page_array = get_pages($cooked_page_args); */
 
-    if (!empty($recipe_tabs)):
+    if ( ! empty( $recipe_tabs ) ) :
         echo '<ul id="cooked-recipe-tabs">';
         $first_tab = true;
 
-        foreach ($recipe_tabs as $slug => $tab):
+        foreach ( $recipe_tabs as $slug => $tab ) :
             $classes = [];
-            if ($first_tab): $classes[] = 'active'; endif;
-            if ($tab['conditional']): $classes[] = 'cooked-conditional-hidden'; endif;
+            if ( $first_tab ) :
+				$classes[] = 'active';
+endif;
+            if ( $tab['conditional'] ) :
+				$classes[] = 'cooked-conditional-hidden';
+endif;
 
-            echo "<li id='cooked-recipe-tab-" . esc_attr($slug) . "'" . (!empty($classes) ? " class='" . esc_attr(implode(" ",$classes)) . "'" : "") . ($tab['conditional'] ? " data-condition='". esc_attr($tab['conditional'])."'" : "") . ($tab['value'] ? " data-value='" . esc_attr($tab['value']) . "'" : ""). ">";
-            echo ( $tab['icon'] ? "<i class='cooked-icon cooked-icon-fw cooked-icon-" . esc_attr($tab['icon']) . "'></i>&nbsp;&nbsp;" : "" );
-            echo esc_html($tab['name']);
-            echo "</li>";
+            echo "<li id='cooked-recipe-tab-" . esc_attr( $slug ) . "'" . ( ! empty( $classes ) ? " class='" . esc_attr( implode( ' ', $classes ) ) . "'" : '' ) . ( $tab['conditional'] ? " data-condition='" . esc_attr( $tab['conditional'] ) . "'" : '' ) . ( $tab['value'] ? " data-value='" . esc_attr( $tab['value'] ) . "'" : '' ) . '>';
+            echo ( $tab['icon'] ? "<i class='cooked-icon cooked-icon-fw cooked-icon-" . esc_attr( $tab['icon'] ) . "'></i>&nbsp;&nbsp;" : '' );
+            echo esc_html( $tab['name'] );
+            echo '</li>';
             $first_tab = false;
 
         endforeach;
 
         echo '</ul>';
 
-    endif; ?>
+    endif;
+    ?>
 
     <div class="cooked-recipe-tab-content-wrapper">
 
-        <?php do_action('cooked_recipe_tabs_before'); ?>
+        <?php do_action( 'cooked_recipe_tabs_before' ); ?>
 
         <section class="cooked-recipe-tab-content" id="cooked-recipe-tab-content-content">
 
             <!-- Allows for backwards compatability features -->
             <input type="hidden" name="_recipe_settings[cooked_version]" value="<?php echo esc_attr( COOKED_VERSION ); ?>">
 
-            <?php if (isset($recipe_review_required) && $recipe_review_required): ?>
+            <?php if ( isset( $recipe_review_required ) && $recipe_review_required ) : ?>
                 <section class="cooked-alert-block" id="cooked-recipe-tab-content-migration">
                     <div class="recipe-setting-block">
                         <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Review Required', 'cooked' ); ?></h3>
-                        <p><?php
+                        <p>
+                        <?php
                             /* translators: for displaying singular or plural versions depending on the number of recipes. */
-                            echo sprintf( esc_html__( "It looks like this recipe is from a different version of %s. Please review and click \"Update\" to save it.","cooked"), "Cooked" );
-                        ?></p>
+                            printf( esc_html__( 'It looks like this recipe is from a different version of %s. Please review and click "Update" to save it.', 'cooked' ), 'Cooked' );
+                        ?>
+                        </p>
                     </div>
                 </section>
             <?php endif; ?>
 
-            <?php if ( isset($recipe_settings) && !empty($recipe_settings) ): ?>
+            <?php if ( isset( $recipe_settings ) && ! empty( $recipe_settings ) ) : ?>
                 <div class="recipe-setting-block">
                     <h3 class="cooked-settings-title cooked-bm-0"><?php esc_html_e( 'Recipe Shortcode', 'cooked' ); ?></h3>
                     <p class="cooked-bm-10"><?php esc_html_e( 'You can use the following shortcode to display your recipe anywhere:', 'cooked' ); ?></p>
@@ -248,62 +262,70 @@ function cooked_render_recipe_fields( $post_id ) {
             <?php endif; ?>
 
             <?php do_action( 'cooked_recipe_meta_before_fields', $recipe_settings ); ?>
-            <?php $nonce = wp_create_nonce('cooked_save_default'); ?>
-            <?php $nonce_bulk = wp_create_nonce('cooked_save_default_bulk'); ?>
+            <?php $nonce = wp_create_nonce( 'cooked_save_default' ); ?>
+            <?php $nonce_bulk = wp_create_nonce( 'cooked_save_default_bulk' ); ?>
 
             <div class="recipe-setting-block">
 
-                <?php if (current_user_can('edit_cooked_default_template')): ?>
-                    <h3 class="cooked-settings-title cooked-bm-30-up"><?php esc_html_e( 'Recipe Template', 'cooked' ); ?><span class="button cooked-layout-save-default" role="button" tabindex="0" aria-expanded="false" aria-controls="cooked-save-default-panel"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></span><span class="button button-cooked-reset cooked-layout-load-default"><?php esc_html_e( 'Reset', 'cooked' ); ?></span><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Template','cooked') . '</strong>' . esc_html__( 'Using the built-in recipe shortcodes found on the "Shortcodes" tab, you can create the layout of your recipe below. Use the "Save as Default" button to save your template.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                <?php if ( current_user_can( 'edit_cooked_default_template' ) ) : ?>
+                    <h3 class="cooked-settings-title cooked-bm-30-up"><?php esc_html_e( 'Recipe Template', 'cooked' ); ?><span class="button cooked-layout-save-default" role="button" tabindex="0" aria-expanded="false" aria-controls="cooked-save-default-panel"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></span><span class="button button-cooked-reset cooked-layout-load-default"><?php esc_html_e( 'Reset', 'cooked' ); ?></span><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Template', 'cooked' ) . '</strong>' . esc_html__( 'Using the built-in recipe shortcodes found on the "Shortcodes" tab, you can create the layout of your recipe below. Use the "Save as Default" button to save your template.', 'cooked' ) ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <div id="cooked-save-default-panel" class="cooked-save-default-panel" hidden>
-                        <strong class="cooked-tooltip-heading"><?php esc_html_e( 'Default Recipe Template','cooked'); ?></strong>
-                        <p><?php esc_html_e( 'Choose from the options below to use this layout as the default for new recipes or for all recipes.', 'cooked'); ?></p>
-                        <span class="cooked-tooltip-buttons cooked-clearfix"><a href="#" class="cooked-save-default-new button" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Save as Default','cooked' ); ?></a>&nbsp;&nbsp;<a href="#" class="cooked-save-default-all button-primary" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-bulk-nonce="<?php echo esc_attr( $nonce_bulk ); ?>"><?php esc_html_e( 'Apply to All','cooked' ); ?></a></span>
+                        <strong class="cooked-tooltip-heading"><?php esc_html_e( 'Default Recipe Template', 'cooked' ); ?></strong>
+                        <p><?php esc_html_e( 'Choose from the options below to use this layout as the default for new recipes or for all recipes.', 'cooked' ); ?></p>
+                        <span class="cooked-tooltip-buttons cooked-clearfix"><a href="#" class="cooked-save-default-new button" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></a>&nbsp;&nbsp;<a href="#" class="cooked-save-default-all button-primary" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-bulk-nonce="<?php echo esc_attr( $nonce_bulk ); ?>"><?php esc_html_e( 'Apply to All', 'cooked' ); ?></a></span>
                         <span id="cooked-template-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span>
                         <span id="cooked-template-progress-text" class="cooked-progress-text">0 / 0</span>
                     </div>
                 <?php endif; ?>
 
                 <div class="recipe-setting-block cooked-bm-30">
-                    <?php $recipe_content = isset($recipe_settings['content']) ? wp_unslash(wp_specialchars_decode($recipe_settings['content'])) : (isset($_cooked_settings['default_content']) ? wp_unslash(wp_specialchars_decode($_cooked_settings['default_content'])) : Cooked_Recipes::default_content()); ?>
+                    <?php $recipe_content = isset( $recipe_settings['content'] ) ? wp_unslash( wp_specialchars_decode( $recipe_settings['content'] ) ) : ( isset( $_cooked_settings['default_content'] ) ? wp_unslash( wp_specialchars_decode( $_cooked_settings['default_content'] ) ) : Cooked_Recipes::default_content() ); ?>
                     <?php
-                        wp_editor($recipe_content, '_recipe_settings_content', [
-                            'teeny' => false,
-                            'media_buttons' => false,
-                            'wpautop' => false,
-                            'editor_height' => 400,
-                            'textarea_name' => '_recipe_settings[content]',
-                            'quicktags' => true
-                        ]);
+                        wp_editor(
+                            $recipe_content,
+                            '_recipe_settings_content',
+                            [
+								'teeny'         => false,
+								'media_buttons' => false,
+								'wpautop'       => false,
+								'editor_height' => 400,
+								'textarea_name' => '_recipe_settings[content]',
+								'quicktags'     => true,
+							]
+                        );
                     ?>
                 </div>
 
                 <div class="recipe-setting-block">
-                    <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Excerpt', 'cooked' ) . '</strong>' . esc_html__( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                    <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Excerpt', 'cooked' ) . '</strong>' . esc_html__( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.', 'cooked' ) ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <p>
-                        <?php if ( $wp_editor_roles_allowed ): ?>
-                            <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? wp_unslash(wp_specialchars_decode($recipe_settings['excerpt'])) : ''; ?>
+                        <?php if ( $wp_editor_roles_allowed ) : ?>
+                            <?php $recipe_excerpt = isset( $recipe_settings['excerpt'] ) ? wp_unslash( wp_specialchars_decode( $recipe_settings['excerpt'] ) ) : ''; ?>
                             <?php
-                            wp_editor($recipe_excerpt, '_recipe_settings_excerpt', [
-                                'teeny' => true,
-                                'media_buttons' => true,
-                                'wpautop' => false,
-                                'editor_height' => 100,
-                                'textarea_name' => '_recipe_settings[excerpt]',
-                                'quicktags' => true
-                            ]);
+                            wp_editor(
+                                $recipe_excerpt,
+                                '_recipe_settings_excerpt',
+                                [
+									'teeny'         => true,
+									'media_buttons' => true,
+									'wpautop'       => false,
+									'editor_height' => 100,
+									'textarea_name' => '_recipe_settings[excerpt]',
+									'quicktags'     => true,
+								]
+                            );
                             ?>
-                        <?php else: ?>
-                            <textarea name="_recipe_settings[excerpt]"><?php echo ( isset($recipe_settings['excerpt']) ? esc_textarea( $recipe_settings['excerpt'] ) : '' ); ?></textarea>
+                        <?php else : ?>
+                            <textarea name="_recipe_settings[excerpt]"><?php echo ( isset( $recipe_settings['excerpt'] ) ? esc_textarea( $recipe_settings['excerpt'] ) : '' ); ?></textarea>
                         <?php endif; ?>
                     </p>
 
                 </div>
 
-                <?php if ( !isset($_cooked_settings['advanced']) || empty($_cooked_settings['advanced']) || !in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) ): ?>
+                <?php if ( ! isset( $_cooked_settings['advanced'] ) || empty( $_cooked_settings['advanced'] ) || ! in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) ) : ?>
                     <div class="recipe-setting-block">
-                        <h3 class="cooked-settings-title"><?php esc_html_e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'SEO Description', 'cooked' ) . '</strong>' . esc_html__( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
-                        <p><textarea name="_recipe_settings[seo_description]"><?php echo isset($recipe_settings['seo_description']) ? esc_textarea( wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) : ''; ?></textarea></p>
+                        <h3 class="cooked-settings-title"><?php esc_html_e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'SEO Description', 'cooked' ) . '</strong>' . esc_html__( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.', 'cooked' ) ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                        <p><textarea name="_recipe_settings[seo_description]"><?php echo isset( $recipe_settings['seo_description'] ) ? esc_textarea( wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) : ''; ?></textarea></p>
                     </div>
                 <?php endif; ?>
 
@@ -316,45 +338,51 @@ function cooked_render_recipe_fields( $post_id ) {
                             <h3 class="cooked-settings-title"><?php esc_html_e( 'Difficulty Level', 'cooked' ); ?></h3>
                             <select name="_recipe_settings[difficulty_level]">
                                 <option value="0">--</option>
-                                <?php foreach ($difficulty_levels as $level => $name):
-                                    echo '<option value="' . esc_attr( $level ) . '"' . ( isset($recipe_settings['difficulty_level']) && $recipe_settings['difficulty_level'] == $level ? ' selected' : '' ) . '>' . esc_html( $name ) . '</option>';
-                                endforeach; ?>
+                                <?php
+                                foreach ( $difficulty_levels as $level => $name ) :
+                                    echo '<option value="' . esc_attr( $level ) . '"' . ( isset( $recipe_settings['difficulty_level'] ) && $recipe_settings['difficulty_level'] == $level ? ' selected' : '' ) . '>' . esc_html( $name ) . '</option>';
+                                endforeach;
+                                ?>
                             </select>
                         </div>
                         <div class="cooked-setting-column-14">
                             <h3 class="cooked-settings-title"><?php esc_html_e( 'Prep Time', 'cooked' ); ?></h3>
-                            <input id="cooked-prep-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[prep_time]" value="<?php echo ( isset($recipe_settings['prep_time']) && $recipe_settings['prep_time'] ? esc_attr( $recipe_settings['prep_time'] ) : '' ); ?>" placeholder="--">
-                            <span class="cooked-time-picker-text"><?php esc_html_e('minutes','cooked'); ?></span>
+                            <input id="cooked-prep-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[prep_time]" value="<?php echo ( isset( $recipe_settings['prep_time'] ) && $recipe_settings['prep_time'] ? esc_attr( $recipe_settings['prep_time'] ) : '' ); ?>" placeholder="--">
+                            <span class="cooked-time-picker-text"><?php esc_html_e( 'minutes', 'cooked' ); ?></span>
                         </div>
                         <div class="cooked-setting-column-14">
                             <h3 class="cooked-settings-title"><?php esc_html_e( 'Cook Time', 'cooked' ); ?></h3>
-                            <input id="cooked-cook-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[cook_time]" value="<?php echo ( isset($recipe_settings['cook_time']) && $recipe_settings['cook_time'] ? esc_attr( $recipe_settings['cook_time'] ) : '' ); ?>" placeholder="--">
-                            <span class="cooked-time-picker-text"><?php esc_html_e('minutes','cooked'); ?></span>
+                            <input id="cooked-cook-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[cook_time]" value="<?php echo ( isset( $recipe_settings['cook_time'] ) && $recipe_settings['cook_time'] ? esc_attr( $recipe_settings['cook_time'] ) : '' ); ?>" placeholder="--">
+                            <span class="cooked-time-picker-text"><?php esc_html_e( 'minutes', 'cooked' ); ?></span>
                         </div>
                         <div class="cooked-setting-column-14">
                             <h3 class="cooked-settings-title"><?php esc_html_e( 'Total Time', 'cooked' ); ?></h3>
-                            <input id="cooked-total-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[total_time]" value="<?php echo ( isset($recipe_settings['total_time']) && $recipe_settings['total_time'] ? esc_attr( $recipe_settings['total_time'] ) : '' ); ?>" placeholder="--">
-                            <span class="cooked-time-picker-text"><?php esc_html_e('minutes','cooked'); ?></span>
+                            <input id="cooked-total-time" class="cooked-time-picker" type="number" step="any" name="_recipe_settings[total_time]" value="<?php echo ( isset( $recipe_settings['total_time'] ) && $recipe_settings['total_time'] ? esc_attr( $recipe_settings['total_time'] ) : '' ); ?>" placeholder="--">
+                            <span class="cooked-time-picker-text"><?php esc_html_e( 'minutes', 'cooked' ); ?></span>
                         </div>
                     </div>
                 </div>
 
                 <div class="recipe-setting-block cooked-bm-30">
-                <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Notes', 'cooked' ) . '</strong>' . esc_html__( 'The notes are displayed in the recipe.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
-                    <?php if ( $wp_editor_roles_allowed ): ?>
-                        <?php $recipe_notes = isset($recipe_settings['notes']) ? wp_unslash(wp_specialchars_decode($recipe_settings['notes'])) : ''; ?>
+                <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Notes', 'cooked' ) . '</strong>' . esc_html__( 'The notes are displayed in the recipe.', 'cooked' ) ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                    <?php if ( $wp_editor_roles_allowed ) : ?>
+                        <?php $recipe_notes = isset( $recipe_settings['notes'] ) ? wp_unslash( wp_specialchars_decode( $recipe_settings['notes'] ) ) : ''; ?>
                         <?php
-                            wp_editor($recipe_notes, '_recipe_settings_notes', [
-                                'teeny' => false,
-                                'media_buttons' => true,
-                                'wpautop' => false,
-                                'editor_height' => 100,
-                                'textarea_name' => '_recipe_settings[notes]',
-                                'quicktags' => true
-                            ]);
+                            wp_editor(
+                                $recipe_notes,
+                                '_recipe_settings_notes',
+                                [
+									'teeny'         => false,
+									'media_buttons' => true,
+									'wpautop'       => false,
+									'editor_height' => 100,
+									'textarea_name' => '_recipe_settings[notes]',
+									'quicktags'     => true,
+								]
+                            );
                         ?>
-                    <?php else: ?>
-                        <textarea name="_recipe_settings[notes]"><?php echo ( isset($recipe_settings['notes']) ? esc_textarea( $recipe_settings['notes'] ) : '' ); ?></textarea>
+                    <?php else : ?>
+                        <textarea name="_recipe_settings[notes]"><?php echo ( isset( $recipe_settings['notes'] ) ? esc_textarea( $recipe_settings['notes'] ) : '' ); ?></textarea>
                     <?php endif; ?>
                 </div>
 
@@ -365,30 +393,35 @@ function cooked_render_recipe_fields( $post_id ) {
         <section class="cooked-recipe-tab-content" id="cooked-recipe-tab-content-ingredients">
 
             <div class="cooked-ingredient-headers cooked-clearfix">
-                <span class="cooked-ingredient-header-amount"><?php esc_html_e('Amount','cooked'); ?></span>
-                <span class="cooked-ingredient-header-measurement"><?php esc_html_e('Measurement','cooked'); ?></span>
-                <span class="cooked-ingredient-header-item"><?php esc_html_e('Item','cooked'); ?></span>
+                <span class="cooked-ingredient-header-amount"><?php esc_html_e( 'Amount', 'cooked' ); ?></span>
+                <span class="cooked-ingredient-header-measurement"><?php esc_html_e( 'Measurement', 'cooked' ); ?></span>
+                <span class="cooked-ingredient-header-item"><?php esc_html_e( 'Item', 'cooked' ); ?></span>
             </div>
 
             <div id="cooked-ingredients-builder" class="cooked-sortable">
 
-                <?php if ( isset($recipe_settings['ingredients']) && !empty($recipe_settings['ingredients']) ): ?>
+                <?php if ( isset( $recipe_settings['ingredients'] ) && ! empty( $recipe_settings['ingredients'] ) ) : ?>
 
-                    <?php foreach($recipe_settings['ingredients'] as $ing_key => $value): ?>
+                    <?php foreach ( $recipe_settings['ingredients'] as $ing_key => $value ) : ?>
 
-                        <?php if ( !isset($value['section_heading_name']) ): ?>
+                        <?php if ( ! isset( $value['section_heading_name'] ) ) : ?>
 
                             <?php $ingredient_classes = apply_filters( 'cooked_ingredient_field_classes', 'recipe-setting-block cooked-ingredient-block cooked-clearfix', $value ); ?>
-                            <?php $has_sub = isset($value['sub_name']) && !empty($value['sub_name']); ?>
+                            <?php $has_sub = isset( $value['sub_name'] ) && ! empty( $value['sub_name'] ); ?>
 
-                            <div class="<?php echo esc_attr( $ingredient_classes ); echo ($has_sub ? ' cooked-has-substitution' : ''); ?>">
+                            <div class="
+                            <?php
+                            echo esc_attr( $ingredient_classes );
+							echo ( $has_sub ? ' cooked-has-substitution' : '' );
+							?>
+                            ">
 
                                 <i class="cooked-icon cooked-icon-drag"></i>
 
                                 <?php do_action( 'cooked_before_ingredient_fields', $ing_key, $value ); ?>
 
                                 <div class="cooked-ingredient-amount">
-                                    <input type="text" data-ingredient-part="amount" name="_recipe_settings[ingredients][<?php echo esc_attr($ing_key); ?>][amount]" value="<?php echo esc_attr( isset( $value['amount'] ) ? $value['amount'] : '' ); ?>" placeholder="--">
+                                    <input type="text" data-ingredient-part="amount" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][amount]" value="<?php echo esc_attr( isset( $value['amount'] ) ? $value['amount'] : '' ); ?>" placeholder="--">
                                 </div>
 
                                 <?php do_action( 'cooked_after_ingredient_amount_field', $ing_key, $value ); ?>
@@ -396,16 +429,18 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <div class="cooked-ingredient-measurement">
                                     <select data-ingredient-part="measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][measurement]">
                                         <option value="">--</option>
-                                        <?php foreach ($measurements as $key => $measurement):
-                                            echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['measurement'] ) && $value['measurement'] == $key ? ' selected' : '' ) . '>' . esc_html($measurement['plural_abbr']) . '</option>';
-                                        endforeach; ?>
+                                        <?php
+                                        foreach ( $measurements as $key => $measurement ) :
+                                            echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['measurement'] ) && $value['measurement'] == $key ? ' selected' : '' ) . '>' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                                        endforeach;
+                                        ?>
                                     </select>
                                 </div>
 
                                 <?php do_action( 'cooked_after_ingredient_measurement_field', $ing_key, $value ); ?>
 
                                 <div class="cooked-ingredient-name">
-                                    <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][name]" value="<?php echo esc_attr( isset( $value['name'] ) ? $value['name'] : '' ); ?>" placeholder="<?php esc_attr_e('ex. Eggs, Milk, etc.','cooked'); ?> ...">
+                                    <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][name]" value="<?php echo esc_attr( isset( $value['name'] ) ? $value['name'] : '' ); ?>" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
                                 </div>
 
                                 <?php do_action( 'cooked_after_ingredient_name_field', $ing_key, $value ); ?>
@@ -414,48 +449,51 @@ function cooked_render_recipe_fields( $post_id ) {
                                 <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
 
                                 <div class="cooked-heading-element cooked-substitution-fields">
-                                    <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e('Substitution:','cooked'); ?></label>
+                                    <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
                                     <div class="cooked-ingredient-amount">
-                                        <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr($ing_key); ?>][sub_amount]" value="<?php echo isset($value['sub_amount']) ? esc_attr( $value['sub_amount'] ) : ''; ?>" placeholder="--">
+                                        <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_amount]" value="<?php echo isset( $value['sub_amount'] ) ? esc_attr( $value['sub_amount'] ) : ''; ?>" placeholder="--">
                                     </div>
                                     <div class="cooked-ingredient-measurement">
                                         <select data-ingredient-part="sub_measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_measurement]">
                                             <option value="">--</option>
-                                            <?php foreach($measurements as $key => $measurement):
-                                                echo '<option value="' . esc_attr( $key ) . '"' . ( isset($value['sub_measurement']) && $value['sub_measurement'] == $key ? ' selected' : '' ) . '>' . esc_html($measurement['plural_abbr']) . '</option>';
-                                            endforeach; ?>
+                                            <?php
+                                            foreach ( $measurements as $key => $measurement ) :
+                                                echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['sub_measurement'] ) && $value['sub_measurement'] == $key ? ' selected' : '' ) . '>' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                                            endforeach;
+                                            ?>
                                         </select>
                                     </div>
                                     <div class="cooked-ingredient-name">
-                                        <input type="text" data-ingredient-part="sub_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_name]" value="<?php echo isset($value['sub_name']) ? esc_attr( $value['sub_name'] ) : ''; ?>" placeholder="<?php esc_attr_e('ex. Apple Sauce, Tofu, etc.','cooked'); ?> ...">
+                                        <input type="text" data-ingredient-part="sub_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_name]" value="<?php echo isset( $value['sub_name'] ) ? esc_attr( $value['sub_name'] ) : ''; ?>" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
                                     </div>
                                 </div>
 
                             </div>
 
-                        <?php elseif ( isset($value['section_heading_name']) ): ?>
+                        <?php elseif ( isset( $value['section_heading_name'] ) ) : ?>
 
                             <div class="recipe-setting-block cooked-ingredient-block cooked-ingredient-heading cooked-clearfix">
                                 <i class="cooked-icon cooked-icon-drag"></i>
                                 <div class="cooked-heading-name">
-                                    <input type="text" data-ingredient-part="section_heading_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e('Section Heading','cooked'); ?> ...">
+                                    <input type="text" data-ingredient-part="section_heading_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                                 </div>
 
                                 <div class="cooked-heading-element">
-                                    <label for="cooked-heading-element-select"><?php esc_html_e('Heading Element:', 'cooked'); ?></label>
+                                    <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
                                     <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_element]">
                                         <?php
                                         $heading_elements = [
                                             'div' => 'div (default)',
-                                            'h2' => 'h2',
-                                            'h3' => 'h3',
-                                            'h4' => 'h4',
-                                            'h5' => 'h5',
-                                            'h6' => 'h6'
+                                            'h2'  => 'h2',
+                                            'h3'  => 'h3',
+                                            'h4'  => 'h4',
+                                            'h5'  => 'h5',
+                                            'h6'  => 'h6',
                                         ];
-                                        foreach ($heading_elements as $element => $label): ?>
-                                            <option value="<?php echo esc_attr($element); ?>" <?php selected(isset($value['section_heading_element']) ? $value['section_heading_element'] : 'div', $element); ?>>
-                                                <?php echo esc_html($label); ?>
+                                        foreach ( $heading_elements as $element => $label ) :
+											?>
+                                            <option value="<?php echo esc_attr( $element ); ?>" <?php selected( isset( $value['section_heading_element'] ) ? $value['section_heading_element'] : 'div', $element ); ?>>
+                                                <?php echo esc_html( $label ); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -469,9 +507,11 @@ function cooked_render_recipe_fields( $post_id ) {
 
                     <?php endforeach; ?>
 
-                <?php else:
+					<?php
+                else :
 
-                    $random_key = wp_rand( 1000000, 9999999 ); ?>
+                    $random_key = wp_rand( 1000000, 9999999 );
+                    ?>
 
                     <div class="recipe-setting-block cooked-ingredient-block cooked-clearfix">
 
@@ -488,16 +528,18 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-ingredient-measurement">
                             <select data-ingredient-part="measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][measurement]">
                                 <option value="">--</option>
-                                <?php foreach ($measurements as $key => $measurement):
-                                    echo '<option value="'.esc_attr( $key ).'">'.esc_html($measurement['plural_abbr']).'</option>';
-                                endforeach; ?>
+                                <?php
+                                foreach ( $measurements as $key => $measurement ) :
+                                    echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                                endforeach;
+                                ?>
                             </select>
                         </div>
 
                         <?php do_action( 'cooked_after_ingredient_measurement_field', $random_key, false ); ?>
 
                         <div class="cooked-ingredient-name">
-                            <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][name]" value="" placeholder="<?php esc_attr_e('ex. Eggs, Milk, etc.','cooked'); ?> ...">
+                            <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][name]" value="" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
                         </div>
 
                         <?php do_action( 'cooked_after_ingredient_name_field', $random_key, false ); ?>
@@ -506,20 +548,22 @@ function cooked_render_recipe_fields( $post_id ) {
                         <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
 
                         <div class="cooked-heading-element cooked-substitution-fields">
-                            <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e('Substitution:','cooked'); ?></label>
+                            <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
                             <div class="cooked-ingredient-amount">
-                                <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr($random_key); ?>][sub_amount]" value="" placeholder="--">
+                                <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_amount]" value="" placeholder="--">
                             </div>
                             <div class="cooked-ingredient-measurement">
                                 <select data-ingredient-part="sub_measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_measurement]">
                                     <option value="">--</option>
-                                    <?php foreach($measurements as $key => $measurement):
-                                        echo '<option value="' . esc_attr( $key ) . '">' . esc_html($measurement['plural_abbr']) . '</option>';
-                                    endforeach; ?>
+                                    <?php
+                                    foreach ( $measurements as $key => $measurement ) :
+                                        echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                                    endforeach;
+                                    ?>
                                 </select>
                             </div>
                             <div class="cooked-ingredient-name">
-                                <input type="text" data-ingredient-part="sub_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_name]" value="" placeholder="<?php esc_attr_e('ex. Apple Sauce, Tofu, etc.','cooked'); ?> ...">
+                                <input type="text" data-ingredient-part="sub_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_name]" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
                             </div>
                         </div>
 
@@ -533,10 +577,10 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <p>
                     <?php do_action( 'cooked_ingredient_buttons_start' ); ?>
-                    <a href="#" class="button cooked-add-ingredient-button"><?php esc_html_e('Add Ingredient','cooked'); ?></a>
-                    &nbsp;<a href="#" class="button cooked-add-heading-button"><?php esc_html_e('Add Section Heading','cooked'); ?></a>
+                    <a href="#" class="button cooked-add-ingredient-button"><?php esc_html_e( 'Add Ingredient', 'cooked' ); ?></a>
+                    &nbsp;<a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
                     <?php do_action( 'cooked_ingredient_buttons_end' ); ?>
-                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="ingredients"><?php esc_html_e('Bulk Add','cooked'); ?></a>
+                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="ingredients"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
                 </p>
 
                 <!-- TEMPLATES -->
@@ -555,16 +599,18 @@ function cooked_render_recipe_fields( $post_id ) {
                     <div class="cooked-ingredient-measurement">
                         <select data-ingredient-part="measurement" name="">
                             <option value="">--</option>
-                            <?php foreach($measurements as $key => $measurement):
-                                echo '<option value="'.esc_attr($key).'">'.esc_html($measurement['plural_abbr']).'</option>';
-                            endforeach; ?>
+                            <?php
+                            foreach ( $measurements as $key => $measurement ) :
+                                echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                            endforeach;
+                            ?>
                         </select>
                     </div>
 
                     <?php do_action( 'cooked_after_ingredient_measurement_field', false, false ); ?>
 
                     <div class="cooked-ingredient-name">
-                        <input type="text" data-ingredient-part="name" name="" value="" placeholder="<?php esc_attr_e('ex. Eggs, Milk, etc.','cooked'); ?> ...">
+                        <input type="text" data-ingredient-part="name" name="" value="" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
                     </div>
 
                     <?php do_action( 'cooked_after_ingredient_name_field', false, false ); ?>
@@ -573,20 +619,22 @@ function cooked_render_recipe_fields( $post_id ) {
                     <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
 
                     <div class="cooked-heading-element cooked-substitution-fields">
-                        <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e('Substitution:','cooked'); ?></label>
+                        <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
                         <div class="cooked-ingredient-amount">
                             <input type="text" data-ingredient-part="sub_amount" name="" value="" placeholder="--">
                         </div>
                         <div class="cooked-ingredient-measurement">
                             <select data-ingredient-part="sub_measurement" name="">
                                 <option value="">--</option>
-                                <?php foreach($measurements as $key => $measurement):
-                                    echo '<option value="'.esc_attr($key).'">'.esc_html($measurement['plural_abbr']).'</option>';
-                                endforeach; ?>
+                                <?php
+                                foreach ( $measurements as $key => $measurement ) :
+                                    echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                                endforeach;
+                                ?>
                             </select>
                         </div>
                         <div class="cooked-ingredient-name">
-                            <input type="text" data-ingredient-part="sub_name" name="" value="" placeholder="<?php esc_attr_e('ex. Apple Sauce, Tofu, etc.','cooked'); ?> ...">
+                            <input type="text" data-ingredient-part="sub_name" name="" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
                         </div>
                     </div>
 
@@ -594,24 +642,25 @@ function cooked_render_recipe_fields( $post_id ) {
                 <div class="recipe-setting-block cooked-template cooked-heading-template cooked-clearfix">
                     <i class="cooked-icon cooked-icon-drag"></i>
                     <div class="cooked-heading-name">
-                        <input type="text" data-ingredient-part="section_heading_name" name="" value="" placeholder="<?php esc_attr_e('Section Heading','cooked'); ?> ...">
+                        <input type="text" data-ingredient-part="section_heading_name" name="" value="" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                     </div>
 
                     <div class="cooked-heading-element">
-                        <label for="cooked-heading-element-select"><?php esc_html_e('Heading Element:', 'cooked'); ?></label>
+                        <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
                         <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" name="">
                             <?php
                             $heading_elements = [
                                 'div' => 'div (default)',
-                                'h2' => 'h2',
-                                'h3' => 'h3',
-                                'h4' => 'h4',
-                                'h5' => 'h5',
-                                'h6' => 'h6'
+                                'h2'  => 'h2',
+                                'h3'  => 'h3',
+                                'h4'  => 'h4',
+                                'h5'  => 'h5',
+                                'h6'  => 'h6',
                             ];
-                            foreach ($heading_elements as $element => $label): ?>
-                                <option value="<?php echo esc_attr($element); ?>" <?php selected('div', $element); ?>>
-                                    <?php echo esc_html($label); ?>
+                            foreach ( $heading_elements as $element => $label ) :
+								?>
+                                <option value="<?php echo esc_attr( $element ); ?>" <?php selected( 'div', $element ); ?>>
+                                    <?php echo esc_html( $label ); ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -629,72 +678,85 @@ function cooked_render_recipe_fields( $post_id ) {
 
             <div id="cooked-directions-builder" class="cooked-sortable">
 
-                <?php if ( isset($recipe_settings['directions']) && !empty($recipe_settings['directions']) ): ?>
+                <?php if ( isset( $recipe_settings['directions'] ) && ! empty( $recipe_settings['directions'] ) ) : ?>
 
-                    <?php $direction_step = 0; foreach ($recipe_settings['directions'] as $dir_key => $value): ?>
+                    <?php $direction_step = 0; foreach ( $recipe_settings['directions'] as $dir_key => $value ) : ?>
 
-                        <?php if ( !isset($value['section_heading_name']) ): ?>
+                        <?php if ( ! isset( $value['section_heading_name'] ) ) : ?>
 
-                            <?php $direction_step++; if (isset($value['image']) && $value['image']) {
-                                $image_thumb = wp_get_attachment_image( $value['image'], 'thumbnail', false, [
-                                    'class' => 'cooked-direction-img',
-                                    'data-id' => esc_attr($dir_key),
-                                    'data-direction-part' => 'image_src',
-                                    'id' => 'direction-' . esc_attr($dir_key) . '-image-src'
-                                ]);
+                            <?php
+                            ++$direction_step; if ( isset( $value['image'] ) && $value['image'] ) {
+                                $image_thumb = wp_get_attachment_image(
+                                    $value['image'],
+                                    'thumbnail',
+                                    false,
+                                    [
+										'class'   => 'cooked-direction-img',
+										'data-id' => esc_attr( $dir_key ),
+										'data-direction-part' => 'image_src',
+										'id'      => 'direction-' . esc_attr( $dir_key ) . '-image-src',
+									]
+                                );
                             } else {
                                 $image_thumb = false;
-                            } ?>
+                            }
+                            ?>
 
                             <div class="recipe-setting-block cooked-direction-block cooked-clearfix cooked-direction-has-number<?php echo ( $direction_step > 9 ? ' cooked-direction-has-number-wide' : '' ); ?>">
                                 <i class="cooked-icon cooked-icon-drag"></i>
                                 <span class="cooked-direction-number"><?php echo (int) $direction_step; ?></span>
                                 <div class="cooked-direction-image<?php echo ( $image_thumb ? ' cooked-has-image' : '' ); ?>">
-                                    <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][image]" id="direction-<?php echo esc_attr($dir_key); ?>-image" value="<?php if ( isset ( $value['image'] ) ) echo esc_attr( $value['image'] ); ?>" />
-                                    <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr($dir_key); ?>" class="button direction-image-button" value="<?php echo ( $image_thumb ? esc_html__( 'Change Image', 'cooked' ) : esc_html__( 'Add Image', 'cooked' ) ); ?>" />
-                                    <?php echo ( $image_thumb ? wp_kses_post( $image_thumb ) : '<img id="direction-' .esc_attr($dir_key) . '-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="' . esc_attr($dir_key) . '">' ); ?>
+                                    <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][image]" id="direction-<?php echo esc_attr( $dir_key ); ?>-image" value="
+                                    <?php
+                                    if ( isset( $value['image'] ) ) {
+										echo esc_attr( $value['image'] );}
+									?>
+                                    " />
+                                    <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-image-button" value="<?php echo ( $image_thumb ? esc_html__( 'Change Image', 'cooked' ) : esc_html__( 'Add Image', 'cooked' ) ); ?>" />
+                                    <?php echo ( $image_thumb ? wp_kses_post( $image_thumb ) : '<img id="direction-' . esc_attr( $dir_key ) . '-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="' . esc_attr( $dir_key ) . '">' ); ?>
                                     <div class="cooked-direction-img-placeholder"></div>
-                                    <a href="#" data-id="<?php echo esc_attr($dir_key); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                                    <a href="#" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                                 </div>
                                 <div class="cooked-direction-content">
-                                    <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][content]"><?php echo !empty($value['content']) ? esc_html($value['content']) : ''; ?></textarea>
+                                    <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][content]"><?php echo ! empty( $value['content'] ) ? esc_html( $value['content'] ) : ''; ?></textarea>
                                 </div>
-                                <div class="cooked-direction-video<?php echo ( !empty($value['video']) ? ' cooked-has-video' : '' ); ?>">
-                                    <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr($dir_key); ?>][video]" value="<?php echo !empty($value['video']) ? esc_attr($value['video']) : ''; ?>" />
-                                    <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr($dir_key); ?>" class="button direction-video-button" value="<?php echo !empty($value['video']) ? esc_html__( 'Change Video', 'cooked' ) : esc_html__( 'Add Video', 'cooked' ); ?>" />
-                                    <?php if ( !empty($value['video']) ): ?>
-                                        <video class="cooked-direction-video-preview" src="<?php echo esc_url(wp_get_attachment_url($value['video'])); ?>" preload="metadata" playsinline></video>
-                                    <?php else: ?>
+                                <div class="cooked-direction-video<?php echo ( ! empty( $value['video'] ) ? ' cooked-has-video' : '' ); ?>">
+                                    <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][video]" value="<?php echo ! empty( $value['video'] ) ? esc_attr( $value['video'] ) : ''; ?>" />
+                                    <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-video-button" value="<?php echo ! empty( $value['video'] ) ? esc_html__( 'Change Video', 'cooked' ) : esc_html__( 'Add Video', 'cooked' ); ?>" />
+                                    <?php if ( ! empty( $value['video'] ) ) : ?>
+                                        <video class="cooked-direction-video-preview" src="<?php echo esc_url( wp_get_attachment_url( $value['video'] ) ); ?>" preload="metadata" playsinline></video>
+                                    <?php else : ?>
                                         <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
                                     <?php endif; ?>
                                     <div class="cooked-direction-video-placeholder"></div>
-                                    <a href="#" data-id="<?php echo esc_attr($dir_key); ?>" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                                    <a href="#" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
                                 </div>
                                 <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
                             </div>
 
-                        <?php elseif ( isset($value['section_heading_name']) ): ?>
+                        <?php elseif ( isset( $value['section_heading_name'] ) ) : ?>
 
                             <div class="recipe-setting-block cooked-direction-block cooked-direction-heading cooked-clearfix">
                                 <i class="cooked-icon cooked-icon-drag"></i>
                                 <div class="cooked-heading-name">
-                                    <input type="text" data-direction-part="section_heading_name" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e('Section Heading', 'cooked'); ?> ...">
+                                    <input type="text" data-direction-part="section_heading_name" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                                 </div>
 
                                 <div class="cooked-heading-element">
-                                    <label for="cooked-heading-element-select"><?php esc_html_e('Heading Element:', 'cooked'); ?></label>
+                                    <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
                                     <select class="cooked-heading-element-select" data-direction-part="section_heading_element" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_element]">
                                         <?php
                                         $heading_elements = [
                                             'div' => 'div (default)',
-                                            'h2' => 'h2',
-                                            'h3' => 'h3',
-                                            'h4' => 'h4',
-                                            'h5' => 'h5',
-                                            'h6' => 'h6'
+                                            'h2'  => 'h2',
+                                            'h3'  => 'h3',
+                                            'h4'  => 'h4',
+                                            'h5'  => 'h5',
+                                            'h6'  => 'h6',
                                         ];
-                                        foreach ($heading_elements as $element => $label): ?>
-                                            <option value="<?php echo esc_attr( $element ); ?>" <?php selected(isset($value['section_heading_element']) ? $value['section_heading_element'] : 'div', $element); ?>>
+                                        foreach ( $heading_elements as $element => $label ) :
+											?>
+                                            <option value="<?php echo esc_attr( $element ); ?>" <?php selected( isset( $value['section_heading_element'] ) ? $value['section_heading_element'] : 'div', $element ); ?>>
                                                 <?php echo esc_html( $label ); ?>
                                             </option>
                                         <?php endforeach; ?>
@@ -709,9 +771,11 @@ function cooked_render_recipe_fields( $post_id ) {
 
                     <?php endforeach; ?>
 
-                <?php else:
+					<?php
+                else :
 
-                    $random_key = wp_rand( 1000000, 9999999 ); ?>
+                    $random_key = wp_rand( 1000000, 9999999 );
+                    ?>
 
                     <div class="recipe-setting-block cooked-direction-block cooked-clearfix cooked-direction-has-number">
                         <i class="cooked-icon cooked-icon-drag"></i>
@@ -724,18 +788,22 @@ function cooked_render_recipe_fields( $post_id ) {
                             <a href="#" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
                         </div>
                         <div class="cooked-direction-content">
-                            <?php if ( $wp_editor_roles_allowed ): ?>
+                            <?php if ( $wp_editor_roles_allowed ) : ?>
                                 <?php
-                                    wp_editor('', 'direction-' . esc_attr( $random_key ) . '-content', [
-                                        'teeny' => true,
-                                        'media_buttons' => false,
-                                        'wpautop' => false,
-                                        'editor_height' => 250,
-                                        'textarea_name' => '_recipe_settings[directions][' . esc_attr( $random_key ) . '][content]',
-                                        'quicktags' => true
-                                    ]);
+                                    wp_editor(
+                                        '',
+                                        'direction-' . esc_attr( $random_key ) . '-content',
+                                        [
+											'teeny'     => true,
+											'media_buttons' => false,
+											'wpautop'   => false,
+											'editor_height' => 250,
+											'textarea_name' => '_recipe_settings[directions][' . esc_attr( $random_key ) . '][content]',
+											'quicktags' => true,
+										]
+                                    );
                                 ?>
-                            <?php else: ?>
+                            <?php else : ?>
                                 <textarea id="direction-<?php echo esc_attr( $random_key ); ?>-content" data-direction-part="content" name="" data-id="<?php echo esc_attr( $random_key ); ?>"></textarea>
                             <?php endif; ?>
                         </div>
@@ -757,10 +825,10 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <p>
                     <?php do_action( 'cooked_direction_buttons_start' ); ?>
-                    <a href="#" class="button cooked-add-direction-button"><?php esc_html_e('Add Direction','cooked'); ?></a>
-                    &nbsp;<a href="#" class="button cooked-add-heading-button"><?php esc_html_e('Add Section Heading','cooked'); ?></a>
+                    <a href="#" class="button cooked-add-direction-button"><?php esc_html_e( 'Add Direction', 'cooked' ); ?></a>
+                    &nbsp;<a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
                     <?php do_action( 'cooked_direction_buttons_end' ); ?>
-                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="directions"><?php esc_html_e('Bulk Add','cooked'); ?></a>
+                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="directions"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
                 </p>
 
                 <!-- TEMPLATES -->
@@ -769,7 +837,7 @@ function cooked_render_recipe_fields( $post_id ) {
                     <span class="cooked-direction-number"></span>
                     <div class="cooked-direction-image">
                         <input data-direction-part="image" type="hidden" name="" value="" />
-                        <input data-direction-part="image_button" data-id="" type="button" class="button direction-image-button" value="<?php esc_attr_e( 'Add Image', 'cooked' )?>" />
+                        <input data-direction-part="image_button" data-id="" type="button" class="button direction-image-button" value="<?php esc_attr_e( 'Add Image', 'cooked' ); ?>" />
                         <img id="" data-direction-part="image_src" class="cooked-direction-img" src="">
                         <div class="cooked-direction-img-placeholder"></div>
                         <a href="#" data-id="" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
@@ -789,23 +857,24 @@ function cooked_render_recipe_fields( $post_id ) {
                 <div class="recipe-setting-block cooked-template cooked-heading-template cooked-clearfix">
                     <i class="cooked-icon cooked-icon-drag"></i>
                     <div class="cooked-heading-name">
-                        <input type="text" data-direction-part="section_heading_name" name="" value="" placeholder="<?php esc_attr_e('Section Heading','cooked'); ?> ...">
+                        <input type="text" data-direction-part="section_heading_name" name="" value="" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                     </div>
 
                     <div class="cooked-heading-element">
-                        <label for="cooked-heading-element-select"><?php esc_html_e('Heading Element:', 'cooked'); ?></label>
+                        <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
                         <select class="cooked-heading-element-select" data-direction-part="section_heading_element" name="">
                             <?php
                             $heading_elements = [
                                 'div' => 'div (default)',
-                                'h2' => 'h2',
-                                'h3' => 'h3',
-                                'h4' => 'h4',
-                                'h5' => 'h5',
-                                'h6' => 'h6'
+                                'h2'  => 'h2',
+                                'h3'  => 'h3',
+                                'h4'  => 'h4',
+                                'h5'  => 'h5',
+                                'h6'  => 'h6',
                             ];
-                            foreach ($heading_elements as $element => $label): ?>
-                                <option value="<?php echo esc_attr( $element ); ?>" <?php selected('div', $element); ?>>
+                            foreach ( $heading_elements as $element => $label ) :
+								?>
+                                <option value="<?php echo esc_attr( $element ); ?>" <?php selected( 'div', $element ); ?>>
                                     <?php echo esc_html( $label ); ?>
                                 </option>
                             <?php endforeach; ?>
@@ -828,28 +897,39 @@ function cooked_render_recipe_fields( $post_id ) {
                 <div class="cooked-clearfix">
                     <div class="cooked-setting-column-12">
 
-                        <?php $_nutrition_facts = Cooked_Measurements::nutrition_facts();
+                        <?php
+                        $_nutrition_facts = Cooked_Measurements::nutrition_facts();
 
                         $nut_loops = 0;
-                        foreach ( $_nutrition_facts as $nutrition_facts ):
-                            foreach ( $nutrition_facts as $slug => $nf ):
+                        foreach ( $_nutrition_facts as $nutrition_facts ) :
+                            foreach ( $nutrition_facts as $slug => $nf ) :
 
-                                $nut_loops++;
-                                if ( $nut_loops == 1 ): echo '<p class="cooked-measurement-inputs">'; endif;
+                                ++$nut_loops;
+                                if ( $nut_loops == 1 ) :
+									echo '<p class="cooked-measurement-inputs">';
+endif;
                                 echo '<span class="cooked-measurement-column">';
-                                    echo '<label for="' . esc_attr($slug) . '" class="cooked-nutrition-label">' . esc_html($nf['name']) . '</label>';
-                                    echo '<input type="' . esc_attr($nf['type']) . '"' . ( $nf['type'] == 'number' ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr($slug) . ']" id="' . esc_attr($slug) . '" value="' . ( isset($recipe_settings['nutrition'][$slug]) ? esc_attr($recipe_settings['nutrition'][$slug]) : '' ) . '" />';
+                                    echo '<label for="' . esc_attr( $slug ) . '" class="cooked-nutrition-label">' . esc_html( $nf['name'] ) . '</label>';
+                                    echo '<input type="' . esc_attr( $nf['type'] ) . '"' . ( $nf['type'] == 'number' ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr( $slug ) . ']" id="' . esc_attr( $slug ) . '" value="' . ( isset( $recipe_settings['nutrition'][ $slug ] ) ? esc_attr( $recipe_settings['nutrition'][ $slug ] ) : '' ) . '" />';
                                 echo '</span>';
-                                if ( $nut_loops == 2 ): echo '</p>'; $nut_loops = 0; endif;
-                                if ( isset($nf['subs']) ):
-                                    foreach ( $nf['subs'] as $sub_slug => $sub_nf ):
-                                        $nut_loops++;
-                                        if ( $nut_loops == 1 ): echo '<p class="cooked-measurement-inputs">'; endif;
+                                if ( $nut_loops == 2 ) :
+									echo '</p>';
+									$nut_loops = 0;
+endif;
+                                if ( isset( $nf['subs'] ) ) :
+                                    foreach ( $nf['subs'] as $sub_slug => $sub_nf ) :
+                                        ++$nut_loops;
+                                        if ( $nut_loops == 1 ) :
+											echo '<p class="cooked-measurement-inputs">';
+endif;
                                         echo '<span class="cooked-measurement-column">';
-                                            echo '<label for="' . esc_attr($sub_slug) . '" class="cooked-nutrition-label">' . esc_html($sub_nf['name']) . '</label>';
-                                            echo '<input type="' . esc_attr($sub_nf['type']) . '"' . ( $nf['type'] == 'number' ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr($sub_slug) . ']" id="' . esc_attr($sub_slug) . '" value="' . ( isset($recipe_settings['nutrition'][$sub_slug]) ? esc_attr($recipe_settings['nutrition'][$sub_slug]) : '' ) . '" />';
+                                            echo '<label for="' . esc_attr( $sub_slug ) . '" class="cooked-nutrition-label">' . esc_html( $sub_nf['name'] ) . '</label>';
+                                            echo '<input type="' . esc_attr( $sub_nf['type'] ) . '"' . ( $nf['type'] == 'number' ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr( $sub_slug ) . ']" id="' . esc_attr( $sub_slug ) . '" value="' . ( isset( $recipe_settings['nutrition'][ $sub_slug ] ) ? esc_attr( $recipe_settings['nutrition'][ $sub_slug ] ) : '' ) . '" />';
                                         echo '</span>';
-                                        if ( $nut_loops == 2 ): echo '</p>'; $nut_loops = 0; endif;
+                                        if ( $nut_loops == 2 ) :
+											echo '</p>';
+											$nut_loops = 0;
+endif;
                                     endforeach;
                                 endif;
                             endforeach;
@@ -862,79 +942,87 @@ function cooked_render_recipe_fields( $post_id ) {
 
                         <section id="cooked-nutrition-label" class="cooked-nut-label-1">
 
-                            <h2><?php esc_html_e('Nutrition Facts', 'cooked'); ?></h2>
+                            <h2><?php esc_html_e( 'Nutrition Facts', 'cooked' ); ?></h2>
 
                             <ul class="cooked-nut-servings">
-                                <?php $nutrition_facts = $_nutrition_facts['top'];
-                                foreach ( $nutrition_facts as $slug => $nf ):
-                                    if ( $slug === 'serving_size' ):
-                                        echo '<li class="cooked-serving-size"><strong>' . esc_html($nf['name']) . '</strong> ';
-                                            echo '<ul class="cooked-right"><li><strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong></li></ul>';
+                                <?php
+                                $nutrition_facts = $_nutrition_facts['top'];
+                                foreach ( $nutrition_facts as $slug => $nf ) :
+                                    if ( $slug === 'serving_size' ) :
+                                        echo '<li class="cooked-serving-size"><strong>' . esc_html( $nf['name'] ) . '</strong> ';
+                                            echo '<ul class="cooked-right"><li><strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong></li></ul>';
                                         echo '</li>';
-                                    else:
-                                        echo '<p><strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong> ' . esc_html(strtolower($nf['name'])) . '</p>';
+                                    else :
+                                        echo '<p><strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong> ' . esc_html( strtolower( $nf['name'] ) ) . '</p>';
                                     endif;
-                                endforeach; ?>
+                                endforeach;
+                                ?>
                             </ul>
 
                             <hr class="cooked-nut-hr" />
 
                             <ul>
-                                <li><strong class="cooked-nut-heading"><?php esc_html_e('Amount per serving', 'cooked'); ?></strong></li>
+                                <li><strong class="cooked-nut-heading"><?php esc_html_e( 'Amount per serving', 'cooked' ); ?></strong></li>
 
-                                <?php $nutrition_facts = $_nutrition_facts['mid'];
-                                foreach ( $nutrition_facts as $slug => $nf ):
-                                    echo '<li class="cooked-calories no-after"><strong>' . esc_html($nf['name']) . '</strong> ';
-                                        echo '<ul class="cooked-right"><li><strong class="cooked-nut-label" data-labeltype="' . esc_attr($slug) . '">___</strong></li></ul>';
+                                <?php
+                                $nutrition_facts = $_nutrition_facts['mid'];
+                                foreach ( $nutrition_facts as $slug => $nf ) :
+                                    echo '<li class="cooked-calories no-after"><strong>' . esc_html( $nf['name'] ) . '</strong> ';
+                                        echo '<ul class="cooked-right"><li><strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong></li></ul>';
                                     echo '</li>';
-                                endforeach; ?>
+                                endforeach;
+                                ?>
 
                                 <li class="cooked-nut-spacer"></li>
-                                <li class="cooked-nut-no-border"><strong class="cooked-nut-heading cooked-nut-right"><?php esc_html_e('% Daily Value *','cooked'); ?></strong></li>
+                                <li class="cooked-nut-no-border"><strong class="cooked-nut-heading cooked-nut-right"><?php esc_html_e( '% Daily Value *', 'cooked' ); ?></strong></li>
 
-                                <?php $nutrition_facts = $_nutrition_facts['main'];
-                                $nut_loops = 0;
+                                <?php
+                                $nutrition_facts = $_nutrition_facts['main'];
+                                $nut_loops       = 0;
 
-                                foreach ( $nutrition_facts as $slug => $nf ):
+                                foreach ( $nutrition_facts as $slug => $nf ) :
                                     echo '<li>';
-                                    echo '<strong>' . esc_html($nf['name']) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_html($slug) . '_measurement">' . esc_html( $nf['measurement'] ) . '</strong>' : '' );
-                                    echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($nf['pdv']) . '" data-labeltype="' . esc_html($slug) . '">0</span>%</strong>' : '' );
+                                    echo '<strong>' . esc_html( $nf['name'] ) . '</strong> <strong class="cooked-nut-label" data-labeltype="' . esc_html( $slug ) . '">___</strong>' . ( isset( $nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_html( $slug ) . '_measurement">' . esc_html( $nf['measurement'] ) . '</strong>' : '' );
+                                    echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr( $nf['pdv'] ) . '" data-labeltype="' . esc_html( $slug ) . '">0</span>%</strong>' : '' );
 
-                                    if ( isset($nf['subs']) ):
-                                        foreach ( $nf['subs'] as $sub_slug => $sub_nf ):
+                                    if ( isset( $nf['subs'] ) ) :
+                                        foreach ( $nf['subs'] as $sub_slug => $sub_nf ) :
                                             echo '<ul>';
-                                                if ($sub_slug === 'trans_fat'):
-                                                    echo '<li>';
-                                                        echo wp_kses_post( $sub_nf['nutrition_info_name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
-                                                    echo '</li>';
-                                                elseif ($sub_slug === 'added_sugars'):
+											if ( $sub_slug === 'trans_fat' ) :
+												echo '<li>';
+													echo wp_kses_post( $sub_nf['nutrition_info_name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset( $sub_nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
+												echo '</li>';
+                                                elseif ( $sub_slug === 'added_sugars' ) :
                                                     echo '<ul><li>';
-                                                        echo esc_html__('Includes', 'cooked') . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' ) . ' ' . esc_html($sub_nf['name']);
-                                                        echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($sub_nf['pdv']) . '" data-labeltype="' . esc_attr($sub_slug) . '">0</span>%</strong>' : '' );
+                                                        echo esc_html__( 'Includes', 'cooked' ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset( $sub_nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' ) . ' ' . esc_html( $sub_nf['name'] );
+                                                        echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr( $sub_nf['pdv'] ) . '" data-labeltype="' . esc_attr( $sub_slug ) . '">0</span>%</strong>' : '' );
                                                     echo '</li></ul>';
-                                                else:
+                                                else :
                                                     echo '<li>';
-                                                    echo esc_html( $sub_nf['name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset($sub_nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
-                                                    echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($sub_nf['pdv']) . '" data-labeltype="' . esc_attr($sub_slug) . '">0</span>%</strong>' : '' );
+                                                    echo esc_html( $sub_nf['name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset( $sub_nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
+                                                    echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr( $sub_nf['pdv'] ) . '" data-labeltype="' . esc_attr( $sub_slug ) . '">0</span>%</strong>' : '' );
                                                     echo '</li>';
                                                 endif;
-                                            echo '</ul>';
+												echo '</ul>';
                                         endforeach;
                                     endif;
                                     echo '</li>';
-                                endforeach; ?>
+                                endforeach;
+                                ?>
                             </ul>
 
                             <hr class="cooked-nut-hr" />
 
                             <ul class="cooked-nut-bottom cooked-clearfix">
-                                <?php $nutrition_facts = $_nutrition_facts['bottom'];
-                                foreach ( $nutrition_facts as $slug => $nf ):
+                                <?php
+                                $nutrition_facts = $_nutrition_facts['bottom'];
+                                foreach ( $nutrition_facts as $slug => $nf ) :
                                     echo '<li>';
-                                        echo esc_html( $nf['name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong>' . ( isset($nf['measurement']) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html( $nf['measurement'] ) . '</strong>' : '' );
-                                        echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr($nf['pdv']) . '" data-labeltype="' . esc_attr($slug) . '">0</span>%</strong>' : '' );
+                                        echo esc_html( $nf['name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong>' . ( isset( $nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html( $nf['measurement'] ) . '</strong>' : '' );
+                                        echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr( $nf['pdv'] ) . '" data-labeltype="' . esc_attr( $slug ) . '">0</span>%</strong>' : '' );
                                     echo '</li>';
-                                endforeach; ?>
+                                endforeach;
+                                ?>
                             </ul>
 
                             <ul>
@@ -948,7 +1036,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 </div>
             </div>
 
-            <input type="hidden" name="_recipe_settings[nutrition][etag]" value="<?php echo !empty($recipe_settings['nutrition']['etag']) ? esc_attr( $recipe_settings['nutrition']['etag'] ) : ''; ?>" />
+            <input type="hidden" name="_recipe_settings[nutrition][etag]" value="<?php echo ! empty( $recipe_settings['nutrition']['etag'] ) ? esc_attr( $recipe_settings['nutrition']['etag'] ) : ''; ?>" />
 
         </section>
 
@@ -959,55 +1047,69 @@ function cooked_render_recipe_fields( $post_id ) {
             <div class="recipe-setting-block">
                 <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Gallery Type', 'cooked' ); ?></h3>
                 <select id="cooked_gallery_type" name="_recipe_settings[gallery][type]">
-                    <?php foreach( $cooked_gallery_types as $slug => $gtype ):
-                        echo '<option value="' . esc_attr( $slug ) . '"' . ( isset($recipe_settings['gallery']['type']) && $recipe_settings['gallery']['type'] == $slug ? ' selected' : '' ) . '>' . esc_attr( $gtype['title'] ) . '</option>';
-                    endforeach; ?>
+                    <?php
+                    foreach ( $cooked_gallery_types as $slug => $gtype ) :
+                        echo '<option value="' . esc_attr( $slug ) . '"' . ( isset( $recipe_settings['gallery']['type'] ) && $recipe_settings['gallery']['type'] == $slug ? ' selected' : '' ) . '>' . esc_attr( $gtype['title'] ) . '</option>';
+                    endforeach;
+                    ?>
                 </select>
             </div>
 
-            <?php foreach( $cooked_gallery_types as $slug => $gtype ):
-                if ( isset($gtype['posts']) && !empty($gtype['posts']) ): ?>
+            <?php
+            foreach ( $cooked_gallery_types as $slug => $gtype ) :
+                if ( isset( $gtype['posts'] ) && ! empty( $gtype['posts'] ) ) :
+					?>
                     <div class="recipe-setting-block cooked-conditional-hidden" data-condition="cooked_gallery_type" data-value="<?php echo esc_attr( $slug ); ?>">
                         <h3 class="cooked-settings-title"><?php echo esc_html( $gtype['title'] ); ?></h3>
                         <select id="cooked_gallery_type" name="_recipe_settings[gallery][<?php echo esc_attr( $slug ); ?>]">
-                            <option value=""><?php esc_html_e('Choose one...','cooked'); ?></option>
-                            <?php foreach( $gtype['posts'] as $gid => $g ):
-                                echo '<option value="' . esc_attr( $gid ) . '"' . ( isset($recipe_settings['gallery'][$slug]) && $recipe_settings['gallery'][$slug] == $gid ? ' selected' : '' ) . '>' . esc_attr( $g ) . '</option>';
-                            endforeach; ?>
+                            <option value=""><?php esc_html_e( 'Choose one...', 'cooked' ); ?></option>
+                            <?php
+                            foreach ( $gtype['posts'] as $gid => $g ) :
+                                echo '<option value="' . esc_attr( $gid ) . '"' . ( isset( $recipe_settings['gallery'][ $slug ] ) && $recipe_settings['gallery'][ $slug ] == $gid ? ' selected' : '' ) . '>' . esc_attr( $g ) . '</option>';
+                            endforeach;
+                            ?>
                         </select>
                     </div>
-                <?php endif;
-            endforeach; ?>
+					<?php
+                endif;
+            endforeach;
+            ?>
 
             <div class="recipe-setting-block cooked-conditional-hidden" data-condition="cooked_gallery_type" data-value="cooked">
 
                 <div class="recipe-setting-block cooked-bm-15">
-                    <h3 class="cooked-settings-title"><?php
+                    <h3 class="cooked-settings-title">
+                    <?php
                         /* translators: a title for the video section of the recipe editor, where users can paste a YouToub or Vimeo URL into the field below. */
-                        echo sprintf( esc_html__( '%1$s or %2$s Video', 'cooked' ), 'YouTube','Vimeo' );
-                    ?></h3>
-                    <p><?php
+                        printf( esc_html__( '%1$s or %2$s Video', 'cooked' ), 'YouTube', 'Vimeo' );
+                    ?>
+                    </h3>
+                    <p>
+                    <?php
                         /* translators: a message describing how to display a video from YouTube or Vimeo. */
-                        echo sprintf( esc_html__( 'If you would like to display a video as the first item in your gallery, you can paste a valid %1$s or %2$s URL below.','cooked'),'YouTube','Vimeo' );
-                    ?></p>
-                    <input type="text" name="_recipe_settings[gallery][video_url]" value="<?php echo ( isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ? esc_attr( $recipe_settings['gallery']['video_url'] ) : '' ); ?>" placeholder="ex. https://www.youtube.com/watch?v=abc123">
+                        printf( esc_html__( 'If you would like to display a video as the first item in your gallery, you can paste a valid %1$s or %2$s URL below.', 'cooked' ), 'YouTube', 'Vimeo' );
+                    ?>
+                    </p>
+                    <input type="text" name="_recipe_settings[gallery][video_url]" value="<?php echo ( isset( $recipe_settings['gallery']['video_url'] ) && $recipe_settings['gallery']['video_url'] ? esc_attr( $recipe_settings['gallery']['video_url'] ) : '' ); ?>" placeholder="ex. https://www.youtube.com/watch?v=abc123">
                 </div>
 
                 <h3 class="cooked-settings-title"><?php esc_html_e( 'Gallery Items', 'cooked' ); ?></h3>
-                <div id="cooked-recipe-image-gallery" class="cooked-clearfix"><?php
+                <div id="cooked-recipe-image-gallery" class="cooked-clearfix">
+                <?php
 
-                    $gallery_items = ( isset($recipe_settings['gallery']['items']) && !empty($recipe_settings['gallery']['items']) ? $recipe_settings['gallery']['items'] : array() );
-                    if (!empty($gallery_items)):
-                        foreach ($gallery_items as $g_item):
-                            $image_thumb = wp_get_attachment_image( $g_item, 'thumbnail' );
-                            $image_title = get_the_title( $g_item );
+                    $gallery_items = ( isset( $recipe_settings['gallery']['items'] ) && ! empty( $recipe_settings['gallery']['items'] ) ? $recipe_settings['gallery']['items'] : array() );
+				if ( ! empty( $gallery_items ) ) :
+					foreach ( $gallery_items as $g_item ) :
+						$image_thumb = wp_get_attachment_image( $g_item, 'thumbnail' );
+						$image_title = get_the_title( $g_item );
 
-                            echo '<div data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-recipe-gallery-item">' . wp_kses_post( $image_thumb ) . '<span class="cooked-gallery-item-title">' . esc_html($image_title) . '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' . esc_attr( $g_item ) . '" /><a href="#" data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>';
+						echo '<div data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-recipe-gallery-item">' . wp_kses_post( $image_thumb ) . '<span class="cooked-gallery-item-title">' . esc_html( $image_title ) . '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' . esc_attr( $g_item ) . '" /><a href="#" data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>';
 
                         endforeach;
                     endif;
 
-                ?></div>
+                ?>
+                </div>
                 <input type="button" class="button cooked-gallery-add-button" value="<?php esc_attr_e( 'Add to Gallery', 'cooked' ); ?>" />
             </div>
 
@@ -1017,7 +1119,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
             <div class="recipe-setting-block">
 
-                <?php do_action('cooked_recipe_shortcodes_before'); ?>
+                <?php do_action( 'cooked_recipe_shortcodes_before' ); ?>
 
                 <!-- [cooked-info] -->
                 <div class="cooked-clearfix">
@@ -1032,20 +1134,25 @@ function cooked_render_recipe_fields( $post_id ) {
 
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
-                                <p class="cooked-bm-5"><strong><?php
+                                <p class="cooked-bm-5"><strong>
+                                <?php
                                     /* translators: "include and exclude" section title */
-                                    echo sprintf( esc_html__( '"%1$s" and "%2$s"', 'cooked' ), 'include', 'exclude' );
-                                ?></strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to include or exclude content from the shortcode output.','cooked'); ?></p>
+                                    printf( esc_html__( '"%1$s" and "%2$s"', 'cooked' ), 'include', 'exclude' );
+                                ?>
+                                </strong></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to include or exclude content from the shortcode output.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='include="author,total_time"' />
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
-                                <p class="cooked-bm-5"><strong><?php
+                                <p class="cooked-bm-5"><strong>
+                                <?php
                                     /* translators: "left and right" section title */
-                                    echo sprintf( esc_html__( '"%1$s" and "%2$s"','cooked' ), 'left','right' ); ?></strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Used like "include", but will position the content to the left or right.','cooked'); ?></p>
+                                    printf( esc_html__( '"%1$s" and "%2$s"', 'cooked' ), 'left', 'right' );
+								?>
+                                    </strong></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Used like "include", but will position the content to the left or right.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='left="author" right="total_time"' />
                                 </div>
@@ -1055,24 +1162,29 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
 
-                            <?php $available_cooked_info_vars = apply_filters( 'cooked_available_info_vars', [
-                                'author' => __('Author', 'cooked'),
-                                'prep_time' => __('Prep Time', 'cooked'),
-                                'cook_time' => __('Cook Time', 'cooked'),
-                                'total_time' => __('Total Time', 'cooked'),
-                                'difficulty_level' => __('Difficulty', 'cooked'),
-                                'servings' => __('Servings Switcher', 'cooked'),
-                                'taxonomies' => __('Category', 'cooked'),
-                                'print' => esc_html__('Print Mode', 'cooked'),
-                                'fullscreen' => __('Full-Screen Mode', 'cooked')
-                            ]);
+                            <?php
+                            $available_cooked_info_vars = apply_filters(
+                                'cooked_available_info_vars',
+                                [
+									'author'           => __( 'Author', 'cooked' ),
+									'prep_time'        => __( 'Prep Time', 'cooked' ),
+									'cook_time'        => __( 'Cook Time', 'cooked' ),
+									'total_time'       => __( 'Total Time', 'cooked' ),
+									'difficulty_level' => __( 'Difficulty', 'cooked' ),
+									'servings'         => __( 'Servings Switcher', 'cooked' ),
+									'taxonomies'       => __( 'Category', 'cooked' ),
+									'print'            => esc_html__( 'Print Mode', 'cooked' ),
+									'fullscreen'       => __( 'Full-Screen Mode', 'cooked' ),
+								]
+                            );
 
-                            foreach( $available_cooked_info_vars as $var => $name ):
-                                echo '<strong>' . esc_html($var) . '</strong> (' . esc_html($name) . ')<br>';
-                            endforeach; ?>
+                            foreach ( $available_cooked_info_vars as $var => $name ) :
+                                echo '<strong>' . esc_html( $var ) . '</strong> (' . esc_html( $name ) . ')<br>';
+                            endforeach;
+                            ?>
 
                         </p>
                     </div>
@@ -1093,7 +1205,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         </div>
 
                         <p class="cooked-bm-5"><strong>"checkboxes"</strong></p>
-                        <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to hide or show the checkboxes:','cooked'); ?></p>
+                        <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to hide or show the checkboxes:', 'cooked' ); ?></p>
                         <div class="cooked-bm-20 cooked-block">
                             <input class='cooked-shortcode-field' type='text' readonly value='checkboxes=false' />
                         </div>
@@ -1101,10 +1213,10 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <strong>true</strong> (<?php esc_html_e( 'Show checkboxes','cooked' ); ?>)<br>
-                            <strong>false</strong> (<?php esc_html_e( 'Hide checkboxes','cooked' ); ?>)
+                            <strong>true</strong> (<?php esc_html_e( 'Show checkboxes', 'cooked' ); ?>)<br>
+                            <strong>false</strong> (<?php esc_html_e( 'Hide checkboxes', 'cooked' ); ?>)
                         </p>
                     </div>
 
@@ -1124,7 +1236,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         </div>
 
                         <p class="cooked-bm-5"><strong>"numbers"</strong></p>
-                        <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to hide or show the numbers:','cooked'); ?></p>
+                        <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to hide or show the numbers:', 'cooked' ); ?></p>
                         <div class="cooked-bm-20 cooked-block">
                             <input class='cooked-shortcode-field' type='text' readonly value='numbers=false' />
                         </div>
@@ -1132,10 +1244,10 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <strong>true</strong> (<?php esc_html_e( 'Show numbers','cooked' ); ?>)<br>
-                            <strong>false</strong> (<?php esc_html_e( 'Hide numbers','cooked' ); ?>)
+                            <strong>true</strong> (<?php esc_html_e( 'Show numbers', 'cooked' ); ?>)<br>
+                            <strong>false</strong> (<?php esc_html_e( 'Hide numbers', 'cooked' ); ?>)
                         </p>
                     </div>
 
@@ -1157,9 +1269,9 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <em><?php esc_html_e( 'None', 'cooked'); ?></em>
+                            <em><?php esc_html_e( 'None', 'cooked' ); ?></em>
                         </p>
                     </div>
 
@@ -1181,9 +1293,9 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <em><?php esc_html_e( 'None', 'cooked'); ?></em>
+                            <em><?php esc_html_e( 'None', 'cooked' ); ?></em>
                         </p>
                     </div>
 
@@ -1207,14 +1319,14 @@ function cooked_render_recipe_fields( $post_id ) {
                             <div class="cooked-clearfix">
                                 <div class="cooked-setting-column-12">
                                     <p class="cooked-bm-5"><strong>"width"</strong></p>
-                                    <p class="cooked-bm-10"><?php esc_html_e( 'Set the width of the gallery.','cooked'); ?></p>
+                                    <p class="cooked-bm-10"><?php esc_html_e( 'Set the width of the gallery.', 'cooked' ); ?></p>
                                     <div class="cooked-bm-20 cooked-block">
                                         <input class='cooked-shortcode-field' type='text' readonly value='width="350px"' />
                                     </div>
                                 </div>
                                 <div class="cooked-setting-column-12">
                                     <p class="cooked-bm-5"><strong>"ratio"</strong></p>
-                                    <p class="cooked-bm-10"><?php esc_html_e( 'Set the image size ratio.','cooked'); ?></p>
+                                    <p class="cooked-bm-10"><?php esc_html_e( 'Set the image size ratio.', 'cooked' ); ?></p>
                                     <div class="cooked-bm-20 cooked-block">
                                         <input class='cooked-shortcode-field' type='text' readonly value='ratio="500/500"' />
                                     </div>
@@ -1224,14 +1336,14 @@ function cooked_render_recipe_fields( $post_id ) {
                             <div class="cooked-clearfix">
                                 <div class="cooked-setting-column-12">
                                     <p class="cooked-bm-5"><strong>"nav"</strong></p>
-                                    <p class="cooked-bm-10"><?php esc_html_e( 'Set the navigation style.','cooked'); ?></p>
+                                    <p class="cooked-bm-10"><?php esc_html_e( 'Set the navigation style.', 'cooked' ); ?></p>
                                     <div class="cooked-bm-20 cooked-block">
                                         <input class='cooked-shortcode-field' type='text' readonly value='nav="thumbs"' />
                                     </div>
                                 </div>
                                 <div class="cooked-setting-column-12">
                                     <p class="cooked-bm-5"><strong>"allowfullscreen"</strong></p>
-                                    <p class="cooked-bm-10"><?php esc_html_e( 'Enable or disable "Full-Screen" mode.','cooked'); ?></p>
+                                    <p class="cooked-bm-10"><?php esc_html_e( 'Enable or disable "Full-Screen" mode.', 'cooked' ); ?></p>
                                     <div class="cooked-bm-20 cooked-block">
                                         <input class='cooked-shortcode-field' type='text' readonly value='allowfullscreen="true"' />
                                     </div>
@@ -1241,27 +1353,30 @@ function cooked_render_recipe_fields( $post_id ) {
                         </div>
 
                         <div class="cooked-setting-column-13">
-                            <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                            <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                             <p class="cooked-bm-10">
                                 <strong>width</strong><br>
                                 <?php
                                     /* translators: related to the width of  slideshows: "80% or 300px" section title */
-                                    echo sprintf( esc_html__( 'ex: "%1$s" or "%2$s"', 'cooked'), '80%','300px' );
-                                ?><br><br>
+                                    printf( esc_html__( 'ex: "%1$s" or "%2$s"', 'cooked' ), '80%', '300px' );
+                                ?>
+                                <br><br>
                                 <strong>ratio</strong><br>
                                 <?php
                                     /* translators: related to the image ratio for slideshows: "ex: 800/600" section title */
-                                    echo sprintf( esc_html__( 'ex: "%s"', 'cooked'), '800/600' );
-                                ?><br><br>
+                                    printf( esc_html__( 'ex: "%s"', 'cooked' ), '800/600' );
+                                ?>
+                                <br><br>
                                 <strong>nav</strong><br>
                                 <?php
                                     /* translators: related to the navigation style for slideshows: "dots, thumbs or false" section title */
-                                    echo sprintf( esc_html__( '"%1$s", "%2$s", or "%3$s"', 'cooked'), 'dots','thumbs','false' );
-                                ?><br><br>
+                                    printf( esc_html__( '"%1$s", "%2$s", or "%3$s"', 'cooked' ), 'dots', 'thumbs', 'false' );
+                                ?>
+                                <br><br>
                                 <strong>allowfullscreen</strong><br>
                                 <?php
                                     /* translators: related to allowing full screen for slideshows: "true or false" section title */
-                                    echo sprintf( esc_html__( '"%1$s" or "%2$s"', 'cooked'), 'true', 'false' );
+                                    printf( esc_html__( '"%1$s" or "%2$s"', 'cooked' ), 'true', 'false' );
                                 ?>
                             </p>
                         </div>
@@ -1286,9 +1401,9 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <em><?php esc_html_e( 'None', 'cooked'); ?></em>
+                            <em><?php esc_html_e( 'None', 'cooked' ); ?></em>
                         </p>
                     </div>
 
@@ -1302,13 +1417,13 @@ function cooked_render_recipe_fields( $post_id ) {
                 <div class="cooked-setting-column-23">
 
                     <h3 class="cooked-settings-title cooked-bm-0"><?php esc_html_e( 'Notes', 'cooked' ); ?></h3>
-                    <p class="cooked-bm-10"><?php esc_html_e( 'This will display the notes, if one is available from the "Layout & Content" tab.', 'cooked'); ?></p>
+                    <p class="cooked-bm-10"><?php esc_html_e( 'This will display the notes, if one is available from the "Layout & Content" tab.', 'cooked' ); ?></p>
                     <div class="cooked-bm-20 cooked-block">
                         <input class='cooked-shortcode-field' type='text' readonly value='[cooked-notes]' />
                     </div>
 
                     <p class="cooked-bm-5"><strong>"show_header"</strong></p>
-                    <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to hide or show the header for the notes section:', 'cooked'); ?></p>
+                    <p class="cooked-bm-10"><?php esc_html_e( 'This will allow you to hide or show the header for the notes section:', 'cooked' ); ?></p>
                     <div class="cooked-bm-20 cooked-block">
                         <input class='cooked-shortcode-field' type='text' readonly value='show_header=true' />
                     </div>
@@ -1316,7 +1431,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 </div>
 
                 <div class="cooked-setting-column-13">
-                    <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                    <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                     <p class="cooked-bm-10">
                         <strong>true</strong> (<?php esc_html_e( 'Show header', 'cooked' ); ?>)<br>
                         <strong>false</strong> (<?php esc_html_e( 'Hide header', 'cooked' ); ?>)
@@ -1335,23 +1450,25 @@ function cooked_render_recipe_fields( $post_id ) {
                         <h3 class="cooked-settings-title cooked-bm-0"><?php esc_html_e( 'Timer', 'cooked' ); ?></h3>
                         <p class="cooked-bm-10"><?php esc_html_e( 'This will display a special link to start a cooking timer.', 'cooked' ); ?></p>
                         <div class="cooked-bm-20 cooked-block">
-                            <input class='cooked-shortcode-field' type='text' readonly value='<?php echo ( shortcode_exists('cooked-timer') ? '[cooked-timer minutes="5"]5 Minutes[/cooked-timer]' : '[timer minutes=5]5 Minutes[/timer]' ); ?>' />
+                            <input class='cooked-shortcode-field' type='text' readonly value='<?php echo ( shortcode_exists( 'cooked-timer' ) ? '[cooked-timer minutes="5"]5 Minutes[/cooked-timer]' : '[timer minutes=5]5 Minutes[/timer]' ); ?>' />
                         </div>
 
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
-                                <p class="cooked-bm-5"><strong><?php
+                                <p class="cooked-bm-5"><strong>
+                                <?php
                                     /* translators: "seconds, minutes and hours" section title */
-                                    echo sprintf( esc_html__( '"%1$s", "%2$s" and "%3$s"','cooked' ), 'seconds','minutes','hours' );
-                                ?></strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Use just one or a combination of all three to set the timer length','cooked'); ?></p>
+                                    printf( esc_html__( '"%1$s", "%2$s" and "%3$s"', 'cooked' ), 'seconds', 'minutes', 'hours' );
+                                ?>
+                                </strong></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Use just one or a combination of all three to set the timer length', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='minutes="5" seconds="30"' />
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"desc"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Add a short description for this timer, if applicable.','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Add a short description for this timer, if applicable.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='desc="Boil for 20 minutes"' />
                                 </div>
@@ -1361,12 +1478,12 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <strong>seconds</strong> (<?php esc_html_e( 'Time in seconds','cooked' ); ?>)<br>
-                            <strong>minutes</strong> (<?php esc_html_e( 'Time in minutes','cooked' ); ?>)<br>
-                            <strong>hours</strong> (<?php esc_html_e( 'Time in hours','cooked' ); ?>)<br>
-                            <strong>desc</strong> (<?php esc_html_e( 'Timer Description','cooked' ); ?>)
+                            <strong>seconds</strong> (<?php esc_html_e( 'Time in seconds', 'cooked' ); ?>)<br>
+                            <strong>minutes</strong> (<?php esc_html_e( 'Time in minutes', 'cooked' ); ?>)<br>
+                            <strong>hours</strong> (<?php esc_html_e( 'Time in hours', 'cooked' ); ?>)<br>
+                            <strong>desc</strong> (<?php esc_html_e( 'Timer Description', 'cooked' ); ?>)
                         </p>
                     </div>
 
@@ -1389,7 +1506,7 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Usage','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Usage', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
                             <?php esc_html_e( 'Simply add the shortcode to your recipe template or content area. The navigation will automatically show the previous and next recipes based on recipe ID order.', 'cooked' ); ?>
                         </p>
@@ -1413,14 +1530,14 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"id"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Specify a recipe ID. If not provided, uses the current recipe.','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Specify a recipe ID. If not provided, uses the current recipe.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='id="123"' />
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"include_ids"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Comma-separated recipe IDs to pin at the start of the grid. Remaining slots are filled with related recipes.','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Comma-separated recipe IDs to pin at the start of the grid. Remaining slots are filled with related recipes.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='include_ids="101,102"' />
                                 </div>
@@ -1430,14 +1547,14 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"title"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Set the heading text for the related recipes section.','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Set the heading text for the related recipes section.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='title="You May Also Like"' />
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"limit"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Number of recipes to display (default: 4).','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Number of recipes to display (default: 4).', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='limit="4"' />
                                 </div>
@@ -1447,7 +1564,7 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"columns"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Number of columns in the grid (default: 2).','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Number of columns in the grid (default: 2).', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='columns="2"' />
                                 </div>
@@ -1457,14 +1574,14 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"hide_image"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Hide recipe card images.','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Hide recipe card images.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='hide_image="true"' />
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"hide_excerpt"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Hide recipe card excerpts.','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Hide recipe card excerpts.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='hide_excerpt="true"' />
                                 </div>
@@ -1474,14 +1591,14 @@ function cooked_render_recipe_fields( $post_id ) {
                         <div class="cooked-clearfix">
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"hide_author"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Hide recipe card authors.','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Hide recipe card authors.', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='hide_author="true"' />
                                 </div>
                             </div>
                             <div class="cooked-setting-column-12">
                                 <p class="cooked-bm-5"><strong>"match_*"</strong></p>
-                                <p class="cooked-bm-10"><?php esc_html_e( 'Toggle which taxonomies are used: match_categories, match_cuisines, match_cooking_methods, match_tags, match_diets (default: true).','cooked'); ?></p>
+                                <p class="cooked-bm-10"><?php esc_html_e( 'Toggle which taxonomies are used: match_categories, match_cuisines, match_cooking_methods, match_tags, match_diets (default: true).', 'cooked' ); ?></p>
                                 <div class="cooked-bm-20 cooked-block">
                                     <input class='cooked-shortcode-field' type='text' readonly value='match_categories="true"' />
                                 </div>
@@ -1494,19 +1611,19 @@ function cooked_render_recipe_fields( $post_id ) {
                     </div>
 
                     <div class="cooked-setting-column-13">
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Available Variables', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
-                            <strong>id</strong> (<?php esc_html_e( 'Recipe ID','cooked' ); ?>)<br>
-                            <strong>include_ids</strong> (<?php esc_html_e( 'Pinned recipe IDs','cooked' ); ?>)<br>
-                            <strong>title</strong> (<?php esc_html_e( 'Section heading','cooked' ); ?>)<br>
-                            <strong>limit</strong> (<?php esc_html_e( 'Number of recipes','cooked' ); ?>)<br>
-                            <strong>columns</strong> (<?php esc_html_e( 'Grid columns','cooked' ); ?>)<br>
-                            <strong>hide_image</strong> (<?php esc_html_e( 'true/false','cooked' ); ?>)<br>
-                            <strong>hide_excerpt</strong> (<?php esc_html_e( 'true/false','cooked' ); ?>)<br>
-                            <strong>hide_author</strong> (<?php esc_html_e( 'true/false','cooked' ); ?>)<br>
-                            <strong>match_*</strong> (<?php esc_html_e( 'true/false','cooked' ); ?>)
+                            <strong>id</strong> (<?php esc_html_e( 'Recipe ID', 'cooked' ); ?>)<br>
+                            <strong>include_ids</strong> (<?php esc_html_e( 'Pinned recipe IDs', 'cooked' ); ?>)<br>
+                            <strong>title</strong> (<?php esc_html_e( 'Section heading', 'cooked' ); ?>)<br>
+                            <strong>limit</strong> (<?php esc_html_e( 'Number of recipes', 'cooked' ); ?>)<br>
+                            <strong>columns</strong> (<?php esc_html_e( 'Grid columns', 'cooked' ); ?>)<br>
+                            <strong>hide_image</strong> (<?php esc_html_e( 'true/false', 'cooked' ); ?>)<br>
+                            <strong>hide_excerpt</strong> (<?php esc_html_e( 'true/false', 'cooked' ); ?>)<br>
+                            <strong>hide_author</strong> (<?php esc_html_e( 'true/false', 'cooked' ); ?>)<br>
+                            <strong>match_*</strong> (<?php esc_html_e( 'true/false', 'cooked' ); ?>)
                         </p>
-                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Example','cooked' ); ?></strong></p>
+                        <p class="cooked-bm-10 cooked-tm-10"><strong class="cooked-heading"><?php esc_html_e( 'Example', 'cooked' ); ?></strong></p>
                         <p class="cooked-bm-10">
                             <code>[cooked-related-recipes include_ids="101,102" limit="4" columns="2" title="Related Recipes"]</code>
                         </p>
@@ -1514,19 +1631,19 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 </div>
 
-                <?php do_action('cooked_recipe_shortcodes_after'); ?>
+                <?php do_action( 'cooked_recipe_shortcodes_after' ); ?>
 
             </div>
 
         </section>
 
-        <?php do_action('cooked_recipe_tabs_after'); ?>
+        <?php do_action( 'cooked_recipe_tabs_after' ); ?>
 
     </div>
 
     <?php Cooked_Recipe_Meta::bulk_add_modal(); ?>
 
-<?php
+	<?php
 }
 
 add_action( 'cooked_recipe_fields', 'cooked_render_recipe_fields', 10 );

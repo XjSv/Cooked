@@ -5,12 +5,14 @@
  * @package     Cooked
  * @subpackage  Misc Functions
  * @since       1.0.0
-*/
+ */
 
 namespace Cooked\System;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 class Functions {
 
@@ -30,19 +32,19 @@ class Functions {
     public static function array_splice_assoc( &$input, $offset, $length, $replacement = [] ) {
         $replacement = (array) $replacement;
 
-        if ( is_array($input) ):
-            $key_indexes = array_flip(array_keys($input));
-            if (isset($input[$offset]) && is_string($offset)) {
-                $offset = $key_indexes[$offset];
+        if ( is_array( $input ) ) :
+            $key_indexes = array_flip( array_keys( $input ) );
+            if ( isset( $input[ $offset ] ) && is_string( $offset ) ) {
+                $offset = $key_indexes[ $offset ];
                 $offset = (int) $offset + 1;
             }
-            if (isset($input[$length]) && is_string($length)) {
-                $length = $key_indexes[$length] - $offset;
+            if ( isset( $input[ $length ] ) && is_string( $length ) ) {
+                $length = $key_indexes[ $length ] - $offset;
             }
 
-            $input = array_slice($input, 0, $offset, TRUE)
+            $input = array_slice( $input, 0, $offset, true )
                     + $replacement
-                    + array_slice($input, $offset + $length, NULL, TRUE);
+                    + array_slice( $input, $offset + $length, null, true );
         endif;
     }
 
@@ -109,64 +111,67 @@ class Functions {
     }
 
     public static function hex2rgb( $hex ) {
-        list( $r,$g,$b ) = sscanf( $hex, "#%02x%02x%02x" );
-        $rgb_array = [$r, $g, $b];
-        return implode( ',',$rgb_array );
+        list( $r, $g, $b ) = sscanf( $hex, '#%02x%02x%02x' );
+        $rgb_array         = [ $r, $g, $b ];
+        return implode( ',', $rgb_array );
     }
 
     public static function parse_readme_changelog( $readme_url = false, $title = false ) {
         ob_start();
-        include !$readme_url ? COOKED_DIR . 'readme.txt' : $readme_url;
+        include ! $readme_url ? COOKED_DIR . 'readme.txt' : $readme_url;
         $readme = ob_get_clean();
 
-        $readme = make_clickable(esc_html($readme));
-        $readme = preg_replace('/`(.*?)`/', '<code>\\1</code>', $readme);
-        //$readme = preg_replace( '/[\040]\*\*\NEW:\*\*/', '<strong class="new">' . __( 'New', 'cooked' ) . '</strong>', $readme);
-        //$readme = preg_replace( '/[\040]\*\*\TWEAK:\*\*/', '<strong class="tweak">' . __( 'Tweak', 'cooked' ) . '</strong>', $readme);
-        //$readme = preg_replace( '/[\040]\*\*\FIX:\*\*/', '<em class="fix">' . __( 'Fixed', 'cooked' ) . '</em>', $readme);
-        //$readme = preg_replace( '/[\040]\*\*\NEW\*\*/', '<strong class="new">' . __( 'New', 'cooked' ) . '</strong>', $readme);
-        //$readme = preg_replace( '/[\040]\*\*\TWEAK\*\*/', '<strong class="tweak">' . __( 'Tweak', 'cooked' ) . '</strong>', $readme);
-        //$readme = preg_replace( '/[\040]\*\*\FIX\*\*/', '<em class="fix">' . __( 'Fixed', 'cooked' ) . '</em>', $readme);
-        $readme = preg_replace( '/\*\*(.*?)\*\*/', '<strong>\\1</strong>', $readme);
-        $readme = preg_replace( '/\*(.*?)\*/', '<em>\\1</em>', $readme);
+        $readme = make_clickable( esc_html( $readme ) );
+        $readme = preg_replace( '/`(.*?)`/', '<code>\\1</code>', $readme );
+        // $readme = preg_replace( '/[\040]\*\*\NEW:\*\*/', '<strong class="new">' . __( 'New', 'cooked' ) . '</strong>', $readme);
+        // $readme = preg_replace( '/[\040]\*\*\TWEAK:\*\*/', '<strong class="tweak">' . __( 'Tweak', 'cooked' ) . '</strong>', $readme);
+        // $readme = preg_replace( '/[\040]\*\*\FIX:\*\*/', '<em class="fix">' . __( 'Fixed', 'cooked' ) . '</em>', $readme);
+        // $readme = preg_replace( '/[\040]\*\*\NEW\*\*/', '<strong class="new">' . __( 'New', 'cooked' ) . '</strong>', $readme);
+        // $readme = preg_replace( '/[\040]\*\*\TWEAK\*\*/', '<strong class="tweak">' . __( 'Tweak', 'cooked' ) . '</strong>', $readme);
+        // $readme = preg_replace( '/[\040]\*\*\FIX\*\*/', '<em class="fix">' . __( 'Fixed', 'cooked' ) . '</em>', $readme);
+        $readme = preg_replace( '/\*\*(.*?)\*\*/', '<strong>\\1</strong>', $readme );
+        $readme = preg_replace( '/\*(.*?)\*/', '<em>\\1</em>', $readme );
         $readme = explode( '== Changelog ==', $readme );
         $readme = $readme[1];
         /* translators: a title for the "What's new in Cooked?" section. */
-        $whats_new_title = '<h4>' . ( $title ? esc_html( $title ) : apply_filters( 'cooked_whats_new_title', sprintf( __( "What's new in %s?", "cooked" ), 'Cooked ' . COOKED_VERSION ) ) ) . '</h4>';
-        $readme = preg_replace('/= (.*?) =/', $whats_new_title, $readme);
-        $readme = preg_replace("/\*+(.*)?/i","<ul class='cooked-whatsnew-list'><li>$1</li></ul>",$readme);
-        $readme = preg_replace("/(\<\/ul\>\n(.*)\<ul class=\'cooked-whatsnew-list\'\>*)+/","",$readme);
-        $readme = explode( $whats_new_title, $readme );
-        $readme = $whats_new_title . $readme[1];
+        $whats_new_title = '<h4>' . ( $title ? esc_html( $title ) : apply_filters( 'cooked_whats_new_title', sprintf( __( "What's new in %s?", 'cooked' ), 'Cooked ' . COOKED_VERSION ) ) ) . '</h4>';
+        $readme          = preg_replace( '/= (.*?) =/', $whats_new_title, $readme );
+        $readme          = preg_replace( '/\*+(.*)?/i', "<ul class='cooked-whatsnew-list'><li>$1</li></ul>", $readme );
+        $readme          = preg_replace( "/(\<\/ul\>\n(.*)\<ul class=\'cooked-whatsnew-list\'\>*)+/", '', $readme );
+        $readme          = explode( $whats_new_title, $readme );
+        $readme          = $whats_new_title . $readme[1];
 
         return $readme;
     }
 
     public static function print_options() {
-        $default_print_options = apply_filters( 'cooked_default_print_options', [
-            'print_options_title' => 'checked',
-            'print_options_info' => '',
-            'print_options_excerpt' => '',
-            'print_options_images' => '',
-            'print_options_ingredients' => 'checked',
-            'print_options_directions' => 'checked',
-            'print_options_notes' => 'checked',
-            'print_options_nutrition' => '',
-        ]);
+        $default_print_options = apply_filters(
+            'cooked_default_print_options',
+            [
+				'print_options_title'       => 'checked',
+				'print_options_info'        => '',
+				'print_options_excerpt'     => '',
+				'print_options_images'      => '',
+				'print_options_ingredients' => 'checked',
+				'print_options_directions'  => 'checked',
+				'print_options_notes'       => 'checked',
+				'print_options_nutrition'   => '',
+			]
+        );
 
         echo '<div id="cooked-print-options" class="cooked-clearfix">';
 
-            echo '<button class="cooked-button" onclick="window.print();">' . esc_html__( 'Print','cooked') . '</button>';
-            echo '<h3>' . esc_html__( 'Print Options:','cooked') . '</h3>';
+            echo '<button class="cooked-button" onclick="window.print();">' . esc_html__( 'Print', 'cooked' ) . '</button>';
+            echo '<h3>' . esc_html__( 'Print Options:', 'cooked' ) . '</h3>';
 
-            echo '<input id="print_options_title" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_title'] ) ? $default_print_options['print_options_title'] : '' ) . ' /> <label for="print_options_title">' . esc_html__('Title','cooked') . '</label>';
-            echo '<input id="print_options_info" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_info'] ) ? $default_print_options['print_options_info'] : '' ) . ' /> <label for="print_options_info">' . esc_html__('Information','cooked') . '</label>';
-            echo '<input id="print_options_excerpt" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_excerpt'] ) ? $default_print_options['print_options_excerpt'] : '' ) . ' /> <label for="print_options_excerpt">' . esc_html__('Excerpt','cooked') . '</label>';
-            echo '<input id="print_options_images" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_images'] ) ? $default_print_options['print_options_images'] : '' ) . ' /> <label for="print_options_images">' . esc_html__('Images','cooked') . '</label>';
-            echo '<input id="print_options_ingredients" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_ingredients'] ) ? $default_print_options['print_options_ingredients'] : '' ) . ' /> <label for="print_options_ingredients">' . esc_html__('Ingredients','cooked') . '</label>';
-            echo '<input id="print_options_directions" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_directions'] ) ? $default_print_options['print_options_directions'] : '' ) . ' /> <label for="print_options_directions">' . esc_html__('Directions','cooked') . '</label>';
-            echo '<input id="print_options_notes" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_notes'] ) ? $default_print_options['print_options_notes'] : '' ) . ' /> <label for="print_options_notes">' . esc_html__('Notes','cooked') . '</label>';
-            echo '<input id="print_options_nutrition" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_nutrition'] ) ? $default_print_options['print_options_nutrition'] : '' ) . ' /> <label for="print_options_nutrition">' . esc_html__('Nutrition','cooked') . '</label>';
+            echo '<input id="print_options_title" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_title'] ) ? $default_print_options['print_options_title'] : '' ) . ' /> <label for="print_options_title">' . esc_html__( 'Title', 'cooked' ) . '</label>';
+            echo '<input id="print_options_info" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_info'] ) ? $default_print_options['print_options_info'] : '' ) . ' /> <label for="print_options_info">' . esc_html__( 'Information', 'cooked' ) . '</label>';
+            echo '<input id="print_options_excerpt" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_excerpt'] ) ? $default_print_options['print_options_excerpt'] : '' ) . ' /> <label for="print_options_excerpt">' . esc_html__( 'Excerpt', 'cooked' ) . '</label>';
+            echo '<input id="print_options_images" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_images'] ) ? $default_print_options['print_options_images'] : '' ) . ' /> <label for="print_options_images">' . esc_html__( 'Images', 'cooked' ) . '</label>';
+            echo '<input id="print_options_ingredients" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_ingredients'] ) ? $default_print_options['print_options_ingredients'] : '' ) . ' /> <label for="print_options_ingredients">' . esc_html__( 'Ingredients', 'cooked' ) . '</label>';
+            echo '<input id="print_options_directions" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_directions'] ) ? $default_print_options['print_options_directions'] : '' ) . ' /> <label for="print_options_directions">' . esc_html__( 'Directions', 'cooked' ) . '</label>';
+            echo '<input id="print_options_notes" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_notes'] ) ? $default_print_options['print_options_notes'] : '' ) . ' /> <label for="print_options_notes">' . esc_html__( 'Notes', 'cooked' ) . '</label>';
+            echo '<input id="print_options_nutrition" type="checkbox" name="print_options" value="1" ' . esc_attr( isset( $default_print_options['print_options_nutrition'] ) ? $default_print_options['print_options_nutrition'] : '' ) . ' /> <label for="print_options_nutrition">' . esc_html__( 'Nutrition', 'cooked' ) . '</label>';
 
         echo '</div>';
     }
@@ -267,40 +272,41 @@ class Functions {
 
             }
 
-        </script><?php
+        </script>
+        <?php
     }
 
     // Store the message
-    public static function set_transient_message($message) {
+    public static function set_transient_message( $message ) {
         $user_id = get_current_user_id();
-        if ( !empty( $message )) {
-            if ( !empty( $user_id ) ) {
-                set_transient('cooked_user_' . $user_id . '_message', $message, 60); // Expires in 60 seconds
+        if ( ! empty( $message ) ) {
+            if ( ! empty( $user_id ) ) {
+                set_transient( 'cooked_user_' . $user_id . '_message', $message, 60 ); // Expires in 60 seconds
             } else {
                 // For guests
                 self::$guest_message_id = uniqid();
-                set_transient('cooked_guest_' . self::$guest_message_id . '_message', $message, 60); // Expires in 60 seconds
+                set_transient( 'cooked_guest_' . self::$guest_message_id . '_message', $message, 60 ); // Expires in 60 seconds
                 return self::$guest_message_id;
             }
         }
     }
 
     // Retrieve and delete the message
-    public static function get_and_delete_transient_message($guest_message_id = false) {
+    public static function get_and_delete_transient_message( $guest_message_id = false ) {
         $user_id = get_current_user_id();
-        if ( !empty( $user_id ) ) {
-            $message = get_transient('cooked_user_' . $user_id . '_message');
-            if ( !empty( $message ) ) {
-                delete_transient('cooked_user_' . $user_id . '_message');
+        if ( ! empty( $user_id ) ) {
+            $message = get_transient( 'cooked_user_' . $user_id . '_message' );
+            if ( ! empty( $message ) ) {
+                delete_transient( 'cooked_user_' . $user_id . '_message' );
                 return $message;
             }
         } else {
             // For guests - use provided guest_message_id or fall back to static property
             $message_id = $guest_message_id ?: self::$guest_message_id;
             if ( $message_id ) {
-                $message = get_transient('cooked_guest_' . $message_id . '_message');
-                if ( !empty( $message ) ) {
-                    delete_transient('cooked_guest_' . $message_id . '_message');
+                $message = get_transient( 'cooked_guest_' . $message_id . '_message' );
+                if ( ! empty( $message ) ) {
+                    delete_transient( 'cooked_guest_' . $message_id . '_message' );
                     self::$guest_message_id = false;
                     return $message;
                 }

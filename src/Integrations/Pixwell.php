@@ -45,7 +45,7 @@ class Pixwell {
         }
 
         $_cooked_settings = \Cooked_Settings::get();
-        $mode = \Cooked_Settings::normalize_dark_mode(
+        $mode             = \Cooked_Settings::normalize_dark_mode(
             isset( $_cooked_settings['dark_mode'] ) ? $_cooked_settings['dark_mode'] : 'off'
         );
 
@@ -78,5 +78,4 @@ class Pixwell {
 
         return __( 'Pixwell\'s dark mode toggle is enabled. Choose <strong>Auto</strong> so Cooked follows it when visitors switch themes.', 'cooked' );
     }
-
 }

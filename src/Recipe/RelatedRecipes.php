@@ -90,7 +90,7 @@ class RelatedRecipes {
         $related_ids = [];
 
         if ( $remaining > 0 ) {
-            $clauses = [];
+            $clauses       = [];
             $taxonomy_atts = [
                 'cp_recipe_category'       => 'match_categories',
                 'cp_recipe_cuisine'        => 'match_cuisines',
@@ -104,7 +104,11 @@ class RelatedRecipes {
                 }
                 $terms = self::get_recipe_terms( $recipe_id, $taxonomy );
                 if ( ! empty( $terms ) ) {
-                    $clauses[] = [ 'taxonomy' => $taxonomy, 'field' => 'term_id', 'terms' => $terms ];
+                    $clauses[] = [
+						'taxonomy' => $taxonomy,
+						'field'    => 'term_id',
+						'terms'    => $terms,
+					];
                 }
             }
 

@@ -21,7 +21,7 @@ class Search extends \WP_Widget {
 
     public function __construct() {
         $widget_ops = [
-            'classname' => 'cooked_widget_search',
+            'classname'   => 'cooked_widget_search',
             'description' => 'Display the recipe search form.',
         ];
         parent::__construct( 'cooked_widget_search', 'Cooked - Recipe Search', $widget_ops );
@@ -33,19 +33,18 @@ class Search extends \WP_Widget {
         if ( ! empty( $instance['title'] ) ) {
             echo wp_kses_post( $args['before_title'] ) . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . wp_kses_post( $args['after_title'] );
         }
-        $size = isset($instance['size']) && $instance['size'] == 'compact' ? ' compact="true"' : '';
-        $browse = isset($instance['hide_browse']) && $instance['hide_browse'] ? ' hide_browse="true"' : '';
-        $sorting = isset($instance['hide_sorting']) && $instance['hide_sorting'] ? ' hide_sorting="true"' : '';
+        $size    = isset( $instance['size'] ) && $instance['size'] == 'compact' ? ' compact="true"' : '';
+        $browse  = isset( $instance['hide_browse'] ) && $instance['hide_browse'] ? ' hide_browse="true"' : '';
+        $sorting = isset( $instance['hide_sorting'] ) && $instance['hide_sorting'] ? ' hide_sorting="true"' : '';
         echo do_shortcode( '[cooked-search' . esc_attr( $size . $browse . $sorting ) . ']' );
         echo wp_kses_post( $args['after_widget'] );
-
     }
 
     public function form( $instance ) {
 
-        $title = !empty( $instance['title'] ) ? $instance['title'] : false;
-        $size = !empty( $instance['size'] ) ? $instance['size'] : 'compact';
-        $hide_browse = isset( $instance['hide_browse'] ) && $instance['hide_browse'] ? true : false;
+        $title        = ! empty( $instance['title'] ) ? $instance['title'] : false;
+        $size         = ! empty( $instance['size'] ) ? $instance['size'] : 'compact';
+        $hide_browse  = isset( $instance['hide_browse'] ) && $instance['hide_browse'] ? true : false;
         $hide_sorting = isset( $instance['hide_sorting'] ) && $instance['hide_sorting'] ? true : false;
 
         ?>
@@ -77,12 +76,11 @@ class Search extends \WP_Widget {
     }
 
     public function update( $new_instance, $old_instance ) {
-        $instance = [];
-        $instance['title'] = !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
-        $instance['size'] = !empty( $new_instance['size'] ) ? wp_strip_all_tags( $new_instance['size'] ) : 'compact';
-        $instance['hide_browse'] = !empty( $new_instance['hide_browse'] ) ? 1 : 0;
-        $instance['hide_sorting'] = !empty( $new_instance['hide_sorting'] ) ? 1 : 0;
+        $instance                 = [];
+        $instance['title']        = ! empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+        $instance['size']         = ! empty( $new_instance['size'] ) ? wp_strip_all_tags( $new_instance['size'] ) : 'compact';
+        $instance['hide_browse']  = ! empty( $new_instance['hide_browse'] ) ? 1 : 0;
+        $instance['hide_sorting'] = ! empty( $new_instance['hide_sorting'] ) ? 1 : 0;
         return $instance;
     }
-
 }

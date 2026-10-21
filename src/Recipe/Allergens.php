@@ -10,7 +10,9 @@
 namespace Cooked\Recipe;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Allergens Class
@@ -50,11 +52,14 @@ class Allergens {
      * @return array
      */
     public static function get_recipe_card_hooks() {
-        return apply_filters( 'cooked_recipe_card_allergen_hooks', [
-            'cooked_recipe_grid_after_name',
-            'cooked_recipe_modern_after_name',
-            'cooked_recipe_full_after_name',
-        ] );
+        return apply_filters(
+            'cooked_recipe_card_allergen_hooks',
+            [
+				'cooked_recipe_grid_after_name',
+				'cooked_recipe_modern_after_name',
+				'cooked_recipe_full_after_name',
+			]
+        );
     }
 
     /**
@@ -73,19 +78,24 @@ class Allergens {
             ? 'recipe_list_style'
             : 'browse_page';
 
-        \Cooked_Functions::array_splice_assoc( $settings['recipe_settings']['fields'], $after, 0, [
-            'recipe_list_allergens' => [
-                'title' => __( 'Recipe List Allergens', 'cooked' ),
-                'desc'  => __( 'Show allergen icons on recipe cards in browse and list views.', 'cooked' ),
-                'type'  => 'checkboxes',
-                'default' => [
-                    'enabled' => false,
-                ],
-                'options' => [
-                    'enabled' => __( 'Show Allergens on Recipe Cards', 'cooked' ),
-                ],
-            ],
-        ] );
+        \Cooked_Functions::array_splice_assoc(
+            $settings['recipe_settings']['fields'],
+            $after,
+            0,
+            [
+				'recipe_list_allergens' => [
+					'title'   => __( 'Recipe List Allergens', 'cooked' ),
+					'desc'    => __( 'Show allergen icons on recipe cards in browse and list views.', 'cooked' ),
+					'type'    => 'checkboxes',
+					'default' => [
+						'enabled' => false,
+					],
+					'options' => [
+						'enabled' => __( 'Show Allergens on Recipe Cards', 'cooked' ),
+					],
+				],
+			]
+        );
 
         return $settings;
     }
@@ -127,7 +137,7 @@ class Allergens {
      */
     public static function render_meta_box( $post ) {
         $recipe_settings = get_post_meta( $post->ID, '_recipe_settings', true );
-        $selected = isset( $recipe_settings['allergens'] ) && is_array( $recipe_settings['allergens'] )
+        $selected        = isset( $recipe_settings['allergens'] ) && is_array( $recipe_settings['allergens'] )
             ? $recipe_settings['allergens']
             : [];
         self::render_field_checkboxes( $selected );
@@ -187,64 +197,67 @@ class Allergens {
      * @return array
      */
     public static function get_allergens() {
-        return apply_filters( 'cooked_allergens', [
-            'celery' => [
-                'label' => __( 'Celery', 'cooked' ),
-                'icon'  => 'allergen-celery',
-            ],
-            'shellfish' => [
-                'label' => __( 'Crustacean shellfish', 'cooked' ),
-                'icon'  => 'allergen-shellfish',
-            ],
-            'eggs' => [
-                'label' => __( 'Eggs', 'cooked' ),
-                'icon'  => 'allergen-egg',
-            ],
-            'fish' => [
-                'label' => __( 'Fish', 'cooked' ),
-                'icon'  => 'allergen-fish',
-            ],
-            'lupin' => [
-                'label' => __( 'Lupin', 'cooked' ),
-                'icon'  => 'allergen-lupin',
-            ],
-            'milk' => [
-                'label' => __( 'Milk', 'cooked' ),
-                'icon'  => 'allergen-milk',
-            ],
-            'molluscs' => [
-                'label' => __( 'Molluscs', 'cooked' ),
-                'icon'  => 'allergen-molluscs',
-            ],
-            'mustard' => [
-                'label' => __( 'Mustard', 'cooked' ),
-                'icon'  => 'allergen-mustard',
-            ],
-            'peanuts' => [
-                'label' => __( 'Peanuts', 'cooked' ),
-                'icon'  => 'allergen-peanut',
-            ],
-            'sesame' => [
-                'label' => __( 'Sesame', 'cooked' ),
-                'icon'  => 'allergen-sesame',
-            ],
-            'soybeans' => [
-                'label' => __( 'Soybeans', 'cooked' ),
-                'icon'  => 'allergen-soy',
-            ],
-            'sulphites' => [
-                'label' => __( 'Sulphur dioxide and sulphites', 'cooked' ),
-                'icon'  => 'allergen-sulphites',
-            ],
-            'tree_nuts' => [
-                'label' => __( 'Tree nuts', 'cooked' ),
-                'icon'  => 'allergen-tree-nut',
-            ],
-            'wheat' => [
-                'label' => __( 'Wheat', 'cooked' ),
-                'icon'  => 'allergen-wheat',
-            ],
-        ] );
+        return apply_filters(
+            'cooked_allergens',
+            [
+				'celery'    => [
+					'label' => __( 'Celery', 'cooked' ),
+					'icon'  => 'allergen-celery',
+				],
+				'shellfish' => [
+					'label' => __( 'Crustacean shellfish', 'cooked' ),
+					'icon'  => 'allergen-shellfish',
+				],
+				'eggs'      => [
+					'label' => __( 'Eggs', 'cooked' ),
+					'icon'  => 'allergen-egg',
+				],
+				'fish'      => [
+					'label' => __( 'Fish', 'cooked' ),
+					'icon'  => 'allergen-fish',
+				],
+				'lupin'     => [
+					'label' => __( 'Lupin', 'cooked' ),
+					'icon'  => 'allergen-lupin',
+				],
+				'milk'      => [
+					'label' => __( 'Milk', 'cooked' ),
+					'icon'  => 'allergen-milk',
+				],
+				'molluscs'  => [
+					'label' => __( 'Molluscs', 'cooked' ),
+					'icon'  => 'allergen-molluscs',
+				],
+				'mustard'   => [
+					'label' => __( 'Mustard', 'cooked' ),
+					'icon'  => 'allergen-mustard',
+				],
+				'peanuts'   => [
+					'label' => __( 'Peanuts', 'cooked' ),
+					'icon'  => 'allergen-peanut',
+				],
+				'sesame'    => [
+					'label' => __( 'Sesame', 'cooked' ),
+					'icon'  => 'allergen-sesame',
+				],
+				'soybeans'  => [
+					'label' => __( 'Soybeans', 'cooked' ),
+					'icon'  => 'allergen-soy',
+				],
+				'sulphites' => [
+					'label' => __( 'Sulphur dioxide and sulphites', 'cooked' ),
+					'icon'  => 'allergen-sulphites',
+				],
+				'tree_nuts' => [
+					'label' => __( 'Tree nuts', 'cooked' ),
+					'icon'  => 'allergen-tree-nut',
+				],
+				'wheat'     => [
+					'label' => __( 'Wheat', 'cooked' ),
+					'icon'  => 'allergen-wheat',
+				],
+			]
+        );
     }
 
     /**
@@ -290,8 +303,8 @@ class Allergens {
         }
 
         $allergens = self::get_allergens();
-        $selected = $recipe_settings['allergens'];
-        $output = '<span class="cooked-allergens">';
+        $selected  = $recipe_settings['allergens'];
+        $output    = '<span class="cooked-allergens">';
 
         foreach ( $selected as $key ) {
             if ( ! isset( $allergens[ $key ] ) ) {
@@ -299,7 +312,7 @@ class Allergens {
             }
 
             $allergen = $allergens[ $key ];
-            $output .= sprintf(
+            $output  .= sprintf(
                 '<span class="cooked-allergen cooked-allergen-%1$s" title="%2$s"><i class="cooked-icon %3$s" aria-hidden="true"></i></span>',
                 esc_attr( $key ),
                 /* translators: %s: allergen name */
@@ -368,5 +381,4 @@ class Allergens {
         echo wp_kses_post( $html );
         echo '</span>';
     }
-
 }

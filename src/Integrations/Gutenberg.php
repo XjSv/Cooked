@@ -5,12 +5,14 @@
  * @package     Cooked
  * @subpackage  Gutenberg Functions
  * @since       1.5.2
-*/
+ */
 
 namespace Cooked\Integrations;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Gutenberg Class
@@ -22,15 +24,15 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class Gutenberg {
 
     public function __construct() {
-        add_filter( 'use_block_editor_for_post_type', [&$this, 'gutenberg_support'], 10, 2 );
-        add_filter( 'gutenberg_can_edit_post_type', [&$this, 'gutenberg_support'], 10, 2 );
+        add_filter( 'use_block_editor_for_post_type', [ &$this, 'gutenberg_support' ], 10, 2 );
+        add_filter( 'gutenberg_can_edit_post_type', [ &$this, 'gutenberg_support' ], 10, 2 );
     }
 
     public function gutenberg_support( $can_edit, $post_type ) {
-        if ( $post_type == 'cp_recipe' )
+        if ( $post_type == 'cp_recipe' ) {
             return false;
+        }
 
         return $can_edit;
     }
-
 }

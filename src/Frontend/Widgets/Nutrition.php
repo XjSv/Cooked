@@ -21,7 +21,7 @@ class Nutrition extends \WP_Widget {
 
     public function __construct() {
         $widget_ops = array(
-            'classname' => 'cooked_nutrition_widget',
+            'classname'   => 'cooked_nutrition_widget',
             'description' => 'Display nutrition facts on recipe sidebars.',
         );
         parent::__construct( 'cooked_nutrition_widget', 'Cooked - Nutrition Facts', $widget_ops );
@@ -35,12 +35,11 @@ class Nutrition extends \WP_Widget {
         }
         echo do_shortcode( '[cooked-nutrition]' );
         echo wp_kses_post( $args['after_widget'] );
-
     }
 
     public function form( $instance ) {
 
-        $title = ( !empty( $instance['title'] ) ? $instance['title'] : false );
+        $title = ( ! empty( $instance['title'] ) ? $instance['title'] : false );
 
         ?>
 
@@ -53,9 +52,8 @@ class Nutrition extends \WP_Widget {
     }
 
     public function update( $new_instance, $old_instance ) {
-        $instance = array();
+        $instance          = array();
         $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
         return $instance;
     }
-
 }

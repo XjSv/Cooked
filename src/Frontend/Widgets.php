@@ -10,8 +10,9 @@
 namespace Cooked\Frontend;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) )
+if ( ! defined( 'ABSPATH' ) ) {
     exit;
+}
 
 class Widgets {
 
@@ -20,13 +21,16 @@ class Widgets {
     }
 
     public function register_widgets() {
-        $widgets = apply_filters( 'cooked_widgets', [
-            'Cooked_Widget_Nutrition',
-            'Cooked_Widget_Search',
-            'Cooked_Widget_Recipe_List',
-            'Cooked_Widget_Recipe_Categories',
-            'Cooked_Widget_Recipe_Card',
-        ] );
+        $widgets = apply_filters(
+            'cooked_widgets',
+            [
+				'Cooked_Widget_Nutrition',
+				'Cooked_Widget_Search',
+				'Cooked_Widget_Recipe_List',
+				'Cooked_Widget_Recipe_Categories',
+				'Cooked_Widget_Recipe_Card',
+			]
+        );
         if ( ! empty( $widgets ) ) :
             foreach ( $widgets as $widget ) :
                 register_widget( $widget );
@@ -49,5 +53,4 @@ class Widgets {
         endif;
         echo '</select>';
     }
-
 }

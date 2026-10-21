@@ -121,7 +121,7 @@ class CsvImport {
                     }
                 }
             } catch ( \Exception $e ) {
-                $error_msg           = $e->getMessage();
+                $error_msg = $e->getMessage();
                 /* translators: 1: CSV row number, 2: error message */
                 $results['errors'][] = sprintf( __( 'Row %1$d: %2$s', 'cooked' ), $row_number, $error_msg );
 

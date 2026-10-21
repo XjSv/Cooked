@@ -21,7 +21,7 @@ class RecipeCategories extends \WP_Widget {
 
     public function __construct() {
         $widget_ops = [
-            'classname' => 'cooked_widget_recipe_categories',
+            'classname'   => 'cooked_widget_recipe_categories',
             'description' => 'Display a list of recipe categories.',
         ];
         parent::__construct( 'cooked_widget_recipe_categories', 'Cooked - Recipe Categories', $widget_ops );
@@ -34,21 +34,20 @@ class RecipeCategories extends \WP_Widget {
             echo wp_kses_post( $args['before_title'] ) . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . wp_kses_post( $args['after_title'] );
         }
 
-        $width = isset($instance['width']) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '';
-        $child_of = isset($instance['child_of']) && $instance['child_of'] ? ' child_of="' . esc_attr( $instance['child_of'] ) . '"' : '';
-        $hide_empty = isset($instance['hide_empty']) && $instance['hide_empty'] ? ' hide_empty="' . esc_attr( $instance['hide_empty'] ) . '"' : '';
-        $show_description = isset($instance['show_description']) && $instance['show_description'] ? ' show_description="' . esc_attr( $instance['show_description'] ) . '"' : '';
+        $width            = isset( $instance['width'] ) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '';
+        $child_of         = isset( $instance['child_of'] ) && $instance['child_of'] ? ' child_of="' . esc_attr( $instance['child_of'] ) . '"' : '';
+        $hide_empty       = isset( $instance['hide_empty'] ) && $instance['hide_empty'] ? ' hide_empty="' . esc_attr( $instance['hide_empty'] ) . '"' : '';
+        $show_description = isset( $instance['show_description'] ) && $instance['show_description'] ? ' show_description="' . esc_attr( $instance['show_description'] ) . '"' : '';
 
         echo do_shortcode( '[cooked-categories' . esc_attr( $width . $child_of . $hide_empty . $show_description ) . ' style="list"]' );
         echo wp_kses_post( $args['after_widget'] );
-
     }
 
     public function form( $instance ) {
 
-        $title = !empty( $instance['title'] ) ? $instance['title'] : false;
-        $child_of = !empty( $instance['child_of'] ) ? $instance['child_of'] : false;
-        $hide_empty = !empty( $instance['hide_empty'] ) ? $instance['hide_empty'] : false;
+        $title            = ! empty( $instance['title'] ) ? $instance['title'] : false;
+        $child_of         = ! empty( $instance['child_of'] ) ? $instance['child_of'] : false;
+        $hide_empty       = ! empty( $instance['hide_empty'] ) ? $instance['hide_empty'] : false;
         $categories_array = \Cooked_Settings::terms_array( 'cp_recipe_category', false, false, false, false, false );
 
         ?>
@@ -61,12 +60,18 @@ class RecipeCategories extends \WP_Widget {
         <p>
             <label for="<?php echo esc_attr( $this->get_field_id( 'child_of' ) ); ?>"><?php esc_attr_e( 'Parent Category', 'cooked' ); ?></label>
             <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'child_of' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'child_of' ) ); ?>">
-                <?php if ( !empty($categories_array) ):
-                    ?><option value=""<?php echo !$child_of ? ' selected' : ''; ?>><?php esc_html_e( 'All Categories', 'cooked' ); ?></option><?php
-                    foreach( $categories_array as $key => $val ):
-                        ?><option value="<?php echo esc_attr( $key ); ?>"<?php echo $child_of == $key ? ' selected' : ''; ?>><?php echo esc_html( $val ); ?></option><?php
+                <?php
+                if ( ! empty( $categories_array ) ) :
+                    ?>
+                    <option value=""<?php echo ! $child_of ? ' selected' : ''; ?>><?php esc_html_e( 'All Categories', 'cooked' ); ?></option>
+                    <?php
+					foreach ( $categories_array as $key => $val ) :
+						?>
+                        <option value="<?php echo esc_attr( $key ); ?>"<?php echo $child_of == $key ? ' selected' : ''; ?>><?php echo esc_html( $val ); ?></option>
+                        <?php
                     endforeach;
-                endif; ?>
+                endif;
+                ?>
             </select>
         </p>
 
@@ -80,11 +85,10 @@ class RecipeCategories extends \WP_Widget {
 
     public function update( $new_instance, $old_instance ) {
 
-        $instance = [];
-        $instance['title'] = !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
-        $instance['child_of'] = !empty( $new_instance['child_of'] ) ? wp_strip_all_tags( $new_instance['child_of'] ) : false;
-        $instance['hide_empty'] = !empty( $new_instance['hide_empty'] ) ? wp_strip_all_tags( $new_instance['hide_empty'] ) : false;
+        $instance               = [];
+        $instance['title']      = ! empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
+        $instance['child_of']   = ! empty( $new_instance['child_of'] ) ? wp_strip_all_tags( $new_instance['child_of'] ) : false;
+        $instance['hide_empty'] = ! empty( $new_instance['hide_empty'] ) ? wp_strip_all_tags( $new_instance['hide_empty'] ) : false;
         return $instance;
     }
-
 }

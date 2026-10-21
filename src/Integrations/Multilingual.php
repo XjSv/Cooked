@@ -10,7 +10,9 @@
 namespace Cooked\Integrations;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Multilingual Class
@@ -125,7 +127,7 @@ class Multilingual {
     public static function get_all_browse_pages() {
         global $_cooked_settings;
 
-        $pages = [];
+        $pages           = [];
         $default_page_id = ! empty( $_cooked_settings['browse_page'] ) ? $_cooked_settings['browse_page'] : false;
 
         if ( ! $default_page_id ) {
@@ -135,7 +137,7 @@ class Multilingual {
         // Default page (always include)
         $pages['default'] = [
             'id'   => $default_page_id,
-            'slug' => self::get_page_slug( $default_page_id )
+            'slug' => self::get_page_slug( $default_page_id ),
         ];
 
         // Polylang translations (check first, as it's more common)
@@ -145,7 +147,7 @@ class Multilingual {
                 if ( $translated_id && $translated_id != $default_page_id ) {
                     $pages[ $lang ] = [
                         'id'   => $translated_id,
-                        'slug' => self::get_page_slug( $translated_id )
+                        'slug' => self::get_page_slug( $translated_id ),
                     ];
                 }
             }
@@ -159,7 +161,7 @@ class Multilingual {
                     if ( $translated_id && $translated_id != $default_page_id ) {
                         $pages[ $lang_code ] = [
                             'id'   => $translated_id,
-                            'slug' => self::get_page_slug( $translated_id )
+                            'slug' => self::get_page_slug( $translated_id ),
                         ];
                     }
                 }
@@ -197,7 +199,7 @@ class Multilingual {
     public static function get_missing_translations() {
         global $_cooked_settings;
 
-        $missing = [];
+        $missing         = [];
         $default_page_id = ! empty( $_cooked_settings['browse_page'] ) ? $_cooked_settings['browse_page'] : false;
 
         if ( ! $default_page_id ) {
@@ -206,7 +208,7 @@ class Multilingual {
 
         // Check Polylang translations (check first, as it's more common)
         if ( self::is_polylang_active() && function_exists( 'pll_languages_list' ) && function_exists( 'pll_get_post_translations' ) ) {
-            $languages = pll_languages_list( [ 'fields' => 'slug' ] );
+            $languages    = pll_languages_list( [ 'fields' => 'slug' ] );
             $translations = pll_get_post_translations( $default_page_id );
 
             foreach ( $languages as $lang ) {
@@ -258,14 +260,14 @@ class Multilingual {
 
         if ( ! empty( $missing ) ) {
             $plugin_name = self::is_polylang_active() ? 'Polylang' : 'WPML';
-            $class = 'notice notice-warning';
-            $message = sprintf(
+            $class       = 'notice notice-warning';
+            $message     = sprintf(
                 '<strong>%s</strong> %s <strong>%s</strong>',
                 __( 'Multilingual Setup:', 'cooked' ),
                 __( 'Your Browse/Search Recipes page is missing translations for:', 'cooked' ),
                 strtoupper( implode( ', ', $missing ) )
             );
-            $message .= '<br><em>' . sprintf(
+            $message    .= '<br><em>' . sprintf(
                 /* translators: %s is the multilingual plugin name (Polylang or WPML) */
                 __( 'Create translations of your browse page in %s for full multilingual support.', 'cooked' ),
                 $plugin_name

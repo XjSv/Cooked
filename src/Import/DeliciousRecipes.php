@@ -5,12 +5,14 @@
  * @package     Cooked_Delicious_Recipes
  * @subpackage  Cooked_Delicious_Recipes / Core
  * @since       1.8.2
-*/
+ */
 
 namespace Cooked\Import;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * DeliciousRecipes Class
@@ -49,13 +51,13 @@ class DeliciousRecipes {
         $delicious_recipes = [];
 
         $args = [
-            'post_type' => 'recipe',
+            'post_type'      => 'recipe',
             'posts_per_page' => -1,
-            'post_status' => 'any',
-            'fields' => 'ids',
-            'meta_query' => [
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+            'meta_query'     => [
                 [
-                    'key' => 'delicious_recipes_metadata',
+                    'key'     => 'delicious_recipes_metadata',
                     'compare' => 'EXISTS',
                 ],
             ],
@@ -63,8 +65,8 @@ class DeliciousRecipes {
 
         $_recipes = new \WP_Query( $args );
 
-        if (!empty($_recipes->posts)) {
-            foreach ($_recipes->posts as $rid) {
+        if ( ! empty( $_recipes->posts ) ) {
+            foreach ( $_recipes->posts as $rid ) {
                 $delicious_recipes[] = $rid;
             }
         }
@@ -78,12 +80,12 @@ class DeliciousRecipes {
      * @since 1.8.2
      * @access public
      */
-    public static function import_recipe($id) {
+    public static function import_recipe( $id ) {
         global $_cooked_settings;
 
-        $post = get_post($id);
-        $post_meta = get_post_custom($id);
-        $delicious_recipe = maybe_unserialize($post_meta['delicious_recipes_metadata'][0]);
+        $post             = get_post( $id );
+        $post_meta        = get_post_custom( $id );
+        $delicious_recipe = maybe_unserialize( $post_meta['delicious_recipes_metadata'][0] );
 
         // Create new cp_recipe post.
         $new_cp_recipe                    = [];
@@ -97,61 +99,61 @@ class DeliciousRecipes {
         $new_cp_recipe['commnets_status'] = isset( $post->comment_status ) ? sanitize_text_field( $post->comment_status ) : '';
         $new_cp_recipe['comment_count']   = isset( $post->comment_count ) ? absint( $post->comment_count ) : '';
 
-        $new_recipe_id = wp_insert_post($new_cp_recipe);
-        if (is_wp_error($new_recipe_id)) {
+        $new_recipe_id = wp_insert_post( $new_cp_recipe );
+        if ( is_wp_error( $new_recipe_id ) ) {
             return [
-                'status' => false,
-                'message' => __('Error importing WP Delicious recipe.', 'cooked'),
+                'status'  => false,
+                'message' => __( 'Error importing WP Delicious recipe.', 'cooked' ),
             ];
         }
 
-        if (isset($_cooked_settings['default_content'])) {
-            $default_content = wp_unslash($_cooked_settings['default_content']);
+        if ( isset( $_cooked_settings['default_content'] ) ) {
+            $default_content = wp_unslash( $_cooked_settings['default_content'] );
         } else {
             $default_content = \Cooked_Recipes::default_content();
         }
 
         // Insert new post meta data.
-        $new_cp_recipe_meta = [];
-        $new_cp_recipe_meta['cooked_version'] = COOKED_VERSION;
-        $new_cp_recipe_meta['content'] = $default_content;
-        $new_cp_recipe_meta['excerpt'] = isset( $delicious_recipe['recipeDescription'] ) ? sanitize_text_field( $delicious_recipe['recipeDescription'] ) : '';
+        $new_cp_recipe_meta                    = [];
+        $new_cp_recipe_meta['cooked_version']  = COOKED_VERSION;
+        $new_cp_recipe_meta['content']         = $default_content;
+        $new_cp_recipe_meta['excerpt']         = isset( $delicious_recipe['recipeDescription'] ) ? sanitize_text_field( $delicious_recipe['recipeDescription'] ) : '';
         $new_cp_recipe_meta['seo_description'] = isset( $delicious_recipe['recipeDescription'] ) ? sanitize_text_field( $delicious_recipe['recipeDescription'] ) : '';
-        $new_cp_recipe_meta['notes'] = isset( $delicious_recipe['recipeNotes'] ) ? $delicious_recipe['recipeNotes'] : '';
+        $new_cp_recipe_meta['notes']           = isset( $delicious_recipe['recipeNotes'] ) ? $delicious_recipe['recipeNotes'] : '';
 
         // Convert beginner, intermediate, advanced to 1, 2, 3.
-        $difficulty_levels = [
-            'beginner' => 1,
+        $difficulty_levels                      = [
+            'beginner'     => 1,
             'intermediate' => 2,
-            'advanced' => 3,
+            'advanced'     => 3,
         ];
-        $new_cp_recipe_meta['difficulty_level'] = isset( $delicious_recipe['difficultyLevel'] ) && isset($difficulty_levels[$delicious_recipe['difficultyLevel']]) ? $difficulty_levels[$delicious_recipe['difficultyLevel']] : 1;
+        $new_cp_recipe_meta['difficulty_level'] = isset( $delicious_recipe['difficultyLevel'] ) && isset( $difficulty_levels[ $delicious_recipe['difficultyLevel'] ] ) ? $difficulty_levels[ $delicious_recipe['difficultyLevel'] ] : 1;
 
-        $new_cp_recipe_meta['prep_time'] = isset( $delicious_recipe['prepTime'] ) ? (int)$delicious_recipe['prepTime'] : 0;
-        $new_cp_recipe_meta['cook_time'] = isset( $delicious_recipe['cookTime'] ) ? (int)$delicious_recipe['cookTime'] : 0;
-        $new_cp_recipe_meta['total_time'] =  $new_cp_recipe_meta['prep_time'] + $new_cp_recipe_meta['cook_time'];
+        $new_cp_recipe_meta['prep_time']  = isset( $delicious_recipe['prepTime'] ) ? (int) $delicious_recipe['prepTime'] : 0;
+        $new_cp_recipe_meta['cook_time']  = isset( $delicious_recipe['cookTime'] ) ? (int) $delicious_recipe['cookTime'] : 0;
+        $new_cp_recipe_meta['total_time'] = $new_cp_recipe_meta['prep_time'] + $new_cp_recipe_meta['cook_time'];
 
         // Recipe Ingredients.
-        $recipeIngredients = isset( $delicious_recipe['recipeIngredients'] ) ? $delicious_recipe['recipeIngredients'] : [];
+        $recipeIngredients                 = isset( $delicious_recipe['recipeIngredients'] ) ? $delicious_recipe['recipeIngredients'] : [];
         $new_cp_recipe_meta['ingredients'] = [];
 
-        if (!empty($recipeIngredients)) {
-            foreach ($recipeIngredients as $ingredient) {
-                if (isset($ingredient['sectionTitle']) && !empty($ingredient['sectionTitle']) && empty($ingredient['ingredients'])) {
+        if ( ! empty( $recipeIngredients ) ) {
+            foreach ( $recipeIngredients as $ingredient ) {
+                if ( isset( $ingredient['sectionTitle'] ) && ! empty( $ingredient['sectionTitle'] ) && empty( $ingredient['ingredients'] ) ) {
                     $new_cp_recipe_meta['ingredients'][] = [
                         'section_heading_name' => $ingredient['sectionTitle'],
                     ];
                 } else {
-                    foreach ($ingredient['ingredients'] as $ingredient) {
+                    foreach ( $ingredient['ingredients'] as $ingredient ) {
                         $new_cp_recipe_meta['ingredients'][] = [
-                            'amount' => (!empty($ingredient['quantity']) ? $ingredient['quantity'] : ''),
-                            'measurement' => (!empty($ingredient['unit']) ? $ingredient['unit'] : ''),
-                            'name' => (!empty($ingredient['ingredient']) ? $ingredient['ingredient'] : ''),
-                            'url' => '',
-                            'description' => (!empty($ingredient['notes']) ? $ingredient['notes'] : ''),
-                            'sub_amount' => '',
+                            'amount'          => ( ! empty( $ingredient['quantity'] ) ? $ingredient['quantity'] : '' ),
+                            'measurement'     => ( ! empty( $ingredient['unit'] ) ? $ingredient['unit'] : '' ),
+                            'name'            => ( ! empty( $ingredient['ingredient'] ) ? $ingredient['ingredient'] : '' ),
+                            'url'             => '',
+                            'description'     => ( ! empty( $ingredient['notes'] ) ? $ingredient['notes'] : '' ),
+                            'sub_amount'      => '',
                             'sub_measurement' => '',
-                            'sub_name' => '',
+                            'sub_name'        => '',
                         ];
                     }
                 }
@@ -159,19 +161,19 @@ class DeliciousRecipes {
         }
 
         // Recipe Instructions.
-        $recipeInstructions = isset( $delicious_recipe['recipeInstructions'] ) ? $delicious_recipe['recipeInstructions'] : [];
+        $recipeInstructions               = isset( $delicious_recipe['recipeInstructions'] ) ? $delicious_recipe['recipeInstructions'] : [];
         $new_cp_recipe_meta['directions'] = [];
 
-        if (!empty($recipeInstructions)) {
-            foreach ($recipeInstructions as $instruction) {
-                if (isset($instruction['sectionTitle']) && !empty($instruction['sectionTitle']) && empty($instruction['instruction'])) {
+        if ( ! empty( $recipeInstructions ) ) {
+            foreach ( $recipeInstructions as $instruction ) {
+                if ( isset( $instruction['sectionTitle'] ) && ! empty( $instruction['sectionTitle'] ) && empty( $instruction['instruction'] ) ) {
                     $new_cp_recipe_meta['directions'][] = [
                         'section_heading_name' => $instruction['sectionTitle'],
                     ];
                 } else {
-                    foreach ($instruction['instruction'] as $instruction) {
+                    foreach ( $instruction['instruction'] as $instruction ) {
                         $new_cp_recipe_meta['directions'][] = [
-                            'image' => $instruction['image'],
+                            'image'   => $instruction['image'],
                             'content' => $instruction['instruction'],
                         ];
                     }
@@ -181,27 +183,27 @@ class DeliciousRecipes {
 
         // Gallery.
         $imageGalleryImages = isset( $delicious_recipe['imageGalleryImages'] ) ? $delicious_recipe['imageGalleryImages'] : [];
-        $videoGalleryVids = isset( $delicious_recipe['videoGalleryVids'] ) ? $delicious_recipe['videoGalleryVids'] : [];
+        $videoGalleryVids   = isset( $delicious_recipe['videoGalleryVids'] ) ? $delicious_recipe['videoGalleryVids'] : [];
 
         $video_url = '';
-        if (!empty($videoGalleryVids)) {
-            if ($videoGalleryVids[0]['vidType'] === 'youtube') {
+        if ( ! empty( $videoGalleryVids ) ) {
+            if ( $videoGalleryVids[0]['vidType'] === 'youtube' ) {
                 $video_url = 'https://www.youtube.com/watch?v=' . $videoGalleryVids[0]['vidID'];
             }
 
-            if ($videoGalleryVids[0]['vidType'] === 'vimeo') {
+            if ( $videoGalleryVids[0]['vidType'] === 'vimeo' ) {
                 $video_url = 'https://vimeo.com/' . $videoGalleryVids[0]['vidID'];
             }
         }
 
         $new_cp_recipe_meta['gallery'] = [
-            'type' => 'cooked',
+            'type'      => 'cooked',
             'video_url' => $video_url,
-            'items' => [],
+            'items'     => [],
         ];
 
-        if (!empty($imageGalleryImages)) {
-            foreach ($imageGalleryImages as $image) {
+        if ( ! empty( $imageGalleryImages ) ) {
+            foreach ( $imageGalleryImages as $image ) {
                 $new_cp_recipe_meta['gallery']['items'][] = $image['imageID'];
             }
         }
@@ -248,48 +250,48 @@ class DeliciousRecipes {
         $new_cp_recipe_meta['nutrition']['chloride']         = isset( $delicious_recipe['chloride'] ) ? sanitize_text_field( $delicious_recipe['chloride'] ) : '';
 
         // Insert new post meta data.
-        update_post_meta($new_recipe_id, '_recipe_settings', $new_cp_recipe_meta);
+        update_post_meta( $new_recipe_id, '_recipe_settings', $new_cp_recipe_meta );
 
         // Updte the _thumbnail_id meta.
-        $thumbnail_id = get_post_meta($id, '_thumbnail_id', true);
-        update_post_meta($new_recipe_id, '_thumbnail_id', $thumbnail_id);
+        $thumbnail_id = get_post_meta( $id, '_thumbnail_id', true );
+        update_post_meta( $new_recipe_id, '_thumbnail_id', $thumbnail_id );
 
         // Copy comments from old recipe to new recipe.
-        $ratings = [];
-        $comments = get_comments(['post_id' => $id]);
-        if (!empty($comments)) {
-            foreach ($comments as $comment) {
+        $ratings  = [];
+        $comments = get_comments( [ 'post_id' => $id ] );
+        if ( ! empty( $comments ) ) {
+            foreach ( $comments as $comment ) {
                 $commentdata = [
-                    'comment_post_ID' => $new_recipe_id,
-                    'comment_author' => $comment->comment_author,
+                    'comment_post_ID'      => $new_recipe_id,
+                    'comment_author'       => $comment->comment_author,
                     'comment_author_email' => $comment->comment_author_email,
-                    'comment_author_url' => $comment->comment_author_url,
-                    'comment_content' => $comment->comment_content,
-                    'comment_type' => $comment->comment_type,
-                    'comment_parent' => $comment->comment_parent,
-                    'user_id' => $comment->user_id,
-                    'comment_author_IP' => $comment->comment_author_IP,
-                    'comment_agent' => $comment->comment_agent,
-                    'comment_date' => $comment->comment_date,
-                    'comment_approved' => $comment->comment_approved,
+                    'comment_author_url'   => $comment->comment_author_url,
+                    'comment_content'      => $comment->comment_content,
+                    'comment_type'         => $comment->comment_type,
+                    'comment_parent'       => $comment->comment_parent,
+                    'user_id'              => $comment->user_id,
+                    'comment_author_IP'    => $comment->comment_author_IP,
+                    'comment_agent'        => $comment->comment_agent,
+                    'comment_date'         => $comment->comment_date,
+                    'comment_approved'     => $comment->comment_approved,
                 ];
-                wp_insert_comment($commentdata);
+                wp_insert_comment( $commentdata );
 
                 // Rating are stored in the wp_commentmeta table with the key: 'rating'.
-                $rating = get_comment_meta($comment->comment_ID, 'rating', true);
-                if (!empty($rating)) {
+                $rating = get_comment_meta( $comment->comment_ID, 'rating', true );
+                if ( ! empty( $rating ) ) {
                     $ratings[] = $rating;
                 }
             }
         }
 
         // Insert recipe ratings meta data.
-        $rating_sum = array_sum($ratings);
+        $rating_sum     = array_sum( $ratings );
         $rating_average = 0;
-        if ($rating_sum > 0) {
-            $rating_average = number_format($rating_sum / count($ratings), 1 );
+        if ( $rating_sum > 0 ) {
+            $rating_average = number_format( $rating_sum / count( $ratings ), 1 );
         }
-        update_post_meta($new_recipe_id, '_recipe_rating', $rating_average);
+        update_post_meta( $new_recipe_id, '_recipe_rating', $rating_average );
 
         // Insert recipe likes and wishlist meta data.
         $likes = get_post_meta( $id, '_recipe_likes', true );
@@ -297,44 +299,44 @@ class DeliciousRecipes {
 
         // Insert recipe taxonomies. Create the terms if they don't exist.
         $recipe_taxonomies_mapping = [
-            'recipe-course' => 'cp_recipe_category',
-            'recipe-cuisine' => 'cp_recipe_cuisine',
+            'recipe-course'         => 'cp_recipe_category',
+            'recipe-cuisine'        => 'cp_recipe_cuisine',
             'recipe-cooking-method' => 'cp_recipe_cooking_method',
-            'recipe-tag' => 'cp_recipe_tags',
-            'recipe-dietary' =>  'cp_recipe_diet',
+            'recipe-tag'            => 'cp_recipe_tags',
+            'recipe-dietary'        => 'cp_recipe_diet',
         ];
 
-        $delicious_recipes_taxonomies = get_object_taxonomies('recipe');
-        if (!empty($delicious_recipes_taxonomies)) {
-            foreach ($delicious_recipes_taxonomies as $taxonomy) {
-                if (isset($recipe_taxonomies_mapping[$taxonomy])) {
-                    $terms = wp_get_object_terms($id, $taxonomy, ['fields' => 'all']);
+        $delicious_recipes_taxonomies = get_object_taxonomies( 'recipe' );
+        if ( ! empty( $delicious_recipes_taxonomies ) ) {
+            foreach ( $delicious_recipes_taxonomies as $taxonomy ) {
+                if ( isset( $recipe_taxonomies_mapping[ $taxonomy ] ) ) {
+                    $terms = wp_get_object_terms( $id, $taxonomy, [ 'fields' => 'all' ] );
 
-                    if (!empty($terms)) {
+                    if ( ! empty( $terms ) ) {
                         $new_terms = [];
 
-                        foreach ($terms as $term_id) {
-                            $term = get_term($term_id);
-                            $term_exists = term_exists($term->name, $recipe_taxonomies_mapping[$taxonomy]);
+                        foreach ( $terms as $term_id ) {
+                            $term        = get_term( $term_id );
+                            $term_exists = term_exists( $term->name, $recipe_taxonomies_mapping[ $taxonomy ] );
 
-                            if (!$term_exists) {
-                                $new_term = wp_insert_term($term->name, $recipe_taxonomies_mapping[$taxonomy]);
-                                if (is_wp_error($new_term)) {
+                            if ( ! $term_exists ) {
+                                $new_term = wp_insert_term( $term->name, $recipe_taxonomies_mapping[ $taxonomy ] );
+                                if ( is_wp_error( $new_term ) ) {
                                     continue;
                                 }
 
-                                $new_term_id = (int)$new_term['term_id'];
+                                $new_term_id = (int) $new_term['term_id'];
                             } else {
-                                $new_term_id = (int)$term_exists['term_id'];
+                                $new_term_id = (int) $term_exists['term_id'];
                             }
 
                             $new_terms[] = $new_term_id;
                         }
 
-                        wp_set_object_terms($new_recipe_id, $new_terms, $recipe_taxonomies_mapping[$taxonomy], true);
+                        wp_set_object_terms( $new_recipe_id, $new_terms, $recipe_taxonomies_mapping[ $taxonomy ], true );
 
                         // Update the term count.
-                        wp_update_term_count($new_terms, $recipe_taxonomies_mapping[$taxonomy]);
+                        wp_update_term_count( $new_terms, $recipe_taxonomies_mapping[ $taxonomy ] );
                     }
                 }
             }

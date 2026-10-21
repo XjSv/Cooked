@@ -44,7 +44,7 @@ class Cli {
         }
 
         $tool_name = $args[0];
-        $result = \Cooked_Updates::run_tool( $tool_name );
+        $result    = \Cooked_Updates::run_tool( $tool_name );
 
         if ( is_wp_error( $result ) ) {
             \WP_CLI::error( $result->get_error_message() );

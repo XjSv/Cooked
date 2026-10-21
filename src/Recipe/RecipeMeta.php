@@ -5,12 +5,14 @@
  * @package     Cooked
  * @subpackage  Post Types
  * @since       1.0.0
-*/
+ */
 
 namespace Cooked\Recipe;
 
 // Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * RecipeMeta Class
@@ -21,9 +23,9 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class RecipeMeta {
     function __construct() {
-        add_action( 'add_meta_boxes', [&$this, 'add_recipe_meta_box'] );
-        add_action( 'save_post', [&$this, 'save_recipe_meta_box'] );
-        add_action( 'admin_notices', [&$this, 'recipe_embed_shortcode_admin_notice'] );
+        add_action( 'add_meta_boxes', [ &$this, 'add_recipe_meta_box' ] );
+        add_action( 'save_post', [ &$this, 'save_recipe_meta_box' ] );
+        add_action( 'admin_notices', [ &$this, 'recipe_embed_shortcode_admin_notice' ] );
     }
 
     public static function meta_cleanup( $recipe_settings ) {
@@ -32,75 +34,73 @@ class RecipeMeta {
 
         $wp_editor_roles_allowed = false;
         if ( is_user_logged_in() ) {
-            $user = wp_get_current_user();
-            $user_roles = $user->roles;
+            $user                    = wp_get_current_user();
+            $user_roles              = $user->roles;
             $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && ! empty( array_intersect( $user_roles, $_cooked_settings['recipe_wp_editor_roles'] ) ) ? true : false;
         }
 
-        if (!empty($recipe_settings)) {
-            foreach ($recipe_settings as $key => $val) {
-                if (!is_array($val)) {
-                    if ( $key === "content" || $key === "excerpt" || $key === "notes" ) {
-                        if ($wp_editor_roles_allowed) {
+        if ( ! empty( $recipe_settings ) ) {
+            foreach ( $recipe_settings as $key => $val ) {
+                if ( ! is_array( $val ) ) {
+                    if ( $key === 'content' || $key === 'excerpt' || $key === 'notes' ) {
+                        if ( $wp_editor_roles_allowed ) {
                             // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
-                            $_recipe_settings[$key] = wp_kses_post( $decoded_val );
+                            $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $_recipe_settings[ $key ] = wp_kses_post( $decoded_val );
                         } else {
                             // Strip all HTML tags - don't encode entities since format_content() will decode them
                             // Decode entities first in case they're already encoded
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
-                            $_recipe_settings[$key] = wp_strip_all_tags( $decoded_val );
+                            $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                         }
                     } elseif ( $key === 'seo_description' ) {
-                        $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                        $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
                         $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                     } elseif ( in_array( $key, [ 'prep_time', 'cook_time', 'total_time' ], true ) ) {
-                        $minutes = \Cooked_Measurements::normalize_minutes( $val );
+                        $minutes                  = \Cooked_Measurements::normalize_minutes( $val );
                         $_recipe_settings[ $key ] = $minutes ? $minutes : '';
-                    } else {
-                        if ($key === "post_title") {
+                    } elseif ( $key === 'post_title' ) {
                             // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
-                            $_recipe_settings[$key] = wp_kses_post( $decoded_val );
-                        } else {
-                            $_recipe_settings[$key] = \Cooked_Functions::sanitize_text_field( $val );
-                        }
+                            $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $_recipe_settings[ $key ] = wp_kses_post( $decoded_val );
+					} else {
+						$_recipe_settings[ $key ] = \Cooked_Functions::sanitize_text_field( $val );
                     }
                 } else {
-                    foreach ($val as $subkey => $subval) {
-                        if (!is_array($subval)) {
-                            $_recipe_settings[$key][$subkey] = \Cooked_Functions::sanitize_text_field($subval);
+                    foreach ( $val as $subkey => $subval ) {
+                        if ( ! is_array( $subval ) ) {
+                            $_recipe_settings[ $key ][ $subkey ] = \Cooked_Functions::sanitize_text_field( $subval );
                         } else {
                             foreach ( $subval as $sub_subkey => $sub_subval ) {
-                                if ( !is_array($sub_subval) ) {
+                                if ( ! is_array( $sub_subval ) ) {
                                     if (
                                         // For content keys: allow 'content'
-                                        ($sub_subkey === 'content') ||
+                                        ( $sub_subkey === 'content' ) ||
                                         // For ingredients: allow 'name' and section heading fields
-                                        ($key === 'ingredients' && ($sub_subkey === 'name' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element')) ||
+                                        ( $key === 'ingredients' && ( $sub_subkey === 'name' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element' ) ) ||
                                         // For directions: allow 'content' and section heading fields
-                                        ($key === 'directions' && ($sub_subkey === 'content' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element'))
+                                        ( $key === 'directions' && ( $sub_subkey === 'content' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element' ) )
                                     ) {
-                                        if ($wp_editor_roles_allowed) {
+                                        if ( $wp_editor_roles_allowed ) {
                                             // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
-                                            $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $decoded_sub_subval );
+                                            $decoded_sub_subval                                 = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = wp_kses_post( $decoded_sub_subval );
                                         } else {
                                             // Strip all HTML tags - don't encode entities since format_content() will decode them
                                             // Decode entities first in case they're already encoded
-                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
-                                            $_recipe_settings[$key][$subkey][$sub_subkey] = wp_strip_all_tags( $decoded_sub_subval );
+                                            $decoded_sub_subval                                 = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = wp_strip_all_tags( $decoded_sub_subval );
                                         }
                                     } else {
-                                        $_recipe_settings[$key][$subkey][$sub_subkey] = \Cooked_Functions::sanitize_text_field( $sub_subval );
+                                        $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = \Cooked_Functions::sanitize_text_field( $sub_subval );
                                     }
                                 } else {
-                                    foreach ($sub_subval as $sub_sub_subkey => $sub_sub_subval) {
-                                        if (!is_array($sub_sub_subval)) {
-                                            $_recipe_settings[$key][$subkey][$sub_subkey][$sub_sub_subkey] = \Cooked_Functions::sanitize_text_field($sub_sub_subval);
+                                    foreach ( $sub_subval as $sub_sub_subkey => $sub_sub_subval ) {
+                                        if ( ! is_array( $sub_sub_subval ) ) {
+                                            $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ][ $sub_sub_subkey ] = \Cooked_Functions::sanitize_text_field( $sub_sub_subval );
                                         } else {
-                                            foreach ($sub_sub_subval as $sub_sub_sub_subkey => $sub_sub_sub_subval) {
-                                                $_recipe_settings[$key][$subkey][$sub_subkey][$sub_sub_subkey][$sub_sub_sub_subkey] = \Cooked_Functions::sanitize_text_field($sub_sub_sub_subval);
+                                            foreach ( $sub_sub_subval as $sub_sub_sub_subkey => $sub_sub_sub_subval ) {
+                                                $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ][ $sub_sub_subkey ][ $sub_sub_sub_subkey ] = \Cooked_Functions::sanitize_text_field( $sub_sub_sub_subval );
                                             }
                                         }
                                     }
@@ -126,7 +126,7 @@ class RecipeMeta {
         );
 
         if ( in_array( $post_type, $post_types ) ) {
-            add_meta_box( 'cooked_recipe_settings', __( 'Cooked Settings', 'cooked' ), [&$this, 'render_recipe_meta_box'], $post_type, 'normal', 'high' );
+            add_meta_box( 'cooked_recipe_settings', __( 'Cooked Settings', 'cooked' ), [ &$this, 'render_recipe_meta_box' ], $post_type, 'normal', 'high' );
         }
     }
 
@@ -143,69 +143,89 @@ class RecipeMeta {
          */
 
         // Check if our nonce is set.
-        if ( !isset( $_POST['cooked_recipe_custom_box_nonce'] ) ) return $post_id;
+        if ( ! isset( $_POST['cooked_recipe_custom_box_nonce'] ) ) {
+			return $post_id;
+        }
 
         $nonce = wp_unslash( $_POST['cooked_recipe_custom_box_nonce'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
-        if ( ! wp_verify_nonce( $nonce, 'cooked_recipe_custom_box' ) ) return $post_id;
+        if ( ! wp_verify_nonce( $nonce, 'cooked_recipe_custom_box' ) ) {
+			return $post_id;
+        }
 
         /*
          * If this is an autosave, our form has not been submitted,
          * so we don't want to do anything.
          */
-        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
+        if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+			return $post_id;
+        }
 
         // Check the user's permissions.
-        if ( ! current_user_can( 'edit_cooked_recipes', $post_id ) ) return $post_id;
+        if ( ! current_user_can( 'edit_cooked_recipes', $post_id ) ) {
+			return $post_id;
+        }
 
         global $recipe_settings;
 
-        /* OK, it's safe for us to validate/sanitize the data now. */
+        /*
+        OK, it's safe for us to validate/sanitize the data now. */
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized in meta_cleanup().
-        $recipe_settings = isset($_POST['_recipe_settings']) ? self::meta_cleanup( wp_unslash( $_POST['_recipe_settings'] ) ) : [];
+        $recipe_settings = isset( $_POST['_recipe_settings'] ) ? self::meta_cleanup( wp_unslash( $_POST['_recipe_settings'] ) ) : [];
 
         if ( isset( $recipe_settings['content'] ) ) {
-            $recipe_settings['content'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['content'] );
+            $recipe_settings['content'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['content'] );
         }
         if ( isset( $recipe_settings['excerpt'] ) ) {
-            $recipe_settings['excerpt'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['excerpt'] );
+            $recipe_settings['excerpt'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['excerpt'] );
         }
         if ( isset( $recipe_settings['notes'] ) ) {
-            $recipe_settings['notes'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['notes'] );
+            $recipe_settings['notes'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['notes'] );
         }
         if ( isset( $recipe_settings['seo_description'] ) ) {
-            $recipe_settings['seo_description'] = str_replace( ["\r\n", "\r"], "\n", $recipe_settings['seo_description'] );
+            $recipe_settings['seo_description'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['seo_description'] );
         }
 
         // Directions
         if ( isset( $recipe_settings['directions'] ) ) {
             foreach ( $recipe_settings['directions'] as $key => $direction ) {
                 if ( isset( $direction['content'] ) ) {
-                    $recipe_settings['directions'][$key]['content'] = str_replace( ["\r\n", "\r"], "\n", $direction['content'] );
+                    $recipe_settings['directions'][ $key ]['content'] = str_replace( [ "\r\n", "\r" ], "\n", $direction['content'] );
                 }
             }
         }
 
         // Update the recipe settings meta field.
         update_post_meta( $post_id, '_recipe_settings', $recipe_settings );
-        $recipe_excerpt = isset($recipe_settings['excerpt']) && $recipe_settings['excerpt'] ? $recipe_settings['excerpt'] : get_the_title( $post_id );
+        $recipe_excerpt = isset( $recipe_settings['excerpt'] ) && $recipe_settings['excerpt'] ? $recipe_settings['excerpt'] : get_the_title( $post_id );
 
-        $seo_content = apply_filters( 'cooked_seo_recipe_content', '<h2>' . wp_kses_post( $recipe_excerpt ) . '</h2><h3>' . __('Ingredients','cooked') . '</h3>[cooked-ingredients checkboxes=false]<h3>' . __('Directions','cooked') . '</h3>[cooked-directions numbers=false]' );
+        $seo_content = apply_filters( 'cooked_seo_recipe_content', '<h2>' . wp_kses_post( $recipe_excerpt ) . '</h2><h3>' . __( 'Ingredients', 'cooked' ) . '</h3>[cooked-ingredients checkboxes=false]<h3>' . __( 'Directions', 'cooked' ) . '</h3>[cooked-directions numbers=false]' );
         $seo_content = do_shortcode( $seo_content );
 
         // Unhook this function so it doesn't loop infinitely
-        remove_action( 'save_post', [&$this, 'save_recipe_meta_box'] );
+        remove_action( 'save_post', [ &$this, 'save_recipe_meta_box' ] );
 
         // Update the post, which calls save_post again
         // @TODO: Check if Elementor is active first
         $should_update_content = apply_filters( 'cooked_should_update_post_content', true, $post_id );
         if ( $should_update_content ) {
-            wp_update_post(['ID' => $post_id, 'post_excerpt' => $recipe_excerpt, 'post_content' => $seo_content] );
+            wp_update_post(
+                [
+					'ID'           => $post_id,
+					'post_excerpt' => $recipe_excerpt,
+					'post_content' => $seo_content,
+				]
+            );
         } else {
-            wp_update_post(['ID' => $post_id, 'post_excerpt' => $recipe_excerpt] );
+            wp_update_post(
+                [
+					'ID'           => $post_id,
+					'post_excerpt' => $recipe_excerpt,
+				]
+            );
         }
 
         // Re-hook this function
-        add_action( 'save_post', [&$this, 'save_recipe_meta_box'] );
+        add_action( 'save_post', [ &$this, 'save_recipe_meta_box' ] );
     }
 
     public function recipe_embed_shortcode_admin_notice() {

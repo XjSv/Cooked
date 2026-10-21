@@ -144,7 +144,6 @@ class UpdatesTest extends FilterTestCase {
     }
 
     public function test_core_activation_flushes_rewrite_rules() {
-        require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
 
         unset( $GLOBALS['wp_roles'] );
 
@@ -154,7 +153,6 @@ class UpdatesTest extends FilterTestCase {
     }
 
     public function test_core_deactivation_deletes_rewrite_rules() {
-        require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
         $GLOBALS['_cooked_test_options']['rewrite_rules'] = [ 'keep' => 'me' ];
 
         Cooked_Post_Types::deactivation();
@@ -163,7 +161,6 @@ class UpdatesTest extends FilterTestCase {
     }
 
     public function test_core_registers_activation_and_deactivation_hooks() {
-        require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
 
         $GLOBALS['_cooked_test_activation_hooks']   = [];
         $GLOBALS['_cooked_test_deactivation_hooks'] = [];

@@ -1,8 +1,5 @@
 <?php
 
-if ( ! class_exists( 'Cooked_Post_Types' ) ) {
-    require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
-}
 
 class PluginApiFiltersTest extends FilterTestCase {
 

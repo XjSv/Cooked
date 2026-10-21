@@ -27,6 +27,7 @@ spl_autoload_register(
             'Cooked_Import'               => \Cooked\Import\Import::class,
             'Cooked_Delicious_Recipes'    => \Cooked\Import\DeliciousRecipes::class,
             'Cooked_Recipe_Maker_Recipes' => \Cooked\Import\RecipeMaker::class,
+            'Cooked_CSV_Import'           => \Cooked\Import\CsvImport::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

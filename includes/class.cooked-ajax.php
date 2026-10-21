@@ -450,7 +450,6 @@ class Cooked_Ajax {
         }
 
         // Process the CSV file
-        require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
         $results = Cooked_CSV_Import::import_from_file($file_path);
 
         // Clean up

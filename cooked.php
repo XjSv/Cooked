@@ -478,7 +478,8 @@ final class Cooked_Plugin {
      * @return void
      */
     private function includes() {
-        require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
+        global $Cooked_Recipes;
+        $Cooked_Recipes = new Cooked_Recipes();
         require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
         add_action( 'init', [ 'Cooked_Allergens', 'init' ] );
 

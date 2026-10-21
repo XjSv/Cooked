@@ -54,6 +54,7 @@ spl_autoload_register(
             'Cooked_SEO'                      => \Cooked\Recipe\Seo::class,
             'Cooked_Related_Recipes'          => \Cooked\Recipe\RelatedRecipes::class,
             'Cooked_Post_Types'               => \Cooked\Recipe\PostTypes::class,
+            'Cooked_Recipes'                  => \Cooked\Recipe\Recipes::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

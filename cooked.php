@@ -5,14 +5,14 @@
  * Description: 	    A recipe plugin for WordPress.
  * Author:              Gora Tech
  * Author URI: 	        https://goratech.dev
- * Version: 		    1.16.2
+ * Version: 		    2.0.0
  * Text Domain: 	    cooked
  * Domain Path: 	    /languages
  * License:     	    GPLv2 or later
  * License URI:         https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least:   6.8
  * Tested up to:        7.1
- * Requires PHP:        7.4
+ * Requires PHP:        8.2
  * Contributors:        xjsv, mgiannopoulos24, boxystudio
  * Tags:                recipe, recipes, food, cooking, nutrition
  *
@@ -38,9 +38,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/src/aliases.php';
 
 define( 'COOKED_DEV', false );
-define( 'COOKED_VERSION', '1.16.2' );
+define( 'COOKED_VERSION', '2.0.0' );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
 
@@ -489,7 +490,6 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
         require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
         require_once COOKED_DIR . 'includes/class.cooked-measurements.php';
-        require_once COOKED_DIR . 'includes/class.cooked-unit-converter.php';
         require_once COOKED_DIR . 'includes/class.cooked-admin-enqueues.php';
         require_once COOKED_DIR . 'includes/class.cooked-enqueues.php';
         require_once COOKED_DIR . 'includes/class.cooked-admin-menus.php';

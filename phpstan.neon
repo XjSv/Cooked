@@ -4,6 +4,8 @@ parameters:
     level: 8
     paths:
         - includes/
-    
-    # This ensures your code is compatible with PHP 7.4 syntax
-    phpVersion: 70400 
+        - src/
+    bootstrapFiles:
+        - src/aliases.php
+
+    phpVersion: 80200

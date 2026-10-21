@@ -70,7 +70,7 @@ This project uses [Bun](https://bun.sh) for package management and running scrip
 #### Development environment
 You can run the plugin locally with either wp-env or DDEV; pick one.
 
-**wp-env** — Requires Node.js and Docker; `@wordpress/env` is in devDependencies. Config in `.wp-env.json` (PHP 7.4, port 8888, plugin mounted from repo root).
+**wp-env** — Requires Node.js and Docker; `@wordpress/env` is in devDependencies. Config in `.wp-env.json` (PHP 8.2, port 8888, plugin mounted from repo root).
 ``` bash
 bun run start:wp-env   # start
 bun run stop:wp-env    # stop
@@ -119,7 +119,7 @@ Runs build and i18n, then creates `build/cooked.zip` ready for distribution (exc
 
 #### Testing
 
-**PHPCS** — Lint PHP files against WordPress Coding Standards and PHPCompatibility (PHP 7.4+):
+**PHPCS** — Lint PHP files against WordPress Coding Standards and PHPCompatibility (PHP 8.2+):
 ``` bash
 bun run lint       # check for violations
 bun run lint-fix   # auto-fix violations

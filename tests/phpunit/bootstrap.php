@@ -165,16 +165,16 @@ function wpautop( $pee, $br = true ) { return $pee; }
 function make_clickable( $text ) { return $text; }
 function wp_unslash( $value ) { return is_string( $value ) ? stripslashes( $value ) : $value; }
 function rest_sanitize_boolean( $value ) {
-	if ( is_bool( $value ) ) {
-		return $value;
-	}
-	if ( is_string( $value ) ) {
-		$value = strtolower( $value );
-		if ( in_array( $value, [ 'false', '0', 'no', 'off', '' ], true ) ) {
-			return false;
-		}
-	}
-	return (bool) $value;
+    if ( is_bool( $value ) ) {
+        return $value;
+    }
+    if ( is_string( $value ) ) {
+        $value = strtolower( $value );
+        if ( in_array( $value, [ 'false', '0', 'no', 'off', '' ], true ) ) {
+            return false;
+        }
+    }
+    return (bool) $value;
 }
 
 /**
@@ -838,12 +838,12 @@ function wp_get_current_user() {
  * Load Composer autoloader
  */
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../src/aliases.php';
 
 /**
  * Load plugin class files needed for testing
  */
 require_once COOKED_DIR . 'includes/class.cooked-measurements.php';
-require_once COOKED_DIR . 'includes/class.cooked-unit-converter.php';
 require_once COOKED_DIR . 'includes/class.cooked-functions.php';
 require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
 require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';

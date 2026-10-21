@@ -3,8 +3,8 @@ Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 6.8
 Tested up to: 7.1
-Stable tag: 1.16.2
-Requires PHP: 7.4
+Stable tag: 2.0.0
+Requires PHP: 8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Funding: https://github.com/sponsors/XjSv

@@ -9,8 +9,8 @@
 .ddev/docker-compose.cooked.yaml
 
 # Dev dependencies
-node_modules/
-/vendor
+/node_modules/
+/vendor/
 .env
 
 # Tests

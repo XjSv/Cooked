@@ -291,7 +291,7 @@ final class Cooked_Plugin {
             self::$instance->recipe_meta = new Cooked_Recipe_Meta();
             self::$instance->measurements = new Cooked_Measurements();
             self::$instance->users = new Cooked_Users();
-            self::$instance->recipes = new Cooked_Recipes();
+            self::$instance->recipes = $GLOBALS['Cooked_Recipes'];
             self::$instance->shortcodes = new Cooked_Shortcodes();
             self::$instance->ajax = new Cooked_Ajax();
             self::$instance->functions = new Cooked_Functions();

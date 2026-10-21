@@ -37,3 +37,7 @@ wordpress/
 
 # Python
 __pycache__/
+
+# Generic agent skills: each developer installs these locally
+/.agents/skills/wordpress-router/
+/.agents/skills/wp-*/

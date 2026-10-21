@@ -125,12 +125,12 @@ bun run lint       # check for violations
 bun run lint-fix   # auto-fix violations
 ```
 
-**PHPUnit** — Run the test suite (14 test classes covering CSV import, recipes, settings, SEO, and more):
+**PHPUnit** — Run the test suite (26 test classes covering CSV import, recipes, settings, SEO, and more):
 ``` bash
 bun run test:php
 ```
 
-Tests are in `tests/phpunit/` with CSV fixtures in `tests/test_data/`. Requires a running wp-env or DDEV environment.
+Tests are in `tests/phpunit/` with CSV fixtures in `tests/test_data/`. No WordPress install is needed: `tests/phpunit/bootstrap.php` stubs the WordPress functions the tests use.
 
 ## Documentation
 

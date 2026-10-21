@@ -1,0 +1,11 @@
+---
+description: Minimal comments — no verbose or patronizing inline commentary
+alwaysApply: true
+---
+
+# Code comments
+
+- Do **not** add multi-line or chatty inline comments that explain obvious structure (e.g. “this is output after the form so X doesn’t apply”), implementation history, or restate what the next line clearly does.
+- Do **not** use dismissive or informal phrasing in comments.
+- Prefer clear naming and structure over narration.
+- Use short comments only when the code is genuinely non-obvious (e.g. a workaround for a third-party bug), or where the project already uses PHPDoc/block docs for public APIs and hooks.

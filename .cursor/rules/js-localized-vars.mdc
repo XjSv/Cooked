@@ -1,0 +1,36 @@
+---
+description: Rules for using wp_localize_script variables in Cooked JS files
+globs: assets/**/*.js
+alwaysApply: false
+---
+
+# Localized JS Variables
+
+Each JS file is enqueued from exactly one place with a known localized object:
+
+- `assets/js/cooked-functions.js` (front end) → `cooked_functions_i18n_js_vars`
+- `assets/admin/js/cooked-functions.js` → `cooked_admin_functions_js_vars`
+- `assets/admin/js/cooked-migration.js` → `cooked_migration_js_vars`
+- `assets/admin/js/cooked-widgets.js` → `cooked_js_vars`
+
+## Rules
+
+1. **Never typeof-check the localized object.** It is always defined when the script runs. Use it directly:
+   ```js
+   // BAD
+   var jsVars = (typeof cooked_admin_functions_js_vars !== 'undefined') ? cooked_admin_functions_js_vars : {};
+
+   // GOOD
+   var jsVars = cooked_admin_functions_js_vars;
+   ```
+
+2. **Never add inline fallback strings for i18n properties.** All translatable strings are provided by `wp_localize_script` in PHP. If a string is needed, add it in the PHP enqueue — not as a JS fallback:
+   ```js
+   // BAD
+   $title.text(jsVars.i18n_some_label || 'Some Label');
+
+   // GOOD
+   $title.text(jsVars.i18n_some_label);
+   ```
+
+3. **Never cross-reference another file's localized object** (e.g. checking for Cooked Pro's `cooked_pro_js_vars` inside `cooked-functions.js`). Each file uses its own.

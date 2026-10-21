@@ -63,6 +63,9 @@ class Enqueues {
                 'icon' => $tab['icon'],
             ];
         }
+        if ( COOKED_DEV ) {
+            $sections[] = [ 'slug' => 'developer', 'name' => __( 'Developer', 'cooked' ), 'icon' => 'code' ];
+        }
 
         $pages = [
             [ 'slug' => 'cooked_settings', 'label' => __( 'Settings', 'cooked' ) ],

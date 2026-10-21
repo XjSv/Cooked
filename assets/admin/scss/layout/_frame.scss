@@ -7,6 +7,9 @@
     --wp-admin-theme-color-darker-10--rgb: 0, 102, 74;
     --wp-admin-theme-color-darker-20: var(--cooked-color-accent-active);
     --wp-admin-theme-color-darker-20--rgb: 0, 85, 62;
+    --wp-components-color-accent: var(--cooked-color-accent-strong);
+    --wp-components-color-accent-darker-10: var(--cooked-color-accent-hover);
+    --wp-components-color-accent-darker-20: var(--cooked-color-accent-active);
     max-width: 1280px;
     margin: 20px auto 40px;
     padding-right: 20px;
@@ -338,4 +341,10 @@
         width: auto;
         margin: 0;
     }
+}
+
+// WordPress draws focus outlines in its own blue; use Cooked green inside the frame.
+#cooked-admin-app :focus,
+#cooked-admin-app :focus-visible {
+    outline-color: var(--cooked-color-accent-strong);
 }

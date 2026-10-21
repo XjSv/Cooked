@@ -73,8 +73,8 @@ class Functions {
         $xml[] = $indent . '</admin-texts>';
         $xml[] = '</wpml-config>';
 
-        echo '<details class="cooked-code-block">';
-        echo '<summary>' . esc_html__( 'WPML config XML', 'cooked' ) . '</summary>';
+        echo '<details class="cooked-code-block" open>';
+        echo '<summary><span class="cooked-icon cooked-icon-angle-right" aria-hidden="true"></span>' . esc_html__( 'WPML config XML', 'cooked' ) . '</summary>';
         echo '<button type="button" class="button cooked-copy-code" data-target="cooked-wpml-config">' . esc_html__( 'Copy', 'cooked' ) . '</button>';
         echo '<pre><code id="cooked-wpml-config">' . esc_html( implode( "\n", $xml ) ) . '</code></pre>';
         echo '</details>';

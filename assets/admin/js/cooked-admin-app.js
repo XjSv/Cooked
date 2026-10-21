@@ -158,7 +158,7 @@
             el( Card, { className: 'cooked-admin-frame' },
                 el( 'div', { className: 'cooked-admin-sticky' + ( stuckState[0] ? ' is-stuck' : '' ) },
                     el( CardHeader, { className: 'cooked-admin-frame-header' },
-                        el( Header, { canSave: section !== 'migration', onSave: save } )
+                        el( Header, { canSave: section !== 'migration' && section !== 'developer', onSave: save } )
                     ),
                     el( PageTabs )
                 ),

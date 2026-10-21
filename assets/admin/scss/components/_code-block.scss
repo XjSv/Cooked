@@ -2,7 +2,7 @@
 
 .cooked-code-block {
     position: relative;
-    margin: 32px 0 0;
+    margin: 16px 0 0;
     border: 1px solid var(--cooked-color-border);
     border-radius: 4px;
     interpolate-size: allow-keywords;
@@ -38,24 +38,24 @@
     display: none;
 }
 
-.cooked-code-block summary::before {
-    content: "";
-    width: 7px;
-    height: 7px;
-    border-right: 2px solid currentColor;
-    border-bottom: 2px solid currentColor;
-    transform: rotate(-45deg);
+.cooked-code-block summary .cooked-icon {
+    font-size: 12px;
     transition: transform 300ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
 }
 
-.cooked-code-block[open] summary::before {
-    transform: rotate(45deg);
+.cooked-code-block[open] summary .cooked-icon {
+    transform: rotate(90deg);
 }
 
 .cooked-code-block .cooked-copy-code {
     position: absolute;
     top: 52px;
     right: 12px;
+    background: #fff;
 }
 
 .cooked-code-block pre {

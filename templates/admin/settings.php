@@ -99,17 +99,17 @@
 
                         echo '</div>';
                     endforeach;
+
+                    if ( COOKED_DEV ) :
+                        echo '<div id="cooked-settings-tab-content-developer" class="cooked-settings-tab-content">';
+                        Cooked_Functions::wpml_xml( $cooked_settings_tabs_fields );
+                        echo '</div>';
+                    endif;
                     ?>
 
                 </div>
 
         </div>
-
-        <?php
-        if ( COOKED_DEV ) :
-            Cooked_Functions::wpml_xml( $cooked_settings_tabs_fields );
-        endif;
-        ?>
 
     </div>
     </form>

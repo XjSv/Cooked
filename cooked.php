@@ -484,7 +484,6 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';
         require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
         require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
-        require_once COOKED_DIR . 'includes/class.cooked-settings.php';
         require_once COOKED_DIR . 'includes/class.cooked-ajax.php';
         require_once COOKED_DIR . 'includes/class.cooked-functions.php';
         require_once COOKED_DIR . 'includes/class.cooked-widgets.php';

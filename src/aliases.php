@@ -41,6 +41,7 @@ spl_autoload_register(
             'Cooked_Plugin_Extra'         => \Cooked\Admin\PluginExtra::class,
             'Cooked_Enqueues'             => \Cooked\Frontend\Enqueues::class,
             'Cooked_Updates'              => \Cooked\Admin\Updates::class,
+            'Cooked_Settings'             => \Cooked\Admin\Settings::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

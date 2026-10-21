@@ -475,32 +475,9 @@ final class Plugin {
      * @return void
      */
     public function load_textdomain() {
-        /*
-         * When translating Cooked, be sure to move your language file into the proper location:
-         *
-         * - wp-content/languages/plugins
-         *
-         * If you do not move custom language files here, they will be lost when updating Cooked. Gora Tech
-         * recommends Loco Translate for easy translations: hhttps://github.com/XjSv/Cooked/wiki/Translations-Text-Changes
-         */
-
-        // Set filter for plugin's languages directory.
-        $cooked_lang_dir = apply_filters( 'cooked_languages_directory', COOKED_DIR . 'languages/' );
-
-        // Traditional WordPress plugin locale filter.
-        $locale = apply_filters( 'plugin_locale',  get_locale(), 'cooked' );
-        $mofile = sprintf( '%1$s-%2$s.mo', 'cooked', $locale );
-
-        // Look in wp-content/languages/plugins/cooked
-        $lang_file_ext = WP_LANG_DIR . '/plugins/cooked/' . $mofile;
-
-        if ( file_exists( $lang_file_ext ) ) {
-            // Load the externally located language files.
-            load_textdomain( 'cooked', $lang_file_ext );
-        } else {
-            // Load the default language files.
-            // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Bundled /languages .mo files.
-            load_plugin_textdomain( 'cooked', false, COOKED_FOLDER . '/languages' );
-        }
+        // Registers the bundled languages/ folder. WordPress loads translations just in time and
+        // prefers language packs in wp-content/languages/plugins over the bundled files.
+        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound -- Bundled fr_FR has no language pack.
+        load_plugin_textdomain( 'cooked', false, COOKED_FOLDER . '/languages' );
     }
 }

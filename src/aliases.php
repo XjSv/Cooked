@@ -22,6 +22,7 @@ spl_autoload_register(
             'Cooked_Measurements'   => \Cooked\Measurement\Measurements::class,
             'Cooked_Roles'          => \Cooked\User\Roles::class,
             'Cooked_Users'          => \Cooked\User\Users::class,
+            'Cooked_Taxonomies'     => \Cooked\Recipe\Taxonomies::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

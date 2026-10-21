@@ -550,10 +550,6 @@ class RecipesFiltersTest extends FilterTestCase {
     }
 
     public function test_cooked_term_name_appears_in_taxonomy_list() {
-        if ( ! class_exists( 'Cooked_Taxonomies' ) ) {
-            require_once COOKED_DIR . 'includes/class.cooked-taxonomies.php';
-        }
-
         $GLOBALS['_cooked_test_terms'][] = (object) [
             'term_id'  => 5,
             'name'     => 'Desserts',

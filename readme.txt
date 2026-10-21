@@ -81,6 +81,10 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
+= 2.0.0 =
+Cooked 2.0 requires PHP 8.2 or newer: check your PHP version before updating. Cooked's PHP files moved from includes/ to src/. Custom code should use the Cooked_* class names, which keep working, rather than loading Cooked files directly.
+
+= 1.16.2 =
 Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a new include_ids attribute to the cooked-related-recipes shortcode.
 
 == Changelog ==

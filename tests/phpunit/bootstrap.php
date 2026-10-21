@@ -834,6 +834,10 @@ function wp_get_current_user() {
     ];
 }
 
+function _deprecated_file( $file, $version, $replacement = '', $message = '' ) {
+    $GLOBALS['_cooked_test_deprecated_files'][] = [ $file, $version, $replacement ];
+}
+
 /**
  * Load Composer autoloader
  */

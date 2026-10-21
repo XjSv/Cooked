@@ -27,6 +27,7 @@ class Enqueues {
         add_action( 'admin_enqueue_scripts', [&$this, 'register_shared_scripts'], 5 );
         add_action( 'admin_enqueue_scripts', [&$this, 'admin_enqueues'], 10, 1 );
         add_action( 'admin_enqueue_scripts', [&$this, 'widget_enqueues'], 11, 1 );
+        add_action( 'admin_enqueue_scripts', [&$this, 'admin_app_enqueues'], 20, 1 );
         add_action( 'customize_controls_enqueue_scripts', [&$this, 'enqueue_widgets'], 10, 1 );
     }
 
@@ -41,6 +42,59 @@ class Enqueues {
     public function register_shared_scripts() {
         $min = COOKED_DEV ? '' : '.min';
         wp_register_script( 'cooked-vue', COOKED_URL . 'assets/vendor/vue/vue' . $min . '.js', [], '2.7.16', false );
+    }
+
+    /**
+     * Loads the admin frame (header, page tabs, section menu) on Cooked's admin screens.
+     *
+     * @since 2.0.0
+     * @param string $hook The current admin page hook.
+     */
+    public function admin_app_enqueues( $hook ) {
+        if ( 'recipes_page_cooked_settings' !== $hook ) {
+            return;
+        }
+
+        $sections = [];
+        foreach ( \Cooked_Settings::tabs_fields() as $slug => $tab ) {
+            $sections[] = [
+                'slug' => $slug,
+                'name' => $tab['name'],
+                'icon' => $tab['icon'],
+            ];
+        }
+
+        $pages = [
+            [ 'slug' => 'cooked_settings', 'label' => __( 'Settings', 'cooked' ) ],
+            [ 'slug' => 'cooked_import', 'label' => __( 'Import', 'cooked' ) ],
+            [ 'slug' => 'cooked_welcome', 'label' => __( 'What\'s New?', 'cooked' ) ],
+        ];
+        if ( ! class_exists( 'Cooked_Pro_Plugin' ) ) {
+            $pages[] = [ 'slug' => 'cooked_pro', 'label' => __( 'Upgrade to Pro', 'cooked' ), 'highlight' => true ];
+        }
+        foreach ( $pages as &$page ) {
+            $page['url']     = admin_url( 'admin.php?page=' . $page['slug'] );
+            $page['current'] = 'cooked_settings' === $page['slug'];
+        }
+        unset( $page );
+
+        wp_enqueue_style( 'cooked-admin-app', COOKED_URL . 'assets/admin/css/cooked-admin-app.css', [ 'wp-components' ], COOKED_VERSION );
+        wp_enqueue_script( 'cooked-admin-app', COOKED_URL . 'assets/admin/js/cooked-admin-app.js', [ 'wp-element', 'wp-components', 'cooked-admin-functions' ], COOKED_VERSION, true );
+        wp_localize_script( 'cooked-admin-app', 'cooked_admin_app_js_vars', [
+            'version'  => COOKED_VERSION,
+            'docsUrl'  => 'https://github.com/XjSv/Cooked/wiki',
+            'legacyId' => 'cooked-settings-prewrap',
+            'sections' => $sections,
+            'pages'    => $pages,
+            'i18n'     => [
+                'title'         => __( 'Cooked', 'cooked' ),
+                'subtitle'      => __( 'Settings', 'cooked' ),
+                'documentation' => __( 'Documentation', 'cooked' ),
+                'save'          => __( 'Update Settings', 'cooked' ),
+                'pages'         => __( 'Cooked pages', 'cooked' ),
+                'sections'      => __( 'Sections', 'cooked' ),
+            ],
+        ] );
     }
 
     public static function enqueue_widgets() {

@@ -8,6 +8,7 @@
  */
 
 ?>
+<div id="cooked-admin-app"></div>
 <div id="cooked-settings-prewrap"><div id="cooked-settings-wrap">
 
     <form action="options.php" method="post">

@@ -679,32 +679,7 @@ body .cooked-timer a:hover {
 .cooked-difficulty-level-3 {
 }
 
-/* Recipe Gallery */
-.cooked-recipe-gallery {
-    height: 1px;
-    overflow: hidden;
-    opacity: 0;
-    transform: translate3d(0, 10px, 0);
-    padding: 0;
-    margin: 0;
-}
-.cooked-recipe-gallery .fotorama__thumb-border {
-    border-color: #333;
-}
-.cooked-recipe-gallery .fotorama__caption__wrap {
-    background: #333;
-    color: #fff;
-}
-.cooked-recipe-gallery .fotorama__stage__frame.fotorama__active {
-    background: #333;
-}
-.cooked-recipe-gallery.cooked-gallery-loaded {
-    height: auto;
-    overflow: inherit;
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-    margin: 0 0 2rem;
-}
+/* Recipe Gallery: assets/css/cooked-gallery.css */
 
 /* Nutrition Label */
 .cooked-nutrition-label {
@@ -1866,13 +1841,6 @@ body.cooked-fsm-active #wpadminbar {
     margin: 1%;
 }
 
-/* 500ms Animation */
-.cooked-recipe-gallery {
-    -webkit-transition: all 500ms cubic-bezier(0.42, 0, 0.15, 1);
-    -moz-transition: all 500ms cubic-bezier(0.42, 0, 0.15, 1);
-    -o-transition: all 500ms cubic-bezier(0.42, 0, 0.15, 1);
-    transition: all 500ms cubic-bezier(0.42, 0, 0.15, 1);
-}
 
 /* 200ms Animation */
 .cooked-fsm,

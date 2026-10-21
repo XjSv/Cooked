@@ -419,50 +419,7 @@ class Shortcodes {
                 case 'cooked':
 
                     if ( isset($recipe_settings['gallery']['items']) && !empty($recipe_settings['gallery']['items']) || isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ):
-
-                        // Gallery Options
-                        // Developers: Filter these to change!
-                        // Full list here: http://fotorama.io/customize/options/
-
-                        $gallery_options_array = [];
-
-                        foreach ( $gallery_options as $data_key => $data_val ):
-                            $gallery_options_array[] = $data_key . '="' . $data_val . '"';
-                        endforeach;
-
-                        $gallery_html = '<div class="cooked-recipe-gallery"' . ( !empty($gallery_options_array) ? ' ' . implode( ' ', $gallery_options_array ) : '' ) . '>';
-
-                        $cooked_gallery_video_last_option = apply_filters( 'cooked_gallery_video_last_option', false );
-
-                        if ( !$cooked_gallery_video_last_option && isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ):
-                            $gallery_html .= '<a href="' . esc_url($recipe_settings['gallery']['video_url']) . '" data-caption="' . esc_attr($recipe_settings['title']) . '">' . esc_html($recipe_settings['title']) . '</a>';
-                        endif;
-
-                        $gallery_items = ( isset($recipe_settings['gallery']['items']) && !empty($recipe_settings['gallery']['items']) ? apply_filters( 'cooked_gallery_items_output', $recipe_settings['gallery']['items'] ) : [] );
-
-                        if ( isset($gallery_items) && !empty($gallery_items) ) {
-                            foreach ( $gallery_items as $item ) {
-                                $image_src = wp_get_attachment_image_src( $item, [900, 900] );
-                                $image_title = get_the_title( $item );
-                                if ( is_array($image_src) && isset($image_src[0]) ) {
-                                    $gallery_html .= '<a href="' . esc_url( $image_src[0] ) . '" data-alt="'.esc_attr( $image_title ).'" data-caption="'.esc_attr( $image_title ).'">
-                                        <img alt="'.esc_attr( $image_title ).'" src="' . wp_get_attachment_image_url( $item, 'thumbnail' ) . '" />
-                                    </a>';
-                                }
-                            }
-                        }
-
-                        if ( $cooked_gallery_video_last_option && isset($recipe_settings['gallery']['video_url']) && $recipe_settings['gallery']['video_url'] ):
-                            $gallery_html .= '<a href="' . esc_url($recipe_settings['gallery']['video_url']) . '" data-caption="' . esc_attr($recipe_settings['title']) . '">' . esc_html($recipe_settings['title']) . '</a>';
-                        endif;
-
-                        // Enqueue Gallery Styles & Scripts
-                        wp_enqueue_style( 'cooked-fotorama' );
-                        wp_enqueue_script( 'cooked-fotorama' );
-
-                        $gallery_html .= '</div>';
-                        return wp_kses_post( $gallery_html );
-
+                        return self::cooked_gallery_html( $recipe_settings, $gallery_options );
                     endif;
 
                 break;
@@ -484,6 +441,201 @@ class Shortcodes {
         endif;
 
         return false;
+    }
+
+    /**
+     * Render the built-in recipe gallery: a slider with dots or thumbnails, and PhotoSwipe
+     * to view images fullscreen.
+     *
+     * $options are the cooked_recipe_gallery_options (data-fit, data-nav, data-width,
+     * data-ratio, data-loop, data-allowfullscreen, data-swipe, data-autoplay and the
+     * data-thumb* sizes), already merged with the shortcode attributes. Shortcode
+     * attributes come from post authors, so every option is validated here.
+     *
+     * @since 2.0.0
+     * @param array<string, mixed>  $recipe_settings The recipe settings.
+     * @param array<string, string> $options         Gallery options.
+     * @return string
+     */
+    private static function cooked_gallery_html( $recipe_settings, $options ) {
+        $option = function ( $key, $default ) use ( $options ) {
+            return isset( $options[ 'data-' . $key ] ) ? strtolower( trim( (string) $options[ 'data-' . $key ] ) ) : $default;
+        };
+
+        $nav = $option( 'nav', 'dots' );
+        $nav = in_array( $nav, [ 'dots', 'thumbs' ], true ) ? $nav : 'false';
+
+        $fit = str_replace( 'scaledown', 'scale-down', $option( 'fit', 'cover' ) );
+        $fit = in_array( $fit, [ 'cover', 'contain', 'scale-down', 'none' ], true ) ? $fit : 'cover';
+
+        $ratio = $option( 'ratio', '800/600' );
+        if ( preg_match( '#^(\d+(?:\.\d+)?)\s*[/:]\s*(\d+(?:\.\d+)?)$#', $ratio, $r ) && (float) $r[2] > 0 ) {
+            $ratio = $r[1] . ' / ' . $r[2];
+        } elseif ( is_numeric( $ratio ) && (float) $ratio > 0 ) {
+            $ratio = (float) $ratio . ' / 1';
+        } else {
+            $ratio = '4 / 3';
+        }
+
+        $width = $option( 'width', '100%' );
+        $width = preg_match( '#^\d+(?:\.\d+)?(px|%)?$#', $width, $w ) ? ( empty( $w[1] ) ? $width . 'px' : $width ) : '100%';
+
+        $loop            = 'false' !== $option( 'loop', 'true' );
+        $allowfullscreen = 'false' !== $option( 'allowfullscreen', 'true' );
+        $swipe           = 'false' !== $option( 'swipe', 'true' );
+        $autoplay        = $option( 'autoplay', 'false' );
+        $autoplay        = ( 'true' === $autoplay ? 5000 : ( ctype_digit( $autoplay ) ? (int) $autoplay : 0 ) );
+
+        $styles = [
+            'max-width:' . $width,
+            '--cooked-gallery-ratio:' . $ratio,
+            '--cooked-gallery-fit:' . $fit,
+            '--cooked-gallery-thumb-width:' . absint( $option( 'thumbwidth', '75' ) ) . 'px',
+            '--cooked-gallery-thumb-height:' . absint( $option( 'thumbheight', '75' ) ) . 'px',
+            '--cooked-gallery-thumb-margin:' . absint( $option( 'thumbmargin', '10' ) ) . 'px',
+            '--cooked-gallery-thumb-border:' . absint( $option( 'thumbborderwidth', '5' ) ) . 'px',
+        ];
+
+        $slides = [];
+
+        $video_embed = ! empty( $recipe_settings['gallery']['video_url'] ) ? self::gallery_video_embed_url( $recipe_settings['gallery']['video_url'] ) : false;
+        $video_slide = false;
+        if ( $video_embed ) {
+            $title       = isset( $recipe_settings['title'] ) ? $recipe_settings['title'] : '';
+            $video_slide = [
+                'type'    => 'video',
+                'embed'   => $video_embed,
+                'url'     => $recipe_settings['gallery']['video_url'],
+                'caption' => $title,
+            ];
+        }
+
+        if ( $video_slide && ! apply_filters( 'cooked_gallery_video_last_option', false ) ) {
+            $slides[] = $video_slide;
+        }
+
+        $gallery_items = ! empty( $recipe_settings['gallery']['items'] ) ? apply_filters( 'cooked_gallery_items_output', $recipe_settings['gallery']['items'] ) : [];
+        foreach ( (array) $gallery_items as $item ) {
+            $full = wp_get_attachment_image_src( $item, 'full' );
+            if ( ! is_array( $full ) || empty( $full[0] ) ) {
+                continue;
+            }
+            $slides[] = [
+                'type'    => 'image',
+                'id'      => (int) $item,
+                'full'    => $full,
+                'caption' => get_the_title( $item ),
+            ];
+        }
+
+        if ( $video_slide && apply_filters( 'cooked_gallery_video_last_option', false ) ) {
+            $slides[] = $video_slide;
+        }
+
+        if ( empty( $slides ) ) {
+            return '';
+        }
+
+        $count = count( $slides );
+        $html  = '<div class="cooked-gallery" role="region" aria-roledescription="' . esc_attr__( 'carousel', 'cooked' ) . '" aria-label="' . esc_attr__( 'Recipe gallery', 'cooked' ) . '"';
+        $html .= ' data-nav="' . esc_attr( $nav ) . '" data-loop="' . ( $loop ? 'true' : 'false' ) . '" data-allowfullscreen="' . ( $allowfullscreen ? 'true' : 'false' ) . '"';
+        $html .= ' data-swipe="' . ( $swipe ? 'true' : 'false' ) . '" data-autoplay="' . esc_attr( (string) $autoplay ) . '" style="' . esc_attr( implode( ';', $styles ) ) . '">';
+        $html .= '<div class="cooked-gallery-stage">';
+        $html .= '<div class="cooked-gallery-track">';
+
+        foreach ( $slides as $index => $slide ) {
+            /* translators: 1: slide number, 2: number of slides. */
+            $label = sprintf( __( '%1$d of %2$d', 'cooked' ), $index + 1, $count );
+            $html .= '<figure class="cooked-gallery-slide cooked-gallery-slide-' . esc_attr( $slide['type'] ) . '" role="group" aria-roledescription="' . esc_attr__( 'slide', 'cooked' ) . '" aria-label="' . esc_attr( $label ) . '"';
+
+            if ( 'video' === $slide['type'] ) {
+                $html .= ' data-video-embed="' . esc_url( $slide['embed'] ) . '">';
+                $html .= '<button type="button" class="cooked-gallery-play" aria-label="' . esc_attr__( 'Play video', 'cooked' ) . '"><span class="cooked-gallery-play-icon" aria-hidden="true"></span></button>';
+                $html .= '<noscript><a href="' . esc_url( $slide['url'] ) . '">' . esc_html__( 'Watch the video', 'cooked' ) . '</a></noscript>';
+            } else {
+                $html .= '>';
+                $html .= '<a class="cooked-gallery-image" href="' . esc_url( $slide['full'][0] ) . '" data-pswp-width="' . absint( $slide['full'][1] ) . '" data-pswp-height="' . absint( $slide['full'][2] ) . '" data-caption="' . esc_attr( $slide['caption'] ) . '">';
+                $html .= wp_get_attachment_image( $slide['id'], [ 900, 900 ], false, [
+                    'alt'     => $slide['caption'],
+                    'loading' => 0 === $index ? 'eager' : 'lazy',
+                ] );
+                $html .= '</a>';
+            }
+
+            if ( '' !== (string) $slide['caption'] ) {
+                $html .= '<figcaption class="cooked-gallery-caption">' . esc_html( $slide['caption'] ) . '</figcaption>';
+            }
+
+            $html .= '</figure>';
+        }
+
+        $html .= '</div>';
+
+        if ( $count > 1 ) {
+            $html .= '<button type="button" class="cooked-gallery-arrow cooked-gallery-prev" aria-label="' . esc_attr__( 'Previous slide', 'cooked' ) . '"></button>';
+            $html .= '<button type="button" class="cooked-gallery-arrow cooked-gallery-next" aria-label="' . esc_attr__( 'Next slide', 'cooked' ) . '"></button>';
+        }
+
+        $html .= '</div>';
+
+        if ( $count > 1 && 'false' !== $nav ) {
+            $html .= '<div class="cooked-gallery-nav cooked-gallery-nav-' . esc_attr( $nav ) . '">';
+            foreach ( $slides as $index => $slide ) {
+                /* translators: %d: slide number. */
+                $html .= '<button type="button" class="cooked-gallery-nav-item" data-slide="' . (int) $index . '" aria-label="' . esc_attr( sprintf( __( 'Go to slide %d', 'cooked' ), $index + 1 ) ) . '">';
+                if ( 'thumbs' === $nav ) {
+                    $html .= 'image' === $slide['type'] ? wp_get_attachment_image( $slide['id'], 'thumbnail', false, [ 'alt' => '', 'loading' => 'lazy' ] ) : '<span class="cooked-gallery-play-icon" aria-hidden="true"></span>';
+                }
+                $html .= '</button>';
+            }
+            $html .= '</div>';
+        }
+
+        $html .= '</div>';
+
+        wp_enqueue_style( 'cooked-gallery' );
+        wp_enqueue_script( 'cooked-gallery' );
+
+        return $html;
+    }
+
+    /**
+     * Turn a YouTube or Vimeo URL into its embed URL. The player is only loaded when the
+     * visitor presses play.
+     *
+     * @since 2.0.0
+     * @param string $url Video URL.
+     * @return string|false Embed URL, or false for an unsupported URL.
+     */
+    public static function gallery_video_embed_url( $url ) {
+        $parts = wp_parse_url( trim( (string) $url ) );
+        if ( empty( $parts['host'] ) ) {
+            return false;
+        }
+
+        $host = strtolower( (string) preg_replace( '#^(www\.|m\.)#i', '', $parts['host'] ) );
+        $path = isset( $parts['path'] ) ? $parts['path'] : '';
+        $id   = '';
+
+        if ( 'youtu.be' === $host ) {
+            $id = trim( $path, '/' );
+        } elseif ( in_array( $host, [ 'youtube.com', 'youtube-nocookie.com' ], true ) ) {
+            if ( preg_match( '#^/(?:shorts|embed|live|v)/([^/?]+)#', $path, $m ) ) {
+                $id = $m[1];
+            } elseif ( ! empty( $parts['query'] ) ) {
+                parse_str( $parts['query'], $query );
+                $id = isset( $query['v'] ) && is_string( $query['v'] ) ? $query['v'] : '';
+            }
+        } elseif ( in_array( $host, [ 'vimeo.com', 'player.vimeo.com' ], true ) ) {
+            if ( preg_match( '#/(\d+)(?:/|$)#', $path, $m ) ) {
+                return 'https://player.vimeo.com/video/' . $m[1];
+            }
+            return false;
+        } else {
+            return false;
+        }
+
+        return preg_match( '#^[A-Za-z0-9_-]{6,20}$#', $id ) ? 'https://www.youtube-nocookie.com/embed/' . $id : false;
     }
 
     public function cooked_info_shortcode($atts, $content = null) {

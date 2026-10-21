@@ -27,13 +27,6 @@ function js() {
     .pipe(dest('assets/js'));
 }
 
-function jsFotorama() {
-  return src('assets/vendor/fotorama/fotorama.js')
-    .pipe(uglify())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(dest('assets/vendor/fotorama'));
-}
-
 function jsAdmin() {
   return src(['assets/admin/js/cooked-functions.js', 'assets/admin/js/cooked-migration.js'])
     .pipe(uglify())
@@ -46,13 +39,12 @@ function watchFiles() {
   watch(['assets/css/icons.css', 'assets/css/print-only.css', 'assets/css/print.css', 'assets/css/style.css'], css);
   watch(['assets/admin/css/essentials.css', 'assets/admin/css/style.css'], cssAdmin);
   watch('assets/js/cooked-functions.js', js);
-  watch('assets/vendor/fotorama/fotorama.js', jsFotorama);
   watch(['assets/admin/js/cooked-functions.js', 'assets/admin/js/cooked-migration.js'], jsAdmin);
 }
 
 // Task for building for production.
-const build = series(css, cssAdmin, js, jsFotorama, jsAdmin);
+const build = series(css, cssAdmin, js, jsAdmin);
 exports.build = build;
 
 // Export the default Gulp task.
-exports.default = series(css, cssAdmin, js, jsFotorama, jsAdmin, watchFiles);
+exports.default = series(css, cssAdmin, js, jsAdmin, watchFiles);

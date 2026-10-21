@@ -18,29 +18,12 @@ var cooked_loading = false;
 
     /****   1. Variables   ****/
     $_Cooked_Ingredient_Boxes = $('.cooked-ingredient-checkbox');
-    $_Cooked_Fotorama = $('.cooked-recipe-gallery');
     $_Cooked_Ajax_List = $('.cooked-recipe-loader');
     $_Cooked_Recipe_Search = $('.cooked-recipe-search');
     $_Cooked_Timers = $('.cooked-timer > a');
     $_Cooked_FSM_Button = $('.cooked-fsm-button');
 
-    /****   2a. Cooked Gallery   ****/
-
-    if ( $_Cooked_Fotorama.length ) {
-        $_Cooked_Fotorama.on('fotorama:ready', function(e, fotorama){
-            setTimeout(function(){
-                $_Cooked_Fotorama.addClass('cooked-gallery-loaded');
-            },100);
-        });
-    }
-
     $(document).ready(function() {
-
-        /****   2b. Cooked Gallery   ****/
-
-        if ( $_Cooked_Fotorama.length ) {
-            $_Cooked_Fotorama.fotorama();
-        }
 
         /****   3. Ingredients   ****/
 

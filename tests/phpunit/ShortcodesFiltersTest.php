@@ -99,14 +99,14 @@ class ShortcodesFiltersTest extends FilterTestCase {
             }
         );
 
-        $this->assertStringContainsString( 'data-fit="contain"', $html );
+        $this->assertStringContainsString( '--cooked-gallery-fit:contain', $html );
     }
 
     public function test_cooked_gallery_video_last_option_moves_video() {
         $GLOBALS['recipe_settings']['gallery'] = [
             'type'      => 'cooked',
             'items'     => [ 11 ],
-            'video_url' => 'https://example.com/video.mp4',
+            'video_url' => 'https://vimeo.com/123456789',
         ];
 
         $html = $this->with_filter(
@@ -119,7 +119,7 @@ class ShortcodesFiltersTest extends FilterTestCase {
             }
         );
 
-        $video_pos = strpos( $html, 'https://example.com/video.mp4' );
+        $video_pos = strpos( $html, 'https://player.vimeo.com/video/123456789' );
         $image_pos = strpos( $html, 'img-11.jpg' );
         $this->assertNotFalse( $video_pos );
         $this->assertNotFalse( $image_pos );

@@ -226,7 +226,7 @@ function wp_get_attachment_image( $attachment_id, $size = 'thumbnail', $icon = f
     if ( isset( $GLOBALS['_cooked_test_attachment_image_html'] ) ) {
         return $GLOBALS['_cooked_test_attachment_image_html'];
     }
-    return $attachment_id ? '<img src="http://example.com/image-' . (int) $attachment_id . '.jpg" class="size-' . $size . '" />' : '';
+    return $attachment_id ? '<img src="http://example.com/image-' . (int) $attachment_id . '.jpg" class="size-' . ( is_array( $size ) ? implode( 'x', $size ) : $size ) . '" />' : '';
 }
 function get_the_title( $post_id = 0 ) {
     if ( is_object( $post_id ) && isset( $post_id->post_title ) ) {
@@ -832,6 +832,10 @@ function wp_get_current_user() {
         'user_login' => 'admin',
         'roles'      => [ 'administrator' ],
     ];
+}
+
+function wp_parse_url( $url, $component = -1 ) {
+    return parse_url( $url, $component );
 }
 
 function _deprecated_file( $file, $version, $replacement = '', $message = '' ) {

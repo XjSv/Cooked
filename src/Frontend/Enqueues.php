@@ -60,9 +60,8 @@ class Enqueues {
 
         $min = COOKED_DEV ? '' : '.min';
 
-        wp_enqueue_style('cooked-essentials', COOKED_URL . 'assets/admin/css/essentials' . $min . '.css', [], COOKED_VERSION);
-        wp_enqueue_style('cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION);
-        wp_enqueue_style('cooked-styling', COOKED_URL . 'assets/css/style' . $min . '.css', [], COOKED_VERSION );
+        wp_enqueue_style('cooked-essentials', COOKED_URL . 'assets/css/essentials.min.css', [], COOKED_VERSION);
+        wp_enqueue_style('cooked-styling', COOKED_URL . 'assets/css/style.min.css', ['cooked-essentials'], COOKED_VERSION );
         wp_register_style('cooked-photoswipe', COOKED_URL . 'assets/vendor/photoswipe/photoswipe.css', [], '5.4.4');
         wp_register_script('cooked-photoswipe', COOKED_URL . 'assets/vendor/photoswipe/photoswipe.umd.min.js', [], '5.4.4', true);
         wp_register_script('cooked-photoswipe-lightbox', COOKED_URL . 'assets/vendor/photoswipe/photoswipe-lightbox.umd.min.js', ['cooked-photoswipe'], '5.4.4', true);

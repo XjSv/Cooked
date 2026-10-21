@@ -41,3 +41,6 @@ __pycache__/
 # Generic agent skills: each developer installs these locally
 /.agents/skills/wordpress-router/
 /.agents/skills/wp-*/
+
+# Source maps written by bun run watch
+*.map

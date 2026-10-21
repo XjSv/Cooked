@@ -46,20 +46,24 @@ Playwright specs live in `tests/playwright/tests/` (`admin`, `browse`, `home`,
 
 - Do not run the build after editing CSS/JS (rule `no-build-process`). Edit the
   source file only; the `.min` files are regenerated at release time.
-- Load assets with the `COOKED_DEV` switch:
+- Compiled CSS is always minified: enqueue `assets/css/<bundle>.min.css`. Load JS with the
+  `COOKED_DEV` switch:
   ```php
   $min = COOKED_DEV ? '' : '.min';
   wp_enqueue_script( 'cooked-my-js', COOKED_URL . 'assets/js/my-file' . $min . '.js', [ 'jquery' ], COOKED_VERSION, true );
   ```
+  With `COOKED_DEV` on, Cooked's asset URLs are versioned by file modification time.
 - Styles are SCSS, all under `assets/scss/`: front-end entries and partials at the
-  top, admin entries and partials in `assets/scss/admin/`, each with `base/`, `layout/`
-  and `components/` folders; `abstracts/` holds the shared tokens. Entry files only
-  `@use` partials. Gulp compiles each entry to an expanded `.css` and a `.min.css`;
-  never edit the compiled CSS. New styles go in a partial added to the entry's `@use`
+  top, admin partials in `assets/scss/admin/`, each with `base/`, `layout/` and
+  `components/` folders; `abstracts/` holds the shared tokens. Four entries, which only
+  `@use` partials, compile to `assets/css/`: `essentials` (icon font and admin menu/bar
+  icons, loaded everywhere), `style` (front end), `print` and `admin/admin`. Never edit
+  the compiled CSS; `bun run watch` writes source maps for debugging. New styles go in a partial added to the entry's `@use`
   list. One declaration per line, 4-space indent, and nest media queries inside the
   selector (`.x { @media (...) { ... } }`).
-- Colours come from the design tokens in `assets/scss/abstracts/_variables.scss`
-  (`--cooked-color-*` custom properties); use them instead of new hex values.
+- Colours and radii come from the design tokens in `assets/scss/abstracts/_variables.scss`
+  (`--cooked-color-*`, `--cooked-radius`, `--cooked-radius-sm` custom properties); use them
+  instead of new hex values or radii.
 - A new first-party JS file needs a minify entry in `gulpfile.js` (`src()` list,
   `watch()` line, and the `build` series).
 - Third-party libraries go in `assets/vendor/<lib>/`, unmodified, with their

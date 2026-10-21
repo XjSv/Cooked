@@ -12,7 +12,12 @@
     <div class="wrap about-wrap">
         <div id="cooked-welcome-panel" class="cooked-welcome-panel">
 
-            <img src="<?php echo esc_url( apply_filters( 'cooked_welcome_banner_img', COOKED_URL . 'assets/admin/images/welcome-banner.png' ) ); ?>" class="cooked-welcome-banner">
+            <?php
+            $cooked_banner = apply_filters( 'cooked_welcome_banner_img', COOKED_URL . 'assets/images/welcome-banner.png' );
+            // Cooked Pro 1.x still returns the pre-2.0 images path.
+            $cooked_banner = str_replace( [ COOKED_URL . '/assets/admin/images/', COOKED_URL . 'assets/admin/images/' ], COOKED_URL . 'assets/images/', $cooked_banner );
+            ?>
+            <img src="<?php echo esc_url( $cooked_banner ); ?>" class="cooked-welcome-banner">
 
             <div class="cooked-welcome-panel-intro">
                 <h1>

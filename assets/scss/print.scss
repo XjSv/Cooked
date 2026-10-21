@@ -1,7 +1,8 @@
 /*!
  * Cooked print styles
  *
- * Compiled to assets/css/print.css and print.min.css by `bun run build`. Edit the SCSS partials, not the output.
+ * Compiled to assets/css/print.min.css by `bun run build`. Edit the SCSS partials, not the output.
  */
 
+@use 'base/icons';
 @use 'layout/print';

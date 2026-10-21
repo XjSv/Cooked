@@ -12,7 +12,7 @@
     <div class="wrap about-wrap">
         <div id="cooked-welcome-panel" class="cooked-welcome-panel">
 
-            <img src="<?php echo esc_url( COOKED_URL . 'assets/admin/images/pro-banner.png' ); ?>" class="cooked-welcome-banner">
+            <img src="<?php echo esc_url( COOKED_URL . 'assets/images/pro-banner.png' ); ?>" class="cooked-welcome-banner">
 
             <div class="cooked-welcome-panel-intro">
                 <h1>

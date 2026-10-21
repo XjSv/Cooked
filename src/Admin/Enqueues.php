@@ -82,7 +82,7 @@ class Enqueues {
         unset( $page );
 
         wp_enqueue_style( 'wp-components' );
-        wp_enqueue_script( 'cooked-admin-app', COOKED_URL . 'assets/admin/js/cooked-admin-app.js', [ 'wp-element', 'wp-components', 'cooked-admin-functions' ], COOKED_VERSION, true );
+        wp_enqueue_script( 'cooked-admin-app', COOKED_URL . 'assets/js/cooked-admin-app.js', [ 'wp-element', 'wp-components', 'cooked-admin-functions' ], COOKED_VERSION, true );
         wp_localize_script( 'cooked-admin-app', 'cooked_admin_app_js_vars', [
             'version'  => COOKED_VERSION,
             'docsUrl'  => 'https://github.com/XjSv/Cooked/wiki',
@@ -113,11 +113,11 @@ class Enqueues {
 
         // Tom Select (searchable select fields)
         wp_enqueue_style( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.default' . $min . '.css', [], '2.6.2' );
-        wp_enqueue_style( 'cooked-tom-select-custom', COOKED_URL . 'assets/admin/css/cooked-tom-select' . $min . '.css', [ 'cooked-tom-select' ], COOKED_VERSION );
+        wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [ 'cooked-tom-select' ], COOKED_VERSION );
         wp_register_script( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.complete' . $min . '.js', [], '2.6.2', true );
 
         // Cooked Widgets JS
-        wp_register_script( 'cooked-widgets', COOKED_URL . 'assets/admin/js/cooked-widgets.js', ['jquery', 'cooked-tom-select'], COOKED_VERSION, true );
+        wp_register_script( 'cooked-widgets', COOKED_URL . 'assets/js/cooked-widgets.js', ['jquery', 'cooked-tom-select'], COOKED_VERSION, true );
         wp_localize_script( 'cooked-widgets', 'cooked_widgets_js_vars', $cooked_js_vars );
         wp_enqueue_script( 'cooked-widgets');
     }
@@ -145,9 +145,8 @@ class Enqueues {
 
         $min = COOKED_DEV ? '' : '.min';
 
-        // Required Assets for Entire Admin (icons, etc.)
-        wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/admin/css/essentials' . $min . '.css', [], COOKED_VERSION );
-        wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION );
+        // Required Assets for Entire Admin (icon font, admin menu icon)
+        wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/css/essentials.min.css', [], COOKED_VERSION );
 
         $load_cooked_admin_assets = false;
 
@@ -194,7 +193,7 @@ class Enqueues {
                 wp_enqueue_script( 'jquery-ui-sortable' );
                 wp_enqueue_script( 'jquery-ui-slider' );
 
-                wp_enqueue_script( 'cooked-conditions', COOKED_URL . 'assets/admin/js/cooked-conditions.js', [ 'jquery', 'backbone' ], COOKED_VERSION, true );
+                wp_enqueue_script( 'cooked-conditions', COOKED_URL . 'assets/js/cooked-conditions.js', [ 'jquery', 'backbone' ], COOKED_VERSION, true );
 
                 $wp_editor_roles_allowed = false;
                 if ( is_user_logged_in() ) {
@@ -265,9 +264,9 @@ class Enqueues {
                 wp_register_script( 'cooked-floating-ui-core', COOKED_URL . 'assets/vendor/floating-ui/floating-ui.core.umd.min.js', [], '1.8.0', true );
                 wp_register_script( 'cooked-floating-ui-dom', COOKED_URL . 'assets/vendor/floating-ui/floating-ui.dom.umd.min.js', ['cooked-floating-ui-core'], '1.8.0', true );
 
-                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/admin/js/cooked-functions' . $min . '.js', ['jquery', 'cooked-floating-ui-dom'], COOKED_VERSION, true );
-                wp_register_script( 'cooked-migration', COOKED_URL . 'assets/admin/js/cooked-migration' . $min . '.js', ['jquery'], COOKED_VERSION, true );
-                wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/admin/css/style' . $min . '.css', [], COOKED_VERSION );
+                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/js/cooked-admin-functions' . $min . '.js', ['jquery', 'cooked-floating-ui-dom'], COOKED_VERSION, true );
+                wp_register_script( 'cooked-migration', COOKED_URL . 'assets/js/cooked-migration' . $min . '.js', ['jquery'], COOKED_VERSION, true );
+                wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
 
                 // Cooked Admin Script

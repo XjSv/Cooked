@@ -3,9 +3,7 @@
 // Print Screen Enqueues
 add_action( 'wp_enqueue_scripts', 'cooked_print_enqueues', 99, 1 );
 function cooked_print_enqueues() {
-	$min = COOKED_DEV ? '' : '.min';
-	wp_enqueue_style( 'cooked-print', COOKED_URL . 'assets/css/print' . $min . '.css', [], COOKED_VERSION, 'screen,print' );
-	wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION, 'screen,print' );
+	wp_enqueue_style( 'cooked-print', COOKED_URL . 'assets/css/print.min.css', [], COOKED_VERSION, 'screen,print' );
 	wp_dequeue_style( 'cooked-essentials' );
 	wp_dequeue_style( 'cooked-styling' );
 }

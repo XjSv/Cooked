@@ -1,7 +1,7 @@
 /*!
  * Cooked admin styles
  *
- * Compiled to assets/admin/css/style.css and style.min.css by `bun run build`. Edit the SCSS partials, not the output.
+ * Compiled to assets/css/admin.min.css by `bun run build`. Edit the SCSS partials, not the output.
  */
 
 // Abstracts
@@ -28,3 +28,4 @@
 @use 'components/allergens';
 @use 'components/code-block';
 @use 'layout/frame';
+@use 'components/tom-select';

@@ -1,0 +1,9 @@
+/*!
+ * Cooked essentials: the icon font and the admin menu and admin bar icons
+ *
+ * Loaded on every admin screen and on the front end. Compiled to
+ * assets/css/essentials.min.css by `bun run build`. Edit the SCSS partials, not the output.
+ */
+
+@use 'base/icons';
+@use 'base/admin-menu';

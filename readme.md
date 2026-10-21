@@ -102,17 +102,21 @@ bun run i18n:update-po    # update all .po files in languages/ from the .pot
 bun run i18n:make-mo      # compile all .po files in languages/ to .mo
 ```
 #### Compiling assets (SCSS/JS)
-Styles are written in SCSS and compiled to `assets/css/` and `assets/admin/css/` (an expanded `.css`, loaded when `COOKED_DEV` is on, and a `.min.css`). Edit the partials, never the compiled CSS:
+Styles are written in SCSS and compiled to minified bundles in `assets/css/`. Edit the partials, never the compiled CSS. `bun run watch` also writes source maps, so browser dev tools point at the SCSS partials.
 
 ```
 assets/scss/
   abstracts/_variables.scss  design tokens (CSS custom properties, shared)
-  style.scss  print.scss  print-only.scss   front-end entries -> assets/css/
-  base/  layout/  components/                front-end partials
+  essentials.scss            -> essentials.min.css  icon font + admin menu/bar icons, loaded everywhere
+  style.scss                 -> style.min.css       front end
+  print.scss                 -> print.min.css       print view
+  base/  layout/  components/                       front-end partials
   admin/
-    style.scss  essentials.scss  cooked-tom-select.scss   admin entries -> assets/admin/css/
-    base/  layout/  components/                             admin partials
+    admin.scss               -> admin.min.css       wp-admin
+    base/  layout/  components/                     admin partials
 ```
+
+JavaScript lives in `assets/js/`; `bun run build` minifies `cooked-functions.js`, `cooked-admin-functions.js` and `cooked-migration.js`.
 
 ``` bash
 bun run build   # one-off build

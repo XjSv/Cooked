@@ -8,9 +8,9 @@
   are not shipped).
 - License: Apache 2.0 (see `LICENSE`)
 - Usage: the recipe finder in the Cooked widgets (`cooked-tom-select` handles, admin;
-  `assets/admin/js/cooked-widgets.js`). The complete build includes the `drag_drop`
+  `assets/js/cooked-widgets.js`). The complete build includes the `drag_drop`
   plugin, which uses native drag and drop (no jQuery UI). Cooked's own overrides
-  are in `assets/admin/css/cooked-tom-select.css`.
+  are in `assets/scss/admin/components/_tom-select.scss`.
 
 To update, copy the same four files from the new release's `dist/` and bump the version
 in `src/Admin/Enqueues.php` (`cooked-tom-select` handles).

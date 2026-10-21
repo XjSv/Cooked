@@ -4,7 +4,7 @@
 - Source: https://github.com/vuejs/vue
 - License: MIT (see `LICENSE`)
 - Usage: none in Cooked itself since 2.0.0 (the settings and import screens use
-  `assets/admin/js/cooked-conditions.js`). It is still registered as `cooked-vue` on
+  `assets/js/cooked-conditions.js`). It is still registered as `cooked-vue` on
   every admin screen because Cooked Pro's Pending Recipes screen depends on that handle.
 
 `vue.js` is the minified production build, not the development build, so

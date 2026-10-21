@@ -33,3 +33,4 @@ notes
 .env
 .env.example
 /.agents
+*.map

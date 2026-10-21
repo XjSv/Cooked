@@ -14,7 +14,8 @@ function cooked_print_enqueues() {
 	<?php wp_head(); ?>
 	<meta name="robots" content="noindex,nofollow">
 </head>
-<body><?php
+<body>
+<?php
 
 $recipe_settings = Cooked_Recipes::get_settings( $post->ID );
 
@@ -33,5 +34,6 @@ do_action( 'cooked_after_print_recipe' );
 
 wp_footer();
 
-?></body>
+?>
+</body>
 </html>

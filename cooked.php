@@ -1,14 +1,14 @@
 <?php
 /**
- * Plugin Name: 	    Cooked - Recipe Management
- * Plugin URI: 	        https://wordpress.org/plugins/cooked
- * Description: 	    A recipe plugin for WordPress.
+ * Plugin Name:         Cooked - Recipe Management
+ * Plugin URI:          https://wordpress.org/plugins/cooked
+ * Description:         A recipe plugin for WordPress.
  * Author:              Gora Tech
- * Author URI: 	        https://goratech.dev
- * Version: 		    2.0.0
- * Text Domain: 	    cooked
- * Domain Path: 	    /languages
- * License:     	    GPLv2 or later
+ * Author URI:          https://goratech.dev
+ * Version:             2.0.0
+ * Text Domain:         cooked
+ * Domain Path:         /languages
+ * License:             GPLv2 or later
  * License URI:         https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least:   6.8
  * Tested up to:        7.1
@@ -30,7 +30,7 @@
  * along with Cooked. If not, see http://www.gnu.org/licenses/.
  *
  * @package Cooked
-*/
+ */
 
 // Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {

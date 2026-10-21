@@ -51,6 +51,7 @@ spl_autoload_register(
             'Cooked_Widget_Recipe_Categories' => \Cooked\Frontend\Widgets\RecipeCategories::class,
             'Cooked_Widget_Recipe_Card'       => \Cooked\Frontend\Widgets\RecipeCard::class,
             'Cooked_Functions'                => \Cooked\System\Functions::class,
+            'Cooked_SEO'                      => \Cooked\Recipe\Seo::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

@@ -56,6 +56,7 @@ spl_autoload_register(
             'Cooked_Post_Types'               => \Cooked\Recipe\PostTypes::class,
             'Cooked_Recipes'                  => \Cooked\Recipe\Recipes::class,
             'Cooked_Recipe_Meta'              => \Cooked\Recipe\RecipeMeta::class,
+            'Cooked_Plugin'                   => \Cooked\Plugin::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

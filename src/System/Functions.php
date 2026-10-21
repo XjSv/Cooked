@@ -75,9 +75,37 @@ class Functions {
 
         echo '<details class="cooked-code-block" open>';
         echo '<summary><span class="cooked-icon cooked-icon-angle-right" aria-hidden="true"></span>' . esc_html__( 'WPML config XML', 'cooked' ) . '</summary>';
-        echo '<button type="button" class="button cooked-copy-code" data-target="cooked-wpml-config">' . esc_html__( 'Copy', 'cooked' ) . '</button>';
-        echo '<pre><code id="cooked-wpml-config">' . esc_html( implode( "\n", $xml ) ) . '</code></pre>';
+        echo '<button type="button" class="cooked-copy-code" data-target="cooked-wpml-config">' . esc_html__( 'Copy', 'cooked' ) . '</button>';
+        echo '<pre><code id="cooked-wpml-config">' . implode( "\n", array_map( [ __CLASS__, 'highlight_xml_line' ], $xml ) ) . '</code></pre>';
         echo '</details>';
+    }
+
+    /**
+     * Escape one line of XML and wrap its parts in spans for syntax colouring.
+     *
+     * @since 2.0.0
+     * @param string $line A line of XML.
+     * @return string Escaped HTML.
+     */
+    public static function highlight_xml_line( $line ) {
+        $html = '';
+        foreach ( preg_split( '#(<[^>]+>)#', $line, -1, PREG_SPLIT_DELIM_CAPTURE ) as $part ) {
+            if ( ! preg_match( '#^<(/?)([\w:-]+)(.*?)(/?)>$#s', $part, $tag ) ) {
+                $html .= esc_html( $part );
+                continue;
+            }
+
+            $html .= '<span class="cooked-xml-punct">&lt;' . esc_html( $tag[1] ) . '</span><span class="cooked-xml-tag">' . esc_html( $tag[2] ) . '</span>';
+
+            preg_match_all( '#([\w:-]+)="([^"]*)"#', $tag[3], $attributes, PREG_SET_ORDER );
+            foreach ( $attributes as $attribute ) {
+                $html .= ' <span class="cooked-xml-attr">' . esc_html( $attribute[1] ) . '</span><span class="cooked-xml-punct">=</span><span class="cooked-xml-value">&quot;' . esc_html( $attribute[2] ) . '&quot;</span>';
+            }
+
+            $html .= '<span class="cooked-xml-punct">' . ( $tag[4] ? ' /' : '' ) . '&gt;</span>';
+        }
+
+        return $html;
     }
 
     public static function hex2rgb( $hex ) {

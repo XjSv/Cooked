@@ -55,7 +55,38 @@
     position: absolute;
     top: 52px;
     right: 12px;
-    background: #fff;
+    min-height: 0;
+    margin: 0;
+    padding: 6px 14px;
+    border: 0;
+    border-radius: 4px;
+    background: var(--cooked-color-accent-strong);
+    box-shadow: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-code-block .cooked-copy-code:hover,
+.cooked-code-block .cooked-copy-code:focus {
+    background: var(--cooked-color-accent-hover);
+    color: #fff;
+}
+
+.cooked-code-block .cooked-copy-code:active {
+    background: var(--cooked-color-accent-active);
+}
+
+.cooked-code-block .cooked-copy-code:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
 }
 
 .cooked-code-block pre {
@@ -63,8 +94,8 @@
     padding: 16px;
     overflow-x: auto;
     border-radius: 0 0 4px 4px;
-    background: var(--cooked-color-text);
-    color: #f0f0f0;
+    background: #1e1e1e;
+    color: #d4d4d4;
     font-size: 12px;
     line-height: 1.6;
 }
@@ -74,4 +105,21 @@
     background: none;
     color: inherit;
     font-size: inherit;
+}
+
+// XML syntax colours (VS Code dark theme).
+.cooked-xml-punct {
+    color: #808080;
+}
+
+.cooked-xml-tag {
+    color: #569cd6;
+}
+
+.cooked-xml-attr {
+    color: #9cdcfe;
+}
+
+.cooked-xml-value {
+    color: #ce9178;
 }

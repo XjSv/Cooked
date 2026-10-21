@@ -123,7 +123,7 @@ class Enqueues {
 
                 wp_enqueue_style( 'cooked-switchery', COOKED_URL . 'assets/vendor/switchery/switchery.min.css', [], '0.8.2' );
                 wp_enqueue_script( 'cooked-switchery', COOKED_URL . 'assets/vendor/switchery/switchery.min.js', [], '0.8.2', true );
-                wp_enqueue_script( 'cooked-vue', COOKED_URL . 'assets/admin/js/vue/vue' . $min . '.js', [], COOKED_VERSION, false );
+                wp_enqueue_script( 'cooked-vue', COOKED_URL . 'assets/vendor/vue/vue' . $min . '.js', [], '2.7.16', false );
 
                 $wp_editor_roles_allowed = false;
                 if ( is_user_logged_in() ) {

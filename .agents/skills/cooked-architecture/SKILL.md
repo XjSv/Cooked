@@ -10,17 +10,17 @@ description: >-
 
 ## Bootstrap Sequence
 
-### Cooked Core (`cooked.php`)
-1. `require_once vendor/autoload.php` (Composer: the bundled libraries and the `Cooked\` PSR-4 classes in `src/`), then `src/aliases.php` (keeps the old `Cooked_*` names working)
-2. Define `COOKED_VERSION`, `COOKED_DEV`
-3. `Cooked_Plugin::instance()` (singleton):
-   - `setup_constants()` — defines `COOKED_DIR`, `COOKED_URL`, `COOKED_FOLDER`, etc.
-   - `includes()` — manual `require_once` for all core classes
+### Cooked Core (`cooked.php` + `src/Plugin.php`)
+1. `cooked.php`: `require_once vendor/autoload.php` (Composer: the bundled libraries and the `Cooked\` PSR-4 classes in `src/`), then `src/aliases.php` (keeps the old `Cooked_*` names working)
+2. `cooked.php`: define `COOKED_VERSION`, `COOKED_DEV`
+3. `Cooked\Plugin::instance()` (singleton, alias `Cooked_Plugin`):
+   - `setup_constants()` — defines `COOKED_DIR`, `COOKED_URL`, `COOKED_FOLDER`, etc. from `cooked.php`'s path
+   - `includes()` — creates the `$Cooked_Recipes` global, requires `src/functions.php` (global recipe-editor functions), hooks `Cooked_Allergens::init`, registers the WP-CLI command
    - Instantiates all core objects (roles, menus, enqueues, settings, post_types, recipe_meta, shortcodes, ajax, widgets, gutenberg, elementor, etc.)
    - `module_setup()` — scans `COOKED_DIR/modules/`, parent theme `cooked-modules/`, child theme `cooked-modules/`
    - Conditionally loads Yoast/RankMath support on `init`
    - Fires `do_action('cooked_loaded')`
-4. `Cooked()` global helper returns the singleton
+4. `Cooked()` global helper returns the singleton; `cooked.php` stores it in `$CookedPlugin`
 
 ### Cooked Pro (`cooked-pro.php`)
 1. Define `COOKED_PRO_VERSION`, `COOKED_PRO_FILE`
@@ -56,26 +56,33 @@ Cooked core loads first → fires `cooked_loaded` → Pro hooks into `plugins_lo
 
 ## Class Naming & File Naming
 
-Cooked 2.0 is moving its classes from `includes/` to namespaced classes in `src/`,
-one class at a time. `src/aliases.php` lists every class moved so far. Each class
-keeps its name without the `Cooked_` prefix (`Cooked_Recipes` → `Cooked\Recipe\Recipes`).
+Since Cooked 2.0 every class lives in `src/` under the `Cooked\` namespace, loaded
+by Composer (PSR-4). `src/aliases.php` maps every pre-2.0 `Cooked_*` name to its
+class. Each class kept its name without the `Cooked_` prefix (`Cooked_Recipes` →
+`Cooked\Recipe\Recipes`). `includes/` only holds deprecated placeholders that keep
+old `require_once` calls working.
 
 Groups in `src/`: `Recipe` (recipes, meta, post types, taxonomies, related,
 allergens, SEO schema), `Measurement`, `User` (users, roles), `Admin` (menus,
 admin enqueues, settings, migration, updates), `Frontend` (enqueues, shortcodes,
 widgets), `Import` (all importers), `Integrations` (Gutenberg, Elementor, Yoast,
-Rank Math, Pixwell, multilingual), `System` (AJAX, CLI, functions). `Cooked_Plugin`
-moves last, to `Cooked\Plugin`.
+Rank Math, Pixwell, multilingual), `System` (AJAX, CLI, functions). The main class
+is `Cooked\Plugin` (`src/Plugin.php`).
 
 | Pattern | Example class | Example file |
 |---------|--------------|-------------|
-| Core class (new, namespaced) | `Cooked\Measurement\UnitConverter` | `src/Measurement/UnitConverter.php` |
-| Core class (not moved yet) | `Cooked_Recipes` | `includes/class.cooked-recipes.php` |
+| Core class | `Cooked\Recipe\Recipes` (alias `Cooked_Recipes`) | `src/Recipe/Recipes.php` |
 | Pro class | `Cooked_Pro_Enqueues` | `includes/class.cooked-enqueues.php` (Pro repo) |
 | Pro module | `Cooked_Interactions` | `modules/interactions/interactions.php` (Pro repo) |
 
-- Every moved class keeps its old name as an alias in `src/aliases.php`. The old
+- Every class keeps its old name as an alias in `src/aliases.php`. The old
   names are public API (Cooked Pro and themes use them): never remove an alias.
+- Inside namespaced code, prefix other class names with `\` (`\Cooked_Settings::get()`,
+  `\WP_Query`, `catch ( \Exception $e )`). An unqualified name resolves to the
+  current namespace and fails, or in a `catch` silently catches nothing.
+- Register static hook callbacks with the old class name as a string
+  (`[ 'Cooked_Recipes', 'method' ]`), not `__CLASS__`: WordPress identifies a static
+  callback by that string, so third-party `remove_action()` calls keep matching.
 - Hooks, option keys, meta keys and `COOKED_*` constants never change.
 - Pro modules live in the Cooked Pro repo; see its `cooked-modules` skill.
 
@@ -107,18 +114,5 @@ $_cooked_settings = Cooked_Settings::get();
    folder is not picked up.
 4. Keep file-scope code out of the file (no `new`, `add_action()` at the bottom):
    an autoloaded file only runs when its class is first used. Instantiate and hook
-   it from `Cooked_Plugin::instance()`.
+   it from `Cooked\Plugin::instance()`.
 5. A brand-new class has no old name, so it gets no alias.
-
-## Moving an Existing Class
-
-One class per commit:
-
-1. `git mv includes/class.cooked-x.php src/{Group}/{Name}.php`.
-2. Add the namespace, rename the class, prefix global classes with `\`.
-3. Move any file-scope code (a `new`, `add_action()` or global function at the
-   bottom of the file) into `Cooked_Plugin` so it still runs at startup.
-4. Add `'Cooked_Old_Name' => \Cooked\Group\Name::class` to the map in `src/aliases.php`.
-5. Remove every `require_once` of the old path, including in
-   `tests/phpunit/bootstrap.php` and other classes.
-6. Run PHPUnit, PHPStan and PHPCS (see `cooked-build-and-test`).

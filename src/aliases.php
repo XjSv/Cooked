@@ -18,14 +18,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 spl_autoload_register(
     static function ( string $class_name ): void {
         static $aliases = [
-            'Cooked_Unit_Converter'    => \Cooked\Measurement\UnitConverter::class,
-            'Cooked_Measurements'      => \Cooked\Measurement\Measurements::class,
-            'Cooked_Roles'             => \Cooked\User\Roles::class,
-            'Cooked_Users'             => \Cooked\User\Users::class,
-            'Cooked_Taxonomies'        => \Cooked\Recipe\Taxonomies::class,
-            'Cooked_Allergens'         => \Cooked\Recipe\Allergens::class,
-            'Cooked_Import'            => \Cooked\Import\Import::class,
-            'Cooked_Delicious_Recipes' => \Cooked\Import\DeliciousRecipes::class,
+            'Cooked_Unit_Converter'       => \Cooked\Measurement\UnitConverter::class,
+            'Cooked_Measurements'         => \Cooked\Measurement\Measurements::class,
+            'Cooked_Roles'                => \Cooked\User\Roles::class,
+            'Cooked_Users'                => \Cooked\User\Users::class,
+            'Cooked_Taxonomies'           => \Cooked\Recipe\Taxonomies::class,
+            'Cooked_Allergens'            => \Cooked\Recipe\Allergens::class,
+            'Cooked_Import'               => \Cooked\Import\Import::class,
+            'Cooked_Delicious_Recipes'    => \Cooked\Import\DeliciousRecipes::class,
+            'Cooked_Recipe_Maker_Recipes' => \Cooked\Import\RecipeMaker::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

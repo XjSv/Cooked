@@ -229,7 +229,6 @@ class Cooked_Ajax {
     public function import_recipes() {
         self::require_settings_ajax( 'cooked_import_recipes' );
 
-        require_once COOKED_DIR . 'includes/class.cooked-recipe-maker.php';
 
         $bulk_amount = 10;
         $recipe_ids = self::recipe_ids_from_json( isset( $_POST['recipe_ids'] ) ? wp_unslash( $_POST['recipe_ids'] ) : '' ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- JSON decoded then absint in recipe_ids_from_json.

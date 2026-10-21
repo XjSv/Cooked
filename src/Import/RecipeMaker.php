@@ -7,6 +7,8 @@
  * @since       1.11.2
 */
 
+namespace Cooked\Import;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -17,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  *
  * @since 1.11.2
  */
-class Cooked_Recipe_Maker_Recipes {
+class RecipeMaker {
 
     /**
      * The import type.
@@ -60,7 +62,7 @@ class Cooked_Recipe_Maker_Recipes {
             ],
         ];
 
-        $_recipes = new WP_Query( $args );
+        $_recipes = new \WP_Query( $args );
 
         if (!empty($_recipes->posts)) {
             foreach ($_recipes->posts as $rid) {
@@ -107,7 +109,7 @@ class Cooked_Recipe_Maker_Recipes {
         if (isset($_cooked_settings['default_content'])) {
             $default_content = wp_unslash($_cooked_settings['default_content']);
         } else {
-            $default_content = Cooked_Recipes::default_content();
+            $default_content = \Cooked_Recipes::default_content();
         }
 
         // Insert new post meta data.
@@ -127,7 +129,7 @@ class Cooked_Recipe_Maker_Recipes {
         $recipeIngredients = isset( $post_meta['wprm_ingredients'][0] ) ? maybe_unserialize($post_meta['wprm_ingredients'][0]) : [];
         $new_cp_recipe_meta['ingredients'] = [];
 
-        $measurements = Cooked_Measurements::get();
+        $measurements = \Cooked_Measurements::get();
         $measurement_keys = array_keys($measurements);
 
         if (!empty($recipeIngredients)) {

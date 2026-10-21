@@ -17,7 +17,6 @@
         </div>
         <div id="cooked-settings-panel" class="wrap">
         <?php
-            require_once COOKED_DIR . 'includes/class.cooked-recipe-maker.php';
             require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
 
             global $_cooked_settings;

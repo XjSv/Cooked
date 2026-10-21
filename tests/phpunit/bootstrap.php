@@ -847,7 +847,6 @@ require_once __DIR__ . '/../../src/aliases.php';
 /**
  * Load plugin class files needed for testing
  */
-require_once COOKED_DIR . 'includes/class.cooked-functions.php';
 require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
 require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
 require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';

@@ -486,7 +486,6 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
         require_once COOKED_DIR . 'includes/class.cooked-enqueues.php';
         require_once COOKED_DIR . 'includes/class.cooked-settings.php';
-        require_once COOKED_DIR . 'includes/class.cooked-migration.php';
         require_once COOKED_DIR . 'includes/class.cooked-updates.php';
         require_once COOKED_DIR . 'includes/class.cooked-ajax.php';
         require_once COOKED_DIR . 'includes/class.cooked-functions.php';

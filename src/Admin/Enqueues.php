@@ -44,7 +44,7 @@ class Enqueues {
         wp_enqueue_script( 'cooked-microplugin', COOKED_URL . 'assets/vendor/microplugin/microplugin.min.js', ['jquery'], '0.0.3', true );
 
         // Cooked Widgets JS
-        wp_register_script( 'cooked-widgets', COOKED_URL . '/assets/admin/js/cooked-widgets.js', ['jquery'], COOKED_VERSION, true );
+        wp_register_script( 'cooked-widgets', COOKED_URL . 'assets/admin/js/cooked-widgets.js', ['jquery'], COOKED_VERSION, true );
         wp_localize_script( 'cooked-widgets', 'cooked_js_vars', $cooked_js_vars );
         wp_enqueue_script( 'cooked-widgets');
     }

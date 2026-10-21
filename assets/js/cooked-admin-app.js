@@ -105,7 +105,7 @@
             var adminBar = parseInt( window.getComputedStyle( document.documentElement ).getPropertyValue( '--wp-admin--admin-bar--height' ), 10 ) || 32,
                 observer = new window.IntersectionObserver( function ( entries ) {
                     stuckState[1]( ! entries[0].isIntersecting );
-                }, { rootMargin: '-' + adminBar + 'px 0px 0px 0px' } );
+                }, { rootMargin: '-' + ( adminBar + 10 ) + 'px 0px 0px 0px' } );
             observer.observe( sentinelRef.current );
             return function () {
                 observer.disconnect();

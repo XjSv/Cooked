@@ -17,7 +17,7 @@
 
 .cooked-admin-frame.components-card {
     overflow: visible;
-    border-top: 4px solid var(--cooked-color-accent);
+    border-radius: var(--cooked-radius);
 }
 
 .cooked-admin-frame.components-card > div {
@@ -27,10 +27,23 @@
 /* Header */
 .cooked-admin-sticky {
     position: sticky;
-    top: var(--wp-admin--admin-bar--height, 32px);
+    top: calc(var(--wp-admin--admin-bar--height, 32px) + 10px);
     z-index: 20;
+    border-top: 4px solid var(--cooked-color-accent);
+    border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
     background: #fff;
     transition: box-shadow 150ms ease;
+}
+
+// While stuck, cover the 10px gap above the header so content doesn't show through it.
+.cooked-admin-sticky.is-stuck::before {
+    content: "";
+    position: absolute;
+    right: -1px;
+    bottom: calc(100% + 4px);
+    left: -1px;
+    height: 10px;
+    background: #f0f0f1;
 }
 
 .cooked-admin-sticky.is-stuck {
@@ -118,7 +131,7 @@
 
 .cooked-admin-version {
     padding: 2px 8px;
-    border-radius: 2px;
+    border-radius: var(--cooked-radius-sm);
     background: #f0f0f0;
     color: var(--cooked-color-text-muted);
     font-size: 12px;
@@ -163,13 +176,14 @@
 }
 
 .cooked-admin-sidebar {
+    border-bottom-left-radius: var(--cooked-radius);
     border-right: 1px solid var(--cooked-color-border);
     background: var(--cooked-color-surface-muted);
 }
 
 .cooked-admin-sections {
     position: sticky;
-    top: calc(var(--wp-admin--admin-bar--height, 32px) + 105px);
+    top: calc(var(--wp-admin--admin-bar--height, 32px) + 119px);
     padding: 24px 16px;
 }
 
@@ -190,7 +204,7 @@
     height: auto;
     margin: 0 0 4px;
     padding: 10px 12px;
-    border-radius: 4px;
+    border-radius: var(--cooked-radius-sm);
     color: var(--cooked-color-text);
     font-size: 14px;
 }
@@ -233,7 +247,7 @@
     justify-content: center;
     width: 36px;
     height: 36px;
-    border-radius: 4px;
+    border-radius: var(--cooked-radius-sm);
     background: var(--cooked-color-accent-soft);
     color: var(--cooked-color-accent-strong);
 }
@@ -385,4 +399,9 @@
         opacity: 1;
         transform: none;
     }
+}
+
+// Buttons in the frame share the small radius.
+#cooked-admin-app .components-button.is-primary {
+    border-radius: var(--cooked-radius-sm);
 }

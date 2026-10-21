@@ -480,7 +480,7 @@ final class Cooked_Plugin {
     private function includes() {
         global $Cooked_Recipes;
         $Cooked_Recipes = new Cooked_Recipes();
-        require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
+        require_once COOKED_DIR . 'src/functions.php';
         add_action( 'init', [ 'Cooked_Allergens', 'init' ] );
 
         if ( defined( 'WP_CLI' ) && WP_CLI ) {

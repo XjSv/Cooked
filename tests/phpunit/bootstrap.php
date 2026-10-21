@@ -848,5 +848,5 @@ require_once __DIR__ . '/../../src/aliases.php';
  * Load plugin class files needed for testing
  */
 $GLOBALS['Cooked_Recipes'] = new Cooked_Recipes();
-require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
+require_once COOKED_DIR . 'src/functions.php';
 require_once __DIR__ . '/FilterTestCase.php';

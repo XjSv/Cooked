@@ -63,8 +63,8 @@ class Enqueues {
         wp_enqueue_style('cooked-essentials', COOKED_URL . 'assets/admin/css/essentials' . $min . '.css', [], COOKED_VERSION);
         wp_enqueue_style('cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION);
         wp_enqueue_style('cooked-styling', COOKED_URL . 'assets/css/style' . $min . '.css', [], COOKED_VERSION );
-        wp_register_style('cooked-fotorama', COOKED_URL . 'assets/css/fotorama/fotorama.min.css', [], '4.6.4');
-        wp_register_script('cooked-fotorama', COOKED_URL . 'assets/js/fotorama/fotorama' . $min . '.js', ['jquery'], '4.6.4', true);
+        wp_register_style('cooked-fotorama', COOKED_URL . 'assets/vendor/fotorama/fotorama.min.css', [], '4.6.4');
+        wp_register_script('cooked-fotorama', COOKED_URL . 'assets/vendor/fotorama/fotorama' . $min . '.js', ['jquery'], '4.6.4', true);
         wp_register_script('cooked-timer', COOKED_URL . 'assets/vendor/jquery-simple-timer/jquery.simple.timer' . $min . '.js', ['jquery'], '0.0.5', true);
         wp_register_script('cooked-nosleep', COOKED_URL . 'assets/vendor/nosleep/NoSleep' . $min . '.js', [], '0.12.0', true);
 

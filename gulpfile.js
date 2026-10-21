@@ -28,10 +28,10 @@ function js() {
 }
 
 function jsFotorama() {
-  return src('assets/js/fotorama/fotorama.js')
+  return src('assets/vendor/fotorama/fotorama.js')
     .pipe(uglify())
     .pipe(rename({ suffix: '.min' }))
-    .pipe(dest('assets/js/fotorama'));
+    .pipe(dest('assets/vendor/fotorama'));
 }
 
 function jsAdmin() {
@@ -46,7 +46,7 @@ function watchFiles() {
   watch(['assets/css/icons.css', 'assets/css/print-only.css', 'assets/css/print.css', 'assets/css/style.css'], css);
   watch(['assets/admin/css/essentials.css', 'assets/admin/css/style.css'], cssAdmin);
   watch('assets/js/cooked-functions.js', js);
-  watch('assets/js/fotorama/fotorama.js', jsFotorama);
+  watch('assets/vendor/fotorama/fotorama.js', jsFotorama);
   watch(['assets/admin/js/cooked-functions.js', 'assets/admin/js/cooked-migration.js'], jsAdmin);
 }
 

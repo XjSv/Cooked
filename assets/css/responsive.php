@@ -1,6 +1,6 @@
 <?php
 
-$_cooked_settings = Cooked_Settings::get();
+$_cooked_settings       = Cooked_Settings::get();
 $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 
 ?>@media screen and ( max-width: <?php echo esc_html( $_cooked_settings['responsive_breakpoint_1'] ); ?>px ) {
@@ -76,13 +76,17 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 	.cooked-fsm .cooked-fsm-ingredients.cooked-active,
 	.cooked-fsm .cooked-fsm-directions-wrap.cooked-active { display:block; }
 
-	<?php if ( false !== $_cooked_dark_css_scope ):
+	<?php
+    if ( false !== $_cooked_dark_css_scope ) :
 
-	$_cooked_fsm_dark_selectors = Cooked_Settings::prefix_dark_mode_css( '.cooked-fsm .cooked-fsm-ingredients, .cooked-fsm .cooked-fsm-directions-wrap' );
+		$_cooked_fsm_dark_selectors = Cooked_Settings::prefix_dark_mode_css( '.cooked-fsm .cooked-fsm-ingredients, .cooked-fsm .cooked-fsm-directions-wrap' );
 
-	?><?php echo wp_kses( $_cooked_fsm_dark_selectors, [] ); ?> { background:#000; color:#fff; }<?php
+		?>
+		<?php echo wp_kses( $_cooked_fsm_dark_selectors, [] ); ?> { background:#000; color:#fff; }
+		<?php
 
-	endif; ?>
+	endif;
+    ?>
 
 	.cooked-fsm {
 		-webkit-transition: all 350ms cubic-bezier(0.420, 0.000, 0.150, 1.000);

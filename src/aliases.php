@@ -40,6 +40,7 @@ spl_autoload_register(
             'Cooked_Migration'            => \Cooked\Admin\Migration::class,
             'Cooked_Plugin_Extra'         => \Cooked\Admin\PluginExtra::class,
             'Cooked_Enqueues'             => \Cooked\Frontend\Enqueues::class,
+            'Cooked_Updates'              => \Cooked\Admin\Updates::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

@@ -853,6 +853,5 @@ require_once COOKED_DIR . 'includes/class.cooked-settings.php';
 require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
 require_once COOKED_DIR . 'includes/class.cooked-ajax.php';
 require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';
-require_once COOKED_DIR . 'includes/class.cooked-updates.php';
 require_once COOKED_DIR . 'includes/class.cooked-seo.php';
 require_once __DIR__ . '/FilterTestCase.php';

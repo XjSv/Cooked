@@ -1,0 +1,77 @@
+// Read-only code block with a copy button (e.g. the WPML config on the settings screen).
+
+.cooked-code-block {
+    position: relative;
+    margin: 32px 0 0;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: 4px;
+    interpolate-size: allow-keywords;
+}
+
+// Open and close smoothly where ::details-content is supported; elsewhere it toggles instantly.
+.cooked-code-block::details-content {
+    height: 0;
+    overflow: hidden;
+    transition: height 300ms ease, content-visibility 300ms allow-discrete;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-code-block[open]::details-content {
+    height: auto;
+}
+
+.cooked-code-block summary {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--cooked-color-accent-strong);
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+}
+
+.cooked-code-block summary::-webkit-details-marker {
+    display: none;
+}
+
+.cooked-code-block summary::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
+    transition: transform 300ms ease;
+}
+
+.cooked-code-block[open] summary::before {
+    transform: rotate(45deg);
+}
+
+.cooked-code-block .cooked-copy-code {
+    position: absolute;
+    top: 52px;
+    right: 12px;
+}
+
+.cooked-code-block pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border-radius: 0 0 4px 4px;
+    background: var(--cooked-color-text);
+    color: #f0f0f0;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.cooked-code-block code {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+}

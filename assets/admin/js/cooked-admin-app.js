@@ -84,6 +84,7 @@
             setSection = state[1],
             contentRef = useRef( null ),
             sentinelRef = useRef( null ),
+            switched = useRef( false ),
             stuckState = useState( false ),
             current = vars.sections.filter( function ( s ) {
                 return s.slug === section;
@@ -112,10 +113,13 @@
         }, [] );
 
         useEffect( function () {
-            var tab = document.getElementById( 'cooked-settings-tab-' + section );
-            if ( tab ) {
-                tab.click();
+            Array.prototype.forEach.call( document.querySelectorAll( '.cooked-settings-tab-content' ), function ( content ) {
+                content.style.display = content.id === 'cooked-settings-tab-content-' + section ? 'block' : 'none';
+            } );
+            if ( switched.current ) {
+                scrollToContent();
             }
+            switched.current = true;
             if ( section && window.history.replaceState ) {
                 window.history.replaceState( null, '', '#' + section );
             }
@@ -124,6 +128,23 @@
                 referer.value = referer.value.split( '#' )[0] + '#' + section;
             }
         }, [ section ] );
+
+        function scrollToContent() {
+            var body = document.querySelector( '.cooked-admin-body' ),
+                sticky = document.querySelector( '.cooked-admin-sticky' ),
+                adminBar = parseInt( window.getComputedStyle( document.documentElement ).getPropertyValue( '--wp-admin--admin-bar--height' ), 10 ) || 32,
+                top;
+            if ( ! body || ! sticky ) {
+                return;
+            }
+            top = body.getBoundingClientRect().top + window.scrollY - adminBar - sticky.offsetHeight;
+            if ( window.scrollY > top ) {
+                window.scrollTo( {
+                    top: top,
+                    behavior: window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches ? 'auto' : 'smooth'
+                } );
+            }
+        }
 
         function save() {
             var submit = document.getElementById( 'submit' );
@@ -158,6 +179,21 @@
             )
         );
     }
+
+    document.addEventListener( 'click', function ( e ) {
+        var button = e.target.closest( '.cooked-copy-code' ),
+            code = button && document.getElementById( button.getAttribute( 'data-target' ) );
+        if ( ! code || ! window.navigator.clipboard ) {
+            return;
+        }
+        window.navigator.clipboard.writeText( code.textContent ).then( function () {
+            var label = button.textContent;
+            button.textContent = vars.i18n.copied;
+            window.setTimeout( function () {
+                button.textContent = label;
+            }, 2000 );
+        } );
+    } );
 
     var root = document.getElementById( 'cooked-admin-app' );
     if ( root ) {

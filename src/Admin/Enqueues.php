@@ -93,6 +93,7 @@ class Enqueues {
                 'save'          => __( 'Update Settings', 'cooked' ),
                 'pages'         => __( 'Cooked pages', 'cooked' ),
                 'sections'      => __( 'Sections', 'cooked' ),
+                'copied'        => __( 'Copied', 'cooked' ),
             ],
         ] );
     }

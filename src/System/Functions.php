@@ -47,35 +47,37 @@ class Functions {
     }
 
     public static function wpml_xml( $cooked_tabs_fields ) {
-        echo '<div style="margin:30px 0 0 17px;">';
-            echo '<h3 style="width:70%;position:relative;z-index:2;padding:10px 0 12px;margin:0;font-size:1.2em;line-height:1.6;font-weight:600;color:#07a780">WPML Config XML</h3>';
-            echo '<pre style="color:#888;">';
-                echo esc_html('<wpml-config>
-&nbsp;&nbsp;&nbsp;&nbsp;<custom-fields>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<custom-field action="copy">_recipe_settings</custom-field>
-&nbsp;&nbsp;&nbsp;&nbsp;</custom-fields>
-&nbsp;&nbsp;&nbsp;&nbsp;<custom-types>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<custom-type translate="1">cp_recipe</custom-type>
-&nbsp;&nbsp;&nbsp;&nbsp;</custom-types>
-&nbsp;&nbsp;&nbsp;&nbsp;<taxonomies>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<taxonomy translate="1">cp_recipe_category</taxonomy>
-&nbsp;&nbsp;&nbsp;&nbsp;</taxonomies>
-&nbsp;&nbsp;&nbsp;&nbsp;<admin-texts>
-');
-                echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<key name=\"cooked_settings\">" ) . "<br>";
-                foreach ( $cooked_tabs_fields as $key => $val ):
-                    echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<key name=\"" . esc_attr( $key ) . "\">" ) . "<br>";
-                        foreach ( $val['fields'] as $sub_key => $sub_val ):
-                            echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<key name=\"" . esc_attr( $sub_key ) . "\" />" ) . "<br>";
-                        endforeach;
-                    echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</key>" ) . "<br>";
-                endforeach;
-                echo esc_html( "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</key>" );
-                echo esc_html('
-&nbsp;&nbsp;&nbsp;&nbsp;</admin-texts>
-</wpml-config>');
-            echo '</pre>';
-        echo '</div>';
+        $indent = '    ';
+        $xml    = [
+            '<wpml-config>',
+            $indent . '<custom-fields>',
+            str_repeat( $indent, 2 ) . '<custom-field action="copy">_recipe_settings</custom-field>',
+            $indent . '</custom-fields>',
+            $indent . '<custom-types>',
+            str_repeat( $indent, 2 ) . '<custom-type translate="1">cp_recipe</custom-type>',
+            $indent . '</custom-types>',
+            $indent . '<taxonomies>',
+            str_repeat( $indent, 2 ) . '<taxonomy translate="1">cp_recipe_category</taxonomy>',
+            $indent . '</taxonomies>',
+            $indent . '<admin-texts>',
+            str_repeat( $indent, 2 ) . '<key name="cooked_settings">',
+        ];
+        foreach ( $cooked_tabs_fields as $key => $val ) {
+            $xml[] = str_repeat( $indent, 3 ) . '<key name="' . $key . '">';
+            foreach ( $val['fields'] as $sub_key => $sub_val ) {
+                $xml[] = str_repeat( $indent, 4 ) . '<key name="' . $sub_key . '" />';
+            }
+            $xml[] = str_repeat( $indent, 3 ) . '</key>';
+        }
+        $xml[] = str_repeat( $indent, 2 ) . '</key>';
+        $xml[] = $indent . '</admin-texts>';
+        $xml[] = '</wpml-config>';
+
+        echo '<details class="cooked-code-block">';
+        echo '<summary>' . esc_html__( 'WPML config XML', 'cooked' ) . '</summary>';
+        echo '<button type="button" class="button cooked-copy-code" data-target="cooked-wpml-config">' . esc_html__( 'Copy', 'cooked' ) . '</button>';
+        echo '<pre><code id="cooked-wpml-config">' . esc_html( implode( "\n", $xml ) ) . '</code></pre>';
+        echo '</details>';
     }
 
     public static function hex2rgb( $hex ) {

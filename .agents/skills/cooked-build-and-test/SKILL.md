@@ -16,7 +16,7 @@ Scripts run with [Bun](https://bun.sh) (`bun run <script>`), PHP tools from
 | Check | Command | Needs WordPress running? |
 |-------|---------|--------------------------|
 | PHPUnit 11 | `bun run test:php` | No. `tests/phpunit/bootstrap.php` stubs WordPress functions. |
-| PHPStan (level 8, PHP 8.2) | `vendor/bin/phpstan analyse --memory-limit=2G` | No |
+| PHPStan (level 8, PHP 8.2) | `bun run phpstan` | No |
 | PHPCS (WPCS + PHPCompatibility 8.2+) | `bun run lint` (`bun run lint-fix` to auto-fix) | No |
 
 - PHPStan has many existing findings. Compare against a run on the unchanged

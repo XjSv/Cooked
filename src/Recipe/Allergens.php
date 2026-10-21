@@ -7,18 +7,20 @@
  * @since       1.15.0
  */
 
+namespace Cooked\Recipe;
+
 // Exit if accessed directly
 if ( ! defined( 'ABSPATH' ) ) exit;
 
 /**
- * Cooked_Allergens Class
+ * Allergens Class
  *
  * Handles allergen storage, admin UI, recipe card icons,
  * and the `allergens` field for the [cooked-info] shortcode.
  *
  * @since 1.15.0
  */
-class Cooked_Allergens {
+class Allergens {
 
     /**
      * Initialize allergen hooks.
@@ -26,18 +28,19 @@ class Cooked_Allergens {
      * @since 1.15.0
      */
     public static function init() {
-        add_action( 'add_meta_boxes', [ __CLASS__, 'register_meta_box' ] );
+        // Hooks use the pre-2.0 class name so remove_action()/remove_filter() calls keep matching.
+        add_action( 'add_meta_boxes', [ 'Cooked_Allergens', 'register_meta_box' ] );
 
         foreach ( self::get_recipe_card_hooks() as $hook ) {
-            add_action( $hook, [ __CLASS__, 'render_from_recipe' ], 10 );
+            add_action( $hook, [ 'Cooked_Allergens', 'render_from_recipe' ], 10 );
         }
 
-        add_filter( 'cooked_settings_tabs_fields', [ __CLASS__, 'settings_tabs_fields' ], 11 );
+        add_filter( 'cooked_settings_tabs_fields', [ 'Cooked_Allergens', 'settings_tabs_fields' ], 11 );
 
         // [cooked-info] integration
-        add_filter( 'cooked_default_info_array', [ __CLASS__, 'register_info_field' ] );
-        add_filter( 'cooked_available_info_shortcode_methods', [ __CLASS__, 'register_info_method' ] );
-        add_filter( 'cooked_available_info_vars', [ __CLASS__, 'register_info_var' ] );
+        add_filter( 'cooked_default_info_array', [ 'Cooked_Allergens', 'register_info_field' ] );
+        add_filter( 'cooked_available_info_shortcode_methods', [ 'Cooked_Allergens', 'register_info_method' ] );
+        add_filter( 'cooked_available_info_vars', [ 'Cooked_Allergens', 'register_info_var' ] );
     }
 
     /**
@@ -70,7 +73,7 @@ class Cooked_Allergens {
             ? 'recipe_list_style'
             : 'browse_page';
 
-        Cooked_Functions::array_splice_assoc( $settings['recipe_settings']['fields'], $after, 0, [
+        \Cooked_Functions::array_splice_assoc( $settings['recipe_settings']['fields'], $after, 0, [
             'recipe_list_allergens' => [
                 'title' => __( 'Recipe List Allergens', 'cooked' ),
                 'desc'  => __( 'Show allergen icons on recipe cards in browse and list views.', 'cooked' ),
@@ -120,7 +123,7 @@ class Cooked_Allergens {
      * Render the allergens meta box content.
      *
      * @since 1.15.0
-     * @param WP_Post $post The post object.
+     * @param \WP_Post $post The post object.
      */
     public static function render_meta_box( $post ) {
         $recipe_settings = get_post_meta( $post->ID, '_recipe_settings', true );
@@ -270,7 +273,7 @@ class Cooked_Allergens {
             return;
         }
 
-        $recipe_settings = Cooked_Recipes::get_settings( $recipe['id'] );
+        $recipe_settings = \Cooked_Recipes::get_settings( $recipe['id'] );
         echo wp_kses_post( self::render( $recipe_settings ) );
     }
 
@@ -330,7 +333,7 @@ class Cooked_Allergens {
      * @return array
      */
     public static function register_info_method( $methods ) {
-        $methods['cooked_info_allergens'] = __CLASS__;
+        $methods['cooked_info_allergens'] = 'Cooked_Allergens';
         return $methods;
     }
 
@@ -367,5 +370,3 @@ class Cooked_Allergens {
     }
 
 }
-
-add_action( 'init', [ 'Cooked_Allergens', 'init' ] );

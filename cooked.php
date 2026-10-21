@@ -499,7 +499,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-elementor.php';
         require_once COOKED_DIR . 'includes/class.cooked-plugin-extra.php';
         require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
-        require_once COOKED_DIR . 'includes/class.cooked-allergens.php';
+        add_action( 'init', [ 'Cooked_Allergens', 'init' ] );
         require_once COOKED_DIR . 'includes/class.cooked-pixwell.php';
 
         if ( defined( 'WP_CLI' ) && WP_CLI ) {

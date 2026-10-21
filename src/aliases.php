@@ -23,6 +23,7 @@ spl_autoload_register(
             'Cooked_Roles'          => \Cooked\User\Roles::class,
             'Cooked_Users'          => \Cooked\User\Users::class,
             'Cooked_Taxonomies'     => \Cooked\Recipe\Taxonomies::class,
+            'Cooked_Allergens'      => \Cooked\Recipe\Allergens::class,
         ];
 
         if ( isset( $aliases[ $class_name ] ) ) {

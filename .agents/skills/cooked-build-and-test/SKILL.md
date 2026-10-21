@@ -51,9 +51,10 @@ Playwright specs live in `tests/playwright/tests/` (`admin`, `browse`, `home`,
   $min = COOKED_DEV ? '' : '.min';
   wp_enqueue_script( 'cooked-my-js', COOKED_URL . 'assets/js/my-file' . $min . '.js', [ 'jquery' ], COOKED_VERSION, true );
   ```
-- Styles are SCSS: `assets/scss/` (front end) and `assets/admin/scss/` (admin), each
-  with `abstracts/`, `base/`, `layout/` and `components/` partials and entry files that
-  only `@use` them. Gulp compiles each entry to an expanded `.css` and a `.min.css`;
+- Styles are SCSS, all under `assets/scss/`: front-end entries and partials at the
+  top, admin entries and partials in `assets/scss/admin/`, each with `base/`, `layout/`
+  and `components/` folders; `abstracts/` holds the shared tokens. Entry files only
+  `@use` partials. Gulp compiles each entry to an expanded `.css` and a `.min.css`;
   never edit the compiled CSS. New styles go in a partial added to the entry's `@use`
   list. One declaration per line, 4-space indent, and nest media queries inside the
   selector (`.x { @media (...) { ... } }`).

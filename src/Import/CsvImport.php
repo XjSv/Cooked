@@ -75,14 +75,14 @@ class CsvImport {
         /**
          * Check for required title column
          */
-        if ( ! in_array( 'title', $headers ) ) {
+        if ( ! in_array( 'title', $headers, true ) ) {
             $results['errors'][] = __( 'CSV file must contain a "title" column.', 'cooked' );
             fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- CSV row streaming.
             return $results;
         }
 
         $row_number = 1;
-        while ( ( $row = fgetcsv( $handle, null, ',', '"', '\\' ) ) !== false ) {
+        while ( ( $row = fgetcsv( $handle, null, ',', '"', '\\' ) ) !== false ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- Standard fgetcsv loop.
             ++$row_number;
             ++$results['total'];
 
@@ -239,8 +239,9 @@ class CsvImport {
              */
             $all_parts = array_map( 'trim', explode( '|', $data['ingredients'] ) );
             $i         = 0;
+            $num_parts = count( $all_parts );
 
-            while ( $i < count( $all_parts ) ) {
+            while ( $i < $num_parts ) {
                 /**
                  * Skip empty parts (they come from || separator)
                  */
@@ -267,7 +268,7 @@ class CsvImport {
                  */
                 $ingredient_parts = [];
                 $j                = $i;
-                while ( count( $ingredient_parts ) < 3 && $j < count( $all_parts ) ) {
+                while ( $j < $num_parts && ! isset( $ingredient_parts[2] ) ) {
                     $p = trim( $all_parts[ $j ] );
                     if ( ! empty( $p ) ) {
                         $ingredient_parts[] = $p;
@@ -289,7 +290,7 @@ class CsvImport {
                      */
                     $next_empty_count = 0;
                     $k                = $i;
-                    while ( $k < count( $all_parts ) && empty( trim( $all_parts[ $k ] ) ) ) {
+                    while ( $k < $num_parts && empty( trim( $all_parts[ $k ] ) ) ) {
                         ++$next_empty_count;
                         ++$k;
                     }
@@ -297,13 +298,13 @@ class CsvImport {
                     /**
                      * If we have empty parts (from ||) and then more parts, it's a substitution
                      */
-                    if ( $next_empty_count > 0 && $k < count( $all_parts ) ) {
+                    if ( $next_empty_count > 0 && $k < $num_parts ) {
                         /**
                          * Collect substitution parts (next 3 non-empty parts)
                          */
                         $sub_parts = [];
                         $sub_i     = $k;
-                        while ( count( $sub_parts ) < 3 && $sub_i < count( $all_parts ) ) {
+                        while ( $sub_i < $num_parts && ! isset( $sub_parts[2] ) ) {
                             $sub_part = trim( $all_parts[ $sub_i ] );
                             if ( ! empty( $sub_part ) ) {
                                 $sub_parts[] = $sub_part;

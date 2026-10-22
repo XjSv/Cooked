@@ -1,4 +1,11 @@
 <?php
+/**
+ * Dynamic responsive CSS
+ *
+ * @package     Cooked
+ * @subpackage  Styles
+ * @since       1.0.0
+ */
 
 $_cooked_settings       = Cooked_Settings::get();
 $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();

@@ -9,7 +9,7 @@
 
 namespace Cooked\Recipe;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,13 +23,18 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Taxonomies {
 
+    /**
+     * The recipe taxonomies (filterable).
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public static function get() {
         global $query_var;
 
         $_cooked_settings = \Cooked_Settings::get();
 
         $front_page_id = get_option( 'page_on_front' );
-        $query_var     = ( ! empty( $_cooked_settings['browse_page'] ) && $_cooked_settings['browse_page'] == $front_page_id ) ? false : true;
+        $query_var     = ( ! empty( $_cooked_settings['browse_page'] ) && (int) $_cooked_settings['browse_page'] === (int) $front_page_id ) ? false : true;
 
         $taxonomy_permalinks = apply_filters(
             'cooked_taxonomy_settings',
@@ -73,16 +78,24 @@ class Taxonomies {
 			$query_var
         );
 
-        if ( ! empty( $_cooked_settings['recipe_taxonomies'] ) && ! in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ) :
+        if ( ! empty( $_cooked_settings['recipe_taxonomies'] ) && ! in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'], true ) ) :
 			unset( $taxonomies['cp_recipe_category'] );
 endif;
 
-        // Filters
+        // Filters.
         add_filter( 'term_link', [ 'Cooked_Taxonomies', 'term_link_filter' ], 10, 3 );
 
         return $taxonomies;
     }
 
+    /**
+     * Outputs one category block for [cooked-categories].
+     *
+     * @param int|string|false $term_id  Term ID.
+     * @param string           $style    block or list.
+     * @param string           $taxonomy Taxonomy.
+     * @return void
+     */
     public static function single_taxonomy_block( $term_id = false, $style = 'block', $taxonomy = 'cp_recipe_category' ) {
         if ( ! $term_id ) {
 			return;
@@ -91,11 +104,11 @@ endif;
         $term = get_term( $term_id );
         if ( ! empty( $term ) ) :
 
-            if ( $style == 'block' ) :
+            if ( 'block' === $style ) :
                 echo '<div class="cooked-term-block cooked-col-25">';
                     echo do_shortcode( '[cooked-recipe-card style="modern-centered" category="' . esc_attr( $term_id ) . '"]' );
                 echo '</div>';
-            elseif ( $style == 'list' ) :
+            elseif ( 'list' === $style ) :
                 echo '<div class="cooked-term-item">';
                     $term_name = apply_filters( 'cooked_term_name', $term->name, $term->term_id, $taxonomy );
                     echo '<a href="' . esc_url( get_term_link( $term->term_id, $taxonomy ) ) . '">' . wp_kses_post( $term_name ) . '</a>';
@@ -105,6 +118,16 @@ endif;
         endif;
     }
 
+    /**
+     * A category card.
+     *
+     * @param int|string|false $term_id    Term ID.
+     * @param string|false     $width      Card width.
+     * @param bool|string      $hide_image Hide the image.
+     * @param bool|string      $hide_total Hide the recipe count.
+     * @param string|false     $style      Card style.
+     * @return string|false
+     */
     public static function card( $term_id = false, $width = false, $hide_image = false, $hide_total = false, $style = false ) {
         if ( ! $term_id ) {
 			return false;
@@ -116,7 +139,7 @@ endif;
             $args = [
                 'post_type'      => 'cp_recipe',
                 'posts_per_page' => -1,
-                'tax_query'      => [
+                'tax_query'      => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Counts recipes in a term.
                     [
                         'taxonomy' => $term->taxonomy,
                         'field'    => 'term_id',
@@ -165,22 +188,30 @@ endif;
         return false;
     }
 
+    /**
+     * Points recipe category links at the Browse page.
+     *
+     * @param string   $url      Term link.
+     * @param \WP_Term $term     Term.
+     * @param string   $taxonomy Taxonomy.
+     * @return string
+     */
     public static function term_link_filter( $url, $term, $taxonomy ) {
         $_cooked_settings = \Cooked_Settings::get();
 
-        // Get the translated browse page for the current language
+        // Get the translated browse page for the current language.
         $parent_page_browse_page = \Cooked_Multilingual::get_browse_page_id();
         $front_page              = get_option( 'page_on_front' );
         $cooked_taxonomies       = [ 'cp_recipe_category' ];
 
-        if ( $parent_page_browse_page && in_array( $taxonomy, $cooked_taxonomies ) ) {
-            if ( $taxonomy === 'cp_recipe_category' ) {
+        if ( $parent_page_browse_page && in_array( $taxonomy, $cooked_taxonomies, true ) ) {
+            if ( 'cp_recipe_category' === $taxonomy ) {
                 $custom_cooked_tax_setting = 'recipe_category_permalink';
             }
 
-            if ( $parent_page_browse_page != $front_page && get_option( 'permalink_structure' ) ) {
+            if ( (int) $parent_page_browse_page !== (int) $front_page && get_option( 'permalink_structure' ) ) {
                 $url = esc_url_raw( untrailingslashit( get_permalink( $parent_page_browse_page ) ) . '/' . $_cooked_settings[ $custom_cooked_tax_setting ] . '/' . $term->slug );
-            } elseif ( $parent_page_browse_page == $front_page ) {
+            } elseif ( (int) $parent_page_browse_page === (int) $front_page ) {
                 if ( get_option( 'permalink_structure' ) ) {
                     $url = esc_url_raw( get_home_url() . '/' . $_cooked_settings[ $custom_cooked_tax_setting ] . '/' . $term->slug );
                 } else {

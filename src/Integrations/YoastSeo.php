@@ -9,7 +9,7 @@
 
 namespace Cooked\Integrations;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,16 +23,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class YoastSeo {
 
+    /**
+     * Whether the recipe variables are registered.
+     *
+     * @var bool
+     */
     private $variable_registered = false;
 
+    /**
+     * Registers the Yoast SEO integration.
+     */
     public function __construct() {
         if ( ! $this->variable_registered ) {
             add_action( 'wpseo_register_extra_replacements', [ $this, 'cooked_register_extra_yoast_variables' ] );
         }
 
-        add_filter( 'wpseo_canonical', [ $this, 'modify_browse_page_canonical_url' ], 20, 2 );
+        add_filter( 'wpseo_canonical', [ $this, 'modify_browse_page_canonical_url' ], 20 );
     }
 
+    /**
+     * Adds Cooked variables to Yoast SEO.
+     *
+     * @return void
+     */
     public function cooked_register_extra_yoast_variables() {
         wpseo_register_var_replacement( '%%cooked_recipe_category%%', [ $this, 'get_cooked_recipe_category' ], 'advanced', __( 'Current recipe category being viewed.', 'cooked' ) );
         $this->variable_registered = true;
@@ -57,7 +70,13 @@ class YoastSeo {
         return '';
     }
 
-    public function modify_browse_page_canonical_url( $canonical_url, $post = null ) {
+    /**
+     * Points the canonical URL of Browse page filters at the filtered URL.
+     *
+     * @param string $canonical_url Canonical URL.
+     * @return string
+     */
+    public function modify_browse_page_canonical_url( $canonical_url ) {
         global $_cooked_settings, $wp_query;
 
         if ( ! is_page() ) {

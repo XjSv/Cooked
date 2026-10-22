@@ -9,7 +9,7 @@
 
 namespace Cooked\Frontend;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,21 +23,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Enqueues {
 
-    function __construct() {
+    /**
+     * Registers the front-end asset hooks.
+     */
+    public function __construct() {
         add_action( 'wp_enqueue_scripts', [ &$this, 'enqueues' ], 10, 1 );
         add_action( 'wp_enqueue_scripts', [ &$this, 'css_colors' ], 11 );
         add_action( 'wp_enqueue_scripts', [ &$this, 'css_responsive' ], 11 );
         add_action( 'wp_footer', [ &$this, 'footer_enqueues' ] );
     }
 
-    public function enqueues( $hook ) {
+    /**
+     * Loads Cooked's front-end styles and scripts.
+     *
+     * @return void
+     */
+    public function enqueues() {
         global $_cooked_settings;
 
         $browse_page_id      = \Cooked_Multilingual::get_browse_page_id();
         $browse_page         = get_post( $browse_page_id );
         $browse_recipes_slug = ! empty( $browse_page ) ? $browse_page->post_name : '';
 
-        // Get the full browse page URL (includes language prefix when using Polylang/WPML)
+        // Get the full browse page URL (includes language prefix when using Polylang/WPML).
         $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : get_site_url();
 
         $cooked_js_vars = [
@@ -82,6 +90,11 @@ class Enqueues {
         wp_add_inline_script( 'cooked-functions', 'const cooked_functions_js_vars = ' . wp_json_encode( $cooked_js_vars, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) . ';', 'before' );
     }
 
+    /**
+     * Adds the custom colour CSS from the settings.
+     *
+     * @return void
+     */
     public function css_colors() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( ! isset( $_GET['print'] ) ) {
@@ -91,6 +104,11 @@ class Enqueues {
         }
     }
 
+    /**
+     * Adds the responsive-breakpoint CSS from the settings.
+     *
+     * @return void
+     */
     public function css_responsive() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( ! isset( $_GET['print'] ) ) {
@@ -100,8 +118,14 @@ class Enqueues {
         }
     }
 
+    /**
+     * Renders a dynamic CSS template and returns it compressed.
+     *
+     * @param string|false $file Template path.
+     * @return string|void
+     */
     public static function get_dynamic_css( $file = false ) {
-        if ( ! $file || $file && ! file_exists( $file ) ) {
+        if ( ! $file || ( $file && ! file_exists( $file ) ) ) {
 			return;
         }
 
@@ -113,12 +137,23 @@ class Enqueues {
         return $compressed_css;
     }
 
+    /**
+     * Strips line breaks, tabs and repeated spaces from CSS.
+     *
+     * @param string|false $css CSS to compress.
+     * @return string
+     */
     public static function compress_css( $css ) {
         // Remove tabs, spaces, newlines, etc.
         $css = str_replace( [ "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ], '', $css );
         return $css;
     }
 
+    /**
+     * Prints the full-screen mode markup in the footer when a recipe needs it.
+     *
+     * @return void
+     */
     public function footer_enqueues() {
         wp_enqueue_script( 'cooked-functions' );
     }

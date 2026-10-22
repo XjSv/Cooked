@@ -16,9 +16,11 @@ namespace Cooked\Frontend\Widgets;
  *
  * @since 1.2.0
  */
-
 class Nutrition extends \WP_Widget {
 
+    /**
+     * Registers the nutrition facts widget.
+     */
     public function __construct() {
         $widget_ops = array(
             'classname'   => 'cooked_nutrition_widget',
@@ -27,6 +29,13 @@ class Nutrition extends \WP_Widget {
         parent::__construct( 'cooked_nutrition_widget', 'Cooked - Nutrition Facts', $widget_ops );
     }
 
+    /**
+     * Outputs the nutrition facts widget.
+     *
+     * @param array<string, mixed> $args     Widget area arguments (before_widget, after_widget, ...).
+     * @param array<string, mixed> $instance Widget settings.
+     * @return void
+     */
     public function widget( $args, $instance ) {
 
         echo wp_kses_post( $args['before_widget'] );
@@ -37,6 +46,12 @@ class Nutrition extends \WP_Widget {
         echo wp_kses_post( $args['after_widget'] );
     }
 
+    /**
+     * Renders the nutrition facts widget settings form.
+     *
+     * @param array<string, mixed> $instance Current widget settings.
+     * @return string|null Nothing; the form is printed (WP_Widget::form() returns string|null).
+     */
     public function form( $instance ) {
 
         $title = ( ! empty( $instance['title'] ) ? $instance['title'] : false );
@@ -49,8 +64,16 @@ class Nutrition extends \WP_Widget {
         </p>
 
         <?php
+        return null;
     }
 
+    /**
+     * Saves the nutrition facts widget settings.
+     *
+     * @param array<string, mixed> $new_instance Settings submitted in the widget form.
+     * @param array<string, mixed> $old_instance Previously saved settings.
+     * @return array<string, mixed>
+     */
     public function update( $new_instance, $old_instance ) {
         $instance          = array();
         $instance['title'] = ( ! empty( $new_instance['title'] ) ) ? wp_strip_all_tags( $new_instance['title'] ) : '';

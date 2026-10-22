@@ -9,7 +9,7 @@
 
 namespace Cooked\Recipe;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,11 +23,14 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Recipes {
 
+    /**
+     * Registers the recipe display hooks.
+     */
     public function __construct() {
         add_filter( 'cooked_recipe_content_filter', [ &$this, 'vendor_checks' ], 1, 1 );
         add_filter( 'the_content', [ &$this, 'recipe_template' ], 10 );
 
-        add_filter( 'parse_query', [ &$this, 'custom_taxonomy_in_query' ], 10 );
+        add_action( 'parse_query', [ &$this, 'custom_taxonomy_in_query' ], 10 );
 
         add_action( 'template_redirect', [ &$this, 'print_recipe_template' ], 10 );
         add_filter( 'rest_cp_recipe_query', [ &$this, 'rest_hide_private_recipes' ], 10, 1 );
@@ -36,10 +39,17 @@ class Recipes {
         add_action( 'pre_get_posts', [ &$this, 'cooked_pre_get_posts' ], 10, 1 );
         add_action( 'restrict_manage_posts', [ &$this, 'filter_recipes_by_taxonomy' ], 10 );
 
-        add_filter( 'get_canonical_url', [ &$this, 'modify_browse_page_canonical_url' ], 20, 2 );
+        add_filter( 'get_canonical_url', [ &$this, 'modify_browse_page_canonical_url' ], 20 );
         add_filter( 'post_thumbnail_id', [ 'Cooked_Recipes', 'filter_default_recipe_thumbnail' ], 10, 2 );
     }
 
+    /**
+     * Uses the default recipe image for recipes without a featured image.
+     *
+     * @param int|string        $thumbnail_id Thumbnail ID.
+     * @param int|\WP_Post|null $post         Post.
+     * @return int|string
+     */
     public static function filter_default_recipe_thumbnail( $thumbnail_id, $post ) {
         if ( $thumbnail_id ) {
             return $thumbnail_id;
@@ -51,7 +61,7 @@ class Recipes {
 
         $post = get_post( $post );
 
-        if ( ! $post || $post->post_type !== 'cp_recipe' ) {
+        if ( ! $post || 'cp_recipe' !== $post->post_type ) {
             return $thumbnail_id;
         }
 
@@ -70,11 +80,22 @@ class Recipes {
         return $thumbnail_id;
     }
 
+    /**
+     * Queries recipes.
+     *
+     * @param array<string, mixed>|int|string|false $args                WP_Query arguments, or a recipe ID.
+     * @param bool                                  $single              Return only the first recipe.
+     * @param bool                                  $ids_only            Return recipe IDs only.
+     * @param int|false                             $limit               Maximum number of recipes.
+     * @param bool                                  $ids_and_titles_only Return IDs and titles only.
+     * @param string|array<int, string>             $post_status         Post status(es) to include.
+     * @return mixed Recipe IDs, recipes with their settings (or the first one), or null when none match.
+     */
     public static function get( $args = false, $single = false, $ids_only = false, $limit = false, $ids_and_titles_only = false, $post_status = 'publish' ) {
         $recipes = [];
         $counter = 0;
 
-        // Get by Recipe ID
+        // Get by Recipe ID.
         if ( $args && ! is_array( $args ) ) :
 
             $recipe_id = $args;
@@ -84,7 +105,7 @@ class Recipes {
                 'post_status' => $post_status,
             ];
 
-			// Default Query
+			// Default Query.
         elseif ( ! $args || ! is_array( $args ) ) :
 
             $args = [
@@ -103,7 +124,7 @@ class Recipes {
                 $args['posts_per_page'] = $limit;
             endif;
 
-			// Search Query
+			// Search Query.
         elseif ( $args && isset( $args['s'] ) && isset( $args['meta_query'] ) ) :
 
             $meta_query = $args['meta_query'];
@@ -120,7 +141,7 @@ class Recipes {
                 $recipe_ids = $recipes_pre_search->posts;
             endif;
 
-            $pre_search_args['meta_query'] = $meta_query;
+            $pre_search_args['meta_query'] = $meta_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Recipe search filters need meta queries.
             unset( $pre_search_args['s'] );
 
             $recipes_pre_search = new \WP_Query( $pre_search_args );
@@ -182,9 +203,16 @@ class Recipes {
         return $recipes;
     }
 
+    /**
+     * A recipe's settings, including title, author and ID.
+     *
+     * @param int  $post_id Recipe ID.
+     * @param bool $bc      Convert settings saved by Cooked 2.x.
+     * @return array<string, mixed>|null Settings, an empty array if the recipe does not exist, or null without an ID.
+     */
     public static function get_settings( $post_id, $bc = true ) {
         if ( ! $post_id ) {
-			return;
+			return null;
         }
 
         $recipe_post = get_post( $post_id );
@@ -201,29 +229,22 @@ class Recipes {
 
         $recipe_settings['title'] = get_the_title( $post_id );
 
-        $wp_excerpt = $recipe_post->post_excerpt;
-
-        // Check for excerpt/content
-        // if ( isset($recipe_settings['excerpt']) && !$recipe_settings['excerpt'] && !$wp_excerpt || !isset($recipe_settings['excerpt']) ) {
-        // wp_update_post(['ID' => $post_id, 'post_excerpt' => $recipe_settings['title']] );
-        // }
-
-        // Check for nutrition data
+        // Check for nutrition data.
         if ( ! isset( $recipe_settings['nutrition'] ) ) :
             $recipe_settings['nutrition']             = [];
             $recipe_settings['nutrition']['servings'] = 1;
         endif;
 
-        // Backwards Compatibility with Cooked 2.x
+        // Backwards Compatibility with Cooked 2.x.
         if ( ! isset( $recipe_settings['cooked_version'] ) && $bc ) :
             $c2_recipe_settings = self::get_c2_recipe_meta( $post_id );
             $recipe_settings    = self::sync_c2_recipe_settings( $c2_recipe_settings, $post_id );
         endif;
 
-        // Get the author information
+        // Get the author information.
         $recipe_settings['author'] = \Cooked_Users::get( $recipe_post->post_author, true );
 
-        // Include the Post ID
+        // Include the Post ID.
         $recipe_settings['id'] = $post_id;
 
         $recipe_settings = apply_filters( 'cooked_single_recipe_settings', $recipe_settings, $post_id );
@@ -231,6 +252,11 @@ class Recipes {
         return $recipe_settings;
     }
 
+    /**
+     * Sets the requested (or default) category for the recipe query.
+     *
+     * @return void
+     */
     public function check_recipe_query() {
         global $_cooked_settings, $recipe_query;
 
@@ -241,8 +267,15 @@ class Recipes {
         endif;
     }
 
+    /**
+     * Adds recipe title search to the _cooked_title query variable.
+     *
+     * @param \WP_Query $q Query.
+     * @return void
+     */
     public static function cooked_pre_get_posts( $q ) {
-        if ( $title = $q->get( '_cooked_title' ) ) {
+        $title = $q->get( '_cooked_title' );
+        if ( $title ) {
             add_filter(
                 'get_meta_sql',
                 function ( $sql ) use ( $title ) {
@@ -253,7 +286,7 @@ class Recipes {
 					}
 					$cooked_modified_where = 1;
 
-					// Modified WHERE
+					// Modified WHERE.
 					$sql['where'] = sprintf(
                         ' AND ( %s OR %s ) ',
                         apply_filters( 'cooked_query_where_filter', $wpdb->prepare( "{$wpdb->posts}.post_title LIKE %s", '%' . $wpdb->esc_like( $title ) . '%' ) ),
@@ -266,6 +299,17 @@ class Recipes {
         }
     }
 
+    /**
+     * Outputs a compact list of recipes.
+     *
+     * @param string                              $orderby     date or ids.
+     * @param int|string                          $show        Number of recipes.
+     * @param array<int, int|string>|string|false $recipes     Recipe IDs, when ordering by ID.
+     * @param string|false                        $width       List width.
+     * @param bool|string                         $hide_image  Hide the images.
+     * @param bool|string                         $hide_author Hide the authors.
+     * @return void
+     */
     public static function recipe_list( $orderby = 'date', $show = 5, $recipes = false, $width = false, $hide_image = false, $hide_author = false ) {
         global $_cooked_settings;
 
@@ -313,7 +357,7 @@ endif;
 
 						echo '<div class="cooked-srl-title"><a href="' . esc_url( get_permalink( $rid ) ) . '">' . esc_html( $recipe['title'] ) . '</a></div>';
 
-				if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'] ) && ! $hide_author ) :
+				if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! $hide_author ) :
 					echo '<div class="cooked-srl-author">';
 					$author = $recipe['author'];
 					/* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */
@@ -331,6 +375,18 @@ endif;
         endif;
     }
 
+    /**
+     * A recipe card.
+     *
+     * @param int|string   $rid          Recipe ID.
+     * @param string|false $width        Card width.
+     * @param bool|string  $hide_image   Hide the image.
+     * @param bool|string  $hide_title   Hide the title.
+     * @param bool|string  $hide_excerpt Hide the excerpt.
+     * @param bool|string  $hide_author  Hide the author.
+     * @param string|false $style        Card style.
+     * @return string|false
+     */
     public static function card( $rid, $width = false, $hide_image = false, $hide_title = false, $hide_excerpt = false, $hide_author = false, $style = false ) {
         global $_cooked_settings;
 
@@ -352,8 +408,6 @@ endif;
 
             echo has_post_thumbnail( $rid ) && ! $hide_image ? '<span class="cooked-recipe-card-image" style="background-image:url(' . esc_url( get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) ) . ');"></span>' : '';
 
-            // do_action( 'cooked_recipe_grid_after_image', $recipe );
-
             echo '<span class="cooked-recipe-card-content">';
 
                 do_action( 'cooked_recipe_grid_before_name', $recipe );
@@ -368,7 +422,7 @@ endif;
 
                 do_action( 'cooked_recipe_grid_before_author', $recipe );
 
-		if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'] ) && ! $hide_author ) :
+		if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! $hide_author ) :
 			echo '<span class="cooked-recipe-card-author">';
 				$author = $recipe['author'];
 				/* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */
@@ -378,7 +432,7 @@ endif;
 
                 do_action( 'cooked_recipe_grid_after_author', $recipe );
 
-		if ( ! $hide_excerpt && ! $hide_title || ! $hide_excerpt && ! $hide_author ) :
+		if ( ( ! $hide_excerpt && ! $hide_title ) || ( ! $hide_excerpt && ! $hide_author ) ) :
 			echo '<span class="cooked-recipe-card-sep"></span>';
 endif;
 
@@ -397,6 +451,11 @@ endif;
         return ob_get_clean();
     }
 
+    /**
+     * Shows the print view for ?print requests.
+     *
+     * @return void
+     */
     public function print_recipe_template() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) ) :
@@ -472,6 +531,11 @@ endif;
         return $response;
     }
 
+    /**
+     * Prints the site logo in the print view, if enabled.
+     *
+     * @return void
+     */
     public static function print_logo() {
         global $_cooked_settings;
 
@@ -503,10 +567,16 @@ endif;
         echo '</div>';
     }
 
+    /**
+     * Hides recipe content restricted by WooCommerce Memberships.
+     *
+     * @param string $content Recipe content.
+     * @return string
+     */
     public static function vendor_checks( $content ) {
         global $wp_query, $post;
 
-        // WooCommerce Memberships
+        // WooCommerce Memberships.
         if ( function_exists( 'wc_memberships_user_can' ) && function_exists( 'wc_memberships_is_post_content_restricted' ) && function_exists( 'wc_memberships_user_can' ) ) :
 
             if ( ! is_user_logged_in() && wc_memberships_is_post_content_restricted() ) :
@@ -523,12 +593,17 @@ endif;
         return $content;
     }
 
+    /**
+     * Adds category filters to the recipe list screen.
+     *
+     * @return void
+     */
     public function filter_recipes_by_taxonomy() {
         global $typenow, $cooked_taxonomies_shown;
         $taxonomies = apply_filters( 'cooked_active_taxonomies', [ 'cp_recipe_category' ] );
-        if ( $typenow == 'cp_recipe' ) :
+        if ( 'cp_recipe' === $typenow ) :
             foreach ( $taxonomies as $taxonomy ) :
-                if ( is_array( $cooked_taxonomies_shown ) && ! in_array( $taxonomy, $cooked_taxonomies_shown ) || ! is_array( $cooked_taxonomies_shown ) ) :
+                if ( ( is_array( $cooked_taxonomies_shown ) && ! in_array( $taxonomy, $cooked_taxonomies_shown, true ) ) || ! is_array( $cooked_taxonomies_shown ) ) :
                     $cooked_taxonomies_shown[] = $taxonomy;
                     // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin taxonomy filter.
                     $selected       = isset( $_GET[ $taxonomy ] ) ? absint( wp_unslash( $_GET[ $taxonomy ] ) ) : '';
@@ -554,29 +629,41 @@ endif;
         endif;
     }
 
+    /**
+     * Filters the recipe list screen by the chosen category.
+     *
+     * @param \WP_Query $query Query.
+     * @return void
+     */
     public function custom_taxonomy_in_query( $query ) {
         global $pagenow;
         $taxonomies = apply_filters( 'cooked_active_taxonomies', [ 'cp_recipe_category' ] );
         $q_vars     = &$query->query_vars;
 
         foreach ( $taxonomies as $taxonomy ) :
-            if ( $pagenow == 'edit.php' && isset( $q_vars['post_type'] ) && $q_vars['post_type'] == 'cp_recipe' && isset( $q_vars[ $taxonomy ] ) && is_numeric( $q_vars[ $taxonomy ] ) && $q_vars[ $taxonomy ] != 0 ) :
+            if ( 'edit.php' === $pagenow && isset( $q_vars['post_type'] ) && 'cp_recipe' === $q_vars['post_type'] && isset( $q_vars[ $taxonomy ] ) && is_numeric( $q_vars[ $taxonomy ] ) && 0 !== (int) $q_vars[ $taxonomy ] ) :
                 $term                = get_term_by( 'id', $q_vars[ $taxonomy ], $taxonomy );
                 $q_vars[ $taxonomy ] = $term->slug;
             endif;
         endforeach;
     }
 
+    /**
+     * The recipe list for [cooked-browse] and friends.
+     *
+     * @param array<string, mixed>|false $list_atts List attributes.
+     * @return string|false
+     */
     public static function list_view( $list_atts = false ) {
         global $wp_query, $recipe_query, $atts, $_cooked_settings, $recipes, $recipe_args, $current_recipe_page;
 
-        // Get the attributes for this view
+        // Get the attributes for this view.
         $atts = array_change_key_case( (array) $list_atts, CASE_LOWER );
 
         $ls_method = 'list_style_grid';
         $ls_class  = 'Cooked_Recipes';
 
-        // Change the recipe layout
+        // Change the recipe layout.
         if ( $atts['layout'] ) {
             $recipe_list_style = apply_filters( 'cooked_recipe_list_style', [ 'grid' => 'Cooked_Recipes' ], $atts['layout'] );
             $list_style        = esc_html( key( $recipe_list_style ) );
@@ -647,7 +734,7 @@ endif;
         $meta_sort = false;
 
         $post_status = 'publish';
-        if ( isset( $atts['public_recipes'] ) && $atts['public_recipes'] == false ) :
+        if ( isset( $atts['public_recipes'] ) && ! $atts['public_recipes'] ) :
             $post_status = [ 'publish', 'pending', 'draft' ];
         endif;
 
@@ -666,13 +753,13 @@ endif;
         endif;
 
         if ( $text_search ) :
-            // Replace [+] [,] [;] with spaces
+            // Treat plus signs, commas and semicolons as spaces.
             $prep_text = str_replace( [ '+', ',', ';' ], ' ', $text_search );
 
-            // Replace duplicate spaces
+            // Replace duplicate spaces.
             $prep_text = preg_replace( '/\s+/', ' ', $prep_text );
 
-            // Explode into an array of search terms
+            // Explode into an array of search terms.
             $words = explode( ' ', $prep_text );
 
             if ( ! empty( $words ) ) :
@@ -693,12 +780,12 @@ endif;
             endif;
             $recipe_args['_cooked_title'] = $prep_text;
             $recipe_args['s']             = $prep_text;
-            $recipe_args['meta_query']    = $meta_query;
+            $recipe_args['meta_query']    = $meta_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Recipe list filters need meta queries.
 
         endif;
 
         if ( ! empty( $tax_query ) ) :
-            $recipe_args['tax_query'] = $tax_query;
+            $recipe_args['tax_query'] = $tax_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Recipe list filters by taxonomy.
         endif;
 
         if ( $atts['author'] && is_numeric( $atts['author'] ) ) :
@@ -712,15 +799,16 @@ endif;
         endif;
 
         $recipe_args = apply_filters( 'cooked_recipe_query_args', $recipe_args, $atts, $sorting_types );
-        if ( ! isset( $atts['public_recipes'] ) || isset( $atts['public_recipes'] ) && $atts['public_recipes'] ) :
+        if ( ! isset( $atts['public_recipes'] ) || ( isset( $atts['public_recipes'] ) && $atts['public_recipes'] ) ) :
             $recipe_args = apply_filters( 'cooked_recipe_public_query_filters', $recipe_args );
         endif;
 
         wp_suspend_cache_addition( true );
 
         ob_start();
-        $recipes = \Cooked_Recipes::get( $recipe_args );
-        ( $theme_template_override = locate_template( 'recipe-list.php' ) ) ? load_template( $theme_template_override, false ) : load_template( COOKED_DIR . 'templates/front/recipe-list.php', false );
+        $recipes                 = \Cooked_Recipes::get( $recipe_args );
+        $theme_template_override = locate_template( 'recipe-list.php' );
+        $theme_template_override ? load_template( $theme_template_override, false ) : load_template( COOKED_DIR . 'templates/front/recipe-list.php', false );
         wp_reset_postdata();
         \Cooked_Settings::reset();
 
@@ -729,14 +817,32 @@ endif;
         return ob_get_clean();
     }
 
+    /**
+     * Outputs the grid layout of a recipe list.
+     *
+     * @param array<string, mixed> $atts List attributes.
+     * @return void
+     */
     public static function list_style_grid( $atts = [] ) {
         load_template( COOKED_DIR . 'templates/front/recipe-single.php', false, $atts );
     }
 
+    /**
+     * The current page of a paginated recipe list.
+     *
+     * @return int
+     */
     public static function current_page() {
         return get_query_var( 'paged' ) ? max( 1, get_query_var( 'paged' ) ) : ( get_query_var( 'page' ) ? max( 1, get_query_var( 'page' ) ) : 1 );
     }
 
+    /**
+     * Pagination for a recipe list.
+     *
+     * @param \WP_Query            $recipe_query Recipe query.
+     * @param array<string, mixed> $recipe_args  Query arguments.
+     * @return string
+     */
     public static function pagination( $recipe_query, $recipe_args ) {
         global $_cooked_settings, $current_recipe_page, $paged, $atts;
 
@@ -757,6 +863,13 @@ endif;
         return $pagination;
     }
 
+    /**
+     * Numbered page links.
+     *
+     * @param int $current_recipe_page Current page.
+     * @param int $total_recipe_pages  Number of pages.
+     * @return string
+     */
     public static function numbered_pagination( $current_recipe_page, $total_recipe_pages ) {
         if ( get_option( 'permalink_structure' ) ) {
             $format = '?paged=%#%';
@@ -765,7 +878,7 @@ endif;
         }
 
         $big  = 999999999;
-        $base = $format == '?paged=%#%' ? $base = str_replace( $big, '%#%', get_pagenum_link( $big ) ) : $base = @add_query_arg( 'paged', '%#%' );
+        $base = '?paged=%#%' === $format ? $base = str_replace( $big, '%#%', get_pagenum_link( $big ) ) : $base = add_query_arg( 'paged', '%#%' );
 
         $recipe_pagination = apply_filters(
             'cooked_pagination_args',
@@ -783,6 +896,13 @@ endif;
         return '<div class="cooked-pagination-numbered cooked-clearfix">' . paginate_links( $recipe_pagination ) . '</div>';
     }
 
+    /**
+     * Whether content embeds the given recipe with [cooked-recipe].
+     *
+     * @param string $content   Content.
+     * @param int    $recipe_id Recipe ID.
+     * @return bool
+     */
     public static function content_has_self_recipe_embed_shortcode( $content, $recipe_id ) {
         if ( ! is_string( $content ) || ! $recipe_id ) {
             return false;
@@ -803,6 +923,13 @@ endif;
         return false;
     }
 
+    /**
+     * Whether a recipe's fields embed the recipe itself.
+     *
+     * @param array<string, mixed> $recipe_settings Recipe settings.
+     * @param int                  $post_id         Recipe ID.
+     * @return bool
+     */
     public static function settings_have_self_recipe_embed_shortcode( $recipe_settings, $post_id ) {
         if ( ! is_array( $recipe_settings ) || empty( $recipe_settings ) || ! $post_id ) {
             return false;
@@ -826,14 +953,29 @@ endif;
         return false;
     }
 
+    /**
+     * The default recipe template (filterable).
+     *
+     * @return string
+     */
     public static function default_content() {
         return apply_filters( 'cooked_default_content', '<p>[cooked-info left="author,taxonomies,difficulty" right="print,fullscreen"]</p><p>[cooked-excerpt]</p><p>[cooked-image]</p><p>[cooked-info left="servings" right="prep_time,cook_time,total_time"]</p><p>[cooked-info left="allergens"]</p><p>[cooked-ingredients]</p><p>[cooked-directions]</p><p>[cooked-notes show_header=true]</p><p>[cooked-gallery]</p>' );
     }
 
+    /**
+     * The print view template (filterable).
+     *
+     * @return string
+     */
     public static function print_content() {
         return apply_filters( 'cooked_print_content', '<p>[cooked-info include="servings,prep_time,cook_time,total_time"]</p><p>[cooked-excerpt]</p><p>[cooked-image]</p><p>[cooked-ingredients]</p><p>[cooked-directions]</p><p>[cooked-notes show_header=true]</p><p>[cooked-nutrition]</p>' );
     }
 
+    /**
+     * The full-screen mode template (filterable).
+     *
+     * @return string
+     */
     public static function fsm_content() {
         return apply_filters(
             'cooked_fsm_content',
@@ -927,6 +1069,11 @@ endif;
         return false;
     }
 
+    /**
+     * Difficulty levels, level => label (filterable).
+     *
+     * @return array<int, string>
+     */
     public static function difficulty_levels() {
         return apply_filters(
             'cooked_difficulty_levels',
@@ -938,9 +1085,15 @@ endif;
         );
     }
 
+    /**
+     * The recipe ID for a slug (numeric slugs are returned as IDs).
+     *
+     * @param string|false $slug Recipe slug or ID.
+     * @return int|string|false
+     */
     public static function get_by_slug( $slug = false ) {
         if ( $slug ) :
-            if ( ! function_exists( 'ctype_digit' ) || function_exists( 'ctype_digit' ) && ! ctype_digit( $slug ) ) :
+            if ( ! function_exists( 'ctype_digit' ) || ( function_exists( 'ctype_digit' ) && ! ctype_digit( $slug ) ) ) :
                 $recipe_query = new \WP_Query(
                     [
 						'name'      => $slug,
@@ -961,6 +1114,11 @@ endif;
         endif;
     }
 
+    /**
+     * Gallery sources for recipes (Cooked and supported gallery plugins).
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public static function gallery_types() {
 
         $gallery_types = apply_filters(
@@ -991,7 +1149,7 @@ endif;
 
             if ( $gtype['required_class'] && class_exists( $gtype['required_class'] ) ) :
 
-                if ( $slug == 'revslider' ) :
+                if ( 'revslider' === $slug ) :
 
                     $slider     = new \RevSlider();
                     $arrSliders = $slider->getArrSliders();
@@ -1027,7 +1185,7 @@ endif;
                     unset( $gallery_types[ $slug ] );
                 endif;
 
-            elseif ( $slug != 'cooked' ) :
+            elseif ( 'cooked' !== $slug ) :
 
 					unset( $gallery_types[ $slug ] );
 
@@ -1040,9 +1198,14 @@ endif;
         return $gallery_types;
     }
 
+    /**
+     * Outputs the Metric/Imperial switcher, if enabled.
+     *
+     * @return void
+     */
     public static function measurement_system_switcher() {
         global $_cooked_settings, $post;
-        $switcher_enabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'enable_measurement_switcher', $_cooked_settings['advanced'] ) ? true : false );
+        $switcher_enabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'enable_measurement_switcher', $_cooked_settings['advanced'], true ) ? true : false );
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         $printing = ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) );
 
@@ -1067,9 +1230,15 @@ endif;
         endif;
     }
 
+    /**
+     * Outputs the servings switcher.
+     *
+     * @param float|int|string $servings Default servings.
+     * @return void
+     */
     public static function serving_size_switcher( $servings ) {
         global $_cooked_settings, $post;
-        $switcher_disabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_servings_switcher', $_cooked_settings['advanced'] ) ? true : false );
+        $switcher_disabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_servings_switcher', $_cooked_settings['advanced'], true ) ? true : false );
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         $printing = ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) );
 
@@ -1144,7 +1313,7 @@ endif;
 			echo '<label for="cooked-servings-changer" class="screen-reader-text">' . esc_html__( 'Servings', 'cooked' ) . '</label>';
 			echo '<select id="cooked-servings-changer" name="servings" class="cooked-servings-changer">';
 			foreach ( $servings_array as $stype ) :
-				echo '<option value="' . esc_attr( $stype['value'] ) . '"' . ( $stype['value'] == $servings ? ' selected' : '' ) . '>' . esc_html( $stype['name'] ) . '</option>';
+				echo '<option value="' . esc_attr( $stype['value'] ) . '"' . ( (float) $stype['value'] === (float) $servings ? ' selected' : '' ) . '>' . esc_html( $stype['name'] ) . '</option>';
 				endforeach;
                 echo '</select>';
             else :
@@ -1154,6 +1323,14 @@ endif;
 			echo '</span>';
     }
 
+    /**
+     * Outputs (or returns, as plain text) one ingredient or section heading.
+     *
+     * @param array<string, mixed> $ing        Ingredient.
+     * @param bool|string          $checkboxes Show a checkbox.
+     * @param bool                 $plain_text Return plain text instead of printing HTML.
+     * @return string|void
+     */
     public static function single_ingredient( $ing, $checkboxes = true, $plain_text = false ) {
         global $recipe_settings;
 
@@ -1172,7 +1349,7 @@ endif;
                 $default_element = isset( $_cooked_settings['section_heading_default_html_tag'] ) ? $_cooked_settings['section_heading_default_html_tag'] : 'div';
 
                 $element = ( isset( $ing['section_heading_element'] ) && in_array( $ing['section_heading_element'], $valid_elements, true ) )
-                    ? ( $ing['section_heading_element'] === 'div' ? $default_element : $ing['section_heading_element'] )
+                    ? ( 'div' === $ing['section_heading_element'] ? $default_element : $ing['section_heading_element'] )
                     : $default_element;
 
                 echo '<' . tag_escape( $element ) . ' class="cooked-single-ingredient cooked-heading">' . esc_html( $ing['section_heading_name'] ) . '</' . tag_escape( $element ) . '>';
@@ -1183,13 +1360,13 @@ endif;
             $multiplier           = (float) esc_html( get_query_var( 'servings', $recipe_settings['nutrition']['servings'] ) );
             $multiplier           = ( ! $multiplier ? $default_serving_size : $multiplier );
 
-            if ( ! $multiplier || $multiplier == $default_serving_size ) {
+            if ( ! $multiplier || $multiplier === (float) $default_serving_size ) {
                 $multiplier = 1;
 			} else {
                 $multiplier = $multiplier / $default_serving_size;
 			}
 
-			if ( $multiplier === 1 ) {
+			if ( 1 === $multiplier ) {
 				$amount       = ( isset( $ing['amount'] ) && $ing['amount'] ? esc_html( $ing['amount'] ) : false );
 				$amount       = $Cooked_Measurements->cleanup_amount( $amount );
 				$format       = ( strpos( $amount, '/' ) === false ? ( strpos( $amount, '.' ) !== false || strpos( $amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
@@ -1230,14 +1407,14 @@ endif;
 
             $name = ( isset( $ing['name'] ) && $ing['name'] ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['name'] ), $ing ) : false );
 
-            // Substitution Logic
+            // Substitution Logic.
             $sub_name         = ( isset( $ing['sub_name'] ) && $ing['sub_name'] ? wp_kses_post( $ing['sub_name'] ) : false );
             $sub_amount       = false;
             $sub_measurement  = false;
             $sub_float_amount = 0;
 
 			if ( $sub_name ) {
-				if ( $multiplier === 1 ) {
+				if ( 1 === $multiplier ) {
 					$sub_amount       = ( isset( $ing['sub_amount'] ) && $ing['sub_amount'] ? esc_html( $ing['sub_amount'] ) : false );
 					$sub_amount       = $Cooked_Measurements->cleanup_amount( $sub_amount );
 					$sub_format       = ( strpos( $sub_amount, '/' ) === false ? ( strpos( $sub_amount, '.' ) !== false || strpos( $sub_amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
@@ -1306,6 +1483,16 @@ endif;
         echo wp_kses_post( apply_filters( 'cooked_single_ingredient_html', $ing_html, $ing, $checkboxes, $plain_text ) );
     }
 
+    /**
+     * Outputs (or returns, as plain text) one direction step or section heading.
+     *
+     * @param array<string, mixed>       $dir        Direction.
+     * @param int|false                  $number     Step number.
+     * @param bool                       $plain_text Return plain text instead of printing HTML.
+     * @param int|false                  $step       Step index, for anchors.
+     * @param array<string, mixed>|false $atts       Shortcode attributes.
+     * @return string|void
+     */
     public static function single_direction( $dir, $number = false, $plain_text = false, $step = false, $atts = false ) {
         global $recipe_settings;
 
@@ -1319,7 +1506,7 @@ endif;
                 $default_element = isset( $_cooked_settings['section_heading_default_html_tag'] ) ? $_cooked_settings['section_heading_default_html_tag'] : 'div';
 
                 $element = ( isset( $dir['section_heading_element'] ) && in_array( $dir['section_heading_element'], $valid_elements, true ) )
-                    ? ( $dir['section_heading_element'] === 'div' ? $default_element : $dir['section_heading_element'] )
+                    ? ( 'div' === $dir['section_heading_element'] ? $default_element : $dir['section_heading_element'] )
                     : $default_element;
 
                 echo '<' . tag_escape( $element ) . ' class="cooked-single-direction cooked-heading">' . esc_html( $dir['section_heading_name'] ) . '</' . tag_escape( $element ) . '>';
@@ -1347,16 +1534,34 @@ endif;
         }
     }
 
+    /**
+     * Formats recipe text as safe HTML paragraphs.
+     *
+     * @param string $content Text.
+     * @return string
+     */
     public static function format_content( $content ) {
         return wpautop( wp_kses_post( html_entity_decode( $content ) ) );
     }
 
+    /**
+     * The difficulty level label.
+     *
+     * @param int|string $level Level.
+     * @return string
+     */
     public static function difficulty_level( $level ) {
         $level_names = self::difficulty_levels();
         $level_text  = isset( $level_names[ $level ] ) ? $level_names[ $level ] : false;
         return $level_text ? '<span class="cooked-difficulty-level-' . esc_attr( $level ) . '">' . wp_kses_post( $level_text ) . '</span>' : '';
     }
 
+    /**
+     * The recipe search box.
+     *
+     * @param array<string, mixed>|false $options Search options.
+     * @return string|false
+     */
     public static function recipe_search_box( $options = false ) {
         global $_cooked_settings, $recipe_args, $tax_col_count, $active_taxonomy;
 
@@ -1367,9 +1572,9 @@ endif;
         if ( isset( $recipe_args['tax_query'] ) ) :
             foreach ( $recipe_args['tax_query'] as $query ) :
                 // Only process inclusion queries (default operator or explicit 'IN')
-                // Skip exclusion queries ('NOT IN') and other complex operators
+                // Skip exclusion queries ('NOT IN') and other complex operators.
                 $operator = isset( $query['operator'] ) ? $query['operator'] : 'IN';
-                if ( $operator === 'IN' && isset( $query['taxonomy'] ) && isset( $query['terms'] ) ) :
+                if ( 'IN' === $operator && isset( $query['taxonomy'] ) && isset( $query['terms'] ) ) :
                     $filters_set[ $query['taxonomy'] ] = implode( ',', $query['terms'] );
                 endif;
             endforeach;
@@ -1414,7 +1619,7 @@ endif;
                 $view_all_recipes_url = false;
             endif;
 
-            if ( in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ) :
+            if ( in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'], true ) ) :
                 $terms_array = \Cooked_Settings::terms_array( 'cp_recipe_category', false, __( 'No categories', 'cooked' ), true, true, false );
                 if ( ! empty( $terms_array ) ) :
                     echo '<span class="cooked-tax-column">';
@@ -1426,7 +1631,7 @@ endif;
 							$term      = get_term( $key );
 							$term_link = ( ! empty( $term ) ? get_term_link( $term ) : false );
 							$term_name = apply_filters( 'cooked_term_name', $term->name, $term->ID, $term->taxonomy );
-							echo ( $term_link ? ( isset( $active_taxonomy ) && $active_taxonomy == $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $term_link ) . '">' . wp_kses_post( $term_name ) . '</a>' . ( isset( $active_taxonomy ) && $active_taxonomy == $val ? '</strong>' : '' ) : '' );
+							echo ( $term_link ? ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $term_link ) . '">' . wp_kses_post( $term_name ) . '</a>' . ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $val ? '</strong>' : '' ) : '' );
 							++$total_taxonomies;
 							$sub_terms_array = \Cooked_Settings::terms_array( 'cp_recipe_category', false, false, true, false, $key );
 							if ( ! empty( $sub_terms_array ) ) :
@@ -1435,7 +1640,7 @@ endif;
 										$sub_term      = get_term( $sub_key );
 										$sub_term_link = ( ! empty( $sub_term ) ? get_term_link( $sub_term ) : false );
 										$sub_term_name = apply_filters( 'cooked_term_name', $sub_term->name, $sub_term->ID, $sub_term->taxonomy );
-										echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset( $active_taxonomy ) && $active_taxonomy == $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $sub_term_link ) . '">' . wp_kses_post( $sub_term_name ) . '</a>' . ( isset( $active_taxonomy ) && $active_taxonomy == $sub_val ? '</strong>' : '' ) . '</span>' : '' );
+										echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $sub_term_link ) . '">' . wp_kses_post( $sub_term_name ) . '</a>' . ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $sub_val ? '</strong>' : '' ) . '</span>' : '' );
 										++$total_taxonomies;
 									endif;
 								endforeach;
@@ -1528,9 +1733,9 @@ endif;
 
 		if ( ! $options['hide_sorting'] ) :
 
-			echo '<span class="cooked-sortby-wrap"><select class="cooked-sortby-select" name="cooked_browse_sort_by">';
+			echo '<span class="cooked-sortby-wrap"><select class="cooked-sortby-select" name="cooked_browse_sort_by" aria-label="' . esc_attr__( 'Sort recipes by', 'cooked' ) . '">';
 			foreach ( $sorting_types as $value => $type ) :
-					echo '<option value="' . esc_attr( $value ) . '"' . ( $sorting_type == $type['slug'] ? ' selected' : '' ) . '>' . esc_attr( $type['name'] ) . '</option>';
+					echo '<option value="' . esc_attr( $value ) . '"' . ( $sorting_type === $type['slug'] ? ' selected' : '' ) . '>' . esc_attr( $type['name'] ) . '</option>';
 				endforeach;
                     echo '</select></span>';
 
@@ -1549,6 +1754,12 @@ endif;
         return ob_get_clean();
     }
 
+    /**
+     * Replaces single recipe content with the recipe template.
+     *
+     * @param string $content Post content.
+     * @return string
+     */
     public function recipe_template( $content ) {
         global $wp_query, $post, $_cooked_content_unfiltered;
 
@@ -1556,11 +1767,10 @@ endif;
             return $content;
         endif;
 
-        if ( is_singular( 'cp_recipe' ) && is_main_query() && $_cooked_content_unfiltered == false ) :
+        if ( is_singular( 'cp_recipe' ) && is_main_query() && ! $_cooked_content_unfiltered ) :
             ob_start();
 
             include COOKED_DIR . 'templates/front/recipe.php';
-            // load_template( COOKED_DIR . 'templates/front/recipe.php', false );
 
             $recipe_content = ob_get_clean();
             global $cooked_recipe_layout_content;
@@ -1578,7 +1788,12 @@ endif;
      * @since 1.0.0
      */
 
-    // Get and return the Cooked 2.x Classic recipe meta information
+    /**
+     * Get and return the Cooked 2.x Classic recipe meta information.
+     *
+     * @param int $post_id Recipe ID.
+     * @return array<string, mixed>
+     */
     public static function get_c2_recipe_meta( $post_id ) {
         $recipe_meta     = [];
         $revised_array   = [];
@@ -1631,7 +1846,13 @@ endif;
         return [];
     }
 
-    // Sync up the Cooked 2.x Classic recipe meta fields to the new Cooked 3.x meta fields
+    /**
+     * Sync up the Cooked 2.x Classic recipe meta fields to the new Cooked 3.x meta fields.
+     *
+     * @param array<string, mixed> $c2_recipe_settings Classic recipe settings.
+     * @param int                  $recipe_id          Recipe ID.
+     * @return array<string, mixed>
+     */
     public static function sync_c2_recipe_settings( $c2_recipe_settings, $recipe_id ) {
         $recipe_settings = [];
         $ingredients     = [];
@@ -1644,7 +1865,7 @@ endif;
         $recipe_settings['prep_time']        = isset( $c2_recipe_settings['_cp_recipe_prep_time'] ) ? $c2_recipe_settings['_cp_recipe_prep_time'] : '';
         $recipe_settings['cook_time']        = isset( $c2_recipe_settings['_cp_recipe_cook_time'] ) ? $c2_recipe_settings['_cp_recipe_cook_time'] : '';
 
-        // Ingredients
+        // Ingredients.
         if ( ! empty( $c2_recipe_settings['_cp_recipe_ingredients'] ) && empty( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] ) ) :
             $ingredients = explode( "\n", $c2_recipe_settings['_cp_recipe_ingredients'] );
         elseif ( ! empty( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] ) ) :
@@ -1654,16 +1875,16 @@ endif;
         if ( ! empty( $ingredients ) && is_array( $ingredients ) ) :
             foreach ( $ingredients as $ing ) :
                 $rand_id = wp_rand( 1000000, 9999999 );
-                if ( isset( $ing['type'] ) && $ing['type'] == 'ingredient' ) :
+                if ( isset( $ing['type'] ) && 'ingredient' === $ing['type'] ) :
                     $recipe_settings['ingredients'][ $rand_id ]['amount']          = $ing['amount'];
                     $recipe_settings['ingredients'][ $rand_id ]['measurement']     = $ing['measurement'];
                     $recipe_settings['ingredients'][ $rand_id ]['name']            = $ing['name'];
                     $recipe_settings['ingredients'][ $rand_id ]['sub_amount']      = '';
                     $recipe_settings['ingredients'][ $rand_id ]['sub_measurement'] = '';
                     $recipe_settings['ingredients'][ $rand_id ]['sub_name']        = '';
-                elseif ( isset( $ing['type'] ) && $ing['type'] == 'section' ) :
+                elseif ( isset( $ing['type'] ) && 'section' === $ing['type'] ) :
                     $recipe_settings['ingredients'][ $rand_id ]['section_heading_name'] = $ing['value'];
-                elseif ( substr( $ing, 0, 2 ) == '--' ) :
+                elseif ( '--' === substr( $ing, 0, 2 ) ) :
                         $recipe_settings['ingredients'][ $rand_id ]['section_heading_name'] = substr( $ing, 2 );
                     else :
                         $recipe_settings['ingredients'][ $rand_id ]['amount']          = false;
@@ -1676,7 +1897,7 @@ endif;
             endforeach;
         endif;
 
-        // Directions
+        // Directions.
         if ( ! empty( $c2_recipe_settings['_cp_recipe_directions'] ) && empty( $c2_recipe_settings['_cp_recipe_detailed_directions'] ) ) :
             $directions = explode( "\n", $c2_recipe_settings['_cp_recipe_directions'] );
         elseif ( ! empty( $c2_recipe_settings['_cp_recipe_detailed_directions'] ) ) :
@@ -1687,12 +1908,12 @@ endif;
 
             foreach ( $directions as $dir ) :
                 $rand_id = wp_rand( 1000000, 9999999 );
-                if ( isset( $dir['type'] ) && $dir['type'] == 'direction' ) :
+                if ( isset( $dir['type'] ) && 'direction' === $dir['type'] ) :
                     $recipe_settings['directions'][ $rand_id ]['image']   = $dir['image_id'];
                     $recipe_settings['directions'][ $rand_id ]['content'] = $dir['value'];
-                elseif ( isset( $dir['type'] ) && $dir['type'] == 'section' ) :
+                elseif ( isset( $dir['type'] ) && 'section' === $dir['type'] ) :
                     $recipe_settings['directions'][ $rand_id ]['section_heading_name'] = $dir['value'];
-                elseif ( substr( $dir, 0, 2 ) == '--' ) :
+                elseif ( '--' === substr( $dir, 0, 2 ) ) :
                         $recipe_settings['directions'][ $rand_id ]['section_heading_name'] = substr( $dir, 2 );
                     else :
                         $recipe_settings['directions'][ $rand_id ]['image']   = false;
@@ -1743,7 +1964,13 @@ endif;
         return apply_filters( 'cooked_sync_c2_recipe_settings', $recipe_settings, $recipe_id );
     }
 
-    public function modify_browse_page_canonical_url( $canonical_url, $post = null ) {
+    /**
+     * Points the canonical URL of Browse page filters at the filtered URL.
+     *
+     * @param string $canonical_url Canonical URL.
+     * @return string
+     */
+    public function modify_browse_page_canonical_url( $canonical_url ) {
         global $_cooked_settings, $wp_query;
 
         if ( ! is_page() ) {

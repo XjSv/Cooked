@@ -9,7 +9,7 @@
 
 namespace Cooked\Recipe;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,12 +23,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PostTypes {
 
-    function __construct() {
+    /**
+     * Registers the recipe post type hooks.
+     */
+    public function __construct() {
         register_activation_hook( COOKED_PLUGIN_FILE, [ &$this, 'activation' ] );
         register_deactivation_hook( COOKED_PLUGIN_FILE, [ 'Cooked_Post_Types', 'deactivation' ] );
 
         add_action( 'init', [ &$this, 'init' ] );
-        add_filter( 'admin_init', [ &$this, 'init_roles' ] );
+        add_action( 'admin_init', [ &$this, 'init_roles' ] );
         add_action( 'after_setup_theme', [ &$this, 'image_sizes' ] );
         add_action( 'wp_head', [ &$this, 'cooked_meta_tags' ], 5 );
         add_action( 'manage_cp_recipe_posts_custom_column', [ &$this, 'custom_columns_data' ], 10, 2 );
@@ -37,30 +40,49 @@ class PostTypes {
         add_filter( 'query_vars', [ &$this, 'add_query_vars_filter' ] );
         add_filter( 'manage_cp_recipe_posts_columns', [ &$this, 'custom_columns' ] );
         add_filter( 'nav_menu_css_class', [ &$this, 'cooked_nav_classes' ], 10, 2 );
-        add_filter( 'redirect_canonical', [ &$this, 'disable_canonical_redirect' ], 10, 2 );
+        add_filter( 'redirect_canonical', [ &$this, 'disable_canonical_redirect' ] );
 
-        // Taxonomy Titles
+        // Taxonomy Titles.
         add_action( 'template_redirect', [ &$this, 'remove_default_title_tag' ] );
         add_filter( 'the_title', [ &$this, 'taxonomy_page_title' ], 10, 2 );
-        add_filter( 'pre_wp_nav_menu', [ &$this, 'disable_taxonomy_page_title' ], 10, 2 );
-        add_filter( 'wp_nav_menu_items', [ &$this, 'enable_taxonomy_page_title' ], 10, 2 );
+        add_filter( 'pre_wp_nav_menu', [ &$this, 'disable_taxonomy_page_title' ] );
+        add_filter( 'wp_nav_menu_items', [ &$this, 'enable_taxonomy_page_title' ] );
         add_filter( 'wp_title', [ &$this, 'taxonomy_meta_title' ], 10 );
 
         // Add a post display state for special pages.
         add_filter( 'display_post_states', [ &$this, 'add_display_post_states' ], 10, 2 );
     }
 
-    function disable_taxonomy_page_title( $nav_menu, $args ) {
+    /**
+     * Stops the category title replacing page titles inside navigation menus.
+     *
+     * @param mixed $nav_menu Menu output.
+     * @return mixed
+     */
+    public function disable_taxonomy_page_title( $nav_menu ) {
         remove_filter( 'the_title', [ &$this, 'taxonomy_page_title' ], 10 );
         return $nav_menu;
     }
 
-    function enable_taxonomy_page_title( $items, $args ) {
+    /**
+     * Restores the category page title after a navigation menu is built.
+     *
+     * @param mixed $items Menu items.
+     * @return mixed
+     */
+    public function enable_taxonomy_page_title( $items ) {
         add_filter( 'the_title', [ &$this, 'taxonomy_page_title' ], 10, 2 );
         return $items;
     }
 
-    function taxonomy_page_title( $title = '', $id = 0 ) {
+    /**
+     * Shows the recipe category's name as the Browse page title on category URLs.
+     *
+     * @param string $title Post title.
+     * @param int    $id    Post ID.
+     * @return string
+     */
+    public function taxonomy_page_title( $title = '', $id = 0 ) {
         if ( is_admin() ) {
 			return $title;
         }
@@ -68,7 +90,7 @@ class PostTypes {
         global $wp_query, $post, $_cooked_settings;
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
-        if ( is_page( $browse_page_id ) && $id == $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
+        if ( is_page( $browse_page_id ) && (int) $id === (int) $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
             $cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
             return $cooked_term->name;
         endif;
@@ -76,11 +98,17 @@ class PostTypes {
         return $title;
     }
 
-    function taxonomy_meta_title( $title = '' ) {
+    /**
+     * Uses the recipe category's name in the document title on category URLs.
+     *
+     * @param string $title Document title.
+     * @return string
+     */
+    public function taxonomy_meta_title( $title = '' ) {
         global $wp_query, $post, $_cooked_settings;
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
-        if ( is_page( $browse_page_id ) && $post->ID == $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
+        if ( is_page( $browse_page_id ) && (int) $post->ID === (int) $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
             $cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
             return $cooked_term->name;
         endif;
@@ -88,48 +116,73 @@ class PostTypes {
         return $title;
     }
 
-    function custom_columns( $columns ) {
+    /**
+     * Adds the featured image column to the recipe list.
+     *
+     * @param array<string, string> $columns List table columns.
+     * @return array<string, string>
+     */
+    public function custom_columns( $columns ) {
             $new_columns = [];
         foreach ( $columns as $key => $val ) :
             $new_columns[ $key ] = $val;
-            if ( $key == 'cb' ) :
+            if ( 'cb' === $key ) :
                 $new_columns['featured_image'] = __( 'Photo', 'cooked' );
             endif;
         endforeach;
         return $new_columns;
     }
 
-    function custom_columns_data( $column, $post_id ) {
-        if ( $column == 'featured_image' ) :
+    /**
+     * Outputs the featured image column.
+     *
+     * @param string $column  Column key.
+     * @param int    $post_id Recipe ID.
+     * @return void
+     */
+    public function custom_columns_data( $column, $post_id ) {
+        if ( 'featured_image' === $column ) :
             echo '<span class="cooked-admin-recipes-list-image">';
                 echo wp_kses_post( get_the_post_thumbnail( $post_id, 'thumbnail' ) );
             echo '</span>';
         endif;
     }
 
+    /**
+     * Fixes menu highlighting on recipe and Browse pages.
+     *
+     * @param array<int, string> $classes Menu item classes.
+     * @param \WP_Post           $item    Menu item.
+     * @return array<int, string>
+     */
     public static function cooked_nav_classes( $classes, $item ) {
         global $_cooked_settings;
         $blog_page_id   = get_option( 'page_for_posts', false );
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
         if ( ( is_post_type_archive( 'cp_recipe' ) || is_singular( 'cp_recipe' ) )
-            && $item->object_id == $blog_page_id ) {
+            && (int) $item->object_id === (int) $blog_page_id ) {
             $classes = array_diff( $classes, [ 'current_page_parent' ] );
         }
 
         if ( ( is_post_type_archive( 'cp_recipe' ) || is_singular( 'cp_recipe' ) )
-            && $item->object_id == $browse_page_id && is_array( $classes ) && ! in_array( 'current_page_parent', $classes ) ) {
+            && (int) $item->object_id === (int) $browse_page_id && is_array( $classes ) && ! in_array( 'current_page_parent', $classes, true ) ) {
             $classes[] = 'current_page_parent';
         }
 
         return $classes;
     }
 
+    /**
+     * Prints Open Graph and description meta tags for recipes.
+     *
+     * @return void
+     */
     public static function cooked_meta_tags() {
         global $_cooked_settings, $post, $wp_query;
 
-        if ( isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) ) {
-            return false;
+        if ( isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_meta_tags', $_cooked_settings['advanced'], true ) ) {
+            return;
         }
 
         if ( isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) {
@@ -146,7 +199,7 @@ class PostTypes {
         }
 
         // Single recipe.
-        if ( isset( $post->post_type ) && $post->post_type == 'cp_recipe' ) {
+        if ( isset( $post->post_type ) && 'cp_recipe' === $post->post_type ) {
             ob_start();
 
             $recipe          = get_post( $post->ID );
@@ -189,6 +242,12 @@ class PostTypes {
         }
     }
 
+    /**
+     * Registers Cooked's query variables.
+     *
+     * @param array<int, string> $vars Public query variables.
+     * @return array<int, string>
+     */
     public static function add_query_vars_filter( $vars ) {
         $vars[] = 'servings';
         $vars[] = 'measurement_system';
@@ -196,6 +255,11 @@ class PostTypes {
         return $vars;
     }
 
+    /**
+     * Removes WordPress's default title tag on recipe pages.
+     *
+     * @return void
+     */
     public function remove_default_title_tag() {
         global $wp_query;
         if ( isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) {
@@ -203,19 +267,35 @@ class PostTypes {
         }
     }
 
+    /**
+     * Sets up roles and flushes rewrite rules on activation.
+     *
+     * @return void
+     */
     public static function activation() {
         self::init();
         self::init_roles();
         flush_rewrite_rules();
     }
 
+    /**
+     * Flushes rewrite rules on deactivation.
+     *
+     * @return void
+     */
     public static function deactivation() {
         delete_option( 'rewrite_rules' );
     }
 
+    /**
+     * Adds the Recipe Editor role and Cooked capabilities.
+     *
+     * @return void
+     */
     public static function init_roles() {
         // Clean up for any old caps or caps that were inserted incorrectly.
-        if ( $role_object = get_role( 'subscriber' ) ) {
+        $role_object = get_role( 'subscriber' );
+        if ( $role_object ) {
             if ( $role_object->has_cap( 'edit_cp_recipes' ) ) {
                 \Cooked_Roles::clean_caps();
             }
@@ -225,6 +305,11 @@ class PostTypes {
         \Cooked_Roles::add_caps();
     }
 
+    /**
+     * Registers the recipe post type and its rewrite rules.
+     *
+     * @return void
+     */
     public static function init() {
         $_cooked_settings   = \Cooked_Settings::get();
         $_cooked_taxonomies = \Cooked_Taxonomies::get();
@@ -234,9 +319,9 @@ class PostTypes {
         $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-        // Security check: Only allow settings update from admin area with proper permissions
-        if ( $settings_updated && is_admin() && current_user_can( 'manage_options' ) && $page === 'cooked_settings' ) {
-            // Recipe Permalink
+        // Security check: Only allow settings update from admin area with proper permissions.
+        if ( $settings_updated && is_admin() && current_user_can( 'manage_options' ) && 'cooked_settings' === $page ) {
+            // Recipe Permalink.
             $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
@@ -248,7 +333,7 @@ class PostTypes {
                 $recipe_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_permalink'] ?? '' ), null, 'save' );
             endif;
 
-            // Recipe Author Permalink
+            // Recipe Author Permalink.
             $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_author_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
@@ -260,7 +345,7 @@ class PostTypes {
                 $recipe_author_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_author_permalink'] ?? '' ), null, 'save' );
             endif;
 
-            // Recipe Category Permalink
+            // Recipe Category Permalink.
             $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_category_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
@@ -276,7 +361,7 @@ class PostTypes {
                 'cooked_taxonomy_settings_update',
                 [
 					'recipe_permalink'          => ( ! $_cooked_settings['recipe_permalink'] ? 'recipes' : $recipe_permalink ),
-					'recipe_author_permalink'   => ( ! $_cooked_settings['recipe_author_permalink'] || 'author' == $_cooked_settings['recipe_author_permalink'] ? 'recipe-author' : $recipe_author_permalink ),
+					'recipe_author_permalink'   => ( ! $_cooked_settings['recipe_author_permalink'] || 'author' === $_cooked_settings['recipe_author_permalink'] ? 'recipe-author' : $recipe_author_permalink ),
 					'recipe_category_permalink' => ( ! $_cooked_settings['recipe_category_permalink'] ? 'recipe-category' : $recipe_category_permalink ),
 				]
             );
@@ -293,7 +378,7 @@ class PostTypes {
 
         global $cooked_taxonomies_for_menu;
 
-        // Register taxonomies first (only once)
+        // Register taxonomies first (only once).
         if ( ! empty( $_cooked_taxonomies ) ) {
             foreach ( $_cooked_taxonomies as $slug => $args ) {
                 register_taxonomy( $slug, [ 'cp_recipe' ], $args );
@@ -308,10 +393,10 @@ class PostTypes {
             }
         }
 
-        // Get all browse page translations (including default)
+        // Get all browse page translations (including default).
         $browse_pages = \Cooked_Multilingual::get_all_browse_pages();
 
-        // Create rewrite rules for each browse page translation
+        // Create rewrite rules for each browse page translation.
         foreach ( $browse_pages as $lang => $page_data ) {
             self::add_browse_page_rewrite_rules( $page_data['id'], $page_data['slug'], $_cooked_taxonomies );
         }
@@ -330,65 +415,65 @@ class PostTypes {
     /**
      * Add rewrite rules for a specific browse page
      *
-     * @param int         $page_id   The browse page ID
-     * @param string|null $page_slug The browse page slug/path (empty string for homepage, null if invalid)
-     * @param array       $taxonomies The registered taxonomies
+     * @param int         $page_id    The browse page ID.
+     * @param string|null $page_slug  The browse page slug/path (empty string for homepage, null if invalid).
+     * @param array       $taxonomies The registered taxonomies.
      */
     private static function add_browse_page_rewrite_rules( $page_id, $page_slug, $taxonomies ) {
-        // Page ID is required, but slug can be empty string (for homepage)
-        if ( ! $page_id || $page_slug === null ) {
+        // Page ID is required, but slug can be empty string (for homepage).
+        if ( ! $page_id || null === $page_slug ) {
             return;
         }
 
-        // Get base path - either parent page slug or empty (for homepage)
-        $base_path = $page_slug !== '' ? $page_slug . '/' : '';
+        // Get base path - either parent page slug or empty (for homepage).
+        $base_path = '' !== $page_slug ? $page_slug . '/' : '';
 
-        // Add taxonomy rewrite rules
+        // Add taxonomy rewrite rules.
         if ( ! empty( $taxonomies ) ) {
             foreach ( $taxonomies as $slug => $args ) {
-                // Taxonomy search sort pagination
+                // Taxonomy search sort pagination.
                 add_rewrite_rule(
                     '^' . $base_path . $args['rewrite']['slug'] . '/([^/]*)/search/([^/]*)/sort/([^/]*)/page/([^/]*)/?',
                     'index.php?page_id=' . $page_id . '&' . $slug . '=$matches[1]&cooked_search_s=$matches[2]&cooked_browse_sort_by=$matches[3]&paged=$matches[4]',
                     'top'
                 );
 
-                // Taxonomy search sort
+                // Taxonomy search sort.
                 add_rewrite_rule(
                     '^' . $base_path . $args['rewrite']['slug'] . '/([^/]*)/search/([^/]*)/sort/([^/]*)/?',
                     'index.php?page_id=' . $page_id . '&' . $slug . '=$matches[1]&cooked_search_s=$matches[2]&cooked_browse_sort_by=$matches[3]',
                     'top'
                 );
 
-                // Taxonomy sort pagination
+                // Taxonomy sort pagination.
                 add_rewrite_rule(
                     '^' . $base_path . $args['rewrite']['slug'] . '/([^/]*)/sort/([^/]*)/page/([^/]*)/?',
                     'index.php?page_id=' . $page_id . '&' . $slug . '=$matches[1]&cooked_browse_sort_by=$matches[2]&paged=$matches[3]',
                     'top'
                 );
 
-                // Taxonomy sort
+                // Taxonomy sort.
                 add_rewrite_rule(
                     '^' . $base_path . $args['rewrite']['slug'] . '/([^/]*)/sort/([^/]*)/?',
                     'index.php?page_id=' . $page_id . '&' . $slug . '=$matches[1]&cooked_browse_sort_by=$matches[2]',
                     'top'
                 );
 
-                // Taxonomy search
+                // Taxonomy search.
                 add_rewrite_rule(
                     '^' . $base_path . $args['rewrite']['slug'] . '/([^/]*)/search/([^/]*)/?',
                     'index.php?page_id=' . $page_id . '&' . $slug . '=$matches[1]&cooked_search_s=$matches[2]',
                     'top'
                 );
 
-                // Taxonomy pagination
+                // Taxonomy pagination.
                 add_rewrite_rule(
                     '^' . $base_path . $args['rewrite']['slug'] . '/([^/]*)/page/([^/]*)/?',
                     'index.php?page_id=' . $page_id . '&paged=$matches[2]&' . $slug . '=$matches[1]',
                     'top'
                 );
 
-                // Taxonomy
+                // Taxonomy.
                 add_rewrite_rule(
                     '^' . $base_path . $args['rewrite']['slug'] . '/([^/]*)/?',
                     'index.php?page_id=' . $page_id . '&' . $slug . '=$matches[1]',
@@ -397,50 +482,50 @@ class PostTypes {
             }
         }
 
-        // Search sort pagination
+        // Search sort pagination.
         add_rewrite_rule(
             '^' . $base_path . 'search/([^/]*)/sort/([^/]*)/page/([^/]*)/?',
             'index.php?page_id=' . $page_id . '&cooked_search_s=$matches[1]&cooked_browse_sort_by=$matches[2]&paged=$matches[3]',
             'top'
         );
 
-        // Search sort
+        // Search sort.
         add_rewrite_rule(
             '^' . $base_path . 'search/([^/]*)/sort/([^/]*)/?',
             'index.php?page_id=' . $page_id . '&cooked_search_s=$matches[1]&cooked_browse_sort_by=$matches[2]',
             'top'
         );
 
-        // Sort Pagination
+        // Sort Pagination.
         add_rewrite_rule(
             '^' . $base_path . 'sort/([^/]*)/page/([^/]*)/?',
             'index.php?page_id=' . $page_id . '&cooked_browse_sort_by=$matches[1]&paged=$matches[2]',
             'top'
         );
 
-        // Sort
+        // Sort.
         add_rewrite_rule(
             '^' . $base_path . 'sort/([^/]*)/?',
             'index.php?page_id=' . $page_id . '&cooked_browse_sort_by=$matches[1]',
             'top'
         );
 
-        // Search
+        // Search.
         add_rewrite_rule(
             '^' . $base_path . 'search/([^/]*)/?',
             'index.php?page_id=' . $page_id . '&cooked_search_s=$matches[1]',
             'top'
         );
 
-        // Pagination
+        // Pagination.
         add_rewrite_rule(
             '^' . $base_path . 'page/([^/]*)/?',
             'index.php?page_id=' . $page_id . '&paged=$matches[1]',
             'top'
         );
 
-        // Plain - only add for non-homepage pages (WordPress handles homepage already)
-        if ( $page_slug !== '' ) {
+        // Plain - only add for non-homepage pages (WordPress handles homepage already).
+        if ( '' !== $page_slug ) {
             add_rewrite_rule(
                 '^' . $page_slug . '/?$',
                 'index.php?page_id=' . $page_id,
@@ -449,6 +534,11 @@ class PostTypes {
         }
     }
 
+    /**
+     * Registers Cooked's image sizes.
+     *
+     * @return void
+     */
     public static function image_sizes() {
         add_image_size( 'cooked-profile-photo', 150, 150, true );
         add_image_size( 'cooked-square', 700, 700, true );
@@ -456,6 +546,11 @@ class PostTypes {
         add_image_size( 'cooked-large', 2000, 2000 );
     }
 
+    /**
+     * The recipe post type arguments (filterable).
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public static function get() {
         global $_cooked_settings;
 
@@ -474,7 +569,7 @@ class PostTypes {
             $exclude_from_search = true;
         }
 
-        if ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_cp_recipe_archive', $_cooked_settings['advanced'] ) ) {
+        if ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_cp_recipe_archive', $_cooked_settings['advanced'], true ) ) {
             $has_archive_slug = false;
         }
 
@@ -520,6 +615,12 @@ class PostTypes {
         return $post_types;
     }
 
+    /**
+     * Sets the title placeholder for new recipes.
+     *
+     * @param string $title Placeholder text.
+     * @return string
+     */
     public function change_new_recipe_title( $title ) {
         $screen = get_current_screen();
         if ( $screen && 'cp_recipe' === $screen->post_type ) {
@@ -538,15 +639,15 @@ class PostTypes {
     public function add_display_post_states( $post_states, $post ) {
         global $_cooked_settings;
 
-        // Check both the main browse page and any translations
+        // Check both the main browse page and any translations.
         $main_browse_page_id = ! empty( $_cooked_settings['browse_page'] ) ? $_cooked_settings['browse_page'] : false;
         $browse_pages        = \Cooked_Multilingual::get_all_browse_pages();
 
-        // Check if this post is the main browse page or any translation
-        $is_browse_page = ( $main_browse_page_id == $post->ID );
+        // Check if this post is the main browse page or any translation.
+        $is_browse_page = ( (int) $main_browse_page_id === (int) $post->ID );
         if ( ! $is_browse_page && ! empty( $browse_pages ) ) {
             foreach ( $browse_pages as $lang => $page_data ) {
-                if ( $page_data['id'] == $post->ID ) {
+                if ( (int) $page_data['id'] === (int) $post->ID ) {
                     $is_browse_page = true;
                     break;
                 }
@@ -563,27 +664,26 @@ class PostTypes {
     /**
      * Disable canonical redirects for Cooked URLs on the homepage
      *
-     * @param string $redirect_url The redirect URL
-     * @param string $requested_url The originally requested URL
+     * @param string $redirect_url The redirect URL.
      * @return string|bool The redirect URL or false to prevent redirect
      */
-    public function disable_canonical_redirect( $redirect_url, $requested_url ) {
+    public function disable_canonical_redirect( $redirect_url ) {
         global $_cooked_settings;
         $_cooked_taxonomies = \Cooked_Taxonomies::get();
 
-        // Only process if this is the homepage
+        // Only process if this is the homepage.
         if ( ! is_front_page() ) {
             return $redirect_url;
         }
 
-        // Check if any Cooked query vars are present
+        // Check if any Cooked query vars are present.
         $cooked_query_vars = [
             'cooked_search_s',
             'cooked_browse_sort_by',
             'paged',
         ];
 
-        // Add taxonomy query vars
+        // Add taxonomy query vars.
         if ( ! empty( $_cooked_taxonomies ) ) {
             foreach ( $_cooked_taxonomies as $slug => $args ) {
                 $cooked_query_vars[] = $slug;

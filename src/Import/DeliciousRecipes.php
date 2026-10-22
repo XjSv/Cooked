@@ -9,7 +9,7 @@
 
 namespace Cooked\Import;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -55,7 +55,7 @@ class DeliciousRecipes {
             'posts_per_page' => -1,
             'post_status'    => 'any',
             'fields'         => 'ids',
-            'meta_query'     => [
+            'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Admin-only import lookup.
                 [
                     'key'     => 'delicious_recipes_metadata',
                     'compare' => 'EXISTS',
@@ -79,6 +79,7 @@ class DeliciousRecipes {
      *
      * @since 1.8.2
      * @access public
+     * @param int $id Recipe ID to import.
      */
     public static function import_recipe( $id ) {
         global $_cooked_settings;
@@ -190,11 +191,11 @@ class DeliciousRecipes {
 
         $video_url = '';
         if ( ! empty( $videoGalleryVids ) ) {
-            if ( $videoGalleryVids[0]['vidType'] === 'youtube' ) {
+            if ( 'youtube' === $videoGalleryVids[0]['vidType'] ) {
                 $video_url = 'https://www.youtube.com/watch?v=' . $videoGalleryVids[0]['vidID'];
             }
 
-            if ( $videoGalleryVids[0]['vidType'] === 'vimeo' ) {
+            if ( 'vimeo' === $videoGalleryVids[0]['vidType'] ) {
                 $video_url = 'https://vimeo.com/' . $videoGalleryVids[0]['vidID'];
             }
         }

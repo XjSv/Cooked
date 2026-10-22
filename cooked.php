@@ -59,7 +59,7 @@ define( 'COOKED_VERSION', '2.0.0' );
  * @since 1.0.0
  * @return object|Cooked_Plugin
  */
-function Cooked() {
+function Cooked() { // phpcs:ignore WordPress.NamingConventions.ValidFunctionName.FunctionNameInvalid -- Public API.
     return Cooked_Plugin::instance();
 }
 

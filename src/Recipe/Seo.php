@@ -9,17 +9,30 @@
 
 namespace Cooked\Recipe;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Seo Class
+ *
+ * This class outputs the recipe structured data.
+ *
+ * @since 1.0.0
+ */
 class Seo {
 
+    /**
+     * The recipe schema as a JSON-LD script tag.
+     *
+     * @param array<string, mixed>|false $recipe Recipe settings.
+     * @return string
+     */
     public static function json_ld( $recipe = false ) {
         global $_cooked_settings;
 
-        if ( ! isset( $_cooked_settings['advanced'] ) || ( isset( $_cooked_settings['advanced'] ) && ! in_array( 'disable_schema_output', $_cooked_settings['advanced'] ) ) ) {
+        if ( ! isset( $_cooked_settings['advanced'] ) || ( isset( $_cooked_settings['advanced'] ) && ! in_array( 'disable_schema_output', $_cooked_settings['advanced'], true ) ) ) {
             $schema_values_json = wp_json_encode( self::schema_values( $recipe ) );
 
             $schema_html      = '<script type="application/ld+json">';
@@ -32,6 +45,12 @@ class Seo {
         }
     }
 
+    /**
+     * The recipe schema (schema.org Recipe) as an array.
+     *
+     * @param array<string, mixed>|false $recipe Recipe settings.
+     * @return array<string, mixed>
+     */
     public static function schema_values( $recipe = false ) {
         global $_cooked_settings;
 
@@ -46,7 +65,8 @@ class Seo {
         $_nutrition_facts = \Cooked_Measurements::nutrition_facts();
 
         $recipe_thumbnail = has_post_thumbnail( $rpost ) ? get_the_post_thumbnail_url( $rpost, 'cooked-medium' ) : '';
-        if ( ! $recipe_author = \Cooked_Users::format_author_name( get_the_author_meta( 'display_name', $rpost->post_author ) ) ) :
+        $recipe_author    = \Cooked_Users::format_author_name( get_the_author_meta( 'display_name', $rpost->post_author ) );
+        if ( ! $recipe_author ) :
             $recipe_author = '';
         endif;
 
@@ -99,7 +119,7 @@ endif;
         endif;
 
         $category_name = '';
-        if ( in_array( 'cp_recipe_category', (array) $_cooked_settings['recipe_taxonomies'] ) ) :
+        if ( in_array( 'cp_recipe_category', (array) $_cooked_settings['recipe_taxonomies'], true ) ) :
             $categories = get_the_terms( $rpost->ID, 'cp_recipe_category' );
             if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) :
                 $category      = $categories[0];

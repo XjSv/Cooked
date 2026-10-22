@@ -1,11 +1,18 @@
 <?php
+/**
+ * Recipe list template
+ *
+ * @package     Cooked
+ * @subpackage  Templates
+ * @since       1.0.0
+ */
 
 global $recipes, $recipe, $_cooked_settings, $recipe_args, $current_recipe_page, $atts, $list_id_counter;
 
-$atts['layout'] = ( ! isset( $atts['layout'] ) || isset( $atts['layout'] ) && ! $atts['layout'] ? ( isset( $_cooked_settings['recipe_list_style'] ) ? $_cooked_settings['recipe_list_style'] : [ 'grid' => 'Cooked_Recipes' ] ) : $atts['layout'] );
+$atts['layout'] = ( ! isset( $atts['layout'] ) || ( isset( $atts['layout'] ) && ! $atts['layout'] ) ? ( isset( $_cooked_settings['recipe_list_style'] ) ? $_cooked_settings['recipe_list_style'] : [ 'grid' => 'Cooked_Recipes' ] ) : $atts['layout'] );
 
 $author_template_override = false;
-$is_author_page           = ( ! isset( $atts['skip_heading'] ) && ! empty( $recipes ) && isset( $recipe_args['author_name'] ) && $recipe_args['author_name'] || ! isset( $atts['skip_heading'] ) && ! empty( $recipes ) && isset( $recipe_args['author'] ) && $recipe_args['author'] ? true : false );
+$is_author_page           = ( ( ! isset( $atts['skip_heading'] ) && ! empty( $recipes ) && isset( $recipe_args['author_name'] ) && $recipe_args['author_name'] ) || ( ! isset( $atts['skip_heading'] ) && ! empty( $recipes ) && isset( $recipe_args['author'] ) && $recipe_args['author'] ) ? true : false );
 
 if ( $is_author_page ) :
 
@@ -19,7 +26,7 @@ if ( $is_author_page ) :
 
 endif;
 
-// START 'cooked_author_template_override' Filter:
+// START 'cooked_author_template_override' Filter.
 if ( $author_template_override ) :
 
 	echo wp_kses_post( $author_template_override );
@@ -30,7 +37,7 @@ else :
 
 	if ( $is_author_page ) :
 
-        $hide_avatars = ( isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false );
+        $hide_avatars = ( isset( $_cooked_settings['hide_author_avatars'][0] ) && 'hidden' === $_cooked_settings['hide_author_avatars'][0] ? true : false );
         echo '<div class="cooked-author-list-heading' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
             echo ( isset( $author['profile_photo'] ) && $author['profile_photo'] ? ( ! $hide_avatars ? '<span class="cooked-author-avatar">' . wp_kses_post( $author['profile_photo'] ) . '</span>' : '' ) : '' );
             /* translators: referring to the author (ex: Recipes by John Smith) */
@@ -39,7 +46,7 @@ else :
             echo ( $browse_page_id ? '<br><a href="' . esc_url( get_permalink( $browse_page_id ) ) . '">' . esc_html__( 'View all recipes', 'cooked' ) . '</a>' : '' );
         echo '</div>';
 
-	elseif ( $atts['search'] === 'true' ) :
+	elseif ( 'true' === $atts['search'] ) :
 
 		$size          = ( $atts['compact'] ? ' compact="true"' : false );
         $hide_browse   = ( $atts['hide_browse'] ? ' hide_browse="true"' : false );
@@ -76,7 +83,7 @@ else :
 		echo wp_kses_post( $child_taxonomies );
 	endif;
 
-    if ( ! empty( $recipes ) && ! isset( $recipes['raw'] ) && count( $recipes ) >= 1 || ! empty( $recipes ) && isset( $recipes['raw'] ) && count( $recipes ) > 1 ) :
+    if ( ( ! empty( $recipes ) && ! isset( $recipes['raw'] ) && count( $recipes ) >= 1 ) || ( ! empty( $recipes ) && isset( $recipes['raw'] ) && count( $recipes ) > 1 ) ) :
 
 		++$list_id_counter;
 		$recipe_list_style = apply_filters( 'cooked_recipe_list_style', [ 'grid' => 'Cooked_Recipes' ], $atts['layout'] );
@@ -87,7 +94,7 @@ else :
 		echo '<section id="cooked-recipe-list-' . intval( $list_id_counter ) . '" class="cooked-clearfix cooked-recipe-' . esc_attr( $list_style ) . ' cooked-recipe-loader' . ( isset( $atts['columns'] ) && $atts['columns'] ? ' cooked-columns-' . esc_attr( $atts['columns'] ) : '' ) . '">';
 
 		foreach ( $recipes as $key => $recipe ) :
-			if ( $key === 'raw' ) :
+			if ( 'raw' === $key ) :
 				continue;
 			endif;
 
@@ -96,7 +103,7 @@ else :
 
 		echo '</section>';
 
-		if ( $atts['pagination'] === 'true' ) :
+		if ( 'true' === $atts['pagination'] ) :
 			echo wp_kses_post( Cooked_Recipes::pagination( $recipes['raw'], $recipe_args ) );
 		endif;
 

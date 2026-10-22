@@ -9,7 +9,7 @@
 
 namespace Cooked\Admin;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,9 +23,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Settings {
 
+    /**
+     * Registers the settings hooks.
+     */
     public function __construct() {
-        add_filter( 'admin_init', [ &$this, 'init' ] );
-        add_filter( 'init', [ &$this, 'init' ] );
+        add_action( 'admin_init', [ &$this, 'init' ] );
+        add_action( 'init', [ &$this, 'init' ] );
         add_action( 'save_post', [ &$this, 'browse_page_saved' ], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
         add_action( 'admin_notices', [ &$this, 'browse_page_missing_notice' ] );
@@ -33,8 +36,14 @@ class Settings {
         add_filter( 'sanitize_option_cooked_settings', [ 'Cooked_Settings', 'save_admin_dark_mode' ], 20 );
     }
 
+    /**
+     * Flushes rewrite rules when the Browse page, or a translation of it, is saved.
+     *
+     * @param int $post_id Saved post ID.
+     * @return void
+     */
     public function browse_page_saved( $post_id ) {
-        // Just a revision, don't do anything
+        // Just a revision, don't do anything.
         if ( wp_is_post_revision( $post_id ) ) {
 			return;
         }
@@ -42,22 +51,27 @@ class Settings {
         $_cooked_settings    = \Cooked_Settings::get();
         $main_browse_page_id = isset( $_cooked_settings['browse_page'] ) ? $_cooked_settings['browse_page'] : false;
 
-        // Check if this is the main browse page
-        if ( $main_browse_page_id == $post_id ) {
+        // Check if this is the main browse page.
+        if ( (int) $main_browse_page_id === (int) $post_id ) {
             flush_rewrite_rules( false );
             return;
         }
 
-        // Also flush if this is a translation of the browse page
+        // Also flush if this is a translation of the browse page.
         $browse_pages = \Cooked_Multilingual::get_all_browse_pages();
         foreach ( $browse_pages as $lang => $page_data ) {
-            if ( $page_data['id'] == $post_id ) {
+            if ( (int) $page_data['id'] === (int) $post_id ) {
                 flush_rewrite_rules( false );
                 return;
             }
         }
     }
 
+    /**
+     * Registers the settings with the Settings API.
+     *
+     * @return void
+     */
     public static function init() {
         global $_cooked_settings, $list_id_counter;
 
@@ -67,6 +81,12 @@ class Settings {
         register_setting( 'cooked_settings_group', 'cooked_settings_saved', [ 'sanitize_callback' => [ 'Cooked_Settings', 'sanitize_saved_flag' ] ] );
     }
 
+    /**
+     * Sanitizes the "settings saved" flag.
+     *
+     * @param mixed $value Submitted value.
+     * @return bool
+     */
     public static function sanitize_saved_flag( $value ) {
         return rest_sanitize_boolean( $value );
     }
@@ -131,32 +151,33 @@ class Settings {
         return $value;
     }
 
+    /**
+     * Sanitizes the submitted settings field by field.
+     *
+     * @param array<string, mixed> $settings Submitted settings.
+     * @return array<string, mixed>
+     */
     public static function sanitize_settings( $settings ) {
         $cooked_tabs_fields = self::tabs_fields();
 
-        // Process each field
+        // Process each field.
         foreach ( $cooked_tabs_fields as $tab ) {
             if ( isset( $tab['fields'] ) && ! empty( $tab['fields'] ) ) {
                 foreach ( $tab['fields'] as $field_name => $field ) {
-                    // Handle checkbox fields specifically
-                    if ( $field['type'] === 'checkboxes' ) {
-                        // If the field is missing from submission, set it as an empty array
-                        if ( ! isset( $settings[ $field_name ] ) ) {
+                    // Handle checkbox fields specifically.
+                    if ( 'checkboxes' === $field['type'] ) {
+                        // A missing or malformed field saves as an empty array; otherwise drop empty values.
+                        if ( ! isset( $settings[ $field_name ] ) || ! is_array( $settings[ $field_name ] ) ) {
                             $settings[ $field_name ] = [];
                         } else {
-                            // Remove any empty string values from checkbox arrays
-                            if ( ! isset( $settings[ $field_name ] ) || ! is_array( $settings[ $field_name ] ) ) {
-                                $settings[ $field_name ] = [];
-                            } else {
-                                $settings[ $field_name ] = array_filter(
-                                    $settings[ $field_name ],
-                                    function ( $value ) {
-										return $value !== '';
-									}
-                                );
-                            }
+                            $settings[ $field_name ] = array_filter(
+                                $settings[ $field_name ],
+                                function ( $value ) {
+                                    return '' !== $value;
+                                }
+                            );
                         }
-                    } elseif ( $field['type'] === 'image_field' ) {
+                    } elseif ( 'image_field' === $field['type'] ) {
                         $image_id = isset( $settings[ $field_name ] ) ? absint( $settings[ $field_name ] ) : 0;
 
                         if ( $image_id && ! wp_attachment_is_image( $image_id ) ) {
@@ -180,13 +201,18 @@ class Settings {
         return $settings;
     }
 
-    function cooked_settings_saved_admin_notice() {
+    /**
+     * Adds the "settings updated" notice after saving.
+     *
+     * @return void
+     */
+    public function cooked_settings_saved_admin_notice() {
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only Settings API query vars.
         $page             = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
         $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-        if ( $settings_updated && $page === 'cooked_settings' ) {
+        if ( $settings_updated && 'cooked_settings' === $page ) {
             add_settings_error(
                 'cooked_settings_group',
                 'cooked_settings_updated',
@@ -196,18 +222,23 @@ class Settings {
         }
     }
 
-    function browse_page_missing_notice() {
-        // Only show on admin pages, not on the Cooked settings page itself
+    /**
+     * Warns, outside the Settings screen, when no Browse page is set.
+     *
+     * @return void
+     */
+    public function browse_page_missing_notice() {
+        // Only show on admin pages, not on the Cooked settings page itself.
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin page query var.
         $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
-        if ( $page === 'cooked_settings' ) {
+        if ( 'cooked_settings' === $page ) {
             return;
         }
 
-        // Get Cooked settings
+        // Get Cooked settings.
         $_cooked_settings = self::get();
 
-        // Check if browse page is set
+        // Check if browse page is set.
         if ( empty( $_cooked_settings['browse_page'] ) || ! $_cooked_settings['browse_page'] ) {
             $class   = 'notice notice-warning is-dismissible';
             $message = sprintf(
@@ -220,11 +251,21 @@ class Settings {
         }
     }
 
+    /**
+     * Deletes all Cooked settings.
+     *
+     * @return void
+     */
     public static function reset() {
         global $_cooked_settings;
         $_cooked_settings = \Cooked_Settings::get();
     }
 
+    /**
+     * The saved settings, with defaults for fields that have never been saved.
+     *
+     * @return array<string, mixed>
+     */
     public static function get() {
         $_cooked_settings = get_option( 'cooked_settings', [] );
 
@@ -235,11 +276,11 @@ class Settings {
             foreach ( $cooked_tabs_fields as $tab ) {
                 if ( isset( $tab['fields'] ) && ! empty( $tab['fields'] ) ) {
                     foreach ( $tab['fields'] as $name => $field ) {
-                        if ( $field['type'] == 'nonce' || $field['type'] == 'misc_button' ) {
+                        if ( 'nonce' === $field['type'] || 'misc_button' === $field['type'] ) {
 							continue;
                         }
 
-                        if ( $field['type'] === 'checkboxes' ) {
+                        if ( 'checkboxes' === $field['type'] ) {
                             $_cooked_settings[ $name ] = isset( $_cooked_settings[ $name ] ) ? $_cooked_settings[ $name ] : ( isset( $field['default'] ) ? $field['default'] : [] );
                         } else {
                             $_cooked_settings[ $name ] = isset( $_cooked_settings[ $name ] ) ? $_cooked_settings[ $name ] : ( isset( $field['default'] ) ? $field['default'] : false );
@@ -364,6 +405,11 @@ class Settings {
         return wp_kses( implode( ', ', $parts ), [] );
     }
 
+    /**
+     * The settings tabs and their fields (filterable, so Cooked Pro can add its own).
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public static function tabs_fields() {
         $pages_array            = self::pages_array( __( 'Choose a page...', 'cooked' ), __( 'No pages', 'cooked' ) );
         $categories_array       = self::terms_array( 'cp_recipe_category', __( 'No default', 'cooked' ), __( 'No categories', 'cooked' ) );
@@ -605,8 +651,8 @@ class Settings {
 							),
 							'desc_in_field' => true,
 							'type'          => 'dark_mode',
-							'default' => 'off',
-							'options' => apply_filters(
+							'default'       => 'off',
+							'options'       => apply_filters(
 								'cooked_dark_mode_options',
 								[
 									'off'     => __( 'Off', 'cooked' ),
@@ -704,6 +750,11 @@ class Settings {
         );
     }
 
+    /**
+     * Choices for "Recipes Per Page".
+     *
+     * @return array<int|string, string>
+     */
     public static function per_page_array() {
         $counter = 0;
         /* translators: posts_per_page default */
@@ -717,6 +768,13 @@ class Settings {
         return apply_filters( 'cooked_per_page_options', $per_page_array );
     }
 
+    /**
+     * Published pages, for page select fields.
+     *
+     * @param string|false $choose_text Label for the empty "choose" option, if any.
+     * @param string|false $none_text   Label shown when there are no pages, if any.
+     * @return array<int|string, string>
+     */
     public static function pages_array( $choose_text, $none_text = false ) {
         $page_array = [];
         $pages      = get_posts(
@@ -738,6 +796,17 @@ class Settings {
         return apply_filters( 'cooked_settings_pages_array', $page_array );
     }
 
+    /**
+     * Terms of a taxonomy, for select fields.
+     *
+     * @param string           $term         Taxonomy name.
+     * @param string|false     $choose_text  Label for the empty "choose" option, if any.
+     * @param string|false     $none_text    Label shown when there are no terms, if any.
+     * @param bool|string      $hide_empty   Whether to leave out terms without recipes.
+     * @param bool             $parents_only Whether to list top-level terms only.
+     * @param int|string|false $child_of     Only list children of this term (ID or slug).
+     * @return array<int|string, string>
+     */
     public static function terms_array( $term, $choose_text, $none_text = false, $hide_empty = false, $parents_only = false, $child_of = false ) {
         $terms_array = [];
 
@@ -774,6 +843,13 @@ class Settings {
         return apply_filters( 'cooked_settings_' . $term . '_array', $terms_array );
     }
 
+    /**
+     * Renders a radio button group.
+     *
+     * @param string                   $field_name Setting key.
+     * @param array<int|string, mixed> $options    Choices, value => label (or label settings).
+     * @return void
+     */
     public static function field_radio( $field_name, $options ) {
         global $_cooked_settings;
 
@@ -804,7 +880,7 @@ class Settings {
 			$combined_extras = $is_disabled . $conditional_value;
 
 			echo '<div class="cooked-option"' . wp_kses( $conditional_requirement, [] ) . '>';
-			echo '<input' . wp_kses( $combined_extras, array() ) . ' type="radio" id="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] == $value || isset( $_cooked_settings[ $field_name ][0] ) && $_cooked_settings[ $field_name ][0] == $value ? ' checked' : '' ) . '/>';
+			echo '<input' . wp_kses( $combined_extras, array() ) . ' type="radio" id="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . esc_attr( $value ) . '"' . ( ( isset( $_cooked_settings[ $field_name ] ) && is_scalar( $_cooked_settings[ $field_name ] ) && (string) $_cooked_settings[ $field_name ] === (string) $value ) || ( isset( $_cooked_settings[ $field_name ][0] ) && (string) $_cooked_settings[ $field_name ][0] === (string) $value ) ? ' checked' : '' ) . '/>';
 			echo '<label for="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' . wp_kses_post( $name ) . '</label>';
 			echo '</div>';
 
@@ -876,6 +952,15 @@ class Settings {
         return 'cooked-setting-title-' . sanitize_html_class( $field_name );
     }
 
+    /**
+     * Renders a select field.
+     *
+     * @param string                    $field_name Setting key.
+     * @param array<int|string, string> $options    Choices, value => label.
+     * @param string|false              $color      Unused.
+     * @param array<string, mixed>      $field      Field definition.
+     * @return void
+     */
     public static function field_select( $field_name, $options, $color = false, $field = [] ) {
         global $_cooked_settings;
 
@@ -888,25 +973,41 @@ class Settings {
         echo '<p>';
             echo '<select aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '"' . esc_attr( $is_disabled ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']">';
 		foreach ( $options as $value => $name ) {
-			echo '<option value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] == $value ? ' selected' : '' ) . '>' . esc_attr( $name ) . '</option>';
+			echo '<option value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[ $field_name ] ) && is_scalar( $_cooked_settings[ $field_name ] ) && (string) $_cooked_settings[ $field_name ] === (string) $value ? ' selected' : '' ) . '>' . esc_attr( $name ) . '</option>';
 		}
             echo '</select>';
         echo '</p>';
     }
 
-    public static function field_nonce( $field_name, $options ) {
+    /**
+     * Outputs a nonce field.
+     *
+     * @param string $field_name Setting key.
+     * @return void
+     */
+    public static function field_nonce( $field_name ) {
         wp_nonce_field( $field_name, $field_name );
     }
 
-    // Kept here for backwards compatibility only. Removed used in Cooked Pro 1.0.1
+    /**
+     * Renders a submit button. Kept for backwards compatibility; Cooked Pro stopped using it in 1.0.1.
+     *
+     * @param string $field_name Button name.
+     * @param string $title      Button label.
+     * @return void
+     */
     public static function field_misc_button( $field_name, $title ) {
         echo '<p>';
             echo '<input type="submit" class="button-secondary" name="' . esc_attr( $field_name ) . '" value="' . esc_attr( $title ) . '">';
         echo '</p>';
     }
-    // END
 
-    public static function field_migrate_button( $field_name, $title ) {
+    /**
+     * Renders the Begin Migration button for classic recipes.
+     *
+     * @return void
+     */
+    public static function field_migrate_button() {
         $total = count( \Cooked_Migration::pending_classic_recipes() );
 
         if ( $total > 0 ) {
@@ -920,6 +1021,13 @@ class Settings {
         }
     }
 
+    /**
+     * Renders a text field.
+     *
+     * @param string       $field_name  Setting key.
+     * @param string|false $placeholder Placeholder text, if any.
+     * @return void
+     */
     public static function field_text( $field_name, $placeholder ) {
         global $_cooked_settings;
 
@@ -928,6 +1036,13 @@ class Settings {
         echo '</p>';
     }
 
+    /**
+     * Renders a password field.
+     *
+     * @param string       $field_name  Setting key.
+     * @param string|false $placeholder Placeholder text, if any.
+     * @return void
+     */
     public static function field_password( $field_name, $placeholder ) {
         global $_cooked_settings;
 
@@ -936,17 +1051,31 @@ class Settings {
         echo '</p>';
     }
 
+    /**
+     * Outputs a block of HTML (no input).
+     *
+     * @param string $field_name Setting key.
+     * @param string $html       HTML to output.
+     * @return void
+     */
     public static function field_html( $field_name, $html ) {
         echo wp_kses_post( $html );
     }
 
+    /**
+     * Renders a permalink slug field after the Browse page URL.
+     *
+     * @param string $field_name Setting key.
+     * @param string $end_of_url Example shown after the slug.
+     * @return void
+     */
     public static function field_permalink_field( $field_name, $end_of_url ) {
         global $_cooked_settings;
 
         $browse_page_id  = $_cooked_settings['browse_page'];
         $browse_page_url = '';
 
-        if ( ! empty( $browse_page_id ) && $field_name !== 'recipe_permalink' ) {
+        if ( ! empty( $browse_page_id ) && 'recipe_permalink' !== $field_name ) {
             $browse_page_url = get_permalink( $browse_page_id );
         }
 
@@ -963,7 +1092,13 @@ class Settings {
         echo '</p>';
     }
 
-    public static function field_number_field( $field_name, $options ) {
+    /**
+     * Renders a number field.
+     *
+     * @param string $field_name Setting key.
+     * @return void
+     */
+    public static function field_number_field( $field_name ) {
         global $_cooked_settings;
 
         echo '<p>';
@@ -971,15 +1106,28 @@ class Settings {
         echo '</p>';
     }
 
-    public static function field_color_field( $field_name, $default ) {
+    /**
+     * Renders a colour picker.
+     *
+     * @param string $field_name    Setting key.
+     * @param string $default_color Default colour.
+     * @return void
+     */
+    public static function field_color_field( $field_name, $default_color ) {
         global $_cooked_settings;
 
         echo '<p>';
-            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" class="cooked-color-field" type="text"' . ( $default ? ' data-default-color="' . esc_attr( $default ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
+            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" class="cooked-color-field" type="text"' . ( $default_color ? ' data-default-color="' . esc_attr( $default_color ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
         echo '</p>';
     }
 
-    public static function field_image_field( $field_name, $default ) {
+    /**
+     * Renders an image picker (Media Library).
+     *
+     * @param string $field_name Setting key.
+     * @return void
+     */
+    public static function field_image_field( $field_name ) {
         global $_cooked_settings;
 
         $attachment_id = isset( $_cooked_settings[ $field_name ] ) ? absint( $_cooked_settings[ $field_name ] ) : 0;
@@ -1008,6 +1156,15 @@ class Settings {
         echo '</div>';
     }
 
+    /**
+     * Renders a group of toggle switches.
+     *
+     * @param string                   $field_name Setting key.
+     * @param array<int|string, mixed> $options    Choices, value => label (or label settings).
+     * @param string|false             $color      Switch colour variant (red, yellow, gray), if any.
+     * @param array<string, mixed>     $field      Field definition.
+     * @return void
+     */
     public static function field_checkboxes( $field_name, $options, $color = false, $field = [] ) {
         global $_cooked_settings;
 
@@ -1037,15 +1194,16 @@ class Settings {
 
 			echo '<div class="cooked-option"' . wp_kses( $conditional_requirement, [] ) . '>';
 
-			// Check if the setting exists at all
+			// Check if the setting exists at all.
 			$setting_exists = isset( $_cooked_settings[ $field_name ] ) && is_array( $_cooked_settings[ $field_name ] );
 
-			// Only use default if setting doesn't exist
+			// Only use default if setting doesn't exist.
 			$use_default = ! $setting_exists && isset( $field['default'] );
 
-			// Determine if checkbox should be checked
-			$is_checked = ( $setting_exists && in_array( $value, $_cooked_settings[ $field_name ] ) ) ||
-							( $use_default && in_array( $value, (array) $field['default'] ) ) ||
+			// Determine if checkbox should be checked.
+			// Option keys can be ints; saved values are strings. Compare both as strings.
+			$is_checked = ( $setting_exists && in_array( (string) $value, array_map( 'strval', $_cooked_settings[ $field_name ] ), true ) ) ||
+							( $use_default && in_array( (string) $value, array_map( 'strval', (array) $field['default'] ), true ) ) ||
 							$is_disabled;
 
 			if ( $is_disabled ) {

@@ -1,7 +1,21 @@
-<?php global $post, $recipe_settings;
+<?php
+/**
+ * Recipe print template
+ *
+ * @package     Cooked
+ * @subpackage  Templates
+ * @since       1.0.0
+ */
 
-// Print Screen Enqueues
+global $post, $recipe_settings;
+
+// Print Screen Enqueues.
 add_action( 'wp_enqueue_scripts', 'cooked_print_enqueues', 99, 1 );
+/**
+ * Loads the print view stylesheet.
+ *
+ * @return void
+ */
 function cooked_print_enqueues() {
 	wp_enqueue_style( 'cooked-print', COOKED_URL . 'assets/css/print.min.css', [], COOKED_VERSION, 'screen,print' );
 	wp_dequeue_style( 'cooked-essentials' );

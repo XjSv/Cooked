@@ -9,7 +9,7 @@
 
 namespace Cooked\Import;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -55,7 +55,7 @@ class RecipeMaker {
             'posts_per_page' => -1,
             'post_status'    => 'any',
             'fields'         => 'ids',
-            'meta_query'     => [
+            'meta_query'     => [ // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Admin-only import lookup.
                 [
                     'key'     => 'wprm_type',
                     'value'   => 'food',
@@ -80,6 +80,7 @@ class RecipeMaker {
      *
      * @since 1.11.2
      * @access public
+     * @param int $id Recipe ID to import.
      */
     public static function import_recipe( $id ) {
         global $_cooked_settings;
@@ -137,19 +138,19 @@ class RecipeMaker {
 
         if ( ! empty( $recipeIngredients ) ) {
             foreach ( $recipeIngredients as $section ) {
-                // Check if this is a section with a name
+                // Check if this is a section with a name.
                 if ( isset( $section['name'] ) && ! empty( $section['name'] ) ) {
                     $new_cp_recipe_meta['ingredients'][] = [
                         'section_heading_name' => $section['name'],
                     ];
                 }
 
-                // Process ingredients in this section
+                // Process ingredients in this section.
                 if ( isset( $section['ingredients'] ) && ! empty( $section['ingredients'] ) ) {
                     foreach ( $section['ingredients'] as $ingredient ) {
                         $new_cp_recipe_meta['ingredients'][] = [
                             'amount'          => ( ! empty( $ingredient['amount'] ) ? $ingredient['amount'] : '' ),
-                            'measurement'     => ( ! empty( $ingredient['unit'] ) && in_array( $ingredient['unit'], $measurement_keys ) ? $ingredient['unit'] : '' ),
+                            'measurement'     => ( ! empty( $ingredient['unit'] ) && in_array( $ingredient['unit'], $measurement_keys, true ) ? $ingredient['unit'] : '' ),
                             'name'            => ( ! empty( $ingredient['name'] ) ? $ingredient['name'] : '' ),
                             'url'             => '',
                             'description'     => ( ! empty( $ingredient['notes'] ) ? $ingredient['notes'] : '' ),
@@ -169,18 +170,18 @@ class RecipeMaker {
 
         if ( ! empty( $recipeInstructions ) ) {
             foreach ( $recipeInstructions as $section ) {
-                // Check if this is a section with a name
+                // Check if this is a section with a name.
                 if ( isset( $section['name'] ) && ! empty( $section['name'] ) ) {
                     $new_cp_recipe_meta['directions'][] = [
                         'section_heading_name' => $section['name'],
                     ];
                 }
 
-                // Process instructions in this section
+                // Process instructions in this section.
                 if ( isset( $section['instructions'] ) && ! empty( $section['instructions'] ) ) {
                     foreach ( $section['instructions'] as $instruction ) {
                         $new_cp_recipe_meta['directions'][] = [
-                            'image'   => isset( $instruction['image'] ) && $instruction['image'] !== 0 ? $instruction['image'] : '',
+                            'image'   => isset( $instruction['image'] ) && 0 !== $instruction['image'] ? $instruction['image'] : '',
                             'content' => isset( $instruction['text'] ) ? $instruction['text'] : '',
                         ];
                     }
@@ -199,8 +200,10 @@ class RecipeMaker {
         // Nutrition Data.
         $new_cp_recipe_meta['nutrition']['serving_size'] = isset( $post_meta['wprm_nutrition_serving_size'][0] ) ? absint( $post_meta['wprm_nutrition_serving_size'][0] ) : '';
         $new_cp_recipe_meta['nutrition']['servings']     = isset( $post_meta['wprm_servings'][0] ) ? absint( $post_meta['wprm_servings'][0] ) : '';
-        $new_cp_recipe_meta['nutrition']['calories']     = isset( $post_meta['wprm_nutrition_calories'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_calories'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['calories_fat']     = isset( $post_meta['wprm_nutrition_calories_from_fat'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_calories_from_fat'][0] ) : '';
+        // WP Recipe Maker also stores calories from fat, vitamins D, E, K, B6 and B12, thiamin,
+        // riboflavin, niacin, folate, biotin, pantothenic acid, phosphorus, iodine, magnesium,
+        // zinc and more; Cooked has no nutrition fields for those, so they are not imported.
+        $new_cp_recipe_meta['nutrition']['calories']    = isset( $post_meta['wprm_nutrition_calories'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_calories'][0] ) : '';
         $new_cp_recipe_meta['nutrition']['fat']         = isset( $post_meta['wprm_nutrition_fat'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_fat'][0] ) : '';
         $new_cp_recipe_meta['nutrition']['sat_fat']     = isset( $post_meta['wprm_nutrition_saturated_fat'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_saturated_fat'][0] ) : '';
         $new_cp_recipe_meta['nutrition']['trans_fat']   = isset( $post_meta['wprm_nutrition_trans_fat'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_trans_fat'][0] ) : '';
@@ -215,27 +218,6 @@ class RecipeMaker {
         $new_cp_recipe_meta['nutrition']['vitamin_c']   = isset( $post_meta['wprm_nutrition_vitamin_c'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_vitamin_c'][0] ) : '';
         $new_cp_recipe_meta['nutrition']['calcium']     = isset( $post_meta['wprm_nutrition_calcium'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_calcium'][0] ) : '';
         $new_cp_recipe_meta['nutrition']['iron']        = isset( $post_meta['wprm_nutrition_iron'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_iron'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['vitamin_d']        = isset( $post_meta['wprm_nutrition_vitamin_d'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_vitamin_d'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['vitamin_e']        = isset( $post_meta['wprm_nutrition_vitamin_e'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_vitamin_e'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['vitamin_k']        = isset( $post_meta['wprm_nutrition_vitamin_k'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_vitamin_k'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['thiamin']          = isset( $post_meta['wprm_nutrition_thiamin'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_thiamin'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['riboflavin']       = isset( $post_meta['wprm_nutrition_riboflavin'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_riboflavin'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['niacin']           = isset( $post_meta['wprm_nutrition_niacin'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_niacin'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['vitamin_b6']       = isset( $post_meta['wprm_nutrition_vitamin_b6'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_vitamin_b6'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['folate']           = isset( $post_meta['wprm_nutrition_folate'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_folate'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['vitamin_b12']      = isset( $post_meta['wprm_nutrition_vitamin_b12'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_vitamin_b12'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['biotin']           = isset( $post_meta['wprm_nutrition_biotin'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_biotin'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['pantothenic_acid'] = isset( $post_meta['wprm_nutrition_pantothenic_acid'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_pantothenic_acid'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['phosphorus']       = isset( $post_meta['wprm_nutrition_phosphorus'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_phosphorus'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['iodine']           = isset( $post_meta['wprm_nutrition_iodine'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_iodine'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['magnesium']        = isset( $post_meta['wprm_nutrition_magnesium'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_magnesium'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['zinc']             = isset( $post_meta['wprm_nutrition_zinc'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_zinc'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['selenium']         = isset( $post_meta['wprm_nutrition_selenium'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_selenium'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['copper']           = isset( $post_meta['wprm_nutrition_copper'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_copper'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['manganese']        = isset( $post_meta['wprm_nutrition_manganese'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_manganese'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['chromium']         = isset( $post_meta['wprm_nutrition_chromium'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_chromium'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['molybdenum']       = isset( $post_meta['wprm_nutrition_molybdenum'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_molybdenum'][0] ) : '';
-        // $new_cp_recipe_meta['nutrition']['chloride']         = isset( $post_meta['wprm_nutrition_chloride'][0] ) ? sanitize_text_field( $post_meta['wprm_nutrition_chloride'][0] ) : '';
 
         // Insert new post meta data.
         update_post_meta( $new_recipe_id, '_recipe_settings', $new_cp_recipe_meta );

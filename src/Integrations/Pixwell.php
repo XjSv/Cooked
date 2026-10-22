@@ -9,7 +9,7 @@
 
 namespace Cooked\Integrations;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -22,6 +22,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Pixwell {
 
+    /**
+     * Registers the Pixwell theme integration.
+     */
     public function __construct() {
         add_action( 'admin_notices', [ $this, 'forced_dark_mode_notice' ] );
         add_filter( 'cooked_dark_mode_field_desc', [ $this, 'replace_settings_desc' ] );

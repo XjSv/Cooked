@@ -9,7 +9,7 @@
 
 namespace Cooked\Import;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,20 +23,39 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Import {
 
+    /**
+     * Registers the import settings hooks.
+     */
     public function __construct() {
-        add_filter( 'admin_init', [ &$this, 'init' ] );
-        add_filter( 'init', [ &$this, 'init' ] );
+        add_action( 'admin_init', [ &$this, 'init' ] );
+        add_action( 'init', [ &$this, 'init' ] );
     }
 
+    /**
+     * Registers the import settings with the Settings API.
+     *
+     * @return void
+     */
     public static function init() {
         register_setting( 'cooked_import_group', 'cooked_import', [ 'sanitize_callback' => [ 'Cooked_Import', 'sanitize_saved_flag' ] ] );
         register_setting( 'cooked_import_group', 'cooked_import_saved', [ 'sanitize_callback' => [ 'Cooked_Import', 'sanitize_saved_flag' ] ] );
     }
 
+    /**
+     * Sanitizes the "import saved" flag.
+     *
+     * @param mixed $value Submitted value.
+     * @return bool
+     */
     public static function sanitize_saved_flag( $value ) {
         return rest_sanitize_boolean( $value );
     }
 
+    /**
+     * The Import tabs (one per importer) and their fields.
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public static function tabs_fields() {
         $Cooked_Delicious_Recipes          = new \Cooked_Delicious_Recipes();
         $delicious_recipes                 = $Cooked_Delicious_Recipes::get_recipes();
@@ -156,7 +175,7 @@ class Import {
             ];
         }
 
-        // CSV Import Tab
+        // CSV Import Tab.
         $html_desc      = __( 'Import recipes from a CSV file. Your CSV file should include the following columns:', 'cooked' );
         $html_desc     .= '<ul class="cooked-admin-ul">';
         $html_desc     .= '<li><strong>title</strong> - ' . __( 'Recipe title (required)', 'cooked' ) . '</li>';
@@ -205,6 +224,15 @@ class Import {
         return apply_filters( 'cooked_import_tabs_fields', $import_tabs );
     }
 
+    /**
+     * Renders the "Begin Import" button and progress bar for an importer.
+     *
+     * @param string               $name          Field key.
+     * @param mixed                $field_options Unused.
+     * @param mixed                $color         Unused.
+     * @param array<string, mixed> $field         Field definition.
+     * @return void
+     */
     public static function field_import_button( $name, $field_options, $color, $field ) {
         $total       = $field['total'];
         $import_type = $field['import_type'];
@@ -220,11 +248,26 @@ class Import {
         }
     }
 
+    /**
+     * Outputs a message field.
+     *
+     * @param string               $name          Field key.
+     * @param mixed                $field_options Unused.
+     * @param mixed                $color         Unused.
+     * @param array<string, mixed> $field         Field definition.
+     * @return void
+     */
     public static function field_message( $name, $field_options, $color, $field ) {
         echo '<p>' . wp_kses_post( $field['message'] ) . '</p>';
     }
 
-    public static function field_csv_upload( $name, $field_options, $color, $field ) {
+    /**
+     * Renders the CSV upload form and the sample files.
+     *
+     * @param string $name Field key.
+     * @return void
+     */
+    public static function field_csv_upload( $name ) {
         $samples = [
             'recipes-small.csv'  => __( 'Small (1 recipe)', 'cooked' ),
             'recipes-medium.csv' => __( 'Medium (3 recipes)', 'cooked' ),

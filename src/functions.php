@@ -10,11 +10,16 @@
  * @since       1.0.0
  */
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Renders the recipe editor meta box: tabs and recipe fields.
+ *
+ * @return void
+ */
 function cooked_recipe_shortcodes_content() {
     global $post_id;
 
@@ -121,13 +126,13 @@ function cooked_recipe_shortcodes_content() {
  * Recipe Fields
  *
  * @since 1.0.0
- * @param $post_id
+ * @param int $post_id Recipe ID.
  */
 function cooked_render_recipe_fields( $post_id ) {
     global $_cooked_settings;
     $recipe_settings = get_post_meta( $post_id, '_recipe_settings', true );
 
-    // Backwards Compatibility with Cooked 2.x
+    // Backwards Compatibility with Cooked 2.x.
     $c2_recipe_settings     = Cooked_Recipes::get_c2_recipe_meta( $post_id );
     $recipe_review_required = false;
 
@@ -191,16 +196,6 @@ function cooked_render_recipe_fields( $post_id ) {
         $user_roles              = $user->roles;
         $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && ! empty( array_intersect( $user_roles, $_cooked_settings['recipe_wp_editor_roles'] ) ) ? true : false;
     }
-
-    /*
-    $cooked_page_args = [
-        'sort_order' => 'asc',
-        'sort_column' => 'post_title',
-        'hierarchical' => false,
-        'post_type' => 'page',
-        'post_status' => 'publish'
-    ];
-    $cooked_page_array = get_pages($cooked_page_args); */
 
     if ( ! empty( $recipe_tabs ) ) :
         echo '<ul id="cooked-recipe-tabs">';
@@ -322,7 +317,7 @@ endif;
 
                 </div>
 
-                <?php if ( ! isset( $_cooked_settings['advanced'] ) || empty( $_cooked_settings['advanced'] ) || ! in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) ) : ?>
+                <?php if ( ! isset( $_cooked_settings['advanced'] ) || empty( $_cooked_settings['advanced'] ) || ! in_array( 'disable_meta_tags', $_cooked_settings['advanced'], true ) ) : ?>
                     <div class="recipe-setting-block">
                         <h3 class="cooked-settings-title"><?php esc_html_e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'SEO Description', 'cooked' ) . '</strong>' . esc_html__( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.', 'cooked' ) ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                         <p><textarea name="_recipe_settings[seo_description]"><?php echo isset( $recipe_settings['seo_description'] ) ? esc_textarea( wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) : ''; ?></textarea></p>
@@ -340,7 +335,7 @@ endif;
                                 <option value="0">--</option>
                                 <?php
                                 foreach ( $difficulty_levels as $level => $name ) :
-                                    echo '<option value="' . esc_attr( $level ) . '"' . ( isset( $recipe_settings['difficulty_level'] ) && $recipe_settings['difficulty_level'] == $level ? ' selected' : '' ) . '>' . esc_html( $name ) . '</option>';
+                                    echo '<option value="' . esc_attr( $level ) . '"' . ( isset( $recipe_settings['difficulty_level'] ) && (string) $recipe_settings['difficulty_level'] === (string) $level ? ' selected' : '' ) . '>' . esc_html( $name ) . '</option>';
                                 endforeach;
                                 ?>
                             </select>
@@ -431,7 +426,7 @@ endif;
                                         <option value="">--</option>
                                         <?php
                                         foreach ( $measurements as $key => $measurement ) :
-                                            echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['measurement'] ) && $value['measurement'] == $key ? ' selected' : '' ) . '>' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                                            echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['measurement'] ) && $value['measurement'] === $key ? ' selected' : '' ) . '>' . esc_html( $measurement['plural_abbr'] ) . '</option>';
                                         endforeach;
                                         ?>
                                     </select>
@@ -458,7 +453,7 @@ endif;
                                             <option value="">--</option>
                                             <?php
                                             foreach ( $measurements as $key => $measurement ) :
-                                                echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['sub_measurement'] ) && $value['sub_measurement'] == $key ? ' selected' : '' ) . '>' . esc_html( $measurement['plural_abbr'] ) . '</option>';
+                                                echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['sub_measurement'] ) && $value['sub_measurement'] === $key ? ' selected' : '' ) . '>' . esc_html( $measurement['plural_abbr'] ) . '</option>';
                                             endforeach;
                                             ?>
                                         </select>
@@ -905,28 +900,28 @@ endif;
                             foreach ( $nutrition_facts as $slug => $nf ) :
 
                                 ++$nut_loops;
-                                if ( $nut_loops == 1 ) :
+                                if ( 1 === $nut_loops ) :
 									echo '<p class="cooked-measurement-inputs">';
 endif;
                                 echo '<span class="cooked-measurement-column">';
                                     echo '<label for="' . esc_attr( $slug ) . '" class="cooked-nutrition-label">' . esc_html( $nf['name'] ) . '</label>';
-                                    echo '<input type="' . esc_attr( $nf['type'] ) . '"' . ( $nf['type'] == 'number' ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr( $slug ) . ']" id="' . esc_attr( $slug ) . '" value="' . ( isset( $recipe_settings['nutrition'][ $slug ] ) ? esc_attr( $recipe_settings['nutrition'][ $slug ] ) : '' ) . '" />';
+                                    echo '<input type="' . esc_attr( $nf['type'] ) . '"' . ( 'number' === $nf['type'] ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr( $slug ) . ']" id="' . esc_attr( $slug ) . '" value="' . ( isset( $recipe_settings['nutrition'][ $slug ] ) ? esc_attr( $recipe_settings['nutrition'][ $slug ] ) : '' ) . '" />';
                                 echo '</span>';
-                                if ( $nut_loops == 2 ) :
+                                if ( 2 === $nut_loops ) :
 									echo '</p>';
 									$nut_loops = 0;
 endif;
                                 if ( isset( $nf['subs'] ) ) :
                                     foreach ( $nf['subs'] as $sub_slug => $sub_nf ) :
                                         ++$nut_loops;
-                                        if ( $nut_loops == 1 ) :
+                                        if ( 1 === $nut_loops ) :
 											echo '<p class="cooked-measurement-inputs">';
 endif;
                                         echo '<span class="cooked-measurement-column">';
                                             echo '<label for="' . esc_attr( $sub_slug ) . '" class="cooked-nutrition-label">' . esc_html( $sub_nf['name'] ) . '</label>';
-                                            echo '<input type="' . esc_attr( $sub_nf['type'] ) . '"' . ( $nf['type'] == 'number' ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr( $sub_slug ) . ']" id="' . esc_attr( $sub_slug ) . '" value="' . ( isset( $recipe_settings['nutrition'][ $sub_slug ] ) ? esc_attr( $recipe_settings['nutrition'][ $sub_slug ] ) : '' ) . '" />';
+                                            echo '<input type="' . esc_attr( $sub_nf['type'] ) . '"' . ( 'number' === $nf['type'] ? ' step="any"' : '' ) . ' placeholder="--" name="_recipe_settings[nutrition][' . esc_attr( $sub_slug ) . ']" id="' . esc_attr( $sub_slug ) . '" value="' . ( isset( $recipe_settings['nutrition'][ $sub_slug ] ) ? esc_attr( $recipe_settings['nutrition'][ $sub_slug ] ) : '' ) . '" />';
                                         echo '</span>';
-                                        if ( $nut_loops == 2 ) :
+                                        if ( 2 === $nut_loops ) :
 											echo '</p>';
 											$nut_loops = 0;
 endif;
@@ -948,7 +943,7 @@ endif;
                                 <?php
                                 $nutrition_facts = $_nutrition_facts['top'];
                                 foreach ( $nutrition_facts as $slug => $nf ) :
-                                    if ( $slug === 'serving_size' ) :
+                                    if ( 'serving_size' === $slug ) :
                                         echo '<li class="cooked-serving-size"><strong>' . esc_html( $nf['name'] ) . '</strong> ';
                                             echo '<ul class="cooked-right"><li><strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">___</strong></li></ul>';
                                         echo '</li>';
@@ -988,11 +983,11 @@ endif;
                                     if ( isset( $nf['subs'] ) ) :
                                         foreach ( $nf['subs'] as $sub_slug => $sub_nf ) :
                                             echo '<ul>';
-											if ( $sub_slug === 'trans_fat' ) :
+											if ( 'trans_fat' === $sub_slug ) :
 												echo '<li>';
 													echo wp_kses_post( $sub_nf['nutrition_info_name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset( $sub_nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
 												echo '</li>';
-                                                elseif ( $sub_slug === 'added_sugars' ) :
+                                                elseif ( 'added_sugars' === $sub_slug ) :
                                                     echo '<ul><li>';
                                                         echo esc_html__( 'Includes', 'cooked' ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">___</strong>' . ( isset( $sub_nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' ) . ' ' . esc_html( $sub_nf['name'] );
                                                         echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr( $sub_nf['pdv'] ) . '" data-labeltype="' . esc_attr( $sub_slug ) . '">0</span>%</strong>' : '' );
@@ -1049,7 +1044,7 @@ endif;
                 <select id="cooked_gallery_type" name="_recipe_settings[gallery][type]">
                     <?php
                     foreach ( $cooked_gallery_types as $slug => $gtype ) :
-                        echo '<option value="' . esc_attr( $slug ) . '"' . ( isset( $recipe_settings['gallery']['type'] ) && $recipe_settings['gallery']['type'] == $slug ? ' selected' : '' ) . '>' . esc_attr( $gtype['title'] ) . '</option>';
+                        echo '<option value="' . esc_attr( $slug ) . '"' . ( isset( $recipe_settings['gallery']['type'] ) && $recipe_settings['gallery']['type'] === $slug ? ' selected' : '' ) . '>' . esc_attr( $gtype['title'] ) . '</option>';
                     endforeach;
                     ?>
                 </select>
@@ -1065,7 +1060,7 @@ endif;
                             <option value=""><?php esc_html_e( 'Choose one...', 'cooked' ); ?></option>
                             <?php
                             foreach ( $gtype['posts'] as $gid => $g ) :
-                                echo '<option value="' . esc_attr( $gid ) . '"' . ( isset( $recipe_settings['gallery'][ $slug ] ) && $recipe_settings['gallery'][ $slug ] == $gid ? ' selected' : '' ) . '>' . esc_attr( $g ) . '</option>';
+                                echo '<option value="' . esc_attr( $gid ) . '"' . ( isset( $recipe_settings['gallery'][ $slug ] ) && (string) $recipe_settings['gallery'][ $slug ] === (string) $gid ? ' selected' : '' ) . '>' . esc_attr( $g ) . '</option>';
                             endforeach;
                             ?>
                         </select>

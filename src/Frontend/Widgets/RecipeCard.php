@@ -16,9 +16,11 @@ namespace Cooked\Frontend\Widgets;
  *
  * @since 1.3.0
  */
-
 class RecipeCard extends \WP_Widget {
 
+    /**
+     * Registers the recipe card widget.
+     */
     public function __construct() {
         $widget_ops = [
             'classname'   => 'cooked_widget_recipe_card',
@@ -27,6 +29,13 @@ class RecipeCard extends \WP_Widget {
         parent::__construct( 'cooked_widget_recipe_card', 'Cooked - Recipe Card', $widget_ops );
     }
 
+    /**
+     * Outputs the recipe card widget.
+     *
+     * @param array<string, mixed> $args     Widget area arguments (before_widget, after_widget, ...).
+     * @param array<string, mixed> $instance Widget settings.
+     * @return void
+     */
     public function widget( $args, $instance ) {
         $recipe_id    = isset( $instance['recipe_id'] ) && $instance['recipe_id'] ? ' id="' . esc_attr( $instance['recipe_id'] ) . '"' : '';
         $style        = isset( $instance['style'] ) && $instance['style'] ? ' style="' . esc_attr( $instance['style'] ) . '"' : '';
@@ -51,6 +60,12 @@ class RecipeCard extends \WP_Widget {
         endif;
     }
 
+    /**
+     * Renders the recipe card widget settings form.
+     *
+     * @param array<string, mixed> $instance Current widget settings.
+     * @return string|null Nothing; the form is printed (WP_Widget::form() returns string|null).
+     */
     public function form( $instance ) {
         $title        = ! empty( $instance['title'] ) ? $instance['title'] : false;
         $recipe_id    = ! empty( $instance['recipe_id'] ) ? $instance['recipe_id'] : false;
@@ -99,7 +114,7 @@ endif;
         <label for="<?php echo esc_attr( $this->get_field_id( 'recipe_id' ) ); ?>"><?php esc_attr_e( 'Recipe:', 'cooked' ); ?></label>
         <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'recipe_id' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'recipe_id' ) ); ?>">
             <?php foreach ( $recipe_list as $rid => $name ) : ?>
-                <option value="<?php echo esc_attr( $rid ); ?>"<?php echo $recipe_id == $rid ? ' selected' : ''; ?>><?php echo esc_html( $name ); ?></option>
+                <option value="<?php echo esc_attr( $rid ); ?>"<?php echo (string) $recipe_id === (string) $rid ? ' selected' : ''; ?>><?php echo esc_html( $name ); ?></option>
             <?php endforeach; ?>
         </select>
         </p>
@@ -108,9 +123,9 @@ endif;
         <label for="<?php echo esc_attr( $this->get_field_id( 'style' ) ); ?>"><?php esc_attr_e( 'Style:', 'cooked' ); ?></label>
         <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'style' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'style' ) ); ?>">
             <option value=""<?php echo ! $style ? ' selected' : ''; ?>><?php esc_html_e( 'Simple', 'cooked' ); ?></option>
-            <option value="centered"<?php echo $style == 'centered' ? ' selected' : ''; ?>><?php esc_html_e( 'Simple Centered', 'cooked' ); ?></option>
-            <option value="modern"<?php echo $style == 'modern' ? ' selected' : ''; ?>><?php esc_html_e( 'Modern', 'cooked' ); ?></option>
-            <option value="modern-centered"<?php echo $style == 'modern-centered' ? ' selected' : ''; ?>><?php esc_html_e( 'Modern Centered', 'cooked' ); ?></option>
+            <option value="centered"<?php echo 'centered' === $style ? ' selected' : ''; ?>><?php esc_html_e( 'Simple Centered', 'cooked' ); ?></option>
+            <option value="modern"<?php echo 'modern' === $style ? ' selected' : ''; ?>><?php esc_html_e( 'Modern', 'cooked' ); ?></option>
+            <option value="modern-centered"<?php echo 'modern-centered' === $style ? ' selected' : ''; ?>><?php esc_html_e( 'Modern Centered', 'cooked' ); ?></option>
         </select>
         </p>
 
@@ -140,8 +155,16 @@ endif;
         </p>
 
         <?php
+        return null;
     }
 
+    /**
+     * Saves the recipe card widget settings.
+     *
+     * @param array<string, mixed> $new_instance Settings submitted in the widget form.
+     * @param array<string, mixed> $old_instance Previously saved settings.
+     * @return array<string, mixed>
+     */
     public function update( $new_instance, $old_instance ) {
         $instance                 = [];
         $instance['title']        = ! empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';

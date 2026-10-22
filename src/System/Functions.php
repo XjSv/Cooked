@@ -9,11 +9,18 @@
 
 namespace Cooked\System;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Functions Class
+ *
+ * This class holds miscellaneous helper functions.
+ *
+ * @since 1.0.0
+ */
 class Functions {
 
     /**
@@ -23,12 +30,27 @@ class Functions {
      */
     private static $guest_message_id = false;
 
+    /**
+     * Strips slashes and encodes HTML entities.
+     *
+     * @param mixed $text Text (shortcode attributes may also be booleans or numbers).
+     * @return string
+     */
     public static function sanitize_text_field( $text ) {
         $text = htmlentities( wp_unslash( $text ) );
         $text = sanitize_text_field( $text );
         return $text;
     }
 
+    /**
+     * Splices an associative array, by key or position, keeping keys.
+     *
+     * @param array<int|string, mixed>       $input       Array to change, by reference.
+     * @param int|string                     $offset      Position or key to insert after.
+     * @param int|string                     $length      Number of items to remove, or the key to remove up to.
+     * @param array<int|string, mixed>|mixed $replacement Items to insert.
+     * @return void
+     */
     public static function array_splice_assoc( &$input, $offset, $length, $replacement = [] ) {
         $replacement = (array) $replacement;
 
@@ -48,6 +70,12 @@ class Functions {
         endif;
     }
 
+    /**
+     * Prints the WPML config XML for the settings (Developer section).
+     *
+     * @param array<string, array<string, mixed>> $cooked_tabs_fields Settings tabs and fields.
+     * @return void
+     */
     public static function wpml_xml( $cooked_tabs_fields ) {
         $indent = '    ';
         $xml    = [
@@ -78,7 +106,7 @@ class Functions {
         echo '<details class="cooked-code-block" open>';
         echo '<summary><span class="cooked-icon cooked-icon-angle-right" aria-hidden="true"></span>' . esc_html__( 'WPML config XML', 'cooked' ) . '</summary>';
         echo '<button type="button" class="cooked-copy-code" data-target="cooked-wpml-config">' . esc_html__( 'Copy', 'cooked' ) . '</button>';
-        echo '<pre><code id="cooked-wpml-config">' . implode( "\n", array_map( [ __CLASS__, 'highlight_xml_line' ], $xml ) ) . '</code></pre>';
+        echo '<pre><code id="cooked-wpml-config">' . implode( "\n", array_map( [ __CLASS__, 'highlight_xml_line' ], $xml ) ) . '</code></pre>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- highlight_xml_line() escapes each line.
         echo '</details>';
     }
 
@@ -127,6 +155,12 @@ class Functions {
         return unserialize( trim( $value ), [ 'allowed_classes' => false ] );
     }
 
+    /**
+     * Converts a hex colour to "r,g,b".
+     *
+     * @param string $hex Colour, e.g. #00c086.
+     * @return string
+     */
     public static function hex2rgb( $hex ) {
         $rgb = sscanf( (string) $hex, '#%02x%02x%02x' );
         // Malformed colours (sscanf() returns null or leaves channels unset) fall back to black.
@@ -136,6 +170,13 @@ class Functions {
         return implode( ',', $rgb );
     }
 
+    /**
+     * The newest release of a changelog file as HTML, under a "What's new" heading.
+     *
+     * @param string|false $readme_url Path to a readme.txt or changelog.txt; defaults to Cooked's changelog.txt.
+     * @param string|false $title      Heading text, instead of the default.
+     * @return string
+     */
     public static function parse_readme_changelog( $readme_url = false, $title = false ) {
         $readme = self::readme_changelog_section( $readme_url );
         if ( '' === trim( $readme ) ) {
@@ -238,6 +279,11 @@ class Functions {
         );
     }
 
+    /**
+     * Outputs the print view options (which sections to print).
+     *
+     * @return void
+     */
     public static function print_options() {
         $default_print_options = apply_filters(
             'cooked_default_print_options',
@@ -270,6 +316,11 @@ class Functions {
         echo '</div>';
     }
 
+    /**
+     * Outputs the script that shows and hides sections in the print view.
+     *
+     * @return void
+     */
     public static function print_options_js() {
         ?><script type="text/javascript">
 
@@ -370,22 +421,34 @@ class Functions {
         <?php
     }
 
-    // Store the message
+    /**
+     * Store the message.
+     *
+     * @param string $message Message to show on the next page load.
+     * @return string|null Guest message ID for guests, null otherwise.
+     */
     public static function set_transient_message( $message ) {
         $user_id = get_current_user_id();
         if ( ! empty( $message ) ) {
             if ( ! empty( $user_id ) ) {
-                set_transient( 'cooked_user_' . $user_id . '_message', $message, 60 ); // Expires in 60 seconds
+                set_transient( 'cooked_user_' . $user_id . '_message', $message, 60 ); // Expires in 60 seconds.
             } else {
-                // For guests
+                // For guests.
                 self::$guest_message_id = uniqid();
-                set_transient( 'cooked_guest_' . self::$guest_message_id . '_message', $message, 60 ); // Expires in 60 seconds
+                set_transient( 'cooked_guest_' . self::$guest_message_id . '_message', $message, 60 ); // Expires in 60 seconds.
                 return self::$guest_message_id;
             }
         }
+
+        return null;
     }
 
-    // Retrieve and delete the message
+    /**
+     * Retrieve and delete the message.
+     *
+     * @param string|false $guest_message_id Guest message ID, if any.
+     * @return mixed The message, or false when there is none.
+     */
     public static function get_and_delete_transient_message( $guest_message_id = false ) {
         $user_id = get_current_user_id();
         if ( ! empty( $user_id ) ) {
@@ -395,8 +458,8 @@ class Functions {
                 return $message;
             }
         } else {
-            // For guests - use provided guest_message_id or fall back to static property
-            $message_id = $guest_message_id ?: self::$guest_message_id;
+            // For guests - use provided guest_message_id or fall back to static property.
+            $message_id = $guest_message_id ? $guest_message_id : self::$guest_message_id;
             if ( $message_id ) {
                 $message = get_transient( 'cooked_guest_' . $message_id . '_message' );
                 if ( ! empty( $message ) ) {

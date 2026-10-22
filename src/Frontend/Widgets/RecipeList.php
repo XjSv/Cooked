@@ -16,9 +16,11 @@ namespace Cooked\Frontend\Widgets;
  *
  * @since 1.3.0
  */
-
 class RecipeList extends \WP_Widget {
 
+    /**
+     * Registers the recipe list widget.
+     */
     public function __construct() {
         $widget_ops = [
             'classname'   => 'cooked_widget_recipe_list',
@@ -28,6 +30,13 @@ class RecipeList extends \WP_Widget {
         parent::__construct( 'cooked_widget_recipe_list', 'Cooked - Recipe List', $widget_ops );
     }
 
+    /**
+     * Outputs the recipe list widget.
+     *
+     * @param array<string, mixed> $args     Widget area arguments (before_widget, after_widget, ...).
+     * @param array<string, mixed> $instance Widget settings.
+     * @return void
+     */
     public function widget( $args, $instance ) {
 
         echo wp_kses_post( $args['before_widget'] );
@@ -35,7 +44,7 @@ class RecipeList extends \WP_Widget {
             echo wp_kses_post( $args['before_title'] ) . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . wp_kses_post( $args['after_title'] );
         }
 
-        $recipes     = isset( $instance['orderby'] ) && $instance['orderby'] == 'ids' && isset( $instance['recipes'] ) && ! empty( $instance['recipes'] ) ? ' recipes="' . implode( ',', $instance['recipes'] ) . '"' : '';
+        $recipes     = isset( $instance['orderby'] ) && 'ids' === $instance['orderby'] && isset( $instance['recipes'] ) && ! empty( $instance['recipes'] ) ? ' recipes="' . implode( ',', $instance['recipes'] ) . '"' : '';
         $orderby     = ! $recipes && isset( $instance['orderby'] ) && $instance['orderby'] ? ' orderby="' . esc_attr( $instance['orderby'] ) . '"' : '';
         $show        = ! $recipes && isset( $instance['show'] ) && $instance['show'] ? ' show="' . esc_attr( $instance['show'] ) . '"' : '';
         $width       = isset( $instance['width'] ) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '';
@@ -46,6 +55,12 @@ class RecipeList extends \WP_Widget {
         echo wp_kses_post( $args['after_widget'] );
     }
 
+    /**
+     * Renders the recipe list widget settings form.
+     *
+     * @param array<string, mixed> $instance Current widget settings.
+     * @return string|null Nothing; the form is printed (WP_Widget::form() returns string|null).
+     */
     public function form( $instance ) {
         $title       = ! empty( $instance['title'] ) ? $instance['title'] : false;
         $orderby     = ! empty( $instance['orderby'] ) ? $instance['orderby'] : 'date';
@@ -55,8 +70,8 @@ class RecipeList extends \WP_Widget {
         $hide_image  = isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false;
         $hide_author = isset( $instance['hide_author'] ) && $instance['hide_author'] ? true : false;
 
-        $recipes_style = $orderby == 'date' ? ' style="display:none;' : '';
-        $show_style    = $orderby == 'ids' ? ' style="display:none;' : '';
+        $recipes_style = 'date' === $orderby ? ' style="display:none;' : '';
+        $show_style    = 'ids' === $orderby ? ' style="display:none;' : '';
 
         ?>
 
@@ -68,8 +83,8 @@ class RecipeList extends \WP_Widget {
         <p>
         <label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>"><?php esc_attr_e( 'Sorted by:', 'cooked' ); ?></label>
         <select class="cooked-widget-conditional widefat" id="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'orderby' ) ); ?>">
-            <option value="date"<?php echo ( ! $orderby || $orderby == 'date' ? ' selected' : '' ); ?>><?php esc_html_e( 'Most Recent', 'cooked' ); ?></option>
-            <option value="ids"<?php echo ( ! $orderby || $orderby == 'ids' ? ' selected' : '' ); ?>><?php esc_html_e( 'Choose Recipes', 'cooked' ); ?></option>
+            <option value="date"<?php echo ( ! $orderby || 'date' === $orderby ? ' selected' : '' ); ?>><?php esc_html_e( 'Most Recent', 'cooked' ); ?></option>
+            <option value="ids"<?php echo ( ! $orderby || 'ids' === $orderby ? ' selected' : '' ); ?>><?php esc_html_e( 'Choose Recipes', 'cooked' ); ?></option>
         </select>
         </p>
 
@@ -81,7 +96,7 @@ class RecipeList extends \WP_Widget {
                 $temp_counter = 0; do {
                     ++$temp_counter;
                     ?>
-                    <option value="<?php echo esc_attr( $temp_counter ); ?>"<?php echo ( ! $show || $show == $temp_counter ? ' selected' : '' ); ?>><?php echo esc_html( $temp_counter ); ?></option>
+                    <option value="<?php echo esc_attr( $temp_counter ); ?>"<?php echo ( ! $show || (string) $show === (string) $temp_counter ? ' selected' : '' ); ?>><?php echo esc_html( $temp_counter ); ?></option>
                     <?php
                 } while ( $temp_counter < $max_show );
                 ?>
@@ -115,8 +130,16 @@ class RecipeList extends \WP_Widget {
         </p>
 
         <?php
+        return null;
     }
 
+    /**
+     * Saves the recipe list widget settings.
+     *
+     * @param array<string, mixed> $new_instance Settings submitted in the widget form.
+     * @param array<string, mixed> $old_instance Previously saved settings.
+     * @return array<string, mixed>
+     */
     public function update( $new_instance, $old_instance ) {
         $instance                = [];
         $instance['title']       = ! empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';

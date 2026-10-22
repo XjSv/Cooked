@@ -9,7 +9,7 @@
 
 namespace Cooked\Measurement;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -25,6 +25,11 @@ use NXP\MathExecutor;
  */
 class Measurements {
 
+    /**
+     * The measurement units (filterable).
+     *
+     * @return array<string, array<string, mixed>>
+     */
     public static function get() {
 
         // Use the "cooked_measurements" filter to add your own measurements.
@@ -213,11 +218,16 @@ class Measurements {
         return $measurements;
     }
 
+    /**
+     * The nutrition facts fields, grouped as on the label (filterable).
+     *
+     * @return array<string, mixed>
+     */
     public static function nutrition_facts() {
         global $_cooked_settings;
 
         // Use the "cooked_nutrition_facts" filter to add your own nutrition facts.
-        // Reference: https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels
+        // Reference: https://www.fda.gov/food/nutrition-facts-label/daily-value-nutrition-and-supplement-facts-labels.
         $unit_g   = __( 'g', 'cooked' );
         $unit_mg  = __( 'mg', 'cooked' );
         $unit_mcg = __( 'mcg', 'cooked' );
@@ -287,7 +297,7 @@ class Measurements {
 						'pdv'         => apply_filters( 'cooked_pdv_sodium', 2300 ),
 					],
 					'carbs'       => [
-						'name'        => ( isset( $_cooked_settings['carb_format'] ) && $_cooked_settings['carb_format'] == 'total' ? __( 'Total Carbohydrate', 'cooked' ) : __( 'Net Carbohydrate', 'cooked' ) ),
+						'name'        => ( isset( $_cooked_settings['carb_format'] ) && 'total' === $_cooked_settings['carb_format'] ? __( 'Total Carbohydrate', 'cooked' ) : __( 'Net Carbohydrate', 'cooked' ) ),
 						'type'        => 'number',
 						'measurement' => $unit_g,
 						'pdv'         => apply_filters( 'cooked_pdv_carbs', 275 ),
@@ -302,7 +312,7 @@ class Measurements {
 								'name'        => __( 'Total Sugars', 'cooked' ),
 								'type'        => 'number',
 								'measurement' => $unit_g,
-								// 'pdv' => apply_filters('cooked_pdv_sugars', 28)
+								// No % Daily Value for total sugars.
 							],
 							'added_sugars' => [
 								'name'        => __( 'Added Sugars', 'cooked' ),
@@ -316,7 +326,7 @@ class Measurements {
 						'name'        => __( 'Protein', 'cooked' ),
 						'type'        => 'number',
 						'measurement' => $unit_g,
-						// 'pdv' => apply_filters('cooked_pdv_protein', 50)
+						// No % Daily Value for protein.
 					],
 				],
 
@@ -484,6 +494,14 @@ class Measurements {
         return $nutrition_facts;
     }
 
+    /**
+     * Picks the singular or plural text for a count.
+     *
+     * @param string    $singular_text Singular form.
+     * @param string    $plural_text   Plural form.
+     * @param float|int $count         Count.
+     * @return string
+     */
     public static function singular_plural( $singular_text, $plural_text, $count ) {
         if ( $count <= 1 ) :
             return $singular_text;
@@ -492,6 +510,12 @@ class Measurements {
         endif;
     }
 
+    /**
+     * Normalises an ingredient amount (fractions, unicode fractions, decimals).
+     *
+     * @param mixed $amount Amount as entered.
+     * @return float|int|string
+     */
     public function cleanup_amount( $amount ) {
         $fractions = self::get_fraction_array();
 
@@ -513,6 +537,12 @@ class Measurements {
         return $amount;
     }
 
+    /**
+     * Formats a decimal amount for the site's locale.
+     *
+     * @param mixed $amount Amount.
+     * @return float|int|string
+     */
     public function locale_formatted( $amount ) {
         global $wp_locale;
 
@@ -525,8 +555,15 @@ class Measurements {
         return $amount;
     }
 
+    /**
+     * Formats an amount as a fraction or a decimal.
+     *
+     * @param float|int|string $float_amount Amount.
+     * @param string           $format       fraction or decimal.
+     * @return float|int|string|null
+     */
     public function format_amount( $float_amount = 0, $format = 'fraction' ) {
-        if ( $format == 'decimal' ) :
+        if ( 'decimal' === $format ) :
             $amount = $float_amount ? number_format_i18n( floatval( $float_amount ), 2 ) : 0;
         else :
             $float_parts = explode( '.', $float_amount );
@@ -553,11 +590,17 @@ class Measurements {
         return $amount;
     }
 
+    /**
+     * Evaluates a simple arithmetic expression (e.g. 1/2).
+     *
+     * @param mixed $expression Expression to evaluate.
+     * @return float|int|string|null
+     */
     public function math( $expression = false ) {
         if ( $expression ) {
             $expression = preg_replace( '/[^0-9\+\-\*\/\(\)\.\,]/', '', esc_html( $expression ) );
 
-            $invalid = '/' == substr( $expression, -1 ) ? true : false; // More checks can be done here if needed.
+            $invalid = '/' === substr( $expression, -1 ) ? true : false; // More checks can be done here if needed.
 
             if ( ! $invalid ) {
                 try {
@@ -574,15 +617,22 @@ class Measurements {
         }
     }
 
+    /**
+     * Converts an amount to a decimal or a fraction.
+     *
+     * @param float|int|string $amount Amount.
+     * @param string           $type   decimal or fraction.
+     * @return float|int|string
+     */
     public function calculate( $amount, $type = 'decimal' ) {
-        if ( $type === 'decimal' ) {
+        if ( 'decimal' === $type ) {
             $amount_parts = explode( ' ', $amount );
             $total_parts  = count( $amount_parts );
 
-            if ( $total_parts === 1 ) {
+            if ( 1 === $total_parts ) {
                 $amount = self::math( $amount );
                 $amount = floatval( $amount );
-            } elseif ( $total_parts === 2 ) {
+            } elseif ( 2 === $total_parts ) {
                 $full_part       = floatval( $amount_parts[0] );
                 $fractional_part = floatval( self::math( $amount_parts[1] ) );
                 $amount          = $full_part + $fractional_part;
@@ -594,17 +644,17 @@ class Measurements {
             $amount_parts = explode( '.', $amount );
             $total_parts  = count( $amount_parts );
 
-            if ( $total_parts === 2 ) {
+            if ( 2 === $total_parts ) {
                 $full_part       = intval( $amount_parts[0] );
                 $fractional_part = self::float2rat( $amount - $full_part );
-                if ( $full_part === 0 && $fractional_part ) {
+                if ( 0 === $full_part && $fractional_part ) {
                     $amount = $fractional_part;
                 } elseif ( $fractional_part ) {
-                    $amount = ( $fractional_part == 1 ) ? $full_part + $fractional_part : "$full_part $fractional_part";
+                    $amount = ( '1' === (string) $fractional_part ) ? $full_part + $fractional_part : "$full_part $fractional_part";
                 } else {
                     $amount = $full_part;
                 }
-            } elseif ( $total_parts !== 1 ) {
+            } elseif ( 1 !== $total_parts ) {
                     $amount = self::float2rat( $amount );
             }
 		}
@@ -612,6 +662,12 @@ class Measurements {
         return $amount;
     }
 
+    /**
+     * Rounds a fraction to the nearest common kitchen fraction.
+     *
+     * @param string $fraction Fraction, e.g. 0.33.
+     * @return float|int|string|void
+     */
     public function fraction_cleaner( $fraction ) {
         $fraction_parts = explode( '/', $fraction );
         $decimal        = $fraction_parts[0] / $fraction_parts[1];
@@ -645,16 +701,30 @@ class Measurements {
         endif;
     }
 
+    /**
+     * The value in a list closest to a number.
+     *
+     * @param float|int                    $search Number to match.
+     * @param array<int|string, float|int> $arr    Candidates.
+     * @return float|int|null
+     */
     public function get_closest_decimal( $search, $arr ) {
         $closest = null;
         foreach ( $arr as $item ) {
-            if ( $closest === null || abs( $search - $closest ) > abs( $item - $search ) ) {
+            if ( null === $closest || abs( $search - $closest ) > abs( $item - $search ) ) {
                 $closest = $item;
 			}
 		}
             return $closest;
     }
 
+    /**
+     * Converts a decimal to a fraction, e.g. 0.5 to 1/2.
+     *
+     * @param float|int|string $n         Decimal.
+     * @param float            $tolerance Allowed error.
+     * @return string
+     */
     public function float2rat( $n, $tolerance = 1.e-6 ) {
         $h1 = 1;
 		$h2 = 0;
@@ -680,6 +750,11 @@ class Measurements {
         endif;
     }
 
+    /**
+     * Common kitchen fractions and their decimals, grouped for rounding.
+     *
+     * @return array<string, mixed>
+     */
     public function get_fraction_array() {
         $fractions_a = [
             [ '⅛', '&#8539;', '&#215B;', '&frac18;' ],
@@ -751,16 +826,23 @@ class Measurements {
             return 0;
         }
 
-        return $minutes == (int) $minutes ? (int) $minutes : $minutes;
+        return floor( $minutes ) === $minutes ? (int) $minutes : $minutes; // $minutes is a float here.
     }
 
+    /**
+     * Formats a number of minutes for display, or as an ISO 8601 duration.
+     *
+     * @param float|int|string $minutes Minutes.
+     * @param string           $format  default or iso.
+     * @return string|false
+     */
     public static function time_format( $minutes, $format = 'default' ) {
         $minutes = self::normalize_minutes( $minutes );
 
         ob_start();
 
         if ( $minutes < 60 ) :
-            if ( $format === 'iso' ) :
+            if ( 'iso' === $format ) :
                 return 'PT0H' . intval( $minutes ) . 'M';
             else :
                 /* translators: singular and plural number of minutes (shorthand) */
@@ -769,7 +851,7 @@ class Measurements {
         elseif ( $minutes < 1440 ) :
             $hours        = floor( $minutes / 60 );
             $minutes_left = $minutes - ( $hours * 60 );
-            if ( $format === 'iso' ) :
+            if ( 'iso' === $format ) :
                 return 'PT' . intval( $hours ) . 'H' . ( $minutes_left ? intval( $minutes_left ) : 0 ) . 'M';
             else :
                 /* translators: singular and plural number of hours (shorthand) */
@@ -785,7 +867,7 @@ class Measurements {
                 $hours_left   = floor( $minutes_left / 60 );
                 $minutes_left = $minutes_left - ( $hours_left * 60 );
             endif;
-            if ( $format === 'iso' ) :
+            if ( 'iso' === $format ) :
                 return 'P' . intval( $days ) . 'DT' . ( $hours_left ? intval( $hours_left ) : 0 ) . 'H' . ( $minutes_left ? intval( $minutes_left ) : 0 ) . 'M';
             else :
                 /* translators: singular and plural number of days */

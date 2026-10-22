@@ -9,31 +9,38 @@
 
 namespace Cooked\Admin;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * Cooked_Post_Types Class
+ * Menus Class
  *
- * This class handles the post type creation.
+ * This class handles the admin menu.
  *
  * @since 1.0.0
  */
-
 class Menus {
 
-    function __construct() {
+    /**
+     * Registers the admin menu hooks.
+     */
+    public function __construct() {
         add_action( 'admin_menu', [ &$this, 'add_menu' ] );
 
         if ( ! is_admin() ) {
             add_action( 'admin_bar_menu', [ &$this, 'add_admin_bar_menu' ], 100 );
         }
 
-        add_action( 'parent_file', [ &$this, 'parent_file_filter' ] );
+        add_filter( 'parent_file', [ &$this, 'parent_file_filter' ] );
     }
 
+    /**
+     * Adds the Recipes menu and its Cooked submenu pages.
+     *
+     * @return void
+     */
     public function add_menu() {
         global $cooked_taxonomies_for_menu;
 
@@ -55,6 +62,11 @@ class Menus {
         }
     }
 
+    /**
+     * Adds the Recipes menu to the front-end admin bar.
+     *
+     * @return void
+     */
     public function add_admin_bar_menu() {
         global $wp_admin_bar;
 
@@ -98,11 +110,17 @@ class Menus {
         }
     }
 
+    /**
+     * Keeps the Recipes menu open on Cooked taxonomy screens.
+     *
+     * @param string $parent_file Parent menu slug.
+     * @return string
+     */
     public function parent_file_filter( $parent_file ) {
         global $submenu_file, $current_screen, $pagenow;
         $post_type = 'cp_recipe';
 
-        if ( $current_screen->post_type === $post_type && $pagenow === 'edit-tags.php' ) {
+        if ( $current_screen->post_type === $post_type && 'edit-tags.php' === $pagenow ) {
             $_cooked_taxonomies = \Cooked_Taxonomies::get();
 
             if ( array_key_exists( $current_screen->taxonomy, $_cooked_taxonomies ) ) {

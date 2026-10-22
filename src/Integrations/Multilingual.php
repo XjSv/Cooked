@@ -9,7 +9,7 @@
 
 namespace Cooked\Integrations;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -67,12 +67,11 @@ class Multilingual {
      * @return string|false Language code or false if not available
      */
     public static function get_current_language() {
-        // Polylang support
+        // Polylang support.
         if ( self::is_polylang_active() && function_exists( 'pll_current_language' ) ) {
             return pll_current_language();
-        }
-        // WPML support
-        elseif ( self::is_wpml_active() ) {
+        } elseif ( self::is_wpml_active() ) {
+            // WPML support.
             return apply_filters( 'wpml_current_language', null );
         }
         return false;
@@ -88,8 +87,8 @@ class Multilingual {
      * @return int|bool The translated page ID or original, false if not set
      */
     public static function get_browse_page_id( $browse_page_id = null ) {
-        // If no ID provided, get from settings
-        if ( $browse_page_id === null ) {
+        // If no ID provided, get from settings.
+        if ( null === $browse_page_id ) {
             global $_cooked_settings;
             $browse_page_id = ! empty( $_cooked_settings['browse_page'] ) ? $_cooked_settings['browse_page'] : false;
         }
@@ -98,15 +97,14 @@ class Multilingual {
             return false;
         }
 
-        // Polylang support (check first, as it's more common)
+        // Polylang support (check first, as it's more common).
         if ( self::is_polylang_active() ) {
             $translated_id = pll_get_post( $browse_page_id );
             if ( $translated_id ) {
                 return $translated_id;
             }
-        }
-        // WPML support (only if Polylang is not active)
-        elseif ( self::is_wpml_active() ) {
+        } elseif ( self::is_wpml_active() ) {
+            // WPML support (only if Polylang is not active).
             $translated_id = icl_object_id( $browse_page_id, 'page', true );
             if ( $translated_id ) {
                 return $translated_id;
@@ -134,31 +132,30 @@ class Multilingual {
             return $pages;
         }
 
-        // Default page (always include)
+        // Default page (always include).
         $pages['default'] = [
             'id'   => $default_page_id,
             'slug' => self::get_page_slug( $default_page_id ),
         ];
 
-        // Polylang translations (check first, as it's more common)
+        // Polylang translations (check first, as it's more common).
         if ( self::is_polylang_active() && function_exists( 'pll_get_post_translations' ) ) {
             $translations = pll_get_post_translations( $default_page_id );
             foreach ( $translations as $lang => $translated_id ) {
-                if ( $translated_id && $translated_id != $default_page_id ) {
+                if ( $translated_id && (int) $translated_id !== (int) $default_page_id ) {
                     $pages[ $lang ] = [
                         'id'   => $translated_id,
                         'slug' => self::get_page_slug( $translated_id ),
                     ];
                 }
             }
-        }
-        // WPML translations (only if Polylang is not active)
-        elseif ( self::is_wpml_active() ) {
+        } elseif ( self::is_wpml_active() ) {
+            // WPML translations (only if Polylang is not active).
             $languages = apply_filters( 'wpml_active_languages', null );
             if ( is_array( $languages ) ) {
                 foreach ( $languages as $lang_code => $lang_data ) {
                     $translated_id = icl_object_id( $default_page_id, 'page', false, $lang_code );
-                    if ( $translated_id && $translated_id != $default_page_id ) {
+                    if ( $translated_id && (int) $translated_id !== (int) $default_page_id ) {
                         $pages[ $lang_code ] = [
                             'id'   => $translated_id,
                             'slug' => self::get_page_slug( $translated_id ),
@@ -172,10 +169,10 @@ class Multilingual {
     }
 
     /**
-     * Get page slug from ID
+     * Get page slug from ID.
      *
-     * @param int $page_id The page ID
-     * @return string|null The page slug (empty string for homepage), or null if page doesn't exist
+     * @param int $page_id The page ID.
+     * @return string|null The page slug (empty string for homepage), or null if page doesn't exist.
      */
     private static function get_page_slug( $page_id ) {
         if ( ! $page_id ) {
@@ -187,7 +184,7 @@ class Multilingual {
             return null;
         }
 
-        // Returns empty string for homepage, which is valid
+        // Returns empty string for homepage, which is valid.
         return ltrim( untrailingslashit( str_replace( home_url(), '', $permalink ) ), '/' );
     }
 
@@ -206,7 +203,7 @@ class Multilingual {
             return $missing;
         }
 
-        // Check Polylang translations (check first, as it's more common)
+        // Check Polylang translations (check first, as it's more common).
         if ( self::is_polylang_active() && function_exists( 'pll_languages_list' ) && function_exists( 'pll_get_post_translations' ) ) {
             $languages    = pll_languages_list( [ 'fields' => 'slug' ] );
             $translations = pll_get_post_translations( $default_page_id );
@@ -216,9 +213,8 @@ class Multilingual {
                     $missing[] = $lang;
                 }
             }
-        }
-        // Check WPML translations (only if Polylang is not active)
-        elseif ( self::is_wpml_active() ) {
+        } elseif ( self::is_wpml_active() ) {
+            // Check WPML translations (only if Polylang is not active).
             $languages = apply_filters( 'wpml_active_languages', null );
             if ( is_array( $languages ) ) {
                 foreach ( $languages as $lang_code => $lang_data ) {
@@ -237,21 +233,21 @@ class Multilingual {
      * Display admin notice about missing browse page translations
      */
     public function translation_notice() {
-        // Only show on Cooked settings page
+        // Only show on Cooked settings page.
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin page query var.
         $page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
-        if ( $page !== 'cooked_settings' ) {
+        if ( 'cooked_settings' !== $page ) {
             return;
         }
 
-        // Only show if multilingual plugin is active
+        // Only show if multilingual plugin is active.
         if ( ! self::is_multilingual_active() ) {
             return;
         }
 
         global $_cooked_settings;
 
-        // Only show if browse page is set
+        // Only show if browse page is set.
         if ( empty( $_cooked_settings['browse_page'] ) ) {
             return;
         }

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Recipe template
+ *
+ * @package     Cooked
+ * @subpackage  Templates
+ * @since       1.0.0
+ */
 
 global $post, $recipe, $recipe_settings, $cooked_timer_identifier;
 
@@ -18,7 +25,7 @@ $recipe_content = apply_filters( 'cooked_pre_recipe_content', $recipe_content, $
 global $cooked_recipe_layout_content;
 $cooked_recipe_layout_content = $recipe_content;
 
-if ( is_feed() && ! is_admin() || is_singular() && ! is_admin() ) :
+if ( ( is_feed() && ! is_admin() ) || ( is_singular() && ! is_admin() ) ) :
 	$schema_array = Cooked_SEO::schema_values( $recipe_settings );
 
 	if ( ! empty( $schema_array ) && is_array( $schema_array ) ) :

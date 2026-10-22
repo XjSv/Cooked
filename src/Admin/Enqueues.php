@@ -9,7 +9,7 @@
 
 namespace Cooked\Admin;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,6 +23,11 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Enqueues {
 
+    /**
+     * Admin color scheme colors.
+     *
+     * @var mixed
+     */
     public static $admin_colors;
 
     /**
@@ -119,7 +124,10 @@ class Enqueues {
         return false;
     }
 
-    function __construct() {
+    /**
+     * Registers the admin asset hooks.
+     */
+    public function __construct() {
         add_action( 'admin_enqueue_scripts', [ &$this, 'register_shared_scripts' ], 5 );
         add_action( 'admin_enqueue_scripts', [ &$this, 'admin_enqueues' ], 10, 1 );
         add_action( 'admin_enqueue_scripts', [ &$this, 'widget_enqueues' ], 11, 1 );
@@ -283,32 +291,49 @@ class Enqueues {
         wp_register_script( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.complete' . $min . '.js', [], '2.6.2', true );
     }
 
+    /**
+     * Loads the recipe finder assets (Tom Select) for the widget forms.
+     *
+     * @return void
+     */
     public static function enqueue_widgets() {
         $cooked_js_vars = [
             'rest_url'   => esc_url( get_rest_url() ),
             'rest_nonce' => wp_create_nonce( 'wp_rest' ),
         ];
 
-        // Gonna need jQuery
+        // Gonna need jQuery.
         wp_enqueue_script( 'jquery' );
 
-        // Tom Select (searchable select fields)
+        // Tom Select (searchable select fields).
         self::register_tom_select();
         wp_enqueue_style( 'cooked-tom-select' );
         wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [ 'cooked-tom-select' ], COOKED_VERSION );
 
-        // Cooked Widgets JS
+        // Cooked Widgets JS.
         wp_register_script( 'cooked-widgets', COOKED_URL . 'assets/js/cooked-widgets.js', [ 'jquery', 'cooked-tom-select' ], COOKED_VERSION, true );
         wp_localize_script( 'cooked-widgets', 'cooked_widgets_js_vars', $cooked_js_vars );
         wp_enqueue_script( 'cooked-widgets' );
     }
 
+    /**
+     * Loads the widget form assets on the Widgets screen.
+     *
+     * @param string $hook Current admin page hook.
+     * @return void
+     */
     public function widget_enqueues( $hook ) {
-        if ( $hook == 'widgets.php' ) {
+        if ( 'widgets.php' === $hook ) {
             self::enqueue_widgets();
         }
     }
 
+    /**
+     * Loads Cooked's admin styles and scripts on its own screens and the recipe editor.
+     *
+     * @param string $hook Current admin page hook.
+     * @return void
+     */
     public function admin_enqueues( $hook ) {
         global $_cooked_settings;
 
@@ -326,13 +351,13 @@ class Enqueues {
 
         $min = COOKED_DEV ? '' : '.min';
 
-        // Required Assets for Entire Admin (icon font, admin menu icon)
+        // Required Assets for Entire Admin (icon font, admin menu icon).
         wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/css/essentials.min.css', [], COOKED_VERSION );
 
         $load_cooked_admin_assets = false;
 
         foreach ( $cooked_admin_hooks as $hook_slug ) {
-            if ( strpos( $hook, $hook_slug ) || $hook_slug == $hook ) {
+            if ( strpos( $hook, $hook_slug ) || $hook_slug === $hook ) {
                 $load_cooked_admin_assets = true;
             }
         }
@@ -344,7 +369,7 @@ class Enqueues {
                 $screen    = get_current_screen();
                 $post_type = $screen ? $screen->post_type : '';
 
-                if ( $hook != 'post-new.php' && $hook != 'post.php' && $hook != 'index.php' && $hook != 'edit.php' || $hook === 'post-new.php' && $post_type === 'cp_recipe' || $hook === 'post.php' && $post_type === 'cp_recipe' || $hook === 'edit.php' && $post_type === 'cp_recipe' || $hook === 'index.php' || $hook === 'widgets.php' ) :
+                if ( ( 'post-new.php' !== $hook && 'post.php' !== $hook && 'index.php' !== $hook && 'edit.php' !== $hook ) || ( 'post-new.php' === $hook && 'cp_recipe' === $post_type ) || ( 'post.php' === $hook && 'cp_recipe' === $post_type ) || ( 'edit.php' === $hook && 'cp_recipe' === $post_type ) || 'index.php' === $hook ) : // widgets.php is covered by the first clause.
                     $enqueue = true;
                     add_thickbox();
                 else :
@@ -357,13 +382,13 @@ class Enqueues {
             if ( $enqueue ) :
 
                 $old_recipes = get_transient( 'cooked_classic_recipes' );
-                if ( $old_recipes && $old_recipes !== 'complete' && is_array( $old_recipes ) ) :
+                if ( $old_recipes && 'complete' !== $old_recipes && is_array( $old_recipes ) ) :
                     $total_old_recipes = count( $old_recipes );
                 else :
                     $total_old_recipes = 0;
                 endif;
 
-                // Gonna need jQuery
+                // Gonna need jQuery.
                 wp_enqueue_media();
                 wp_enqueue_editor();
                 wp_enqueue_script( 'jquery' );
@@ -450,7 +475,7 @@ class Enqueues {
                 wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
 
-                // Cooked Admin Script
+                // Cooked Admin Script.
                 wp_localize_script( 'cooked-admin-functions', 'cooked_admin_functions_js_vars', $cooked_js_vars );
                 wp_enqueue_script( 'cooked-admin-functions' );
 

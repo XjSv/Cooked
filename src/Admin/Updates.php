@@ -9,7 +9,7 @@
 
 namespace Cooked\Admin;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -25,27 +25,37 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Updates {
 
     /**
-     * Current plugin version
+     * Current plugin version.
+     *
+     * @var string
      */
     private static $current_version;
 
     /**
-     * Previous plugin version
+     * Previous plugin version.
+     *
+     * @var mixed
      */
     private static $previous_version;
 
     /**
-     * Current pro plugin version
+     * Current pro plugin version.
+     *
+     * @var mixed
      */
     private static $current_pro_version;
 
     /**
-     * Previous pro plugin version
+     * Previous pro plugin version.
+     *
+     * @var mixed
      */
     private static $previous_pro_version;
 
     /**
-     * Cooked Settings Saved
+     * Cooked Settings Saved.
+     *
+     * @var mixed
      */
     private static $cooked_settings_saved;
 
@@ -87,7 +97,7 @@ class Updates {
             self::$cooked_settings_saved = true;
         }
 
-        // Only run updates if version has changed
+        // Only run updates if version has changed.
         if ( self::needs_update() ) {
             self::run_updates();
         }
@@ -103,7 +113,7 @@ class Updates {
     public static function needs_update() {
         // Check both versions.
         $cooked_version_compare     = version_compare( self::$previous_version, self::$current_version );
-        $cooked_pro_version_compare = ( defined( 'COOKED_PRO_VERSION' ) && self::$current_pro_version !== null ) ? version_compare( self::$previous_pro_version, self::$current_pro_version ) : 0;
+        $cooked_pro_version_compare = ( defined( 'COOKED_PRO_VERSION' ) && null !== self::$current_pro_version ) ? version_compare( self::$previous_pro_version, self::$current_pro_version ) : 0;
 
         // Update if either version has changed.
         if ( $cooked_version_compare < 0 || $cooked_pro_version_compare < 0 ) {
@@ -117,10 +127,10 @@ class Updates {
      * Run all necessary updates
      */
     private static function run_updates() {
-        // Store the previous version for logging
+        // Store the previous version for logging.
         $old_version = self::$previous_version;
 
-        // Run version-specific updates
+        // Run version-specific updates.
         self::run_version_updates();
 
         self::update_rewrite_rules();
@@ -214,7 +224,7 @@ class Updates {
      */
     public static function run_tool( $tool_name ) {
         $tool_name = is_string( $tool_name ) ? trim( $tool_name ) : '';
-        if ( $tool_name === '' ) {
+        if ( '' === $tool_name ) {
             return new \WP_Error( 'cooked_tool_empty', __( 'Tool name is required.', 'cooked' ) );
         }
 
@@ -284,7 +294,7 @@ class Updates {
      * @since 1.11.2
      */
     private static function fix_recipe_line_endings() {
-        // Get all recipe posts
+        // Get all recipe posts.
         $recipes = get_posts(
             [
 				'post_type'      => 'cp_recipe',
@@ -308,7 +318,7 @@ class Updates {
 
             $needs_update = false;
 
-            // Fix content field
+            // Fix content field.
             if ( isset( $recipe_settings['content'] ) ) {
                 $original_content           = $recipe_settings['content'];
                 $recipe_settings['content'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['content'] );
@@ -317,7 +327,7 @@ class Updates {
                 }
             }
 
-            // Fix excerpt field
+            // Fix excerpt field.
             if ( isset( $recipe_settings['excerpt'] ) ) {
                 $original_excerpt           = $recipe_settings['excerpt'];
                 $recipe_settings['excerpt'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['excerpt'] );
@@ -326,7 +336,7 @@ class Updates {
                 }
             }
 
-            // Fix notes field
+            // Fix notes field.
             if ( isset( $recipe_settings['notes'] ) ) {
                 $original_notes           = $recipe_settings['notes'];
                 $recipe_settings['notes'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['notes'] );
@@ -335,7 +345,7 @@ class Updates {
                 }
             }
 
-            // Fix directions content
+            // Fix directions content.
             if ( isset( $recipe_settings['directions'] ) && is_array( $recipe_settings['directions'] ) ) {
                 foreach ( $recipe_settings['directions'] as $key => $direction ) {
                     if ( isset( $direction['content'] ) ) {
@@ -348,14 +358,14 @@ class Updates {
                 }
             }
 
-            // Update the recipe if changes were made
+            // Update the recipe if changes were made.
             if ( $needs_update ) {
                 update_post_meta( $recipe->ID, '_recipe_settings', $recipe_settings );
                 ++$updated_count;
             }
         }
 
-        // Log the update if any recipes were modified
+        // Log the update if any recipes were modified.
         if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( sprintf( 'Cooked: Fixed line endings in %d recipes for WordPress exporter/importer compatibility.', $updated_count ) );
@@ -390,7 +400,7 @@ class Updates {
     private static function remove_recipes_from_cooked_user_meta() {
         $user_ids = get_users(
             [
-				'meta_key' => 'cooked_user_meta',
+				'meta_key' => 'cooked_user_meta', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- One-off upgrade routine.
 				'fields'   => 'ID',
 			]
         );

@@ -9,7 +9,7 @@
 
 namespace Cooked\Recipe;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -124,7 +124,7 @@ class RelatedRecipes {
                     'posts_per_page' => $remaining,
                     'orderby'        => 'rand',
                     'fields'         => 'ids',
-                    'tax_query'      => array_merge( [ 'relation' => 'OR' ], $clauses ),
+                    'tax_query'      => array_merge( [ 'relation' => 'OR' ], $clauses ), // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- Related recipes share terms.
                 ];
 
                 $current_language = false;

@@ -9,7 +9,7 @@
 
 namespace Cooked\Frontend;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -21,7 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-
 class Shortcodes {
 
     /**
@@ -31,11 +30,14 @@ class Shortcodes {
      */
     private static $recipe_embed_stack = [];
 
-    function __construct() {
-        // Allow shortcodes in widgets
+    /**
+     * Registers the shortcodes.
+     */
+    public function __construct() {
+        // Allow shortcodes in widgets.
         add_filter( 'widget_text', 'do_shortcode' );
 
-        // Site-Wide
+        // Site-Wide.
         add_shortcode( 'cooked-browse', [ $this, 'cooked_browse_shortcode' ] );
         add_shortcode( 'cooked-search', [ $this, 'cooked_search_shortcode' ] );
         add_shortcode( 'cooked-recipe', [ $this, 'cooked_recipe_shortcode' ] );
@@ -51,7 +53,7 @@ class Shortcodes {
             add_shortcode( 'timer', [ $this, 'cooked_timer' ] );
         endif;
 
-        // Recipe-Only
+        // Recipe-Only.
         add_shortcode( 'cooked-title', [ $this, 'cooked_title_shortcode' ] );
         add_shortcode( 'cooked-gallery', [ $this, 'cooked_gallery_shortcode' ] );
         add_shortcode( 'cooked-image', [ $this, 'cooked_image_shortcode' ] );
@@ -63,7 +65,7 @@ class Shortcodes {
         add_shortcode( 'cooked-nutrition', [ $this, 'cooked_nutrition_shortcode' ] );
 
         // Add preprocessing filter for shortcodes for Elementor, Divi, and other builders compatibility.
-        add_filter( 'pre_do_shortcode_tag', [ $this, 'preprocess_shortcode' ], 10, 4 );
+        add_filter( 'pre_do_shortcode_tag', [ $this, 'preprocess_shortcode' ], 10, 3 );
     }
 
     /**
@@ -73,11 +75,10 @@ class Shortcodes {
      * @param mixed  $output The shortcode output.
      * @param string $tag    The shortcode tag.
      * @param array  $attr   The shortcode attributes.
-     * @param array  $m      The regex matches.
      * @return mixed
      */
-    public function preprocess_shortcode( $output, $tag, $attr, $m ) {
-        // Tags to skip
+    public function preprocess_shortcode( $output, $tag, $attr ) {
+        // Tags to skip.
         $skip_tags = [
             'cooked-search',
             'cooked-browse',
@@ -87,8 +88,8 @@ class Shortcodes {
             'cooked-recipe-card',
         ];
 
-        // Only process for Cooked shortcodes
-        if ( is_front_page() || strpos( $tag, 'cooked-' ) === false || in_array( $tag, $skip_tags ) ) {
+        // Only process for Cooked shortcodes.
+        if ( is_front_page() || strpos( $tag, 'cooked-' ) === false || in_array( $tag, $skip_tags, true ) ) {
             return $output;
         }
 
@@ -115,8 +116,14 @@ class Shortcodes {
         return $output;
     }
 
-    public function cooked_search_shortcode( $atts, $content = null ) {
-        // Shortcode Attributes
+    /**
+     * [cooked-search]: the recipe search box.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_search_shortcode( $atts ) {
+        // Shortcode Attributes.
         $options = shortcode_atts(
             [
                 'compact'       => false,
@@ -130,15 +137,22 @@ class Shortcodes {
         return \Cooked_Recipes::recipe_search_box( $options );
     }
 
+    /**
+     * [timer]: a cooking timer link.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @param string|null          $content Content between the shortcode tags.
+     * @return string
+     */
     public function cooked_timer( $atts, $content = null ) {
         global $cooked_timer_identifier;
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
                 'seconds' => 0,
                 'minutes' => 0,
-                'length'  => 0, // Deprecated, left here for backwards compatibility with 2.x
+                'length'  => 0, // Deprecated, left here for backwards compatibility with 2.x.
                 'hours'   => 0,
                 'desc'    => '',
             ],
@@ -167,10 +181,16 @@ class Shortcodes {
         return '<span class="cooked-timer"><a aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . esc_attr( $desc ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
     }
 
-    public function cooked_browse_shortcode( $sc_atts, $content = null ) {
+    /**
+     * [cooked-browse]: the browsable recipe list with search.
+     *
+     * @param array<string, mixed> $sc_atts Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_browse_shortcode( $sc_atts ) {
         global $_cooked_settings;
 
-        if ( isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ) {
+        if ( isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'], true ) ) {
             /* translators: referring to the bottom of the Settings page. */
             return current_user_can( 'edit_cooked_settings' ) ? wpautop( sprintf( __( 'Public recipes are currently disabled. You can change this at the bottom of the %s page.', 'cooked' ), '<a href="' . trailingslashit( esc_url( admin_url() ) ) . 'admin.php?page=cooked_settings" target="_blank">' . __( 'Settings', 'cooked' ) . '</a>' ) ) : false;
         }
@@ -186,7 +206,7 @@ class Shortcodes {
         }
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             apply_filters(
                 'cooked_browse_shortcode_default_attributes',
@@ -214,12 +234,18 @@ class Shortcodes {
         return \Cooked_Recipes::list_view( $atts );
     }
 
-    public function cooked_recipe_card_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-recipe-card]: a single recipe card.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_recipe_card_shortcode( $atts ) {
         if ( is_admin() ) {
 			return false;
         }
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'id'           => false,
@@ -257,12 +283,18 @@ class Shortcodes {
         return ob_get_clean();
     }
 
-    public function cooked_categories_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-categories]: recipe category blocks or a list.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_categories_shortcode( $atts ) {
         if ( is_admin() ) {
 			return false;
         }
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'hide_empty' => true,
@@ -282,7 +314,7 @@ class Shortcodes {
 
         $categories_array = \Cooked_Settings::terms_array( 'cp_recipe_category', false, false, $hide_empty, $parents_only, $child_of );
         if ( ! empty( $categories_array ) ) {
-            echo $style == 'list' ? '<div class="cooked-recipe-term-list">' : '<div class="cooked-recipe-term-grid cooked-clearfix">';
+            echo 'list' === $style ? '<div class="cooked-recipe-term-list">' : '<div class="cooked-recipe-term-grid cooked-clearfix">';
 			foreach ( $categories_array as $key => $val ) {
 				\Cooked_Taxonomies::single_taxonomy_block( $key, $style );
 			}
@@ -292,12 +324,18 @@ class Shortcodes {
         return ob_get_clean();
     }
 
-    public function cooked_recipe_list_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-recipe-list]: a compact list of recipes.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_recipe_list_shortcode( $atts ) {
         if ( is_admin() ) {
 			return false;
         }
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'orderby'     => 'date',
@@ -329,12 +367,18 @@ class Shortcodes {
         return ob_get_clean();
     }
 
-    public function cooked_recipe_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-recipe]: embeds a full recipe.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_recipe_shortcode( $atts ) {
         if ( is_admin() ) {
 			return false;
         }
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'id' => false,
@@ -391,6 +435,12 @@ class Shortcodes {
         }
     }
 
+    /**
+     * Message shown instead of a recipe that embeds itself.
+     *
+     * @param int $recipe_id Recipe ID.
+     * @return string
+     */
     private static function recipe_embed_blocked_message( $recipe_id ) {
         $shortcode = '[cooked-recipe id="' . intval( $recipe_id ) . '"]';
         $message   = '<em>' . sprintf(
@@ -404,10 +454,16 @@ class Shortcodes {
         return wpautop( $message );
     }
 
-    public function cooked_gallery_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-gallery]: the recipe's gallery (Cooked or a gallery plugin).
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false|void
+     */
+    public function cooked_gallery_shortcode( $atts ) {
         global $recipe_settings;
 
-        if ( isset( $recipe_settings['gallery'] ) && isset( $recipe_settings['gallery']['type'] ) && $recipe_settings['gallery']['type'] == 'cooked' ) {
+        if ( isset( $recipe_settings['gallery'] ) && isset( $recipe_settings['gallery']['type'] ) && 'cooked' === $recipe_settings['gallery']['type'] ) {
             $gallery_options = apply_filters(
                 'cooked_recipe_gallery_options',
                 [
@@ -425,20 +481,20 @@ class Shortcodes {
 				]
             );
 
-            // Generate the Shortcode Attributes
+            // Generate the Shortcode Attributes.
             $gallery_atts = [];
             foreach ( $gallery_options as $opt_name => $opt_value ) {
                 $name_sans_data                  = str_replace( 'data-', '', $opt_name );
                 $gallery_atts[ $name_sans_data ] = $opt_value;
             }
 
-            // Set the Shortcode Attributes
+            // Set the Shortcode Attributes.
             $atts = shortcode_atts(
                 $gallery_atts,
                 $atts
             );
 
-            // Check for Shortcode Attribute Customizations
+            // Check for Shortcode Attribute Customizations.
             foreach ( $gallery_options as $opt_name => $opt_value ) {
                 $name_sans_data = str_replace( 'data-', '', $opt_name );
                 if ( isset( $atts[ $name_sans_data ] ) && $atts[ $name_sans_data ] ) {
@@ -454,7 +510,7 @@ class Shortcodes {
             switch ( $recipe_settings['gallery']['type'] ) :
 
                 case 'cooked':
-                    if ( isset( $recipe_settings['gallery']['items'] ) && ! empty( $recipe_settings['gallery']['items'] ) || isset( $recipe_settings['gallery']['video_url'] ) && $recipe_settings['gallery']['video_url'] ) :
+                    if ( ( isset( $recipe_settings['gallery']['items'] ) && ! empty( $recipe_settings['gallery']['items'] ) ) || ( isset( $recipe_settings['gallery']['video_url'] ) && $recipe_settings['gallery']['video_url'] ) ) :
                         return self::cooked_gallery_html( $recipe_settings, $gallery_options );
                     endif;
 
@@ -462,15 +518,12 @@ class Shortcodes {
 
                 case 'envira':
                     return ( $recipe_settings['gallery']['envira'] ? '<div class="cooked-recipe-gallery-envira">' . do_shortcode( '[envira-gallery id="' . intval( $recipe_settings['gallery']['envira'] ) . '"]' ) . '</div>' : '' );
-                break;
 
                 case 'soliloquy':
                     return ( $recipe_settings['gallery']['soliloquy'] ? '<div class="cooked-recipe-gallery-soliloquy">' . do_shortcode( '[soliloquy id="' . intval( $recipe_settings['gallery']['soliloquy'] ) . '"]' ) . '</div>' : '' );
-                break;
 
                 case 'revslider':
                     return ( $recipe_settings['gallery']['revslider'] ? '<div class="cooked-recipe-gallery-revslider">' . do_shortcode( '[rev_slider alias="' . intval( $recipe_settings['gallery']['revslider'] ) . '"]' ) . '</div>' : '' );
-                break;
 
             endswitch;
 
@@ -494,8 +547,8 @@ class Shortcodes {
      * @return string
      */
     private static function cooked_gallery_html( $recipe_settings, $options ) {
-        $option = function ( $key, $default ) use ( $options ) {
-            return isset( $options[ 'data-' . $key ] ) ? strtolower( trim( (string) $options[ 'data-' . $key ] ) ) : $default;
+        $option = function ( $key, $fallback ) use ( $options ) {
+            return isset( $options[ 'data-' . $key ] ) ? strtolower( trim( (string) $options[ 'data-' . $key ] ) ) : $fallback;
         };
 
         $nav = $option( 'nav', 'dots' );
@@ -687,7 +740,13 @@ class Shortcodes {
         return preg_match( '#^[A-Za-z0-9_-]{6,20}$#', $id ) ? 'https://www.youtube-nocookie.com/embed/' . $id : false;
     }
 
-    public function cooked_info_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-info]: the recipe info bar (author, times, servings, ...).
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|void
+     */
+    public function cooked_info_shortcode( $atts ) {
         global $recipe, $recipe_settings, $_cooked_settings;
 
         if ( ! isset( $recipe_settings['id'] ) && isset( $recipe->ID ) ) :
@@ -697,7 +756,7 @@ class Shortcodes {
             $recipe_settings['id'] = $post->ID;
         endif;
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'left'    => false,
@@ -727,28 +786,28 @@ class Shortcodes {
         );
 
         if ( $left ) :
-            // Left Content
+            // Left Content.
             foreach ( $left as $val ) :
                 $info_array['left'][ $val ] = isset( $default_info_array[ $val ] ) ? $default_info_array[ $val ] : '';
             endforeach;
             if ( $right ) :
-                // Right Content
+                // Right Content.
                 foreach ( $right as $val ) :
                     $info_array['right'][ $val ] = isset( $default_info_array[ $val ] ) ? $default_info_array[ $val ] : '';
                 endforeach;
             endif;
         elseif ( $right ) :
-            // Right Content
+            // Right Content.
             foreach ( $right as $val ) :
                 $info_array['right'][ $val ] = isset( $default_info_array[ $val ] ) ? $default_info_array[ $val ] : '';
             endforeach;
         elseif ( $include ) :
-            // Include Content (left)
+            // Include Content (left).
             foreach ( $include as $val ) :
                 $info_array[ $val ] = isset( $default_info_array[ $val ] ) ? $default_info_array[ $val ] : '';
             endforeach;
         elseif ( $exclude ) :
-            // Exclude Content (left)
+            // Exclude Content (left).
             $info_array = $default_info_array;
             foreach ( $exclude as $val ) :
                 unset( $info_array[ $val ] );
@@ -781,7 +840,7 @@ class Shortcodes {
 				foreach ( $info_array['left'] as $name => $val ) :
 					$function = 'cooked_info_' . $name;
 					if ( array_key_exists( $function, $available_methods ) ) :
-						$class = ( $available_methods[ $function ] == 'Cooked_Recipes' ? $this : $available_methods[ $function ] );
+						$class = ( 'Cooked_Recipes' === $available_methods[ $function ] ? $this : $available_methods[ $function ] );
 						if ( method_exists( $class, $function ) ) :
 							$class::$function( $recipe_settings );
                             endif;
@@ -794,7 +853,7 @@ class Shortcodes {
 					foreach ( $info_array['right'] as $name => $val ) :
 						$function = 'cooked_info_' . $name;
 						if ( array_key_exists( $function, $available_methods ) ) :
-							$class = ( $available_methods[ $function ] == 'Cooked_Recipes' ? $this : $available_methods[ $function ] );
+							$class = ( 'Cooked_Recipes' === $available_methods[ $function ] ? $this : $available_methods[ $function ] );
 							if ( method_exists( $class, $function ) ) :
 								$class::$function( $recipe_settings );
                                 endif;
@@ -809,7 +868,7 @@ class Shortcodes {
 				foreach ( $info_array['right'] as $name => $val ) :
 					$function = 'cooked_info_' . $name;
 					if ( array_key_exists( $function, $available_methods ) ) :
-						$class = ( $available_methods[ $function ] == 'Cooked_Recipes' ? $this : $available_methods[ $function ] );
+						$class = ( 'Cooked_Recipes' === $available_methods[ $function ] ? $this : $available_methods[ $function ] );
 						if ( method_exists( $class, $function ) ) :
 							$class::$function( $recipe_settings );
                             endif;
@@ -822,7 +881,7 @@ class Shortcodes {
                 foreach ( $info_array as $name => $val ) :
                     $function = 'cooked_info_' . $name;
                     if ( array_key_exists( $function, $available_methods ) ) :
-                        $class = ( $available_methods[ $function ] == 'Cooked_Recipes' ? $this : $available_methods[ $function ] );
+                        $class = ( 'Cooked_Recipes' === $available_methods[ $function ] ? $this : $available_methods[ $function ] );
                         if ( method_exists( $class, $function ) ) :
                             $class::$function( $recipe_settings );
                         endif;
@@ -845,11 +904,16 @@ class Shortcodes {
             remove_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_cooked_donut' ] );
             $cooked_info_html = apply_filters( 'cooked_info_shortcode_output', $cooked_info_html, $recipe_settings );
             return $cooked_info_html;
-            // return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
         endif;
     }
 
-    function cooked_kses_servings_switcher( $tags ) {
+    /**
+     * Allows the servings switcher's <select> through KSES.
+     *
+     * @param array<string, mixed> $tags Allowed tags and attributes.
+     * @return array<string, mixed>
+     */
+    public function cooked_kses_servings_switcher( $tags ) {
         $tags['select'] = [
             'name'  => true,
             'id'    => true,
@@ -862,32 +926,43 @@ class Shortcodes {
         return $tags;
     }
 
-    function cooked_kses_cooked_donut( $tags ) {
+    /**
+     * Allows Cooked Pro's nutrition donut <script> through KSES.
+     *
+     * @param array<string, mixed> $tags Allowed tags and attributes.
+     * @return array<string, mixed>
+     */
+    public function cooked_kses_cooked_donut( $tags ) {
         $tags['script'] = [
             'type' => true,
         ];
         return $tags;
     }
 
+    /**
+     * Outputs the recipe author for [cooked-info].
+     *
+     * @return void
+     */
     public static function cooked_info_author() {
         global $recipe_settings, $_cooked_settings;
 
-        if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'] ) ) {
+        if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) {
             $browse_page_id  = \Cooked_Multilingual::get_browse_page_id();
             $front_page_id   = get_option( 'page_on_front' );
             $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : false;
             $author          = ! empty( $recipe_settings['author'] ) ? $recipe_settings['author'] : false;
 
             if ( ! empty( $author['id'] ) && ! empty( $browse_page_id ) ) {
-                // Generate author slug from user_nicename, fallback to user ID if nicename is empty
+                // Generate author slug from user_nicename, fallback to user ID if nicename is empty.
                 if ( ! empty( $author['user_nicename'] ) ) {
-                    $author_slug = urlencode( sanitize_title( $author['user_nicename'] ) );
+                    $author_slug = rawurlencode( sanitize_title( $author['user_nicename'] ) );
                 } else {
-                    // Fallback to user ID if user_nicename is empty or missing
+                    // Fallback to user ID if user_nicename is empty or missing.
                     $author_slug = $author['id'];
                 }
 
-                $permalink = $front_page_id != $browse_page_id && get_option( 'permalink_structure' ) ?
+                $permalink = (int) $front_page_id !== (int) $browse_page_id && get_option( 'permalink_structure' ) ?
                                 esc_url( untrailingslashit( $browse_page_url ) . '/' . $_cooked_settings['recipe_author_permalink'] . '/' . trailingslashit( $author_slug ) ) :
                                 esc_url( trailingslashit( get_home_url() ) . 'index.php?page_id=' . $browse_page_id . '&recipe_author=' . $author['id'] );
 
@@ -896,9 +971,9 @@ class Shortcodes {
                 $permalink = false;
             }
 
-            $author_links = isset( $_cooked_settings['disable_author_links'][0] ) && $_cooked_settings['disable_author_links'][0] == 'disabled' ? false : true;
-            $clickable    = isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) || ! $author_links ? false : true;
-            $hide_avatars = isset( $_cooked_settings['hide_author_avatars'][0] ) && $_cooked_settings['hide_author_avatars'][0] == 'hidden' ? true : false;
+            $author_links = isset( $_cooked_settings['disable_author_links'][0] ) && 'disabled' === $_cooked_settings['disable_author_links'][0] ? false : true;
+            $clickable    = ( isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'], true ) ) || ! $author_links ? false : true;
+            $hide_avatars = isset( $_cooked_settings['hide_author_avatars'][0] ) && 'hidden' === $_cooked_settings['hide_author_avatars'][0] ? true : false;
 
             echo '<span class="cooked-author' . ( $hide_avatars ? ' cooked-no-avatar' : '' ) . '">';
                 echo ! $hide_avatars ? '<span class="cooked-author-avatar">' . ( ! empty( $author ) ? wp_kses_post( $author['profile_photo'] ) : '' ) . '</span>' : '';
@@ -909,25 +984,42 @@ class Shortcodes {
         }
     }
 
+    /**
+     * Outputs the difficulty level for [cooked-info].
+     *
+     * @param array<string, mixed> $recipe Recipe settings.
+     * @return void
+     */
     public static function cooked_info_difficulty( $recipe ) {
         global $_cooked_settings;
 
-        if ( in_array( 'difficulty_level', $_cooked_settings['recipe_info_display_options'] ) && isset( $recipe['difficulty_level'] ) && $recipe['difficulty_level'] ) {
+        if ( in_array( 'difficulty_level', $_cooked_settings['recipe_info_display_options'], true ) && isset( $recipe['difficulty_level'] ) && $recipe['difficulty_level'] ) {
             $dl_html = '<span class="cooked-difficulty-level"><strong class="cooked-meta-title">' . esc_html__( 'Difficulty', 'cooked' ) . '</strong>' . \Cooked_Recipes::difficulty_level( $recipe['difficulty_level'] ) . '</span>';
             echo wp_kses_post( apply_filters( 'cooked_show_difficulty_level', $dl_html, $recipe['difficulty_level'] ) );
         }
     }
 
+    /**
+     * Outputs the servings and measurement switchers for [cooked-info].
+     *
+     * @param array<string, mixed> $recipe Recipe settings.
+     * @return void
+     */
     public static function cooked_info_servings( $recipe ) {
         global $_cooked_settings;
 
-        if ( in_array( 'servings', $_cooked_settings['recipe_info_display_options'] ) ) {
+        if ( in_array( 'servings', $_cooked_settings['recipe_info_display_options'], true ) ) {
             $servings = isset( $recipe['nutrition']['servings'] ) && $recipe['nutrition']['servings'] ? $recipe['nutrition']['servings'] : 1;
             \Cooked_Recipes::serving_size_switcher( $servings );
             \Cooked_Recipes::measurement_system_switcher();
         }
     }
 
+    /**
+     * Outputs the print button for [cooked-info].
+     *
+     * @return void
+     */
     public static function cooked_info_print() {
         global $recipe_settings, $_cooked_settings;
 
@@ -941,6 +1033,11 @@ class Shortcodes {
         echo '<span class="cooked-print"><a aria-label="' . esc_attr__( 'Print', 'cooked' ) . '" target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $recipe_post_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
     }
 
+    /**
+     * Outputs the full-screen button for [cooked-info].
+     *
+     * @return void
+     */
     public static function cooked_info_fullscreen() {
         global $recipe_settings, $_cooked_settings;
 
@@ -948,28 +1045,46 @@ class Shortcodes {
         wp_enqueue_script( 'cooked-nosleep' );
     }
 
+    /**
+     * Outputs the prep time for [cooked-info].
+     *
+     * @param array<string, mixed> $recipe Recipe settings.
+     * @return void
+     */
     public static function cooked_info_prep_time( $recipe ) {
         global $_cooked_settings;
 
-        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'timing_prep', $_cooked_settings['recipe_info_display_options'] ) ) {
+        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'timing_prep', $_cooked_settings['recipe_info_display_options'], true ) ) {
             $prep_time = isset( $recipe['prep_time'] ) ? \Cooked_Measurements::normalize_minutes( $recipe['prep_time'] ) : 0;
             echo $prep_time ? '<span class="cooked-prep-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . esc_html__( 'Prep Time', 'cooked' ) . '</strong>' . wp_kses_post( \Cooked_Measurements::time_format( $prep_time ) ) . '</span>' : '';
         }
     }
 
+    /**
+     * Outputs the cook time for [cooked-info].
+     *
+     * @param array<string, mixed> $recipe Recipe settings.
+     * @return void
+     */
     public static function cooked_info_cook_time( $recipe ) {
         global $_cooked_settings;
 
-        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'timing_cook', $_cooked_settings['recipe_info_display_options'] ) ) {
+        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'timing_cook', $_cooked_settings['recipe_info_display_options'], true ) ) {
             $cook_time = isset( $recipe['cook_time'] ) ? \Cooked_Measurements::normalize_minutes( $recipe['cook_time'] ) : 0;
             echo $cook_time ? '<span class="cooked-cook-time cooked-time"><span class="cooked-time-icon"><i class="cooked-icon cooked-icon-clock"></i></span><strong class="cooked-meta-title">' . esc_html__( 'Cook Time', 'cooked' ) . '</strong>' . wp_kses_post( \Cooked_Measurements::time_format( $cook_time ) ) . '</span>' : '';
         }
     }
 
+    /**
+     * Outputs the total time for [cooked-info].
+     *
+     * @param array<string, mixed> $recipe Recipe settings.
+     * @return void
+     */
     public static function cooked_info_total_time( $recipe ) {
         global $_cooked_settings;
 
-        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'timing_total', $_cooked_settings['recipe_info_display_options'] ) ) {
+        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'timing_total', $_cooked_settings['recipe_info_display_options'], true ) ) {
             $total_time = isset( $recipe['total_time'] ) ? \Cooked_Measurements::normalize_minutes( $recipe['total_time'] ) : 0;
 
             if ( $total_time ) {
@@ -986,19 +1101,24 @@ class Shortcodes {
         }
     }
 
+    /**
+     * Outputs the recipe categories for [cooked-info].
+     *
+     * @return void
+     */
     public static function cooked_info_taxonomies() {
         global $recipe_settings, $_cooked_settings, $clickable;
 
-        $clickable = isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ? false : true;
+        $clickable = isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'], true ) ? false : true;
 
-        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'taxonomies', $_cooked_settings['recipe_info_display_options'] ) ) :
+        if ( ! empty( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'taxonomies', $_cooked_settings['recipe_info_display_options'], true ) ) :
 
             global $recipe_terms_list;
             $recipe_terms_list = '';
 
             do_action( 'cooked_info_taxonomies_shortcode_before', $recipe_settings );
 
-            if ( ! empty( $_cooked_settings['recipe_taxonomies'] ) && in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ) :
+            if ( ! empty( $_cooked_settings['recipe_taxonomies'] ) && in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'], true ) ) :
                 if ( $clickable ) :
                     $recipe_terms_list .= get_the_term_list( $recipe_settings['id'], 'cp_recipe_category', '<span class="cooked-taxonomy cooked-category"><strong class="cooked-meta-title">' . __( 'Category', 'cooked' ) . '</strong>', ', ', '</span>' );
                 else :
@@ -1026,10 +1146,15 @@ class Shortcodes {
         endif;
     }
 
-    public function cooked_excerpt_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-excerpt]: the recipe excerpt.
+     *
+     * @return string|false|void
+     */
+    public function cooked_excerpt_shortcode() {
         global $_cooked_settings, $recipe_settings;
 
-        if ( isset( $_cooked_settings['recipe_info_display_options'] ) && is_array( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'] ) ) {
+        if ( isset( $_cooked_settings['recipe_info_display_options'] ) && is_array( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) ) {
             ob_start();
 
             if ( isset( $recipe_settings['excerpt'] ) && $recipe_settings['excerpt'] ) {
@@ -1041,10 +1166,16 @@ class Shortcodes {
         }
     }
 
-    public function cooked_notes_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-notes]: the recipe notes.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false|void
+     */
+    public function cooked_notes_shortcode( $atts ) {
         global $_cooked_settings, $recipe_settings;
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'show_header' => false,
@@ -1053,9 +1184,9 @@ class Shortcodes {
         );
 
         $show_header = \Cooked_Functions::sanitize_text_field( $atts['show_header'] );
-        $show_header = ! $show_header || $show_header == 'false' ? false : $show_header;
+        $show_header = ! $show_header || 'false' === $show_header ? false : $show_header;
 
-        if ( isset( $_cooked_settings['recipe_info_display_options'] ) && is_array( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'notes', $_cooked_settings['recipe_info_display_options'] ) ) {
+        if ( isset( $_cooked_settings['recipe_info_display_options'] ) && is_array( $_cooked_settings['recipe_info_display_options'] ) && in_array( 'notes', $_cooked_settings['recipe_info_display_options'], true ) ) {
             ob_start();
 
             if ( isset( $recipe_settings['notes'] ) && ! empty( $recipe_settings['notes'] ) ) {
@@ -1072,7 +1203,12 @@ class Shortcodes {
         }
     }
 
-    public function cooked_title_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-title]: the recipe title.
+     *
+     * @return string
+     */
+    public function cooked_title_shortcode() {
         global $recipe, $recipe_settings;
 
         if ( ! isset( $recipe_settings['id'] ) ) {
@@ -1082,7 +1218,12 @@ class Shortcodes {
         return esc_html( get_the_title( $recipe_settings['id'] ) );
     }
 
-    public function cooked_image_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-image]: the featured image.
+     *
+     * @return string|false
+     */
+    public function cooked_image_shortcode() {
         global $recipe, $recipe_settings;
 
         if ( ! isset( $recipe_settings['id'] ) ) :
@@ -1103,10 +1244,16 @@ class Shortcodes {
         return ob_get_clean();
     }
 
-    public function cooked_ingredients_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-ingredients]: the ingredient list.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_ingredients_shortcode( $atts ) {
         global $recipe_settings;
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'checkboxes' => true,
@@ -1115,7 +1262,7 @@ class Shortcodes {
         );
 
         $checkboxes = \Cooked_Functions::sanitize_text_field( $atts['checkboxes'] );
-        $checkboxes = ! $checkboxes || $checkboxes == 'false' ? false : $checkboxes;
+        $checkboxes = ! $checkboxes || 'false' === $checkboxes ? false : $checkboxes;
 
         ob_start();
 
@@ -1134,10 +1281,16 @@ class Shortcodes {
         return ob_get_clean();
     }
 
-    public function cooked_directions_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-directions]: the directions.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_directions_shortcode( $atts ) {
         global $recipe_settings;
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             apply_filters(
                 'cooked_directions_shortcode_atts',
@@ -1150,7 +1303,7 @@ class Shortcodes {
 
         $step    = 0;
         $numbers = \Cooked_Functions::sanitize_text_field( $atts['numbers'] );
-        $numbers = ! $numbers || $numbers == 'false' ? false : $numbers;
+        $numbers = ! $numbers || 'false' === $numbers ? false : $numbers;
 
         ob_start();
 
@@ -1172,10 +1325,16 @@ class Shortcodes {
         return ob_get_clean();
     }
 
-    public function cooked_nutrition_shortcode( $atts, $content = null ) {
+    /**
+     * [cooked-nutrition]: the nutrition facts label.
+     *
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return string|false
+     */
+    public function cooked_nutrition_shortcode( $atts ) {
         global $_cooked_settings, $recipe_settings;
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts(
             [
 				'id'    => false,
@@ -1209,7 +1368,7 @@ class Shortcodes {
 
                 echo '<div class="cooked-nut-servings">';
                 foreach ( $top_facts as $slug => $nf ) :
-                    if ( $slug === 'serving_size' ) :
+                    if ( 'serving_size' === $slug ) :
                         echo '<div class="cooked-serving-size"><strong>' . esc_html( $nf['name'] ) . '</strong> ';
                             echo '<p class="cooked-right"><strong class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">' . esc_html( isset( $nutrition_facts[ $slug ] ) ? $nutrition_facts[ $slug ] : '' ) . '</strong></p>';
                         echo '</div>';
@@ -1231,7 +1390,7 @@ class Shortcodes {
                 ob_start();
 
                 foreach ( $mid_facts as $slug => $nf ) :
-                    if ( isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] || isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] === '0' ) :
+                    if ( ( isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] ) || ( isset( $nutrition_facts[ $slug ] ) && '0' === $nutrition_facts[ $slug ] ) ) :
                         echo '<dt class="cooked-calories no-after"><strong>' . esc_html( $nf['name'] ) . '</strong>';
                             echo '<strong class="cooked-nut-label">' . esc_html( $nutrition_facts[ $slug ] ) . '</strong>';
                         echo '</dt>';
@@ -1253,7 +1412,7 @@ class Shortcodes {
 
                 foreach ( $main_facts as $slug => $nf ) :
 
-                    if ( isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] || isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] === '0' ) :
+                    if ( ( isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] ) || ( isset( $nutrition_facts[ $slug ] ) && '0' === $nutrition_facts[ $slug ] ) ) :
 
 						echo '<dt>';
 						echo '<strong>' . esc_html( $nf['name'] ) . '</strong> <strong class="cooked-nut-label">' . esc_html( $nutrition_facts[ $slug ] ) . '</strong>' . ( isset( $nf['measurement'] ) ? '<strong class="cooked-nut-label cooked-nut-measurement">' . esc_html( $nf['measurement'] ) . '</strong>' : '' );
@@ -1261,13 +1420,13 @@ class Shortcodes {
 
 						if ( isset( $nf['subs'] ) ) :
 							foreach ( $nf['subs'] as $sub_slug => $sub_nf ) :
-								if ( isset( $nutrition_facts[ $sub_slug ] ) && $nutrition_facts[ $sub_slug ] || isset( $nutrition_facts[ $sub_slug ] ) && $nutrition_facts[ $sub_slug ] === '0' ) :
+								if ( ( isset( $nutrition_facts[ $sub_slug ] ) && $nutrition_facts[ $sub_slug ] ) || ( isset( $nutrition_facts[ $sub_slug ] ) && '0' === $nutrition_facts[ $sub_slug ] ) ) :
 									echo '<dl>';
-									if ( $sub_slug === 'trans_fat' ) :
+									if ( 'trans_fat' === $sub_slug ) :
 										echo '<dt>';
                                         echo wp_kses_post( $sub_nf['nutrition_info_name'] ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">' . esc_html( $nutrition_facts[ $sub_slug ] ) . '</strong>' . ( isset( $sub_nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' );
 										echo '</dt>';
-									elseif ( $sub_slug === 'added_sugars' ) :
+									elseif ( 'added_sugars' === $sub_slug ) :
 										echo '<dl><dt>';
                                         echo esc_html__( 'Includes', 'cooked' ) . ' <strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '">' . esc_html( $nutrition_facts[ $sub_slug ] ) . '</strong>' . ( isset( $sub_nf['measurement'] ) ? '<strong class="cooked-nut-label" data-labeltype="' . esc_attr( $sub_slug ) . '_measurement">' . esc_html( $sub_nf['measurement'] ) . '</strong>' : '' ) . ' ' . esc_html( $sub_nf['name'] );
                                         echo ( isset( $sub_nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr( $sub_nf['pdv'] ) . '" data-labeltype="' . esc_attr( $sub_slug ) . '">' . esc_html( ceil( ( $nutrition_facts[ $sub_slug ] / $sub_nf['pdv'] ) * 100 ) ) . '</span>%</strong>' : '' );
@@ -1302,7 +1461,7 @@ class Shortcodes {
                 ob_start();
 
                 foreach ( $bottom_facts as $slug => $nf ) :
-                    if ( isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] || isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] === '0' ) :
+                    if ( ( isset( $nutrition_facts[ $slug ] ) && $nutrition_facts[ $slug ] ) || ( isset( $nutrition_facts[ $slug ] ) && '0' === $nutrition_facts[ $slug ] ) ) :
                         echo '<dt>';
                             echo '<strong>' . esc_html( $nf['name'] ) . '</strong> <span class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '">' . esc_html( $nutrition_facts[ $slug ] ) . '</span>' . ( isset( $nf['measurement'] ) ? '<span class="cooked-nut-label" data-labeltype="' . esc_attr( $slug ) . '_measurement">' . esc_html( $nf['measurement'] ) . '</span>' : '' );
                             echo ( isset( $nf['pdv'] ) ? '<strong class="cooked-nut-right"><span class="cooked-nut-percent" data-pdv="' . esc_attr( $nf['pdv'] ) . '" data-labeltype="' . esc_attr( $slug ) . '">' . esc_html( ceil( ( $nutrition_facts[ $slug ] / $nf['pdv'] ) * 100 ) ) . '</span>%</strong>' : '' );
@@ -1315,14 +1474,14 @@ class Shortcodes {
 
             endif;
 
-            // Start a buffer for all nutrition facts content
+            // Start a buffer for all nutrition facts content.
             ob_start();
 
             if ( isset( $top_facts_content ) && $top_facts_content ) :
                 echo wp_kses_post( $top_facts_content );
             endif;
 
-            if ( isset( $mid_facts_content ) && $mid_facts_content || isset( $main_facts_content ) && $main_facts_content ) :
+            if ( ( isset( $mid_facts_content ) && $mid_facts_content ) || ( isset( $main_facts_content ) && $main_facts_content ) ) :
 
                 echo '<hr class="cooked-nut-hr" />';
                 echo '<dl>';
@@ -1361,13 +1520,13 @@ class Shortcodes {
                 echo '<div class="cooked-nutrition-label' . ( $float ? ' cooked-float-' . esc_attr( $float ) : '' ) . '">';
                     echo '<div class="cooked-nutrition-title">' . esc_html__( 'Nutrition Facts', 'cooked' ) . '</div>';
                     echo wp_kses_post( $nutrition_facts_content );
-				if ( isset( $main_facts_content ) && $main_facts_content || isset( $bottom_facts_content ) && $bottom_facts_content ) :
+				if ( ( isset( $main_facts_content ) && $main_facts_content ) || ( isset( $bottom_facts_content ) && $bottom_facts_content ) ) :
 					echo '<div class="cooked-nut-spacer"></div>';
 					echo '<p class="cooked-daily-value-text">* ' . esc_html__( 'The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice.', 'cooked' ) . '</p>';
                     endif;
 
                     // Add the Edamam attribution "Powered by Edamam" if the Edamam API is enabled.
-                    // More Information: https://developer.edamam.com/attribution
+                    // More Information: https://developer.edamam.com/attribution.
 				if ( ! empty( $_cooked_settings['enable_nutrition_api'] ) ) :
 					echo '<div class="cooked-nutrition-edamam">';
 						do_action( 'cooked_nutrition_facts_powered_by_edamam' );
@@ -1389,51 +1548,48 @@ class Shortcodes {
      * Displays related recipes based on shared terms in any recipe taxonomy (categories,
      * cuisines, cooking methods, tags, diets), random order. No scoring, ingredients, or cache.
      *
-     * @param array  $atts Shortcode attributes
-     * @param string $content Shortcode content
-     * @return string Related recipes HTML
+     * @param array $atts Shortcode attributes.
+     * @return string Related recipes HTML.
      * @since 1.0.0
      */
-    public function cooked_related_recipes_shortcode( $atts, $content = null ) {
+    public function cooked_related_recipes_shortcode( $atts ) {
         if ( is_admin() ) {
 			return false;
         }
 
         global $post, $_cooked_settings;
 
-        // Shortcode Attributes
+        // Shortcode Attributes.
         $atts = shortcode_atts( \Cooked_Related_Recipes::get_default_atts(), $atts );
 
-        // Get recipe ID - validate if provided, otherwise try current post
+        // Get recipe ID - validate if provided, otherwise try current post.
         $recipe_id = false;
 
         if ( ! empty( $atts['id'] ) ) {
-            // Validate that the ID is numeric before converting
+            // Validate that the ID is numeric before converting.
             if ( is_numeric( $atts['id'] ) && $atts['id'] > 0 ) {
                 $recipe_id = (int) $atts['id'];
             } else {
-                // Invalid ID provided (e.g., "asdas", "", "0", "-5")
+                // Invalid ID provided (e.g., "asdas", "", "0", "-5").
                 return '<p class="cooked-related-recipes-error">' . __( 'Invalid recipe ID specified. Please provide a valid numeric recipe ID.', 'cooked' ) . '</p>';
             }
-        } else {
-            // No ID provided, try to get from current post
-            if ( isset( $post->ID ) && get_post_type( $post->ID ) === 'cp_recipe' ) {
-                $recipe_id = $post->ID;
-            }
+        } elseif ( isset( $post->ID ) && get_post_type( $post->ID ) === 'cp_recipe' ) {
+            // No ID provided, use the current post.
+            $recipe_id = $post->ID;
         }
 
         if ( ! $recipe_id ) {
             return '<p class="cooked-related-recipes-error">' . __( 'No recipe found. Please specify a recipe ID using the id attribute, or use this shortcode on a recipe page.', 'cooked' ) . '</p>';
         }
 
-        // Get the source recipe (allow any status to support drafts/pending)
+        // Get the source recipe (allow any status to support drafts/pending).
         $source_recipe = \Cooked_Recipes::get( $recipe_id, true, false, false, false, 'any' );
 
         if ( ! $source_recipe || empty( $source_recipe ) ) {
             $error_msg = __( 'Recipe not found.', 'cooked' );
-            // Check if it's a different post type
+            // Check if it's a different post type.
             $post_check = get_post( $recipe_id );
-            if ( $post_check && $post_check->post_type !== 'cp_recipe' ) {
+            if ( $post_check && 'cp_recipe' !== $post_check->post_type ) {
                 /* translators: %d: post ID */
                 $error_msg .= ' ' . sprintf( __( 'The specified ID (%d) is not a recipe.', 'cooked' ), $recipe_id );
             } elseif ( ! $post_check ) {
@@ -1443,12 +1599,12 @@ class Shortcodes {
             return '<p class="cooked-related-recipes-error">' . esc_html( $error_msg ) . '</p>';
         }
 
-        // Find related recipes (on-demand query: taxonomies OR + orderby rand, no cache)
+        // Find related recipes (on-demand query: taxonomies OR + orderby rand, no cache).
         $related_recipes = \Cooked_Related_Recipes::get_related_recipes( $recipe_id, $atts );
 
         if ( empty( $related_recipes ) ) {
             $empty_msg = __( 'No related recipes found.', 'cooked' );
-            // Provide helpful context
+            // Provide helpful context.
             if ( class_exists( 'Cooked_Multilingual' ) && \Cooked_Multilingual::is_multilingual_active() ) {
                 $empty_msg .= ' ' . __( 'This may be because there are no other recipes in the current language with matching attributes.', 'cooked' );
             } else {
@@ -1458,7 +1614,7 @@ class Shortcodes {
         }
 
         // Get recipe IDs for display and filter out deleted/invalid recipes
-        // Note: Language filtering is already handled by WP_Query in find_related_recipes()
+        // Note: Language filtering is already handled by WP_Query in find_related_recipes().
         $recipe_ids = array_column( $related_recipes, 'id' );
 
         /**
@@ -1475,12 +1631,12 @@ class Shortcodes {
 
         ob_start();
 
-        // Display title
+        // Display title.
         if ( $atts['title'] ) {
             echo '<h3 class="cooked-related-recipes-title">' . esc_html( $atts['title'] ) . '</h3>';
         }
 
-        // Display recipes in grid
+        // Display recipes in grid.
         $columns      = intval( $atts['columns'] );
         $hide_image   = wp_validate_boolean( $atts['hide_image'] );
         $hide_excerpt = wp_validate_boolean( $atts['hide_excerpt'] );

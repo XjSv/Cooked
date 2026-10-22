@@ -9,7 +9,7 @@
 
 namespace Cooked\Admin;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,15 +23,23 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Migration {
 
+    /**
+     * Registers the Cooked Classic migration hooks.
+     */
     public function __construct() {
         add_action( 'plugins_loaded', [ &$this, 'init' ] );
     }
 
+    /**
+     * Adds the migration tab and admin notice while Cooked Classic recipes remain.
+     *
+     * @return void
+     */
     public static function init() {
-        // Check for recipes from Cooked Classic and display an "Update" notice
+        // Check for recipes from Cooked Classic and display an "Update" notice.
         $old_recipes = self::get_cooked_classic_recipes();
 
-        if ( $old_recipes != 'complete' && ! empty( $old_recipes ) ) {
+        if ( is_array( $old_recipes ) && ! empty( $old_recipes ) ) {
             $total_old_recipes = count( $old_recipes );
 
             if ( $total_old_recipes > 0 ) {
@@ -41,10 +49,16 @@ class Migration {
         }
     }
 
+    /**
+     * Adds the Migration tab to the settings.
+     *
+     * @param array<string, mixed> $settings Settings tabs and fields.
+     * @return array<string, mixed>
+     */
     public static function settings_filter( $settings ) {
         $old_recipes = self::get_cooked_classic_recipes();
 
-        if ( $old_recipes != 'complete' && ! empty( $old_recipes ) ) {
+        if ( is_array( $old_recipes ) && ! empty( $old_recipes ) ) {
             $total = count( $old_recipes );
 
             /* translators: for displaying singular or plural versions depending on the number of recipes. */
@@ -82,20 +96,25 @@ class Migration {
         return $settings;
     }
 
+    /**
+     * Shows an admin notice while Cooked Classic recipes still need migrating.
+     *
+     * @return void
+     */
     public static function old_recipes_message() {
         $total = count( self::pending_classic_recipes() );
 
         if ( $total > 0 ) {
-            $class = 'notice notice-error';
-            /* translators: for displaying singular or plural versions depending on the number of recipes. */
+            $class   = 'notice notice-error';
             $message = sprintf(
+                /* translators: 1: number of recipes, 2: migration link. */
                 esc_html( _n( 'There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe.', 'There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes.', $total, 'cooked' ) ),
                 '<strong>' . number_format( $total ) . '</strong>',
                 '<strong><a href="' . esc_url(
                     add_query_arg(
                         [
-								'page' => 'cooked_settings',
-								'cm'   => '1',
+                            'page' => 'cooked_settings',
+                            'cm'   => '1',
                         ],
                         esc_url( admin_url( 'admin.php' ) )
                     )
@@ -122,10 +141,15 @@ class Migration {
         return is_array( $classic_recipes ) ? $classic_recipes : [];
     }
 
+    /**
+     * Finds recipes saved by Cooked Classic, cached in a transient.
+     *
+     * @return int[]|string Recipe IDs, or 'complete' when there are none.
+     */
     public static function get_cooked_classic_recipes() {
         $classic_recipes = get_transient( 'cooked_classic_recipes' );
 
-        if ( empty( $classic_recipes ) && $classic_recipes != 'complete' ) {
+        if ( empty( $classic_recipes ) ) {
 
             $classic_recipes = [];
 

@@ -9,7 +9,7 @@
 
 namespace Cooked\User;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,7 +23,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Users {
 
-    function __construct() {
+    /**
+     * Registers the user hooks.
+     */
+    public function __construct() {
         add_action( 'init', [ &$this, 'recipe_author_rewrite' ], 10 );
 
         add_filter( 'manage_users_columns', [ &$this, 'recipe_count_column' ] );
@@ -32,12 +35,17 @@ class Users {
         add_action( 'pre_user_query', [ &$this, 'pre_user_query' ], 1 );
     }
 
+    /**
+     * Adds rewrite rules for recipe author pages under each Browse page.
+     *
+     * @return void
+     */
     public static function recipe_author_rewrite() {
         global $_cooked_settings;
 
         $front_page_id = get_option( 'page_on_front' );
 
-        // Get all browse page translations for rewrite rules
+        // Get all browse page translations for rewrite rules.
         $browse_pages = \Cooked_Multilingual::get_all_browse_pages();
 
         if ( empty( $browse_pages ) ) {
@@ -46,12 +54,12 @@ class Users {
 
         add_rewrite_tag( '%recipe_author%', '([^&]+)' );
 
-        // Create rewrite rules for each browse page translation
+        // Create rewrite rules for each browse page translation.
         foreach ( $browse_pages as $lang => $page_data ) {
             $browse_page_id   = $page_data['id'];
             $browse_page_slug = $page_data['slug'] ? basename( $page_data['slug'] ) : false;
 
-            if ( ! $browse_page_slug || $browse_page_id == $front_page_id ) {
+            if ( ! $browse_page_slug || (int) $browse_page_id === (int) $front_page_id ) {
                 continue;
             }
 
@@ -60,6 +68,14 @@ class Users {
         }
     }
 
+    /**
+     * A recipe author: name, profile URL and avatar.
+     *
+     * @param int|false    $user_id       User ID.
+     * @param bool         $basic         Leave out the avatar and profile URL.
+     * @param string|false $user_nicename User slug, when there is no ID.
+     * @return array<string, mixed>|false
+     */
     public static function get( $user_id = false, $basic = false, $user_nicename = false ) {
         if ( ! $user_id && $user_nicename ) {
             $user = get_user_by( 'slug', $user_nicename );
@@ -111,6 +127,13 @@ class Users {
         }
     }
 
+    /**
+     * Formats an author name per the Author Name Format setting.
+     *
+     * @param string       $name   Full name.
+     * @param string|false $format full, first_only, first_last_initial or first_initial_last.
+     * @return string|false
+     */
     public static function format_author_name( $name, $format = false ) {
         if ( ! $name ) {
 			return false;
@@ -118,7 +141,7 @@ class Users {
 
         global $_cooked_settings;
 
-        $_cooked_settings = ! $_cooked_settings || $_cooked_settings && empty( $_cooked_settings ) ? \Cooked_Settings::get() : $_cooked_settings;
+        $_cooked_settings = ! $_cooked_settings || ( $_cooked_settings && empty( $_cooked_settings ) ) ? \Cooked_Settings::get() : $_cooked_settings;
 
         if ( ! $format && isset( $_cooked_settings['author_name_format'] ) && $_cooked_settings['author_name_format'] ) :
             $format = $_cooked_settings['author_name_format'];
@@ -129,7 +152,7 @@ class Users {
         $filtered = apply_filters( 'cooked_format_author_name', $name, $format );
 
         // If the filter returns an array with a second element true, treat as safe.
-        if ( is_array( $filtered ) && isset( $filtered[1] ) && $filtered[1] === true ) {
+        if ( is_array( $filtered ) && isset( $filtered[1] ) && true === $filtered[1] ) {
             $name = $filtered[0];
             $safe = true;
         } else {
@@ -156,19 +179,39 @@ class Users {
         return $safe ? $formatted : esc_html( $formatted );
     }
 
-    function recipe_count_column( $column_headers ) {
+    /**
+     * Adds the Recipes column to the Users screen.
+     *
+     * @param array<string, string> $column_headers Columns.
+     * @return array<string, string>
+     */
+    public function recipe_count_column( $column_headers ) {
         $column_headers['cooked_recipe_count'] = __( 'Recipes', 'cooked' );
 
         return $column_headers;
     }
 
-    function recipe_count_column_sortable( $columns ) {
+    /**
+     * Makes the Recipes column sortable.
+     *
+     * @param array<string, string> $columns Sortable columns.
+     * @return array<string, string>
+     */
+    public function recipe_count_column_sortable( $columns ) {
         $columns['cooked_recipe_count'] = 'cooked_recipe_count';
 
         return $columns;
     }
 
-    function recipe_count_column_value( $value, $column_name, $user_id ) {
+    /**
+     * Outputs a user's recipe count.
+     *
+     * @param string $value       Column value.
+     * @param string $column_name Column key.
+     * @param int    $user_id     User ID.
+     * @return string
+     */
+    public function recipe_count_column_value( $value, $column_name, $user_id ) {
         if ( 'cooked_recipe_count' === $column_name ) {
             $value = count_user_posts( $user_id, 'cp_recipe' );
         }
@@ -176,7 +219,13 @@ class Users {
         return $value;
     }
 
-    function pre_user_query( $query ) {
+    /**
+     * Sorts users by recipe count.
+     *
+     * @param \WP_User_Query $query User query.
+     * @return void
+     */
+    public function pre_user_query( $query ) {
         global $wpdb, $current_screen;
 
         // Only filter in the admin.
@@ -190,9 +239,9 @@ class Users {
         }
 
         // Only filter if orderby is set to 'cooked_recipe_count'.
-        if ( isset( $query->query_vars ) && isset( $query->query_vars['orderby'] ) && ( 'cooked_recipe_count' == $query->query_vars['orderby'] ) ) {
+        if ( isset( $query->query_vars ) && isset( $query->query_vars['orderby'] ) && ( 'cooked_recipe_count' === $query->query_vars['orderby'] ) ) {
             // We need the order - default is ASC.
-            $order = isset( $query->query_vars ) && isset( $query->query_vars['order'] ) && strcasecmp( $query->query_vars['order'], 'desc' ) == 0 ? 'DESC' : 'ASC';
+            $order = isset( $query->query_vars ) && isset( $query->query_vars['order'] ) && 0 === strcasecmp( $query->query_vars['order'], 'desc' ) ? 'DESC' : 'ASC';
 
             // Order the posts by recipe count.
             $query->query_orderby = "ORDER BY ( SELECT COUNT(*) FROM {$wpdb->posts} posts WHERE posts.post_type = 'cp_recipe' AND posts.post_status IN ('publish', 'pending', 'draft') AND posts.post_author = {$wpdb->users}.ID ) {$order}";

@@ -9,7 +9,7 @@
 
 namespace Cooked\Integrations;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -23,16 +23,29 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class RankMathSeo {
 
+    /**
+     * Whether the recipe variables are registered.
+     *
+     * @var bool
+     */
     private $variable_registered = false;
 
+    /**
+     * Registers the Rank Math integration.
+     */
     public function __construct() {
         if ( ! $this->variable_registered ) {
             add_action( 'rank_math/vars/register_extra_replacements', [ $this, 'register_rank_math_variables' ] );
         }
 
-        add_filter( 'rank_math/frontend/canonical', [ $this, 'modify_browse_page_canonical_url' ], 20, 2 );
+        add_filter( 'rank_math/frontend/canonical', [ $this, 'modify_browse_page_canonical_url' ], 20 );
     }
 
+    /**
+     * Adds Cooked variables to Rank Math.
+     *
+     * @return void
+     */
     public function register_rank_math_variables() {
         rank_math_register_var_replacement(
             'cooked_recipe_category',
@@ -66,7 +79,13 @@ class RankMathSeo {
         return '';
     }
 
-    public function modify_browse_page_canonical_url( $canonical_url, $post = null ) {
+    /**
+     * Points the canonical URL of Browse page filters at the filtered URL.
+     *
+     * @param string $canonical_url Canonical URL.
+     * @return string
+     */
+    public function modify_browse_page_canonical_url( $canonical_url ) {
         global $_cooked_settings, $wp_query;
 
         if ( ! is_page() ) {

@@ -9,7 +9,7 @@
 
 namespace Cooked\Recipe;
 
-// Exit if accessed directly
+// Exit if accessed directly.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -22,12 +22,21 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class RecipeMeta {
-    function __construct() {
+    /**
+     * Registers the recipe editor hooks.
+     */
+    public function __construct() {
         add_action( 'add_meta_boxes', [ &$this, 'add_recipe_meta_box' ] );
         add_action( 'save_post', [ &$this, 'save_recipe_meta_box' ] );
         add_action( 'admin_notices', [ &$this, 'recipe_embed_shortcode_admin_notice' ] );
     }
 
+    /**
+     * Sanitizes the recipe settings submitted from the editor.
+     *
+     * @param array<string, mixed> $recipe_settings Submitted recipe settings.
+     * @return array<string, mixed>
+     */
     public static function meta_cleanup( $recipe_settings ) {
         global $_cooked_settings;
         $_recipe_settings = [];
@@ -42,25 +51,25 @@ class RecipeMeta {
         if ( ! empty( $recipe_settings ) ) {
             foreach ( $recipe_settings as $key => $val ) {
                 if ( ! is_array( $val ) ) {
-                    if ( $key === 'content' || $key === 'excerpt' || $key === 'notes' ) {
+                    if ( 'content' === $key || 'excerpt' === $key || 'notes' === $key ) {
                         if ( $wp_editor_roles_allowed ) {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
+                            // Decode HTML entities first so wp_kses_post can see actual HTML tags.
                             $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
                             $_recipe_settings[ $key ] = wp_kses_post( $decoded_val );
                         } else {
                             // Strip all HTML tags - don't encode entities since format_content() will decode them
-                            // Decode entities first in case they're already encoded
+                            // Decode entities first in case they're already encoded.
                             $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
                             $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                         }
-                    } elseif ( $key === 'seo_description' ) {
+                    } elseif ( 'seo_description' === $key ) {
                         $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
                         $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                     } elseif ( in_array( $key, [ 'prep_time', 'cook_time', 'total_time' ], true ) ) {
                         $minutes                  = \Cooked_Measurements::normalize_minutes( $val );
                         $_recipe_settings[ $key ] = $minutes ? $minutes : '';
-                    } elseif ( $key === 'post_title' ) {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
+                    } elseif ( 'post_title' === $key ) {
+                            // Decode HTML entities first so wp_kses_post can see actual HTML tags.
                             $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
                             $_recipe_settings[ $key ] = wp_kses_post( $decoded_val );
 					} else {
@@ -74,20 +83,20 @@ class RecipeMeta {
                             foreach ( $subval as $sub_subkey => $sub_subval ) {
                                 if ( ! is_array( $sub_subval ) ) {
                                     if (
-                                        // For content keys: allow 'content'
-                                        ( $sub_subkey === 'content' ) ||
-                                        // For ingredients: allow 'name' and section heading fields
-                                        ( $key === 'ingredients' && ( $sub_subkey === 'name' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element' ) ) ||
-                                        // For directions: allow 'content' and section heading fields
-                                        ( $key === 'directions' && ( $sub_subkey === 'content' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element' ) )
+                                        // For content keys: allow 'content'.
+                                        ( 'content' === $sub_subkey ) ||
+                                        // For ingredients: allow 'name' and section heading fields.
+                                        ( 'ingredients' === $key && ( 'name' === $sub_subkey || 'section_heading_name' === $sub_subkey || 'section_heading_element' === $sub_subkey ) ) ||
+                                        // For directions: allow 'content' and section heading fields.
+                                        ( 'directions' === $key && ( 'content' === $sub_subkey || 'section_heading_name' === $sub_subkey || 'section_heading_element' === $sub_subkey ) )
                                     ) {
                                         if ( $wp_editor_roles_allowed ) {
-                                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
+                                            // Decode HTML entities first so wp_kses_post can see actual HTML tags.
                                             $decoded_sub_subval                                 = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
                                             $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = wp_kses_post( $decoded_sub_subval );
                                         } else {
                                             // Strip all HTML tags - don't encode entities since format_content() will decode them
-                                            // Decode entities first in case they're already encoded
+                                            // Decode entities first in case they're already encoded.
                                             $decoded_sub_subval                                 = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
                                             $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = wp_strip_all_tags( $decoded_sub_subval );
                                         }
@@ -117,6 +126,9 @@ class RecipeMeta {
 
     /**
      * Adds the meta box container.
+     *
+     * @param string $post_type Current post type.
+     * @return void
      */
     public function add_recipe_meta_box( $post_type ) {
         // Limit meta box to Cooked Recipes.
@@ -125,7 +137,7 @@ class RecipeMeta {
             apply_filters( 'cp_recipe_metabox_post_types', [ 'cp_recipe' ] )
         );
 
-        if ( in_array( $post_type, $post_types ) ) {
+        if ( in_array( $post_type, $post_types, true ) ) {
             add_meta_box( 'cooked_recipe_settings', __( 'Cooked Settings', 'cooked' ), [ &$this, 'render_recipe_meta_box' ], $post_type, 'normal', 'high' );
         }
     }
@@ -136,7 +148,6 @@ class RecipeMeta {
      * @param int $post_id The ID of the post being saved.
      */
     public function save_recipe_meta_box( $post_id ) {
-
         /*
          * We need to verify this came from the our screen and with proper authorization,
          * because save_post can be triggered at other times.
@@ -167,8 +178,7 @@ class RecipeMeta {
 
         global $recipe_settings;
 
-        /*
-        OK, it's safe for us to validate/sanitize the data now. */
+        // OK, it's safe for us to validate/sanitize the data now.
         // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Sanitized in meta_cleanup().
         $recipe_settings = isset( $_POST['_recipe_settings'] ) ? self::meta_cleanup( wp_unslash( $_POST['_recipe_settings'] ) ) : [];
 
@@ -185,7 +195,7 @@ class RecipeMeta {
             $recipe_settings['seo_description'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['seo_description'] );
         }
 
-        // Directions
+        // Directions.
         if ( isset( $recipe_settings['directions'] ) ) {
             foreach ( $recipe_settings['directions'] as $key => $direction ) {
                 if ( isset( $direction['content'] ) ) {
@@ -201,11 +211,11 @@ class RecipeMeta {
         $seo_content = apply_filters( 'cooked_seo_recipe_content', '<h2>' . wp_kses_post( $recipe_excerpt ) . '</h2><h3>' . __( 'Ingredients', 'cooked' ) . '</h3>[cooked-ingredients checkboxes=false]<h3>' . __( 'Directions', 'cooked' ) . '</h3>[cooked-directions numbers=false]' );
         $seo_content = do_shortcode( $seo_content );
 
-        // Unhook this function so it doesn't loop infinitely
+        // Unhook this function so it doesn't loop infinitely.
         remove_action( 'save_post', [ &$this, 'save_recipe_meta_box' ] );
 
-        // Update the post, which calls save_post again
-        // @TODO: Check if Elementor is active first
+        // Update the post, which calls save_post again. Integrations such as Elementor can
+        // opt out through the cooked_should_update_post_content filter.
         $should_update_content = apply_filters( 'cooked_should_update_post_content', true, $post_id );
         if ( $should_update_content ) {
             wp_update_post(
@@ -224,13 +234,18 @@ class RecipeMeta {
             );
         }
 
-        // Re-hook this function
+        // Re-hook this function.
         add_action( 'save_post', [ &$this, 'save_recipe_meta_box' ] );
     }
 
+    /**
+     * Warns in the editor when a recipe embeds itself.
+     *
+     * @return void
+     */
     public function recipe_embed_shortcode_admin_notice() {
         $screen = get_current_screen();
-        if ( ! $screen || $screen->post_type !== 'cp_recipe' || $screen->base !== 'post' ) {
+        if ( ! $screen || 'cp_recipe' !== $screen->post_type || 'post' !== $screen->base ) {
             return;
         }
 
@@ -261,7 +276,7 @@ class RecipeMeta {
     /**
      * Render Meta Box content.
      *
-     * @param \WP_Post $post The post object.
+     * @return void
      */
     public function render_recipe_meta_box() {
         global $post;
@@ -276,6 +291,11 @@ class RecipeMeta {
         wp_nonce_field( 'cooked_recipe_custom_box', 'cooked_recipe_custom_box_nonce' );
     }
 
+    /**
+     * Prints the Bulk Add modal for ingredients and directions.
+     *
+     * @return void
+     */
     public static function bulk_add_modal() {
         // Frontend submit form uses cooked-button + colors.php; wp-admin uses core .button styles.
         if ( is_admin() ) {

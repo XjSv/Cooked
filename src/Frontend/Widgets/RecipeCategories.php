@@ -16,9 +16,11 @@ namespace Cooked\Frontend\Widgets;
  *
  * @since 1.6.4
  */
-
 class RecipeCategories extends \WP_Widget {
 
+    /**
+     * Registers the recipe categories widget.
+     */
     public function __construct() {
         $widget_ops = [
             'classname'   => 'cooked_widget_recipe_categories',
@@ -27,6 +29,13 @@ class RecipeCategories extends \WP_Widget {
         parent::__construct( 'cooked_widget_recipe_categories', 'Cooked - Recipe Categories', $widget_ops );
     }
 
+    /**
+     * Outputs the recipe categories widget.
+     *
+     * @param array<string, mixed> $args     Widget area arguments (before_widget, after_widget, ...).
+     * @param array<string, mixed> $instance Widget settings.
+     * @return void
+     */
     public function widget( $args, $instance ) {
 
         echo wp_kses_post( $args['before_widget'] );
@@ -43,6 +52,12 @@ class RecipeCategories extends \WP_Widget {
         echo wp_kses_post( $args['after_widget'] );
     }
 
+    /**
+     * Renders the recipe categories widget settings form.
+     *
+     * @param array<string, mixed> $instance Current widget settings.
+     * @return string|null Nothing; the form is printed (WP_Widget::form() returns string|null).
+     */
     public function form( $instance ) {
 
         $title            = ! empty( $instance['title'] ) ? $instance['title'] : false;
@@ -67,7 +82,7 @@ class RecipeCategories extends \WP_Widget {
                     <?php
 					foreach ( $categories_array as $key => $val ) :
 						?>
-                        <option value="<?php echo esc_attr( $key ); ?>"<?php echo $child_of == $key ? ' selected' : ''; ?>><?php echo esc_html( $val ); ?></option>
+                        <option value="<?php echo esc_attr( $key ); ?>"<?php echo (string) $child_of === (string) $key ? ' selected' : ''; ?>><?php echo esc_html( $val ); ?></option>
                         <?php
                     endforeach;
                 endif;
@@ -81,8 +96,16 @@ class RecipeCategories extends \WP_Widget {
         </p>
 
         <?php
+        return null;
     }
 
+    /**
+     * Saves the recipe categories widget settings.
+     *
+     * @param array<string, mixed> $new_instance Settings submitted in the widget form.
+     * @param array<string, mixed> $old_instance Previously saved settings.
+     * @return array<string, mixed>
+     */
     public function update( $new_instance, $old_instance ) {
 
         $instance               = [];

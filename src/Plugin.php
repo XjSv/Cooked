@@ -22,6 +22,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 final class Plugin {
 
     /**
+     * The single plugin instance.
+     *
      * @var \Cooked_Plugin
      * @since 1.0.0
      */
@@ -293,11 +295,11 @@ final class Plugin {
      * @return void
      */
     private function module_setup() {
-        // Look for Cooked Modules
+        // Look for Cooked Modules.
         $modules = file_exists( COOKED_DIR . 'modules' ) ? scandir( COOKED_DIR . 'modules' ) : false;
         if ( $modules ) :
             foreach ( $modules as $module_name ) :
-                if ( $module_name !== '.' && $module_name !== '..' ) :
+                if ( '.' !== $module_name && '..' !== $module_name ) :
                     if ( file_exists( COOKED_DIR . 'modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ) :
                         require_once COOKED_DIR . 'modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
                     endif;
@@ -305,12 +307,12 @@ final class Plugin {
             endforeach;
         endif;
 
-        // Look for Cooked Modules in Parent Theme
+        // Look for Cooked Modules in Parent Theme.
         $parent_theme_folder = trailingslashit( get_template_directory() );
         $modules             = file_exists( $parent_theme_folder . 'cooked-modules' ) ? scandir( $parent_theme_folder . 'cooked-modules' ) : false;
         if ( $modules ) :
             foreach ( $modules as $module_name ) :
-                if ( $module_name !== '.' && $module_name !== '..' ) :
+                if ( '.' !== $module_name && '..' !== $module_name ) :
                     if ( file_exists( $parent_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ) :
                         require_once $parent_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
                     endif;
@@ -318,13 +320,13 @@ final class Plugin {
             endforeach;
         endif;
 
-        // Look for Cooked Modules in Child Theme (if one is active)
+        // Look for Cooked Modules in Child Theme (if one is active).
         $child_theme_folder = trailingslashit( get_stylesheet_directory() );
-        if ( $child_theme_folder != $parent_theme_folder ) :
+        if ( $child_theme_folder !== $parent_theme_folder ) :
             $modules = file_exists( $child_theme_folder . 'cooked-modules' ) ? scandir( $child_theme_folder . 'cooked-modules' ) : false;
             if ( $modules ) :
                 foreach ( $modules as $module_name ) :
-                    if ( $module_name !== '.' && $module_name !== '..' ) :
+                    if ( '.' !== $module_name && '..' !== $module_name ) :
                         if ( file_exists( $child_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php' ) ) :
                             require_once $child_theme_folder . 'cooked-modules/' . esc_attr( $module_name ) . '/' . esc_attr( $module_name ) . '.php';
                         endif;
@@ -341,11 +343,11 @@ final class Plugin {
      * @return void
      */
     public function initialize_plugin_support() {
-        if ( in_array( 'wordpress-seo/wp-seo.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+        if ( in_array( 'wordpress-seo/wp-seo.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
             self::$instance->yoastseo = new \Cooked_YoastSEO();
         }
 
-        if ( in_array( 'seo-by-rank-math/rank-math.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+        if ( in_array( 'seo-by-rank-math/rank-math.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
             self::$instance->rankmathseo = new \Cooked_RankMathSEO();
         }
     }
@@ -359,10 +361,10 @@ final class Plugin {
         $current_version = get_option( 'cooked_version', '0' );
 
         if ( version_compare( $current_version, COOKED_VERSION, '<' ) ) {
-            // Run migrations
+            // Run migrations.
             $this->migration->init();
 
-            // Update version in database
+            // Update version in database.
             update_option( 'cooked_version', COOKED_VERSION );
         }
     }
@@ -379,7 +381,6 @@ final class Plugin {
      */
     public function __clone() {
         // Nope, can't do that.
-        return false;
     }
 
     /**
@@ -391,7 +392,6 @@ final class Plugin {
      */
     public function __wakeup() {
         // Nope, can't do that either.
-        return false;
     }
 
     /**
@@ -443,12 +443,12 @@ final class Plugin {
             define( 'CAL_GREGORIAN', 1 );
         }
 
-        // Time Format
+        // Time Format.
         if ( ! defined( 'COOKED_TIME_FORMAT' ) ) {
             define( 'COOKED_TIME_FORMAT', get_option( 'time_format', 'g:ia' ) );
         }
 
-        // Date Format
+        // Date Format.
         if ( ! defined( 'COOKED_DATE_FORMAT' ) ) {
             define( 'COOKED_DATE_FORMAT', get_option( 'date_format', 'F j, Y' ) );
         }

@@ -1,0 +1,122 @@
+name: E2E Tests
+run-name: Playwright E2E tests (${{ github.ref_name }})
+
+on:
+  # Automatic runs disabled for now: run manually from the Actions tab.
+  # push:
+  #   branches: [ main, develop ]
+  # pull_request:
+  #   branches: [ main, develop ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: e2e-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck:
+    name: Type-check the suite
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Type-check
+        run: bun run test:e2e:typecheck
+
+      # Each spec folder under tests/playwright/tests needs a job below, or its specs never run in CI.
+      - name: Every suite has a job
+        run: |
+          for suite in $(find tests/playwright/tests -mindepth 1 -maxdepth 1 -type d -not -name '.*' -printf '%f\n'); do
+            grep -qE -- "suite: ${suite}$" .github/workflows/e2e.yml \
+              || { echo "::error::Spec folder '${suite}' has no job in e2e.yml"; exit 1; }
+          done
+
+  # One job per spec folder, each on its own wp-env site. A new folder gets an entry here.
+  # The suite's global setup creates the e2e users through WP-CLI before the specs run.
+  e2e:
+    name: ${{ matrix.name }}
+    needs: typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Admin
+            suite: admin
+          - name: Frontend
+            suite: frontend
+          - name: Security
+            suite: security
+          - name: Accessibility
+            suite: accessibility
+
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v6
+
+      # The plugin loads its classes through Composer's autoloader.
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          tools: composer
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --no-progress
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Build assets
+        run: bun run build
+
+      - name: Install Chromium
+        run: bunx playwright install --with-deps chromium
+
+      # Starts WordPress on localhost:8888 with the plugin mapped in (.wp-env.json).
+      # A separate step keeps environment errors apart from test failures.
+      - name: Start wp-env
+        run: bunx wp-env start
+
+      - name: Run tests
+        run: bun run test:e2e tests/playwright/tests/${{ matrix.suite }}
+        env:
+          CI: true
+
+      - name: WordPress debug log
+        if: failure()
+        run: bunx wp-env run cli cat wp-content/debug.log || true
+
+      - name: Upload report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ matrix.suite }}
+          path: |
+            tests/playwright/playwright-report
+            tests/playwright/test-results
+          retention-days: 7
+
+      - name: Stop wp-env
+        if: always()
+        run: bunx wp-env stop

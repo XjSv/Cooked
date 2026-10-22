@@ -67,11 +67,10 @@ function deleteCsvRecipes(): void {
 }
 
 async function importCsvFile(adminPage: Page, csvFileName: string) {
-  await adminPage.goto('/wp-admin/admin.php?page=cooked_import', { waitUntil: 'networkidle' });
+  await adminPage.goto('/wp-admin/admin.php?page=cooked_import#csv_import', { waitUntil: 'networkidle' });
+  await adminPage.locator('.cooked-admin-ready').waitFor();
 
-  await adminPage.locator('#cooked-settings-tab-csv_import a').click();
-
-  await expect(adminPage.locator('#cooked-settings-tab-content-csv_import')).toBeVisible({ timeout: 10000 });
+  await expect(adminPage.locator('#cooked-csv-file')).toBeAttached({ timeout: 10000 });
 
   const csvPath = path.join(SAMPLE_DATA_DIR, csvFileName);
   await adminPage.setInputFiles('#cooked-csv-file', csvPath);

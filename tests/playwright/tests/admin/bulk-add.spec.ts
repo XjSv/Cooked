@@ -3,16 +3,6 @@ import { deletePostsByTitle } from '../../utils/wp-cli';
 
 const TIMER_SHORTCODE = '[cooked-timer minutes="5"]5 Minutes[/cooked-timer]';
 
-declare global {
-  interface Window {
-    tinyMCE: {
-      get: (id: string) => {
-        getContent: (args?: { format?: string }) => string;
-      } | null;
-    };
-  }
-}
-
 test.describe('Bulk Add directions with cooked-timer shortcode', () => {
   let title: string;
 

@@ -17,7 +17,8 @@
     "SCRIPT_DEBUG": true,
     "COOKED_DEV": true,
     "WP_ENVIRONMENT_TYPE": "local",
-    "DISALLOW_FILE_EDIT": false
+    "DISALLOW_FILE_EDIT": false,
+    "DISALLOW_UNFILTERED_HTML": true
   },
   "lifecycleScripts": {
     "afterStart": "wp-env run cli wp plugin activate cooked"

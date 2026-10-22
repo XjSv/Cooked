@@ -1,16 +1,5 @@
 import { expect, type Page } from '@playwright/test';
 
-declare global {
-  interface Window {
-    tinyMCE: {
-      get: (id: string) => {
-        setContent: (content: string) => void;
-      };
-      editors: { [key: string]: unknown };
-    };
-  }
-}
-
 export async function fillAndPublishAdminRecipe(page: Page, recipeTitle: string): Promise<string> {
   await page.goto('/wp-admin/post-new.php?post_type=cp_recipe', { waitUntil: 'networkidle' });
 

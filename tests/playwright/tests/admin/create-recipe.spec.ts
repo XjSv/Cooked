@@ -13,17 +13,6 @@ function withoutDisableMetaTags(settings: Record<string, unknown>): Record<strin
   return { ...settings, advanced };
 }
 
-declare global {
-  interface Window {
-    tinyMCE: {
-      get: (id: string) => {
-        setContent: (content: string) => void;
-      };
-      editors: { [key: string]: any };
-    };
-  }
-}
-
 test.describe.configure({ mode: 'serial' });
 
 test.beforeAll(() => {

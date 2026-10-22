@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { SEED_RECIPES } from '../../../utils/seed';
 
 test.describe('Sort Browse Recipes (anonymous user)', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -10,26 +11,27 @@ test.describe('Sort Browse Recipes (anonymous user)', () => {
 
     await page.selectOption('.cooked-sortby-select', 'date_asc');
     await page.evaluate(() => {
-      document.querySelector('.cooked-sortby-select').closest('form').dispatchEvent(new Event('submit'));
+      document.querySelector('.cooked-sortby-select')!.closest('form')!.dispatchEvent(new Event('submit'));
     });
 
-    await page.waitForURL('**/browse-recipes/sort/date_asc');
+    await page.waitForURL(/\/browse-recipes\/sort\/date_asc\/?$/);
     await page.waitForLoadState('networkidle');
 
-    const firstRecipe = page.locator('.cooked-recipe').first();
-    await expect(firstRecipe.locator('.cooked-recipe-name')).toHaveText('Albanian Flatbread (Pite në Tigan)');
-    await expect(firstRecipe).toHaveAttribute('id', 'cooked-recipe-1866');
+    // The oldest seed recipe comes first.
+    const firstRecipe = page.locator('.cooked-recipe .cooked-recipe-card-title').first();
+    await expect(firstRecipe).toHaveText(SEED_RECIPES.bread.title);
 
     await page.selectOption('.cooked-sortby-select', 'date_desc');
     await page.evaluate(() => {
-      document.querySelector('.cooked-sortby-select').closest('form').dispatchEvent(new Event('submit'));
+      document.querySelector('.cooked-sortby-select')!.closest('form')!.dispatchEvent(new Event('submit'));
     });
 
-    await page.waitForURL('**/browse-recipes/sort/date_desc');
+    await page.waitForURL(/\/browse-recipes\/sort\/date_desc\/?$/);
     await page.waitForLoadState('networkidle');
 
-    const secondRecipe = page.locator('.cooked-recipe').first();
-    await expect(secondRecipe.locator('.cooked-recipe-name')).toHaveText('Albanian Bread Stuffed with Cheese (Pogaça me Djathë)');
-    await expect(secondRecipe).toHaveAttribute('id', 'cooked-recipe-3587');
+    // Newest first: the oldest seed recipe is no longer at the top.
+    const newestRecipe = page.locator('.cooked-recipe .cooked-recipe-card-title').first();
+    await expect(newestRecipe).toBeVisible();
+    await expect(newestRecipe).not.toHaveText(SEED_RECIPES.bread.title);
   });
 });

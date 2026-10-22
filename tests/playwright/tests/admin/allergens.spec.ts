@@ -140,7 +140,7 @@ test.describe('Frontend allergens (anonymous)', () => {
     }
 
     await page.goto('/?post_type=cp_recipe&p=' + recipeId, { waitUntil: 'networkidle' });
-    await expect(page.locator('h1.entry-title')).toHaveText(title);
+    await expect(page.locator('h1.entry-title, h1.wp-block-post-title')).toHaveText(title);
 
     const info = page.locator('.cooked-allergens-info');
     await expect(info).toBeVisible();

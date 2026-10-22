@@ -22,7 +22,7 @@ test.describe('Browse filters accessibility (anonymous user)', () => {
     await page
       .locator(`${browseSearch} .cooked-tax-column:has-text("Categories") a[href*="/recipe-category/bread"]`)
       .click();
-    await page.waitForURL('**/browse-recipes/recipe-category/bread');
+    await page.waitForURL(/\/browse-recipes\/recipe-category\/bread\/?$/);
     await page.waitForLoadState('networkidle');
     await page.locator('.cooked-recipe').first().waitFor();
     await expectAccessible(page);

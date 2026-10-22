@@ -30,6 +30,7 @@
     "analyze:php": "./vendor/bin/phpstan analyse --memory-limit=2G",
     "test:e2e:install": "bunx playwright install chromium",
     "test:e2e": "bunx playwright test --config tests/playwright/playwright.config.ts",
+    "test:e2e:typecheck": "tsc -p tests/playwright/tsconfig.json --noEmit",
     "test:e2e:a11y": "bunx playwright test --config tests/playwright/playwright.config.ts tests/playwright/tests/accessibility",
     "test:e2e:report": "bunx playwright show-report tests/playwright/playwright-report",
     "test:visual": "backstop test --config=tests/backstop/backstop.config.js",
@@ -77,6 +78,7 @@
     "gulp-sass": "^6.0.1",
     "gulp-uglify": "^3.0.2",
     "playwright": "^1.64.1",
-    "sass": "^1.106.0"
+    "sass": "^1.106.0",
+    "typescript": "^5.9.3"
   }
 }

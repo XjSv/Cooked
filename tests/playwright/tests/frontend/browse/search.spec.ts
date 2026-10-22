@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { SEED_RECIPES } from '../../../utils/seed';
 
 test.describe('Search Browse Recipes (anonymous user)', () => {
   test.use({ storageState: { cookies: [], origins: [] } });
@@ -11,15 +12,15 @@ test.describe('Search Browse Recipes (anonymous user)', () => {
     await page.fill('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search', 'beef');
 
     await page.evaluate(() => {
-      document.querySelector('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search').closest('form').dispatchEvent(new Event('submit'));
+      document.querySelector('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search')!.closest('form')!.dispatchEvent(new Event('submit'));
     });
 
-    await page.waitForURL('**/browse-recipes/search/beef/sort/date_desc');
+    await page.waitForURL(/\/browse-recipes\/search\/beef\/sort\/date_desc\/?$/);
     await page.waitForLoadState('networkidle');
 
-    const firstRecipe = page.locator('.cooked-recipe').first();
-    await expect(firstRecipe.locator('.cooked-recipe-name')).toHaveText('Albanian Pan-Fried Meatballs (Qofte të Skuqura)');
-    await expect(firstRecipe).toHaveAttribute('id', 'cooked-recipe-2761');
+    const titles = page.locator('.cooked-recipe .cooked-recipe-card-title');
+    await expect(titles.filter({ hasText: SEED_RECIPES.beef.title })).toBeVisible();
+    await expect(titles.filter({ hasText: SEED_RECIPES.chicken.title })).toHaveCount(0);
   });
 
   test('Search recipes by title (chicken)', async ({ page }) => {
@@ -30,14 +31,14 @@ test.describe('Search Browse Recipes (anonymous user)', () => {
     await page.fill('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search', 'chicken');
 
     await page.evaluate(() => {
-      document.querySelector('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search').closest('form').dispatchEvent(new Event('submit'));
+      document.querySelector('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search')!.closest('form')!.dispatchEvent(new Event('submit'));
     });
 
-    await page.waitForURL('**/browse-recipes/search/chicken/sort/date_desc');
+    await page.waitForURL(/\/browse-recipes\/search\/chicken\/sort\/date_desc\/?$/);
     await page.waitForLoadState('networkidle');
 
-    const firstRecipe = page.locator('.cooked-recipe').first();
-    await expect(firstRecipe.locator('.cooked-recipe-name')).toHaveText('Meatball Soup (Supë me Pasha Qofte)');
-    await expect(firstRecipe).toHaveAttribute('id', 'cooked-recipe-2886');
+    const titles = page.locator('.cooked-recipe .cooked-recipe-card-title');
+    await expect(titles.filter({ hasText: SEED_RECIPES.chicken.title })).toBeVisible();
+    await expect(titles.filter({ hasText: SEED_RECIPES.beef.title })).toHaveCount(0);
   });
 });

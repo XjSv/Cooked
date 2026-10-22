@@ -1,0 +1,725 @@
+// Recipe editor, new layout (body.cooked-recipe-editor, set by Enqueues::admin_body_class()
+// unless Settings > General > Admin Screens is set to Classic). The tab row matches the admin
+// frame's page tabs; the Layout tab uses templates/admin/frame/recipe-layout.php. Tabs that
+// have not been redesigned yet keep their classic content styles.
+
+body.cooked-recipe-editor {
+
+    // WordPress's boxes and fields on the page, rounded to match the Cooked meta box.
+    .postbox {
+        border-radius: var(--cooked-radius);
+    }
+
+    .postbox-header {
+        border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
+    }
+
+    .postbox.closed .postbox-header {
+        border-radius: var(--cooked-radius);
+    }
+
+    #major-publishing-actions {
+        border-radius: 0 0 var(--cooked-radius) var(--cooked-radius);
+    }
+
+    #screen-meta {
+        overflow: hidden;
+        border-radius: var(--cooked-radius) var(--cooked-radius) 0 var(--cooked-radius);
+    }
+
+    #titlediv #title,
+    #poststuff input[type="text"],
+    #poststuff input[type="number"],
+    #poststuff input[type="url"],
+    #poststuff input[type="email"],
+    #poststuff textarea,
+    #poststuff select,
+    #poststuff .button,
+    .page-title-action {
+        border-radius: var(--cooked-radius-sm);
+    }
+
+    .categorydiv div.tabs-panel {
+        border-radius: var(--cooked-radius-sm);
+    }
+
+    .categorydiv .category-tabs li {
+        border-radius: var(--cooked-radius-sm) var(--cooked-radius-sm) 0 0;
+    }
+
+    // Author: Tom Select (cooked-admin-functions.js), at the width of WordPress's select.
+    #authordiv .ts-wrapper {
+        max-width: 300px;
+    }
+
+    #cooked_recipe_settings {
+        overflow: clip visible; // round the corners without breaking the sticky tab row
+        border-color: var(--cooked-color-border);
+        border-radius: var(--cooked-radius);
+    }
+
+    #cooked_recipe_settings .postbox-header {
+        border-bottom-color: var(--cooked-color-border);
+    }
+
+    /* Tabs */
+    #cooked-recipe-tabs {
+        display: flex;
+        gap: 28px;
+        padding: 0 32px;
+        overflow-x: auto;
+        border-bottom: 1px solid var(--cooked-color-border);
+        background: var(--cooked-color-surface);
+        scrollbar-width: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        // One underline that slides to the active tab (cooked-admin-functions.js sets the variables).
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: var(--cooked-tab-w, 0);
+            height: 3px;
+            transform: translateX(var(--cooked-tab-x, 0));
+            background: var(--cooked-color-accent);
+            pointer-events: none;
+        }
+
+        &.is-animated::after {
+            transition: transform 300ms ease, width 300ms ease;
+
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
+        }
+
+        @media screen and (max-width: 600px) {
+            gap: 20px;
+            padding: 0 16px;
+        }
+    }
+
+    #cooked_recipe_settings.stuck #cooked-recipe-tabs {
+        box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.2);
+    }
+
+    #cooked-recipe-tabs li,
+    #cooked-recipe-tabs li:hover,
+    #cooked-recipe-tabs li.active {
+        position: relative;
+        flex: 0 0 auto;
+        height: auto;
+        padding: 14px 0 12px;
+        border: 0;
+        background: none;
+        color: var(--cooked-color-text);
+        font-size: 13px;
+        line-height: 1.5;
+        white-space: nowrap;
+        transition: color 200ms ease;
+    }
+
+    #cooked-recipe-tabs li .cooked-icon {
+        margin-right: 6px;
+        font-size: 13px;
+        vertical-align: -1px;
+    }
+
+    #cooked-recipe-tabs li:hover,
+    #cooked-recipe-tabs li.active {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    // Hover hint on inactive tabs, as on the admin frame's page tabs.
+    #cooked-recipe-tabs li::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        width: 24px;
+        height: 3px;
+        border-radius: 3px;
+        background: var(--cooked-color-accent);
+        opacity: 0.4;
+        transform: translateX(-50%) scaleX(0);
+        transition: transform 200ms ease;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    #cooked-recipe-tabs li:not(.active):hover::after {
+        transform: translateX(-50%) scaleX(1);
+    }
+
+    /* Layout tab */
+    #cooked-recipe-tab-content-content {
+        padding: 0;
+    }
+
+    .cooked-recipe-fields {
+        padding: 4px 32px 8px;
+        color: var(--cooked-color-text);
+
+        @media screen and (max-width: 600px) {
+            padding: 4px 16px 8px;
+        }
+    }
+
+    .cooked-recipe-section {
+        padding: 24px 0;
+
+        & + .cooked-recipe-section {
+            border-top: 1px solid var(--cooked-color-border);
+        }
+    }
+
+    .cooked-recipe-section-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 14px;
+
+        // Title and description stack; actions sit at the right.
+        > .cooked-recipe-section-title,
+        > .cooked-recipe-section-desc {
+            flex: 1 1 100%;
+        }
+    }
+
+    .cooked-recipe-section-title {
+        display: block;
+        margin: 0;
+        padding: 0;
+        color: var(--cooked-color-accent-strong);
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .cooked-recipe-section-title-row {
+        display: flex;
+        flex: 1 1 auto;
+        gap: 6px;
+        align-items: center;
+    }
+
+    // The "?" help tooltips (cooked-admin-functions.js), as buttons so they take keyboard focus.
+    button.cooked-tooltip-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: none;
+        color: var(--cooked-color-text-muted);
+        font-size: 14px;
+        cursor: help;
+
+        &:hover,
+        &:focus-visible {
+            color: var(--cooked-color-accent-strong);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--cooked-color-accent-strong);
+            outline-offset: 1px;
+        }
+    }
+
+    .cooked-recipe-section-desc {
+        margin: 4px 0 0;
+        color: var(--cooked-color-text-muted);
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    .cooked-recipe-section-head > .cooked-recipe-section-desc {
+        margin-top: -8px; // the head's row gap already separates them
+    }
+
+    .cooked-recipe-section-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    // The gap spaces the buttons: drop the classic Save as Default / Reset offsets.
+    #cooked_recipe_settings .cooked-recipe-section-actions .button {
+        top: auto;
+        margin: 0;
+        padding: 0 12px;
+    }
+
+    // Shortcode: description on the left, the code and its copy button on the right.
+    .cooked-recipe-section-inline {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        align-items: center;
+        justify-content: space-between;
+
+        .cooked-recipe-section-head {
+            margin-bottom: 0;
+        }
+    }
+
+    .cooked-shortcode-copy {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+
+        code {
+            padding: 6px 10px;
+            border: 1px solid var(--cooked-color-border);
+            border-radius: var(--cooked-radius-sm);
+            background: var(--cooked-color-surface-muted);
+            color: var(--cooked-color-text);
+            font-size: 13px;
+            user-select: all;
+        }
+    }
+
+    // Buttons in the Layout tab, in the frame's green outline style.
+    .cooked-recipe-fields .button {
+        min-height: 32px;
+        border-color: var(--cooked-color-accent-strong);
+        border-radius: var(--cooked-radius-sm);
+        background: var(--cooked-color-surface);
+        color: var(--cooked-color-accent-strong);
+        line-height: 30px;
+
+        &:hover {
+            background: var(--cooked-color-accent-soft);
+            color: var(--cooked-color-accent-hover);
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 1px var(--cooked-color-surface), 0 0 0 3px var(--cooked-color-accent-strong);
+            outline: none;
+        }
+
+        &.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+    }
+
+    .cooked-recipe-fields .button.cooked-layout-load-default {
+        border-color: #8c8f94;
+        color: var(--cooked-color-text-muted);
+
+        &:hover {
+            background: var(--cooked-color-surface-muted);
+            color: var(--cooked-color-text);
+        }
+    }
+
+    .cooked-save-default-panel .cooked-tooltip-heading {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    // Difficulty and the three times.
+    .cooked-recipe-details-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 16px;
+
+        @media screen and (max-width: 1100px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @media screen and (max-width: 480px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .cooked-recipe-field label {
+        display: block;
+        margin: 0 0 6px;
+        color: var(--cooked-color-text);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    // The ID outranks the classic #cooked_recipe_settings field rules.
+    #cooked_recipe_settings .cooked-recipe-fields select,
+    #cooked_recipe_settings .cooked-recipe-fields input[type="number"],
+    #cooked_recipe_settings .cooked-recipe-fields textarea {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        min-height: 40px;
+        margin: 0;
+        padding: 8px 12px;
+        border: 1px solid #8c8f94;
+        border-radius: var(--cooked-radius-sm);
+        background-color: var(--cooked-color-surface);
+        color: var(--cooked-color-text);
+        font-size: 14px;
+        line-height: 1.5;
+        box-shadow: none;
+
+        &:focus {
+            border-color: var(--cooked-color-accent-strong);
+            box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+            outline: none;
+        }
+    }
+
+    // cooked-admin-functions.js wraps selects in .cooked-select-wrapper, which draws Cooked's chevron.
+    #cooked_recipe_settings .cooked-recipe-fields .cooked-select-wrapper,
+    #cooked_recipe_settings .cooked-recipe-fields .cooked-select-wrapper.is-enhanced {
+        display: block;
+        min-width: 0; // fit the grid column (Settings gives enhanced selects a 220px minimum)
+        margin: 0;
+        border-radius: var(--cooked-radius-sm);
+        background: var(--cooked-color-surface);
+
+        &::before {
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--cooked-color-text-muted);
+        }
+
+        &:hover::before {
+            color: var(--cooked-color-text);
+        }
+
+        select {
+            padding-right: 36px;
+            background: transparent;
+            cursor: pointer;
+        }
+    }
+
+    .cooked-recipe-fields textarea {
+        display: block;
+        resize: vertical;
+    }
+
+    // "minutes" sits inside the field, at the right.
+    #cooked_recipe_settings .cooked-input-suffix {
+        position: relative;
+        display: block;
+
+        input[type="number"] {
+            padding-right: 72px;
+            -moz-appearance: textfield;
+
+            &::-webkit-outer-spin-button,
+            &::-webkit-inner-spin-button {
+                margin: 0;
+                -webkit-appearance: none;
+            }
+        }
+
+        .cooked-time-picker-text {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+            color: var(--cooked-color-text-muted);
+            font-size: 13px;
+            pointer-events: none;
+        }
+    }
+
+    // WordPress editors (TinyMCE 4 and Quicktags): one rounded field with a flat toolbar,
+    // and the Visual/Code switch as a small segmented control in its top bar.
+    .cooked-recipe-fields .wp-editor-wrap {
+        overflow: hidden;
+        border: 1px solid #8c8f94;
+        border-radius: var(--cooked-radius);
+        background: var(--cooked-color-surface);
+
+        &:focus-within {
+            border-color: var(--cooked-color-accent-strong);
+            box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+        }
+    }
+
+    .cooked-recipe-fields .wp-editor-wrap {
+        position: relative;
+    }
+
+    // The switch sits at the right end of the toolbar row instead of a row of its own.
+    .cooked-recipe-fields .wp-editor-tools {
+        position: absolute;
+        z-index: 2;
+        top: 6px;
+        right: 8px;
+        padding: 0;
+        border: 0;
+        background: none;
+    }
+
+    .cooked-recipe-fields div.mce-toolbar-grp > div,
+    .cooked-recipe-fields .quicktags-toolbar {
+        padding-right: 130px;
+    }
+
+    // Visual/Code: a segmented control whose thumb slides to the active side. WordPress
+    // marks the wrapper .tmce-active or .html-active; the buttons share the width equally.
+    .cooked-recipe-fields .wp-editor-tabs {
+        position: relative;
+        display: inline-grid;
+        grid-template-columns: 1fr 1fr;
+        float: none;
+        padding: 2px;
+        border-radius: var(--cooked-radius-sm);
+        background: var(--cooked-color-border);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 2px;
+            bottom: 2px;
+            left: 2px;
+            width: calc(50% - 2px);
+            border-radius: 3px;
+            background: var(--cooked-color-surface);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+            transition: transform 250ms cubic-bezier(.22, .61, .36, 1);
+
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
+        }
+    }
+
+    .cooked-recipe-fields .html-active .wp-editor-tabs::before {
+        transform: translateX(100%);
+    }
+
+    .cooked-recipe-fields .wp-switch-editor,
+    .cooked-recipe-fields .tmce-active .switch-tmce,
+    .cooked-recipe-fields .html-active .switch-html {
+        position: relative; // above the thumb
+        float: none;
+        top: 0;
+        height: auto;
+        min-width: 56px;
+        margin: 0;
+        padding: 3px 12px;
+        border: 0;
+        border-radius: 3px;
+        background: transparent;
+        box-shadow: none;
+        color: var(--cooked-color-text-muted);
+        font-size: 12px;
+        font-weight: 500;
+        line-height: 1.6;
+        text-align: center;
+        transition: color 250ms ease;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    .cooked-recipe-fields .tmce-active .switch-tmce,
+    .cooked-recipe-fields .html-active .switch-html {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    .cooked-recipe-fields .wp-switch-editor:focus-visible {
+        outline: 2px solid var(--cooked-color-accent-strong);
+        outline-offset: 1px;
+    }
+
+    .cooked-recipe-fields .wp-editor-container {
+        border: 0;
+    }
+
+    .cooked-recipe-fields div.mce-toolbar-grp,
+    .cooked-recipe-fields .quicktags-toolbar {
+        padding: 4px 6px;
+        border-bottom: 1px solid var(--cooked-color-border);
+        background: var(--cooked-color-surface);
+    }
+
+    .cooked-recipe-fields .mce-toolbar .mce-btn-group .mce-btn,
+    .cooked-recipe-fields .mce-toolbar .mce-btn-group .mce-btn:focus {
+        margin: 1px;
+        border: 0;
+        border-radius: var(--cooked-radius-sm);
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .cooked-recipe-fields .mce-toolbar .mce-btn-group .mce-btn:hover,
+    .cooked-recipe-fields .mce-toolbar .mce-btn-group .mce-btn.mce-active {
+        background: var(--cooked-color-accent-soft);
+        box-shadow: none;
+    }
+
+    .cooked-recipe-fields .mce-toolbar .mce-btn i,
+    .cooked-recipe-fields .mce-toolbar .mce-btn .mce-txt {
+        color: var(--cooked-color-text-muted);
+    }
+
+    .cooked-recipe-fields .mce-toolbar .mce-btn:hover i,
+    .cooked-recipe-fields .mce-toolbar .mce-btn.mce-active i {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    .cooked-recipe-fields .mce-toolbar .mce-listbox,
+    .cooked-recipe-fields .mce-toolbar .mce-listbox:hover {
+        border: 1px solid var(--cooked-color-border);
+        background: var(--cooked-color-surface);
+    }
+
+    .cooked-recipe-fields .quicktags-toolbar input.button.button-small {
+        min-height: 26px;
+        border-color: var(--cooked-color-border);
+        color: var(--cooked-color-text);
+        line-height: 24px;
+    }
+
+    .cooked-recipe-fields .mce-panel.mce-tinymce {
+        border: 0;
+        box-shadow: none;
+    }
+
+    .cooked-recipe-fields .mce-statusbar {
+        border-top: 1px solid var(--cooked-color-border);
+        background: var(--cooked-color-surface-muted);
+    }
+
+    // Code view: the template is shortcodes, so monospace there too. The ID outranks the
+    // field rule above, so the textarea sits flush under the toolbar inside the rounded frame.
+    #cooked_recipe_settings .cooked-recipe-fields textarea.wp-editor-area {
+        top: 0;
+        display: block;
+        margin: 0;
+        min-height: 0;
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        font-size: 13px;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    .cooked-recipe-notice {
+        margin: 24px 0 0;
+        padding: 12px 16px;
+        border-left: 4px solid var(--cooked-color-warning);
+        border-radius: var(--cooked-radius-sm);
+        background: #fff8e5;
+        color: var(--cooked-color-text);
+
+        strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+    }
+}
+
+// Allergens meta box: a grid of selectable tiles. The checkbox stays in the label (invisible,
+// over the tile), so clicks, keyboard and screen readers work as before; the tile shows its state.
+body.cooked-recipe-editor #cooked_allergens {
+    border-color: var(--cooked-color-border);
+    border-radius: var(--cooked-radius);
+
+    .cooked-allergens-checkboxes {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+        gap: 6px;
+        flex-direction: unset;
+        padding: 2px 0;
+    }
+
+    .cooked-allergen-checkbox {
+        position: relative;
+        gap: 8px;
+        min-height: 36px;
+        padding: 6px 8px;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: 6px;
+        background: var(--cooked-color-surface);
+        transition: border-color 150ms ease, background-color 150ms ease;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+
+        &:hover {
+            border-color: #8c8f94;
+        }
+    }
+
+    // Invisible, but covering the whole tile, so every click lands on the checkbox itself.
+    .cooked-allergen-checkbox input[type="checkbox"] {
+        position: absolute;
+        z-index: 1;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        border: 0;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+    .cooked-allergen,
+    .cooked-allergen .cooked-icon {
+        color: var(--cooked-color-text-muted);
+    }
+
+    .cooked-allergen .cooked-icon {
+        font-size: 1.25rem;
+    }
+
+    .cooked-allergen-label {
+        color: var(--cooked-color-text);
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    // Selected: green tile with a check badge in the corner.
+    .cooked-allergen-checkbox:has(input:checked) {
+        border-color: var(--cooked-color-accent-strong);
+        background: var(--cooked-color-accent-soft);
+
+        .cooked-allergen,
+        .cooked-allergen .cooked-icon,
+        .cooked-allergen-label {
+            color: var(--cooked-color-accent-strong);
+        }
+
+        .cooked-allergen-label {
+            font-weight: 600;
+        }
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--cooked-color-accent-fill) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") no-repeat center / 9px;
+        }
+    }
+
+    .cooked-allergen-checkbox:has(input:focus-visible) {
+        outline: 2px solid var(--cooked-color-accent-strong);
+        outline-offset: 1px;
+    }
+}

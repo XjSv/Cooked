@@ -198,6 +198,9 @@ class Settings {
             $settings['dark_mode'] = self::normalize_dark_mode( $settings['dark_mode'] );
         }
 
+        // Per-user preferences kept in user meta (save_admin_dark_mode()), not site settings.
+        unset( $settings['admin_dark_mode'], $settings['editor_dark_mode'] );
+
         return $settings;
     }
 
@@ -309,9 +312,21 @@ class Settings {
     }
 
     /**
-     * Saves the "Admin screens" dark mode row (a user preference, not a site setting) when
-     * the Settings form is submitted. Runs on sanitize_option_cooked_settings, after
-     * options.php has checked the form's nonce and the user's capability.
+     * The current user's dark mode for the recipe editor (new layout): off, enabled, or auto.
+     * A personal preference, stored per user, separate from the admin screens' one.
+     *
+     * @since 2.0.0
+     * @return string
+     */
+    public static function editor_dark_mode() {
+        return self::normalize_dark_mode( get_user_meta( get_current_user_id(), 'cooked_editor_dark_mode', true ) );
+    }
+
+    /**
+     * Saves the per-user dark mode selects (Admin Dark Mode and Recipe Editor Dark Mode; user
+     * preferences, not site settings) when the Settings form is submitted. Runs on
+     * sanitize_option_cooked_settings, after options.php has checked the form's nonce and the
+     * user's capability.
      *
      * @since 2.0.0
      * @param mixed $value The sanitized cooked_settings value, returned unchanged.
@@ -319,9 +334,12 @@ class Settings {
      */
     public static function save_admin_dark_mode( $value ) {
         // phpcs:disable WordPress.Security.NonceVerification.Missing -- options.php verified the settings form's nonce.
-        if ( isset( $_POST['option_page'], $_POST['cooked_admin_dark_mode'] ) && 'cooked_settings_group' === $_POST['option_page'] && current_user_can( 'edit_cooked_settings' ) ) {
-            $mode = self::normalize_dark_mode( sanitize_key( wp_unslash( $_POST['cooked_admin_dark_mode'] ) ) );
-            update_user_meta( get_current_user_id(), 'cooked_admin_dark_mode', $mode );
+        if ( isset( $_POST['option_page'] ) && 'cooked_settings_group' === $_POST['option_page'] && current_user_can( 'edit_cooked_settings' ) ) {
+            foreach ( [ 'cooked_admin_dark_mode', 'cooked_editor_dark_mode' ] as $meta_key ) {
+                if ( isset( $_POST[ $meta_key ] ) ) {
+                    update_user_meta( get_current_user_id(), $meta_key, self::normalize_dark_mode( sanitize_key( wp_unslash( $_POST[ $meta_key ] ) ) ) );
+                }
+            }
         }
         // phpcs:enable WordPress.Security.NonceVerification.Missing
         return $value;
@@ -603,7 +621,7 @@ class Settings {
 						],
 						'admin_interface'                  => [
 							'title'   => __( 'Admin Screens', 'cooked' ),
-							'desc'    => __( 'Cooked 2.0 shows its Settings, Import, What\'s New and Upgrade to Pro screens in a new layout. Switch to the classic layout if you prefer the previous one.', 'cooked' ),
+							'desc'    => __( 'Cooked 2.0 shows its Settings, Import, What\'s New and Upgrade to Pro screens, and the recipe editor, in a new layout. Switch to the classic layout if you prefer the previous one.', 'cooked' ),
 							'type'    => 'checkboxes',
 							'default' => [],
 							'options' => [
@@ -642,17 +660,14 @@ class Settings {
 					'icon'   => 'pencil',
 					'fields' => [
 						'dark_mode'               => [
-							'title'         => __( 'Dark Mode', 'cooked' ),
-							// Describes the site-wide "Front end" row, so field_dark_mode() prints it there
-							// rather than under the title; the "Admin screens" row is a per-user preference.
-							'desc'          => apply_filters(
+							'title'   => __( 'Dark Mode', 'cooked' ),
+							'desc'    => apply_filters(
 								'cooked_dark_mode_field_desc',
-								__( 'Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off.', 'cooked' )
+								__( 'For your recipes on the site. Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off.', 'cooked' )
 							),
-							'desc_in_field' => true,
-							'type'          => 'dark_mode',
-							'default'       => 'off',
-							'options'       => apply_filters(
+							'type'    => 'select',
+							'default' => 'off',
+							'options' => apply_filters(
 								'cooked_dark_mode_options',
 								[
 									'off'     => __( 'Off', 'cooked' ),
@@ -660,6 +675,31 @@ class Settings {
 									'auto'    => __( 'Auto (match theme dark mode)', 'cooked' ),
 								]
 							),
+						],
+						// Per-user preferences, saved to user meta (save_admin_dark_mode()), not to cooked_settings.
+						'admin_dark_mode'         => [
+							'title'    => __( 'Admin Dark Mode', 'cooked' ),
+							'desc'     => __( 'Your own preference for the Settings, Import, What\'s New and Upgrade to Pro screens. <strong>Auto</strong> follows your computer\'s light or dark setting.', 'cooked' ),
+							'type'     => 'user_dark_mode',
+							'meta_key' => 'cooked_admin_dark_mode', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- A user meta name, not a query.
+							'default'  => 'off',
+							'options'  => [
+								'off'     => __( 'Off', 'cooked' ),
+								'enabled' => __( 'On', 'cooked' ),
+								'auto'    => __( 'Auto (match your system)', 'cooked' ),
+							],
+						],
+						'editor_dark_mode'        => [
+							'title'    => __( 'Recipe Editor Dark Mode', 'cooked' ),
+							'desc'     => __( 'Your own preference for the recipe editor. <strong>Auto</strong> follows your computer\'s light or dark setting.', 'cooked' ),
+							'type'     => 'user_dark_mode',
+							'meta_key' => 'cooked_editor_dark_mode', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- A user meta name, not a query.
+							'default'  => 'off',
+							'options'  => [
+								'off'     => __( 'Off', 'cooked' ),
+								'enabled' => __( 'On', 'cooked' ),
+								'auto'    => __( 'Auto (match your system)', 'cooked' ),
+							],
 						],
 						'hide_author_avatars'     => [
 							'title'   => __( 'Author Images', 'cooked' ),
@@ -890,55 +930,27 @@ class Settings {
     }
 
     /**
-     * Dark Mode: a site-wide "Front end" select and a personal "Admin screens" select.
+     * Renders a per-user dark mode select (Admin Dark Mode, Recipe Editor Dark Mode): the current
+     * user's preference from the field's meta_key, saved by save_admin_dark_mode().
      *
      * @since 2.0.0
-     * @param string               $field_name Setting key (dark_mode).
-     * @param array<string,string> $options    Front-end modes.
-     * @param string|false         $color      Unused.
-     * @param array<string, mixed> $field      Field definition.
+     * @param string                    $field_name Setting key.
+     * @param array<int|string, string> $options    Choices, value => label.
+     * @param string|false              $color      Unused.
+     * @param array<string, mixed>      $field      Field definition, with its user meta key.
      * @return void
      */
-    public static function field_dark_mode( $field_name, $options, $color = false, $field = [] ) {
-        global $_cooked_settings;
-
-        $rows = [
-            [
-                'id'      => 'cooked-dark-mode-front',
-                'name'    => 'cooked_settings[' . $field_name . ']',
-                'label'   => __( 'Front end', 'cooked' ),
-                'desc'    => isset( $field['desc'] ) ? $field['desc'] : '',
-                'options' => $options,
-                'value'   => self::normalize_dark_mode( isset( $_cooked_settings[ $field_name ] ) ? $_cooked_settings[ $field_name ] : 'off' ),
-            ],
-            [
-                'id'      => 'cooked-dark-mode-admin',
-                'name'    => 'cooked_admin_dark_mode',
-                'label'   => __( 'Admin screens', 'cooked' ),
-                'desc'    => __( 'Your own preference: it only changes how Cooked\'s admin screens look for you. <strong>Auto</strong> follows your computer\'s light or dark setting.', 'cooked' ),
-                'options' => [
-                    'off'     => __( 'Off', 'cooked' ),
-                    'enabled' => __( 'On', 'cooked' ),
-                    'auto'    => __( 'Auto (match your system)', 'cooked' ),
-                ],
-                'value'   => self::admin_dark_mode(),
-            ],
-        ];
-
-        echo '<div class="cooked-dark-mode-rows">';
-        foreach ( $rows as $row ) {
-            echo '<div class="cooked-dark-mode-row">';
-                echo '<label class="cooked-dark-mode-label" id="' . esc_attr( $row['id'] ) . '-label" for="' . esc_attr( $row['id'] ) . '">' . esc_html( $row['label'] ) . '</label>';
-                echo $row['desc'] ? '<p>' . wp_kses_post( $row['desc'] ) . '</p>' : '';
-                // Named by aria-labelledby too: Tom Select points the <label for> at its own control.
-                echo '<p><select id="' . esc_attr( $row['id'] ) . '" aria-labelledby="' . esc_attr( $row['id'] ) . '-label" name="' . esc_attr( $row['name'] ) . '">';
-            foreach ( $row['options'] as $value => $label ) {
-                echo '<option value="' . esc_attr( $value ) . '"' . selected( $row['value'], $value, false ) . '>' . esc_html( $label ) . '</option>';
-            }
-                echo '</select></p>';
-            echo '</div>';
+    public static function field_user_dark_mode( $field_name, $options, $color = false, $field = [] ) {
+        $meta_key = isset( $field['meta_key'] ) ? (string) $field['meta_key'] : '';
+        if ( ! in_array( $meta_key, [ 'cooked_admin_dark_mode', 'cooked_editor_dark_mode' ], true ) ) {
+            return;
         }
-        echo '</div>';
+        $current = self::normalize_dark_mode( get_user_meta( get_current_user_id(), $meta_key, true ) );
+        echo '<p><select id="' . esc_attr( str_replace( '_', '-', $meta_key ) ) . '" name="' . esc_attr( $meta_key ) . '" aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '">';
+        foreach ( $options as $value => $label ) {
+            echo '<option value="' . esc_attr( (string) $value ) . '"' . selected( $current, $value, false ) . '>' . esc_html( $label ) . '</option>';
+        }
+        echo '</select></p>';
     }
 
     /**

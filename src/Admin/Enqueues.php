@@ -73,6 +73,38 @@ class Enqueues {
     }
 
     /**
+     * CSS for inside the recipe editor's TinyMCE iframes (the page styles cannot reach them):
+     * the admin font instead of the default serif, the user's recipe editor dark mode, and for the
+     * template editor, each top-level element (usually one shortcode per line) as a block.
+     *
+     * No double quotes: WordPress prints TinyMCE settings inside a double-quoted JavaScript string.
+     *
+     * @since 2.0.0
+     * @param bool $template Whether this is the Recipe Template editor.
+     * @return string
+     */
+    public static function recipe_editor_content_style( $template = false ) {
+        $css = 'body{margin:12px 14px;color:#1e1e1e;font:14px/1.6 -apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Oxygen-Sans,Ubuntu,Cantarell,\'Helvetica Neue\',sans-serif}p{margin:0 0 10px}a{color:#007a55}';
+        if ( $template ) {
+            $css .= 'body{margin:12px}body>*{margin:0 0 8px;padding:8px 12px;border:1px solid #e3e5e8;border-radius:6px;background:#f6f7f8;color:#1e1e1e;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}body>ul,body>ol{padding-left:32px}';
+        }
+
+        $dark = 'body{background:#1f2328;color:#e4e6e8}a{color:#3dd6a3}';
+        if ( $template ) {
+            $dark .= 'body>*{border-color:#3a3f45;background:#262b31;color:#e4e6e8}';
+        }
+
+        $dark_mode = \Cooked_Settings::editor_dark_mode();
+        if ( 'enabled' === $dark_mode ) {
+            $css .= $dark;
+        } elseif ( 'auto' === $dark_mode ) {
+            $css .= '@media (prefers-color-scheme:dark){' . $dark . '}';
+        }
+
+        return $css;
+    }
+
+    /**
      * Whether the classic (pre-2.0) admin screens are selected in Settings > General.
      *
      * @since 2.0.0
@@ -145,11 +177,25 @@ class Enqueues {
      */
     public function admin_body_class( $classes ) {
         $screen = get_current_screen();
-        if ( $screen && self::app_screen_for( $screen->id ) ) {
-            $classes .= ' cooked-admin-page';
+        if ( ! $screen ) {
+            return $classes;
+        }
 
-            // The user's admin dark mode (Settings > Design > Dark Mode > Admin screens).
-            $dark_mode = \Cooked_Settings::admin_dark_mode();
+        // The recipe editor's new layout (templates/admin/frame/recipe-layout.php).
+        $is_recipe_editor = 'cp_recipe' === $screen->post_type && 'post' === $screen->base && ! self::use_classic_ui();
+        if ( $is_recipe_editor ) {
+            $classes .= ' cooked-recipe-editor';
+        }
+
+        $is_frame_screen = (bool) self::app_screen_for( $screen->id );
+        if ( $is_frame_screen ) {
+            $classes .= ' cooked-admin-page';
+        }
+
+        if ( $is_frame_screen || $is_recipe_editor ) {
+            // The user's own dark mode (Settings > Design): Admin Dark Mode for the frame screens,
+            // Recipe Editor Dark Mode for the editor.
+            $dark_mode = $is_recipe_editor ? \Cooked_Settings::editor_dark_mode() : \Cooked_Settings::admin_dark_mode();
             if ( 'enabled' === $dark_mode ) {
                 $classes .= ' cooked-admin-dark';
             } elseif ( 'auto' === $dark_mode ) {
@@ -259,7 +305,6 @@ class Enqueues {
 					'sectionsScrollLeft'  => __( 'Scroll sections left', 'cooked' ),
 					'sectionsScrollRight' => __( 'Scroll sections right', 'cooked' ),
 					'version'             => __( 'Version:', 'cooked' ),
-					'copied'              => __( 'Copied', 'cooked' ),
 					'changelog'           => __( 'Changelog', 'cooked' ),
 					'changelogError'      => __( 'The changelog could not be loaded. Please try again.', 'cooked' ),
 					/* translators: %s: a sample CSV file's name, e.g. "Small (1 recipe)" */
@@ -423,6 +468,7 @@ class Enqueues {
                     'i18n_edit_image_title'                => __( 'Edit Gallery Item', 'cooked' ),
                     'i18n_edit_image_button'               => __( 'Update Gallery Item', 'cooked' ),
                     'i18n_saved'                           => __( 'Saved', 'cooked' ),
+                    'i18n_copied'                          => __( 'Copied', 'cooked' ),
                     'i18n_applied'                         => __( 'Applied', 'cooked' ),
                     'i18n_confirm_save_default_all'        => __( 'Are you sure you want to apply this new template to all of your recipes?', 'cooked' ),
                     'i18n_confirm_load_default'            => __( 'Are you sure you want to reset this recipe template to the Cooked plugin default?', 'cooked' ),
@@ -471,8 +517,11 @@ class Enqueues {
                 wp_register_script( 'cooked-floating-ui-core', COOKED_URL . 'assets/vendor/floating-ui/floating-ui.core.umd.min.js', [], '1.8.0', true );
                 wp_register_script( 'cooked-floating-ui-dom', COOKED_URL . 'assets/vendor/floating-ui/floating-ui.dom.umd.min.js', [ 'cooked-floating-ui-core' ], '1.8.0', true );
 
-                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/js/cooked-admin-functions' . $min . '.js', [ 'jquery', 'cooked-floating-ui-dom' ], COOKED_VERSION, true );
-                wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [], COOKED_VERSION );
+                // Tom Select, for the frame screens and the recipe editor's new layout.
+                self::register_tom_select();
+                wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/js/cooked-admin-functions' . $min . '.js', [ 'jquery', 'cooked-floating-ui-dom', 'cooked-tom-select' ], COOKED_VERSION, true );
+                wp_enqueue_style( 'cooked-tom-select' );
+                wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [ 'cooked-tom-select' ], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
 
                 // Cooked Admin Script.

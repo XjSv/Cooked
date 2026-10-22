@@ -1,5 +1,49 @@
 var $_CookedConditionalTimeout  = false;
 
+/**
+ * Desktop: Tom Select for admin selects (the admin frame screens and the recipe editor), with a
+ * search box on long lists (e.g. the Browse/Search page). Touch devices keep the native picker,
+ * which suits them better. The <select> stays in the form, kept in sync by Tom Select.
+ */
+window.cookedEnhanceSelects = function(selector) {
+    if (!window.TomSelect || window.matchMedia('(pointer: coarse)').matches) {
+        return;
+    }
+    Array.prototype.forEach.call(document.querySelectorAll(selector), function(select) {
+        var settings = {
+            allowEmptyOption: true,
+            maxOptions: null
+        };
+        if (select.tomselect || select.multiple) {
+            return;
+        }
+        if (select.options.length <= 8) {
+            settings.controlInput = null;
+        }
+        // Tom Select points a <label for> at its own control, which would leave the original
+        // (hidden, still in the form) select without a name; name it from the label instead.
+        var label = select.id && !select.getAttribute('aria-labelledby') ? document.querySelector('label[for="' + select.id + '"]') : null;
+        if (label) {
+            label.id = label.id || select.id + '-label';
+            select.setAttribute('aria-labelledby', label.id);
+        }
+
+        var tomSelect = new window.TomSelect(select, settings),
+            labelledBy = select.getAttribute('aria-labelledby');
+        // Tom Select names its control from a <label for>; settings selects are named by
+        // their title instead (aria-labelledby), so pass that on.
+        if (labelledBy) {
+            tomSelect.control.setAttribute('aria-labelledby', labelledBy);
+            if (tomSelect.control_input) {
+                tomSelect.control_input.setAttribute('aria-labelledby', labelledBy);
+            }
+        }
+        if (select.parentNode.classList.contains('cooked-select-wrapper')) {
+            select.parentNode.classList.add('is-enhanced');
+        }
+    });
+};
+
 /** Maps touch events on sortable drag handles to mouse events so sortable works on touch devices. */
 var cookedSortableTouchHandler = function(event) {
     var target = event.target;
@@ -584,6 +628,24 @@ var cookedSortableTouchHandler = function(event) {
                 }
             });
 
+            // New layout: one underline that slides to the active tab (CSS draws it from these variables).
+            var cooked_move_tab_indicator = function(animate) {
+                if (!$('body').hasClass('cooked-recipe-editor')) {
+                    return;
+                }
+                var active = $_CookedRecipeTab.filter('.active')[0];
+                if (!active) {
+                    return;
+                }
+                $_CookedRecipeTabs.toggleClass('is-animated', !!animate);
+                $_CookedRecipeTabs[0].style.setProperty('--cooked-tab-x', active.offsetLeft + 'px');
+                $_CookedRecipeTabs[0].style.setProperty('--cooked-tab-w', active.offsetWidth + 'px');
+            };
+            cooked_move_tab_indicator(false);
+            $(window).on('load resize', function() {
+                cooked_move_tab_indicator(false);
+            });
+
             $_CookedRecipeTab.on('click', function(e) {
                 e.preventDefault();
                 $_CookedRecipeTab.removeClass('active');
@@ -596,6 +658,7 @@ var cookedSortableTouchHandler = function(event) {
                 $newTab.show();
 
                 thisTab.addClass('active');
+                cooked_move_tab_indicator(true);
             });
         }
 
@@ -1075,6 +1138,27 @@ var cookedSortableTouchHandler = function(event) {
                 init_nutrition_facts( $_CookedNutritionFactsTab );
             });
         }
+
+        /****   Recipe editor (new layout): Tom Select on the Layout tab (after the selects are wrapped) and Author   ****/
+        if ($('body').hasClass('cooked-recipe-editor')) {
+            window.cookedEnhanceSelects('.cooked-recipe-fields select, #post_author_override');
+        }
+
+        /****   Copy buttons (code blocks, recipe shortcode)   ****/
+        $(document).on('click', '.cooked-copy-code', function() {
+            var button = this,
+                code = document.getElementById(button.getAttribute('data-target'));
+            if (!code || !window.navigator.clipboard) {
+                return;
+            }
+            window.navigator.clipboard.writeText(code.textContent).then(function() {
+                var label = button.textContent;
+                button.textContent = cooked_admin_functions_js_vars.i18n_copied;
+                window.setTimeout(function() {
+                    button.textContent = label;
+                }, 2000);
+            });
+        });
 
         /****   Time Pickers   ****/
         if ( $('#cooked-prep-time').length ) {

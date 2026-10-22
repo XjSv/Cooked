@@ -86,12 +86,23 @@ class SettingsTest extends TestCase {
         $this->assertIsArray($settings);
     }
 
+    public function test_admin_and_editor_dark_modes_are_separate_per_user_selects() {
+        $tabs = Cooked_Settings::tabs_fields();
+
+        foreach (['admin_dark_mode' => 'cooked_admin_dark_mode', 'editor_dark_mode' => 'cooked_editor_dark_mode'] as $name => $meta_key) {
+            $field = $tabs['design']['fields'][$name];
+            $this->assertSame('user_dark_mode', $field['type']);
+            $this->assertSame($meta_key, $field['meta_key']);
+            $this->assertSame(['off', 'enabled', 'auto'], array_keys($field['options']));
+        }
+    }
+
     public function test_dark_mode_options_include_auto() {
         $tabs = Cooked_Settings::tabs_fields();
         $field = $tabs['design']['fields']['dark_mode'];
         $options = $field['options'];
 
-        $this->assertSame('dark_mode', $field['type']); // front-end select plus the per-user admin select
+        $this->assertSame('select', $field['type']);
         $this->assertSame('off', $field['default']);
         $this->assertArrayHasKey('off', $options);
         $this->assertArrayHasKey('enabled', $options);

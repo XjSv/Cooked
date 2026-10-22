@@ -83,38 +83,9 @@
         } );
     }
 
-    // Desktop: Tom Select for the screens' selects, with a search box on long lists (e.g.
-    // the Browse/Search page). Touch devices keep the native picker, which suits them
-    // better. The <select> stays in the form, kept in sync by Tom Select.
+    // Tom Select for the screens' selects (cooked-admin-functions.js).
     function enhanceSelects() {
-        if ( ! window.TomSelect || window.matchMedia( '(pointer: coarse)' ).matches ) {
-            return;
-        }
-        Array.prototype.forEach.call( document.querySelectorAll( '.cooked-admin-screen select' ), function ( select ) {
-            var settings = {
-                allowEmptyOption: true,
-                maxOptions: null
-            };
-            if ( select.tomselect || select.multiple ) {
-                return;
-            }
-            if ( select.options.length <= 8 ) {
-                settings.controlInput = null;
-            }
-            var tomSelect = new window.TomSelect( select, settings ),
-                labelledBy = select.getAttribute( 'aria-labelledby' );
-            // Tom Select names its control from a <label for>; settings selects are named by
-            // their title instead (aria-labelledby), so pass that on.
-            if ( labelledBy ) {
-                tomSelect.control.setAttribute( 'aria-labelledby', labelledBy );
-                if ( tomSelect.control_input ) {
-                    tomSelect.control_input.setAttribute( 'aria-labelledby', labelledBy );
-                }
-            }
-            if ( select.parentNode.classList.contains( 'cooked-select-wrapper' ) ) {
-                select.parentNode.classList.add( 'is-enhanced' );
-            }
-        } );
+        window.cookedEnhanceSelects( '.cooked-admin-screen select' );
     }
 
     // What's New "View Full Changelog": the whole readme.txt changelog, fetched once.
@@ -956,21 +927,6 @@
             )
         );
     }
-
-    document.addEventListener( 'click', function ( e ) {
-        var button = e.target.closest( '.cooked-copy-code' ),
-            code = button && document.getElementById( button.getAttribute( 'data-target' ) );
-        if ( ! code || ! window.navigator.clipboard ) {
-            return;
-        }
-        window.navigator.clipboard.writeText( code.textContent ).then( function () {
-            var label = button.textContent;
-            button.textContent = vars.i18n.copied;
-            window.setTimeout( function () {
-                button.textContent = label;
-            }, 2000 );
-        } );
-    } );
 
     var root = document.getElementById( 'cooked-admin-app' );
     if ( root ) {

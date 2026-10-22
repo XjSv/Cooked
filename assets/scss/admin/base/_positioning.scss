@@ -95,18 +95,6 @@
     font-size: 0.85rem;
 }
 
-// Settings > Design > Dark Mode: "Front end" and "Admin screens" rows.
-#cooked_recipe_settings .recipe-setting-block .cooked-dark-mode-row + .cooked-dark-mode-row {
-    margin-top: 1.25rem;
-}
-
-#cooked_recipe_settings .recipe-setting-block .cooked-dark-mode-label {
-    display: block;
-    margin: 0 0 0.25rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-}
-
 #cooked_recipe_settings .recipe-setting-block .cooked-option {
     display: flex;
     align-items: center;

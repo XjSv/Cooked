@@ -661,6 +661,12 @@ body.cooked-admin-page #wpcontent {
     outline-color: var(--cooked-color-accent-strong);
 }
 
+// Links (page tabs, section menu): no focus ring after a mouse click, only for the keyboard.
+#cooked-admin-app a:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+}
+
 // Smooth hovers on the frame's buttons and links.
 #cooked-admin-app .components-button,
 #cooked-admin-app a {

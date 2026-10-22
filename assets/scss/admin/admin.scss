@@ -31,5 +31,6 @@
 @use 'layout/pro';
 @use 'layout/welcome';
 @use 'layout/import';
+@use 'layout/recipe-editor-frame';
 @use 'components/tom-select';
 @use 'layout/dark'; // last: overrides the light colours above

@@ -10,7 +10,7 @@ Each JS file is enqueued from exactly one place with a known localized object:
 
 - `assets/js/cooked-functions.js` (front end) → `cooked_functions_i18n_js_vars`
 - `assets/js/cooked-admin-functions.js` → `cooked_admin_functions_js_vars`
-- `assets/js/cooked-migration.js` → `cooked_migration_js_vars`
+- `assets/js/cooked-migration.js` → `cooked_admin_functions_js_vars` (bundled into `cooked-admin-functions.min.js`)
 - `assets/js/cooked-widgets.js` → `cooked_widgets_js_vars`
 
 ## Rules

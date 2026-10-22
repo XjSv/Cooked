@@ -164,7 +164,7 @@ class TemplateFiltersTest extends FilterTestCase {
             function () {
                 return $this->capture_output(
                     function () {
-                        include COOKED_DIR . 'templates/admin/welcome.php';
+                        include COOKED_DIR . 'templates/admin/frame/welcome.php';
                     }
                 );
             }

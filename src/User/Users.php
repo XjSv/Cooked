@@ -137,35 +137,23 @@ class Users {
             $safe = false;
         }
 
+        $parts = explode( ' ', $name );
         switch ( $format ) {
-            case 'full':
-                if ( $safe ) {
-                    return $name;
-                } else {
-                    return esc_html( $name );
-                }
             case 'first_last_initial':
-                $name = explode( ' ', $name );
-                if ( isset( $name[1] ) ) :
-                    return $name[0] . ' ' . substr( $name[1], 0, 1 ) . '.';
-                endif;
-                return $name[0];
+                $formatted = isset( $parts[1] ) ? $parts[0] . ' ' . mb_substr( $parts[1], 0, 1 ) . '.' : $parts[0];
+                break;
             case 'first_initial_last':
-                $name = explode( ' ', $name );
-                if ( isset( $name[1] ) ) :
-                    return substr( $name[0], 0, 1 ) . '. ' . esc_html( $name[1] );
-                endif;
-                return $name[0];
+                $formatted = isset( $parts[1] ) ? mb_substr( $parts[0], 0, 1 ) . '. ' . $parts[1] : $parts[0];
+                break;
             case 'first_only':
-                $name = explode( ' ', $name );
-                return esc_html( $name[0] );
+                $formatted = $parts[0];
+                break;
+            default: // 'full'
+                $formatted = $name;
         }
 
-        if ( $safe ) {
-            return $name;
-        } else {
-            return esc_html( $name );
-        }
+        // Escaped the same way for every format, unless the filter marked its name as safe.
+        return $safe ? $formatted : esc_html( $formatted );
     }
 
     function recipe_count_column( $column_headers ) {

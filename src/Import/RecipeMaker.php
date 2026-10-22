@@ -86,7 +86,7 @@ class RecipeMaker {
 
         $post       = get_post( $id );
         $post_meta  = get_post_custom( $id );
-        $wprm_notes = maybe_unserialize( $post_meta['wprm_notes'][0] );
+        $wprm_notes = isset( $post_meta['wprm_notes'][0] ) ? \Cooked_Functions::safe_unserialize( $post_meta['wprm_notes'][0] ) : '';
 
         // Create new cp_recipe post.
         $new_cp_recipe                    = [];
@@ -128,7 +128,8 @@ class RecipeMaker {
         $new_cp_recipe_meta['total_time']       = $new_cp_recipe_meta['prep_time'] + $new_cp_recipe_meta['cook_time'];
 
         // Recipe Ingredients.
-        $recipeIngredients                 = isset( $post_meta['wprm_ingredients'][0] ) ? maybe_unserialize( $post_meta['wprm_ingredients'][0] ) : [];
+        $recipeIngredients                 = isset( $post_meta['wprm_ingredients'][0] ) ? \Cooked_Functions::safe_unserialize( $post_meta['wprm_ingredients'][0] ) : [];
+        $recipeIngredients                 = is_array( $recipeIngredients ) ? $recipeIngredients : [];
         $new_cp_recipe_meta['ingredients'] = [];
 
         $measurements     = \Cooked_Measurements::get();
@@ -162,7 +163,8 @@ class RecipeMaker {
         }
 
         // Recipe Instructions.
-        $recipeInstructions               = isset( $post_meta['wprm_instructions'][0] ) ? maybe_unserialize( $post_meta['wprm_instructions'][0] ) : [];
+        $recipeInstructions               = isset( $post_meta['wprm_instructions'][0] ) ? \Cooked_Functions::safe_unserialize( $post_meta['wprm_instructions'][0] ) : [];
+        $recipeInstructions               = is_array( $recipeInstructions ) ? $recipeInstructions : [];
         $new_cp_recipe_meta['directions'] = [];
 
         if ( ! empty( $recipeInstructions ) ) {
@@ -187,7 +189,7 @@ class RecipeMaker {
         }
 
         // Gallery.
-        $videoGalleryVids              = isset( $post_meta['wprm_video_embed'] ) ? $post_meta['wprm_video_embed'][0] : '';
+        $videoGalleryVids              = isset( $post_meta['wprm_video_embed'][0] ) ? $post_meta['wprm_video_embed'][0] : '';
         $new_cp_recipe_meta['gallery'] = [
             'type'      => 'cooked',
             'video_url' => $videoGalleryVids,
@@ -292,11 +294,15 @@ class RecipeMaker {
                 if ( isset( $recipe_taxonomies_mapping[ $taxonomy ] ) ) {
                     $terms = wp_get_object_terms( $id, $taxonomy, [ 'fields' => 'all' ] );
 
-                    if ( ! empty( $terms ) ) {
+                    if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
                         $new_terms = [];
 
                         foreach ( $terms as $term_id ) {
-                            $term        = get_term( $term_id );
+                            $term = get_term( $term_id );
+                            if ( ! $term instanceof \WP_Term ) {
+                                continue;
+                            }
+
                             $term_exists = term_exists( $term->name, $recipe_taxonomies_mapping[ $taxonomy ] );
 
                             if ( ! $term_exists ) {

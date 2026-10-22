@@ -44,6 +44,8 @@
                 $.ajax({
                     url: cooked_widgets_js_vars.rest_url + 'wp/v2/cooked_recipe/',
                     type: 'GET',
+                    // Authenticated, so editors still find recipes when public recipes are disabled.
+                    headers: { 'X-WP-Nonce': cooked_widgets_js_vars.rest_nonce },
                     dataType: 'json',
                     data: {
                         search: query,

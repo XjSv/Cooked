@@ -1,5 +1,8 @@
 # PHPStan configuration for Cooked
 
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 8
     paths:
@@ -7,5 +10,11 @@ parameters:
         - src/
     bootstrapFiles:
         - src/aliases.php
+        - tests/phpstan/bootstrap.php
+    scanFiles:
+        - tests/phpstan/stubs.php
+
+    # WordPress docblocks are not reliable enough to treat as certain.
+    treatPhpDocTypesAsCertain: false
 
     phpVersion: 80200

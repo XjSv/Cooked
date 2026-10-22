@@ -30,6 +30,8 @@ class Recipes {
         add_filter( 'parse_query', [ &$this, 'custom_taxonomy_in_query' ], 10 );
 
         add_action( 'template_redirect', [ &$this, 'print_recipe_template' ], 10 );
+        add_filter( 'rest_cp_recipe_query', [ &$this, 'rest_hide_private_recipes' ], 10, 1 );
+        add_filter( 'rest_prepare_cp_recipe', [ &$this, 'rest_hide_private_recipe' ], 10, 1 );
         add_action( 'cooked_check_recipe_query', [ &$this, 'check_recipe_query' ], 10 );
         add_action( 'pre_get_posts', [ &$this, 'cooked_pre_get_posts' ], 10, 1 );
         add_action( 'restrict_manage_posts', [ &$this, 'filter_recipes_by_taxonomy' ], 10 );
@@ -185,6 +187,12 @@ class Recipes {
 			return;
         }
 
+        $recipe_post = get_post( $post_id );
+        // The recipe may have been deleted (e.g. mid-request, or a stale ID in a shortcode).
+        if ( ! $recipe_post ) {
+            return [];
+        }
+
         $recipe_settings = get_post_meta( $post_id, '_recipe_settings', true );
 
         if ( ! is_array( $recipe_settings ) || empty( $recipe_settings ) ) {
@@ -193,8 +201,7 @@ class Recipes {
 
         $recipe_settings['title'] = get_the_title( $post_id );
 
-        $recipe_post = get_post( $post_id );
-        $wp_excerpt  = $recipe_post->post_excerpt;
+        $wp_excerpt = $recipe_post->post_excerpt;
 
         // Check for excerpt/content
         // if ( isset($recipe_settings['excerpt']) && !$recipe_settings['excerpt'] && !$wp_excerpt || !isset($recipe_settings['excerpt']) ) {
@@ -393,9 +400,76 @@ endif;
     public function print_recipe_template() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) ) :
+            // With public recipes disabled, only print links from a [cooked-recipe] embed (which
+            // carry the recipe's print key) or editors may open the print view.
+            if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checked against the recipe's HMAC below.
+                $key = isset( $_GET['print_key'] ) ? sanitize_key( wp_unslash( $_GET['print_key'] ) ) : '';
+                if ( ! hash_equals( self::print_key( get_queried_object_id() ), $key ) ) {
+                    global $wp_query;
+                    $wp_query->set_404();
+                    status_header( 404 );
+                    nocache_headers();
+                    return;
+                }
+            }
+
             load_template( COOKED_DIR . 'templates/front/recipe-print.php', false );
             exit;
         endif;
+    }
+
+    /**
+     * Whether "Disable Public Recipes" is on (Settings > General > Advanced Settings).
+     *
+     * @since 2.0.0
+     * @return bool
+     */
+    public static function public_recipes_disabled() {
+        global $_cooked_settings;
+        return isset( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', (array) $_cooked_settings['advanced'], true );
+    }
+
+    /**
+     * Per-recipe key that lets a [cooked-recipe] embed's print link open the print view
+     * while public recipes are disabled.
+     *
+     * @since 2.0.0
+     * @param int $recipe_id Recipe post ID.
+     * @return string
+     */
+    public static function print_key( $recipe_id ) {
+        return substr( wp_hash( 'cooked_print_' . (int) $recipe_id ), 0, 20 );
+    }
+
+    /**
+     * With public recipes disabled, the REST recipe collection is empty for anyone who
+     * can't edit recipes (the post type stays in REST for the editor).
+     *
+     * @since 2.0.0
+     * @param array<string, mixed> $args WP_Query arguments for the REST collection.
+     * @return array<string, mixed>
+     */
+    public function rest_hide_private_recipes( $args ) {
+        if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
+            $args['post__in'] = [ 0 ];
+        }
+        return $args;
+    }
+
+    /**
+     * With public recipes disabled, single REST recipes are refused to anyone who can't
+     * edit recipes.
+     *
+     * @since 2.0.0
+     * @param \WP_REST_Response $response The prepared recipe.
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function rest_hide_private_recipe( $response ) {
+        if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
+            return new \WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to view this recipe.', 'cooked' ), [ 'status' => rest_authorization_required_code() ] );
+        }
+        return $response;
     }
 
     public static function print_logo() {
@@ -1210,7 +1284,7 @@ endif;
 				return $output;
 			} else {
 				echo '<div itemprop="recipeIngredient" class="cooked-single-ingredient cooked-ingredient' . ( ! $checkboxes ? ' cooked-ing-no-checkbox' : '' ) . '">';
-					echo ( $checkboxes ? '<span class="cooked-ingredient-checkbox">&nbsp;</span>' : '' );
+					echo ( $checkboxes ? '<span class="cooked-ingredient-checkbox"></span>' : '' );
 					do_action( 'cooked_ingredient_after_checkbox', $ing );
 					echo ( $amount ? '<span class="cooked-ing-amount" data-decimal="' . esc_html( $float_amount ) . '">' . wp_kses_post( $amount ) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( $measurement ) . '</span> ' : '' );
 					do_action( 'cooked_ingredient_after_amount', $ing );
@@ -1352,7 +1426,7 @@ endif;
 							$term      = get_term( $key );
 							$term_link = ( ! empty( $term ) ? get_term_link( $term ) : false );
 							$term_name = apply_filters( 'cooked_term_name', $term->name, $term->ID, $term->taxonomy );
-							echo ( $term_link ? ( isset( $active_taxonomy ) && $active_taxonomy == $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url( $term_link ) . '">' . wp_kses_post( $term_name ) . '</a>' . ( isset( $active_taxonomy ) && $active_taxonomy == $val ? '</strong>' : '' ) : '' );
+							echo ( $term_link ? ( isset( $active_taxonomy ) && $active_taxonomy == $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $term_link ) . '">' . wp_kses_post( $term_name ) . '</a>' . ( isset( $active_taxonomy ) && $active_taxonomy == $val ? '</strong>' : '' ) : '' );
 							++$total_taxonomies;
 							$sub_terms_array = \Cooked_Settings::terms_array( 'cp_recipe_category', false, false, true, false, $key );
 							if ( ! empty( $sub_terms_array ) ) :
@@ -1361,7 +1435,7 @@ endif;
 										$sub_term      = get_term( $sub_key );
 										$sub_term_link = ( ! empty( $sub_term ) ? get_term_link( $sub_term ) : false );
 										$sub_term_name = apply_filters( 'cooked_term_name', $sub_term->name, $sub_term->ID, $sub_term->taxonomy );
-										echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset( $active_taxonomy ) && $active_taxonomy == $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url( $sub_term_link ) . '">' . wp_kses_post( $sub_term_name ) . '</a>' . ( isset( $active_taxonomy ) && $active_taxonomy == $sub_val ? '</strong>' : '' ) . '</span>' : '' );
+										echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset( $active_taxonomy ) && $active_taxonomy == $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $sub_term_link ) . '">' . wp_kses_post( $sub_term_name ) . '</a>' . ( isset( $active_taxonomy ) && $active_taxonomy == $sub_val ? '</strong>' : '' ) . '</span>' : '' );
 										++$total_taxonomies;
 									endif;
 								endforeach;
@@ -1574,10 +1648,10 @@ endif;
         if ( ! empty( $c2_recipe_settings['_cp_recipe_ingredients'] ) && empty( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] ) ) :
             $ingredients = explode( "\n", $c2_recipe_settings['_cp_recipe_ingredients'] );
         elseif ( ! empty( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] ) ) :
-            $ingredients = unserialize( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] );
+            $ingredients = \Cooked_Functions::safe_unserialize( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] );
         endif;
 
-        if ( ! empty( $ingredients ) ) :
+        if ( ! empty( $ingredients ) && is_array( $ingredients ) ) :
             foreach ( $ingredients as $ing ) :
                 $rand_id = wp_rand( 1000000, 9999999 );
                 if ( isset( $ing['type'] ) && $ing['type'] == 'ingredient' ) :
@@ -1606,10 +1680,10 @@ endif;
         if ( ! empty( $c2_recipe_settings['_cp_recipe_directions'] ) && empty( $c2_recipe_settings['_cp_recipe_detailed_directions'] ) ) :
             $directions = explode( "\n", $c2_recipe_settings['_cp_recipe_directions'] );
         elseif ( ! empty( $c2_recipe_settings['_cp_recipe_detailed_directions'] ) ) :
-            $directions = unserialize( $c2_recipe_settings['_cp_recipe_detailed_directions'] );
+            $directions = \Cooked_Functions::safe_unserialize( $c2_recipe_settings['_cp_recipe_detailed_directions'] );
         endif;
 
-        if ( ! empty( $directions ) ) :
+        if ( ! empty( $directions ) && is_array( $directions ) ) :
 
             foreach ( $directions as $dir ) :
                 $rand_id = wp_rand( 1000000, 9999999 );

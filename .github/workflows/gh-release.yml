@@ -62,7 +62,7 @@ jobs:
         run: composer install --no-dev --optimize-autoloader --no-interaction --prefer-dist --no-progress
 
       - name: Create plugin zip
-        run: bunx bestzip build/cooked.zip cooked.php LICENSE readme.txt wpml-config.xml assets/ includes/ languages/ sample-data/ templates/ vendor/
+        run: bunx bestzip build/cooked.zip cooked.php LICENSE readme.txt changelog.txt wpml-config.xml assets/ includes/ src/ languages/ sample-data/ templates/ vendor/
 
       - name: Create Release
         uses: softprops/action-gh-release@v2

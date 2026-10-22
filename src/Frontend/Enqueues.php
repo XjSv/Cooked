@@ -79,7 +79,7 @@ class Enqueues {
         wp_enqueue_script( 'wp-sanitize' );
         wp_register_script( 'cooked-functions', COOKED_URL . 'assets/js/cooked-functions' . $min . '.js', [ 'jquery', 'wp-sanitize' ], COOKED_VERSION, true );
         wp_localize_script( 'cooked-functions', 'cooked_functions_i18n_js_vars', $cooked_i18n_js_vars );
-        wp_add_inline_script( 'cooked-functions', 'const cooked_functions_js_vars = ' . json_encode( $cooked_js_vars ) . ';', 'before' );
+        wp_add_inline_script( 'cooked-functions', 'const cooked_functions_js_vars = ' . wp_json_encode( $cooked_js_vars, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT ) . ';', 'before' );
     }
 
     public function css_colors() {

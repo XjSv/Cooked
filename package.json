@@ -36,7 +36,7 @@
     "test:visual:ref": "backstop reference --config=tests/backstop/backstop.config.js",
     "test:visual:approve": "backstop approve --config=tests/backstop/backstop.config.js",
     "icons:embed": "bun scripts/embed-icons-font.js",
-    "bundle": "bun run gulp build && bun run i18n && composer install --no-dev && bunx bestzip build/cooked.zip cooked.php LICENSE readme.txt wpml-config.xml assets/ includes/ src/ languages/ sample-data/ templates/ vendor/"
+    "bundle": "bun run gulp build && bun run i18n && composer install --no-dev && bunx bestzip build/cooked.zip cooked.php LICENSE readme.txt changelog.txt wpml-config.xml assets/ includes/ src/ languages/ sample-data/ templates/ vendor/"
   },
   "repository": {
     "type": "git",
@@ -72,6 +72,7 @@
     "dotenv": "^18.0.8",
     "gulp": "^5.0.1",
     "gulp-clean-css": "^4.3.0",
+    "gulp-concat": "^2.6.1",
     "gulp-rename": "^2.1.0",
     "gulp-sass": "^6.0.1",
     "gulp-uglify": "^3.0.2",

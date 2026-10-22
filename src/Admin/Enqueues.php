@@ -25,6 +25,100 @@ class Enqueues {
 
     public static $admin_colors;
 
+    /**
+     * Admin screens that render inside the admin frame, keyed by page slug.
+     *
+     * Every screen is rendered on each of their pages (see Menus::cooked_app_page()),
+     * so the frame switches between them without a page load.
+     *
+     * @since 2.0.0
+     * @return array<string, array{title: string, template: string, classic_template: string, canSave: bool}>
+     */
+    public static function app_screens() {
+        $screens = [
+            'cooked_settings' => [
+                'title'            => __( 'Settings', 'cooked' ),
+                'template'         => 'frame/settings.php',
+                // The settings form is shared: the classic layout shows its own header and tabs.
+                'classic_template' => 'frame/settings.php',
+                'canSave'          => true,
+            ],
+            'cooked_import'   => [
+                'title'            => __( 'Import', 'cooked' ),
+                'template'         => 'frame/import.php',
+                'classic_template' => 'classic/import.php',
+                'canSave'          => false,
+            ],
+            'cooked_welcome'  => [
+                'title'            => __( 'What\'s New?', 'cooked' ),
+                'template'         => 'frame/welcome.php',
+                'classic_template' => 'classic/welcome.php',
+                'canSave'          => false,
+            ],
+        ];
+        if ( ! class_exists( 'Cooked_Pro_Plugin' ) ) {
+            $screens['cooked_pro'] = [
+                'title'            => __( 'Upgrade to Pro', 'cooked' ),
+                'template'         => 'frame/pro.php',
+                'classic_template' => 'classic/pro.php',
+                'canSave'          => false,
+            ];
+        }
+        return $screens;
+    }
+
+    /**
+     * Whether the classic (pre-2.0) admin screens are selected in Settings > General.
+     *
+     * @since 2.0.0
+     * @return bool
+     */
+    public static function use_classic_ui() {
+        global $_cooked_settings;
+        return ! empty( $_cooked_settings['admin_interface'] ) && in_array( 'classic', (array) $_cooked_settings['admin_interface'], true );
+    }
+
+    /**
+     * Section menu entries (slug, name, icon) for a set of settings-style tabs.
+     *
+     * @since 2.0.0
+     * @param array<string, array<string, mixed>> $tabs Tabs keyed by slug, each with 'name' and 'icon'.
+     * @return array<int, array{slug: string, name: string, icon: string}>
+     */
+    private static function tab_sections( $tabs ) {
+        $sections = [];
+        foreach ( $tabs as $slug => $tab ) {
+            $sections[] = [
+                'slug' => $slug,
+                'name' => $tab['name'],
+                'icon' => $tab['icon'],
+            ];
+        }
+        return $sections;
+    }
+
+    /**
+     * Returns the frame screen slug for an admin page hook, or false.
+     *
+     * Matches on the `_page_{slug}` suffix: the prefix comes from the translated
+     * "Recipes" menu title, so it differs per site language.
+     *
+     * @since 2.0.0
+     * @param string $hook Admin page hook or screen ID.
+     * @return string|false
+     */
+    private static function app_screen_for( $hook ) {
+        if ( self::use_classic_ui() ) {
+            return false;
+        }
+        foreach ( array_keys( self::app_screens() ) as $slug ) {
+            if ( str_ends_with( $hook, '_page_' . $slug ) ) {
+                return $slug;
+            }
+        }
+        return false;
+    }
+
     function __construct() {
         add_action( 'admin_enqueue_scripts', [ &$this, 'register_shared_scripts' ], 5 );
         add_action( 'admin_enqueue_scripts', [ &$this, 'admin_enqueues' ], 10, 1 );
@@ -35,7 +129,7 @@ class Enqueues {
     }
 
     /**
-     * Adds a dedicated body class on Cooked's settings screen.
+     * Adds a dedicated body class on the Cooked screens that use the admin frame.
      *
      * @since 2.0.0
      * @param string $classes Space-separated list of admin body classes.
@@ -43,8 +137,16 @@ class Enqueues {
      */
     public function admin_body_class( $classes ) {
         $screen = get_current_screen();
-        if ( $screen && 'recipes_page_cooked_settings' === $screen->id ) {
-            $classes .= ' cooked-settings-page';
+        if ( $screen && self::app_screen_for( $screen->id ) ) {
+            $classes .= ' cooked-admin-page';
+
+            // The user's admin dark mode (Settings > Design > Dark Mode > Admin screens).
+            $dark_mode = \Cooked_Settings::admin_dark_mode();
+            if ( 'enabled' === $dark_mode ) {
+                $classes .= ' cooked-admin-dark';
+            } elseif ( 'auto' === $dark_mode ) {
+                $classes .= ' cooked-admin-dark-auto';
+            }
         }
         return $classes;
     }
@@ -69,24 +171,32 @@ class Enqueues {
      * @param string $hook The current admin page hook.
      */
     public function admin_app_enqueues( $hook ) {
-        if ( 'recipes_page_cooked_settings' !== $hook ) {
+        $current = self::app_screen_for( $hook );
+        if ( ! $current ) {
             return;
         }
 
-        $sections = [];
-        foreach ( \Cooked_Settings::tabs_fields() as $slug => $tab ) {
-            $sections[] = [
-                'slug' => $slug,
-                'name' => $tab['name'],
-                'icon' => $tab['icon'],
-            ];
-        }
+        // Section menus: one entry per tab of the screen's fields (Settings, Import).
+        $sections = [
+            'cooked_settings' => self::tab_sections( \Cooked_Settings::tabs_fields() ),
+            'cooked_import'   => self::tab_sections( \Cooked_Import::tabs_fields() ),
+        ];
         if ( COOKED_DEV ) {
-            $sections[] = [
+            $sections['cooked_settings'][] = [
 				'slug' => 'developer',
 				'name' => __( 'Developer', 'cooked' ),
 				'icon' => 'code',
 			];
+        }
+
+        $screens = [];
+        foreach ( self::app_screens() as $slug => $screen ) {
+            $screens[ $slug ] = [
+                'title'    => $screen['title'],
+                'url'      => admin_url( 'admin.php?page=' . $slug ),
+                'canSave'  => $screen['canSave'],
+                'sections' => isset( $sections[ $slug ] ) ? $sections[ $slug ] : [],
+            ];
         }
 
         $pages = [
@@ -111,25 +221,29 @@ class Enqueues {
 			];
         }
         foreach ( $pages as &$page ) {
-            $page['url']     = admin_url( 'admin.php?page=' . $page['slug'] );
-            $page['current'] = 'cooked_settings' === $page['slug'];
+            $page['url'] = admin_url( 'admin.php?page=' . $page['slug'] );
         }
         unset( $page );
 
         wp_enqueue_style( 'wp-components' );
-        wp_enqueue_script( 'cooked-admin-app', COOKED_URL . 'assets/js/cooked-admin-app.js', [ 'wp-element', 'wp-components', 'cooked-admin-functions' ], COOKED_VERSION, true );
+        self::register_tom_select();
+        wp_enqueue_style( 'cooked-tom-select' );
+        wp_enqueue_script( 'cooked-admin-app', COOKED_URL . 'assets/js/cooked-admin-app.js', [ 'wp-element', 'wp-components', 'cooked-admin-functions', 'cooked-tom-select' ], COOKED_VERSION, true );
         wp_localize_script(
             'cooked-admin-app',
             'cooked_admin_app_js_vars',
             [
-				'version'  => COOKED_VERSION,
-				'docsUrl'  => 'https://github.com/XjSv/Cooked/wiki',
-				'legacyId' => 'cooked-settings-prewrap',
-				'sections' => $sections,
-				'pages'    => $pages,
-				'i18n'     => [
+				'version' => COOKED_VERSION,
+				'docsUrl' => 'https://github.com/XjSv/Cooked/wiki',
+				'current' => $current,
+				'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+				'nonces'  => [
+					'fullChangelog' => wp_create_nonce( 'cooked_full_changelog' ),
+				],
+				'screens' => $screens,
+				'pages'   => $pages,
+				'i18n'    => [
 					'title'               => __( 'Cooked', 'cooked' ),
-					'subtitle'            => __( 'Settings', 'cooked' ),
 					'documentation'       => __( 'Documentation', 'cooked' ),
 					'save'                => __( 'Update Settings', 'cooked' ),
 					'pages'               => __( 'Cooked pages', 'cooked' ),
@@ -138,25 +252,50 @@ class Enqueues {
 					'sectionsScrollRight' => __( 'Scroll sections right', 'cooked' ),
 					'version'             => __( 'Version:', 'cooked' ),
 					'copied'              => __( 'Copied', 'cooked' ),
+					'changelog'           => __( 'Changelog', 'cooked' ),
+					'changelogError'      => __( 'The changelog could not be loaded. Please try again.', 'cooked' ),
+					/* translators: %s: a sample CSV file's name, e.g. "Small (1 recipe)" */
+					'csvPreview'          => __( 'Sample CSV: %s', 'cooked' ),
+					'csvError'            => __( 'The sample file could not be loaded. Please try again.', 'cooked' ),
+					'csvImportError'      => __( 'This browser could not start the import. Download the file and upload it instead.', 'cooked' ),
+					'download'            => __( 'Download', 'cooked' ),
+					'importNow'           => __( 'Import Now', 'cooked' ),
+					'searchLabel'         => __( 'Search settings', 'cooked' ),
+					'searchPlaceholder'   => __( 'Search settings…', 'cooked' ),
+					'searchEmpty'         => __( 'No settings found.', 'cooked' ),
+					/* translators: %d: number of matching settings */
+					'searchCount'         => __( '%d settings found. Use the up and down arrows to choose one.', 'cooked' ),
 				],
 			]
         );
     }
 
+    /**
+     * Registers Tom Select (searchable and styled select fields), used by the widgets'
+     * recipe finder and the admin frame's settings selects.
+     *
+     * @since 2.0.0
+     * @return void
+     */
+    private static function register_tom_select() {
+        $min = COOKED_DEV ? '' : '.min';
+        wp_register_style( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.default' . $min . '.css', [], '2.6.2' );
+        wp_register_script( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.complete' . $min . '.js', [], '2.6.2', true );
+    }
+
     public static function enqueue_widgets() {
         $cooked_js_vars = [
-            'rest_url' => esc_url( get_rest_url() ),
+            'rest_url'   => esc_url( get_rest_url() ),
+            'rest_nonce' => wp_create_nonce( 'wp_rest' ),
         ];
-
-        $min = COOKED_DEV ? '' : '.min';
 
         // Gonna need jQuery
         wp_enqueue_script( 'jquery' );
 
         // Tom Select (searchable select fields)
-        wp_enqueue_style( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.default' . $min . '.css', [], '2.6.2' );
+        self::register_tom_select();
+        wp_enqueue_style( 'cooked-tom-select' );
         wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [ 'cooked-tom-select' ], COOKED_VERSION );
-        wp_register_script( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.complete' . $min . '.js', [], '2.6.2', true );
 
         // Cooked Widgets JS
         wp_register_script( 'cooked-widgets', COOKED_URL . 'assets/js/cooked-widgets.js', [ 'jquery', 'cooked-tom-select' ], COOKED_VERSION, true );
@@ -203,7 +342,7 @@ class Enqueues {
             if ( function_exists( 'get_current_screen' ) ) :
 
                 $screen    = get_current_screen();
-                $post_type = $screen->post_type;
+                $post_type = $screen ? $screen->post_type : '';
 
                 if ( $hook != 'post-new.php' && $hook != 'post.php' && $hook != 'index.php' && $hook != 'edit.php' || $hook === 'post-new.php' && $post_type === 'cp_recipe' || $hook === 'post.php' && $post_type === 'cp_recipe' || $hook === 'edit.php' && $post_type === 'cp_recipe' || $hook === 'index.php' || $hook === 'widgets.php' ) :
                     $enqueue = true;
@@ -287,6 +426,7 @@ class Enqueues {
                     'cooked_import_nonce'                  => wp_create_nonce( 'cooked_admin_import' ),
                     'cooked_migrate_nonce'                 => wp_create_nonce( 'cooked_migrate_recipes' ),
                     'cooked_import_recipes_nonce'          => wp_create_nonce( 'cooked_import_recipes' ),
+                    'cooked_load_default_nonce'            => wp_create_nonce( 'cooked_load_default' ),
                     'i18n_bulk_add_ingredients'            => __( 'Bulk Add Ingredients', 'cooked' ),
                     'i18n_bulk_add_directions'             => __( 'Bulk Add Directions', 'cooked' ),
                     'i18n_bulk_add_placeholder_ingredients' => __( "2 cups flour\n1 tsp salt\n1/2 cup sugar\n3 large eggs", 'cooked' ),
@@ -307,15 +447,17 @@ class Enqueues {
                 wp_register_script( 'cooked-floating-ui-dom', COOKED_URL . 'assets/vendor/floating-ui/floating-ui.dom.umd.min.js', [ 'cooked-floating-ui-core' ], '1.8.0', true );
 
                 wp_register_script( 'cooked-admin-functions', COOKED_URL . 'assets/js/cooked-admin-functions' . $min . '.js', [ 'jquery', 'cooked-floating-ui-dom' ], COOKED_VERSION, true );
-                wp_register_script( 'cooked-migration', COOKED_URL . 'assets/js/cooked-migration' . $min . '.js', [ 'jquery' ], COOKED_VERSION, true );
                 wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
 
                 // Cooked Admin Script
                 wp_localize_script( 'cooked-admin-functions', 'cooked_admin_functions_js_vars', $cooked_js_vars );
-                wp_localize_script( 'cooked-migration', 'cooked_migration_js_vars', $cooked_js_vars );
                 wp_enqueue_script( 'cooked-admin-functions' );
-                wp_enqueue_script( 'cooked-migration' );
+
+                // The minified admin bundle already includes the migration script.
+                if ( COOKED_DEV ) {
+                    wp_enqueue_script( 'cooked-migration', COOKED_URL . 'assets/js/cooked-migration.js', [ 'cooked-admin-functions' ], COOKED_VERSION, true );
+                }
             endif;
         }
     }

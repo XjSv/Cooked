@@ -426,6 +426,7 @@ class Shortcodes {
             );
 
             // Generate the Shortcode Attributes
+            $gallery_atts = [];
             foreach ( $gallery_options as $opt_name => $opt_value ) {
                 $name_sans_data                  = str_replace( 'data-', '', $opt_name );
                 $gallery_atts[ $name_sans_data ] = $opt_value;
@@ -835,9 +836,13 @@ class Shortcodes {
         $cooked_info_html = ob_get_clean();
 
         if ( $cooked_info_html ) :
+            // Allow the servings switcher's <select> and Cooked Pro's nutrition donut <script>
+            // for this one call only; left in place they would loosen every later KSES call.
             add_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_servings_switcher' ] );
             add_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_cooked_donut' ] );
             $cooked_info_html = '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
+            remove_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_servings_switcher' ] );
+            remove_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_cooked_donut' ] );
             $cooked_info_html = apply_filters( 'cooked_info_shortcode_output', $cooked_info_html, $recipe_settings );
             return $cooked_info_html;
             // return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
@@ -930,6 +935,9 @@ class Shortcodes {
         $query_args['print']    = 1;
         $servings               = (float) esc_html( get_query_var( 'servings', false ) );
         $query_args['servings'] = ! empty( $servings ) ? $servings : false;
+        if ( \Cooked_Recipes::public_recipes_disabled() ) {
+            $query_args['print_key'] = \Cooked_Recipes::print_key( $recipe_settings['id'] );
+        }
         echo '<span class="cooked-print"><a aria-label="' . esc_attr__( 'Print', 'cooked' ) . '" target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $recipe_post_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
     }
 

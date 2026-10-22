@@ -81,7 +81,7 @@ endif;
                     $image = '';
                     if ( $image_id ) :
                         $image = wp_get_attachment_image_src( $image_id, 'full' );
-                        $image = $image[0];
+                        $image = $image ? $image[0] : '';
                     endif;
 
                     $directions[] = [
@@ -99,9 +99,9 @@ endif;
         endif;
 
         $category_name = '';
-        if ( in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'] ) ) :
+        if ( in_array( 'cp_recipe_category', (array) $_cooked_settings['recipe_taxonomies'] ) ) :
             $categories = get_the_terms( $rpost->ID, 'cp_recipe_category' );
-            if ( ! empty( $categories ) ) :
+            if ( ! empty( $categories ) && ! is_wp_error( $categories ) ) :
                 $category      = $categories[0];
                 $category_name = $category->name;
             endif;

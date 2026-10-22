@@ -32,6 +32,14 @@ class FunctionsTest extends TestCase {
     }
 
     /**
+     * Test hex2rgb falls back to black for malformed colours instead of warning.
+     */
+    public function test_hex2rgb_malformed_falls_back_to_black() {
+        $this->assertSame( '0,0,0', Cooked_Functions::hex2rgb( 'not-a-colour' ) );
+        $this->assertSame( '0,0,0', Cooked_Functions::hex2rgb( '#ff' ) );
+    }
+
+    /**
      * Test hex2rgb converts black.
      */
     public function test_hex2rgb_black() {

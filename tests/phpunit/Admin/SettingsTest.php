@@ -4,6 +4,28 @@ use PHPUnit\Framework\TestCase;
 
 class SettingsTest extends TestCase {
 
+    public function test_sanitize_settings_cleans_each_field_type() {
+        $clean = Cooked_Settings::sanitize_settings(
+            [
+                'main_color'              => 'red;}</style><script>',
+                'responsive_breakpoint_1' => '800px',
+                'responsive_breakpoint_2' => '-640',
+                'recipe_permalink'        => 'My Recipes//Second Part',
+                'carb_format'             => 'not-an-option',
+                'author_name_format'      => 'first_only',
+                'advanced'                => [ 'disable_meta_tags', 'not_an_option' ],
+            ]
+        );
+
+        $this->assertSame( '#16a780', $clean['main_color'] ); // invalid colour -> default
+        $this->assertSame( '1000', $clean['responsive_breakpoint_1'] ); // not numeric -> default
+        $this->assertSame( '640', $clean['responsive_breakpoint_2'] );
+        $this->assertSame( 'my-recipes/second-part', $clean['recipe_permalink'] ); // empty parts dropped
+        $this->assertNotSame( 'not-an-option', $clean['carb_format'] );
+        $this->assertSame( 'first_only', $clean['author_name_format'] );
+        $this->assertSame( [ 'disable_meta_tags' ], $clean['advanced'] );
+    }
+
     public function test_tabs_fields_returns_array() {
         $tabs = Cooked_Settings::tabs_fields();
         $this->assertIsArray($tabs);
@@ -69,7 +91,7 @@ class SettingsTest extends TestCase {
         $field = $tabs['design']['fields']['dark_mode'];
         $options = $field['options'];
 
-        $this->assertSame('select', $field['type']);
+        $this->assertSame('dark_mode', $field['type']); // front-end select plus the per-user admin select
         $this->assertSame('off', $field['default']);
         $this->assertArrayHasKey('off', $options);
         $this->assertArrayHasKey('enabled', $options);

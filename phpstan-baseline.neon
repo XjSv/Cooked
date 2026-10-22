@@ -1,0 +1,4135 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 2
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Enqueues\:\:admin_app_enqueues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Enqueues\:\:admin_enqueues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Enqueues\:\:admin_enqueues\(\) has parameter \$hook with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Enqueues\:\:enqueue_widgets\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Enqueues\:\:register_shared_scripts\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Enqueues\:\:widget_enqueues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Enqueues\:\:widget_enqueues\(\) has parameter \$hook with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, bool given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Property Cooked\\Admin\\Enqueues\:\:\$admin_colors has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Ternary operator condition is always false\.$#'
+			identifier: ternary.alwaysFalse
+			count: 3
+			path: src/Admin/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Menus\:\:add_admin_bar_menu\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Menus.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Menus\:\:add_menu\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Menus.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Menus\:\:parent_file_filter\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Menus.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Menus\:\:parent_file_filter\(\) has parameter \$parent_file with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Menus.php
+
+		-
+			message: '#^Loose comparison using \!\= between 0\|0\.0\|''''\|''0''\|array\{\}\|false\|null and ''complete'' will always evaluate to true\.$#'
+			identifier: notEqual.alwaysTrue
+			count: 1
+			path: src/Admin/Migration.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Migration\:\:get_cooked_classic_recipes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Migration.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Migration\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Migration.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Migration\:\:old_recipes_message\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Migration.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Migration\:\:settings_filter\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Migration.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Migration\:\:settings_filter\(\) has parameter \$settings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Migration.php
+
+		-
+			message: '#^Action callback returns array but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Admin/PluginExtra.php
+
+		-
+			message: '#^Method Cooked\\Admin\\PluginExtra\:\:cooked_plugin_action_links_action\(\) has parameter \$links with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Admin/PluginExtra.php
+
+		-
+			message: '#^Method Cooked\\Admin\\PluginExtra\:\:cooked_plugin_action_links_action\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Admin/PluginExtra.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:browse_page_missing_notice\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:browse_page_saved\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:browse_page_saved\(\) has parameter \$post_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:cooked_settings_saved_admin_notice\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_checkboxes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_checkboxes\(\) has parameter \$color with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_checkboxes\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_checkboxes\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_checkboxes\(\) has parameter \$options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_color_field\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_color_field\(\) has parameter \$default with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_color_field\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_html\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_html\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_html\(\) has parameter \$html with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_image_field\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_image_field\(\) has parameter \$default with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_image_field\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_migrate_button\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_migrate_button\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_migrate_button\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_misc_button\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_misc_button\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_misc_button\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_nonce\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_nonce\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_nonce\(\) has parameter \$options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_number_field\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_number_field\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_number_field\(\) has parameter \$options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_password\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_password\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_password\(\) has parameter \$placeholder with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_permalink_field\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_permalink_field\(\) has parameter \$end_of_url with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_permalink_field\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_radio\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_radio\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_radio\(\) has parameter \$options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_select\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_select\(\) has parameter \$color with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_select\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_select\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_select\(\) has parameter \$options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_text\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_text\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:field_text\(\) has parameter \$placeholder with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:get\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:pages_array\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:pages_array\(\) has parameter \$choose_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:pages_array\(\) has parameter \$none_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:per_page_array\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:reset\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:sanitize_saved_flag\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:sanitize_saved_flag\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:sanitize_settings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:sanitize_settings\(\) has parameter \$settings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:tabs_fields\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:terms_array\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:terms_array\(\) has parameter \$child_of with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:terms_array\(\) has parameter \$choose_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:terms_array\(\) has parameter \$hide_empty with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:terms_array\(\) has parameter \$none_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:terms_array\(\) has parameter \$parents_only with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Settings\:\:terms_array\(\) has parameter \$term with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Parameter \#1 \$args of function get_terms expects array\{taxonomy\?\: array\<string\>\|string, object_ids\?\: array\<int\>\|int, orderby\?\: string, order\?\: string, hide_empty\?\: bool\|int, include\?\: array\<int\>\|string, exclude\?\: array\<int\>\|string, exclude_tree\?\: array\<int\>\|string, \.\.\.\}, array\{taxonomy\: mixed, hide_empty\: mixed, parent\?\: ''0''\|float\|int\|\(non\-falsy\-string&numeric\-string\)\|false\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_html expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Unable to resolve the template type T in call to function rest_sanitize_boolean$#'
+			identifier: argument.templateType
+			count: 2
+			path: src/Admin/Settings.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:fix_recipe_line_endings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:get_runnable_tools\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:get_version_updates\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:purge_legacy_related_recipes_cache\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:registered_extra_rewrite_rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:remove_recipes_from_cooked_user_meta\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:run_updates\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:run_version_updates\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Method Cooked\\Admin\\Updates\:\:update_rewrite_rules\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, array\{''Cooked\\\\Admin\\\\Updates'', mixed\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function call_user_func expects callable\(\)\: mixed, array\{''Cooked\\\\Admin\\\\Updates'', non\-empty\-string\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Property Cooked\\Admin\\Updates\:\:\$cooked_settings_saved has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Property Cooked\\Admin\\Updates\:\:\$current_pro_version has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Property Cooked\\Admin\\Updates\:\:\$current_version has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Property Cooked\\Admin\\Updates\:\:\$previous_pro_version has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Property Cooked\\Admin\\Updates\:\:\$previous_version has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Static method Cooked\\Admin\\Updates\:\:fix_recipe_line_endings\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Static method Cooked\\Admin\\Updates\:\:purge_legacy_related_recipes_cache\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Static method Cooked\\Admin\\Updates\:\:remove_recipes_from_cooked_user_meta\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:compress_css\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:compress_css\(\) has parameter \$css with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:css_colors\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:css_responsive\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:enqueues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:enqueues\(\) has parameter \$hook with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:footer_enqueues\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:get_dynamic_css\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Enqueues\:\:get_dynamic_css\(\) has parameter \$file with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, int\<min, \-1\>\|int\<1, max\>\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_post expects int\|numeric\-string\|WP_Post\|null, bool\|int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Parameter \#1 \$value of function untrailingslashit expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^Ternary operator condition is always false\.$#'
+			identifier: ternary.alwaysFalse
+			count: 1
+			path: src/Frontend/Enqueues.php
+
+		-
+			message: '#^@param string \$output does not accept actual type of parameter\: string\|false\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Binary operation "\.\=" between '''' and string\|WP_Error\|false results in an error\.$#'
+			identifier: assignOp.invalid
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_browse_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_browse_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_browse_shortcode\(\) has parameter \$sc_atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_categories_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_categories_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_categories_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_directions_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_directions_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_directions_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_excerpt_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_excerpt_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_excerpt_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_gallery_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_gallery_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_gallery_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_image_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_image_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_image_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_author\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_cook_time\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_cook_time\(\) has parameter \$recipe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_difficulty\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_difficulty\(\) has parameter \$recipe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_fullscreen\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_prep_time\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_prep_time\(\) has parameter \$recipe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_print\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_servings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_servings\(\) has parameter \$recipe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_taxonomies\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_total_time\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_info_total_time\(\) has parameter \$recipe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_ingredients_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_ingredients_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_ingredients_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_kses_cooked_donut\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_kses_cooked_donut\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_kses_servings_switcher\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_kses_servings_switcher\(\) has parameter \$tags with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_notes_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_notes_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_notes_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_nutrition_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_nutrition_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_nutrition_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_card_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_card_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_card_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_list_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_list_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_list_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_recipe_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_related_recipes_shortcode\(\) has parameter \$atts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_related_recipes_shortcode\(\) should return string but returns false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_search_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_search_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_search_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_timer\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_timer\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_timer\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_title_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_title_shortcode\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:cooked_title_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:preprocess_shortcode\(\) has parameter \$attr with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:preprocess_shortcode\(\) has parameter \$m with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:recipe_embed_blocked_message\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Shortcodes\:\:recipe_embed_blocked_message\(\) has parameter \$recipe_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Parameter \#1 \$content of function do_shortcode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, int\<min, \-1\>\|int\<1, max\>\|true given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, float given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_html expects string, float given\.$#'
+			identifier: argument.type
+			count: 5
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Parameter \#1 \$value of function untrailingslashit expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 3
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Variable \$gallery_options might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Variable \$nutrition_facts_content in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Variable \$recipe_settings in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Variable \$source_recipe in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Frontend/Shortcodes.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\:\:recipe_finder\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Widgets.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\:\:recipe_finder\(\) has parameter \$field_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Widgets.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\:\:recipe_finder\(\) has parameter \$field_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Widgets.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\:\:recipe_finder\(\) has parameter \$included with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Frontend/Widgets.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\:\:register_widgets\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Widgets.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\Nutrition\:\:form\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Frontend/Widgets/Nutrition.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\Nutrition\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Widgets/Nutrition.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\Nutrition\:\:widget\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Widgets/Nutrition.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeCard\:\:form\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Frontend/Widgets/RecipeCard.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeCard\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Widgets/RecipeCard.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeCard\:\:widget\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Widgets/RecipeCard.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeCategories\:\:form\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Frontend/Widgets/RecipeCategories.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeCategories\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Widgets/RecipeCategories.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeCategories\:\:widget\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Widgets/RecipeCategories.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeList\:\:form\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Frontend/Widgets/RecipeList.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeList\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Widgets/RecipeList.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\RecipeList\:\:widget\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Widgets/RecipeList.php
+
+		-
+			message: '#^Negated boolean expression is always false\.$#'
+			identifier: booleanNot.alwaysFalse
+			count: 3
+			path: src/Frontend/Widgets/RecipeList.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Widgets/RecipeList.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_html expects string, int\<1, max\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Frontend/Widgets/RecipeList.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\Search\:\:form\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: src/Frontend/Widgets/Search.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\Search\:\:update\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Frontend/Widgets/Search.php
+
+		-
+			message: '#^Method Cooked\\Frontend\\Widgets\\Search\:\:widget\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Frontend/Widgets/Search.php
+
+		-
+			message: '#^Cannot access offset ''sub_amount'' on array\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 2
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Cannot access offset ''sub_name'' on array\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\CsvImport\:\:import_from_file\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\CsvImport\:\:import_recipe\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\CsvImport\:\:import_recipe\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\CsvImport\:\:match_measurement\(\) has parameter \$measurements with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\CsvImport\:\:parse_ingredient_parts\(\) has parameter \$measurements with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\CsvImport\:\:parse_ingredient_parts\(\) has parameter \$parts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\CsvImport\:\:parse_ingredient_parts\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(string\|null\)\: mixed\)\|null, ''trim'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Variable \$headers in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Import/CsvImport.php
+
+		-
+			message: '#^Method Cooked\\Import\\DeliciousRecipes\:\:get_recipes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/DeliciousRecipes.php
+
+		-
+			message: '#^Method Cooked\\Import\\DeliciousRecipes\:\:import_recipe\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/DeliciousRecipes.php
+
+		-
+			message: '#^Method Cooked\\Import\\DeliciousRecipes\:\:import_recipe\(\) has parameter \$id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/DeliciousRecipes.php
+
+		-
+			message: '#^PHPDoc tag @var above a method has no effect\.$#'
+			identifier: varTag.misplaced
+			count: 1
+			path: src/Import/DeliciousRecipes.php
+
+		-
+			message: '#^Parameter \#1 \$commentdata of function wp_insert_comment expects array\{comment_agent\?\: string, comment_approved\?\: int\|string, comment_author\?\: string, comment_author_email\?\: string, comment_author_IP\?\: string, comment_author_url\?\: string, comment_content\?\: string, comment_date\?\: string, \.\.\.\}, array\{comment_post_ID\: int\<0, max\>, comment_author\: string, comment_author_email\: string, comment_author_url\: string, comment_content\: string, comment_type\: string, comment_parent\: numeric\-string, user_id\: numeric\-string, \.\.\.\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Import/DeliciousRecipes.php
+
+		-
+			message: '#^Parameter \#1 \$postarr of function wp_insert_post expects array\{ID\?\: int, post_author\?\: int, post_date\?\: string, post_date_gmt\?\: string, post_content\?\: string, post_content_filtered\?\: string, post_title\?\: string, post_excerpt\?\: string, \.\.\.\}, array\{post_type\: ''cp_recipe'', post_status\: ''draft'', post_title\: string, post_content\: string, post_author\: ''''\|int\<0, max\>, post_excerpt\: string, ping_status\: string, commnets_status\: string, \.\.\.\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Import/DeliciousRecipes.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_csv_upload\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_csv_upload\(\) has parameter \$color with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_csv_upload\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_csv_upload\(\) has parameter \$field_options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_csv_upload\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_import_button\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_import_button\(\) has parameter \$color with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_import_button\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_import_button\(\) has parameter \$field_options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_import_button\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_message\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_message\(\) has parameter \$color with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_message\(\) has parameter \$field with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_message\(\) has parameter \$field_options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:field_message\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:sanitize_saved_flag\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:sanitize_saved_flag\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\Import\:\:tabs_fields\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Unable to resolve the template type T in call to function rest_sanitize_boolean$#'
+			identifier: argument.templateType
+			count: 1
+			path: src/Import/Import.php
+
+		-
+			message: '#^Method Cooked\\Import\\RecipeMaker\:\:get_recipes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/RecipeMaker.php
+
+		-
+			message: '#^Method Cooked\\Import\\RecipeMaker\:\:import_recipe\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Import/RecipeMaker.php
+
+		-
+			message: '#^Method Cooked\\Import\\RecipeMaker\:\:import_recipe\(\) has parameter \$id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Import/RecipeMaker.php
+
+		-
+			message: '#^PHPDoc tag @var above a method has no effect\.$#'
+			identifier: varTag.misplaced
+			count: 1
+			path: src/Import/RecipeMaker.php
+
+		-
+			message: '#^Parameter \#1 \$commentdata of function wp_insert_comment expects array\{comment_agent\?\: string, comment_approved\?\: int\|string, comment_author\?\: string, comment_author_email\?\: string, comment_author_IP\?\: string, comment_author_url\?\: string, comment_content\?\: string, comment_date\?\: string, \.\.\.\}, array\{comment_post_ID\: int\<0, max\>, comment_author\: string, comment_author_email\: string, comment_author_url\: string, comment_content\: string, comment_type\: string, comment_parent\: numeric\-string, user_id\: numeric\-string, \.\.\.\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Import/RecipeMaker.php
+
+		-
+			message: '#^Parameter \#1 \$postarr of function wp_insert_post expects array\{ID\?\: int, post_author\?\: int, post_date\?\: string, post_date_gmt\?\: string, post_content\?\: string, post_content_filtered\?\: string, post_title\?\: string, post_excerpt\?\: string, \.\.\.\}, array\{post_type\: ''cp_recipe'', post_status\: ''draft'', post_title\: string, post_content\: string, post_author\: ''''\|int\<0, max\>, post_excerpt\: string, ping_status\: string, commnets_status\: string, \.\.\.\} given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Import/RecipeMaker.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:elementor_filter\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:elementor_filter\(\) has parameter \$layout_content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:elementor_filter\(\) has parameter \$og_content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:elementor_filter\(\) has parameter \$recipe_content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:elementor_filter\(\) has parameter \$recipe_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:should_update_content\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:should_update_content\(\) has parameter \$recipe_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Elementor\:\:should_update_content\(\) has parameter \$should_update with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Elementor.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Gutenberg\:\:gutenberg_support\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/Gutenberg.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Gutenberg\:\:gutenberg_support\(\) has parameter \$can_edit with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Gutenberg.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Gutenberg\:\:gutenberg_support\(\) has parameter \$post_type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/Gutenberg.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Multilingual\:\:get_all_browse_pages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Integrations/Multilingual.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Multilingual\:\:get_missing_translations\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Integrations/Multilingual.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Multilingual\:\:translation_notice\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/Multilingual.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\Pixwell\:\:forced_dark_mode_notice\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/Pixwell.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\RankMathSeo\:\:modify_browse_page_canonical_url\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\RankMathSeo\:\:modify_browse_page_canonical_url\(\) has parameter \$canonical_url with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\RankMathSeo\:\:modify_browse_page_canonical_url\(\) has parameter \$post with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\RankMathSeo\:\:register_rank_math_variables\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Parameter \#1 \$page of function is_page expects array\<int\|string\>\|int\|string, bool\|int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, bool\|int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Parameter \#1 \$value of function untrailingslashit expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Property Cooked\\Integrations\\RankMathSeo\:\:\$variable_registered has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Integrations/RankMathSeo.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\YoastSeo\:\:cooked_register_extra_yoast_variables\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\YoastSeo\:\:modify_browse_page_canonical_url\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\YoastSeo\:\:modify_browse_page_canonical_url\(\) has parameter \$canonical_url with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Method Cooked\\Integrations\\YoastSeo\:\:modify_browse_page_canonical_url\(\) has parameter \$post with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Parameter \#1 \$page of function is_page expects array\<int\|string\>\|int\|string, bool\|int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, bool\|int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Parameter \#1 \$value of function untrailingslashit expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Property Cooked\\Integrations\\YoastSeo\:\:\$variable_registered has no type specified\.$#'
+			identifier: missingType.property
+			count: 1
+			path: src/Integrations/YoastSeo.php
+
+		-
+			message: '#^Binary operation "/" between string and string results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Call to function is_string\(\) with non\-empty\-string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:calculate\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:calculate\(\) has parameter \$amount with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:calculate\(\) has parameter \$type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:cleanup_amount\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:cleanup_amount\(\) has parameter \$amount with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:float2rat\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:float2rat\(\) has parameter \$n with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:float2rat\(\) has parameter \$tolerance with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:format_amount\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:format_amount\(\) has parameter \$float_amount with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:format_amount\(\) has parameter \$format with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:fraction_cleaner\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:fraction_cleaner\(\) has parameter \$fraction with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:get\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:get_closest_decimal\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:get_closest_decimal\(\) has parameter \$arr with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:get_closest_decimal\(\) has parameter \$search with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:get_fraction_array\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:locale_formatted\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:locale_formatted\(\) has parameter \$amount with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:math\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:math\(\) has parameter \$expression with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:nutrition_facts\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:singular_plural\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:singular_plural\(\) has parameter \$count with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:singular_plural\(\) has parameter \$plural_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:singular_plural\(\) has parameter \$singular_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:time_format\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:time_format\(\) has parameter \$format with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\Measurements\:\:time_format\(\) has parameter \$minutes with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Parameter \#1 \$expression of method NXP\\MathExecutor\:\:execute\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Parameter \#1 \$string of function substr expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Measurement/Measurements.php
+
+		-
+			message: '#^Call to an undefined method object\:\:toUnit\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Measurement/UnitConverter.php
+
+		-
+			message: '#^Method Cooked\\Measurement\\UnitConverter\:\:convert\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Measurement/UnitConverter.php
+
+		-
+			message: '#^Property Cooked\\Measurement\\UnitConverter\:\:\$default_targets type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Measurement/UnitConverter.php
+
+		-
+			message: '#^Property Cooked\\Measurement\\UnitConverter\:\:\$unit_map type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Measurement/UnitConverter.php
+
+		-
+			message: '#^Call to an undefined method object\:\:init\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: src/Plugin.php
+
+		-
+			message: '#^If condition is always false\.$#'
+			identifier: if.alwaysFalse
+			count: 1
+			path: src/Plugin.php
+
+		-
+			message: '#^Method Cooked\\Plugin\:\:__clone\(\) with return type void returns false but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Plugin.php
+
+		-
+			message: '#^Method Cooked\\Plugin\:\:__wakeup\(\) with return type void returns false but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: src/Plugin.php
+
+		-
+			message: '#^Method Cooked\\Plugin\:\:check_plugin_update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Plugin.php
+
+		-
+			message: '#^Result of && is always false\.$#'
+			identifier: booleanAnd.alwaysFalse
+			count: 1
+			path: src/Plugin.php
+
+		-
+			message: '#^Static property Cooked\\Plugin\:\:\$instance \(Cooked\\Plugin\) in isset\(\) is not nullable\.$#'
+			identifier: isset.property
+			count: 1
+			path: src/Plugin.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:cooked_info_allergens\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:cooked_info_allergens\(\) has parameter \$recipe_settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:get_allergens\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:get_icon_class\(\) has parameter \$allergen with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:get_recipe_card_hooks\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:register_info_field\(\) has parameter \$info with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:register_info_field\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:register_info_method\(\) has parameter \$methods with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:register_info_method\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:register_info_var\(\) has parameter \$vars with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:register_info_var\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:register_meta_box\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:render\(\) has parameter \$recipe_settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:render_field_checkboxes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:render_field_checkboxes\(\) has parameter \$selected with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:render_from_recipe\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:render_from_recipe\(\) has parameter \$recipe with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:render_meta_box\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:sanitize_selected\(\) has parameter \$selected with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:sanitize_selected\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:settings_tabs_fields\(\) has parameter \$settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Allergens\:\:settings_tabs_fields\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Allergens.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 3
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$post_title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Cannot access property \$description on WP_Term\|false\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Cannot access property \$name on WP_Term\|false\.$#'
+			identifier: property.nonObject
+			count: 5
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:activation\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:add_browse_page_rewrite_rules\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:add_browse_page_rewrite_rules\(\) has parameter \$taxonomies with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:add_display_post_states\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:add_display_post_states\(\) has parameter \$post_states with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:add_query_vars_filter\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:add_query_vars_filter\(\) has parameter \$vars with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:change_new_recipe_title\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:change_new_recipe_title\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:cooked_meta_tags\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:cooked_nav_classes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:cooked_nav_classes\(\) has parameter \$classes with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:cooked_nav_classes\(\) has parameter \$item with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:custom_columns\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:custom_columns\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:custom_columns_data\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:custom_columns_data\(\) has parameter \$column with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:custom_columns_data\(\) has parameter \$post_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:deactivation\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:disable_taxonomy_page_title\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:disable_taxonomy_page_title\(\) has parameter \$args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:disable_taxonomy_page_title\(\) has parameter \$nav_menu with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:enable_taxonomy_page_title\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:enable_taxonomy_page_title\(\) has parameter \$args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:enable_taxonomy_page_title\(\) has parameter \$items with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:get\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:image_sizes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:init\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:init_roles\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:remove_default_title_tag\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:taxonomy_meta_title\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:taxonomy_meta_title\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:taxonomy_page_title\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:taxonomy_page_title\(\) has parameter \$id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\PostTypes\:\:taxonomy_page_title\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Parameter \#1 \$content of function wp_kses expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Parameter \#1 \$page of function is_page expects array\<int\|string\>\|int\|string, bool\|int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Parameter \#1 \$text of function wp_strip_all_tags expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Parameter \#2 \$raw_title of function sanitize_title_with_dashes expects string, null given\.$#'
+			identifier: argument.type
+			count: 9
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Unable to resolve the template type T in call to function rest_sanitize_boolean$#'
+			identifier: argument.templateType
+			count: 1
+			path: src/Recipe/PostTypes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:add_recipe_meta_box\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:add_recipe_meta_box\(\) has parameter \$post_type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:bulk_add_modal\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:meta_cleanup\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:meta_cleanup\(\) has parameter \$recipe_settings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:recipe_embed_shortcode_admin_notice\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:render_recipe_meta_box\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:save_recipe_meta_box\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$post$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Recipe/RecipeMeta.php
+
+		-
+			message: '#^Binary operation "\." between ''\<div class\="cooked…'' and list\<string\>\|string\|null results in an error\.$#'
+			identifier: binaryOp.invalid
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Call to function is_array\(\) with non\-empty\-array\<mixed\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot access property \$ID on WP_Error\|WP_Term\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot access property \$ID on WP_Post\|null\.$#'
+			identifier: property.nonObject
+			count: 4
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot access property \$label on WP_Taxonomy\|false\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot access property \$name on WP_Error\|WP_Term\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot access property \$post_title on WP_Post\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot access property \$slug on WP_Term\|false\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot access property \$taxonomy on WP_Error\|WP_Term\|null\.$#'
+			identifier: property.nonObject
+			count: 2
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has parameter \$hide_author with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has parameter \$hide_excerpt with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has parameter \$hide_image with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has parameter \$hide_title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has parameter \$rid with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has parameter \$style with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:card\(\) has parameter \$width with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:check_recipe_query\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:content_has_self_recipe_embed_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:content_has_self_recipe_embed_shortcode\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:content_has_self_recipe_embed_shortcode\(\) has parameter \$recipe_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:cooked_pre_get_posts\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:cooked_pre_get_posts\(\) has parameter \$q with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:current_page\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:custom_taxonomy_in_query\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:custom_taxonomy_in_query\(\) has parameter \$query with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:default_content\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:difficulty_level\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:difficulty_level\(\) has parameter \$level with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:difficulty_levels\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:filter_default_recipe_thumbnail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:filter_default_recipe_thumbnail\(\) has parameter \$post with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:filter_default_recipe_thumbnail\(\) has parameter \$thumbnail_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:filter_recipes_by_taxonomy\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:format_content\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:format_content\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:fsm_content\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:gallery_types\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get\(\) has parameter \$args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get\(\) has parameter \$ids_and_titles_only with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get\(\) has parameter \$ids_only with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get\(\) has parameter \$limit with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get\(\) has parameter \$post_status with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get\(\) has parameter \$single with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_by_slug\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_by_slug\(\) has parameter \$slug with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_c2_recipe_meta\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_c2_recipe_meta\(\) has parameter \$post_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_fsm_markup\(\) has parameter \$settings with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_settings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_settings\(\) has parameter \$bc with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:get_settings\(\) has parameter \$post_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:list_style_grid\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:list_style_grid\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:list_view\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:list_view\(\) has parameter \$list_atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:measurement_system_switcher\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:modify_browse_page_canonical_url\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:modify_browse_page_canonical_url\(\) has parameter \$canonical_url with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:modify_browse_page_canonical_url\(\) has parameter \$post with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:numbered_pagination\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:numbered_pagination\(\) has parameter \$current_recipe_page with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:numbered_pagination\(\) has parameter \$total_recipe_pages with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:pagination\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:pagination\(\) has parameter \$recipe_args with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:pagination\(\) has parameter \$recipe_query with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:print_content\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:print_logo\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:print_recipe_template\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_list\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_list\(\) has parameter \$hide_author with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_list\(\) has parameter \$hide_image with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_list\(\) has parameter \$orderby with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_list\(\) has parameter \$recipes with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_list\(\) has parameter \$show with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_list\(\) has parameter \$width with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_search_box\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_search_box\(\) has parameter \$options with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_template\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:recipe_template\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:serving_size_switcher\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:serving_size_switcher\(\) has parameter \$servings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:settings_have_self_recipe_embed_shortcode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:settings_have_self_recipe_embed_shortcode\(\) has parameter \$post_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:settings_have_self_recipe_embed_shortcode\(\) has parameter \$recipe_settings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_direction\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_direction\(\) has parameter \$atts with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_direction\(\) has parameter \$dir with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_direction\(\) has parameter \$number with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_direction\(\) has parameter \$plain_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_direction\(\) has parameter \$step with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_ingredient\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_ingredient\(\) has parameter \$checkboxes with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_ingredient\(\) has parameter \$ing with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:single_ingredient\(\) has parameter \$plain_text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:sync_c2_recipe_settings\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:sync_c2_recipe_settings\(\) has parameter \$c2_recipe_settings with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:sync_c2_recipe_settings\(\) has parameter \$recipe_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:vendor_checks\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Recipes\:\:vendor_checks\(\) has parameter \$content with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_unique expects array, array\<mixed\>\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$data of function wp_kses_post expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$page of function is_page expects array\<int\|string\>\|int\|string, bool\|int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, bool\|int given\.$#'
+			identifier: argument.type
+			count: 4
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$search of function str_replace expects array\<string\>\|string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$term of function get_term_link expects int\|string\|WP_Term, WP_Error\|WP_Term given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|WP_Error given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 5
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#1 \$value of function untrailingslashit expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#2 \$string of function explode expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#2 \$value of function get_term_by expects int\|string, float\|int\<min, \-1\>\|int\<1, max\>\|string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, array\<int\|WP_Post\>\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Variable \$browse_html might not be defined\.$#'
+			identifier: variable.undefined
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Variable \$filters_set in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/Recipe/Recipes.php
+
+		-
+			message: '#^Cannot cast int\|WP_Post to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:find_related_recipes\(\) has parameter \$atts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:find_related_recipes\(\) has parameter \$source_recipe with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:find_related_recipes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:get_default_atts\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:get_recipe_terms\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:get_related_recipes\(\) has parameter \$atts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:get_related_recipes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\RelatedRecipes\:\:parse_include_ids\(\) has parameter \$atts with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Variable \$source_recipe in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Recipe/RelatedRecipes.php
+
+		-
+			message: '#^Cannot access property \$ID on WP_Post\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Cannot access property \$post_author on WP_Post\|null\.$#'
+			identifier: property.nonObject
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Seo\:\:json_ld\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Seo\:\:json_ld\(\) has parameter \$recipe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Seo\:\:schema_values\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Seo\:\:schema_values\(\) has parameter \$recipe with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, WP_Post\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Parameter \#1 \$text of function wp_strip_all_tags expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Parameter \#2 \$user_id of function get_the_author_meta expects int\|false, ''''\|numeric\-string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Seo.php
+
+		-
+			message: '#^Access to an undefined property WP_Error\|WP_Term\:\:\$ID\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Access to an undefined property WP_Error\|WP_Term\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Access to an undefined property WP_Error\|WP_Term\:\:\$taxonomy\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Access to an undefined property WP_Error\|WP_Term\:\:\$term_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:card\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:card\(\) has parameter \$hide_image with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:card\(\) has parameter \$hide_total with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:card\(\) has parameter \$style with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:card\(\) has parameter \$term_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:card\(\) has parameter \$width with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:get\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:single_taxonomy_block\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:single_taxonomy_block\(\) has parameter \$style with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:single_taxonomy_block\(\) has parameter \$taxonomy with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:single_taxonomy_block\(\) has parameter \$term_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:term_link_filter\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:term_link_filter\(\) has parameter \$taxonomy with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:term_link_filter\(\) has parameter \$term with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Method Cooked\\Recipe\\Taxonomies\:\:term_link_filter\(\) has parameter \$url with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, int\<min, \-1\>\|int\<1, max\>\|true given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Parameter \#1 \$term of function get_term_link expects int\|string\|WP_Term, WP_Error\|WP_Term given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|WP_Error given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Parameter \#1 \$value of function untrailingslashit expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Variable \$custom_cooked_tax_setting might not be defined\.$#'
+			identifier: variable.undefined
+			count: 2
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Variable \$term in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/Recipe/Taxonomies.php
+
+		-
+			message: '#^Argument of an invalid type array\<int\|WP_Post\>\|null supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:get_import_ids\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:get_migrate_ids\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:get_recipe_count\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:get_recipe_ids\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:import_recipes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:load_default\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:migrate_recipes\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:parse_bulk_ingredients\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:process_csv\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:recipe_ids_from_json\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:recipe_ids_from_json\(\) has parameter \$json with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:require_settings_ajax\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:require_settings_ajax\(\) has parameter \$nonce_action with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:sanitize_import_type\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:sanitize_import_type\(\) has parameter \$import_type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:save_default\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:save_default_bulk\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:upload_csv\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:user_can_edit_post_of_type\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:user_can_edit_post_of_type\(\) has parameter \$post_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Ajax\:\:user_can_edit_post_of_type\(\) has parameter \$post_type with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Parameter \#1 \$post_id of function get_post_meta expects int, int\|WP_Post given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Parameter \#1 \$post_id of function update_post_meta expects int, int\|WP_Post given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Parameter \#1 \$value of function count expects array\|Countable, array\<int\|WP_Post\>\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/System/Ajax.php
+
+		-
+			message: '#^Method Cooked\\System\\Cli\:\:list_tools\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Cli.php
+
+		-
+			message: '#^Method Cooked\\System\\Cli\:\:list_tools\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/System/Cli.php
+
+		-
+			message: '#^Method Cooked\\System\\Cli\:\:list_tools\(\) has parameter \$assoc_args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/System/Cli.php
+
+		-
+			message: '#^Method Cooked\\System\\Cli\:\:run\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Cli.php
+
+		-
+			message: '#^Method Cooked\\System\\Cli\:\:run\(\) has parameter \$args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/System/Cli.php
+
+		-
+			message: '#^Method Cooked\\System\\Cli\:\:run\(\) has parameter \$assoc_args with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/System/Cli.php
+
+		-
+			message: '#^Argument of an invalid type list\<string\>\|false supplied for foreach, only iterables are supported\.$#'
+			identifier: foreach.nonIterable
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:array_splice_assoc\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:array_splice_assoc\(\) has parameter \$input with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:array_splice_assoc\(\) has parameter \$length with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:array_splice_assoc\(\) has parameter \$offset with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:array_splice_assoc\(\) has parameter \$replacement with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:get_and_delete_transient_message\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:get_and_delete_transient_message\(\) has parameter \$guest_message_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:hex2rgb\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:hex2rgb\(\) has parameter \$hex with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:parse_readme_changelog\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:parse_readme_changelog\(\) has parameter \$readme_url with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:parse_readme_changelog\(\) has parameter \$title with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:print_options\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:print_options_js\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:sanitize_text_field\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:sanitize_text_field\(\) has parameter \$text with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:set_transient_message\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:set_transient_message\(\) has parameter \$message with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:wpml_xml\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Method Cooked\\System\\Functions\:\:wpml_xml\(\) has parameter \$cooked_tabs_fields with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Static property Cooked\\System\\Functions\:\:\$guest_message_id \(string\) does not accept default value of type false\.$#'
+			identifier: property.defaultValue
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Static property Cooked\\System\\Functions\:\:\$guest_message_id \(string\) does not accept false\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/System/Functions.php
+
+		-
+			message: '#^Call to an undefined method object\:\:add_cap\(\)\.$#'
+			identifier: method.notFound
+			count: 13
+			path: src/User/Roles.php
+
+		-
+			message: '#^Call to an undefined method object\:\:remove_cap\(\)\.$#'
+			identifier: method.notFound
+			count: 23
+			path: src/User/Roles.php
+
+		-
+			message: '#^Method Cooked\\User\\Roles\:\:add_caps\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Roles.php
+
+		-
+			message: '#^Method Cooked\\User\\Roles\:\:add_roles\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Roles.php
+
+		-
+			message: '#^Method Cooked\\User\\Roles\:\:clean_caps\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Roles.php
+
+		-
+			message: '#^Method Cooked\\User\\Roles\:\:remove_caps\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Roles.php
+
+		-
+			message: '#^Method Cooked\\User\\Roles\:\:remove_roles\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Roles.php
+
+		-
+			message: '#^Access to an undefined property object\:\:\$query_orderby\.$#'
+			identifier: property.notFound
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Left side of && is always true\.$#'
+			identifier: booleanAnd.leftAlwaysTrue
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:format_author_name\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:format_author_name\(\) has parameter \$format with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:format_author_name\(\) has parameter \$name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:get\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:get\(\) has parameter \$basic with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:get\(\) has parameter \$user_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:get\(\) has parameter \$user_nicename with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:pre_user_query\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:pre_user_query\(\) has parameter \$query with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_author_rewrite\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column\(\) has parameter \$column_headers with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column_sortable\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column_sortable\(\) has parameter \$columns with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column_value\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column_value\(\) has parameter \$column_name with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column_value\(\) has parameter \$user_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Method Cooked\\User\\Users\:\:recipe_count_column_value\(\) has parameter \$value with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Variable \$_cooked_settings in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: src/User/Users.php
+
+		-
+			message: '#^Function cooked_recipe_shortcodes_content\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/functions.php
+
+		-
+			message: '#^Function cooked_render_recipe_fields\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/functions.php
+
+		-
+			message: '#^Function cooked_render_recipe_fields\(\) has parameter \$post_id with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/functions.php
+
+		-
+			message: '#^Parameter \#1 \$text of function esc_attr expects string, int given\.$#'
+			identifier: argument.type
+			count: 19
+			path: src/functions.php
+
+		-
+			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/functions.php
+
+		-
+			message: '#^Variable \$recipe_review_required in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.variable
+			count: 1
+			path: src/functions.php

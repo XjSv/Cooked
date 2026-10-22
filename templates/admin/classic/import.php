@@ -1,6 +1,6 @@
 <?php
 /**
- * Cooked Import admin page
+ * Cooked Import admin page, classic layout (Settings > General > Admin Screens). The new layout is in ../frame/
  *
  * @package     Cooked
  * @subpackage  Admin
@@ -13,7 +13,7 @@
         <form action="options.php" method="post">
 
         <div class="cooked-settings-header">
-            <i class="cooked-icon cooked-icon-cooked-icon"></i>&nbsp;&nbsp;<?php esc_html_e( 'Cooked Import', 'cooked' ); ?>
+            <i class="cooked-icon cooked-icon-cooked-icon"></i><?php esc_html_e( 'Cooked Import', 'cooked' ); ?>
         </div>
         <div id="cooked-settings-panel" class="wrap">
         <?php
@@ -25,7 +25,7 @@
             $tab_counter = 1;
             echo '<ul id="cooked-settings-tabs" class="cooked-clearfix">';
         foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
-            echo '<li id="cooked-settings-tab-' . esc_attr( $tab_slug ) . '"' . ( 1 === $tab_counter ? ' class="active"' : '' ) . '><a href="#' . esc_attr( $tab_slug ) . '"><i class="cooked-icon cooked-icon-' . esc_attr( $tab['icon'] ) . '"></i>&nbsp;&nbsp;' . esc_attr( $tab['name'] ) . '</a></li>';
+            echo '<li id="cooked-settings-tab-' . esc_attr( $tab_slug ) . '"' . ( 1 === $tab_counter ? ' class="active"' : '' ) . '><a href="#' . esc_attr( $tab_slug ) . '"><i class="cooked-icon cooked-icon-' . esc_attr( $tab['icon'] ) . '"></i>' . esc_attr( $tab['name'] ) . '</a></li>';
             ++$tab_counter;
             endforeach;
             echo '</ul>';
@@ -76,7 +76,7 @@
                                         endif;
 
                                     echo '<div' . wp_kses( $conditional_requirement, array() ) . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
-                                        echo ! $notitle ? '<h3 class="cooked-settings-title">' . wp_kses_post( $field['title'] ) . '</h3>' : '';
+                                        echo ! $notitle ? '<h3 class="cooked-settings-title" id="' . esc_attr( Cooked_Settings::title_id( $name ) ) . '">' . wp_kses_post( $field['title'] ) . '</h3>' : '';
                                         echo isset( $field['desc'] ) && $field['desc'] ? '<p>' . wp_kses_post( $field['desc'] ) . '</p>' : '';
                                         $Cooked_Import->$field_type( $name, $field_options, $color, $field );
                                     echo '</div>';

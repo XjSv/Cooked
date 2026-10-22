@@ -85,7 +85,10 @@ class DeliciousRecipes {
 
         $post             = get_post( $id );
         $post_meta        = get_post_custom( $id );
-        $delicious_recipe = maybe_unserialize( $post_meta['delicious_recipes_metadata'][0] );
+        $delicious_recipe = isset( $post_meta['delicious_recipes_metadata'][0] ) ? \Cooked_Functions::safe_unserialize( $post_meta['delicious_recipes_metadata'][0] ) : [];
+        if ( ! is_array( $delicious_recipe ) ) {
+            $delicious_recipe = [];
+        }
 
         // Create new cp_recipe post.
         $new_cp_recipe                    = [];
@@ -119,7 +122,7 @@ class DeliciousRecipes {
         $new_cp_recipe_meta['content']         = $default_content;
         $new_cp_recipe_meta['excerpt']         = isset( $delicious_recipe['recipeDescription'] ) ? sanitize_text_field( $delicious_recipe['recipeDescription'] ) : '';
         $new_cp_recipe_meta['seo_description'] = isset( $delicious_recipe['recipeDescription'] ) ? sanitize_text_field( $delicious_recipe['recipeDescription'] ) : '';
-        $new_cp_recipe_meta['notes']           = isset( $delicious_recipe['recipeNotes'] ) ? $delicious_recipe['recipeNotes'] : '';
+        $new_cp_recipe_meta['notes']           = isset( $delicious_recipe['recipeNotes'] ) ? wp_kses_post( $delicious_recipe['recipeNotes'] ) : '';
 
         // Convert beginner, intermediate, advanced to 1, 2, 3.
         $difficulty_levels                      = [
@@ -312,11 +315,15 @@ class DeliciousRecipes {
                 if ( isset( $recipe_taxonomies_mapping[ $taxonomy ] ) ) {
                     $terms = wp_get_object_terms( $id, $taxonomy, [ 'fields' => 'all' ] );
 
-                    if ( ! empty( $terms ) ) {
+                    if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
                         $new_terms = [];
 
                         foreach ( $terms as $term_id ) {
-                            $term        = get_term( $term_id );
+                            $term = get_term( $term_id );
+                            if ( ! $term instanceof \WP_Term ) {
+                                continue;
+                            }
+
                             $term_exists = term_exists( $term->name, $recipe_taxonomies_mapping[ $taxonomy ] );
 
                             if ( ! $term_exists ) {

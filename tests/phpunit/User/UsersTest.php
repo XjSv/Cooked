@@ -37,4 +37,16 @@ class UsersTest extends TestCase {
         $result = Cooked_Users::format_author_name('Madonna', 'first_last_initial');
         $this->assertSame('Madonna', $result);
     }
+
+    public function test_format_author_name_escapes_every_format() {
+        foreach ( [ 'full', 'first_only', 'first_last_initial', 'first_initial_last' ] as $format ) {
+            $result = Cooked_Users::format_author_name( '<b>Jo</b> <i>Doe</i>', $format );
+            $this->assertStringNotContainsString( '<', $result, $format );
+        }
+    }
+
+    public function test_format_author_name_initial_is_multibyte_safe() {
+        $this->assertSame( 'Élodie D.', Cooked_Users::format_author_name( 'Élodie Doe', 'first_last_initial' ) );
+        $this->assertSame( 'É. Doe', Cooked_Users::format_author_name( 'Élodie Doe', 'first_initial_last' ) );
+    }
 }

@@ -46,12 +46,12 @@ class Menus {
             }
         }
 
-        add_submenu_page( 'cooked_recipes_menu', __( 'Settings', 'cooked' ), __( 'Settings', 'cooked' ), 'edit_cooked_settings', 'cooked_settings', [ &$this, 'cooked_settings_page' ] );
-        add_submenu_page( 'cooked_recipes_menu', __( 'Import', 'cooked' ), __( 'Import', 'cooked' ), 'edit_cooked_settings', 'cooked_import', [ &$this, 'cooked_import_page' ] );
-        add_submenu_page( 'cooked_recipes_menu', __( 'What\'s New?', 'cooked' ), __( 'What\'s New?', 'cooked' ), 'edit_cooked_settings', 'cooked_welcome', [ &$this, 'cooked_welcome_content' ] );
+        add_submenu_page( 'cooked_recipes_menu', __( 'Settings', 'cooked' ), __( 'Settings', 'cooked' ), 'edit_cooked_settings', 'cooked_settings', [ &$this, 'cooked_app_page' ] );
+        add_submenu_page( 'cooked_recipes_menu', __( 'Import', 'cooked' ), __( 'Import', 'cooked' ), 'edit_cooked_settings', 'cooked_import', [ &$this, 'cooked_app_page' ] );
+        add_submenu_page( 'cooked_recipes_menu', __( 'What\'s New?', 'cooked' ), __( 'What\'s New?', 'cooked' ), 'edit_cooked_settings', 'cooked_welcome', [ &$this, 'cooked_app_page' ] );
 
         if ( ! class_exists( 'Cooked_Pro_Plugin' ) ) {
-            add_submenu_page( 'cooked_recipes_menu', __( 'Upgrade to Pro', 'cooked' ), '<span class="admin-menu-cooked-upgrade">' . __( 'Upgrade to Pro', 'cooked' ) . '</span>', 'edit_cooked_settings', 'cooked_pro', [ &$this, 'cooked_pro' ] );
+            add_submenu_page( 'cooked_recipes_menu', __( 'Upgrade to Pro', 'cooked' ), '<span class="admin-menu-cooked-upgrade">' . __( 'Upgrade to Pro', 'cooked' ) . '</span>', 'edit_cooked_settings', 'cooked_pro', [ &$this, 'cooked_app_page' ] );
         }
     }
 
@@ -115,39 +115,34 @@ class Menus {
         return $parent_file;
     }
 
-    // Settings Panel
-    public function cooked_settings_page() {
+    /**
+     * Admin frame screens (Settings, Import, What's New, Upgrade to Pro). Each of their pages
+     * renders all of them; the frame shows the current one and switches between them in place.
+     *
+     * @return void
+     */
+    public function cooked_app_page() {
         if ( ! current_user_can( 'edit_cooked_settings' ) ) {
             wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'cooked' ) );
         }
 
-        include COOKED_DIR . 'templates/admin/settings.php';
-    }
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin page query var.
+        $current = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
+        $screens = Enqueues::app_screens();
 
-    // Import Page
-    public function cooked_import_page() {
-        if ( ! current_user_can( 'edit_cooked_settings' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'cooked' ) );
+        // Classic layout: just this page's own screen, without the frame.
+        if ( Enqueues::use_classic_ui() ) {
+            if ( isset( $screens[ $current ] ) ) {
+                include COOKED_DIR . 'templates/admin/' . $screens[ $current ]['classic_template'];
+            }
+            return;
         }
 
-        include COOKED_DIR . 'templates/admin/import.php';
-    }
-
-    // Welcome Page
-    public function cooked_welcome_content() {
-        if ( ! current_user_can( 'edit_cooked_settings' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'cooked' ) );
+        echo '<div id="cooked-admin-app"></div>';
+        foreach ( $screens as $slug => $screen ) {
+            echo '<div class="cooked-admin-screen" data-screen="' . esc_attr( $slug ) . '"' . ( $slug === $current ? '' : ' hidden' ) . '>';
+            include COOKED_DIR . 'templates/admin/' . $screen['template'];
+            echo '</div>';
         }
-
-        include COOKED_DIR . 'templates/admin/welcome.php';
-    }
-
-    // Cooked Pro
-    public function cooked_pro() {
-        if ( ! current_user_can( 'edit_cooked_settings' ) ) {
-            wp_die( esc_html__( 'You do not have sufficient permissions to access this page.', 'cooked' ) );
-        }
-
-        include COOKED_DIR . 'templates/admin/pro.php';
     }
 }

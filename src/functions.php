@@ -216,7 +216,7 @@ endif;
 endif;
 
             echo "<li id='cooked-recipe-tab-" . esc_attr( $slug ) . "'" . ( ! empty( $classes ) ? " class='" . esc_attr( implode( ' ', $classes ) ) . "'" : '' ) . ( $tab['conditional'] ? " data-condition='" . esc_attr( $tab['conditional'] ) . "'" : '' ) . ( $tab['value'] ? " data-value='" . esc_attr( $tab['value'] ) . "'" : '' ) . '>';
-            echo ( $tab['icon'] ? "<i class='cooked-icon cooked-icon-fw cooked-icon-" . esc_attr( $tab['icon'] ) . "'></i>&nbsp;&nbsp;" : '' );
+            echo ( $tab['icon'] ? "<i class='cooked-icon cooked-icon-fw cooked-icon-" . esc_attr( $tab['icon'] ) . "'></i>" : '' );
             echo esc_html( $tab['name'] );
             echo '</li>';
             $first_tab = false;
@@ -272,7 +272,7 @@ endif;
                     <div id="cooked-save-default-panel" class="cooked-save-default-panel" hidden>
                         <strong class="cooked-tooltip-heading"><?php esc_html_e( 'Default Recipe Template', 'cooked' ); ?></strong>
                         <p><?php esc_html_e( 'Choose from the options below to use this layout as the default for new recipes or for all recipes.', 'cooked' ); ?></p>
-                        <span class="cooked-tooltip-buttons cooked-clearfix"><a href="#" class="cooked-save-default-new button" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></a>&nbsp;&nbsp;<a href="#" class="cooked-save-default-all button-primary" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-bulk-nonce="<?php echo esc_attr( $nonce_bulk ); ?>"><?php esc_html_e( 'Apply to All', 'cooked' ); ?></a></span>
+                        <span class="cooked-tooltip-buttons"><a href="#" class="cooked-save-default-new button" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></a><a href="#" class="cooked-save-default-all button-primary" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-bulk-nonce="<?php echo esc_attr( $nonce_bulk ); ?>"><?php esc_html_e( 'Apply to All', 'cooked' ); ?></a></span>
                         <span id="cooked-template-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span>
                         <span id="cooked-template-progress-text" class="cooked-progress-text">0 / 0</span>
                     </div>
@@ -575,12 +575,12 @@ endif;
 
             <div class="recipe-setting-block">
 
-                <p>
+                <p class="cooked-builder-buttons">
                     <?php do_action( 'cooked_ingredient_buttons_start' ); ?>
                     <a href="#" class="button cooked-add-ingredient-button"><?php esc_html_e( 'Add Ingredient', 'cooked' ); ?></a>
-                    &nbsp;<a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
+                    <a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
                     <?php do_action( 'cooked_ingredient_buttons_end' ); ?>
-                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="ingredients"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
+                    <a href="#" class="button cooked-bulk-add-button" data-type="ingredients"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
                 </p>
 
                 <!-- TEMPLATES -->
@@ -823,12 +823,12 @@ endif;
 
             <div class="recipe-setting-block">
 
-                <p>
+                <p class="cooked-builder-buttons">
                     <?php do_action( 'cooked_direction_buttons_start' ); ?>
                     <a href="#" class="button cooked-add-direction-button"><?php esc_html_e( 'Add Direction', 'cooked' ); ?></a>
-                    &nbsp;<a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
+                    <a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
                     <?php do_action( 'cooked_direction_buttons_end' ); ?>
-                    &nbsp;<a href="#" class="button cooked-bulk-add-button" data-type="directions"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
+                    <a href="#" class="button cooked-bulk-add-button" data-type="directions"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
                 </p>
 
                 <!-- TEMPLATES -->

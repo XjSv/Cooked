@@ -57,7 +57,9 @@ class CsvImport {
         /**
          * Read header row
          */
-        $headers = fgetcsv( $handle );
+        // The escape character is passed explicitly (PHP 8.4 deprecates the default); '\\' is
+        // the previous default, so parsing is unchanged.
+        $headers = fgetcsv( $handle, null, ',', '"', '\\' );
         if ( false === $headers || empty( $headers ) ) {
             $results['errors'][] = __( 'CSV file is empty or invalid.', 'cooked' );
             fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- CSV row streaming.
@@ -80,7 +82,7 @@ class CsvImport {
         }
 
         $row_number = 1;
-        while ( ( $row = fgetcsv( $handle ) ) !== false ) {
+        while ( ( $row = fgetcsv( $handle, null, ',', '"', '\\' ) ) !== false ) {
             ++$row_number;
             ++$results['total'];
 

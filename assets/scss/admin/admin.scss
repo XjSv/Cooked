@@ -28,4 +28,8 @@
 @use 'components/allergens';
 @use 'components/code-block';
 @use 'layout/frame';
+@use 'layout/pro';
+@use 'layout/welcome';
+@use 'layout/import';
 @use 'components/tom-select';
+@use 'layout/dark'; // last: overrides the light colours above

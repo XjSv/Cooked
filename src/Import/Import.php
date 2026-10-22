@@ -77,7 +77,7 @@ class Import {
                     'icon'   => 'migrate',
                     'fields' => [
                         'cooked_import_button' => [
-                            'title'       => 'WP Delicious (formerly Delicious Recipes)&nbsp;&nbsp;<i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;Cooked',
+                            'title'       => 'WP Delicious (formerly Delicious Recipes) <i class="cooked-icon cooked-icon-angle-right"></i> Cooked',
                             'desc'        => $html_desc,
                             'type'        => 'import_button',
                             'total'       => $total,
@@ -132,7 +132,7 @@ class Import {
                     'icon'   => 'migrate',
                     'fields' => [
                         'cooked_import_button' => [
-                            'title'       => 'WP Recipe Maker&nbsp;&nbsp;<i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;Cooked',
+                            'title'       => 'WP Recipe Maker <i class="cooked-icon cooked-icon-angle-right"></i> Cooked',
                             'desc'        => $html_desc,
                             'type'        => 'import_button',
                             'total'       => $total,
@@ -225,13 +225,21 @@ class Import {
     }
 
     public static function field_csv_upload( $name, $field_options, $color, $field ) {
-        echo '<p class="cooked-import-note"><strong>' . esc_html__( 'Download sample CSV files:', 'cooked' ) . '</strong> ';
-        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-small.csv' ) . '" download>' . esc_html__( 'Small (1 recipe)', 'cooked' ) . '</a>, ';
-        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-medium.csv' ) . '" download>' . esc_html__( 'Medium (3 recipes)', 'cooked' ) . '</a>, ';
-        echo '<a href="' . esc_url( COOKED_URL . 'sample-data/recipes-large.csv' ) . '" download>' . esc_html__( 'Large (10 recipes)', 'cooked' ) . '</a></p>';
+        $samples = [
+            'recipes-small.csv'  => __( 'Small (1 recipe)', 'cooked' ),
+            'recipes-medium.csv' => __( 'Medium (3 recipes)', 'cooked' ),
+            'recipes-large.csv'  => __( 'Large (10 recipes)', 'cooked' ),
+        ];
+        $links   = [];
+        foreach ( $samples as $file => $label ) {
+            // Downloads; in the admin frame a click opens a preview instead (cooked-admin-app.js).
+            $links[] = '<a href="' . esc_url( COOKED_URL . 'sample-data/' . $file ) . '" class="cooked-csv-sample" download="' . esc_attr( $file ) . '">' . esc_html( $label ) . '</a>';
+        }
+        $label = \Cooked\Admin\Enqueues::use_classic_ui() ? __( 'Download sample CSV files:', 'cooked' ) : __( 'Preview a sample CSV file:', 'cooked' );
+        echo '<p class="cooked-import-note cooked-csv-samples"><strong>' . esc_html( $label ) . '</strong> ' . implode( ', ', $links ) . '</p>';  // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped above.
         echo '<form id="cooked-csv-import-form" enctype="multipart/form-data">';
         echo '<p>';
-        echo '<input type="file" id="cooked-csv-file" name="csv_file" accept=".csv" required>';
+        echo '<input type="file" id="cooked-csv-file" name="csv_file" accept=".csv" required aria-labelledby="' . esc_attr( \Cooked_Settings::title_id( $name ) ) . '">';
         echo '</p>';
         echo '<p>';
         echo '<input id="cooked-csv-import-button" type="button" class="button-primary" value="' . esc_attr__( 'Upload and Import CSV', 'cooked' ) . '">';

@@ -17,16 +17,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Roles {
 
     public static function add_roles() {
+        // No unfiltered_html: recipe content is sanitized with wp_kses_post() on save, and raw
+        // HTML would also let the role bypass KSES on anything else it can edit. A site that
+        // wants it can add it back through this filter.
         $caps = apply_filters(
             'cooked_recipe_editor_caps',
             [
 				'manage_categories' => 1,
 				'upload_files'      => 1,
-				'unfiltered_html'   => 1,
 			]
         );
 
         add_role( 'cooked_recipe_editor', __( 'Recipe Editor', 'cooked' ), $caps );
+
+        // add_role() leaves an existing role alone, so take the capability back from sites
+        // created before 2.0 (unless the filter above still grants it).
+        $role = get_role( 'cooked_recipe_editor' );
+        if ( $role && empty( $caps['unfiltered_html'] ) && $role->has_cap( 'unfiltered_html' ) ) {
+            $role->remove_cap( 'unfiltered_html' );
+        }
     }
 
     public static function remove_roles() {

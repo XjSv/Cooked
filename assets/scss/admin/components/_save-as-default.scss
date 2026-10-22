@@ -76,7 +76,9 @@
 }
 
 .cooked-save-default-panel .cooked-tooltip-buttons {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
     padding: 12px 0 5px;
 }
 

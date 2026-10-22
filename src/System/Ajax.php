@@ -61,9 +61,11 @@ class Ajax {
         // CSV Import - Process file
         add_action( 'wp_ajax_cooked_process_csv', [ &$this, 'process_csv' ] );
 
+        // What's New - Full changelog
+        add_action( 'wp_ajax_cooked_full_changelog', [ &$this, 'full_changelog' ] );
+
         // Bulk Add - Parse Ingredients
         add_action( 'wp_ajax_cooked_parse_bulk_ingredients', [ &$this, 'parse_bulk_ingredients' ] );
-        add_action( 'wp_ajax_nopriv_cooked_parse_bulk_ingredients', [ &$this, 'parse_bulk_ingredients' ] );
     }
 
     private static function recipe_ids_from_json( $json ) {
@@ -101,21 +103,22 @@ class Ajax {
         return $post_type && get_post_type( $post_id ) === $post_type && current_user_can( 'edit_post', $post_id );
     }
 
+    /**
+     * The whole readme.txt changelog as HTML, for the What's New "View Full Changelog" modal.
+     *
+     * @since 2.0.0
+     * @return void
+     */
+    public function full_changelog() {
+        self::require_settings_ajax( 'cooked_full_changelog' );
+        wp_send_json_success( [ 'html' => wp_kses_post( Functions::parse_readme_full_changelog() ) ] );
+    }
+
     public function get_migrate_ids() {
         self::require_settings_ajax( 'cooked_migrate_recipes' );
 
-        $old_recipes = get_transient( 'cooked_classic_recipes' );
-        if ( $old_recipes != 'complete' ) :
-            $total = count( $old_recipes );
-
-            if ( $total > 0 ) :
-                echo wp_json_encode( $old_recipes );
-            else :
-                echo 'false';
-            endif;
-        else :
-            echo 'false';
-        endif;
+        $old_recipes = \Cooked_Migration::pending_classic_recipes();
+        echo ! empty( $old_recipes ) ? wp_json_encode( $old_recipes ) : 'false';
 
         wp_die();
     }
@@ -382,6 +385,7 @@ class Ajax {
     public function load_default() {
         global $_cooked_settings;
 
+        check_ajax_referer( 'cooked_load_default', 'nonce' );
         if ( ! current_user_can( 'edit_cooked_recipes' ) ) {
             wp_die();
         }
@@ -422,24 +426,91 @@ class Ajax {
             wp_send_json_error( [ 'message' => __( 'Invalid file type. Please upload a CSV file.', 'cooked' ) ] );
         }
 
-        // Use WordPress upload handler
+        self::delete_stale_csv_imports();
+
+        // Use WordPress upload handler, saving into the private import folder under a random
+        // name rather than the public, date-based uploads folder.
         require_once ABSPATH . 'wp-admin/includes/file.php';
-        $upload = wp_handle_upload( $_FILES['csv_file'], [ 'test_form' => false ] );
+        add_filter( 'upload_dir', [ __CLASS__, 'csv_import_upload_dir' ] );
+        $upload = wp_handle_upload(
+            $_FILES['csv_file'],
+            [
+				'test_form'                => false,
+				'unique_filename_callback' => function () {
+					return 'cooked-import-' . wp_generate_password( 20, false ) . '.csv';
+				},
+			]
+        );
+        remove_filter( 'upload_dir', [ __CLASS__, 'csv_import_upload_dir' ] );
 
         if ( isset( $upload['error'] ) ) {
             wp_send_json_error( [ 'message' => $upload['error'] ] );
         }
+        self::protect_csv_import_dir();
 
         // Store file path in transient for processing
         $transient_key = 'cooked_csv_import_' . get_current_user_id() . '_' . time();
-        set_transient( $transient_key, $upload['file'], 3600 ); // 1 hour
+        set_transient( $transient_key, $upload['file'], HOUR_IN_SECONDS );
 
-        wp_send_json_success(
-            [
-				'transient_key' => $transient_key,
-				'file_path'     => $upload['file'],
-			]
-        );
+        wp_send_json_success( [ 'transient_key' => $transient_key ] );
+    }
+
+    /**
+     * The private folder that uploaded CSV imports wait in until they are processed.
+     *
+     * @since 2.0.0
+     * @return string Absolute path, without a trailing slash.
+     */
+    private static function csv_import_dir() {
+        $uploads = wp_upload_dir( null, false );
+        return trailingslashit( $uploads['basedir'] ) . 'cooked-imports';
+    }
+
+    /**
+     * Points the CSV upload at the private import folder (an upload_dir filter).
+     *
+     * @since 2.0.0
+     * @param array<string, mixed> $dirs Upload directory data.
+     * @return array<string, mixed>
+     */
+    public static function csv_import_upload_dir( $dirs ) {
+        $dirs['subdir'] = '/cooked-imports';
+        $dirs['path']   = $dirs['basedir'] . '/cooked-imports';
+        $dirs['url']    = $dirs['baseurl'] . '/cooked-imports';
+        return $dirs;
+    }
+
+    /**
+     * Denies web access to the import folder (Apache) and hides its listing; the random
+     * file names cover servers that ignore .htaccess.
+     *
+     * @since 2.0.0
+     * @return void
+     */
+    private static function protect_csv_import_dir() {
+        $dir = self::csv_import_dir();
+        if ( ! file_exists( $dir . '/.htaccess' ) ) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Small static file in our own uploads folder.
+            file_put_contents( $dir . '/.htaccess', "Require all denied\nDeny from all\n" );
+        }
+        if ( ! file_exists( $dir . '/index.php' ) ) {
+            // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents -- Small static file in our own uploads folder.
+            file_put_contents( $dir . '/index.php', "<?php\n// Silence is golden.\n" );
+        }
+    }
+
+    /**
+     * Deletes CSV uploads that were never processed (their transient lasts an hour).
+     *
+     * @since 2.0.0
+     * @return void
+     */
+    private static function delete_stale_csv_imports() {
+        foreach ( (array) glob( self::csv_import_dir() . '/*.csv' ) as $file ) {
+            if ( $file && filemtime( $file ) < time() - HOUR_IN_SECONDS ) {
+                wp_delete_file( $file );
+            }
+        }
     }
 
     /**
@@ -452,11 +523,17 @@ class Ajax {
         }
 
         $transient_key = isset( $_POST['transient_key'] ) ? sanitize_text_field( wp_unslash( $_POST['transient_key'] ) ) : '';
-        $file_path     = get_transient( $transient_key );
 
-        if ( ! $file_path || ! file_exists( $file_path ) ) {
+        // Only this user's own upload, and only a .csv inside the private import folder: the
+        // file is parsed and then deleted.
+        $file_path  = preg_match( '/^cooked_csv_import_' . get_current_user_id() . '_\d+$/', $transient_key ) ? get_transient( $transient_key ) : false;
+        $real_path  = $file_path ? realpath( $file_path ) : false;
+        $import_dir = realpath( self::csv_import_dir() );
+
+        if ( ! $real_path || ! $import_dir || 0 !== strpos( $real_path, $import_dir . DIRECTORY_SEPARATOR ) || 'csv' !== strtolower( pathinfo( $real_path, PATHINFO_EXTENSION ) ) ) {
             wp_send_json_error( [ 'message' => __( 'CSV file not found. Please upload again.', 'cooked' ) ] );
         }
+        $file_path = $real_path;
 
         // Process the CSV file
         $results = \Cooked_CSV_Import::import_from_file( $file_path );
@@ -492,11 +569,18 @@ class Ajax {
 
     public function parse_bulk_ingredients() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
-        if ( ! wp_verify_nonce( $nonce, 'cooked_bulk_add' ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'cooked_bulk_add' ) || ! current_user_can( 'edit_cooked_recipes' ) ) {
             wp_send_json_error( [ 'message' => __( 'Security check failed.', 'cooked' ) ] );
         }
 
         $lines = isset( $_POST['lines'] ) ? wp_unslash( (array) $_POST['lines'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each line is sanitize_text_field'd below.
+        // Bound the regex work: far more than any recipe needs.
+        $lines = array_map(
+            function ( $line ) {
+                return is_string( $line ) ? mb_substr( $line, 0, 500 ) : '';
+            },
+            array_slice( $lines, 0, 500 )
+        );
 
         if ( empty( $lines ) ) {
             wp_send_json_error( [ 'message' => __( 'No ingredients provided.', 'cooked' ) ] );

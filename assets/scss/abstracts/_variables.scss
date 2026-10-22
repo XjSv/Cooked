@@ -8,6 +8,7 @@
     --cooked-color-accent-hover: #00664a;
     --cooked-color-accent-active: #00553e;
     --cooked-color-accent-soft: #e8f7f1;
+    --cooked-color-accent-fill: #007a55; // backgrounds behind white text (buttons, badges)
     --cooked-color-brand-dark: #33373c;
     --cooked-color-brand-icon: #00e0a9;
 
@@ -21,6 +22,8 @@
     --cooked-color-text-muted: #757575;
     --cooked-color-border: #e0e0e0;
     --cooked-color-surface-muted: #fcfcfc;
+    --cooked-color-surface: #fff; // cards, frames, form fields
+    --cooked-color-page: #f0f0f1; // the WordPress admin page behind them
 
     // Shape
     --cooked-radius: 8px; // frames and cards

@@ -333,7 +333,7 @@ Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a
 * **FIX:** Fixes an XSS vulnerability with the Serving Size picker.
 
 = 1.7.9 =
-** **NEW:** Added an `inline_browse` option to the `[cooked-browse]` and `[cooked-search]` shortcodes. Ex. `[cooked-browse inline_browse="true"]` This will show the taxonomies inline and not require the "Browse" button being clicked to view them.
+* **NEW:** Added an `inline_browse` option to the `[cooked-browse]` and `[cooked-search]` shortcodes. Ex. `[cooked-browse inline_browse="true"]` This will show the taxonomies inline and not require the "Browse" button being clicked to view them.
 
 = 1.7.8.5 =
 * **FIX:** Fixed an issue with large spaces between the recipe template shortcodes

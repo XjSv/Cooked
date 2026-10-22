@@ -17,17 +17,17 @@
                 e.preventDefault();
 
                 var thisButton = $(this),
-                    confirm_migrate = confirm(cooked_migration_js_vars.i18n_confirm_migrate_recipes);
+                    confirm_migrate = confirm(cooked_admin_functions_js_vars.i18n_confirm_migrate_recipes);
 
                 if (confirm_migrate && !thisButton.hasClass('disabled')) {
                     thisButton.addClass('disabled').attr('disabled', true);
                     thisButton.hide();
 
                     var ajax__bulk_migrate_recipes = $.post(
-                        cooked_migration_js_vars.ajax_url,
+                        cooked_admin_functions_js_vars.ajax_url,
                         {
                             action: 'cooked_get_migrate_ids',
-                            nonce: cooked_migration_js_vars.cooked_migrate_nonce
+                            nonce: cooked_admin_functions_js_vars.cooked_migrate_nonce
                         },
                         function (json_recipe_ids) {
                             if (json_recipe_ids) {
@@ -51,18 +51,18 @@
 
                 var thisButton = $(this),
                     import_type = thisButton.data('import-type'),
-                    confirm_import = confirm(cooked_migration_js_vars.i18n_confirm_import_recipes);
+                    confirm_import = confirm(cooked_admin_functions_js_vars.i18n_confirm_import_recipes);
 
                 if (confirm_import && !thisButton.hasClass('disabled')) {
                     thisButton.addClass('disabled').attr('disabled', true);
                     thisButton.hide();
 
                     var ajax__bulk_import_recipes = $.post(
-                        cooked_migration_js_vars.ajax_url,
+                        cooked_admin_functions_js_vars.ajax_url,
                         {
                             action: 'cooked_get_import_ids',
                             import_type: import_type,
-                            nonce: cooked_migration_js_vars.cooked_import_recipes_nonce
+                            nonce: cooked_admin_functions_js_vars.cooked_import_recipes_nonce
                         },
                         function (json_recipe_ids) {
                             if (json_recipe_ids) {
@@ -73,7 +73,7 @@
                                     cooked_import_recipes(json_recipe_ids, total_recipes, import_type);
                                 }
                             } else {
-                                console.log(cooked_migration_js_vars.i18n_something_wrong);
+                                console.log(cooked_admin_functions_js_vars.i18n_something_wrong);
                                 thisButton.addClass('disabled').attr('disabled', false);
                                 thisButton.show();
                             }
@@ -96,12 +96,12 @@
                 errorsDiv.hide().empty();
 
                 if (!file) {
-                    errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_csv_no_file + '</p>').show();
+                    errorsDiv.html('<p>' + cooked_admin_functions_js_vars.i18n_csv_no_file + '</p>').show();
                     return;
                 }
 
                 if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
-                    errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_csv_invalid_file + '</p>').show();
+                    errorsDiv.html('<p>' + cooked_admin_functions_js_vars.i18n_csv_invalid_file + '</p>').show();
                     return;
                 }
 
@@ -109,7 +109,7 @@
                     return;
                 }
 
-                var confirm_import = confirm(cooked_migration_js_vars.i18n_confirm_csv_import);
+                var confirm_import = confirm(cooked_admin_functions_js_vars.i18n_confirm_csv_import);
                 if (!confirm_import) {
                     return;
                 }
@@ -119,7 +119,7 @@
 
                 var formData = new FormData();
                 formData.append('action', 'cooked_upload_csv');
-                formData.append('nonce', cooked_migration_js_vars.cooked_import_nonce);
+                formData.append('nonce', cooked_admin_functions_js_vars.cooked_import_nonce);
                 formData.append('csv_file', file);
 
                 // Show progress
@@ -127,37 +127,37 @@
                     $_CookedCSVImportProgress.addClass('cooked-active');
                     $_CookedCSVImportProgressText.addClass('cooked-active');
                     $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "0%" });
-                    $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_uploading);
+                    $_CookedCSVImportProgressText.text(cooked_admin_functions_js_vars.i18n_uploading);
                 }
 
                 // Upload file
                 $.ajax({
-                    url: cooked_migration_js_vars.ajax_url,
+                    url: cooked_admin_functions_js_vars.ajax_url,
                     type: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function(response) {
                         if (response.success) {
-                            $_CookedCSVImportProgressText.text(cooked_migration_js_vars.i18n_processing);
+                            $_CookedCSVImportProgressText.text(cooked_admin_functions_js_vars.i18n_processing);
                             $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "50%" });
 
                             // Process CSV
                             $.post(
-                                cooked_migration_js_vars.ajax_url,
+                                cooked_admin_functions_js_vars.ajax_url,
                                 {
                                     action: 'cooked_process_csv',
                                     transient_key: response.data.transient_key,
-                                    nonce: cooked_migration_js_vars.cooked_import_nonce
+                                    nonce: cooked_admin_functions_js_vars.cooked_import_nonce
                                 },
                                 function(processResponse) {
                                     if (processResponse.success) {
                                         $_CookedCSVImportProgress.find('.cooked-progress-bar').css({ "width" : "100%" });
-                                        $_CookedCSVImportProgressText.text(processResponse.data.success + ' / ' + processResponse.data.total + ' ' + cooked_migration_js_vars.i18n_recipes_imported);
+                                        $_CookedCSVImportProgressText.text(processResponse.data.success + ' / ' + processResponse.data.total + ' ' + cooked_admin_functions_js_vars.i18n_recipes_imported);
 
                                         // Show errors if any
                                         if (processResponse.data.errors && processResponse.data.errors.length > 0) {
-                                            var errorHtml = '<p><strong>' + cooked_migration_js_vars.i18n_errors + '</strong></p><ul>';
+                                            var errorHtml = '<p><strong>' + cooked_admin_functions_js_vars.i18n_errors + '</strong></p><ul>';
                                             processResponse.data.errors.forEach(function(error) {
                                                 errorHtml += '<li>' + error + '</li>';
                                             });
@@ -174,7 +174,7 @@
                                             fileInput.hide();
                                         }, 2000);
                                     } else {
-                                        errorsDiv.html('<p>' + (processResponse.data.message || cooked_migration_js_vars.i18n_import_failed) + '</p>').show();
+                                        errorsDiv.html('<p>' + (processResponse.data.message || cooked_admin_functions_js_vars.i18n_import_failed) + '</p>').show();
                                         thisButton.removeClass('disabled').attr('disabled', false);
                                         fileInput.attr('disabled', false);
                                         $_CookedCSVImportProgress.removeClass('cooked-active');
@@ -183,14 +183,14 @@
                                 },
                                 'json'
                             ).fail(function() {
-                                errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_failed_process_csv + '</p>').show();
+                                errorsDiv.html('<p>' + cooked_admin_functions_js_vars.i18n_failed_process_csv + '</p>').show();
                                 thisButton.removeClass('disabled').attr('disabled', false);
                                 fileInput.attr('disabled', false);
                                 $_CookedCSVImportProgress.removeClass('cooked-active');
                                 $_CookedCSVImportProgressText.removeClass('cooked-active');
                             });
                         } else {
-                            errorsDiv.html('<p>' + (response.data.message || cooked_migration_js_vars.i18n_file_upload_failed) + '</p>').show();
+                            errorsDiv.html('<p>' + (response.data.message || cooked_admin_functions_js_vars.i18n_file_upload_failed) + '</p>').show();
                             thisButton.removeClass('disabled').attr('disabled', false);
                             fileInput.attr('disabled', false);
                             $_CookedCSVImportProgress.removeClass('cooked-active');
@@ -198,7 +198,7 @@
                         }
                     },
                     error: function() {
-                        errorsDiv.html('<p>' + cooked_migration_js_vars.i18n_failed_upload_csv + '</p>').show();
+                        errorsDiv.html('<p>' + cooked_admin_functions_js_vars.i18n_failed_upload_csv + '</p>').show();
                         thisButton.removeClass('disabled').attr('disabled', false);
                         fileInput.attr('disabled', false);
                         $_CookedCSVImportProgress.removeClass('cooked-active');
@@ -268,11 +268,11 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
         formattedTotal.toLocaleString();
 
         var ajax__bulk_migrate_recipes = jQuery.post(
-            cooked_migration_js_vars.ajax_url,
+            cooked_admin_functions_js_vars.ajax_url,
             {
                 action: 'cooked_migrate_recipes',
                 recipe_ids: recipe_ids,
-                nonce: cooked_migration_js_vars.cooked_migrate_nonce
+                nonce: cooked_admin_functions_js_vars.cooked_migrate_nonce
             },
             function( new_recipe_ids ) {
                 if ( new_recipe_ids && new_recipe_ids != 'false' && new_recipe_ids != false ){
@@ -300,9 +300,9 @@ function cooked_migrate_recipes(recipe_ids, total_recipes ) {
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
                         if ( estimatedHours >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + cooked_migration_js_vars.i18n_hrs + ", " + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + cooked_admin_functions_js_vars.i18n_hrs + ", " + estimatedMinutes + " " + cooked_admin_functions_js_vars.i18n_mins + " " + cooked_admin_functions_js_vars.i18n_remaining + "</strong>" );
                         } else if ( estimatedMinutes >= 1 ){
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + cooked_admin_functions_js_vars.i18n_mins + " " + cooked_admin_functions_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }
@@ -349,12 +349,12 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
         formattedTotal.toLocaleString();
 
         var ajax__bulk_migrate_recipes = jQuery.post(
-            cooked_migration_js_vars.ajax_url,
+            cooked_admin_functions_js_vars.ajax_url,
             {
                 action: 'cooked_import_recipes',
                 recipe_ids: recipe_ids,
                 import_type: import_type,
-                nonce: cooked_migration_js_vars.cooked_import_recipes_nonce
+                nonce: cooked_admin_functions_js_vars.cooked_import_recipes_nonce
             },
             function (new_recipe_ids) {
                 if (new_recipe_ids && new_recipe_ids != 'false' && new_recipe_ids != false) {
@@ -382,9 +382,9 @@ function cooked_import_recipes(recipe_ids, total_recipes, import_type) {
                         estimatedHours = Math.floor(estimatedCompletionTime / 3600);
                         estimatedMinutes = Math.floor((estimatedCompletionTime / 60) % 60);
                         if ( estimatedHours >= 1 ) {
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + cooked_migration_js_vars.i18n_hrs + ", " + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedHours + " " + cooked_admin_functions_js_vars.i18n_hrs + ", " + estimatedMinutes + " " + cooked_admin_functions_js_vars.i18n_mins + " " + cooked_admin_functions_js_vars.i18n_remaining + "</strong>" );
                         } else if ( estimatedMinutes >= 1 ) {
-                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + cooked_migration_js_vars.i18n_mins + " " + cooked_migration_js_vars.i18n_remaining + "</strong>" );
+                            progress_text.html( formattedComplete + " / " + formattedTotal + "<strong style='display:inline-block; float:right;'>" + estimatedMinutes + " " + cooked_admin_functions_js_vars.i18n_mins + " " + cooked_admin_functions_js_vars.i18n_remaining + "</strong>" );
                         } else {
                             progress_text.text( formattedComplete + " / " + formattedTotal );
                         }

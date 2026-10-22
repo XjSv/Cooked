@@ -163,6 +163,8 @@ function load_plugin_textdomain( $domain, $deprecated, $plugin_rel_path ) { retu
  */
 function wpautop( $pee, $br = true ) { return $pee; }
 function make_clickable( $text ) { return $text; }
+function sanitize_hex_color( $color ) { if ( '' === $color ) { return ''; } return preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ? $color : null; }
+function is_serialized( $data ) { return is_string( $data ) && ( 'N;' === trim( $data ) || (bool) preg_match( '/^[aOsbidC]:/', trim( $data ) ) ); }
 function wp_unslash( $value ) { return is_string( $value ) ? stripslashes( $value ) : $value; }
 function rest_sanitize_boolean( $value ) {
     if ( is_bool( $value ) ) {

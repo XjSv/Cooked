@@ -110,38 +110,132 @@ class Functions {
         return $html;
     }
 
+    /**
+     * Unserializes stored legacy or imported data without creating objects (no PHP Object
+     * Injection, unlike unserialize() / maybe_unserialize() with their defaults). Values
+     * that aren't serialized are returned unchanged.
+     *
+     * @since 2.0.0
+     * @param mixed $value Possibly serialized value.
+     * @return mixed
+     */
+    public static function safe_unserialize( $value ) {
+        if ( ! is_string( $value ) || ! is_serialized( $value ) ) {
+            return $value;
+        }
+        // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.serialize_unserialize -- Objects are disallowed.
+        return unserialize( trim( $value ), [ 'allowed_classes' => false ] );
+    }
+
     public static function hex2rgb( $hex ) {
-        list( $r, $g, $b ) = sscanf( $hex, '#%02x%02x%02x' );
-        $rgb_array         = [ $r, $g, $b ];
-        return implode( ',', $rgb_array );
+        $rgb = sscanf( (string) $hex, '#%02x%02x%02x' );
+        // Malformed colours (sscanf() returns null or leaves channels unset) fall back to black.
+        if ( ! is_array( $rgb ) || in_array( null, $rgb, true ) ) {
+            return '0,0,0';
+        }
+        return implode( ',', $rgb );
     }
 
     public static function parse_readme_changelog( $readme_url = false, $title = false ) {
-        ob_start();
-        include ! $readme_url ? COOKED_DIR . 'readme.txt' : $readme_url;
-        $readme = ob_get_clean();
-
-        $readme = make_clickable( esc_html( $readme ) );
-        $readme = preg_replace( '/`(.*?)`/', '<code>\\1</code>', $readme );
-        // $readme = preg_replace( '/[\040]\*\*\NEW:\*\*/', '<strong class="new">' . __( 'New', 'cooked' ) . '</strong>', $readme);
-        // $readme = preg_replace( '/[\040]\*\*\TWEAK:\*\*/', '<strong class="tweak">' . __( 'Tweak', 'cooked' ) . '</strong>', $readme);
-        // $readme = preg_replace( '/[\040]\*\*\FIX:\*\*/', '<em class="fix">' . __( 'Fixed', 'cooked' ) . '</em>', $readme);
-        // $readme = preg_replace( '/[\040]\*\*\NEW\*\*/', '<strong class="new">' . __( 'New', 'cooked' ) . '</strong>', $readme);
-        // $readme = preg_replace( '/[\040]\*\*\TWEAK\*\*/', '<strong class="tweak">' . __( 'Tweak', 'cooked' ) . '</strong>', $readme);
-        // $readme = preg_replace( '/[\040]\*\*\FIX\*\*/', '<em class="fix">' . __( 'Fixed', 'cooked' ) . '</em>', $readme);
-        $readme = preg_replace( '/\*\*(.*?)\*\*/', '<strong>\\1</strong>', $readme );
-        $readme = preg_replace( '/\*(.*?)\*/', '<em>\\1</em>', $readme );
-        $readme = explode( '== Changelog ==', $readme );
-        $readme = $readme[1];
+        $readme = self::readme_changelog_section( $readme_url );
+        if ( '' === trim( $readme ) ) {
+            return '';
+        }
+        // Name the release the entries below belong to (the newest "= x.y.z =" heading), not
+        // the installed plugin version, which may not have a changelog entry yet.
+        $version = preg_match( '/= (.*?) =/', $readme, $matches ) ? $matches[1] : COOKED_VERSION;
         /* translators: a title for the "What's new in Cooked?" section. */
-        $whats_new_title = '<h4>' . ( $title ? esc_html( $title ) : apply_filters( 'cooked_whats_new_title', sprintf( __( "What's new in %s?", 'cooked' ), 'Cooked ' . COOKED_VERSION ) ) ) . '</h4>';
-        $readme          = preg_replace( '/= (.*?) =/', $whats_new_title, $readme );
-        $readme          = preg_replace( '/\*+(.*)?/i', "<ul class='cooked-whatsnew-list'><li>$1</li></ul>", $readme );
-        $readme          = preg_replace( "/(\<\/ul\>\n(.*)\<ul class=\'cooked-whatsnew-list\'\>*)+/", '', $readme );
+        $whats_new_title = '<h4>' . ( $title ? esc_html( $title ) : apply_filters( 'cooked_whats_new_title', sprintf( __( "What's new in %s?", 'cooked' ), 'Cooked ' . $version ) ) ) . '</h4>';
+        $readme          = (string) preg_replace( '/= (.*?) =/', $whats_new_title, $readme );
+        $readme          = self::changelog_entries_html( $readme );
         $readme          = explode( $whats_new_title, $readme );
         $readme          = $whats_new_title . $readme[1];
 
         return $readme;
+    }
+
+    /**
+     * The whole changelog as HTML: a "Version x.y.z" heading per release, followed by its
+     * entries (tagged by change type, as in parse_readme_changelog()).
+     *
+     * @since 2.0.0
+     * @param string|false $readme_url Path to a readme.txt or changelog.txt; defaults to Cooked's changelog.txt.
+     * @return string
+     */
+    public static function parse_readme_full_changelog( $readme_url = false ) {
+        $readme = self::readme_changelog_section( $readme_url );
+        $readme = (string) preg_replace_callback(
+            '/= (.*?) =/',
+            function ( $matches ) {
+                /* translators: %s: a version number, e.g. 1.16.2 */
+                return '<h4 class="cooked-changelog-version">' . sprintf( esc_html__( 'Version %s', 'cooked' ), $matches[1] ) . '</h4>';
+            },
+            $readme
+        );
+
+        return self::changelog_entries_html( $readme );
+    }
+
+    /**
+     * Reads a readme.txt or changelog.txt and returns its "== Changelog ==" section (the
+     * whole file if it has no such heading), escaped, with links, `code`, **bold** and
+     * *italic* converted to HTML.
+     *
+     * Cooked's own changelog lives in changelog.txt, which ships with the plugin; Cooked
+     * Pro passes the path to its readme.txt.
+     *
+     * @since 2.0.0
+     * @param string|false $readme_url Path to a readme.txt or changelog.txt; defaults to Cooked's changelog.txt.
+     * @return string
+     */
+    private static function readme_changelog_section( $readme_url ) {
+        $file = $readme_url ? (string) $readme_url : COOKED_DIR . 'changelog.txt';
+        // Read as text (include would run any PHP in the file); only .txt files.
+        if ( 'txt' !== strtolower( pathinfo( $file, PATHINFO_EXTENSION ) ) || ! is_readable( $file ) ) {
+            return '';
+        }
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local plugin file.
+        $readme = (string) file_get_contents( $file );
+
+        $readme = esc_html( $readme );
+        // [text](https://…) links, as in the changelog's credits. Before make_clickable(),
+        // which would otherwise link the bare URL and leave the brackets.
+        // preg_replace() returns null on a regex error; keep a string throughout.
+        $readme = (string) preg_replace( '/\[([^\]\n]+)\]\((https?:\/\/[^\s)]+)\)/', '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>', $readme );
+        $readme = make_clickable( $readme );
+        $readme = (string) preg_replace( '/`(.*?)`/', '<code>\\1</code>', $readme );
+        $readme = (string) preg_replace( '/\*\*(.*?)\*\*/', '<strong>\\1</strong>', $readme );
+        $readme = (string) preg_replace( '/\*(.*?)\*/', '<em>\\1</em>', $readme );
+        $readme = explode( '== Changelog ==', $readme );
+
+        return isset( $readme[1] ) ? $readme[1] : $readme[0];
+    }
+
+    /**
+     * Turns the changelog's "* entry" lines into lists, one per release.
+     *
+     * Each entry with a leading **FIX:**, **NEW:**, … is tagged with its change type so
+     * the What's New screen can colour it. The label text itself is unchanged.
+     *
+     * @since 2.0.0
+     * @param string $readme Changelog section with its release headings already replaced.
+     * @return string
+     */
+    private static function changelog_entries_html( $readme ) {
+        $readme = (string) preg_replace( '/\*+(.*)?/i', "<ul class='cooked-whatsnew-list'><li>$1</li></ul>", $readme );
+        $readme = (string) preg_replace( "/(\<\/ul\>\n(.*)\<ul class=\'cooked-whatsnew-list\'\>*)+/", '', $readme );
+
+        return (string) preg_replace_callback(
+            '/<li>\s*<strong>([A-Za-z ]+):<\/strong>\s*/',
+            function ( $matches ) {
+                // The pattern only captures letters and spaces, so this is a safe class name.
+                $type = strtolower( str_replace( ' ', '-', trim( $matches[1] ) ) );
+                // The ": " after the label sits in a span the new What's New layout hides
+                // (the badge has its own margin); the classic page still reads "FIX: …".
+                return '<li class="cooked-change-' . $type . '"><strong class="cooked-change-label">' . $matches[1] . '<span class="cooked-change-colon">: </span></strong>';
+            },
+            $readme
+        );
     }
 
     public static function print_options() {

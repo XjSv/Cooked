@@ -8,7 +8,6 @@
  */
 
 ?>
-<div id="cooked-admin-app"></div>
 <div id="cooked-settings-prewrap"><div id="cooked-settings-wrap">
 
     <form action="options.php" method="post">
@@ -18,7 +17,7 @@
     </div>
 
     <div class="cooked-settings-header">
-        <i class="cooked-icon cooked-icon-cooked-icon"></i>&nbsp;&nbsp;<?php esc_html_e( 'Cooked Settings', 'cooked' ); ?>
+        <i class="cooked-icon cooked-icon-cooked-icon"></i><?php esc_html_e( 'Cooked Settings', 'cooked' ); ?>
     </div>
     <div id="cooked-settings-panel" class="wrap">
     <?php
@@ -31,7 +30,7 @@
         $tab_counter = 1;
         echo '<ul id="cooked-settings-tabs" class="cooked-clearfix">';
     foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
-        echo '<li id="cooked-settings-tab-' . esc_attr( $tab_slug ) . '"' . ( 1 === $tab_counter ? ' class="active"' : '' ) . '><a href="#' . esc_attr( $tab_slug ) . '"><i class="cooked-icon cooked-icon-' . esc_attr( $tab['icon'] ) . '"></i>&nbsp;&nbsp;' . esc_attr( $tab['name'] ) . '</a></li>';
+        echo '<li id="cooked-settings-tab-' . esc_attr( $tab_slug ) . '"' . ( 1 === $tab_counter ? ' class="active"' : '' ) . '><a href="#' . esc_attr( $tab_slug ) . '"><i class="cooked-icon cooked-icon-' . esc_attr( $tab['icon'] ) . '"></i>' . esc_attr( $tab['name'] ) . '</a></li>';
         ++$tab_counter;
         endforeach;
         echo '</ul>';
@@ -87,8 +86,8 @@
                                     endif;
 
                                 echo '<div' . wp_kses( $conditional_requirement, array() ) . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
-                                    echo ( ! $notitle ? '<h3 class="cooked-settings-title">' . wp_kses_post( $field['title'] ) . '</h3>' : '' );
-                                    echo ( isset( $field['desc'] ) && $field['desc'] ? '<p>' . wp_kses_post( $field['desc'] ) . '</p>' : '' );
+                                    echo ( ! $notitle ? '<h3 class="cooked-settings-title" id="' . esc_attr( Cooked_Settings::title_id( $name ) ) . '">' . wp_kses_post( $field['title'] ) . '</h3>' : '' );
+                                    echo ( isset( $field['desc'] ) && $field['desc'] && empty( $field['desc_in_field'] ) ? '<p>' . wp_kses_post( $field['desc'] ) . '</p>' : '' );
                                     $Cooked_Settings->$field_type( $name, $field_options, $color, $field );
                                 echo '</div>';
 

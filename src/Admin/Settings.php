@@ -29,6 +29,8 @@ class Settings {
         add_action( 'save_post', [ &$this, 'browse_page_saved' ], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
         add_action( 'admin_notices', [ &$this, 'browse_page_missing_notice' ] );
+        // After the settings' own sanitize callback (priority 10).
+        add_filter( 'sanitize_option_cooked_settings', [ 'Cooked_Settings', 'save_admin_dark_mode' ], 20 );
     }
 
     public function browse_page_saved( $post_id ) {
@@ -70,6 +72,65 @@ class Settings {
     }
 
     // Add this new method to handle settings sanitization.
+    /**
+     * Sanitizes one submitted setting by its field type. Choice fields keep only values
+     * that are real options of the field; invalid values fall back to the field default.
+     *
+     * @since 2.0.0
+     * @param mixed                $value Submitted value.
+     * @param array<string, mixed> $field Field definition from tabs_fields().
+     * @return mixed
+     */
+    private static function sanitize_field_value( $value, $field ) {
+        $options = isset( $field['options'] ) && is_array( $field['options'] ) ? $field['options'] : null;
+        $default = isset( $field['default'] ) ? $field['default'] : '';
+
+        switch ( $field['type'] ) {
+            case 'checkboxes':
+                $value = array_map( 'strval', (array) $value );
+                return null === $options ? array_values( array_map( 'sanitize_text_field', $value ) ) : array_values(
+                    array_filter(
+                        $value,
+                        function ( $choice ) use ( $options ) {
+                            return array_key_exists( $choice, $options );
+                        }
+                    )
+                );
+
+            case 'dark_mode':
+                return self::normalize_dark_mode( $value );
+
+            case 'select':
+            case 'radio':
+                $value = is_scalar( $value ) ? (string) $value : '';
+                if ( null !== $options && '' !== $value && ! array_key_exists( $value, $options ) ) {
+                    return $default;
+                }
+                return sanitize_text_field( $value );
+
+            case 'number_field':
+                // Stored as a string, like the defaults and existing data.
+                return is_numeric( $value ) ? (string) absint( $value ) : $default;
+
+            case 'color_field':
+                $color = sanitize_hex_color( is_string( $value ) ? $value : '' );
+                return $color ? $color : $default;
+
+            case 'permalink_field':
+                $parts = array_filter( array_map( 'sanitize_title', explode( '/', is_string( $value ) ? $value : '' ) ) );
+                return $parts ? implode( '/', $parts ) : $default;
+
+            case 'html':
+                return is_string( $value ) ? wp_kses_post( $value ) : '';
+
+            case 'text':
+            case 'password':
+                return is_scalar( $value ) ? sanitize_text_field( (string) $value ) : '';
+        }
+
+        return $value;
+    }
+
     public static function sanitize_settings( $settings ) {
         $cooked_tabs_fields = self::tabs_fields();
 
@@ -103,6 +164,10 @@ class Settings {
                         }
 
                         $settings[ $field_name ] = $image_id;
+                    }
+
+                    if ( isset( $settings[ $field_name ] ) ) {
+                        $settings[ $field_name ] = self::sanitize_field_value( $settings[ $field_name ], $field );
                     }
                 }
             }
@@ -189,6 +254,36 @@ class Settings {
         }
 
         return apply_filters( 'cooked_get_settings', $_cooked_settings );
+    }
+
+    /**
+     * The current user's dark mode for Cooked's admin screens: off, enabled, or auto (follow
+     * the operating system's light/dark setting). A personal preference, stored per user.
+     *
+     * @since 2.0.0
+     * @return string
+     */
+    public static function admin_dark_mode() {
+        return self::normalize_dark_mode( get_user_meta( get_current_user_id(), 'cooked_admin_dark_mode', true ) );
+    }
+
+    /**
+     * Saves the "Admin screens" dark mode row (a user preference, not a site setting) when
+     * the Settings form is submitted. Runs on sanitize_option_cooked_settings, after
+     * options.php has checked the form's nonce and the user's capability.
+     *
+     * @since 2.0.0
+     * @param mixed $value The sanitized cooked_settings value, returned unchanged.
+     * @return mixed
+     */
+    public static function save_admin_dark_mode( $value ) {
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- options.php verified the settings form's nonce.
+        if ( isset( $_POST['option_page'], $_POST['cooked_admin_dark_mode'] ) && 'cooked_settings_group' === $_POST['option_page'] && current_user_can( 'edit_cooked_settings' ) ) {
+            $mode = self::normalize_dark_mode( sanitize_key( wp_unslash( $_POST['cooked_admin_dark_mode'] ) ) );
+            update_user_meta( get_current_user_id(), 'cooked_admin_dark_mode', $mode );
+        }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
+        return $value;
     }
 
     /**
@@ -460,6 +555,15 @@ class Settings {
 							'default' => apply_filters( 'cooked_recipe_wp_editor_roles_defaults', [ 'administrator', 'editor', 'cooked_recipe_editor' ] ),
 							'options' => $role_options,
 						],
+						'admin_interface'                  => [
+							'title'   => __( 'Admin Screens', 'cooked' ),
+							'desc'    => __( 'Cooked 2.0 shows its Settings, Import, What\'s New and Upgrade to Pro screens in a new layout. Switch to the classic layout if you prefer the previous one.', 'cooked' ),
+							'type'    => 'checkboxes',
+							'default' => [],
+							'options' => [
+								'classic' => __( 'Use the Classic Layout', 'cooked' ),
+							],
+						],
 						'advanced'                         => [
 							'title'   => __( 'Advanced Settings', 'cooked' ),
 							'desc'    => '',
@@ -492,12 +596,15 @@ class Settings {
 					'icon'   => 'pencil',
 					'fields' => [
 						'dark_mode'               => [
-							'title'   => __( 'Dark Mode', 'cooked' ),
-							'desc'    => apply_filters(
+							'title'         => __( 'Dark Mode', 'cooked' ),
+							// Describes the site-wide "Front end" row, so field_dark_mode() prints it there
+							// rather than under the title; the "Admin screens" row is a per-user preference.
+							'desc'          => apply_filters(
 								'cooked_dark_mode_field_desc',
 								__( 'Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off.', 'cooked' )
 							),
-							'type'    => 'select',
+							'desc_in_field' => true,
+							'type'          => 'dark_mode',
 							'default' => 'off',
 							'options' => apply_filters(
 								'cooked_dark_mode_options',
@@ -649,7 +756,8 @@ class Settings {
 
         $terms = get_terms( $args );
 
-        if ( ! empty( $terms ) ) {
+        // get_terms() returns a WP_Error when the taxonomy isn't registered (e.g. a Pro taxonomy).
+        if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
             if ( $choose_text ) {
                 $terms_array[0] = $choose_text;
             }
@@ -671,7 +779,7 @@ class Settings {
 
         $counter = 1;
 
-        echo '<p class="cooked-padded">';
+        echo '<div class="cooked-option-list">';
 		foreach ( $options as $value => $name ) {
 			$is_disabled             = '';
 			$conditional_value       = '';
@@ -695,19 +803,77 @@ class Settings {
 
 			$combined_extras = $is_disabled . $conditional_value;
 
-			if ( $conditional_requirement ) :
-				echo '<span class="conditional-requirement"' . wp_kses( $conditional_requirement, [] ) . '>';
-endif;
+			echo '<div class="cooked-option"' . wp_kses( $conditional_requirement, [] ) . '>';
 			echo '<input' . wp_kses( $combined_extras, array() ) . ' type="radio" id="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] == $value || isset( $_cooked_settings[ $field_name ][0] ) && $_cooked_settings[ $field_name ][0] == $value ? ' checked' : '' ) . '/>';
-			echo '&nbsp;<label for="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' . wp_kses_post( $name ) . '</label>';
-			echo '<br>';
-			if ( $conditional_requirement ) :
-				echo '</span>';
-endif;
+			echo '<label for="radio-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' . wp_kses_post( $name ) . '</label>';
+			echo '</div>';
 
 			++$counter;
 		}
-        echo '</p>';
+        echo '</div>';
+    }
+
+    /**
+     * Dark Mode: a site-wide "Front end" select and a personal "Admin screens" select.
+     *
+     * @since 2.0.0
+     * @param string               $field_name Setting key (dark_mode).
+     * @param array<string,string> $options    Front-end modes.
+     * @param string|false         $color      Unused.
+     * @param array<string, mixed> $field      Field definition.
+     * @return void
+     */
+    public static function field_dark_mode( $field_name, $options, $color = false, $field = [] ) {
+        global $_cooked_settings;
+
+        $rows = [
+            [
+                'id'      => 'cooked-dark-mode-front',
+                'name'    => 'cooked_settings[' . $field_name . ']',
+                'label'   => __( 'Front end', 'cooked' ),
+                'desc'    => isset( $field['desc'] ) ? $field['desc'] : '',
+                'options' => $options,
+                'value'   => self::normalize_dark_mode( isset( $_cooked_settings[ $field_name ] ) ? $_cooked_settings[ $field_name ] : 'off' ),
+            ],
+            [
+                'id'      => 'cooked-dark-mode-admin',
+                'name'    => 'cooked_admin_dark_mode',
+                'label'   => __( 'Admin screens', 'cooked' ),
+                'desc'    => __( 'Your own preference: it only changes how Cooked\'s admin screens look for you. <strong>Auto</strong> follows your computer\'s light or dark setting.', 'cooked' ),
+                'options' => [
+                    'off'     => __( 'Off', 'cooked' ),
+                    'enabled' => __( 'On', 'cooked' ),
+                    'auto'    => __( 'Auto (match your system)', 'cooked' ),
+                ],
+                'value'   => self::admin_dark_mode(),
+            ],
+        ];
+
+        echo '<div class="cooked-dark-mode-rows">';
+        foreach ( $rows as $row ) {
+            echo '<div class="cooked-dark-mode-row">';
+                echo '<label class="cooked-dark-mode-label" id="' . esc_attr( $row['id'] ) . '-label" for="' . esc_attr( $row['id'] ) . '">' . esc_html( $row['label'] ) . '</label>';
+                echo $row['desc'] ? '<p>' . wp_kses_post( $row['desc'] ) . '</p>' : '';
+                // Named by aria-labelledby too: Tom Select points the <label for> at its own control.
+                echo '<p><select id="' . esc_attr( $row['id'] ) . '" aria-labelledby="' . esc_attr( $row['id'] ) . '-label" name="' . esc_attr( $row['name'] ) . '">';
+            foreach ( $row['options'] as $value => $label ) {
+                echo '<option value="' . esc_attr( $value ) . '"' . selected( $row['value'], $value, false ) . '>' . esc_html( $label ) . '</option>';
+            }
+                echo '</select></p>';
+            echo '</div>';
+        }
+        echo '</div>';
+    }
+
+    /**
+     * ID of a setting's title (the <h3> the settings templates print above each field).
+     *
+     * @since 2.0.0
+     * @param string $field_name Setting key.
+     * @return string
+     */
+    public static function title_id( $field_name ) {
+        return 'cooked-setting-title-' . sanitize_html_class( $field_name );
     }
 
     public static function field_select( $field_name, $options, $color = false, $field = [] ) {
@@ -720,7 +886,7 @@ endif;
         }
 
         echo '<p>';
-            echo '<select' . esc_attr( $is_disabled ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']">';
+            echo '<select aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '"' . esc_attr( $is_disabled ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']">';
 		foreach ( $options as $value => $name ) {
 			echo '<option value="' . esc_attr( $value ) . '"' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] == $value ? ' selected' : '' ) . '>' . esc_attr( $name ) . '</option>';
 		}
@@ -741,20 +907,16 @@ endif;
     // END
 
     public static function field_migrate_button( $field_name, $title ) {
-        $old_recipes = get_transient( 'cooked_classic_recipes' );
+        $total = count( \Cooked_Migration::pending_classic_recipes() );
 
-        if ( $old_recipes != 'complete' ) {
-            $total = count( $old_recipes );
-
-            if ( $total > 0 ) {
-                echo '<p>';
-                    echo '<input id="cooked-migration-button" type="button" class="button-secondary" name="begin_cooked_migration" value="' . esc_attr__( 'Begin Migration', 'cooked' ) . '">';
-                echo '</p>';
-                echo '<p>';
-                    echo '<span id="cooked-migration-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-migration-progress-text" class="cooked-progress-text">0 / ' . esc_html( $total ) . '</span>';
-                echo '</p>';
-                echo '<p id="cooked-migration-completed"><strong>Migration Complete!</strong> You can now <a href="' . esc_url( add_query_arg( [ 'page' => 'cooked_settings' ], esc_url( admin_url( 'admin.php' ) ) ) ) . '">' . esc_html__( 'reload', 'cooked' ) . '</a> the settings screen.</p>';
-            }
+        if ( $total > 0 ) {
+            echo '<p>';
+                echo '<input id="cooked-migration-button" type="button" class="button-secondary" name="begin_cooked_migration" value="' . esc_attr__( 'Begin Migration', 'cooked' ) . '">';
+            echo '</p>';
+            echo '<p>';
+                echo '<span id="cooked-migration-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-migration-progress-text" class="cooked-progress-text">0 / ' . esc_html( $total ) . '</span>';
+            echo '</p>';
+            echo '<p id="cooked-migration-completed"><strong>Migration Complete!</strong> You can now <a href="' . esc_url( add_query_arg( [ 'page' => 'cooked_settings' ], esc_url( admin_url( 'admin.php' ) ) ) ) . '">' . esc_html__( 'reload', 'cooked' ) . '</a> the settings screen.</p>';
         }
     }
 
@@ -762,7 +924,7 @@ endif;
         global $_cooked_settings;
 
         echo '<p>';
-            echo '<input id="cooked_field--' . esc_attr( $field_name ) . '" type="text"' . ( $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
+            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" id="cooked_field--' . esc_attr( $field_name ) . '" type="text"' . ( $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
         echo '</p>';
     }
 
@@ -770,7 +932,7 @@ endif;
         global $_cooked_settings;
 
         echo '<p>';
-            echo '<input type="password"' . ( $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
+            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" type="password"' . ( $placeholder ? ' placeholder="' . esc_attr( $placeholder ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
         echo '</p>';
     }
 
@@ -797,7 +959,7 @@ endif;
         }
 
         echo '<p class="cooked-permalink-field-wrapper">';
-            echo '<span>' . esc_url( $browse_page_url ) . '</span><input type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
+            echo '<span>' . esc_url( $browse_page_url ) . '</span><input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" type="text" class="cooked-permalink-field" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '"><span>/' . esc_html( $end_of_url ) . '/</span>';
         echo '</p>';
     }
 
@@ -805,7 +967,7 @@ endif;
         global $_cooked_settings;
 
         echo '<p>';
-            echo '<input type="number" step="any" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
+            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" type="number" step="any" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
         echo '</p>';
     }
 
@@ -813,7 +975,7 @@ endif;
         global $_cooked_settings;
 
         echo '<p>';
-            echo '<input class="cooked-color-field" type="text"' . ( $default ? ' data-default-color="' . esc_attr( $default ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
+            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" class="cooked-color-field" type="text"' . ( $default ? ' data-default-color="' . esc_attr( $default ) . '"' : '' ) . ' name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
         echo '</p>';
     }
 
@@ -849,7 +1011,7 @@ endif;
     public static function field_checkboxes( $field_name, $options, $color = false, $field = [] ) {
         global $_cooked_settings;
 
-        echo '<p class="cooked-padded">';
+        echo '<div class="cooked-option-list">';
 		foreach ( $options as $value => $name ) {
 			$is_disabled             = '';
 			$conditional_value       = '';
@@ -873,9 +1035,7 @@ endif;
 
 			$combined_extras = $is_disabled . $conditional_value;
 
-			if ( $conditional_requirement ) {
-				echo '<span class="conditional-requirement"' . wp_kses( $conditional_requirement, [] ) . '>';
-			}
+			echo '<div class="cooked-option"' . wp_kses( $conditional_requirement, [] ) . '>';
 
 			// Check if the setting exists at all
 			$setting_exists = isset( $_cooked_settings[ $field_name ] ) && is_array( $_cooked_settings[ $field_name ] );
@@ -900,14 +1060,10 @@ endif;
 					'"' . ( $is_checked ? ' checked' : '' ) . '/>';
 			}
 
-			echo '&nbsp;<label for="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' .
+			echo '<label for="checkbox-group-' . esc_attr( $field_name ) . '-' . esc_attr( $value ) . '">' .
 				wp_kses_post( $name ) . '</label>';
-			echo '<br>';
-
-			if ( $conditional_requirement ) {
-				echo '</span>';
-			}
+			echo '</div>';
 		}
-        echo '</p>';
+        echo '</div>';
     }
 }

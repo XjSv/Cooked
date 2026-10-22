@@ -1,0 +1,226 @@
+// Admin dark mode for the framed screens (Settings > Design > Dark Mode > Admin screens,
+// a per-user preference). Enqueues::admin_body_class() adds `cooked-admin-dark` (On) or
+// `cooked-admin-dark-auto` (follow the operating system). Most of the frame reads the
+// colour tokens, so redefining them on <body> does most of the work, modals included
+// (WordPress renders those outside #cooked-admin-app). The rest are WordPress and older
+// Cooked styles with fixed light colours.
+
+@mixin cooked-admin-dark {
+    // Tokens. Text greens get lighter to read on dark; fills stay deep for white text.
+    --cooked-color-text: #e4e6e8;
+    --cooked-color-text-muted: #a2a8ae;
+    --cooked-color-border: #3a3f45;
+    --cooked-color-surface: #1f2328;
+    --cooked-color-surface-muted: #262b31;
+    --cooked-color-page: #16191d;
+    --cooked-color-accent-strong: #3dd6a3;
+    --cooked-color-accent-hover: #5fe0b6;
+    --cooked-color-accent-active: #7ee8c5;
+    --cooked-color-accent-soft: rgba(0, 192, 134, 0.16);
+    --cooked-color-accent-fill: #007a55;
+    // WordPress components (Card, Modal, Button) inside the frame and in modals.
+    --wp-components-color-background: var(--cooked-color-surface);
+    --wp-components-color-foreground: var(--cooked-color-text);
+
+    background: var(--cooked-color-page);
+    color: var(--cooked-color-text);
+    color-scheme: dark; // native scrollbars, date pickers, autofill
+
+    #wpbody-content,
+    #wpfooter {
+        color: var(--cooked-color-text-muted);
+    }
+
+    #wpfooter a {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    // Admin notices.
+    .notice,
+    div.updated,
+    div.error {
+        background: var(--cooked-color-surface);
+        color: var(--cooked-color-text);
+        box-shadow: 0 0 0 1px var(--cooked-color-border);
+    }
+
+    .notice-dismiss::before {
+        color: var(--cooked-color-text-muted);
+    }
+
+    // Frame.
+    .cooked-admin-frame.components-card {
+        background: var(--cooked-color-surface);
+        box-shadow: 0 0 0 1px var(--cooked-color-border);
+    }
+
+    .cooked-admin-logo {
+        background: #0d0f12;
+    }
+
+    .cooked-admin-page-tab.is-highlight {
+        color: #f0a542;
+    }
+
+    // The frame points WordPress's button accent at the text green; buttons need the deep
+    // fill green for white text (the frame sets these on #cooked-admin-app, so match it).
+    #cooked-admin-app,
+    .cooked-modal {
+        --wp-admin-theme-color: var(--cooked-color-accent-fill);
+        --wp-admin-theme-color-darker-10: #008f63;
+        --wp-admin-theme-color-darker-20: #00a371;
+        --wp-components-color-accent: var(--cooked-color-accent-fill);
+        --wp-components-color-accent-darker-10: #008f63;
+        --wp-components-color-accent-darker-20: #00a371;
+    }
+
+    // WordPress gives admin headings a fixed near-black colour.
+    #cooked-admin-app h1,
+    #cooked-admin-app h2,
+    #cooked-admin-app h3,
+    #cooked-admin-app h4,
+    .cooked-modal h1,
+    .cooked-modal h4 {
+        color: var(--cooked-color-text);
+    }
+
+    #cooked-admin-app .components-button.is-secondary,
+    .cooked-modal .components-button.is-secondary {
+        background: transparent;
+        color: var(--cooked-color-accent-strong);
+        box-shadow: inset 0 0 0 1px var(--cooked-color-accent-strong);
+    }
+
+    .components-external-link,
+    .components-external-link__icon {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    // Settings form (older styles with fixed colours).
+    #cooked_recipe_settings .recipe-setting-block p,
+    #cooked_recipe_settings ul.cooked-admin-ul,
+    #cooked_recipe_settings label,
+    #cooked_recipe_settings .cooked-settings-desc,
+    #cooked_import_settings .cooked-settings-desc,
+    #cooked_import_settings p,
+    #cooked_import_settings li {
+        color: var(--cooked-color-text);
+    }
+
+    #cooked-admin-app #cooked_recipe_settings .recipe-setting-block h3.cooked-settings-title,
+    #cooked-admin-app #cooked_import_settings h3.cooked-settings-title {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    #cooked-admin-app #cooked_recipe_settings .recipe-setting-block.cooked-danger h3.cooked-settings-title,
+    #cooked-admin-app #cooked_recipe_settings .cooked-alert-block h3.cooked-settings-title {
+        color: #ff8a65;
+    }
+
+    #cooked_recipe_settings input[type="text"],
+    #cooked_recipe_settings input[type="number"],
+    #cooked_recipe_settings input[type="password"],
+    #cooked_recipe_settings input[type="url"],
+    #cooked_recipe_settings textarea,
+    #cooked_recipe_settings select,
+    #cooked_import_settings input[type="file"] {
+        border-color: #5c636b;
+        background-color: var(--cooked-color-surface-muted);
+        color: var(--cooked-color-text);
+    }
+
+    #cooked_recipe_settings .cooked-select-wrapper {
+        background: none;
+    }
+
+    // Toggle switches: a visible track and knob when off.
+    #cooked_recipe_settings input[type="checkbox"][class*="cooked-switch"]:not(:checked) {
+        border-color: #5c636b;
+        background: #3a3f45;
+    }
+
+    // Colour picker button.
+    #cooked_recipe_settings .wp-picker-container .wp-color-result.button {
+        border-color: #5c636b;
+        background: var(--cooked-color-surface-muted);
+        color: var(--cooked-color-text);
+    }
+
+    #cooked_recipe_settings .wp-picker-container .wp-color-result-text {
+        border-left-color: #5c636b;
+        background: var(--cooked-color-surface-muted);
+        color: var(--cooked-color-text);
+    }
+
+    #cooked_recipe_settings .cooked-select-wrapper::before {
+        color: var(--cooked-color-text-muted);
+    }
+
+    #cooked_recipe_settings code,
+    #cooked_import_settings code {
+        background: var(--cooked-color-surface-muted);
+        color: var(--cooked-color-text);
+    }
+
+    #cooked_recipe_settings .button,
+    #cooked_import_settings .button {
+        border-color: var(--cooked-color-accent-strong);
+        background: transparent;
+        color: var(--cooked-color-accent-strong);
+    }
+
+    // Tom Select.
+    #cooked-admin-app .cooked-admin-screen .ts-wrapper.single .ts-control,
+    #cooked-admin-app .cooked-admin-screen .ts-dropdown {
+        border-color: #5c636b;
+        background: var(--cooked-color-surface-muted);
+        color: var(--cooked-color-text);
+    }
+
+    #cooked-admin-app .cooked-admin-screen .ts-wrapper.single .ts-control input {
+        color: var(--cooked-color-text);
+    }
+
+    // Modals.
+    .components-modal__screen-overlay.cooked-modal-overlay {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    .cooked-modal.components-modal__frame,
+    .cooked-modal .components-modal__header {
+        background: var(--cooked-color-surface);
+        color: var(--cooked-color-text);
+    }
+
+    .cooked-modal .components-modal__header {
+        border-bottom-color: var(--cooked-color-border);
+    }
+
+    .cooked-modal .components-modal__header .components-button {
+        color: var(--cooked-color-text);
+    }
+
+    .cooked-modal a {
+        color: var(--cooked-color-accent-strong);
+    }
+
+    // What's New: the Upgrade to Pro quick link.
+    .cooked-welcome-links a.is-highlight .cooked-welcome-link-icon {
+        background: rgba(240, 165, 66, 0.16);
+        color: #f0a542;
+    }
+
+    #cooked-admin-app .cooked-welcome-links a.is-highlight {
+        color: #f0a542;
+    }
+}
+
+body.cooked-admin-dark {
+    @include cooked-admin-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    body.cooked-admin-dark-auto {
+        @include cooked-admin-dark;
+    }
+}

@@ -70,7 +70,7 @@ class Migration {
                     'icon'   => 'migrate',
                     'fields' => [
                         'cooked_migrate_button' => [
-                            'title' => 'Cooked Classic&nbsp;&nbsp;<i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;Cooked',
+                            'title' => 'Cooked Classic <i class="cooked-icon cooked-icon-angle-right"></i> Cooked',
                             'desc'  => $html_desc,
                             'type'  => 'migrate_button',
                         ],
@@ -83,33 +83,43 @@ class Migration {
     }
 
     public static function old_recipes_message() {
-        $old_recipes = get_transient( 'cooked_classic_recipes' );
+        $total = count( self::pending_classic_recipes() );
 
-        if ( $old_recipes != 'complete' ) {
-            $total = count( $old_recipes );
-
-            if ( $total > 0 ) {
-                $class = 'notice notice-error';
-                /* translators: for displaying singular or plural versions depending on the number of recipes. */
-                $message = sprintf(
-                    esc_html( _n( 'There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe.', 'There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes.', $total, 'cooked' ) ),
-                    '<strong>' . number_format( $total ) . '</strong>',
-                    '<strong><a href="' . esc_url(
-                        add_query_arg(
-                            [
+        if ( $total > 0 ) {
+            $class = 'notice notice-error';
+            /* translators: for displaying singular or plural versions depending on the number of recipes. */
+            $message = sprintf(
+                esc_html( _n( 'There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe.', 'There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes.', $total, 'cooked' ) ),
+                '<strong>' . number_format( $total ) . '</strong>',
+                '<strong><a href="' . esc_url(
+                    add_query_arg(
+                        [
 								'page' => 'cooked_settings',
 								'cm'   => '1',
-                            ],
-                            esc_url( admin_url( 'admin.php' ) )
-                        )
-                    ) . '#migration">' . __(
-                        'click here',
-                        'cooked'
-                    ) . '</a></strong>'
-                );
-                printf( '<div class="%1$s" style="padding:10px 20px"><p style="font-size:1.2em">%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
-            }
+                        ],
+                        esc_url( admin_url( 'admin.php' ) )
+                    )
+                ) . '#migration">' . __(
+                    'click here',
+                    'cooked'
+                ) . '</a></strong>'
+            );
+            printf( '<div class="%1$s" style="padding:10px 20px"><p style="font-size:1.2em">%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
         }
+    }
+
+    /**
+     * Cooked Classic recipe IDs still waiting to be migrated.
+     *
+     * Unlike get_cooked_classic_recipes(), which returns 'complete' once there is nothing
+     * to migrate (and recomputes when its transient expires), this always returns an array.
+     *
+     * @since 2.0.0
+     * @return int[]
+     */
+    public static function pending_classic_recipes() {
+        $classic_recipes = self::get_cooked_classic_recipes();
+        return is_array( $classic_recipes ) ? $classic_recipes : [];
     }
 
     public static function get_cooked_classic_recipes() {

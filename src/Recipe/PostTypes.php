@@ -237,7 +237,7 @@ class PostTypes {
         // Security check: Only allow settings update from admin area with proper permissions
         if ( $settings_updated && is_admin() && current_user_can( 'manage_options' ) && $page === 'cooked_settings' ) {
             // Recipe Permalink
-            $permalink_parts = explode( '/', $_cooked_settings['recipe_permalink'] );
+            $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
                     $part                    = sanitize_title_with_dashes( $part, null, 'save' );
@@ -245,11 +245,11 @@ class PostTypes {
                 endforeach;
                 $recipe_permalink = implode( '/', $permalink_parts );
             else :
-                $recipe_permalink = sanitize_title_with_dashes( $_cooked_settings['recipe_permalink'], null, 'save' );
+                $recipe_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_permalink'] ?? '' ), null, 'save' );
             endif;
 
             // Recipe Author Permalink
-            $permalink_parts = explode( '/', $_cooked_settings['recipe_author_permalink'] );
+            $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_author_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
                     $part                    = sanitize_title_with_dashes( $part, null, 'save' );
@@ -257,11 +257,11 @@ class PostTypes {
                 endforeach;
                 $recipe_author_permalink = implode( '/', $permalink_parts );
             else :
-                $recipe_author_permalink = sanitize_title_with_dashes( $_cooked_settings['recipe_author_permalink'], null, 'save' );
+                $recipe_author_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_author_permalink'] ?? '' ), null, 'save' );
             endif;
 
             // Recipe Category Permalink
-            $permalink_parts = explode( '/', $_cooked_settings['recipe_category_permalink'] );
+            $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_category_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
                     $part                    = sanitize_title_with_dashes( $part, null, 'save' );
@@ -269,7 +269,7 @@ class PostTypes {
                 endforeach;
                 $recipe_category_permalink = implode( '/', $permalink_parts );
             else :
-                $recipe_category_permalink = sanitize_title_with_dashes( $_cooked_settings['recipe_category_permalink'], null, 'save' );
+                $recipe_category_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_category_permalink'] ?? '' ), null, 'save' );
             endif;
 
             $taxonomy_settings_update = apply_filters(
@@ -464,9 +464,12 @@ class PostTypes {
         $has_archive_slug    = sanitize_title_with_dashes( __( 'Recipe Archive', 'cooked' ) );
         $exclude_from_search = false;
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if ( ! isset( $_GET['print'] ) && isset( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ) {
-            $public_recipes      = false;
+        if ( \Cooked_Recipes::public_recipes_disabled() ) {
+            // Print links from [cooked-recipe] embeds still need the single recipe to resolve,
+            // so a print request registers it as public; Cooked_Recipes::print_recipe_template()
+            // then requires the recipe's print key. Archives and search stay off either way.
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only makes the print route resolvable; access is checked in print_recipe_template().
+            $public_recipes      = isset( $_GET['print'] );
             $has_archive_slug    = false;
             $exclude_from_search = true;
         }
@@ -519,7 +522,7 @@ class PostTypes {
 
     public function change_new_recipe_title( $title ) {
         $screen = get_current_screen();
-        if ( 'cp_recipe' == $screen->post_type ) {
+        if ( $screen && 'cp_recipe' === $screen->post_type ) {
             $title = __( 'Recipe title ...', 'cooked' );
         }
 

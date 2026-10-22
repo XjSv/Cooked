@@ -331,7 +331,8 @@ var cookedSortableTouchHandler = function(event) {
                     var ajax__save_default_all = $.post(
                         cooked_admin_functions_js_vars.ajax_url,
                         {
-                            action: 'cooked_load_default'
+                            action: 'cooked_load_default',
+                            nonce: cooked_admin_functions_js_vars.cooked_load_default_nonce
                         },
                         function (result) {
                             if ( recipe_editor === null ) {

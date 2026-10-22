@@ -9,6 +9,10 @@
 
 $_cooked_settings       = Cooked_Settings::get();
 $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
+// White text sits on the main colours (and the main colour is used as text on white), so
+// darken them where needed to meet WCAG AA contrast. Hover aims a little higher so it stays darker.
+$_cooked_main_color       = Cooked_Functions::accessible_color( $_cooked_settings['main_color'] );
+$_cooked_main_color_hover = Cooked_Functions::accessible_color( $_cooked_settings['main_color_hover'], 5.5 );
 
 ?>/* Main Color */
 .cooked-button,
@@ -20,14 +24,14 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 .cooked-progress span,
 .cooked-recipe-search .cooked-taxonomy-selected,
 .cooked-recipe-card-modern:hover .cooked-recipe-card-sep,
-.cooked-recipe-card-modern-centered:hover .cooked-recipe-card-sep { background:<?php echo esc_html( $_cooked_settings['main_color'] ); ?>; }
+.cooked-recipe-card-modern-centered:hover .cooked-recipe-card-sep { background:<?php echo esc_html( $_cooked_main_color ); ?>; }
 .cooked-timer-obj,
-.cooked-fsm a { color:<?php echo esc_html( $_cooked_settings['main_color'] ); ?>; }
+.cooked-fsm a { color:<?php echo esc_html( $_cooked_main_color ); ?>; }
 
 /* Main Color Darker */
 .cooked-button:hover,
 .cooked-recipe-search .cooked-taxonomy-selected:hover,
-.cooked-browse-search-button:hover { background:<?php echo esc_html( $_cooked_settings['main_color_hover'] ); ?>; }
+.cooked-browse-search-button:hover { background:<?php echo esc_html( $_cooked_main_color_hover ); ?>; }
 <?php
 
 if ( false !== $_cooked_dark_css_scope ) :

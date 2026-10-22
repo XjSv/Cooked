@@ -18,6 +18,30 @@ class FunctionsTest extends TestCase {
     }
 
     /**
+     * Test accessible_color darkens the default main colour until white text passes AA.
+     */
+    public function test_accessible_color_darkens_default_main_color() {
+        $this->assertSame( '#128666', Cooked_Functions::accessible_color( '#16a780' ) );
+    }
+
+    /**
+     * Test accessible_color keeps colours that already pass, and malformed values.
+     */
+    public function test_accessible_color_keeps_passing_and_malformed_colors() {
+        $this->assertSame( '#1e3a8a', Cooked_Functions::accessible_color( '#1E3A8A' ) );
+        $this->assertSame( '#000000', Cooked_Functions::accessible_color( '#000000' ) );
+        $this->assertSame( 'red', Cooked_Functions::accessible_color( 'red' ) );
+    }
+
+    /**
+     * Test accessible_color can reach black for white, the lightest input.
+     */
+    public function test_accessible_color_white_reaches_contrast() {
+        $this->assertNotSame( '#ffffff', Cooked_Functions::accessible_color( '#ffffff' ) );
+        $this->assertSame( '#000000', Cooked_Functions::accessible_color( '#ffffff', 21 ) );
+    }
+
+    /**
      * Test hex2rgb converts pure green.
      */
     public function test_hex2rgb_green() {

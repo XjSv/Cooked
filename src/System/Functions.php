@@ -171,6 +171,54 @@ class Functions {
     }
 
     /**
+     * Darkens a hex colour just enough for white text on it (and it as text on white) to meet
+     * WCAG AA contrast. Colours that already pass come back unchanged.
+     *
+     * @param string $hex   Colour, e.g. #16a780.
+     * @param float  $ratio Minimum contrast ratio against white.
+     * @return string Hex colour.
+     */
+    public static function accessible_color( $hex, $ratio = 4.5 ) {
+        if ( ! preg_match( '/^#[0-9a-f]{6}$/i', (string) $hex ) ) {
+            return (string) $hex;
+        }
+        $rgb = array_map( 'intval', explode( ',', self::hex2rgb( $hex ) ) );
+
+        // Mix towards black in small steps, which keeps the hue.
+        for ( $mix = 0; $mix <= 100; $mix += 2 ) {
+            $channels = array_map(
+                function ( $channel ) use ( $mix ) {
+                    return (int) round( $channel * ( 100 - $mix ) / 100 );
+                },
+                $rgb
+            );
+            if ( 1.05 / ( self::relative_luminance( $channels ) + 0.05 ) >= $ratio ) {
+                return 0 === $mix ? strtolower( (string) $hex ) : vsprintf( '#%02x%02x%02x', $channels );
+            }
+        }
+
+        return '#000000';
+    }
+
+    /**
+     * WCAG relative luminance of an RGB colour.
+     *
+     * @param array<int, int> $rgb Red, green and blue, 0-255.
+     * @return float
+     */
+    private static function relative_luminance( $rgb ) {
+        $linear = array_map(
+            function ( $channel ) {
+                $channel = $channel / 255;
+                return $channel <= 0.03928 ? $channel / 12.92 : pow( ( $channel + 0.055 ) / 1.055, 2.4 );
+            },
+            $rgb
+        );
+
+        return 0.2126 * $linear[0] + 0.7152 * $linear[1] + 0.0722 * $linear[2];
+    }
+
+    /**
      * The newest release of a changelog file as HTML, under a "What's new" heading.
      *
      * @param string|false $readme_url Path to a readme.txt or changelog.txt; defaults to Cooked's changelog.txt.

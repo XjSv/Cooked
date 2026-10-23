@@ -290,8 +290,9 @@ body.cooked-recipe-editor {
         }
     }
 
-    // Buttons in the Layout tab, in the frame's green outline style.
-    .cooked-recipe-fields .button {
+    // Buttons in the Layout tab and under the builders, in the frame's green outline style.
+    .cooked-recipe-fields .button,
+    .cooked-builder-buttons .button {
         min-height: 32px;
         border-color: var(--cooked-color-accent-strong);
         border-radius: var(--cooked-radius-sm);
@@ -315,7 +316,8 @@ body.cooked-recipe-editor {
         }
     }
 
-    .cooked-recipe-fields .button.cooked-layout-load-default {
+    .cooked-recipe-fields .button.cooked-layout-load-default,
+    .cooked-builder-buttons .button.cooked-bulk-add-button {
         border-color: #8c8f94;
         color: var(--cooked-color-text-muted);
 
@@ -574,9 +576,16 @@ body.cooked-recipe-editor {
         color: var(--cooked-color-accent-strong);
     }
 
-    .cooked-recipe-fields .mce-toolbar .mce-listbox,
-    .cooked-recipe-fields .mce-toolbar .mce-listbox:hover {
+    // The format menu keeps one border; a border only on hover made it jump by 2px.
+    .cooked-recipe-fields .mce-toolbar .mce-btn-group .mce-btn.mce-listbox {
+        margin-right: 4px;
         border: 1px solid var(--cooked-color-border);
+        background: var(--cooked-color-surface);
+    }
+
+    .cooked-recipe-fields .mce-toolbar .mce-btn-group .mce-btn.mce-listbox:hover,
+    .cooked-recipe-fields .mce-toolbar .mce-btn-group .mce-btn.mce-listbox.mce-active {
+        border-color: var(--cooked-color-accent-strong);
         background: var(--cooked-color-surface);
     }
 
@@ -630,32 +639,39 @@ body.cooked-recipe-editor {
     }
 }
 
-// Allergens meta box: a grid of selectable tiles, icon above the name. The checkbox stays in
-// the label (invisible, over the tile), so clicks, keyboard and screen readers work as before;
-// the tile shows its state. Three across in the sidebar, more when the box is in the main column.
+// Switching tabs fades the new one in, like switching Settings sections (_frame.scss).
+body.cooked-recipe-editor .cooked-recipe-tab-content.is-entering {
+    animation: cooked-section-enter 250ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+// Allergens meta box: selectable pills, icon beside the name, as wide as their name and
+// wrapping across the box. The checkbox stays in the label (invisible, over the pill), so
+// clicks, keyboard and screen readers work as before; the pill shows its state.
 body.cooked-recipe-editor #cooked_allergens {
     border-color: var(--cooked-color-border);
     border-radius: var(--cooked-radius);
 
     .cooked-allergens-checkboxes {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(76px, 1fr));
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
         gap: 6px;
-        flex-direction: unset;
         padding: 4px 0 2px;
     }
 
     .cooked-allergen-checkbox {
         position: relative;
-        flex-direction: column;
-        justify-content: flex-start;
+        flex: 0 1 auto;
         gap: 6px;
         min-width: 0;
-        padding: 10px 4px 8px;
+        padding: 5px 12px 5px 9px;
         border: 1px solid var(--cooked-color-border);
-        border-radius: 6px;
+        border-radius: 999px;
         background: var(--cooked-color-surface);
-        text-align: center;
         transition: border-color 150ms ease, background-color 150ms ease;
 
         @media (prefers-reduced-motion: reduce) {
@@ -686,19 +702,17 @@ body.cooked-recipe-editor #cooked_allergens {
     }
 
     .cooked-allergen .cooked-icon {
-        font-size: 1.5rem;
+        font-size: 1.1rem;
     }
 
     .cooked-allergen-label {
-        max-width: 100%;
+        min-width: 0;
         color: var(--cooked-color-text);
-        font-size: 11.5px;
-        line-height: 1.25;
-        overflow-wrap: anywhere;
-        hyphens: auto;
+        font-size: 12.5px;
+        line-height: 1.3;
     }
 
-    // Selected: green tile with a check badge in the corner.
+    // Selected: green pill with a check badge in the corner.
     .cooked-allergen-checkbox:has(input:checked) {
         border-color: var(--cooked-color-accent-strong);
         background: var(--cooked-color-accent-soft);
@@ -709,15 +723,11 @@ body.cooked-recipe-editor #cooked_allergens {
             color: var(--cooked-color-accent-strong);
         }
 
-        .cooked-allergen-label {
-            font-weight: 600;
-        }
-
         &::after {
             content: "";
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: -4px;
+            right: -3px;
             width: 14px;
             height: 14px;
             border-radius: 50%;

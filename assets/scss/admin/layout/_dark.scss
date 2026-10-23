@@ -381,8 +381,9 @@
             border-color: #5c636b;
         }
 
-        // Reset is the secondary action: neutral outline, unlike the green Save as Default.
-        #cooked_recipe_settings .cooked-recipe-fields .button.cooked-layout-load-default {
+        // Reset and Bulk Add are secondary actions: neutral outline, unlike the green Save as Default.
+        #cooked_recipe_settings .cooked-recipe-fields .button.cooked-layout-load-default,
+        #cooked_recipe_settings .cooked-builder-buttons .button.cooked-bulk-add-button {
             border-color: #5c636b;
             color: var(--cooked-color-text-muted);
 
@@ -393,10 +394,9 @@
             }
         }
 
-        // Tabs not redesigned yet (Ingredients, Directions, Nutrition, Gallery, Shortcodes):
+        // Tabs not redesigned yet (Directions, Nutrition, Gallery, Shortcodes):
         // their older styles have fixed light colours.
         #cooked_recipe_settings h3.cooked-settings-title,
-        #cooked_recipe_settings .cooked-ingredient-headers span,
         #cooked_recipe_settings #cooked-nutrition-label .cooked-nut-label {
             color: var(--cooked-color-accent-strong);
         }
@@ -421,26 +421,19 @@
             background: var(--cooked-color-surface-muted);
         }
 
-        #cooked-ingredients-builder .cooked-ingredient-block.ui-sortable-placeholder,
         #cooked-directions-builder .cooked-direction-block.ui-sortable-placeholder {
             border-color: var(--cooked-color-surface);
             background: var(--cooked-color-border);
         }
 
-        #cooked-ingredients-builder .cooked-ingredient-block i.cooked-icon-drag,
         #cooked-directions-builder .cooked-direction-block i.cooked-icon-drag,
-        #cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient .cooked-icon,
         #cooked-directions-builder .cooked-direction-block .cooked-delete-direction .cooked-icon {
             color: #5c636b;
         }
 
-        #cooked-ingredients-builder .cooked-ingredient-block:hover i.cooked-icon-drag,
         #cooked-directions-builder .cooked-direction-block:hover i.cooked-icon-drag,
-        #cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-delete-ingredient .cooked-icon,
         #cooked-directions-builder .cooked-direction-block:hover .cooked-delete-direction .cooked-icon,
-        #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element .cooked-icon,
-        #cooked-directions-builder .cooked-direction-block .cooked-show-heading-element .cooked-icon,
-        #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution .cooked-icon {
+        #cooked-directions-builder .cooked-direction-block .cooked-show-heading-element .cooked-icon {
             color: var(--cooked-color-text-muted);
         }
 
@@ -449,10 +442,7 @@
             color: #ff6b6b;
         }
 
-        #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element .cooked-icon:hover,
         #cooked-directions-builder .cooked-direction-block .cooked-show-heading-element .cooked-icon:hover,
-        #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-substitution .cooked-icon:hover,
-        #cooked-ingredients-builder .cooked-ingredient-block > .cooked-heading-element select,
         #cooked-directions-builder .cooked-direction-block > .cooked-heading-element select {
             color: var(--cooked-color-accent-strong);
         }

@@ -1,0 +1,516 @@
+// Recipe editor, Ingredients tab (new layout only; the classic layout keeps the 1.x styles).
+//
+// The list reads like the recipe: one card, a line per ingredient ("2  cups  flour"), fields
+// that only show their box on hover or focus, and section headings as group headers with their
+// heading element beside them. Drag handles and row actions appear on hover or keyboard focus
+// (always on touch screens). A quick-add field under the list parses "2 cups flour" like Bulk
+// Add. Fields add-ons put after the item (cooked_after_ingredient_name_field) fall onto a
+// full-width line. The selectors start with the builder's ID to outrank the 1.x rules.
+
+$columns: 20px 72px minmax(96px, 132px) minmax(0, 1fr) 64px;
+$columns-phone: 20px 64px minmax(0, 1fr) 64px;
+$heading-columns: 20px minmax(0, 1fr) auto 64px;
+$heading-columns-phone: 20px minmax(0, 1fr) 64px;
+
+body.cooked-recipe-editor {
+
+    // Column headers, on the rows' columns. On phones the item moves to its own line, so only
+    // Amount and Measurement keep a header (the item has its placeholder).
+    #cooked_recipe_settings .cooked-ingredient-headers {
+        display: grid;
+        grid-template-columns: $columns;
+        column-gap: 6px;
+        padding: 0 9px 6px;
+
+        &::after {
+            content: none;
+        }
+
+        span {
+            float: none;
+            width: auto;
+            padding: 0 8px;
+            color: var(--cooked-color-text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+        }
+
+        .cooked-ingredient-header-amount {
+            grid-column: 2;
+            text-align: center;
+        }
+
+        .cooked-ingredient-header-measurement {
+            grid-column: 3;
+        }
+
+        .cooked-ingredient-header-item {
+            grid-column: 4;
+        }
+
+        @media screen and (max-width: 600px) {
+            grid-template-columns: $columns-phone;
+            padding: 0 5px 6px;
+
+            .cooked-ingredient-header-item {
+                display: none;
+            }
+        }
+    }
+
+    #cooked-ingredients-builder {
+        margin: 0 !important; // The builder script sets an inline margin.
+        border: 1px solid var(--cooked-color-border);
+        border-radius: var(--cooked-radius);
+        background: var(--cooked-color-surface);
+
+        .cooked-ingredient-block {
+            position: relative;
+            display: grid;
+            grid-template-columns: $columns;
+            align-items: center;
+            column-gap: 6px;
+            row-gap: 4px;
+            margin: 0;
+            padding: 4px 8px;
+            border-top: 1px solid var(--cooked-color-border);
+
+            &:first-child {
+                border-top: 0;
+                border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
+            }
+
+            &:last-child {
+                border-radius: 0 0 var(--cooked-radius) var(--cooked-radius);
+            }
+
+            &:first-child:last-child {
+                border-radius: var(--cooked-radius);
+            }
+
+            &::after {
+                content: none;
+            }
+
+            &:hover,
+            &:focus-within {
+                background: var(--cooked-color-surface-muted);
+            }
+
+            // Add-on fields: a full-width line under the row.
+            > div {
+                grid-column: 2 / 5;
+                float: none;
+                width: auto;
+                min-width: 0;
+                padding: 0;
+            }
+
+            @media screen and (max-width: 600px) {
+                grid-template-columns: $columns-phone;
+                padding: 6px 4px;
+
+                > div {
+                    grid-column: 2 / 4;
+                }
+            }
+        }
+
+        // Fields: plain text until hovered or focused.
+        .cooked-ingredient-block input[type="text"],
+        .cooked-ingredient-block select,
+        .cooked-ingredient-block .ts-wrapper.single .ts-control {
+            width: 100%;
+            max-width: none;
+            min-height: 34px;
+            margin: 0;
+            padding: 0 8px;
+            border: 1px solid transparent;
+            border-radius: var(--cooked-radius-sm);
+            box-shadow: none;
+            background: transparent;
+            color: var(--cooked-color-text);
+            font-size: 14px;
+            transition: border-color 120ms ease, background-color 120ms ease;
+
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
+        }
+
+        .cooked-ingredient-block:hover input[type="text"],
+        .cooked-ingredient-block:hover select,
+        .cooked-ingredient-block:hover .ts-wrapper.single .ts-control {
+            border-color: var(--cooked-color-border);
+            background: var(--cooked-color-surface);
+        }
+
+        .cooked-ingredient-block input[type="text"]:focus,
+        .cooked-ingredient-block select:focus,
+        .cooked-ingredient-block .ts-wrapper.single.focus .ts-control,
+        .cooked-ingredient-block .ts-wrapper.single.dropdown-active .ts-control {
+            border-color: var(--cooked-color-accent-strong);
+            box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+            background: var(--cooked-color-surface);
+            outline: 0;
+        }
+
+        // Tom Select's chevron only once the field shows its box.
+        .cooked-ingredient-block .ts-wrapper.single .ts-control::after {
+            opacity: 0;
+        }
+
+        .cooked-ingredient-block:hover .ts-wrapper.single .ts-control::after,
+        .cooked-ingredient-block .ts-wrapper.single.focus .ts-control::after,
+        .cooked-ingredient-block .ts-wrapper.single.dropdown-active .ts-control::after {
+            opacity: 1;
+        }
+
+        // Tom Select: fit the column, one line (its search box shares the line with the value).
+        .cooked-ingredient-block .cooked-select-wrapper,
+        .cooked-ingredient-block .ts-wrapper {
+            display: block;
+            width: 100%;
+            min-width: 0; // Settings gives enhanced selects a 220px minimum.
+            margin: 0;
+        }
+
+        .cooked-ingredient-block .ts-wrapper.single .ts-control {
+            align-items: center;
+            flex-wrap: nowrap;
+            overflow: hidden;
+            padding-right: 28px;
+            cursor: pointer;
+
+            > .item {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            > input {
+                flex: 1 1 0;
+                min-width: 0 !important;
+            }
+        }
+
+        .cooked-ingredient-block > .cooked-ingredient-amount {
+            grid-row: 1;
+            grid-column: 2;
+        }
+
+        .cooked-ingredient-block .cooked-ingredient-amount input[type="text"] {
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .cooked-ingredient-block > .cooked-ingredient-measurement {
+            grid-row: 1;
+            grid-column: 3;
+
+            select,
+            .ts-control,
+            .ts-control .item {
+                color: var(--cooked-color-text-muted);
+            }
+        }
+
+        .cooked-ingredient-block > .cooked-ingredient-name {
+            grid-row: 1;
+            grid-column: 4;
+            padding: 0;
+
+            @media screen and (max-width: 600px) {
+                grid-row: 2;
+                grid-column: 2 / 4;
+            }
+        }
+
+        // Drag handle and actions: on hover or keyboard focus; always on touch screens.
+        .cooked-ingredient-block i.cooked-icon-drag {
+            position: static;
+            grid-row: 1;
+            grid-column: 1;
+            justify-self: center;
+            color: var(--cooked-color-text-muted);
+            font-size: 20px;
+        }
+
+        .cooked-ingredient-block i.cooked-icon-drag,
+        .cooked-ingredient-block .cooked-show-substitution,
+        .cooked-ingredient-block .cooked-delete-ingredient {
+            opacity: 0;
+            transition: opacity 120ms ease;
+
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
+
+            @media (hover: none) {
+                opacity: 1;
+            }
+        }
+
+        .cooked-ingredient-block:hover,
+        .cooked-ingredient-block:focus-within {
+            i.cooked-icon-drag,
+            .cooked-show-substitution,
+            .cooked-delete-ingredient {
+                opacity: 1;
+            }
+        }
+
+        // A saved substitution keeps its toggle visible.
+        .cooked-ingredient-block.cooked-has-substitution .cooked-show-substitution {
+            opacity: 1;
+        }
+
+        .cooked-ingredient-block .cooked-show-substitution,
+        .cooked-ingredient-block .cooked-delete-ingredient {
+            position: static;
+            grid-row: 1;
+            grid-column: 5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--cooked-radius-sm);
+            cursor: pointer;
+
+            @media screen and (max-width: 600px) {
+                grid-column: 4;
+            }
+
+            .cooked-icon {
+                color: var(--cooked-color-text-muted);
+                font-size: 13px;
+            }
+
+            &:hover {
+                background: var(--cooked-color-surface);
+            }
+
+            &:focus-visible {
+                opacity: 1;
+                outline: 2px solid var(--cooked-color-accent-strong);
+                outline-offset: 1px;
+            }
+        }
+
+        .cooked-ingredient-block .cooked-show-substitution {
+            justify-self: start;
+        }
+
+        .cooked-ingredient-block .cooked-delete-ingredient {
+            justify-self: end;
+
+            &:hover .cooked-icon {
+                color: #d63638;
+            }
+        }
+
+        .cooked-ingredient-block.cooked-expanded .cooked-show-substitution .cooked-icon,
+        .cooked-ingredient-block.cooked-has-substitution .cooked-show-substitution .cooked-icon,
+        .cooked-ingredient-block .cooked-show-substitution:hover .cooked-icon {
+            color: var(--cooked-color-accent-strong);
+        }
+
+        // Substitution: "↳ Substitution" and its fields under the ingredient, in its columns.
+        .cooked-ingredient-block.cooked-expanded > .cooked-substitution-fields {
+            display: grid;
+            grid-row: 2;
+            grid-column: 2 / 5;
+            grid-template-columns: 72px minmax(96px, 132px) minmax(0, 1fr);
+            column-gap: 6px;
+            row-gap: 2px;
+            margin: 0 0 4px;
+            padding: 0;
+
+            @media screen and (max-width: 600px) {
+                grid-row: 3;
+                grid-column: 2 / 4;
+                grid-template-columns: 64px minmax(0, 1fr);
+            }
+
+            > div {
+                float: none;
+                width: auto;
+                padding: 0;
+            }
+
+            .cooked-sub-label {
+                grid-column: 1 / -1;
+                margin: 2px 0 0 8px;
+                color: var(--cooked-color-text-muted);
+                font-size: 12px;
+                font-weight: 400;
+
+                &::before {
+                    content: "\21B3";
+                    margin-right: 4px;
+                }
+            }
+
+            .cooked-ingredient-name {
+                @media screen and (max-width: 600px) {
+                    grid-column: 1 / -1;
+                }
+            }
+        }
+
+        // Section headings: a group header, its heading element beside it.
+        .cooked-ingredient-block.cooked-ingredient-heading {
+            grid-template-columns: $heading-columns;
+            padding-top: 12px;
+            padding-bottom: 6px;
+            border-top-width: 2px;
+
+            &:first-child {
+                padding-top: 6px;
+            }
+
+            @media screen and (max-width: 600px) {
+                grid-template-columns: $heading-columns-phone;
+            }
+
+            .cooked-delete-ingredient {
+                grid-column: 4;
+
+                @media screen and (max-width: 600px) {
+                    grid-column: 3;
+                }
+            }
+        }
+
+        .cooked-ingredient-block > .cooked-heading-name {
+            grid-row: 1;
+            grid-column: 2;
+            padding: 0;
+
+            input[type="text"] {
+                font-size: 15px;
+                font-weight: 600;
+            }
+        }
+
+        // Always shown in this layout; the pencil that toggled it is not needed.
+        .cooked-ingredient-heading > .cooked-heading-element {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            grid-row: 1;
+            grid-column: 3;
+            float: none;
+            width: auto;
+            margin: 0;
+            padding: 0;
+
+            @media screen and (max-width: 600px) {
+                grid-row: 2;
+                grid-column: 2;
+            }
+
+            label {
+                color: var(--cooked-color-text-muted);
+                font-size: 12px;
+                font-weight: 400;
+                white-space: nowrap;
+            }
+
+            .cooked-select-wrapper,
+            .ts-wrapper {
+                width: 130px;
+            }
+
+            select,
+            .ts-control,
+            .ts-control .item {
+                color: var(--cooked-color-text-muted);
+                font-size: 13px;
+            }
+        }
+
+        .cooked-ingredient-heading .cooked-show-heading-element {
+            display: none;
+        }
+
+        // Dragging.
+        .cooked-ingredient-block.ui-sortable-helper {
+            border: 1px solid var(--cooked-color-border);
+            border-radius: var(--cooked-radius-sm);
+            background: var(--cooked-color-surface);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .cooked-ingredient-block.ui-sortable-placeholder {
+            display: block;
+            height: 42px;
+            border: 1px dashed var(--cooked-color-accent-strong);
+            background: var(--cooked-color-accent-soft);
+        }
+    }
+
+    // Quick add.
+    #cooked-recipe-tab-content-ingredients .cooked-ingredient-quick-add {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 10px 0 14px;
+        padding: 0 12px 0 10px;
+        border: 1px dashed #8c8f94;
+        border-radius: var(--cooked-radius);
+        background: var(--cooked-color-surface);
+
+        &::before {
+            content: "+";
+            color: var(--cooked-color-accent-strong);
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        &:focus-within {
+            border-style: solid;
+            border-color: var(--cooked-color-accent-strong);
+            box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+        }
+
+        .cooked-ingredient-quick-add-input {
+            flex: 1;
+            min-width: 0;
+            min-height: 42px;
+            margin: 0;
+            padding: 0;
+            border: 0;
+            box-shadow: none;
+            background: transparent;
+            color: var(--cooked-color-text);
+            font-size: 14px;
+            outline: 0;
+        }
+
+        .cooked-ingredient-quick-add-hint {
+            color: var(--cooked-color-text-muted);
+            font-size: 12px;
+            white-space: nowrap;
+
+            @media screen and (max-width: 600px) {
+                display: none;
+            }
+        }
+    }
+
+    // Add Ingredient / Add Section Heading on the left, Bulk Add on the right.
+    #cooked-recipe-tab-content-ingredients .cooked-builder-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 0;
+
+        .cooked-bulk-add-button {
+            margin-left: auto;
+        }
+    }
+}

@@ -29,7 +29,15 @@ window.cookedEnhanceSelects = function(selector) {
         }
 
         var tomSelect = new window.TomSelect(select, settings),
-            labelledBy = select.getAttribute('aria-labelledby');
+            labelledBy = select.getAttribute('aria-labelledby'),
+            ariaLabel = select.getAttribute('aria-label');
+        // Builder row selects are named by aria-label (they have no visible label).
+        if (ariaLabel && !labelledBy) {
+            tomSelect.control.setAttribute('aria-label', ariaLabel);
+            if (tomSelect.control_input) {
+                tomSelect.control_input.setAttribute('aria-label', ariaLabel);
+            }
+        }
         // Tom Select names its control from a <label for>; settings selects are named by
         // their title instead (aria-labelledby), so pass that on.
         if (labelledBy) {
@@ -632,6 +640,11 @@ var cookedSortableTouchHandler = function(event) {
                 var $newTab = $('#cooked-recipe-tab-content-' + thisTabID);
                 $newTab.show();
 
+                // Restart the fade-in (the same one as switching Settings sections).
+                $newTab.removeClass('is-entering');
+                void $newTab[0].offsetWidth;
+                $newTab.addClass('is-entering');
+
                 thisTab.addClass('active');
                 cooked_move_tab_indicator(true);
             });
@@ -765,15 +778,71 @@ var cookedSortableTouchHandler = function(event) {
                 }
             });
 
+            // The new editor layout shows saved substitutions without a click.
+            if ($('body').hasClass('cooked-recipe-editor')) {
+                $_CookedIngredientBuilder.find('.cooked-has-substitution').addClass('cooked-expanded')
+                    .find('.cooked-show-substitution').attr('aria-expanded', 'true');
+            }
+
             $_CookedIngredientBuilder.parent().on('click', '.cooked-show-substitution', function(e) {
                 e.preventDefault();
                 var thisParent = $(this).parent();
                 if ( thisParent.hasClass('cooked-expanded') ) {
                     thisParent.removeClass('cooked-expanded');
+                    $(this).attr('aria-expanded', 'false');
                 } else {
                     thisParent.addClass('cooked-expanded');
+                    $(this).attr('aria-expanded', 'true');
                     thisParent.find('input[data-ingredient-part="sub_amount"]').focus();
                 }
+            });
+
+            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
+                e.preventDefault();
+                var thisParent = $(this).parent(),
+                    expanded = !thisParent.hasClass('cooked-expanded');
+                thisParent.toggleClass('cooked-expanded', expanded);
+                $(this).attr('aria-expanded', expanded ? 'true' : 'false');
+                if ( expanded ) {
+                    thisParent.find('select[data-ingredient-part="section_heading_element"]').focus();
+                }
+            });
+
+            // Quick add (new layout): "2 cups flour" + Enter becomes a row, parsed like Bulk Add.
+            $('#cooked-recipe-tab-content-ingredients').on('keydown', '.cooked-ingredient-quick-add-input', function(e) {
+                if ( e.key !== 'Enter' ) {
+                    return;
+                }
+                e.preventDefault(); // Not the post form.
+
+                var $input = $(this),
+                    line = $.trim($input.val());
+
+                if ( !line || $input.prop('readonly') ) {
+                    return;
+                }
+
+                var add = function(items) {
+                    // Replace the empty starter row a new recipe opens with.
+                    var $rows = $_CookedIngredientBuilder.children('.cooked-ingredient-block');
+                    if ( $rows.length === 1 && !$rows.hasClass('cooked-ingredient-heading') && !$rows.find('input[type="text"]').filter(function() { return this.value; }).length ) {
+                        $rows.remove();
+                    }
+                    cooked_bulk_add_ingredients_parsed(items);
+                    $input.val('').prop('readonly', false).trigger('focus');
+                };
+
+                $input.prop('readonly', true);
+                $.post(cooked_admin_functions_js_vars.ajax_url, {
+                    action: 'cooked_parse_bulk_ingredients',
+                    nonce: cooked_admin_functions_js_vars.cooked_bulk_add_nonce,
+                    lines: [line]
+                }, function(response) {
+                    var parsed = response.success && response.data && response.data.parsed ? response.data.parsed : null;
+                    add(parsed && parsed.length ? parsed : [{ name: line }]);
+                }).fail(function() {
+                    add([{ name: line }]);
+                });
             });
 
             $_CookedIngredientBuilder.on('keyup change', 'input[data-ingredient-part="sub_amount"], input[data-ingredient-part="sub_name"], select[data-ingredient-part="sub_measurement"]', function(e) {
@@ -845,9 +914,11 @@ var cookedSortableTouchHandler = function(event) {
                 var thisParent = $(this).parent();
                 if ( thisParent.hasClass('cooked-expanded') ) {
                     thisParent.removeClass('cooked-expanded');
+                    $(this).attr('aria-expanded', 'false');
                 } else {
                     thisParent.addClass('cooked-expanded');
-                    thisParent.find('input[data-direction-part="section_heading_element"]').focus();
+                    $(this).attr('aria-expanded', 'true');
+                    thisParent.find('select[data-direction-part="section_heading_element"]').focus();
                 }
             });
 
@@ -1383,6 +1454,11 @@ function cooked_reset_ingredient_builder() {
         jQuery('#cooked-ingredients-builder').css( { 'margin-bottom':'20px' } );
     } else {
         jQuery('#cooked-ingredients-builder').css( { 'margin-bottom':'12px' } );
+    }
+
+    // New layout: Tom Select on the rows' unit and heading selects (new rows included).
+    if (jQuery('body').hasClass('cooked-recipe-editor') && window.cookedEnhanceSelects) {
+        window.cookedEnhanceSelects('#cooked-ingredients-builder select');
     }
 }
 

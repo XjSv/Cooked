@@ -87,6 +87,8 @@ class Enqueues {
         $css = 'body{margin:12px 14px;color:#1e1e1e;font:14px/1.6 -apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Oxygen-Sans,Ubuntu,Cantarell,\'Helvetica Neue\',sans-serif}p{margin:0 0 10px}a{color:#007a55}';
         if ( $template ) {
             $css .= 'body{margin:12px}body>*{margin:0 0 8px;padding:8px 12px;border:1px solid #e3e5e8;border-radius:6px;background:#f6f7f8;color:#1e1e1e;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}body>ul,body>ol{padding-left:32px}';
+            // Headings keep their box but read as headings.
+            $css .= 'body>h1,body>h2,body>h3,body>h4,body>h5,body>h6{font-family:-apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Oxygen-Sans,Ubuntu,Cantarell,\'Helvetica Neue\',sans-serif;font-weight:600;line-height:1.3}body>h1{font-size:22px}body>h2{font-size:19px}body>h3{font-size:17px}body>h4{font-size:15px}body>h5{font-size:14px}body>h6{font-size:13px}';
         }
 
         $dark = 'body{background:#1f2328;color:#e4e6e8}a{color:#3dd6a3}';

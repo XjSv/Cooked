@@ -132,6 +132,18 @@
     border-bottom: 6px solid #fff;
 }
 
+// The row actions are buttons; draw them as the bare icons they replaced.
+#cooked-ingredients-builder .cooked-ingredient-block button.cooked-delete-ingredient,
+#cooked-ingredients-builder .cooked-ingredient-block button.cooked-show-substitution,
+#cooked-ingredients-builder .cooked-ingredient-block button.cooked-show-heading-element {
+    padding: 0;
+    border: 0;
+    background: none;
+    box-shadow: none;
+    font: inherit;
+    line-height: 1;
+}
+
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-delete-ingredient {
     cursor: pointer;
     font-size: 14px;

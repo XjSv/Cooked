@@ -267,13 +267,13 @@ endif;
                                 <?php do_action( 'cooked_before_ingredient_fields', $ing_key, $value ); ?>
 
                                 <div class="cooked-ingredient-amount">
-                                    <input type="text" data-ingredient-part="amount" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][amount]" value="<?php echo esc_attr( isset( $value['amount'] ) ? $value['amount'] : '' ); ?>" placeholder="--">
+                                    <input type="text" data-ingredient-part="amount" aria-label="<?php esc_attr_e( 'Amount', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][amount]" value="<?php echo esc_attr( isset( $value['amount'] ) ? $value['amount'] : '' ); ?>" placeholder="--">
                                 </div>
 
                                 <?php do_action( 'cooked_after_ingredient_amount_field', $ing_key, $value ); ?>
 
                                 <div class="cooked-ingredient-measurement">
-                                    <select data-ingredient-part="measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][measurement]">
+                                    <select data-ingredient-part="measurement" aria-label="<?php esc_attr_e( 'Measurement', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][measurement]">
                                         <option value="">--</option>
                                         <?php
                                         foreach ( $measurements as $key => $measurement ) :
@@ -286,21 +286,21 @@ endif;
                                 <?php do_action( 'cooked_after_ingredient_measurement_field', $ing_key, $value ); ?>
 
                                 <div class="cooked-ingredient-name">
-                                    <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][name]" value="<?php echo esc_attr( isset( $value['name'] ) ? $value['name'] : '' ); ?>" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
+                                    <input type="text" data-ingredient-part="name" aria-label="<?php esc_attr_e( 'Item', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][name]" value="<?php echo esc_attr( isset( $value['name'] ) ? $value['name'] : '' ); ?>" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
                                 </div>
 
                                 <?php do_action( 'cooked_after_ingredient_name_field', $ing_key, $value ); ?>
 
-                                <span href="#" class="cooked-show-substitution" aria-label="Show Substitution"><i class="cooked-icon cooked-icon-reverse"></i></span>
-                                <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                                <button type="button" class="cooked-show-substitution" aria-expanded="false" aria-label="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>" title="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-reverse" aria-hidden="true"></i></button>
+                                <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button>
 
                                 <div class="cooked-heading-element cooked-substitution-fields">
-                                    <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
+                                    <label class="cooked-sub-label"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
                                     <div class="cooked-ingredient-amount">
-                                        <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_amount]" value="<?php echo isset( $value['sub_amount'] ) ? esc_attr( $value['sub_amount'] ) : ''; ?>" placeholder="--">
+                                        <input type="text" data-ingredient-part="sub_amount" aria-label="<?php esc_attr_e( 'Substitute amount', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_amount]" value="<?php echo isset( $value['sub_amount'] ) ? esc_attr( $value['sub_amount'] ) : ''; ?>" placeholder="--">
                                     </div>
                                     <div class="cooked-ingredient-measurement">
-                                        <select data-ingredient-part="sub_measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_measurement]">
+                                        <select data-ingredient-part="sub_measurement" aria-label="<?php esc_attr_e( 'Substitute measurement', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_measurement]">
                                             <option value="">--</option>
                                             <?php
                                             foreach ( $measurements as $key => $measurement ) :
@@ -310,7 +310,7 @@ endif;
                                         </select>
                                     </div>
                                     <div class="cooked-ingredient-name">
-                                        <input type="text" data-ingredient-part="sub_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_name]" value="<?php echo isset( $value['sub_name'] ) ? esc_attr( $value['sub_name'] ) : ''; ?>" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
+                                        <input type="text" data-ingredient-part="sub_name" aria-label="<?php esc_attr_e( 'Substitute item', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_name]" value="<?php echo isset( $value['sub_name'] ) ? esc_attr( $value['sub_name'] ) : ''; ?>" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
                                     </div>
                                 </div>
 
@@ -321,12 +321,12 @@ endif;
                             <div class="recipe-setting-block cooked-ingredient-block cooked-ingredient-heading cooked-clearfix">
                                 <i class="cooked-icon cooked-icon-drag"></i>
                                 <div class="cooked-heading-name">
-                                    <input type="text" data-ingredient-part="section_heading_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
+                                    <input type="text" data-ingredient-part="section_heading_name" aria-label="<?php esc_attr_e( 'Section heading', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                                 </div>
 
                                 <div class="cooked-heading-element">
-                                    <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
-                                    <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_element]">
+                                    <label><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
+                                    <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][section_heading_element]">
                                         <?php
                                         $heading_elements = [
                                             'div' => 'div (default)',
@@ -344,9 +344,9 @@ endif;
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+                                <button type="button" class="cooked-show-heading-element" aria-expanded="false" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" title="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button>
 
-                                <span href="#" class="cooked-delete-ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                                <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button>
                             </div>
 
                         <?php endif; ?>
@@ -366,13 +366,13 @@ endif;
                         <?php do_action( 'cooked_before_ingredient_fields', $random_key, false ); ?>
 
                         <div class="cooked-ingredient-amount">
-                            <input type="text" data-ingredient-part="amount" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][amount]" value="" placeholder="--">
+                            <input type="text" data-ingredient-part="amount" aria-label="<?php esc_attr_e( 'Amount', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][amount]" value="" placeholder="--">
                         </div>
 
                         <?php do_action( 'cooked_after_ingredient_amount_field', $random_key, false ); ?>
 
                         <div class="cooked-ingredient-measurement">
-                            <select data-ingredient-part="measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][measurement]">
+                            <select data-ingredient-part="measurement" aria-label="<?php esc_attr_e( 'Measurement', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][measurement]">
                                 <option value="">--</option>
                                 <?php
                                 foreach ( $measurements as $key => $measurement ) :
@@ -385,21 +385,21 @@ endif;
                         <?php do_action( 'cooked_after_ingredient_measurement_field', $random_key, false ); ?>
 
                         <div class="cooked-ingredient-name">
-                            <input type="text" data-ingredient-part="name" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][name]" value="" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
+                            <input type="text" data-ingredient-part="name" aria-label="<?php esc_attr_e( 'Item', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][name]" value="" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
                         </div>
 
                         <?php do_action( 'cooked_after_ingredient_name_field', $random_key, false ); ?>
 
-                        <span href="#" class="cooked-show-substitution" aria-label="Show Heading Element"><i class="cooked-icon cooked-icon-reverse"></i></span>
-                        <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                        <button type="button" class="cooked-show-substitution" aria-expanded="false" aria-label="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>" title="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-reverse" aria-hidden="true"></i></button>
+                        <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button>
 
                         <div class="cooked-heading-element cooked-substitution-fields">
-                            <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
+                            <label class="cooked-sub-label"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
                             <div class="cooked-ingredient-amount">
-                                <input type="text" data-ingredient-part="sub_amount" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_amount]" value="" placeholder="--">
+                                <input type="text" data-ingredient-part="sub_amount" aria-label="<?php esc_attr_e( 'Substitute amount', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_amount]" value="" placeholder="--">
                             </div>
                             <div class="cooked-ingredient-measurement">
-                                <select data-ingredient-part="sub_measurement" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_measurement]">
+                                <select data-ingredient-part="sub_measurement" aria-label="<?php esc_attr_e( 'Substitute measurement', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_measurement]">
                                     <option value="">--</option>
                                     <?php
                                     foreach ( $measurements as $key => $measurement ) :
@@ -409,7 +409,7 @@ endif;
                                 </select>
                             </div>
                             <div class="cooked-ingredient-name">
-                                <input type="text" data-ingredient-part="sub_name" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_name]" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
+                                <input type="text" data-ingredient-part="sub_name" aria-label="<?php esc_attr_e( 'Substitute item', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_name]" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
                             </div>
                         </div>
 
@@ -418,6 +418,13 @@ endif;
                 <?php endif; ?>
 
             </div>
+
+            <?php if ( ! Cooked_Admin_Enqueues::use_classic_ui() ) : ?>
+                <div class="cooked-ingredient-quick-add">
+                    <input type="text" class="cooked-ingredient-quick-add-input" aria-label="<?php esc_attr_e( 'Add an ingredient', 'cooked' ); ?>" aria-describedby="cooked-ingredient-quick-add-hint" placeholder="<?php esc_attr_e( 'Add an ingredient, e.g. 2 cups flour, sifted', 'cooked' ); ?>" autocomplete="off">
+                    <span class="cooked-ingredient-quick-add-hint" id="cooked-ingredient-quick-add-hint"><?php esc_html_e( 'Press Enter to add', 'cooked' ); ?></span>
+                </div>
+            <?php endif; ?>
 
             <div class="recipe-setting-block">
 
@@ -437,13 +444,13 @@ endif;
                     <?php do_action( 'cooked_before_ingredient_fields', false, false ); ?>
 
                     <div class="cooked-ingredient-amount">
-                        <input type="text" data-ingredient-part="amount" name="" value="" placeholder="--">
+                        <input type="text" data-ingredient-part="amount" aria-label="<?php esc_attr_e( 'Amount', 'cooked' ); ?>" name="" value="" placeholder="--">
                     </div>
 
                     <?php do_action( 'cooked_after_ingredient_amount_field', false, false ); ?>
 
                     <div class="cooked-ingredient-measurement">
-                        <select data-ingredient-part="measurement" name="">
+                        <select data-ingredient-part="measurement" aria-label="<?php esc_attr_e( 'Measurement', 'cooked' ); ?>" name="">
                             <option value="">--</option>
                             <?php
                             foreach ( $measurements as $key => $measurement ) :
@@ -456,21 +463,21 @@ endif;
                     <?php do_action( 'cooked_after_ingredient_measurement_field', false, false ); ?>
 
                     <div class="cooked-ingredient-name">
-                        <input type="text" data-ingredient-part="name" name="" value="" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
+                        <input type="text" data-ingredient-part="name" aria-label="<?php esc_attr_e( 'Item', 'cooked' ); ?>" name="" value="" placeholder="<?php esc_attr_e( 'ex. Eggs, Milk, etc.', 'cooked' ); ?> ...">
                     </div>
 
                     <?php do_action( 'cooked_after_ingredient_name_field', false, false ); ?>
 
-                    <span href="#" class="cooked-show-substitution" aria-label="Show Substitution"><i class="cooked-icon cooked-icon-reverse"></i></span>
-                    <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                    <button type="button" class="cooked-show-substitution" aria-expanded="false" aria-label="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>" title="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-reverse" aria-hidden="true"></i></button>
+                    <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button>
 
                     <div class="cooked-heading-element cooked-substitution-fields">
-                        <label class="cooked-sub-label" style="display:block;margin-bottom:5px;"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
+                        <label class="cooked-sub-label"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
                         <div class="cooked-ingredient-amount">
-                            <input type="text" data-ingredient-part="sub_amount" name="" value="" placeholder="--">
+                            <input type="text" data-ingredient-part="sub_amount" aria-label="<?php esc_attr_e( 'Substitute amount', 'cooked' ); ?>" name="" value="" placeholder="--">
                         </div>
                         <div class="cooked-ingredient-measurement">
-                            <select data-ingredient-part="sub_measurement" name="">
+                            <select data-ingredient-part="sub_measurement" aria-label="<?php esc_attr_e( 'Substitute measurement', 'cooked' ); ?>" name="">
                                 <option value="">--</option>
                                 <?php
                                 foreach ( $measurements as $key => $measurement ) :
@@ -480,7 +487,7 @@ endif;
                             </select>
                         </div>
                         <div class="cooked-ingredient-name">
-                            <input type="text" data-ingredient-part="sub_name" name="" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
+                            <input type="text" data-ingredient-part="sub_name" aria-label="<?php esc_attr_e( 'Substitute item', 'cooked' ); ?>" name="" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
                         </div>
                     </div>
 
@@ -488,12 +495,12 @@ endif;
                 <div class="recipe-setting-block cooked-template cooked-heading-template cooked-clearfix">
                     <i class="cooked-icon cooked-icon-drag"></i>
                     <div class="cooked-heading-name">
-                        <input type="text" data-ingredient-part="section_heading_name" name="" value="" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
+                        <input type="text" data-ingredient-part="section_heading_name" aria-label="<?php esc_attr_e( 'Section heading', 'cooked' ); ?>" name="" value="" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                     </div>
 
                     <div class="cooked-heading-element">
-                        <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
-                        <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" name="">
+                        <label><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
+                        <select class="cooked-heading-element-select" data-ingredient-part="section_heading_element" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" name="">
                             <?php
                             $heading_elements = [
                                 'div' => 'div (default)',
@@ -511,9 +518,9 @@ endif;
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <span href="#" class="cooked-show-heading-element" aria-label="Show Heading Element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+                    <button type="button" class="cooked-show-heading-element" aria-expanded="false" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" title="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button>
 
-                    <span href="#" class="cooked-delete-ingredient" aria-label="Delete Ingredient"><i class="cooked-icon cooked-icon-times"></i></span>
+                    <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button>
                 </div>
                 <!-- END TEMPLATES -->
 

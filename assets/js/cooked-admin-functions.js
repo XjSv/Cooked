@@ -812,17 +812,38 @@ var cookedSortableTouchHandler = function(event) {
                     .find('.cooked-show-substitution').attr('aria-expanded', 'true');
             }
 
+            // Substitute toggle: adds the first substitute, then shows or hides them.
             $_CookedIngredientBuilder.parent().on('click', '.cooked-show-substitution', function(e) {
                 e.preventDefault();
                 var thisParent = $(this).parent();
-                if ( thisParent.hasClass('cooked-expanded') ) {
+                if ( !thisParent.find('.cooked-substitution-row').length ) {
+                    cooked_add_substitution_row(thisParent);
+                } else if ( thisParent.hasClass('cooked-expanded') ) {
                     thisParent.removeClass('cooked-expanded');
                     $(this).attr('aria-expanded', 'false');
                 } else {
                     thisParent.addClass('cooked-expanded');
                     $(this).attr('aria-expanded', 'true');
-                    thisParent.find('input[data-ingredient-part="sub_amount"]').focus();
+                    thisParent.find('.cooked-substitution-row input[data-substitution-part="amount"]').first().trigger('focus');
                 }
+            });
+
+            $_CookedIngredientBuilder.on('click', '.cooked-add-substitution', function(e) {
+                e.preventDefault();
+                cooked_add_substitution_row($(this).closest('.cooked-ingredient-block'));
+            });
+
+            $_CookedIngredientBuilder.on('click', '.cooked-delete-substitution', function(e) {
+                e.preventDefault();
+                var $block = $(this).closest('.cooked-ingredient-block');
+                $(this).closest('.cooked-substitution-row').remove();
+                if ( !$block.find('.cooked-substitution-row').length ) {
+                    $block.removeClass('cooked-expanded');
+                    $block.find('.cooked-show-substitution').attr('aria-expanded', 'false').trigger('focus');
+                } else {
+                    $block.find('.cooked-add-substitution').trigger('focus');
+                }
+                cooked_update_has_substitution($block);
             });
 
             $_CookedIngredientBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
@@ -836,15 +857,8 @@ var cookedSortableTouchHandler = function(event) {
                 }
             });
 
-            $_CookedIngredientBuilder.on('keyup change', 'input[data-ingredient-part="sub_amount"], input[data-ingredient-part="sub_name"], select[data-ingredient-part="sub_measurement"]', function(e) {
-                var parentBlock = $(this).parents('.recipe-setting-block'),
-                    subName = parentBlock.find('input[data-ingredient-part="sub_name"]').val();
-
-                if (subName && subName.trim()){
-                    parentBlock.addClass('cooked-has-substitution');
-                } else {
-                    parentBlock.removeClass('cooked-has-substitution');
-                }
+            $_CookedIngredientBuilder.on('keyup change', 'input[data-substitution-part="name"]', function() {
+                cooked_update_has_substitution($(this).closest('.cooked-ingredient-block'));
             });
 
             if ($_CookedAutoNutritionButton.length) {
@@ -1390,6 +1404,23 @@ function init_nutrition_facts( nutritionTab ) {
 }
 
 // Reset Time Picker Settings & Names
+/** Adds a substitute line to an ingredient row, opens its substitutes and focuses the amount. */
+function cooked_add_substitution_row($block) {
+    var $row = jQuery('.cooked-substitution-row-template').first().children('.cooked-substitution-row').clone();
+    $block.find('.cooked-add-substitution').before($row);
+    $block.addClass('cooked-expanded').find('.cooked-show-substitution').attr('aria-expanded', 'true');
+    cooked_reset_ingredient_builder();
+    $row.find('input[data-substitution-part="amount"]').trigger('focus');
+}
+
+/** Marks an ingredient row that has at least one named substitute. */
+function cooked_update_has_substitution($block) {
+    var hasSubstitute = $block.find('input[data-substitution-part="name"]').filter(function() {
+        return jQuery.trim(this.value) !== '';
+    }).length > 0;
+    $block.toggleClass('cooked-has-substitution', hasSubstitute);
+}
+
 function cooked_reset_ingredient_builder() {
     var ingredientBlocks = jQuery('.cooked-ingredient-block'),
         total_ingredients_blocks = 0,
@@ -1415,6 +1446,22 @@ function cooked_reset_ingredient_builder() {
                     thisField.attr('name', '_recipe_settings[ingredients][' + randomKeyForInterval + '][' + ingredientPartName + ']');
                 }
             });
+
+            // New substitutes: name them into this ingredient's substitutions list.
+            var ingredientPrefix = ( $_this.find('[data-ingredient-part="amount"]').attr('name') || '' ).match(/^_recipe_settings\[ingredients\]\[[^\]]+\]/);
+            if (ingredientPrefix) {
+                $_this.find('.cooked-substitution-row').each(function() {
+                    var $row = jQuery(this),
+                        index = $row.attr('data-index') || cooked_get_random_int(10000000, 99999999);
+                    $row.attr('data-index', index);
+                    $row.find('[data-substitution-part]').each(function() {
+                        var thisField = jQuery(this);
+                        if (!thisField.attr('name')) {
+                            thisField.attr('name', ingredientPrefix[0] + '[substitutions][' + index + '][' + thisField.data('substitution-part') + ']');
+                        }
+                    });
+                });
+            }
         });
 
         if ($_CookedAutoNutritionButton.length) {

@@ -123,6 +123,64 @@ function cooked_recipe_shortcodes_content() {
 }
 
 /**
+ * One substitute's fields in the recipe editor: amount, measurement, name and a remove button.
+ *
+ * @since 2.0.0
+ * @param string|int|false                                         $ing_key      Ingredient key, or false in the template (the builder script names it).
+ * @param int                                                      $index        Position in the ingredient's substitutions.
+ * @param array{amount: string, measurement: string, name: string} $substitution Values.
+ * @param array<string, array<string, mixed>>                      $measurements Measurement units.
+ * @return void
+ */
+function cooked_render_substitution_row( $ing_key, $index, $substitution, $measurements ) {
+    $field_name = function ( $part ) use ( $ing_key, $index ) {
+        return false === $ing_key ? '' : '_recipe_settings[ingredients][' . $ing_key . '][substitutions][' . $index . '][' . $part . ']';
+    };
+    ?>
+    <div class="cooked-substitution-row" data-or="<?php echo esc_attr_x( 'or', 'ingredient substitution', 'cooked' ); ?>">
+        <div class="cooked-ingredient-amount">
+            <input type="text" data-substitution-part="amount" aria-label="<?php esc_attr_e( 'Substitute amount', 'cooked' ); ?>" name="<?php echo esc_attr( $field_name( 'amount' ) ); ?>" value="<?php echo esc_attr( $substitution['amount'] ); ?>" placeholder="--">
+        </div>
+        <div class="cooked-ingredient-measurement">
+            <select data-substitution-part="measurement" aria-label="<?php esc_attr_e( 'Substitute measurement', 'cooked' ); ?>" name="<?php echo esc_attr( $field_name( 'measurement' ) ); ?>">
+                <option value="">--</option>
+                <?php foreach ( $measurements as $key => $measurement ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>"<?php selected( $substitution['measurement'], (string) $key ); ?>><?php echo esc_html( $measurement['plural_abbr'] ); ?></option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+        <div class="cooked-ingredient-name">
+            <input type="text" data-substitution-part="name" aria-label="<?php esc_attr_e( 'Substitute item', 'cooked' ); ?>" name="<?php echo esc_attr( $field_name( 'name' ) ); ?>" value="<?php echo esc_attr( $substitution['name'] ); ?>" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
+        </div>
+        <button type="button" class="cooked-delete-substitution" aria-label="<?php esc_attr_e( 'Remove substitute', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove substitute', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
+    </div>
+    <?php
+}
+
+/**
+ * An ingredient's substitutes in the recipe editor, each an "or" line, and an Add button.
+ *
+ * @since 2.0.0
+ * @param string|int|false                                                     $ing_key       Ingredient key, or false in the template.
+ * @param array<int, array{amount: string, measurement: string, name: string}> $substitutions Substitutes.
+ * @param array<string, array<string, mixed>>                                  $measurements  Measurement units.
+ * @return void
+ */
+function cooked_render_substitution_fields( $ing_key, $substitutions, $measurements ) {
+    ?>
+    <div class="cooked-heading-element cooked-substitution-fields">
+        <span class="cooked-sub-label"><?php esc_html_e( 'Substitutions:', 'cooked' ); ?></span>
+        <?php
+        foreach ( array_values( $substitutions ) as $index => $substitution ) {
+            cooked_render_substitution_row( $ing_key, $index, $substitution, $measurements );
+        }
+        ?>
+        <button type="button" class="cooked-add-substitution"><?php esc_html_e( 'Add substitute', 'cooked' ); ?></button>
+    </div>
+    <?php
+}
+
+/**
  * Recipe Fields
  *
  * @since 1.0.0
@@ -253,7 +311,7 @@ endif;
                         <?php if ( ! isset( $value['section_heading_name'] ) ) : ?>
 
                             <?php $ingredient_classes = apply_filters( 'cooked_ingredient_field_classes', 'recipe-setting-block cooked-ingredient-block cooked-clearfix', $value ); ?>
-                            <?php $has_sub = isset( $value['sub_name'] ) && ! empty( $value['sub_name'] ); ?>
+                            <?php $has_sub = ! empty( Cooked_Recipes::ingredient_substitutions( $value ) ); ?>
 
                             <div class="
                             <?php
@@ -294,25 +352,7 @@ endif;
                                 <button type="button" class="cooked-show-substitution" aria-expanded="false" aria-label="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>" title="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-reverse" aria-hidden="true"></i></button>
                                 <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
 
-                                <div class="cooked-heading-element cooked-substitution-fields" data-or="<?php echo esc_attr_x( 'or', 'ingredient substitution', 'cooked' ); ?>">
-                                    <label class="cooked-sub-label"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
-                                    <div class="cooked-ingredient-amount">
-                                        <input type="text" data-ingredient-part="sub_amount" aria-label="<?php esc_attr_e( 'Substitute amount', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_amount]" value="<?php echo isset( $value['sub_amount'] ) ? esc_attr( $value['sub_amount'] ) : ''; ?>" placeholder="--">
-                                    </div>
-                                    <div class="cooked-ingredient-measurement">
-                                        <select data-ingredient-part="sub_measurement" aria-label="<?php esc_attr_e( 'Substitute measurement', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_measurement]">
-                                            <option value="">--</option>
-                                            <?php
-                                            foreach ( $measurements as $key => $measurement ) :
-                                                echo '<option value="' . esc_attr( $key ) . '"' . ( isset( $value['sub_measurement'] ) && $value['sub_measurement'] === $key ? ' selected' : '' ) . '>' . esc_html( $measurement['plural_abbr'] ) . '</option>';
-                                            endforeach;
-                                            ?>
-                                        </select>
-                                    </div>
-                                    <div class="cooked-ingredient-name">
-                                        <input type="text" data-ingredient-part="sub_name" aria-label="<?php esc_attr_e( 'Substitute item', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $ing_key ); ?>][sub_name]" value="<?php echo isset( $value['sub_name'] ) ? esc_attr( $value['sub_name'] ) : ''; ?>" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
-                                    </div>
-                                </div>
+                                <?php cooked_render_substitution_fields( $ing_key, Cooked_Recipes::ingredient_substitutions( $value ), $measurements ); ?>
 
                             </div>
 
@@ -393,25 +433,7 @@ endif;
                         <button type="button" class="cooked-show-substitution" aria-expanded="false" aria-label="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>" title="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-reverse" aria-hidden="true"></i></button>
                         <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
 
-                        <div class="cooked-heading-element cooked-substitution-fields" data-or="<?php echo esc_attr_x( 'or', 'ingredient substitution', 'cooked' ); ?>">
-                            <label class="cooked-sub-label"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
-                            <div class="cooked-ingredient-amount">
-                                <input type="text" data-ingredient-part="sub_amount" aria-label="<?php esc_attr_e( 'Substitute amount', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_amount]" value="" placeholder="--">
-                            </div>
-                            <div class="cooked-ingredient-measurement">
-                                <select data-ingredient-part="sub_measurement" aria-label="<?php esc_attr_e( 'Substitute measurement', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_measurement]">
-                                    <option value="">--</option>
-                                    <?php
-                                    foreach ( $measurements as $key => $measurement ) :
-                                        echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $measurement['plural_abbr'] ) . '</option>';
-                                    endforeach;
-                                    ?>
-                                </select>
-                            </div>
-                            <div class="cooked-ingredient-name">
-                                <input type="text" data-ingredient-part="sub_name" aria-label="<?php esc_attr_e( 'Substitute item', 'cooked' ); ?>" name="_recipe_settings[ingredients][<?php echo esc_attr( $random_key ); ?>][sub_name]" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
-                            </div>
-                        </div>
+                        <?php cooked_render_substitution_fields( $random_key, [], $measurements ); ?>
 
                     </div>
 
@@ -464,25 +486,7 @@ endif;
                     <button type="button" class="cooked-show-substitution" aria-expanded="false" aria-label="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>" title="<?php esc_attr_e( 'Substitution', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-reverse" aria-hidden="true"></i></button>
                     <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
 
-                    <div class="cooked-heading-element cooked-substitution-fields" data-or="<?php echo esc_attr_x( 'or', 'ingredient substitution', 'cooked' ); ?>">
-                        <label class="cooked-sub-label"><?php esc_html_e( 'Substitution:', 'cooked' ); ?></label>
-                        <div class="cooked-ingredient-amount">
-                            <input type="text" data-ingredient-part="sub_amount" aria-label="<?php esc_attr_e( 'Substitute amount', 'cooked' ); ?>" name="" value="" placeholder="--">
-                        </div>
-                        <div class="cooked-ingredient-measurement">
-                            <select data-ingredient-part="sub_measurement" aria-label="<?php esc_attr_e( 'Substitute measurement', 'cooked' ); ?>" name="">
-                                <option value="">--</option>
-                                <?php
-                                foreach ( $measurements as $key => $measurement ) :
-                                    echo '<option value="' . esc_attr( $key ) . '">' . esc_html( $measurement['plural_abbr'] ) . '</option>';
-                                endforeach;
-                                ?>
-                            </select>
-                        </div>
-                        <div class="cooked-ingredient-name">
-                            <input type="text" data-ingredient-part="sub_name" aria-label="<?php esc_attr_e( 'Substitute item', 'cooked' ); ?>" name="" value="" placeholder="<?php esc_attr_e( 'ex. Apple Sauce, Tofu, etc.', 'cooked' ); ?> ...">
-                        </div>
-                    </div>
+                    <?php cooked_render_substitution_fields( false, [], $measurements ); ?>
 
                 </div>
                 <div class="recipe-setting-block cooked-template cooked-heading-template cooked-clearfix">
@@ -514,6 +518,20 @@ endif;
                     <button type="button" class="cooked-show-heading-element" aria-expanded="false" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" title="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button>
 
                     <button type="button" class="cooked-delete-ingredient" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
+                </div>
+                <div class="cooked-template cooked-substitution-row-template">
+                    <?php
+                    cooked_render_substitution_row(
+                        false,
+                        0,
+                        [
+                            'amount'      => '',
+                            'measurement' => '',
+                            'name'        => '',
+                        ],
+                        $measurements
+                    );
+                    ?>
                 </div>
                 <!-- END TEMPLATES -->
 

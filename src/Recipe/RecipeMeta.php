@@ -221,6 +221,15 @@ class RecipeMeta {
             $recipe_settings['seo_description'] = str_replace( [ "\r\n", "\r" ], "\n", $recipe_settings['seo_description'] );
         }
 
+        // Ingredients: each one's substitutes as a list, the first also in the pre-2.0 fields.
+        if ( isset( $recipe_settings['ingredients'] ) && is_array( $recipe_settings['ingredients'] ) ) {
+            foreach ( $recipe_settings['ingredients'] as $key => $ingredient ) {
+                if ( is_array( $ingredient ) && ! isset( $ingredient['section_heading_name'] ) ) {
+                    $recipe_settings['ingredients'][ $key ] = \Cooked_Recipes::with_substitutions( $ingredient, \Cooked_Recipes::ingredient_substitutions( $ingredient ) );
+                }
+            }
+        }
+
         // Directions.
         if ( isset( $recipe_settings['directions'] ) ) {
             foreach ( $recipe_settings['directions'] as $key => $direction ) {

@@ -368,7 +368,8 @@
     border: 2px solid #ece8c4;
 }
 
-#cooked_recipe_settings .recipe-setting-block.cooked-template {
+#cooked_recipe_settings .recipe-setting-block.cooked-template,
+#cooked_recipe_settings .cooked-substitution-row-template {
     display: none;
 }
 

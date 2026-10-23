@@ -284,56 +284,51 @@ class CsvImport {
                     $i = $j;
 
                     /**
-                     * Check if next parts are empty (indicating || separator for substitution)
-                     *
-                     * Look ahead to see if we have empty parts followed by non-empty parts
+                     * Substitutes: each "||" after the ingredient starts one (amount|measurement|name,
+                     * amount|name or name), so "flour||almond flour||oat flour" gives two.
                      */
-                    $next_empty_count = 0;
-                    $k                = $i;
-                    while ( $k < $num_parts && empty( trim( $all_parts[ $k ] ) ) ) {
-                        ++$next_empty_count;
-                        ++$k;
-                    }
+                    $substitutions = [];
+                    while ( $i < $num_parts ) {
+                        $k = $i;
+                        while ( $k < $num_parts && '' === trim( $all_parts[ $k ] ) ) {
+                            ++$k;
+                        }
 
-                    /**
-                     * If we have empty parts (from ||) and then more parts, it's a substitution
-                     */
-                    if ( $next_empty_count > 0 && $k < $num_parts ) {
-                        /**
-                         * Collect substitution parts (next 3 non-empty parts)
-                         */
+                        // A single "|" leads to the next ingredient; only "||" starts a substitute.
+                        if ( $k === $i || $k >= $num_parts ) {
+                            break;
+                        }
+
                         $sub_parts = [];
                         $sub_i     = $k;
-                        while ( $sub_i < $num_parts && ! isset( $sub_parts[2] ) ) {
-                            $sub_part = trim( $all_parts[ $sub_i ] );
-                            if ( ! empty( $sub_part ) ) {
-                                $sub_parts[] = $sub_part;
-                            }
+                        while ( $sub_i < $num_parts && ! isset( $sub_parts[2] ) && '' !== trim( $all_parts[ $sub_i ] ) ) {
+                            $sub_parts[] = trim( $all_parts[ $sub_i ] );
                             ++$sub_i;
                         }
 
-                        /**
-                         * Parse substitution
-                         */
+                        $substitution = [
+                            'amount'      => '',
+                            'measurement' => '',
+                            'name'        => '',
+                        ];
                         if ( count( $sub_parts ) >= 3 ) {
-                            $ingredient['sub_amount'] = sanitize_text_field( $sub_parts[0] );
-                            $sub_measurement          = sanitize_text_field( $sub_parts[1] );
-                            $matched_sub_measurement  = self::match_measurement( $sub_measurement, $measurements );
-                            if ( $matched_sub_measurement ) {
-                                $ingredient['sub_measurement'] = $matched_sub_measurement;
-                            }
-                            $ingredient['sub_name'] = sanitize_text_field( $sub_parts[2] );
+                            $substitution['amount']      = sanitize_text_field( $sub_parts[0] );
+                            $matched_sub_measurement     = self::match_measurement( sanitize_text_field( $sub_parts[1] ), $measurements );
+                            $substitution['measurement'] = $matched_sub_measurement ? $matched_sub_measurement : '';
+                            $substitution['name']        = sanitize_text_field( $sub_parts[2] );
                         } elseif ( count( $sub_parts ) === 2 ) {
-                            $ingredient['sub_amount'] = sanitize_text_field( $sub_parts[0] );
-                            $ingredient['sub_name']   = sanitize_text_field( $sub_parts[1] );
-                        } elseif ( count( $sub_parts ) === 1 ) {
-                            $ingredient['sub_name'] = sanitize_text_field( $sub_parts[0] );
+                            $substitution['amount'] = sanitize_text_field( $sub_parts[0] );
+                            $substitution['name']   = sanitize_text_field( $sub_parts[1] );
+                        } else {
+                            $substitution['name'] = sanitize_text_field( $sub_parts[0] );
                         }
+                        $substitutions[] = $substitution;
 
-                        /**
-                         * Move past substitution
-                         */
                         $i = $sub_i;
+                    }
+
+                    if ( $substitutions && is_array( $ingredient ) ) {
+                        $ingredient = \Cooked_Recipes::with_substitutions( $ingredient, $substitutions );
                     }
 
                     $recipe_meta['ingredients'][] = $ingredient;

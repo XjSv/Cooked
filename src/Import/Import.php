@@ -183,7 +183,7 @@ class Import {
         $html_desc     .= '<li><strong>prep_time</strong> - ' . __( 'Prep time in minutes', 'cooked' ) . '</li>';
         $html_desc     .= '<li><strong>cook_time</strong> - ' . __( 'Cook time in minutes', 'cooked' ) . '</li>';
         $html_desc     .= '<li><strong>difficulty_level</strong> - ' . __( 'Difficulty level (1=Beginner, 2=Intermediate, 3=Advanced)', 'cooked' ) . '</li>';
-        $html_desc     .= '<li style="line-height: 1.6;"><strong>ingredients</strong> - ' . __( 'Ingredients, separated by pipe <code>(|)</code>. <br>Format: <code>"amount|measurement|name"</code> or <code>"name"</code> for simple ingredients.<br>Add substitutions with double pipe <code>(||)</code>: <code>"amount|measurement|name||sub_amount|sub_measurement|sub_name"</code>', 'cooked' ) . '</li>';
+        $html_desc     .= '<li style="line-height: 1.6;"><strong>ingredients</strong> - ' . __( 'Ingredients, separated by pipe <code>(|)</code>. <br>Format: <code>"amount|measurement|name"</code> or <code>"name"</code> for simple ingredients.<br>Add substitutions with double pipe <code>(||)</code>: <code>"amount|measurement|name||sub_amount|sub_measurement|sub_name"</code>. Add more with another double pipe.', 'cooked' ) . '</li>';
         $html_desc     .= '<li><strong>directions</strong> - ' . __( 'Directions/instructions, separated by pipe <code>(|)</code>', 'cooked' ) . '</li>';
         $html_desc     .= '<li><strong>notes</strong> - ' . __( 'Notes', 'cooked' ) . '</li>';
             $html_desc .= '<li><strong>category</strong> - ' . __( 'Category, separated by comma', 'cooked' ) . '</li>';

@@ -1324,6 +1324,68 @@ endif;
     }
 
     /**
+     * An ingredient's substitutes, in order: its `substitutions` list, or for recipes saved
+     * before 2.0 the single `sub_amount` / `sub_measurement` / `sub_name`. Entries without a
+     * name are skipped.
+     *
+     * @since 2.0.0
+     * @param array<string, mixed> $ing Ingredient.
+     * @return array<int, array{amount: string, measurement: string, name: string}>
+     */
+    public static function ingredient_substitutions( $ing ) {
+        if ( isset( $ing['substitutions'] ) && is_array( $ing['substitutions'] ) ) {
+            $entries = $ing['substitutions'];
+        } else {
+            $entries = [
+                [
+                    'amount'      => isset( $ing['sub_amount'] ) ? $ing['sub_amount'] : '',
+                    'measurement' => isset( $ing['sub_measurement'] ) ? $ing['sub_measurement'] : '',
+                    'name'        => isset( $ing['sub_name'] ) ? $ing['sub_name'] : '',
+                ],
+            ];
+        }
+
+        $substitutions = [];
+        foreach ( $entries as $entry ) {
+            if ( ! is_array( $entry ) || ! isset( $entry['name'] ) || ! is_scalar( $entry['name'] ) || '' === trim( (string) $entry['name'] ) ) {
+                continue;
+            }
+            $substitutions[] = [
+                'amount'      => isset( $entry['amount'] ) && is_scalar( $entry['amount'] ) ? (string) $entry['amount'] : '',
+                'measurement' => isset( $entry['measurement'] ) && is_scalar( $entry['measurement'] ) ? (string) $entry['measurement'] : '',
+                'name'        => (string) $entry['name'],
+            ];
+        }
+
+        return $substitutions;
+    }
+
+    /**
+     * Sets an ingredient's substitutes: the `substitutions` list, with the first also in the
+     * pre-2.0 `sub_amount` / `sub_measurement` / `sub_name` fields that add-ons may read.
+     *
+     * @since 2.0.0
+     * @param array<string, mixed>                                                 $ing           Ingredient.
+     * @param array<int, array{amount: string, measurement: string, name: string}> $substitutions Substitutes.
+     * @return array<string, mixed>
+     */
+    public static function with_substitutions( $ing, $substitutions ) {
+        $substitutions = array_values( $substitutions );
+        $first         = isset( $substitutions[0] ) ? $substitutions[0] : [
+            'amount'      => '',
+            'measurement' => '',
+            'name'        => '',
+        ];
+
+        $ing['substitutions']   = $substitutions;
+        $ing['sub_amount']      = $first['amount'];
+        $ing['sub_measurement'] = $first['measurement'];
+        $ing['sub_name']        = $first['name'];
+
+        return $ing;
+    }
+
+    /**
      * Outputs (or returns, as plain text) one ingredient or section heading.
      *
      * @param array<string, mixed> $ing        Ingredient.
@@ -1342,6 +1404,7 @@ endif;
         if ( isset( $ing['section_heading_name'] ) && $ing['section_heading_name'] ) {
 
             if ( $plain_text ) {
+                ob_end_clean(); // Plain text is returned, not buffered.
                 return $ing['section_heading_name'];
             } else {
                 $valid_elements = [ 'div', 'h2', 'h3', 'h4', 'h5', 'h6' ];
@@ -1407,57 +1470,58 @@ endif;
 
             $name = ( isset( $ing['name'] ) && $ing['name'] ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['name'] ), $ing ) : false );
 
-            // Substitution Logic.
-            $sub_name         = ( isset( $ing['sub_name'] ) && $ing['sub_name'] ? wp_kses_post( $ing['sub_name'] ) : false );
-            $sub_amount       = false;
-            $sub_measurement  = false;
-            $sub_float_amount = 0;
+            // Substitutes, each scaled and converted like the ingredient itself.
+            $substitutions = [];
+            foreach ( self::ingredient_substitutions( $ing ) as $substitution ) {
+                $sub_name         = wp_kses_post( $substitution['name'] );
+                $sub_amount       = $substitution['amount'] ? esc_html( $substitution['amount'] ) : false;
+                $sub_amount       = $Cooked_Measurements->cleanup_amount( $sub_amount );
+                $sub_format       = ( strpos( $sub_amount, '/' ) === false ? ( strpos( $sub_amount, '.' ) !== false || strpos( $sub_amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
+                $sub_float_amount = $Cooked_Measurements->calculate( $sub_amount, 'decimal' );
 
-			if ( $sub_name ) {
-				if ( 1 === $multiplier ) {
-					$sub_amount       = ( isset( $ing['sub_amount'] ) && $ing['sub_amount'] ? esc_html( $ing['sub_amount'] ) : false );
-					$sub_amount       = $Cooked_Measurements->cleanup_amount( $sub_amount );
-					$sub_format       = ( strpos( $sub_amount, '/' ) === false ? ( strpos( $sub_amount, '.' ) !== false || strpos( $sub_amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
-					$sub_float_amount = $Cooked_Measurements->calculate( $sub_amount, 'decimal' );
-					$sub_amount       = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
-				} else {
-					$sub_amount       = ( isset( $ing['sub_amount'] ) && $ing['sub_amount'] ? esc_html( $ing['sub_amount'] ) : false );
-					$sub_amount       = $Cooked_Measurements->cleanup_amount( $sub_amount );
-					$sub_format       = ( strpos( $sub_amount, '/' ) === false ? ( strpos( $sub_amount, '.' ) !== false || strpos( $sub_amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
-					$sub_float_amount = $Cooked_Measurements->calculate( $sub_amount, 'decimal' );
+                if ( 1 === $multiplier ) {
+                    $sub_amount = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
+                } elseif ( $sub_float_amount ) {
+                    $sub_float_amount = $sub_float_amount * $multiplier;
+                    $sub_amount       = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
+                }
 
-					if ( $sub_float_amount ) {
-						$sub_float_amount = $sub_float_amount * $multiplier;
-						$sub_amount       = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
-					}
-				}
+                $sub_measurement_key = $substitution['measurement'] ? esc_html( $substitution['measurement'] ) : false;
 
-				$sub_measurement_key = ( isset( $ing['sub_measurement'] ) && $ing['sub_measurement'] ? esc_html( $ing['sub_measurement'] ) : false );
+                if ( $measurement_system && $sub_measurement_key && $sub_float_amount && isset( $measurements[ $sub_measurement_key ]['system'] ) ) {
+                    $sub_source_system = $measurements[ $sub_measurement_key ]['system'];
+                    if ( $sub_source_system && $sub_source_system !== $measurement_system ) {
+                        $sub_target = \Cooked_Unit_Converter::get_target_unit( $sub_measurement_key );
+                        $sub_result = $sub_target ? \Cooked_Unit_Converter::convert( $sub_float_amount, $sub_measurement_key, $sub_target ) : null;
+                        if ( $sub_result ) {
+                            $sub_float_amount    = $sub_result['amount'];
+                            $sub_measurement_key = $sub_result['unit'];
+                            if ( $sub_float_amount > 10 ) {
+                                $sub_format = 'decimal';
+                            }
+                            $sub_amount = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
+                        }
+                    }
+                }
 
-				if ( $measurement_system && $sub_measurement_key && $sub_float_amount && isset( $measurements[ $sub_measurement_key ]['system'] ) ) {
-					$sub_source_system = $measurements[ $sub_measurement_key ]['system'];
-					if ( $sub_source_system && $sub_source_system !== $measurement_system ) {
-						$sub_target = \Cooked_Unit_Converter::get_target_unit( $sub_measurement_key );
-						$sub_result = $sub_target ? \Cooked_Unit_Converter::convert( $sub_float_amount, $sub_measurement_key, $sub_target ) : null;
-						if ( $sub_result ) {
-							$sub_float_amount    = $sub_result['amount'];
-							$sub_measurement_key = $sub_result['unit'];
-							if ( $sub_float_amount > 10 ) {
-								$sub_format = 'decimal';
-							}
-							$sub_amount = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
-						}
-					}
-				}
-
-				$sub_measurement = ( $sub_measurement_key && $sub_float_amount && isset( $measurements[ $sub_measurement_key ] ) ? $Cooked_Measurements->singular_plural( $measurements[ $sub_measurement_key ]['singular_abbr'], $measurements[ $sub_measurement_key ]['plural_abbr'], $sub_float_amount ) : false );
-			}
+                $substitutions[] = [
+                    'name'         => $sub_name,
+                    'amount'       => $sub_amount,
+                    'float_amount' => $sub_float_amount,
+                    'measurement'  => ( $sub_measurement_key && $sub_float_amount && isset( $measurements[ $sub_measurement_key ] ) ? $Cooked_Measurements->singular_plural( $measurements[ $sub_measurement_key ]['singular_abbr'], $measurements[ $sub_measurement_key ]['plural_abbr'], $sub_float_amount ) : false ),
+                ];
+            }
 
 			if ( $plain_text ) {
 				$output = ( $amount ? $amount . ' ' : '' ) . ( $measurement ? $measurement . ' ' : '' ) . ( $name ? $name : '' );
-				if ( $sub_name ) {
-					$output .= ' (' . __( 'or', 'cooked' ) . ' ' . ( $sub_amount ? $sub_amount . ' ' : '' ) . ( $sub_measurement ? $sub_measurement . ' ' : '' ) . $sub_name . ')';
+				if ( $substitutions ) {
+					$alternatives = [];
+					foreach ( $substitutions as $sub ) {
+						$alternatives[] = __( 'or', 'cooked' ) . ' ' . ( $sub['amount'] ? $sub['amount'] . ' ' : '' ) . ( $sub['measurement'] ? $sub['measurement'] . ' ' : '' ) . $sub['name'];
+					}
+					$output .= ' (' . implode( ', ', $alternatives ) . ')';
 				}
+				ob_end_clean(); // Plain text is returned, not buffered.
 				return $output;
 			} else {
 				echo '<div itemprop="recipeIngredient" class="cooked-single-ingredient cooked-ingredient' . ( ! $checkboxes ? ' cooked-ing-no-checkbox' : '' ) . '">';
@@ -1468,11 +1532,11 @@ endif;
 					echo ( $name ? '<span class="cooked-ing-name">' . wp_kses_post( $name ) . '</span>' : '' );
 					do_action( 'cooked_ingredient_after_name', $ing );
 
-				if ( $sub_name ) {
+				foreach ( $substitutions as $sub ) {
 					echo '<span class="cooked-ingredient-substitution">';
 						echo ' <span class="cooked-ing-sub-label">' . esc_html__( 'or', 'cooked' ) . '</span> ';
-						echo ( $sub_amount ? '<span class="cooked-ing-amount" data-decimal="' . esc_html( $sub_float_amount ) . '">' . wp_kses_post( $sub_amount ) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( $sub_measurement ) . '</span> ' : '' );
-						echo '<span class="cooked-ing-name">' . wp_kses_post( $sub_name ) . '</span>';
+						echo ( $sub['amount'] ? '<span class="cooked-ing-amount" data-decimal="' . esc_html( $sub['float_amount'] ) . '">' . wp_kses_post( $sub['amount'] ) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( $sub['measurement'] ) . '</span> ' : '' );
+						echo '<span class="cooked-ing-name">' . wp_kses_post( $sub['name'] ) . '</span>';
 					echo '</span>';
 				}
 				echo '</div>';

@@ -670,8 +670,8 @@ class Shortcodes {
         $html .= '</div>';
 
         if ( $count > 1 ) {
-            $html .= '<button type="button" class="cooked-gallery-arrow cooked-gallery-prev" aria-label="' . esc_attr__( 'Previous slide', 'cooked' ) . '"></button>';
-            $html .= '<button type="button" class="cooked-gallery-arrow cooked-gallery-next" aria-label="' . esc_attr__( 'Next slide', 'cooked' ) . '"></button>';
+            $html .= '<button type="button" class="cooked-gallery-arrow cooked-gallery-prev" aria-label="' . esc_attr__( 'Previous slide', 'cooked' ) . '"><i class="cooked-icon cooked-icon-angle-left" aria-hidden="true"></i></button>';
+            $html .= '<button type="button" class="cooked-gallery-arrow cooked-gallery-next" aria-label="' . esc_attr__( 'Next slide', 'cooked' ) . '"><i class="cooked-icon cooked-icon-angle-right" aria-hidden="true"></i></button>';
         }
 
         $html .= '</div>';

@@ -148,13 +148,16 @@
 .cooked-gallery .cooked-gallery-arrow {
     position: absolute;
     top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 40px;
     height: 40px;
     transform: translateY(-50%);
     border-radius: 50%;
-    // The chevron is an SVG, centred in the circle (the 1.x rotated borders sat off-centre).
-    background: rgba(255, 255, 255, 0.92) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e1e1e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E") no-repeat center / 18px 18px;
+    background: rgba(255, 255, 255, 0.92);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    color: #1e1e1e;
     opacity: 0;
     transition: opacity 200ms ease, background-color 200ms ease;
 
@@ -164,6 +167,12 @@
 
     &:hover {
         background-color: #fff;
+    }
+
+    // Cooked's own chevrons (the icon font).
+    .cooked-icon {
+        font-size: 18px;
+        line-height: 1;
     }
 }
 
@@ -189,14 +198,9 @@
     right: 12px;
 }
 
-// The previous arrow is the same chevron, mirrored (swapped in right-to-left text).
-.cooked-gallery .cooked-gallery-prev,
-[dir="rtl"] .cooked-gallery .cooked-gallery-next {
+// Right-to-left: the arrows point the other way.
+[dir="rtl"] .cooked-gallery .cooked-gallery-arrow .cooked-icon {
     scale: -1 1;
-}
-
-[dir="rtl"] .cooked-gallery .cooked-gallery-prev {
-    scale: 1 1;
 }
 
 .cooked-gallery-nav {

@@ -1978,3 +1978,74 @@ function cooked_bulk_add_ingredients_parsed(items) {
 
     cooked_reset_ingredient_builder();
 }
+
+/**
+ * Settings: the Admin Screens "Compare layouts" dialog (Cooked_Settings::layout_compare_button())
+ * and its slider (templates/admin/parts/layout-compare.php). The range input moves the divider;
+ * the tabs switch between screens.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    var dialog = document.getElementById('cooked-layout-compare-dialog'),
+        opener = document.querySelector('.cooked-layout-compare-open');
+    if (dialog && opener && typeof dialog.showModal === 'function') {
+        opener.addEventListener('click', function() {
+            dialog.showModal();
+        });
+        dialog.querySelector('.cooked-layout-compare-close').addEventListener('click', function() {
+            dialog.close();
+        });
+        // A click on the backdrop (outside the dialog box) closes it too.
+        dialog.addEventListener('click', function(e) {
+            if (e.target === dialog) {
+                dialog.close();
+            }
+        });
+        // Back to the button that opened it.
+        dialog.addEventListener('close', function() {
+            opener.focus();
+        });
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll('.cooked-layout-compare'), function(section) {
+        var tabs = Array.prototype.slice.call(section.querySelectorAll('[role="tab"]'));
+
+        Array.prototype.forEach.call(section.querySelectorAll('.cooked-compare'), function(compare) {
+            var range = compare.querySelector('.cooked-compare-range'),
+                update = function() {
+                    compare.style.setProperty('--cooked-compare-pos', range.value + '%');
+                    range.setAttribute('aria-valuetext', range.value + '%');
+                };
+            range.addEventListener('input', update);
+            update();
+        });
+
+        var select = function(tab) {
+            tabs.forEach(function(other) {
+                var selected = other === tab,
+                    panel = document.getElementById(other.getAttribute('aria-controls'));
+                other.setAttribute('aria-selected', selected ? 'true' : 'false');
+                other.tabIndex = selected ? 0 : -1;
+                if (panel) {
+                    panel.hidden = !selected;
+                }
+            });
+        };
+
+        tabs.forEach(function(tab, index) {
+            tab.addEventListener('click', function() {
+                select(tab);
+            });
+            // Arrow keys move between tabs (WAI-ARIA tabs pattern).
+            tab.addEventListener('keydown', function(e) {
+                var next = e.key === 'ArrowRight' ? index + 1 : e.key === 'ArrowLeft' ? index - 1 : null;
+                if (next === null) {
+                    return;
+                }
+                e.preventDefault();
+                var target = tabs[(next + tabs.length) % tabs.length];
+                select(target);
+                target.focus();
+            });
+        });
+    });
+});

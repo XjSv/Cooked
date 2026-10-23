@@ -118,6 +118,12 @@ body.cooked-recipe-editor {
             }
         }
 
+        // The 1.x input rule nudges text inputs down 2px; units (Tom Select) are not nudged.
+        .cooked-ingredient-block input[type="text"] {
+            position: static;
+            top: auto;
+        }
+
         // Fields: plain text until hovered or focused.
         .cooked-ingredient-block input[type="text"],
         .cooked-ingredient-block select,
@@ -169,15 +175,20 @@ body.cooked-recipe-editor {
         }
 
         // Tom Select: fit the column, one line (its search box shares the line with the value).
+        // Flex, so the wrapper is exactly as tall as the control (block left 2px of line box).
         .cooked-ingredient-block .cooked-select-wrapper,
         .cooked-ingredient-block .ts-wrapper {
-            display: block;
+            display: flex;
+            height: 34px;
+            min-height: 0;
             width: 100%;
             min-width: 0; // Settings gives enhanced selects a 220px minimum.
             margin: 0;
         }
 
         .cooked-ingredient-block .ts-wrapper.single .ts-control {
+            box-sizing: border-box;
+            height: 34px;
             align-items: center;
             flex-wrap: nowrap;
             overflow: hidden;

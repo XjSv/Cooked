@@ -620,13 +620,14 @@ class Settings {
 							'options' => $role_options,
 						],
 						'admin_interface'                  => [
-							'title'   => __( 'Admin Screens', 'cooked' ),
-							'desc'    => __( 'Cooked 2.0 shows its Settings, Import, What\'s New and Upgrade to Pro screens, and the recipe editor, in a new layout. Switch to the classic layout if you prefer the previous one.', 'cooked' ),
-							'type'    => 'checkboxes',
-							'default' => [],
-							'options' => [
+							'title'         => __( 'Admin Screens', 'cooked' ),
+							'desc'          => __( 'Cooked 2.0 shows its Settings, Import, What\'s New and Upgrade to Pro screens, and the recipe editor, in a new layout. Switch to the classic layout if you prefer the previous one.', 'cooked' ),
+							'type'          => 'checkboxes',
+							'default'       => [],
+							'options'       => [
 								'classic' => __( 'Use the Classic Layout', 'cooked' ),
 							],
+							'after_control' => [ __CLASS__, 'layout_compare_button' ],
 						],
 						'advanced'                         => [
 							'title'   => __( 'Advanced Settings', 'cooked' ),
@@ -989,6 +990,29 @@ class Settings {
 		}
             echo '</select>';
         echo '</p>';
+    }
+
+    /**
+     * The Admin Screens setting's "Compare layouts" button and the dialog it opens: a slider
+     * over screenshots of the classic and new layouts (display only: nothing is saved).
+     *
+     * @since 2.0.0
+     * @return void
+     */
+    public static function layout_compare_button() {
+        ?>
+        <button type="button" class="button cooked-layout-compare-open" aria-haspopup="dialog" aria-controls="cooked-layout-compare-dialog"><?php esc_html_e( 'Compare layouts', 'cooked' ); ?></button>
+        <dialog id="cooked-layout-compare-dialog" class="cooked-layout-compare-dialog" aria-labelledby="cooked-layout-compare-title">
+            <div class="cooked-layout-compare-dialog-header">
+                <h2 id="cooked-layout-compare-title"><?php esc_html_e( 'Classic and new layouts', 'cooked' ); ?></h2>
+                <button type="button" class="cooked-layout-compare-close" aria-label="<?php esc_attr_e( 'Close', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
+            </div>
+            <div class="cooked-layout-compare-dialog-body">
+                <p class="cooked-layout-compare-intro"><?php esc_html_e( 'Drag the slider to see the same screen in the classic layout (left) and the new one (right).', 'cooked' ); ?></p>
+                <?php include COOKED_DIR . 'templates/admin/parts/layout-compare.php'; ?>
+            </div>
+        </dialog>
+        <?php
     }
 
     /**

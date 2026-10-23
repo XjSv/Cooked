@@ -108,6 +108,10 @@
                                 echo '<div class="cooked-setting-control">';
                                 if ( $has_renderer ) :
                                     $Cooked_Settings->$field_type( $name, $field_options, $color, $field );
+                                    // Optional extra output under the control (e.g. Admin Screens' Compare button).
+                                    if ( ! empty( $field['after_control'] ) && is_callable( $field['after_control'] ) ) :
+                                        call_user_func( $field['after_control'], $name, $field );
+                                    endif;
                                 else :
                                     /**
                                      * Renders a settings field of a type Cooked has no renderer for.

@@ -28,6 +28,7 @@ function _e( $text, $domain = 'default' ) { echo $text; }
 function esc_html__( $text, $domain = 'default' ) { return $text; }
 function esc_html_e( $text, $domain = 'default' ) { echo $text; }
 function esc_html_x( $text, $context, $domain = 'default' ) { return $text; }
+function esc_attr_x( $text, $context, $domain = 'default' ) { return $text; }
 function esc_attr__( $text, $domain = 'default' ) { return $text; }
 function esc_attr_e( $text, $domain = 'default' ) { echo $text; }
 

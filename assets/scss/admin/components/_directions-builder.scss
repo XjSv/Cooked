@@ -127,3 +127,10 @@
         padding: 10px;
     }
 }
+
+// The image/video buttons have an icon before their label.
+#cooked-directions-builder .direction-image-button .cooked-icon,
+#cooked-directions-builder .direction-video-button .cooked-icon {
+    margin-right: 6px;
+    vertical-align: -2px;
+}

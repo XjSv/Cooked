@@ -568,10 +568,10 @@ endif;
 
                             <div class="recipe-setting-block cooked-direction-block cooked-clearfix cooked-direction-has-number<?php echo ( $direction_step > 9 ? ' cooked-direction-has-number-wide' : '' ); ?>">
                                 <i class="cooked-icon cooked-icon-drag"></i>
-                                <span class="cooked-direction-number"><?php echo (int) $direction_step; ?></span>
+                                <span class="cooked-direction-number" data-label="<?php esc_attr_e( 'Step', 'cooked' ); ?>"><?php echo (int) $direction_step; ?></span>
                                 <div class="cooked-direction-image<?php echo ( $image_thumb ? ' cooked-has-image' : '' ); ?>">
                                     <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][image]" id="direction-<?php echo esc_attr( $dir_key ); ?>-image" value="<?php echo isset( $value['image'] ) ? esc_attr( $value['image'] ) : ''; ?>" />
-                                    <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-image-button" value="<?php echo ( $image_thumb ? esc_html__( 'Change Image', 'cooked' ) : esc_html__( 'Add Image', 'cooked' ) ); ?>" />
+                                    <button type="button" data-direction-part="image_button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-image-button"><i class="cooked-icon cooked-icon-image" aria-hidden="true"></i><span class="cooked-media-button-label"><?php echo ( $image_thumb ? esc_html__( 'Change Image', 'cooked' ) : esc_html__( 'Add Image', 'cooked' ) ); ?></span></button>
                                     <?php echo ( $image_thumb ? wp_kses_post( $image_thumb ) : '<img id="direction-' . esc_attr( $dir_key ) . '-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="' . esc_attr( $dir_key ) . '">' ); ?>
                                     <div class="cooked-direction-img-placeholder"></div>
                                     <button type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-image-button" aria-label="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
@@ -581,7 +581,7 @@ endif;
                                 </div>
                                 <div class="cooked-direction-video<?php echo ( ! empty( $value['video'] ) ? ' cooked-has-video' : '' ); ?>">
                                     <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][video]" value="<?php echo ! empty( $value['video'] ) ? esc_attr( $value['video'] ) : ''; ?>" />
-                                    <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-video-button" value="<?php echo ! empty( $value['video'] ) ? esc_html__( 'Change Video', 'cooked' ) : esc_html__( 'Add Video', 'cooked' ); ?>" />
+                                    <button type="button" data-direction-part="video_button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-video-button"><i class="cooked-icon cooked-icon-video" aria-hidden="true"></i><span class="cooked-media-button-label"><?php echo ! empty( $value['video'] ) ? esc_html__( 'Change Video', 'cooked' ) : esc_html__( 'Add Video', 'cooked' ); ?></span></button>
                                     <?php if ( ! empty( $value['video'] ) ) : ?>
                                         <video class="cooked-direction-video-preview" src="<?php echo esc_url( wp_get_attachment_url( $value['video'] ) ); ?>" preload="metadata" playsinline></video>
                                     <?php else : ?>
@@ -638,10 +638,10 @@ endif;
 
                     <div class="recipe-setting-block cooked-direction-block cooked-clearfix cooked-direction-has-number">
                         <i class="cooked-icon cooked-icon-drag"></i>
-                        <span class="cooked-direction-number">1</span>
+                        <span class="cooked-direction-number" data-label="<?php esc_attr_e( 'Step', 'cooked' ); ?>">1</span>
                         <div class="cooked-direction-image">
                             <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $random_key ); ?>][image]" id="direction-<?php echo esc_attr( $random_key ); ?>-image" value="" />
-                            <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-image-button" value="<?php esc_attr_e( 'Add Image', 'cooked' ); ?>" />
+                            <button type="button" data-direction-part="image_button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-image-button"><i class="cooked-icon cooked-icon-image" aria-hidden="true"></i><span class="cooked-media-button-label"><?php esc_html_e( 'Add Image', 'cooked' ); ?></span></button>
                             <img id="direction-<?php echo esc_attr( $random_key ); ?>-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="<?php echo esc_attr( $random_key ); ?>">
                             <div class="cooked-direction-img-placeholder"></div>
                             <button type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-image-button" aria-label="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
@@ -668,7 +668,7 @@ endif;
                         </div>
                         <div class="cooked-direction-video">
                             <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $random_key ); ?>][video]" value="" />
-                            <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-video-button" value="<?php esc_attr_e( 'Add Video', 'cooked' ); ?>" />
+                            <button type="button" data-direction-part="video_button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-video-button"><i class="cooked-icon cooked-icon-video" aria-hidden="true"></i><span class="cooked-media-button-label"><?php esc_html_e( 'Add Video', 'cooked' ); ?></span></button>
                             <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
                             <div class="cooked-direction-video-placeholder"></div>
                             <button type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
@@ -693,10 +693,10 @@ endif;
                 <!-- TEMPLATES -->
                 <div class="recipe-setting-block cooked-template cooked-direction-template cooked-clearfix">
                     <i class="cooked-icon cooked-icon-drag"></i>
-                    <span class="cooked-direction-number"></span>
+                    <span class="cooked-direction-number" data-label="<?php esc_attr_e( 'Step', 'cooked' ); ?>"></span>
                     <div class="cooked-direction-image">
                         <input data-direction-part="image" type="hidden" name="" value="" />
-                        <input data-direction-part="image_button" data-id="" type="button" class="button direction-image-button" value="<?php esc_attr_e( 'Add Image', 'cooked' ); ?>" />
+                        <button type="button" data-direction-part="image_button" data-id="" class="button direction-image-button"><i class="cooked-icon cooked-icon-image" aria-hidden="true"></i><span class="cooked-media-button-label"><?php esc_html_e( 'Add Image', 'cooked' ); ?></span></button>
                         <img id="" data-direction-part="image_src" class="cooked-direction-img" src="">
                         <div class="cooked-direction-img-placeholder"></div>
                         <button type="button" data-id="" class="remove-image-button" aria-label="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
@@ -706,7 +706,7 @@ endif;
                     </div>
                     <div class="cooked-direction-video">
                         <input data-direction-part="video" type="hidden" name="" value="" />
-                        <input data-direction-part="video_button" type="button" data-id="" class="button direction-video-button" value="<?php esc_attr_e( 'Add Video', 'cooked' ); ?>" />
+                        <button type="button" data-direction-part="video_button" data-id="" class="button direction-video-button"><i class="cooked-icon cooked-icon-video" aria-hidden="true"></i><span class="cooked-media-button-label"><?php esc_html_e( 'Add Video', 'cooked' ); ?></span></button>
                         <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
                         <div class="cooked-direction-video-placeholder"></div>
                         <button type="button" data-id="" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>

@@ -481,7 +481,7 @@ body.cooked-recipe-editor {
 
     .cooked-recipe-fields div.mce-toolbar-grp > div,
     .cooked-recipe-fields .quicktags-toolbar {
-        padding-right: 130px;
+        padding-right: 180px; // room for the Visual / Code switch (about 172px)
     }
 
     // Visual/Code: a segmented control whose thumb slides to the active side. WordPress

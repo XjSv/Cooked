@@ -13,6 +13,9 @@ $step-columns-narrow: 18px 26px minmax(0, 1fr) minmax(0, 1fr) 32px;
 $heading-columns: 20px minmax(0, 1fr) auto 40px;
 
 body.cooked-recipe-editor #poststuff #cooked-directions-builder {
+    // The steps lay out by the builder's own width: with the sidebar beside it, the editor
+    // column is much narrower than the screen.
+    container: cooked-directions / inline-size;
     margin: 0 !important; // The builder script sets an inline margin.
     border: 1px solid var(--cooked-color-border);
     border-radius: var(--cooked-radius);
@@ -51,7 +54,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
             background: var(--cooked-color-surface-muted);
         }
 
-        @media screen and (max-width: 782px) {
+        @container cooked-directions (max-width: 760px) {
             grid-template-columns: $step-columns-narrow;
             padding: 10px 4px;
         }
@@ -70,7 +73,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
         }
     }
 
-    // Drag handle, step number and remove button sit on the first line of the text.
+    // Drag handle and step number are centred on the tiles; the remove button is top right.
     .cooked-direction-block i.cooked-icon-drag {
         grid-row: 1;
         grid-column: 1;
@@ -113,13 +116,13 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
         justify-self: end;
         width: 28px;
         height: 28px;
-        margin-top: 42px !important; // Centred on the 112px tiles.
+        margin-top: 0 !important; // Top right of the step.
         padding: 0;
         border-radius: var(--cooked-radius-sm);
         background: none;
         opacity: 0;
 
-        @media screen and (max-width: 782px) {
+        @container cooked-directions (max-width: 760px) {
             grid-column: 5;
         }
         transition: opacity 120ms ease;
@@ -162,7 +165,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
         grid-column: 4;
         padding: 0 !important;
 
-        @media screen and (max-width: 782px) {
+        @container cooked-directions (max-width: 760px) {
             grid-column: 3 / 5;
         }
 
@@ -212,7 +215,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
         gap: 4px;
         padding: 0;
 
-        @media screen and (max-width: 782px) {
+        @container cooked-directions (max-width: 760px) {
             grid-row: 2;
         }
     }
@@ -224,7 +227,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
     .cooked-direction-block > .cooked-direction-video {
         grid-column: 5;
 
-        @media screen and (max-width: 782px) {
+        @container cooked-directions (max-width: 760px) {
             grid-column: 4;
         }
     }
@@ -252,7 +255,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
         white-space: normal;
         text-align: center;
 
-        @media screen and (max-width: 782px) {
+        @container cooked-directions (max-width: 760px) {
             height: 64px;
         }
 
@@ -365,7 +368,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
             grid-column: 4;
         }
 
-        @media screen and (max-width: 600px) {
+        @container cooked-directions (max-width: 560px) {
             grid-template-columns: 18px minmax(0, 1fr) 32px;
 
             .cooked-delete-direction {
@@ -416,7 +419,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
         gap: 6px;
         padding: 0;
 
-        @media screen and (max-width: 600px) {
+        @container cooked-directions (max-width: 560px) {
             grid-row: 2;
             grid-column: 2;
         }

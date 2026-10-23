@@ -86,27 +86,57 @@
     margin: 0 0 12px;
 }
 
-// Screen tabs: a segmented control.
+// Screen tabs: a segmented control like the editor's Visual / Code switch, its thumb sliding
+// to the selected tab.
 .cooked-layout-compare-tabs {
-    display: inline-flex;
-    padding: 3px;
-    border-radius: var(--cooked-radius);
-    background: var(--cooked-color-surface-muted);
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 2px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-border);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        left: 2px;
+        width: calc(50% - 2px);
+        border-radius: 3px;
+        background: var(--cooked-color-surface);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+        transition: transform 250ms cubic-bezier(.22, .61, .36, 1);
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    &:has(button:nth-child(2)[aria-selected="true"])::before {
+        transform: translateX(100%);
+    }
 
     button {
-        padding: 6px 14px;
+        position: relative; // above the thumb
+        min-width: 110px;
+        padding: 4px 14px;
         border: 0;
-        border-radius: var(--cooked-radius-sm);
-        background: none;
+        border-radius: 3px;
+        background: transparent;
         color: var(--cooked-color-text-muted);
         font-size: 13px;
         font-weight: 500;
+        line-height: 1.6;
         cursor: pointer;
+        transition: color 250ms ease;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
 
         &[aria-selected="true"] {
-            background: var(--cooked-color-surface);
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
-            color: var(--cooked-color-text);
+            color: var(--cooked-color-accent-strong);
         }
 
         &:focus-visible {

@@ -376,11 +376,6 @@
             color: var(--cooked-color-text);
         }
 
-        // Allergen tiles.
-        #cooked_allergens .cooked-allergen-checkbox:hover {
-            border-color: #5c636b;
-        }
-
         // Reset and Bulk Add are secondary actions: neutral outline, unlike the green Save as Default.
         #cooked_recipe_settings .cooked-recipe-fields .button.cooked-layout-load-default,
         #cooked_recipe_settings .cooked-builder-buttons .button.cooked-bulk-add-button {

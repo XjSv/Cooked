@@ -763,6 +763,34 @@ var cookedSortableTouchHandler = function(event) {
             });
         }
 
+        // The Cooked Settings box is too wide for the sidebar: refuse drops there, and disable
+        // its "Move up" arrow while it is first in the main column, where that arrow would move
+        // it into the sidebar. A saved sidebar position is also fixed in PHP.
+        var $_CookedSettingsBox = $('#cooked_recipe_settings.postbox');
+        if ($_CookedSettingsBox.length && $('#side-sortables').length) {
+            $('#side-sortables').on('sortreceive', function(e, ui) {
+                if (ui.item.is($_CookedSettingsBox)) {
+                    $(ui.sender).sortable('cancel');
+                }
+            });
+
+            var cooked_lock_settings_box = function() {
+                if ($_CookedSettingsBox.is($('#normal-sortables').children('.postbox:visible').first())) {
+                    $_CookedSettingsBox.find('.handle-order-higher').attr('aria-disabled', 'true');
+                }
+            };
+            // postbox.js recalculates the arrows after every move; reapply after it.
+            if (window.postboxes && typeof window.postboxes.updateOrderButtonsProperties === 'function') {
+                var cooked_update_order_buttons = window.postboxes.updateOrderButtonsProperties;
+                window.postboxes.updateOrderButtonsProperties = function() {
+                    cooked_update_order_buttons.apply(this, arguments);
+                    cooked_lock_settings_box();
+                };
+            }
+            $(document).on('postbox-toggled', cooked_lock_settings_box);
+            cooked_lock_settings_box();
+        }
+
         if ($_CookedIngredientBuilder.length) {
             cooked_reset_ingredient_builder();
 
@@ -806,43 +834,6 @@ var cookedSortableTouchHandler = function(event) {
                 if ( expanded ) {
                     thisParent.find('select[data-ingredient-part="section_heading_element"]').focus();
                 }
-            });
-
-            // Quick add (new layout): "2 cups flour" + Enter becomes a row, parsed like Bulk Add.
-            $('#cooked-recipe-tab-content-ingredients').on('keydown', '.cooked-ingredient-quick-add-input', function(e) {
-                if ( e.key !== 'Enter' ) {
-                    return;
-                }
-                e.preventDefault(); // Not the post form.
-
-                var $input = $(this),
-                    line = $.trim($input.val());
-
-                if ( !line || $input.prop('readonly') ) {
-                    return;
-                }
-
-                var add = function(items) {
-                    // Replace the empty starter row a new recipe opens with.
-                    var $rows = $_CookedIngredientBuilder.children('.cooked-ingredient-block');
-                    if ( $rows.length === 1 && !$rows.hasClass('cooked-ingredient-heading') && !$rows.find('input[type="text"]').filter(function() { return this.value; }).length ) {
-                        $rows.remove();
-                    }
-                    cooked_bulk_add_ingredients_parsed(items);
-                    $input.val('').prop('readonly', false).trigger('focus');
-                };
-
-                $input.prop('readonly', true);
-                $.post(cooked_admin_functions_js_vars.ajax_url, {
-                    action: 'cooked_parse_bulk_ingredients',
-                    nonce: cooked_admin_functions_js_vars.cooked_bulk_add_nonce,
-                    lines: [line]
-                }, function(response) {
-                    var parsed = response.success && response.data && response.data.parsed ? response.data.parsed : null;
-                    add(parsed && parsed.length ? parsed : [{ name: line }]);
-                }).fail(function() {
-                    add([{ name: line }]);
-                });
             });
 
             $_CookedIngredientBuilder.on('keyup change', 'input[data-ingredient-part="sub_amount"], input[data-ingredient-part="sub_name"], select[data-ingredient-part="sub_measurement"]', function(e) {

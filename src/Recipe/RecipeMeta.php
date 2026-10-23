@@ -139,7 +139,33 @@ class RecipeMeta {
 
         if ( in_array( $post_type, $post_types, true ) ) {
             add_meta_box( 'cooked_recipe_settings', __( 'Cooked Settings', 'cooked' ), [ &$this, 'render_recipe_meta_box' ], $post_type, 'normal', 'high' );
+            add_filter( 'get_user_option_meta-box-order_' . $post_type, [ __CLASS__, 'keep_meta_box_in_main_column' ] );
         }
+    }
+
+    /**
+     * Moves the Cooked Settings box out of a saved sidebar position: it is too wide for the
+     * sidebar. The editor script also stops it being dragged or moved there.
+     *
+     * @since 2.0.0
+     * @param array<string, string>|false $order Saved box order, context => comma-separated IDs.
+     * @return array<string, string>|false
+     */
+    public static function keep_meta_box_in_main_column( $order ) {
+        if ( ! is_array( $order ) || empty( $order['side'] ) ) {
+            return $order;
+        }
+
+        $side = explode( ',', $order['side'] );
+        if ( ! in_array( 'cooked_recipe_settings', $side, true ) ) {
+            return $order;
+        }
+
+        $order['side']   = implode( ',', array_diff( $side, [ 'cooked_recipe_settings' ] ) );
+        $normal          = isset( $order['normal'] ) && '' !== $order['normal'] ? explode( ',', $order['normal'] ) : [];
+        $order['normal'] = implode( ',', array_merge( [ 'cooked_recipe_settings' ], $normal ) );
+
+        return $order;
     }
 
     /**
@@ -307,10 +333,10 @@ class RecipeMeta {
         }
         ?>
         <div id="cooked-bulk-add-overlay" class="cooked-bulk-add-overlay" style="display:none;">
-            <div class="cooked-bulk-add-modal">
+            <div class="cooked-bulk-add-modal" role="dialog" aria-modal="true" aria-labelledby="cooked-bulk-add-title">
                 <div class="cooked-bulk-add-header">
                     <h2 id="cooked-bulk-add-title"></h2>
-                    <a href="#" class="cooked-bulk-add-close">&times;</a>
+                    <button type="button" class="cooked-bulk-add-close" aria-label="<?php esc_attr_e( 'Close', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                 </div>
                 <div class="cooked-bulk-add-body">
                     <p class="cooked-bulk-add-help"><?php esc_html_e( 'Enter one item per line. Use the checkboxes below to mark section headings.', 'cooked' ); ?></p>

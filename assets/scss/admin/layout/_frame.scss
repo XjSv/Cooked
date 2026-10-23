@@ -711,10 +711,13 @@ body.cooked-admin-page #wpcontent {
 }
 
 // Thin Cooked-green scrollbar on scrolling areas (modal bodies, the CSV preview table,
-// Tom Select option lists): transparent track, rounded thumb that darkens on hover.
+// Tom Select option lists here and in the recipe editor, the Bulk Add modal): transparent
+// track, rounded thumb that darkens on hover.
 .cooked-modal .components-modal__content,
 .cooked-modal .cooked-modal-scroll-x,
-#cooked-admin-app .ts-dropdown .ts-dropdown-content {
+#cooked-admin-app .ts-dropdown .ts-dropdown-content,
+body.cooked-recipe-editor .ts-dropdown .ts-dropdown-content,
+.cooked-bulk-add-modal .cooked-bulk-add-body {
     overscroll-behavior: contain;
     scroll-behavior: smooth;
 

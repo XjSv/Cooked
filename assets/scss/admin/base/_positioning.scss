@@ -190,12 +190,14 @@
     width: 65px;
 }
 
-#cooked_recipe_settings .recipe-setting-block input[type="text"],
+// Not Tom Select's search box (.ts-control > input): it shares a line with the selected value
+// and Tom Select hides and sizes it itself.
+#cooked_recipe_settings .recipe-setting-block input[type="text"]:not(.ts-control > input),
 #cooked_recipe_settings .recipe-setting-block input[type="password"] {
     width: 75%;
 }
 
-#cooked_recipe_settings .recipe-setting-block input[type="text"],
+#cooked_recipe_settings .recipe-setting-block input[type="text"]:not(.ts-control > input),
 #cooked_recipe_settings .recipe-setting-block input[type="password"],
 #cooked_recipe_settings .recipe-setting-block input[type="number"] {
     margin: 0 6px 5px 0;

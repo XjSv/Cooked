@@ -366,9 +366,10 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
             margin-top: 0 !important;
         }
 
+        // Same right edge as the steps' remove button, centred on the heading's line.
         .cooked-delete-direction {
-            position: static !important;
-            justify-self: end;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         .cooked-delete-direction {

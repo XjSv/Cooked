@@ -14,7 +14,9 @@ window.cookedEnhanceSelects = function(selector) {
             allowEmptyOption: true,
             maxOptions: null
         };
-        if (select.tomselect || select.multiple) {
+        // Templates are cloned for new rows: enhance the clones, not the template (a cloned
+        // Tom Select is a dead copy with the same IDs).
+        if (select.tomselect || select.multiple || select.closest('.cooked-template')) {
             return;
         }
         if (select.options.length <= 8) {
@@ -1066,7 +1068,9 @@ var cookedSortableTouchHandler = function(event) {
                     var media_attachment = direction_video_frame.state().get('selection').first().toJSON();
 
                     var $videoBlock = $('.direction-video-button[data-id="' + directionID + '"]').closest('.cooked-direction-video');
-                    $videoBlock.find('.cooked-direction-video-preview').attr('src', media_attachment.url);
+                    // #t=0.1: browsers then paint a frame, not just load metadata. Clear any
+                    // inline display:none from older markup so the stylesheet can show it.
+                    $videoBlock.find('.cooked-direction-video-preview').attr('src', media_attachment.url + '#t=0.1').css('display', '');
                     $videoBlock.find('input[data-direction-part="video"]').val( media_attachment.id );
                     $videoBlock.addClass('cooked-has-video');
                     $('.direction-video-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_video_change );

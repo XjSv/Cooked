@@ -583,9 +583,9 @@ endif;
                                     <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][video]" value="<?php echo ! empty( $value['video'] ) ? esc_attr( $value['video'] ) : ''; ?>" />
                                     <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-video-button" value="<?php echo ! empty( $value['video'] ) ? esc_html__( 'Change Video', 'cooked' ) : esc_html__( 'Add Video', 'cooked' ); ?>" />
                                     <?php if ( ! empty( $value['video'] ) ) : ?>
-                                        <video class="cooked-direction-video-preview" src="<?php echo esc_url( wp_get_attachment_url( $value['video'] ) ); ?>" preload="metadata" playsinline></video>
+                                        <video class="cooked-direction-video-preview" src="<?php echo esc_url( wp_get_attachment_url( $value['video'] ) . '#t=0.1' ); ?>" preload="metadata" playsinline></video>
                                     <?php else : ?>
-                                        <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
+                                        <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline></video>
                                     <?php endif; ?>
                                     <div class="cooked-direction-video-placeholder"></div>
                                     <button type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
@@ -669,7 +669,7 @@ endif;
                         <div class="cooked-direction-video">
                             <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $random_key ); ?>][video]" value="" />
                             <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-video-button" value="<?php esc_attr_e( 'Add Video', 'cooked' ); ?>" />
-                            <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
+                            <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline></video>
                             <div class="cooked-direction-video-placeholder"></div>
                             <button type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                         </div>
@@ -707,7 +707,7 @@ endif;
                     <div class="cooked-direction-video">
                         <input data-direction-part="video" type="hidden" name="" value="" />
                         <input data-direction-part="video_button" type="button" data-id="" class="button direction-video-button" value="<?php esc_attr_e( 'Add Video', 'cooked' ); ?>" />
-                        <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
+                        <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline></video>
                         <div class="cooked-direction-video-placeholder"></div>
                         <button type="button" data-id="" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                     </div>

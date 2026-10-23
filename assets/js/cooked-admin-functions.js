@@ -927,20 +927,6 @@ var cookedSortableTouchHandler = function(event) {
                 }
             });
 
-            if ($('body').hasClass('cooked-recipe-editor')) {
-                $_CookedDirectionBuilder.on('input', 'textarea[data-direction-part="content"]', function() {
-                    cooked_autosize_direction(this);
-                });
-                // The tab is hidden on load (scrollHeight 0): size the steps when it opens.
-                $('#cooked-recipe-tab-directions').on('click', function() {
-                    window.setTimeout(function() {
-                        $_CookedDirectionBuilder.find('textarea[data-direction-part="content"]').each(function() {
-                            cooked_autosize_direction(this);
-                        });
-                    }, 0);
-                });
-            }
-
             $_CookedDirectionBuilder.parent().on('click', '.cooked-add-direction-button', function(e) {
                 e.preventDefault();
                 var clonedDirectionTemplate = $_CookedDirectionBuilder.parent().find('.cooked-direction-template').clone().removeClass('cooked-template cooked-direction-template').addClass('cooked-direction-block');
@@ -984,7 +970,7 @@ var cookedSortableTouchHandler = function(event) {
                 $parent.removeClass('cooked-has-image');
                 $parent.find('img').attr('src', '').removeAttr('srcset').removeAttr('sizes');
                 $parent.find('input[data-direction-part="image"]').val('');
-                cooked_set_media_button_label($parent.find('.direction-image-button'), cooked_admin_functions_js_vars.i18n_image_title);
+                $parent.find('.direction-image-button').prop('value', cooked_admin_functions_js_vars.i18n_image_title);
                 cooked_reset_direction_builder();
             });
 
@@ -994,7 +980,7 @@ var cookedSortableTouchHandler = function(event) {
                 $parent.removeClass('cooked-has-video');
                 $parent.find('.cooked-direction-video-preview').attr('src', '');
                 $parent.find('input[data-direction-part="video"]').val('');
-                cooked_set_media_button_label($parent.find('.direction-video-button'), cooked_admin_functions_js_vars.i18n_video_title);
+                $parent.find('.direction-video-button').prop('value', cooked_admin_functions_js_vars.i18n_video_title);
                 cooked_reset_direction_builder();
             });
 
@@ -1042,7 +1028,7 @@ var cookedSortableTouchHandler = function(event) {
                         .removeAttr('sizes')
                         .parent().addClass('cooked-has-image');
                     $('input[name="_recipe_settings[directions][' + directionID + '][image]"]').val( media_attachment.id );
-                    cooked_set_media_button_label($('.direction-image-button[data-id="' + directionID + '"]'), cooked_admin_functions_js_vars.i18n_image_change);
+                    $('.direction-image-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_image_change );
                 });
 
                 // Opens the media library frame.
@@ -1083,7 +1069,7 @@ var cookedSortableTouchHandler = function(event) {
                     $videoBlock.find('.cooked-direction-video-preview').attr('src', media_attachment.url);
                     $videoBlock.find('input[data-direction-part="video"]').val( media_attachment.id );
                     $videoBlock.addClass('cooked-has-video');
-                    cooked_set_media_button_label($('.direction-video-button[data-id="' + directionID + '"]'), cooked_admin_functions_js_vars.i18n_video_change);
+                    $('.direction-video-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_video_change );
                 });
 
                 // Opens the media library frame.
@@ -1193,7 +1179,7 @@ var cookedSortableTouchHandler = function(event) {
                 if ( directionID ) {
                     $('#direction-'+directionID+'-image-src').parent().removeClass('cooked-has-image').prop('src',false);
                        $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val('');
-                    cooked_set_media_button_label($('.direction-image-button[data-id="' + directionID + '"]'), cooked_admin_functions_js_vars.i18n_image_title);
+                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value',cooked_admin_functions_js_vars.i18n_image_title );
                 } else {
                     thisButton.parent().remove();
                 }
@@ -1518,31 +1504,6 @@ function cooked_reset_ingredient_builder() {
 }
 
 // Reset Time Picker Settings & Names
-/** Sets a direction image/video button's label (and its tooltip, for the new layout's icon buttons). */
-function cooked_set_media_button_label($button, text) {
-    $button.find('.cooked-media-button-label').text(text);
-    $button.attr('title', text);
-}
-
-/** New layout: a step's textarea grows with its text instead of scrolling. */
-function cooked_autosize_direction(textarea) {
-    if (!textarea.offsetWidth) {
-        return; // Hidden tab: measured when it opens.
-    }
-    textarea.style.height = 'auto';
-    textarea.style.height = textarea.scrollHeight + 2 + 'px';
-}
-
-// Re-measure when a step's width changes (window resize, a thumbnail added beside it).
-var cooked_direction_resize_observer = window.ResizeObserver ? new ResizeObserver(function(entries) {
-    entries.forEach(function(entry) {
-        if (entry.target.dataset.cookedWidth !== String(entry.contentRect.width)) {
-            entry.target.dataset.cookedWidth = entry.contentRect.width;
-            cooked_autosize_direction(entry.target);
-        }
-    });
-}) : null;
-
 function cooked_reset_direction_builder() {
     var directionBlocks = jQuery('.cooked-direction-block'),
         total_blocks = 0;
@@ -1608,21 +1569,9 @@ function cooked_reset_direction_builder() {
         jQuery('#cooked-directions-builder').css( { 'margin-bottom': '12px' } );
     }
 
-    // New layout: Tom Select on the section headings' element selects (new ones included),
-    // tooltips on the icon-only media buttons, and steps sized to their text.
-    if (jQuery('body').hasClass('cooked-recipe-editor')) {
-        if (window.cookedEnhanceSelects) {
-            window.cookedEnhanceSelects('#cooked-directions-builder select');
-        }
-        jQuery('#cooked-directions-builder .direction-image-button, #cooked-directions-builder .direction-video-button').each(function() {
-            jQuery(this).attr('title', jQuery(this).find('.cooked-media-button-label').text());
-        });
-        jQuery('#cooked-directions-builder textarea[data-direction-part="content"]').each(function() {
-            cooked_autosize_direction(this);
-            if (cooked_direction_resize_observer) {
-                cooked_direction_resize_observer.observe(this);
-            }
-        });
+    // New layout: Tom Select on the section headings' element selects (new ones included).
+    if (jQuery('body').hasClass('cooked-recipe-editor') && window.cookedEnhanceSelects) {
+        window.cookedEnhanceSelects('#cooked-directions-builder select');
     }
 }
 

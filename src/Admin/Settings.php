@@ -1164,7 +1164,7 @@ class Settings {
 			echo '<img class="cooked-settings-image-preview-img" id="' . esc_attr( $preview_id ) . '" src="" alt="" />';
 		}
 
-            echo '<a href="#" class="cooked-settings-image-remove"><i class="cooked-icon cooked-icon-times"></i></a>';
+            echo '<button type="button" class="cooked-settings-image-remove"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i><span class="screen-reader-text">' . esc_html__( 'Remove image', 'cooked' ) . '</span></button>';
         echo '</div>';
     }
 

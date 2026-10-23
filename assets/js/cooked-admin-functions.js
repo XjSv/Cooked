@@ -146,32 +146,7 @@ var cookedSortableTouchHandler = function(event) {
                             let fieldID = textarea.attr('id');
 
                             wp.editor.remove(fieldID);
-                            wp.editor.initialize(fieldID, {
-                                tinymce: {
-                                    wpautop: false,
-                                    toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,wp_link_advanced,unlink,fullscreen',
-                                    toolbar2: '',
-                                    toolbar3: '',
-                                    toolbar4: '',
-                                    height: 100,
-                                    textarea_name: textareaName,
-                                    plugins: 'link lists fullscreen wordpress wplink',
-                                    setup: function(editor) {
-                                        // @TODO: Inline Link editor does not work.
-                                        // editor.on('init', function() {
-                                        //     if (typeof wpLink !== 'undefined') {
-                                        //         editor.addCommand('WP_Link', function() {
-                                        //             window.wpActiveEditor = editor.id;
-                                        //             wpLink.open(editor.id);
-                                        //             return false;
-                                        //         });
-                                        //     }
-                                        // });
-                                    }
-                                },
-                                quicktags: true,
-                                mediaButtons: false
-                            });
+                            wp.editor.initialize(fieldID, cooked_direction_editor_settings(textareaName));
                         }
                     }
                 });
@@ -679,7 +654,8 @@ var cookedSortableTouchHandler = function(event) {
                 }
             });
 
-            if ( CookedSettingsTabHash ) {
+            // A hash with no matching tab (e.g. a link from the new layout) opens the default tab.
+            if ( CookedSettingsTabHash && $_CookedSettingsTabs.find('a[href="'+CookedSettingsTabHash+'"]').length ) {
                 var activeTab = CookedSettingsTabHash;
                 activeTab = activeTab.split('#');
                 activeTab = activeTab[1];
@@ -690,14 +666,14 @@ var cookedSortableTouchHandler = function(event) {
                 } else {
                     $_CookedRecipeSettingsSubmit.show();
                 }
-                $('.cooked-settings-tab-content').hide();
-                $('#cooked-settings-tab-content-'+activeTab).show();
+                $_CookedSettingsPanel.find('.cooked-settings-tab-content').hide();
+                $_CookedSettingsPanel.find('#cooked-settings-tab-content-'+activeTab).show();
             } else {
                 var activeTab = $_CookedSettingsTabs.find('.active > a').attr('href');
                 activeTab = activeTab.split('#');
                 activeTab = activeTab[1];
-                $('.cooked-settings-tab-content').hide();
-                $('#cooked-settings-tab-content-'+activeTab).show();
+                $_CookedSettingsPanel.find('.cooked-settings-tab-content').hide();
+                $_CookedSettingsPanel.find('#cooked-settings-tab-content-'+activeTab).show();
             }
 
             $_CookedSettingsTab.on('click',function(e) {
@@ -716,8 +692,8 @@ var cookedSortableTouchHandler = function(event) {
                     $_CookedRecipeSettingsSubmit.show();
                 }
 
-                $('.cooked-settings-tab-content').hide();
-                $('#cooked-settings-tab-content-'+activeTab).show();
+                $_CookedSettingsPanel.find('.cooked-settings-tab-content').hide();
+                $_CookedSettingsPanel.find('#cooked-settings-tab-content-'+activeTab).show();
 
                 if ( $('#cooked-settings-panel').hasClass('stuck') ) {
                     window.scrollTo(0,130);
@@ -1450,32 +1426,7 @@ function cooked_reset_direction_builder() {
 
                 if (directionPartName === 'content' && thisField.is('textarea') && canInitializeWpEditor) {
                     // Init the WordPress Editor.
-                    wp.editor.initialize(fieldID, {
-                        tinymce: {
-                            wpautop: false,
-                            toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,wp_link_advanced,unlink,fullscreen',
-                            toolbar2: '',
-                            toolbar3: '',
-                            toolbar4: '',
-                            height: 100,
-                            textarea_name: '_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']',
-                            plugins: 'link lists fullscreen wordpress wplink',
-                            setup: function(editor) {
-                                // @TODO: Inline Link editor does not work.
-                                // editor.on('init', function() {
-                                //     if (typeof wpLink !== 'undefined') {
-                                //         editor.addCommand('WP_Link', function() {
-                                //             window.wpActiveEditor = editor.id;
-                                //             wpLink.open(editor.id);
-                                //             return false;
-                                //         });
-                                //     }
-                                // });
-                            }
-                        },
-                        quicktags: true,
-                        mediaButtons: false
-                    });
+                    wp.editor.initialize(fieldID, cooked_direction_editor_settings('_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']'));
                 }
             }
         });
@@ -1517,6 +1468,30 @@ function cooked_is_int(val) {
 }
 
 // Cooked Conditional Fields Function
+/**
+ * wp.editor settings for a direction's content: the same toolbar as the "teeny" wp_editor()
+ * the server renders for directions, so links use WordPress's inline link editor (wplink).
+ *
+ * @param {string} textareaName Field name for the editor's textarea.
+ * @return {Object}
+ */
+function cooked_direction_editor_settings(textareaName) {
+    return {
+        tinymce: {
+            wpautop: false,
+            toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,unlink,fullscreen',
+            toolbar2: '',
+            toolbar3: '',
+            toolbar4: '',
+            height: 100,
+            textarea_name: textareaName,
+            plugins: 'lists fullscreen wordpress wplink'
+        },
+        quicktags: true,
+        mediaButtons: false
+    };
+}
+
 function cooked_init_conditional_field(thisID) {
     var thisField = jQuery('#' + thisID);
 

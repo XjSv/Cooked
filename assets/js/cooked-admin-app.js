@@ -312,7 +312,7 @@
             var section = content.id.replace( 'cooked-settings-tab-content-', '' );
             Array.prototype.forEach.call( content.querySelectorAll( '.recipe-setting-block' ), function ( block ) {
                 var title = block.querySelector( 'h3.cooked-settings-title' ),
-                    desc = block.querySelector( 'h3.cooked-settings-title + p' ),
+                    desc = block.querySelector( '.cooked-settings-desc' ),
                     labels = Array.prototype.map.call( block.querySelectorAll( 'label' ), function ( label ) {
                         return label.textContent.trim();
                     } ).filter( Boolean );

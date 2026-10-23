@@ -1,42 +1,49 @@
 /* Settings Columns */
-#cooked_recipe_settings .cooked-setting-column-14 {
+// Shared by the recipe editor and the classic Settings layout. The columns are direct
+// children of a .cooked-clearfix, so that container becomes a 12-column grid instead of
+// relying on floats and percentage widths.
+#cooked_recipe_settings .cooked-clearfix:has(> [class*="cooked-setting-column-"]) {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
+}
+
+// Clearfix pseudos would become grid items.
+#cooked_recipe_settings .cooked-clearfix:has(> [class*="cooked-setting-column-"])::after {
+    content: none;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14,
+#cooked_recipe_settings .cooked-setting-column-13,
+#cooked_recipe_settings .cooked-setting-column-23,
+#cooked_recipe_settings .cooked-setting-column-12 {
     position: relative;
-    width: 25%;
-    float: left;
-    padding-right: 20px;
-    box-sizing: border-box;
+    min-width: 0;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14 {
+    grid-column: span 3;
 }
 
 #cooked_recipe_settings .cooked-setting-column-13 {
-    position: relative;
-    width: 33%;
-    float: left;
-    padding-right: 20px;
-    box-sizing: border-box;
+    grid-column: span 4;
 }
 
 #cooked_recipe_settings .cooked-setting-column-23 {
-    position: relative;
-    width: 66%;
-    float: left;
-    padding-right: 20px;
-    box-sizing: border-box;
+    grid-column: span 8;
 }
 
 #cooked_recipe_settings .cooked-setting-column-12 {
-    position: relative;
-    width: 50%;
-    float: left;
-    padding-right: 20px;
-    box-sizing: border-box;
+    grid-column: span 6;
 }
 
-#cooked_recipe_settings .cooked-setting-column-14 input[type="text"],
-#cooked_recipe_settings .cooked-setting-column-13 input[type="text"],
-#cooked_recipe_settings .cooked-setting-column-23 input[type="text"],
-#cooked_recipe_settings .cooked-setting-column-12 input[type="text"],
+#cooked_recipe_settings .cooked-setting-column-14 input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .cooked-setting-column-13 input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .cooked-setting-column-23 input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .cooked-setting-column-12 input[type="text"]:not(.ts-control > input),
 #cooked_recipe_settings .recipe-setting-block input[type="text"].cooked-shortcode-field {
-    width: 95%;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 #cooked_recipe_settings .cooked-setting-column-14 select,
@@ -45,12 +52,277 @@
 #cooked_recipe_settings .cooked-setting-column-12 select,
 #cooked_recipe_settings .cooked-setting-column-14 .cooked-select-wrapper,
 #cooked_recipe_settings .cooked-setting-column-13 .cooked-select-wrapper,
-#cooked_recipe_settings .cooked-setting-column-12 .cooked-select-wrapper {
+#cooked_recipe_settings .cooked-setting-column-23 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-12 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-14 .ts-wrapper,
+#cooked_recipe_settings .cooked-setting-column-13 .ts-wrapper,
+#cooked_recipe_settings .cooked-setting-column-23 .ts-wrapper,
+#cooked_recipe_settings .cooked-setting-column-12 .ts-wrapper {
     width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
-#cooked_recipe_settings .cooked-setting-column-14.cooked-tb-col {
-    padding: 0;
+// Tablet: the four time fields keep two per row; wider columns stack.
+@media screen and (max-width: 782px) {
+    #cooked_recipe_settings .cooked-setting-column-13,
+    #cooked_recipe_settings .cooked-setting-column-23,
+    #cooked_recipe_settings .cooked-setting-column-12 {
+        grid-column: 1 / -1;
+    }
+
+    #cooked_recipe_settings .cooked-setting-column-14 {
+        grid-column: span 6;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #cooked_recipe_settings .cooked-setting-column-14 {
+        grid-column: 1 / -1;
+    }
+}
+
+// The normalised Settings rows (templates/admin/frame/settings.php) are also used by the
+// classic layout, where they have no frame wrapper. The description reads as the paragraph
+// it replaced.
+#cooked_recipe_settings .cooked-settings-desc {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+}
+
+// In the frame, each setting is a row: heading and description on the left, control on the
+// right. Long or grouped fields (.is-stacked) keep the full width for their control.
+.cooked-admin-screen[data-screen="cooked_settings"] #cooked_recipe_settings {
+
+    .cooked-settings-notices {
+        margin: 0 0 8px;
+
+        &:empty {
+            display: none;
+        }
+
+        .notice {
+            margin: 0 0 16px;
+        }
+    }
+
+    .cooked-setting-row {
+        margin: 0;
+        padding: 18px 0;
+
+        & + .cooked-setting-row {
+            border-top: 1px solid var(--cooked-color-border);
+        }
+
+        @media screen and (max-width: 782px) {
+            padding: 16px 0;
+        }
+    }
+
+    .cooked-setting-row-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 0.9fr);
+        align-items: start;
+        gap: 8px 40px;
+
+        @media screen and (max-width: 782px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .cooked-setting-row.is-stacked .cooked-setting-row-inner {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 12px;
+    }
+
+    .cooked-setting-head {
+        min-width: 0;
+    }
+
+    .cooked-setting-row .cooked-setting-head .cooked-settings-title {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .cooked-setting-row .cooked-setting-head .cooked-settings-desc {
+        margin: 4px 0 0;
+        color: var(--cooked-color-text-muted);
+        font-size: 13px;
+        line-height: 1.5;
+
+        p {
+            margin: 0 0 8px;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        ul {
+            margin: 6px 0 8px;
+            padding-left: 18px;
+            list-style: disc;
+        }
+
+        li {
+            margin: 2px 0;
+            font-size: inherit;
+            line-height: inherit;
+        }
+    }
+
+    .cooked-setting-control {
+        min-width: 0;
+
+        > p {
+            margin: 0;
+        }
+
+        // Not Tom Select's search box, which shares the line with the selected value.
+        input[type="text"]:not(.ts-control > input),
+        input[type="password"] {
+            width: 100%;
+            max-width: 420px;
+            margin-right: 0;
+            box-sizing: border-box;
+        }
+
+        input[type="text"].cooked-small-textfield,
+        input[type="password"].cooked-small-textfield {
+            width: 150px;
+        }
+
+        input[type="text"].cooked-color-field {
+            width: 7rem;
+        }
+
+        select,
+        .cooked-select-wrapper {
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+        }
+
+        .cooked-select-wrapper {
+            display: block;
+            margin: 0;
+
+            select,
+            .ts-wrapper {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        .cooked-option-list {
+            margin: 0;
+        }
+
+        // Image field: thumbnail, then Change Image and Remove beside it.
+        .cooked-settings-image-field {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+            max-width: none;
+            margin: 0;
+
+            .cooked-settings-image-preview-img {
+                order: -1;
+                width: 96px;
+                height: 96px;
+                margin: 0;
+                object-fit: cover;
+                border: 1px solid var(--cooked-color-border);
+                border-radius: var(--cooked-radius-sm);
+            }
+
+            .cooked-settings-image-remove {
+                position: static;
+                padding: 8px;
+                background: none;
+                color: var(--cooked-color-text-muted);
+                border-radius: var(--cooked-radius-sm);
+
+                &:hover,
+                &:focus-visible {
+                    background: none;
+                    color: #b32d2e;
+                }
+            }
+        }
+
+        // Permalinks: base URL, slug and example ending read as one joined URL field. On phones
+        // the base URL takes its own line above the slug.
+        .cooked-permalink-field-wrapper {
+            display: flex;
+            align-items: stretch;
+            max-width: 720px;
+            border: 1px solid #8c8f94;
+            border-radius: var(--cooked-radius-sm);
+            background: var(--cooked-color-surface);
+            overflow: hidden;
+
+            &:focus-within {
+                border-color: var(--cooked-color-accent-strong);
+                box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+            }
+
+            span {
+                display: flex;
+                align-items: center;
+                padding: 0 10px;
+                background: var(--cooked-color-surface-muted);
+                color: var(--cooked-color-text-muted);
+                font-size: 13px;
+                line-height: 1.4;
+                white-space: nowrap;
+            }
+
+            span:first-child {
+                min-width: 0;
+                flex: 0 1 auto;
+                overflow-wrap: anywhere;
+                white-space: normal;
+                border-right: 1px solid var(--cooked-color-border);
+            }
+
+            span:last-child {
+                border-left: 1px solid var(--cooked-color-border);
+            }
+
+            input[type="text"].cooked-permalink-field {
+                flex: 1 1 140px;
+                width: auto;
+                min-width: 0;
+                max-width: none;
+                min-height: 38px;
+                margin: 0;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+                outline: 0;
+                background: transparent;
+            }
+
+            @media screen and (max-width: 600px) {
+                flex-wrap: wrap;
+
+                span:first-child {
+                    flex: 1 1 100%;
+                    padding: 6px 10px;
+                    border-right: 0;
+                    border-bottom: 1px solid var(--cooked-color-border);
+                }
+            }
+        }
+    }
 }
 
 #cooked-welcome-screen {

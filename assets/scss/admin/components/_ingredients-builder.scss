@@ -206,8 +206,12 @@
     width: 100%;
 }
 
+// Collapsed rather than display: none. WordPress positions the inline link toolbar from the
+// status bar's top edge; a hidden status bar measures as 0 and the toolbar never shows.
 #cooked-directions-builder .cooked-direction-block .mce-statusbar {
-    display: none;
+    height: 0;
+    overflow: hidden;
+    border: 0;
 }
 
 #cooked-directions-builder .cooked-direction-block > .cooked-direction-image {

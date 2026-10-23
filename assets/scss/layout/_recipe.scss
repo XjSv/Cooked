@@ -1,6 +1,5 @@
-/* Recipe Image */
+/* Recipe Image (no max-width: the theme's content width applies, as for the text) */
 .cooked-post-featured-image {
-    max-width: 100%;
     height: auto;
     border: none;
     display: block;
@@ -12,6 +11,7 @@ body .cooked-post-featured-image img {
     display: block;
     width: 100%;
     height: auto;
+    border-radius: 12px;
 }
 
 /* Ingredients */

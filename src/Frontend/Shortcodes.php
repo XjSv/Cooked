@@ -576,7 +576,6 @@ class Shortcodes {
         $autoplay        = ( 'true' === $autoplay ? 5000 : ( ctype_digit( $autoplay ) ? (int) $autoplay : 0 ) );
 
         $styles = [
-            'max-width:' . $width,
             '--cooked-gallery-ratio:' . $ratio,
             '--cooked-gallery-fit:' . $fit,
             '--cooked-gallery-thumb-width:' . absint( $option( 'thumbwidth', '75' ) ) . 'px',
@@ -584,6 +583,11 @@ class Shortcodes {
             '--cooked-gallery-thumb-margin:' . absint( $option( 'thumbmargin', '10' ) ) . 'px',
             '--cooked-gallery-thumb-border:' . absint( $option( 'thumbborderwidth', '5' ) ) . 'px',
         ];
+        // Only a width the shortcode asks for: an inline max-width: 100% would override the
+        // theme's content width (block themes) and stretch the gallery across the page.
+        if ( '100%' !== $width ) {
+            array_unshift( $styles, 'max-width:' . $width );
+        }
 
         $slides = [];
 

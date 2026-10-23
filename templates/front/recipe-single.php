@@ -31,7 +31,9 @@ echo '<article class="' . esc_attr( implode( ' ', $recipe_classes ) ) . ' cooked
 
     do_action( 'cooked_recipe_grid_before_image', $recipe );
 
-    echo has_post_thumbnail( $recipe['id'] ) ? '<a href="' . esc_url( get_permalink( $recipe['id'] ) ) . '" class="cooked-recipe-card-image" style="background-image:url(' . esc_url( get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) ) . ');"></a>' : '<span class="cooked-recipe-image-empty"></span>';
+    // The image link repeats the title link below: hidden from screen readers and the tab order
+    // (it has no text of its own, so it would be an unnamed link).
+    echo has_post_thumbnail( $recipe['id'] ) ? '<a href="' . esc_url( get_permalink( $recipe['id'] ) ) . '" class="cooked-recipe-card-image" style="background-image:url(' . esc_url( get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) ) . ');" aria-hidden="true" tabindex="-1"></a>' : '<span class="cooked-recipe-image-empty"></span>';
 
     do_action( 'cooked_recipe_grid_after_image', $recipe );
 

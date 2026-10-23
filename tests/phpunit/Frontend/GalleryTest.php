@@ -94,7 +94,9 @@ class GalleryTest extends FilterTestCase {
         $this->assertStringNotContainsString( 'expression(', $html );
         $this->assertStringContainsString( 'data-nav="false"', $html );
         $this->assertStringNotContainsString( 'cooked-gallery-nav', $html );
-        $this->assertStringContainsString( 'max-width:100%', $html );
+        // An invalid width falls back to the default, which sets no max-width (the theme's
+        // content width applies).
+        $this->assertStringNotContainsString( 'max-width', $html );
         $this->assertStringContainsString( '--cooked-gallery-ratio:4 / 3', $html );
         $this->assertStringContainsString( '--cooked-gallery-fit:scale-down', $html );
     }
@@ -110,5 +112,10 @@ class GalleryTest extends FilterTestCase {
         $GLOBALS['recipe_settings']['gallery']['items']     = [];
 
         $this->assertSame( '', $this->shortcodes->cooked_gallery_shortcode( [] ) );
+    }
+
+    public function test_a_custom_width_sets_max_width() {
+        $html = $this->shortcodes->cooked_gallery_shortcode( [ 'width' => '600' ] );
+        $this->assertStringContainsString( 'max-width:600px', $html );
     }
 }

@@ -1619,9 +1619,3 @@ parameters:
 			identifier: argument.type
 			count: 16
 			path: src/functions.php
-
-		-
-			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/functions.php

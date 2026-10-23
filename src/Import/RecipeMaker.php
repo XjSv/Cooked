@@ -133,8 +133,7 @@ class RecipeMaker {
         $recipeIngredients                 = is_array( $recipeIngredients ) ? $recipeIngredients : [];
         $new_cp_recipe_meta['ingredients'] = [];
 
-        $measurements     = \Cooked_Measurements::get();
-        $measurement_keys = array_keys( $measurements );
+        $measurements = \Cooked_Measurements::get();
 
         if ( ! empty( $recipeIngredients ) ) {
             foreach ( $recipeIngredients as $section ) {
@@ -148,10 +147,18 @@ class RecipeMaker {
                 // Process ingredients in this section.
                 if ( isset( $section['ingredients'] ) && ! empty( $section['ingredients'] ) ) {
                     foreach ( $section['ingredients'] as $ingredient ) {
+                        // WP Recipe Maker units are free text ("cups", "tbsp."): map them to Cooked's.
+                        $parts = \Cooked_Measurements::import_ingredient_parts(
+                            ! empty( $ingredient['amount'] ) ? $ingredient['amount'] : '',
+                            ! empty( $ingredient['unit'] ) ? $ingredient['unit'] : '',
+                            ! empty( $ingredient['name'] ) ? $ingredient['name'] : '',
+                            $measurements
+                        );
+
                         $new_cp_recipe_meta['ingredients'][] = [
-                            'amount'          => ( ! empty( $ingredient['amount'] ) ? $ingredient['amount'] : '' ),
-                            'measurement'     => ( ! empty( $ingredient['unit'] ) && in_array( $ingredient['unit'], $measurement_keys, true ) ? $ingredient['unit'] : '' ),
-                            'name'            => ( ! empty( $ingredient['name'] ) ? $ingredient['name'] : '' ),
+                            'amount'          => $parts['amount'],
+                            'measurement'     => $parts['measurement'],
+                            'name'            => $parts['name'],
                             'url'             => '',
                             'description'     => ( ! empty( $ingredient['notes'] ) ? $ingredient['notes'] : '' ),
                             'sub_amount'      => '',

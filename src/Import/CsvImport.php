@@ -537,68 +537,14 @@ class CsvImport {
     }
 
     /**
-     * Match a measurement string to a measurement key.
-     * Checks exact key match, variations, singular, and plural forms.
+     * Match a measurement string to a measurement key (see Measurements::match()).
      *
      * @param string $measurement_string The measurement string from CSV.
      * @param array  $measurements Full measurements array.
      * @return string|false The measurement key or false if not found
      */
     private static function match_measurement( $measurement_string, $measurements ) {
-        $measurement_string = strtolower( trim( $measurement_string ) );
-
-        /**
-         * First, check for exact key match
-         */
-        if ( isset( $measurements[ $measurement_string ] ) ) {
-            return $measurement_string;
-        }
-
-        /**
-         * Check variations, singular, and plural for each measurement
-         */
-        foreach ( $measurements as $key => $measurement_data ) {
-            /**
-             * Check variations
-             */
-            if ( isset( $measurement_data['variations'] ) && is_array( $measurement_data['variations'] ) ) {
-                foreach ( $measurement_data['variations'] as $variation ) {
-                    if ( strtolower( $variation ) === $measurement_string ) {
-                        return $key;
-                    }
-                }
-            }
-
-            /**
-             * Check singular
-             */
-            if ( isset( $measurement_data['singular'] ) && strtolower( $measurement_data['singular'] ) === $measurement_string ) {
-                return $key;
-            }
-
-            /**
-             * Check plural
-             */
-            if ( isset( $measurement_data['plural'] ) && strtolower( $measurement_data['plural'] ) === $measurement_string ) {
-                return $key;
-            }
-
-            /**
-             * Check singular abbreviation
-             */
-            if ( isset( $measurement_data['singular_abbr'] ) && strtolower( $measurement_data['singular_abbr'] ) === $measurement_string ) {
-                return $key;
-            }
-
-            /**
-             * Check plural abbreviation
-             */
-            if ( isset( $measurement_data['plural_abbr'] ) && strtolower( $measurement_data['plural_abbr'] ) === $measurement_string ) {
-                return $key;
-            }
-        }
-
-        return false;
+        return \Cooked_Measurements::match( $measurement_string, $measurements );
     }
 
     /**

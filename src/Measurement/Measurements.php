@@ -26,6 +26,75 @@ use NXP\MathExecutor;
 class Measurements {
 
     /**
+     * Matches a unit as written ("cups", "Tbsp.", "teaspoon") to a measurement key.
+     *
+     * Checks the key, its variations, singular and plural names and abbreviations, ignoring
+     * case and a trailing full stop. Importers use it to map other plugins' free-text units.
+     *
+     * @since 2.0.0
+     * @param string                                   $unit         Unit as written.
+     * @param array<string, array<string, mixed>>|null $measurements Measurements (default: get()).
+     * @return string|false Measurement key, or false when nothing matches.
+     */
+    public static function match( $unit, $measurements = null ) {
+        $unit = strtolower( trim( (string) $unit ) );
+        $unit = rtrim( $unit, '.' );
+        if ( '' === $unit ) {
+            return false;
+        }
+
+        $measurements = null === $measurements ? self::get() : $measurements;
+
+        if ( isset( $measurements[ $unit ] ) ) {
+            return $unit;
+        }
+
+        foreach ( $measurements as $key => $measurement ) {
+            $names = isset( $measurement['variations'] ) && is_array( $measurement['variations'] ) ? $measurement['variations'] : [];
+            foreach ( [ 'singular', 'plural', 'singular_abbr', 'plural_abbr' ] as $field ) {
+                if ( isset( $measurement[ $field ] ) ) {
+                    $names[] = $measurement[ $field ];
+                }
+            }
+            foreach ( $names as $name ) {
+                if ( strtolower( rtrim( (string) $name, '.' ) ) === $unit ) {
+                    return $key;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Maps an imported ingredient's amount, unit and name to Cooked's fields. A unit Cooked
+     * does not know ("large", "cloves", "can") stays as words at the start of the name, so
+     * "1 large egg" still reads that way instead of losing the word.
+     *
+     * @since 2.0.0
+     * @param string                                   $amount       Amount as written.
+     * @param string                                   $unit         Unit as written.
+     * @param string                                   $name         Ingredient name.
+     * @param array<string, array<string, mixed>>|null $measurements Measurements (default: get()).
+     * @return array{amount: string, measurement: string, name: string}
+     */
+    public static function import_ingredient_parts( $amount, $unit, $name, $measurements = null ) {
+        $unit = trim( (string) $unit );
+        $name = trim( (string) $name );
+        $key  = self::match( $unit, $measurements );
+
+        if ( ! $key && '' !== $unit ) {
+            $name = trim( $unit . ' ' . $name );
+        }
+
+        return [
+            'amount'      => trim( (string) $amount ),
+            'measurement' => $key ? $key : '',
+            'name'        => $name,
+        ];
+    }
+
+    /**
      * The measurement units (filterable).
      *
      * @return array<string, array<string, mixed>>

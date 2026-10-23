@@ -142,24 +142,36 @@ class DeliciousRecipes {
         $new_cp_recipe_meta['ingredients'] = [];
 
         if ( ! empty( $recipeIngredients ) ) {
-            foreach ( $recipeIngredients as $ingredient ) {
-                if ( isset( $ingredient['sectionTitle'] ) && ! empty( $ingredient['sectionTitle'] ) && empty( $ingredient['ingredients'] ) ) {
+            $measurements = \Cooked_Measurements::get();
+
+            // Each section: its title (if any), then its ingredients.
+            foreach ( $recipeIngredients as $section ) {
+                if ( ! empty( $section['sectionTitle'] ) ) {
                     $new_cp_recipe_meta['ingredients'][] = [
-                        'section_heading_name' => $ingredient['sectionTitle'],
+                        'section_heading_name' => $section['sectionTitle'],
                     ];
-                } else {
-                    foreach ( $ingredient['ingredients'] as $ingredient ) {
-                        $new_cp_recipe_meta['ingredients'][] = [
-                            'amount'          => ( ! empty( $ingredient['quantity'] ) ? $ingredient['quantity'] : '' ),
-                            'measurement'     => ( ! empty( $ingredient['unit'] ) ? $ingredient['unit'] : '' ),
-                            'name'            => ( ! empty( $ingredient['ingredient'] ) ? $ingredient['ingredient'] : '' ),
-                            'url'             => '',
-                            'description'     => ( ! empty( $ingredient['notes'] ) ? $ingredient['notes'] : '' ),
-                            'sub_amount'      => '',
-                            'sub_measurement' => '',
-                            'sub_name'        => '',
-                        ];
-                    }
+                }
+
+                $section_ingredients = isset( $section['ingredients'] ) && is_array( $section['ingredients'] ) ? $section['ingredients'] : [];
+                foreach ( $section_ingredients as $ingredient ) {
+                    // WP Delicious units are free text ("cups", "tbsp."): map them to Cooked's.
+                    $parts = \Cooked_Measurements::import_ingredient_parts(
+                        ! empty( $ingredient['quantity'] ) ? $ingredient['quantity'] : '',
+                        ! empty( $ingredient['unit'] ) ? $ingredient['unit'] : '',
+                        ! empty( $ingredient['ingredient'] ) ? $ingredient['ingredient'] : '',
+                        $measurements
+                    );
+
+                    $new_cp_recipe_meta['ingredients'][] = [
+                        'amount'          => $parts['amount'],
+                        'measurement'     => $parts['measurement'],
+                        'name'            => $parts['name'],
+                        'url'             => '',
+                        'description'     => ( ! empty( $ingredient['notes'] ) ? $ingredient['notes'] : '' ),
+                        'sub_amount'      => '',
+                        'sub_measurement' => '',
+                        'sub_name'        => '',
+                    ];
                 }
             }
         }
@@ -169,18 +181,20 @@ class DeliciousRecipes {
         $new_cp_recipe_meta['directions'] = [];
 
         if ( ! empty( $recipeInstructions ) ) {
-            foreach ( $recipeInstructions as $instruction ) {
-                if ( isset( $instruction['sectionTitle'] ) && ! empty( $instruction['sectionTitle'] ) && empty( $instruction['instruction'] ) ) {
+            // Each section: its title (if any), then its steps.
+            foreach ( $recipeInstructions as $section ) {
+                if ( ! empty( $section['sectionTitle'] ) ) {
                     $new_cp_recipe_meta['directions'][] = [
-                        'section_heading_name' => $instruction['sectionTitle'],
+                        'section_heading_name' => $section['sectionTitle'],
                     ];
-                } else {
-                    foreach ( $instruction['instruction'] as $instruction ) {
-                        $new_cp_recipe_meta['directions'][] = [
-                            'image'   => $instruction['image'],
-                            'content' => $instruction['instruction'],
-                        ];
-                    }
+                }
+
+                $steps = isset( $section['instruction'] ) && is_array( $section['instruction'] ) ? $section['instruction'] : [];
+                foreach ( $steps as $step ) {
+                    $new_cp_recipe_meta['directions'][] = [
+                        'image'   => isset( $step['image'] ) ? $step['image'] : '',
+                        'content' => isset( $step['instruction'] ) ? $step['instruction'] : '',
+                    ];
                 }
             }
         }

@@ -30,6 +30,20 @@ class UpdatesTest extends FilterTestCase {
         $this->assertInstanceOf(WP_Error::class, $result);
     }
 
+    public function test_first_run_keeps_changes_made_during_the_request() {
+        // The option changed during this request (e.g. WP-CLI or an import); the copy loaded at
+        // the start of the request is stale and must not be written back at shutdown.
+        $GLOBALS['_cooked_test_options']['cooked_settings_version'] = COOKED_VERSION;
+        $GLOBALS['_cooked_test_options']['cooked_settings']         = [ 'browse_page' => '8' ];
+        $GLOBALS['_cooked_settings']                                 = [ 'browse_page' => '0' ];
+
+        Cooked_Updates::init();
+
+        $this->assertSame( '8', get_option( 'cooked_settings' )['browse_page'] );
+        $this->assertTrue( (bool) get_option( 'cooked_settings_saved' ) );
+        unset( $GLOBALS['_cooked_settings'] );
+    }
+
     public function test_version_bump_flushes_rewrite_rules() {
         $GLOBALS['_cooked_test_options']['cooked_settings_saved']   = true;
         $GLOBALS['_cooked_test_options']['cooked_settings_version'] = '1.15.0';

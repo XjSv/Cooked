@@ -86,14 +86,13 @@ class Updates {
         self::$current_pro_version   = defined( 'COOKED_PRO_VERSION' ) ? COOKED_PRO_VERSION : null;
         self::$previous_pro_version  = get_option( 'cooked_pro_settings_version', '1.0.0' );
 
+        // First run: store the settings with their defaults filled in, once. Read them now:
+        // the copy loaded at the start of the request ($_cooked_settings) is stale if the option
+        // changed since (WP-CLI, an import, a seed), and writing it back here at shutdown undid
+        // that change on every request until the Settings form was first saved.
         if ( ! self::$cooked_settings_saved ) {
-            global $_cooked_settings;
-
-            if ( empty( $_cooked_settings ) ) {
-                $_cooked_settings = \Cooked_Settings::get();
-            }
-
-            update_option( 'cooked_settings', $_cooked_settings );
+            update_option( 'cooked_settings', \Cooked_Settings::get() );
+            update_option( 'cooked_settings_saved', true );
             self::$cooked_settings_saved = true;
         }
 

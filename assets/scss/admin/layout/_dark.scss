@@ -523,7 +523,10 @@
             border-color: var(--cooked-color-border);
         }
 
-        .cooked-bulk-add-close,
+        .cooked-bulk-add-close {
+            color: #ff6b6b;
+        }
+
         .cooked-bulk-add-help,
         .cooked-bulk-add-heading-toggle,
         .cooked-bulk-add-heading-line-label,

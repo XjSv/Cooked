@@ -48,22 +48,22 @@
     flex: none;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 36px;
+    width: 30px;
+    height: 30px;
     padding: 0;
     border: 0;
     border-radius: var(--cooked-radius-sm);
     background: none;
-    color: var(--cooked-color-text-muted);
+    color: #d63638;
     cursor: pointer;
 
     .cooked-icon {
-        font-size: 16px;
+        font-size: 12px;
     }
 
     &:hover {
-        background: var(--cooked-color-surface-muted);
-        color: var(--cooked-color-text);
+        background: rgba(214, 54, 56, 0.1);
+        color: #b32d2e;
     }
 
     &:focus-visible {

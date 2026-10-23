@@ -373,6 +373,24 @@
     height: 43px;
 }
 
+// The step actions are buttons; draw them as the bare icons they replaced.
+#cooked-directions-builder .cooked-direction-block button.cooked-delete-direction,
+#cooked-directions-builder .cooked-direction-block button.cooked-show-heading-element,
+#cooked-directions-builder .cooked-direction-block button.remove-image-button,
+#cooked-directions-builder .cooked-direction-block button.remove-video-button {
+    border: 0;
+    box-shadow: none;
+    font: inherit;
+    line-height: 1;
+    cursor: pointer;
+}
+
+#cooked-directions-builder .cooked-direction-block button.cooked-delete-direction,
+#cooked-directions-builder .cooked-direction-block button.cooked-show-heading-element {
+    padding: 0;
+    background: none;
+}
+
 #cooked-directions-builder .cooked-direction-block .cooked-delete-direction {
     cursor: pointer;
     font-size: 14px;

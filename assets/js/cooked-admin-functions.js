@@ -970,6 +970,7 @@ var cookedSortableTouchHandler = function(event) {
                 $parent.removeClass('cooked-has-image');
                 $parent.find('img').attr('src', '').removeAttr('srcset').removeAttr('sizes');
                 $parent.find('input[data-direction-part="image"]').val('');
+                $parent.find('.direction-image-button').prop('value', cooked_admin_functions_js_vars.i18n_image_title);
                 cooked_reset_direction_builder();
             });
 
@@ -1019,8 +1020,10 @@ var cookedSortableTouchHandler = function(event) {
 
                     // Sends the attachment URL to our custom image input field.
                     // Remove srcset/sizes so the UI updates when an image was previously loaded (WP outputs srcset on edit).
-                    var $directionImg = $('#direction-' + directionID + '-image-src');
-                    $directionImg.attr('src', media_attachment.sizes.thumbnail.url)
+                    var $directionImg = $('#direction-' + directionID + '-image-src'),
+                        // Small images have no thumbnail size.
+                        thumbUrl = media_attachment.sizes && media_attachment.sizes.thumbnail ? media_attachment.sizes.thumbnail.url : media_attachment.url;
+                    $directionImg.attr('src', thumbUrl)
                         .removeAttr('srcset')
                         .removeAttr('sizes')
                         .parent().addClass('cooked-has-image');
@@ -1564,6 +1567,11 @@ function cooked_reset_direction_builder() {
         jQuery('#cooked-directions-builder').css( { 'margin-bottom': '20px' } );
     } else {
         jQuery('#cooked-directions-builder').css( { 'margin-bottom': '12px' } );
+    }
+
+    // New layout: Tom Select on the section headings' element selects (new ones included).
+    if (jQuery('body').hasClass('cooked-recipe-editor') && window.cookedEnhanceSelects) {
+        window.cookedEnhanceSelects('#cooked-directions-builder select');
     }
 }
 

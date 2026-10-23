@@ -466,6 +466,19 @@ body.cooked-recipe-editor {
         background: none;
     }
 
+    // Editors made in JavaScript (wp.editor.initialize, e.g. new direction steps) put the
+    // editor inside .wp-editor-tools: keep that in the flow and move only the switch.
+    .cooked-recipe-fields .wp-editor-tools:has(.wp-editor-container) {
+        position: static;
+
+        .wp-editor-tabs {
+            position: absolute;
+            z-index: 2;
+            top: 6px;
+            right: 8px;
+        }
+    }
+
     .cooked-recipe-fields div.mce-toolbar-grp > div,
     .cooked-recipe-fields .quicktags-toolbar {
         padding-right: 130px;

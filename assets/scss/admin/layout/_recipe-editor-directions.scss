@@ -1,0 +1,446 @@
+// Recipe editor, Directions tab (new layout only; the classic layout keeps the 1.x styles).
+//
+// One card with a row per step: drag handle, a round step number, the step's text (textarea or
+// WordPress editor), and its image and video as compact controls under the text, with a
+// thumbnail once chosen. Section headings are group headers with their heading element beside
+// them, as on the Ingredients tab. The selectors start with #poststuff and the builder's ID to
+// outrank the 1.x rules in components/_ingredients-builder.scss and _directions-builder.scss
+// (some of which use !important) and the dark-mode field colours.
+
+$step-columns: 20px 30px auto auto minmax(0, 1fr) 40px;
+$step-columns-phone: 18px 26px auto auto minmax(0, 1fr) 32px;
+$heading-columns: 20px minmax(0, 1fr) auto 40px;
+
+body.cooked-recipe-editor #poststuff #cooked-directions-builder {
+    margin: 0 !important; // The builder script sets an inline margin.
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-surface);
+
+    .cooked-direction-block {
+        position: relative;
+        display: grid;
+        grid-template-areas: none;
+        grid-template-columns: $step-columns;
+        align-items: start;
+        gap: 8px 8px;
+        margin: 0;
+        padding: 12px 8px;
+        border-top: 1px solid var(--cooked-color-border);
+
+        &:first-child {
+            border-top: 0;
+            border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
+        }
+
+        &:last-child {
+            border-radius: 0 0 var(--cooked-radius) var(--cooked-radius);
+        }
+
+        &:first-child:last-child {
+            border-radius: var(--cooked-radius);
+        }
+
+        &::after {
+            content: none;
+        }
+
+        &:hover,
+        &:focus-within {
+            background: var(--cooked-color-surface-muted);
+        }
+
+        @media screen and (max-width: 600px) {
+            grid-template-columns: $step-columns-phone;
+            padding: 10px 4px;
+        }
+
+        // Every 1.x part is positioned or floated; here they are grid items.
+        > div,
+        > span,
+        > i,
+        > button {
+            position: static;
+            float: none;
+            grid-area: auto;
+            width: auto;
+            min-width: 0;
+            margin: 0;
+        }
+    }
+
+    // Drag handle, step number and remove button sit on the first line of the text.
+    .cooked-direction-block i.cooked-icon-drag {
+        grid-row: 1;
+        grid-column: 1;
+        justify-self: center;
+        margin-top: 4px;
+        color: var(--cooked-color-text-muted);
+        font-size: 20px;
+        opacity: 0;
+        transition: opacity 120ms ease;
+
+        @media (hover: none) {
+            opacity: 1;
+        }
+    }
+
+    .cooked-direction-block .cooked-direction-number {
+        display: inline-flex;
+        grid-row: 1;
+        grid-column: 2;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        margin-top: 2px;
+        border-radius: 50%;
+        background: var(--cooked-color-accent-soft);
+        color: var(--cooked-color-accent-strong);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
+        opacity: 1; // 1.x fades it
+    }
+
+    .cooked-direction-block .cooked-delete-direction {
+        display: inline-flex;
+        grid-row: 1;
+        grid-column: 6;
+        align-items: center;
+        justify-content: center;
+        justify-self: end;
+        width: 28px;
+        height: 28px;
+        padding: 0;
+        border-radius: var(--cooked-radius-sm);
+        background: none;
+        opacity: 0;
+        transition: opacity 120ms ease;
+
+        @media (hover: none) {
+            opacity: 1;
+        }
+
+        .cooked-icon {
+            color: var(--cooked-color-text-muted);
+            font-size: 13px;
+        }
+
+        &:hover {
+            background: var(--cooked-color-surface);
+
+            .cooked-icon {
+                color: #d63638;
+            }
+        }
+
+        &:focus-visible {
+            opacity: 1;
+            outline: 2px solid var(--cooked-color-accent-strong);
+            outline-offset: 1px;
+        }
+    }
+
+    .cooked-direction-block:hover,
+    .cooked-direction-block:focus-within {
+        i.cooked-icon-drag,
+        .cooked-delete-direction {
+            opacity: 1;
+        }
+    }
+
+    // The step's text.
+    .cooked-direction-block > .cooked-direction-content {
+        grid-row: 1;
+        grid-column: 3 / 6;
+        padding: 0 !important;
+
+        textarea {
+            display: block;
+            width: 100%;
+            height: 96px;
+            min-height: 72px;
+            margin: 0;
+            padding: 8px 10px;
+            top: 0;
+            border: 1px solid var(--cooked-color-border);
+            border-radius: var(--cooked-radius-sm);
+            box-shadow: none;
+            background: var(--cooked-color-surface);
+            color: var(--cooked-color-text);
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+
+            &:focus {
+                border-color: var(--cooked-color-accent-strong);
+                box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+                outline: 0;
+            }
+        }
+
+        .wp-editor-container {
+            overflow: hidden;
+            border: 1px solid var(--cooked-color-border);
+            border-radius: var(--cooked-radius-sm);
+        }
+
+        .wp-editor-tools {
+            padding: 0;
+        }
+    }
+
+    // Image and video: a small button each under the text; once chosen, a thumbnail (click it
+    // to change) and a remove button.
+    .cooked-direction-block > .cooked-direction-image,
+    .cooked-direction-block > .cooked-direction-video {
+        display: flex;
+        grid-row: 2;
+        align-items: center;
+        align-self: center;
+        gap: 6px;
+        padding: 0;
+    }
+
+    .cooked-direction-block > .cooked-direction-image {
+        grid-column: 3;
+
+        @media screen and (max-width: 600px) {
+            grid-column: 3 / 6;
+        }
+    }
+
+    .cooked-direction-block > .cooked-direction-video {
+        grid-column: 4;
+
+        // Phones: under the image, so the two never overlap.
+        @media screen and (max-width: 600px) {
+            grid-row: 3;
+            grid-column: 3 / 6;
+        }
+    }
+
+    .cooked-direction-img-placeholder,
+    .cooked-direction-video-placeholder {
+        display: none !important;
+    }
+
+    .direction-image-button,
+    .direction-video-button {
+        order: 2;
+        width: auto;
+        min-height: 28px;
+        margin: 0;
+        padding: 0 10px;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: var(--cooked-radius-sm);
+        background: var(--cooked-color-surface);
+        color: var(--cooked-color-text-muted);
+        font-size: 12px;
+        line-height: 26px;
+        text-align: center;
+
+        &:hover {
+            border-color: var(--cooked-color-accent-strong);
+            background: var(--cooked-color-surface);
+            color: var(--cooked-color-accent-strong);
+        }
+
+        &:focus {
+            border-color: var(--cooked-color-accent-strong);
+            box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+            outline: 0;
+        }
+    }
+
+    .cooked-direction-image img,
+    .cooked-direction-video .cooked-direction-video-preview {
+        display: none;
+        order: 1;
+        height: 48px;
+        margin: 0;
+        object-fit: cover;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: var(--cooked-radius-sm);
+        cursor: pointer;
+    }
+
+    .cooked-direction-image img {
+        width: 64px;
+    }
+
+    .cooked-direction-video .cooked-direction-video-preview {
+        width: 85px;
+        aspect-ratio: auto;
+    }
+
+    .cooked-direction-image.cooked-has-image img,
+    .cooked-direction-video.cooked-has-video .cooked-direction-video-preview {
+        display: block;
+    }
+
+    .remove-image-button,
+    .remove-video-button {
+        display: none;
+        order: 3;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        border-radius: 50%;
+        background: none;
+
+        .cooked-icon {
+            color: var(--cooked-color-text-muted);
+            font-size: 11px;
+        }
+
+        &:hover {
+            background: rgba(214, 54, 56, 0.1);
+
+            .cooked-icon {
+                color: #d63638;
+            }
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--cooked-color-accent-strong);
+            outline-offset: 1px;
+        }
+    }
+
+    .cooked-direction-image.cooked-has-image .remove-image-button,
+    .cooked-direction-video.cooked-has-video .remove-video-button {
+        display: inline-flex;
+    }
+
+    // Section headings: a group header, its heading element beside it.
+    .cooked-direction-block.cooked-direction-heading {
+        grid-template-columns: $heading-columns;
+        align-items: center;
+        padding-top: 14px;
+        padding-bottom: 8px;
+        border-top-width: 2px;
+
+        &:first-child {
+            padding-top: 8px;
+        }
+
+        i.cooked-icon-drag {
+            margin-top: 0;
+        }
+
+        .cooked-delete-direction {
+            grid-column: 4;
+        }
+
+        @media screen and (max-width: 600px) {
+            grid-template-columns: 18px minmax(0, 1fr) 32px;
+
+            .cooked-delete-direction {
+                grid-column: 3;
+            }
+        }
+    }
+
+    .cooked-direction-heading > .cooked-heading-name {
+        grid-row: 1;
+        grid-column: 2;
+        padding: 0;
+
+        input[type="text"] {
+            width: 100%;
+            min-height: 34px;
+            margin: 0;
+            padding: 0 8px;
+            top: 0;
+            border: 1px solid transparent;
+            border-radius: var(--cooked-radius-sm);
+            box-shadow: none;
+            background: transparent;
+            color: var(--cooked-color-text);
+            font-size: 15px;
+            font-weight: 600;
+
+            &:focus {
+                border-color: var(--cooked-color-accent-strong);
+                box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+                background: var(--cooked-color-surface);
+                outline: 0;
+            }
+        }
+    }
+
+    .cooked-direction-heading:hover > .cooked-heading-name input[type="text"] {
+        border-color: var(--cooked-color-border);
+        background: var(--cooked-color-surface);
+    }
+
+    // Always shown in this layout; the pencil that toggled it is not needed.
+    .cooked-direction-heading > .cooked-heading-element {
+        display: flex;
+        grid-row: 1;
+        grid-column: 3;
+        align-items: center;
+        gap: 6px;
+        padding: 0;
+
+        @media screen and (max-width: 600px) {
+            grid-row: 2;
+            grid-column: 2;
+        }
+
+        label {
+            color: var(--cooked-color-text-muted);
+            font-size: 12px;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        select,
+        .cooked-select-wrapper,
+        .ts-wrapper {
+            width: 130px;
+        }
+
+        select,
+        .ts-control,
+        .ts-control .item {
+            color: var(--cooked-color-text-muted);
+            font-size: 13px;
+        }
+    }
+
+    .cooked-direction-heading .cooked-show-heading-element {
+        display: none;
+    }
+
+    // Dragging.
+    .cooked-direction-block.ui-sortable-helper {
+        border: 1px solid var(--cooked-color-border);
+        border-radius: var(--cooked-radius-sm);
+        background: var(--cooked-color-surface);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .cooked-direction-block.ui-sortable-placeholder {
+        display: block;
+        height: 60px;
+        border: 1px dashed var(--cooked-color-accent-strong);
+        background: var(--cooked-color-accent-soft);
+    }
+}
+
+// Add Direction / Add Section Heading on the left, Bulk Add on the right.
+body.cooked-recipe-editor #cooked-recipe-tab-content-directions .cooked-builder-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 14px 0 0;
+
+    .cooked-bulk-add-button {
+        margin-left: auto;
+    }
+}

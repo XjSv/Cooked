@@ -538,7 +538,7 @@ endif;
             </div>
         </section>
 
-        <section class="cooked-recipe-tab-content" id="cooked-recipe-tab-content-directions">
+        <section class="cooked-recipe-tab-content<?php echo Cooked_Admin_Enqueues::use_classic_ui() ? '' : ' cooked-recipe-fields'; ?>" id="cooked-recipe-tab-content-directions">
 
             <div id="cooked-directions-builder" class="cooked-sortable">
 
@@ -570,19 +570,14 @@ endif;
                                 <i class="cooked-icon cooked-icon-drag"></i>
                                 <span class="cooked-direction-number"><?php echo (int) $direction_step; ?></span>
                                 <div class="cooked-direction-image<?php echo ( $image_thumb ? ' cooked-has-image' : '' ); ?>">
-                                    <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][image]" id="direction-<?php echo esc_attr( $dir_key ); ?>-image" value="
-                                    <?php
-                                    if ( isset( $value['image'] ) ) {
-										echo esc_attr( $value['image'] );}
-									?>
-                                    " />
+                                    <input data-direction-part="image" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][image]" id="direction-<?php echo esc_attr( $dir_key ); ?>-image" value="<?php echo isset( $value['image'] ) ? esc_attr( $value['image'] ) : ''; ?>" />
                                     <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="button direction-image-button" value="<?php echo ( $image_thumb ? esc_html__( 'Change Image', 'cooked' ) : esc_html__( 'Add Image', 'cooked' ) ); ?>" />
                                     <?php echo ( $image_thumb ? wp_kses_post( $image_thumb ) : '<img id="direction-' . esc_attr( $dir_key ) . '-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="' . esc_attr( $dir_key ) . '">' ); ?>
                                     <div class="cooked-direction-img-placeholder"></div>
-                                    <a href="#" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                                    <button type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-image-button" aria-label="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                                 </div>
                                 <div class="cooked-direction-content">
-                                    <textarea data-direction-part="content" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][content]"><?php echo ! empty( $value['content'] ) ? esc_html( $value['content'] ) : ''; ?></textarea>
+                                    <textarea data-direction-part="content" aria-label="<?php esc_attr_e( 'Step', 'cooked' ); ?>" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][content]"><?php echo ! empty( $value['content'] ) ? esc_html( $value['content'] ) : ''; ?></textarea>
                                 </div>
                                 <div class="cooked-direction-video<?php echo ( ! empty( $value['video'] ) ? ' cooked-has-video' : '' ); ?>">
                                     <input data-direction-part="video" type="hidden" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][video]" value="<?php echo ! empty( $value['video'] ) ? esc_attr( $value['video'] ) : ''; ?>" />
@@ -593,9 +588,9 @@ endif;
                                         <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
                                     <?php endif; ?>
                                     <div class="cooked-direction-video-placeholder"></div>
-                                    <a href="#" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                                    <button type="button" data-id="<?php echo esc_attr( $dir_key ); ?>" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                                 </div>
-                                <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
+                                <button type="button" class="cooked-delete-direction" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                             </div>
 
                         <?php elseif ( isset( $value['section_heading_name'] ) ) : ?>
@@ -603,12 +598,12 @@ endif;
                             <div class="recipe-setting-block cooked-direction-block cooked-direction-heading cooked-clearfix">
                                 <i class="cooked-icon cooked-icon-drag"></i>
                                 <div class="cooked-heading-name">
-                                    <input type="text" data-direction-part="section_heading_name" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
+                                    <input type="text" data-direction-part="section_heading_name" aria-label="<?php esc_attr_e( 'Section heading', 'cooked' ); ?>" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_name]" value="<?php echo esc_attr( $value['section_heading_name'] ); ?>" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                                 </div>
 
                                 <div class="cooked-heading-element">
-                                    <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
-                                    <select class="cooked-heading-element-select" data-direction-part="section_heading_element" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_element]">
+                                    <label><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
+                                    <select class="cooked-heading-element-select" data-direction-part="section_heading_element" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" name="_recipe_settings[directions][<?php echo esc_attr( $dir_key ); ?>][section_heading_element]">
                                         <?php
                                         $heading_elements = [
                                             'div' => 'div (default)',
@@ -626,9 +621,9 @@ endif;
                                         <?php endforeach; ?>
                                     </select>
                                 </div>
-                                <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+                                <button type="button" class="cooked-show-heading-element" aria-expanded="false" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" title="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button>
 
-                                <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
+                                <button type="button" class="cooked-delete-direction" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                             </div>
 
                         <?php endif; ?>
@@ -649,7 +644,7 @@ endif;
                             <input data-direction-part="image_button" type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-image-button" value="<?php esc_attr_e( 'Add Image', 'cooked' ); ?>" />
                             <img id="direction-<?php echo esc_attr( $random_key ); ?>-image-src" data-direction-part="image_src" class="cooked-direction-img" src="" data-id="<?php echo esc_attr( $random_key ); ?>">
                             <div class="cooked-direction-img-placeholder"></div>
-                            <a href="#" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                            <button type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-image-button" aria-label="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                         </div>
                         <div class="cooked-direction-content">
                             <?php if ( $wp_editor_roles_allowed ) : ?>
@@ -661,14 +656,14 @@ endif;
 											'teeny'     => true,
 											'media_buttons' => false,
 											'wpautop'   => false,
-											'editor_height' => 250,
+											'editor_height' => 150,
 											'textarea_name' => '_recipe_settings[directions][' . esc_attr( $random_key ) . '][content]',
 											'quicktags' => true,
 										]
                                     );
                                 ?>
                             <?php else : ?>
-                                <textarea id="direction-<?php echo esc_attr( $random_key ); ?>-content" data-direction-part="content" name="" data-id="<?php echo esc_attr( $random_key ); ?>"></textarea>
+                                <textarea id="direction-<?php echo esc_attr( $random_key ); ?>-content" data-direction-part="content" aria-label="<?php esc_attr_e( 'Step', 'cooked' ); ?>" name="" data-id="<?php echo esc_attr( $random_key ); ?>"></textarea>
                             <?php endif; ?>
                         </div>
                         <div class="cooked-direction-video">
@@ -676,9 +671,9 @@ endif;
                             <input data-direction-part="video_button" type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="button direction-video-button" value="<?php esc_attr_e( 'Add Video', 'cooked' ); ?>" />
                             <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
                             <div class="cooked-direction-video-placeholder"></div>
-                            <a href="#" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                            <button type="button" data-id="<?php echo esc_attr( $random_key ); ?>" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                         </div>
-                        <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
+                        <button type="button" class="cooked-delete-direction" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                     </div>
 
                 <?php endif; ?>
@@ -704,29 +699,29 @@ endif;
                         <input data-direction-part="image_button" data-id="" type="button" class="button direction-image-button" value="<?php esc_attr_e( 'Add Image', 'cooked' ); ?>" />
                         <img id="" data-direction-part="image_src" class="cooked-direction-img" src="">
                         <div class="cooked-direction-img-placeholder"></div>
-                        <a href="#" data-id="" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                        <button type="button" data-id="" class="remove-image-button" aria-label="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove image', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                     </div>
                     <div class="cooked-direction-content">
-                        <textarea id="" data-direction-part="content" name=""></textarea>
+                        <textarea id="" data-direction-part="content" aria-label="<?php esc_attr_e( 'Step', 'cooked' ); ?>" name=""></textarea>
                     </div>
                     <div class="cooked-direction-video">
                         <input data-direction-part="video" type="hidden" name="" value="" />
                         <input data-direction-part="video_button" type="button" data-id="" class="button direction-video-button" value="<?php esc_attr_e( 'Add Video', 'cooked' ); ?>" />
                         <video class="cooked-direction-video-preview" src="" preload="metadata" playsinline style="display:none;"></video>
                         <div class="cooked-direction-video-placeholder"></div>
-                        <a href="#" data-id="" class="remove-video-button"><i class="cooked-icon cooked-icon-times"></i></a>
+                        <button type="button" data-id="" class="remove-video-button" aria-label="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove video', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                     </div>
-                    <a href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></a>
+                    <button type="button" class="cooked-delete-direction" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                 </div>
                 <div class="recipe-setting-block cooked-template cooked-heading-template cooked-clearfix">
                     <i class="cooked-icon cooked-icon-drag"></i>
                     <div class="cooked-heading-name">
-                        <input type="text" data-direction-part="section_heading_name" name="" value="" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
+                        <input type="text" data-direction-part="section_heading_name" aria-label="<?php esc_attr_e( 'Section heading', 'cooked' ); ?>" name="" value="" placeholder="<?php esc_attr_e( 'Section Heading', 'cooked' ); ?> ...">
                     </div>
 
                     <div class="cooked-heading-element">
-                        <label for="cooked-heading-element-select"><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
-                        <select class="cooked-heading-element-select" data-direction-part="section_heading_element" name="">
+                        <label><?php esc_html_e( 'Heading Element:', 'cooked' ); ?></label>
+                        <select class="cooked-heading-element-select" data-direction-part="section_heading_element" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" name="">
                             <?php
                             $heading_elements = [
                                 'div' => 'div (default)',
@@ -744,9 +739,9 @@ endif;
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <span href="#" class="cooked-show-heading-element"><i class="cooked-icon cooked-icon-pencil"></i></span>
+                    <button type="button" class="cooked-show-heading-element" aria-expanded="false" aria-label="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>" title="<?php esc_attr_e( 'Heading element', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button>
 
-                    <span href="#" class="cooked-delete-direction"><i class="cooked-icon cooked-icon-times"></i></span>
+                    <button type="button" class="cooked-delete-direction" aria-label="<?php esc_attr_e( 'Remove', 'cooked' ); ?>" title="<?php esc_attr_e( 'Remove', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
                 </div>
                 <!-- END TEMPLATES -->
 

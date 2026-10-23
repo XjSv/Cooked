@@ -1002,12 +1002,12 @@ class Settings {
     public static function layout_compare_button() {
         ?>
         <button type="button" class="button cooked-layout-compare-open" aria-haspopup="dialog" aria-controls="cooked-layout-compare-dialog"><?php esc_html_e( 'Compare layouts', 'cooked' ); ?></button>
-        <dialog id="cooked-layout-compare-dialog" class="cooked-layout-compare-dialog" aria-labelledby="cooked-layout-compare-title">
-            <div class="cooked-layout-compare-dialog-header">
+        <dialog id="cooked-layout-compare-dialog" class="cooked-dialog cooked-layout-compare-dialog" aria-labelledby="cooked-layout-compare-title">
+            <div class="cooked-dialog-header">
                 <h2 id="cooked-layout-compare-title"><?php esc_html_e( 'Classic and new layouts', 'cooked' ); ?></h2>
-                <button type="button" class="cooked-layout-compare-close" aria-label="<?php esc_attr_e( 'Close', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
+                <button type="button" class="cooked-dialog-close" aria-label="<?php esc_attr_e( 'Close', 'cooked' ); ?>"><i class="cooked-icon cooked-icon-close" aria-hidden="true"></i></button>
             </div>
-            <div class="cooked-layout-compare-dialog-body">
+            <div class="cooked-dialog-body">
                 <p class="cooked-layout-compare-intro"><?php esc_html_e( 'Drag the slider to see the same screen in the classic layout (left) and the new one (right).', 'cooked' ); ?></p>
                 <?php include COOKED_DIR . 'templates/admin/parts/layout-compare.php'; ?>
             </div>

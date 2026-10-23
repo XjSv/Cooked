@@ -463,46 +463,9 @@ class Shortcodes {
     public function cooked_gallery_shortcode( $atts ) {
         global $recipe_settings;
 
+        $gallery_options = [];
         if ( isset( $recipe_settings['gallery'] ) && isset( $recipe_settings['gallery']['type'] ) && 'cooked' === $recipe_settings['gallery']['type'] ) {
-            $gallery_options = apply_filters(
-                'cooked_recipe_gallery_options',
-                [
-					'data-fit'              => 'cover',
-					'data-nav'              => 'dots',
-					'data-width'            => '100%',
-					'data-loop'             => 'true',
-					'data-allowfullscreen'  => 'true',
-					'data-ratio'            => '800/600',
-					'data-thumbmargin'      => '10',
-					'data-thumbborderwidth' => '5',
-					'data-swipe'            => 'true',
-					'data-thumbheight'      => '75',
-					'data-thumbwidth'       => '75',
-				]
-            );
-
-            // Generate the Shortcode Attributes.
-            $gallery_atts = [];
-            foreach ( $gallery_options as $opt_name => $opt_value ) {
-                $name_sans_data                  = str_replace( 'data-', '', $opt_name );
-                $gallery_atts[ $name_sans_data ] = $opt_value;
-            }
-
-            // Set the Shortcode Attributes.
-            $atts = shortcode_atts(
-                $gallery_atts,
-                $atts
-            );
-
-            // Check for Shortcode Attribute Customizations.
-            foreach ( $gallery_options as $opt_name => $opt_value ) {
-                $name_sans_data = str_replace( 'data-', '', $opt_name );
-                if ( isset( $atts[ $name_sans_data ] ) && $atts[ $name_sans_data ] ) {
-                    $gallery_options[ $opt_name ] = $atts[ $name_sans_data ];
-                }
-            }
-        } else {
-            $atts = [];
+            $gallery_options = self::gallery_options( $recipe_settings['gallery'], is_array( $atts ) ? $atts : [] );
         }
 
         if ( isset( $recipe_settings['gallery'] ) && isset( $recipe_settings['gallery']['type'] ) ) :
@@ -530,6 +493,107 @@ class Shortcodes {
         endif;
 
         return false;
+    }
+
+    /**
+     * The Cooked gallery's options: the cooked_recipe_gallery_options defaults, then the
+     * recipe's own style from the Gallery tab, then the shortcode's attributes.
+     *
+     * @since 2.0.0
+     * @param array<string, mixed> $gallery The recipe's gallery settings.
+     * @param array<string, mixed> $atts    Shortcode attributes.
+     * @return array<string, string>
+     */
+    private static function gallery_options( $gallery, $atts ) {
+        $gallery_options = apply_filters(
+            'cooked_recipe_gallery_options',
+            [
+                'data-fit'              => 'cover',
+                'data-nav'              => 'dots',
+                'data-width'            => '100%',
+                'data-loop'             => 'true',
+                'data-allowfullscreen'  => 'true',
+                'data-ratio'            => '800/600',
+                'data-thumbmargin'      => '10',
+                'data-thumbborderwidth' => '5',
+                'data-swipe'            => 'true',
+                'data-thumbheight'      => '75',
+                'data-thumbwidth'       => '75',
+            ]
+        );
+
+        // The recipe's style (Gallery tab). Unset values keep the defaults above.
+        $styles = [
+            'dots'   => 'dots',
+            'thumbs' => 'thumbs',
+            'none'   => 'false',
+        ];
+        if ( isset( $gallery['style'] ) && is_string( $gallery['style'] ) && isset( $styles[ $gallery['style'] ] ) ) {
+            $gallery_options['data-nav'] = $styles[ $gallery['style'] ];
+        }
+        if ( isset( $gallery['loop'] ) && in_array( (string) $gallery['loop'], [ '0', '1' ], true ) ) {
+            $gallery_options['data-loop'] = '1' === (string) $gallery['loop'] ? 'true' : 'false';
+        }
+        // data-autoplay is the interval in milliseconds (cooked-gallery.js); 0 is off.
+        if ( isset( $gallery['autoplay'] ) && in_array( (string) $gallery['autoplay'], [ '0', '1' ], true ) ) {
+            $gallery_options['data-autoplay'] = '1' === (string) $gallery['autoplay'] ? '5000' : '0';
+        }
+        if ( isset( $gallery['ratio'] ) && in_array( $gallery['ratio'], array_keys( self::gallery_ratios() ), true ) ) {
+            $gallery_options['data-ratio'] = $gallery['ratio'];
+        }
+        if ( isset( $gallery['fit'] ) && in_array( $gallery['fit'], [ 'cover', 'contain' ], true ) ) {
+            $gallery_options['data-fit'] = $gallery['fit'];
+        }
+
+        // Shortcode attributes win.
+        $gallery_atts = [];
+        foreach ( $gallery_options as $opt_name => $opt_value ) {
+            $gallery_atts[ str_replace( 'data-', '', $opt_name ) ] = $opt_value;
+        }
+        $atts = shortcode_atts( $gallery_atts, $atts );
+        foreach ( $gallery_options as $opt_name => $opt_value ) {
+            $name_sans_data = str_replace( 'data-', '', $opt_name );
+            if ( isset( $atts[ $name_sans_data ] ) && $atts[ $name_sans_data ] ) {
+                $gallery_options[ $opt_name ] = $atts[ $name_sans_data ];
+            }
+        }
+
+        return $gallery_options;
+    }
+
+    /**
+     * Gallery shapes offered on the Gallery tab, ratio => label.
+     *
+     * @since 2.0.0
+     * @return array<string, string>
+     */
+    public static function gallery_ratios() {
+        return [
+            '4/3'  => __( 'Standard (4:3)', 'cooked' ),
+            '3/2'  => __( 'Photo (3:2)', 'cooked' ),
+            '16/9' => __( 'Wide (16:9)', 'cooked' ),
+            '1/1'  => __( 'Square (1:1)', 'cooked' ),
+        ];
+    }
+
+    /**
+     * The Cooked gallery for given gallery settings, as the recipe would show it: for the
+     * Gallery tab's preview.
+     *
+     * @since 2.0.0
+     * @param array<string, mixed> $gallery Gallery settings (items, video_url and the style).
+     * @param string               $title   Caption for a video slide.
+     * @return string
+     */
+    public static function gallery_preview_html( $gallery, $title = '' ) {
+        $gallery['type'] = 'cooked';
+        return self::cooked_gallery_html(
+            [
+                'gallery' => $gallery,
+                'title'   => $title,
+            ],
+            self::gallery_options( $gallery, [] )
+        );
     }
 
     /**

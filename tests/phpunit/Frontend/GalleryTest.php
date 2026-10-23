@@ -118,4 +118,52 @@ class GalleryTest extends FilterTestCase {
         $html = $this->shortcodes->cooked_gallery_shortcode( [ 'width' => '600' ] );
         $this->assertStringContainsString( 'max-width:600px', $html );
     }
+
+    public function test_recipe_gallery_style_sets_the_options() {
+        $GLOBALS['recipe_settings']['gallery'] += [
+            'style'    => 'thumbs',
+            'loop'     => '0',
+            'autoplay' => '1',
+            'ratio'    => '16/9',
+            'fit'      => 'contain',
+        ];
+        $html = $this->shortcodes->cooked_gallery_shortcode( [] );
+
+        $this->assertStringContainsString( 'data-nav="thumbs"', $html );
+        $this->assertStringContainsString( 'data-loop="false"', $html );
+        $this->assertStringContainsString( 'data-autoplay="5000"', $html );
+        $this->assertStringContainsString( '--cooked-gallery-ratio:16 / 9', $html );
+        $this->assertStringContainsString( '--cooked-gallery-fit:contain', $html );
+    }
+
+    public function test_invalid_recipe_gallery_style_keeps_the_defaults() {
+        $GLOBALS['recipe_settings']['gallery'] += [
+            'style'    => 'carousel',
+            'loop'     => 'yes',
+            'autoplay' => '999',
+            'ratio'    => '1/0',
+            'fit'      => 'stretch',
+        ];
+        $html = $this->shortcodes->cooked_gallery_shortcode( [] );
+
+        $this->assertStringContainsString( 'data-nav="dots"', $html );
+        $this->assertStringContainsString( 'data-loop="true"', $html );
+        $this->assertStringContainsString( 'data-autoplay="0"', $html );
+        $this->assertStringContainsString( '--cooked-gallery-ratio:800 / 600', $html );
+    }
+
+    public function test_shortcode_attributes_win_over_the_recipe_style() {
+        $GLOBALS['recipe_settings']['gallery']['style'] = 'thumbs';
+        $html = $this->shortcodes->cooked_gallery_shortcode( [ 'nav' => 'dots' ] );
+
+        $this->assertStringContainsString( 'data-nav="dots"', $html );
+    }
+
+    public function test_style_none_hides_the_navigation() {
+        $GLOBALS['recipe_settings']['gallery']['style'] = 'none';
+        $html = $this->shortcodes->cooked_gallery_shortcode( [] );
+
+        $this->assertStringContainsString( 'data-nav="false"', $html );
+        $this->assertStringNotContainsString( 'cooked-gallery-nav', $html );
+    }
 }

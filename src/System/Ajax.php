@@ -69,6 +69,63 @@ class Ajax {
 
         // Bulk Add - Parse Ingredients.
         add_action( 'wp_ajax_cooked_parse_bulk_ingredients', [ &$this, 'parse_bulk_ingredients' ] );
+
+        // Gallery tab - Preview.
+        add_action( 'wp_ajax_cooked_gallery_preview', [ &$this, 'gallery_preview' ] );
+    }
+
+    /**
+     * Gallery tab preview: a small page with the recipe's gallery as the front end shows it,
+     * built from the (unsaved) values in the editor, for the preview dialog's iframe.
+     *
+     * @since 2.0.0
+     * @return void
+     */
+    public function gallery_preview() {
+        $nonce = isset( $_GET['nonce'] ) ? wp_unslash( $_GET['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
+        if ( ! wp_verify_nonce( $nonce, 'cooked_gallery_preview' ) || ! current_user_can( 'edit_cooked_recipes' ) ) {
+            wp_die( esc_html__( 'Security check failed.', 'cooked' ), 403 );
+        }
+
+        // Only image attachments, at most 50.
+        $items = isset( $_GET['items'] ) ? array_slice( array_filter( array_map( 'absint', explode( ',', sanitize_text_field( wp_unslash( $_GET['items'] ) ) ) ) ), 0, 50 ) : [];
+        $items = array_values( array_filter( $items, 'wp_attachment_is_image' ) );
+
+        $gallery = [
+            'items'     => $items,
+            'video_url' => isset( $_GET['video_url'] ) ? esc_url_raw( wp_unslash( $_GET['video_url'] ) ) : '',
+        ];
+        // The style values are validated where they are used (Cooked_Shortcodes::gallery_options()).
+        foreach ( [ 'style', 'loop', 'autoplay', 'ratio', 'fit' ] as $key ) {
+            if ( isset( $_GET[ $key ] ) ) {
+                $gallery[ $key ] = sanitize_text_field( wp_unslash( $_GET[ $key ] ) );
+            }
+        }
+
+        $html = \Cooked\Frontend\Shortcodes::gallery_preview_html( $gallery, __( 'Recipe video', 'cooked' ) );
+        if ( '' === $html ) {
+            $html = '<p class="cooked-gallery-preview-empty">' . esc_html__( 'Add images or a video to see the gallery.', 'cooked' ) . '</p>';
+        }
+
+        $asset = function ( $path ) {
+            return esc_url( COOKED_URL . $path . '?ver=' . COOKED_VERSION );
+        };
+
+        header( 'Content-Type: text/html; charset=utf-8' );
+        // phpcs:disable WordPress.WP.EnqueuedResources -- A standalone page for an iframe, not a WordPress screen.
+        echo '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">';
+        echo '<link rel="stylesheet" href="' . $asset( 'assets/css/essentials.min.css' ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
+        echo '<link rel="stylesheet" href="' . $asset( 'assets/css/style.min.css' ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
+        echo '<link rel="stylesheet" href="' . $asset( 'assets/vendor/photoswipe/photoswipe.css' ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
+        echo '<style>body{margin:0;padding:20px;background:#fff;color:#1e1e1e;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.cooked-gallery{max-width:720px;margin:0 auto}.cooked-gallery-preview-empty{margin:60px 0;text-align:center;color:#757575}</style>';
+        echo '</head><body>';
+        echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built and escaped by Cooked_Shortcodes::cooked_gallery_html().
+        echo '<script src="' . $asset( 'assets/vendor/photoswipe/photoswipe.umd.min.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
+        echo '<script src="' . $asset( 'assets/vendor/photoswipe/photoswipe-lightbox.umd.min.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
+        echo '<script src="' . $asset( 'assets/js/cooked-gallery.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
+        echo '</body></html>';
+        // phpcs:enable WordPress.WP.EnqueuedResources
+        exit;
     }
 
     /**

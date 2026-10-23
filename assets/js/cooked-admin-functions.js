@@ -2003,7 +2003,7 @@ document.addEventListener('DOMContentLoaded', function() {
         opener.addEventListener('click', function() {
             dialog.showModal();
         });
-        dialog.querySelector('.cooked-layout-compare-close').addEventListener('click', function() {
+        dialog.querySelector('.cooked-dialog-close').addEventListener('click', function() {
             dialog.close();
         });
         // A click on the backdrop (outside the dialog box) closes it too.
@@ -2059,5 +2059,71 @@ document.addEventListener('DOMContentLoaded', function() {
                 target.focus();
             });
         });
+    });
+});
+
+/**
+ * Recipe editor › Gallery: "Preview Gallery" opens a dialog with the gallery as the recipe page
+ * shows it (Cooked_Ajax::gallery_preview()), built from the tab's current, unsaved values.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    var dialog = document.getElementById('cooked-gallery-preview-dialog'),
+        opener = document.querySelector('.cooked-gallery-preview-button');
+    if (!dialog || !opener || typeof dialog.showModal !== 'function' || typeof cooked_admin_functions_js_vars === 'undefined') {
+        return;
+    }
+
+    var frame = dialog.querySelector('.cooked-gallery-preview-frame'),
+        value = function(name) {
+            var fields = document.querySelectorAll('[name="_recipe_settings[gallery][' + name + ']"]'),
+                result = '';
+            // A switch comes after its hidden "0", like PHP reads them: the last one that counts wins.
+            Array.prototype.forEach.call(fields, function(field) {
+                if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
+                    result = field.value;
+                }
+            });
+            return result;
+        };
+
+    // The preview is on this site, so the frame can grow to fit it (the dialog scrolls past the
+    // window's height).
+    frame.addEventListener('load', function() {
+        var doc = frame.contentDocument;
+        if (doc && doc.body && frame.src !== 'about:blank') {
+            frame.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px';
+        }
+    });
+
+    opener.addEventListener('click', function() {
+        var items = Array.prototype.map.call(document.querySelectorAll('[name="_recipe_settings[gallery][items][]"]'), function(input) {
+                return input.value;
+            }),
+            params = new URLSearchParams({
+                action: 'cooked_gallery_preview',
+                nonce: cooked_admin_functions_js_vars.cooked_gallery_preview_nonce,
+                items: items.join(','),
+                video_url: value('video_url'),
+                style: value('style'),
+                loop: value('loop'),
+                autoplay: value('autoplay'),
+                ratio: value('ratio'),
+                fit: value('fit')
+            });
+        frame.src = cooked_admin_functions_js_vars.ajax_url + '?' + params.toString();
+        dialog.showModal();
+    });
+    dialog.querySelector('.cooked-dialog-close').addEventListener('click', function() {
+        dialog.close();
+    });
+    dialog.addEventListener('click', function(e) {
+        if (e.target === dialog) {
+            dialog.close();
+        }
+    });
+    dialog.addEventListener('close', function() {
+        // Stops a playing video and the autoplay timer.
+        frame.src = 'about:blank';
+        opener.focus();
     });
 });

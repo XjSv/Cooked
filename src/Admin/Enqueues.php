@@ -500,6 +500,7 @@ class Enqueues {
                     'cooked_migrate_nonce'                 => wp_create_nonce( 'cooked_migrate_recipes' ),
                     'cooked_import_recipes_nonce'          => wp_create_nonce( 'cooked_import_recipes' ),
                     'cooked_load_default_nonce'            => wp_create_nonce( 'cooked_load_default' ),
+                    'cooked_gallery_preview_nonce'         => wp_create_nonce( 'cooked_gallery_preview' ),
                     'i18n_bulk_add_ingredients'            => __( 'Bulk Add Ingredients', 'cooked' ),
                     'i18n_bulk_add_directions'             => __( 'Bulk Add Directions', 'cooked' ),
                     'i18n_bulk_add_placeholder_ingredients' => __( "2 cups flour\n1 tsp salt\n1/2 cup sugar\n3 large eggs", 'cooked' ),

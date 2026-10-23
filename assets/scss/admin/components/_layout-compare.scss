@@ -4,7 +4,7 @@
     margin: 10px 0 0;
 }
 
-.cooked-layout-compare-dialog {
+.cooked-dialog {
     width: min(1040px, calc(100vw - 32px));
     max-height: calc(100vh - 48px);
     padding: 0;
@@ -20,8 +20,9 @@
     }
 }
 
-// Header like the Bulk Add modal: title, and a small red close button.
-.cooked-layout-compare-dialog-header {
+// Dialogs (Compare layouts, gallery preview): header like the Bulk Add modal, a title and a
+// small red close button.
+.cooked-dialog-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -39,7 +40,7 @@
     }
 }
 
-.cooked-layout-compare-close {
+.cooked-dialog-close {
     display: inline-flex;
     flex: none;
     align-items: center;
@@ -68,7 +69,7 @@
     }
 }
 
-.cooked-layout-compare-dialog-body {
+.cooked-dialog-body {
     padding: 16px 24px 24px;
 
     @media screen and (max-width: 600px) {

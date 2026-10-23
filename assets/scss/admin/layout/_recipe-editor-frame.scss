@@ -204,6 +204,13 @@ body.cooked-recipe-editor {
         line-height: 1.4;
     }
 
+    // Field headings in the other tabs (Gallery), green like the section titles.
+    #cooked_recipe_settings .cooked-recipe-fields h3.cooked-settings-title {
+        color: var(--cooked-color-accent-strong);
+        font-size: 15px;
+        font-weight: 600;
+    }
+
     .cooked-recipe-section-title-row {
         display: flex;
         flex: 1 1 auto;

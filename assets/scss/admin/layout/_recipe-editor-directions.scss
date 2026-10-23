@@ -107,16 +107,17 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
         opacity: 1; // 1.x fades it
     }
 
+    // Remove: the step's top-right corner.
     .cooked-direction-block .cooked-delete-direction {
+        position: absolute !important;
+        top: 6px;
+        right: 6px;
         display: inline-flex;
-        grid-row: 1;
-        grid-column: 6;
         align-items: center;
         justify-content: center;
-        justify-self: end;
         width: 28px;
         height: 28px;
-        margin-top: 0 !important; // Top right of the step.
+        margin: 0 !important;
         padding: 0;
         border-radius: var(--cooked-radius-sm);
         background: none;
@@ -208,6 +209,7 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
     .cooked-direction-block > .cooked-direction-image,
     .cooked-direction-block > .cooked-direction-video {
         position: relative;
+        inset: auto; // 1.x offsets them (top/left/right) for its absolute layout above 1440px.
         display: flex;
         grid-row: 1;
         flex-direction: column;
@@ -357,11 +359,16 @@ body.cooked-recipe-editor #poststuff #cooked-directions-builder {
             padding-top: 8px;
         }
 
-        // Headings are one line: no offset to the tiles' middle.
+        // Headings are one line: no offset to the tiles' middle, remove in its column.
         i.cooked-icon-drag,
         .cooked-delete-direction {
             align-self: center;
             margin-top: 0 !important;
+        }
+
+        .cooked-delete-direction {
+            position: static !important;
+            justify-self: end;
         }
 
         .cooked-delete-direction {

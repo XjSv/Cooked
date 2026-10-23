@@ -27,6 +27,8 @@ $_cooked_main_color_hover = Cooked_Functions::accessible_color( $_cooked_setting
 .cooked-recipe-card-modern-centered:hover .cooked-recipe-card-sep { background:<?php echo esc_html( $_cooked_main_color ); ?>; }
 .cooked-timer-obj,
 .cooked-fsm a { color:<?php echo esc_html( $_cooked_main_color ); ?>; }
+/* A ring, not text: the main colour as set. */
+.cooked-gallery .cooked-gallery-nav-thumbs .cooked-gallery-active::after { box-shadow:inset 0 0 0 2px <?php echo esc_html( $_cooked_settings['main_color'] ); ?>; }
 
 /* Main Color Darker */
 .cooked-button:hover,

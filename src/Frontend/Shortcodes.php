@@ -515,7 +515,7 @@ class Shortcodes {
                 'data-allowfullscreen'  => 'true',
                 'data-ratio'            => '800/600',
                 'data-thumbmargin'      => '10',
-                'data-thumbborderwidth' => '5',
+                'data-thumbborderwidth' => '5', // No longer used (the current thumbnail has a thin ring); kept for filters that set it.
                 'data-swipe'            => 'true',
                 'data-thumbheight'      => '75',
                 'data-thumbwidth'       => '75',
@@ -559,6 +559,25 @@ class Shortcodes {
         }
 
         return $gallery_options;
+    }
+
+    /**
+     * The recipe's gallery style for the Gallery tab's fields, with defaults for unset or invalid
+     * values (the same values gallery_options() accepts).
+     *
+     * @since 2.0.0
+     * @param array<string, mixed> $gallery The recipe's gallery settings.
+     * @return array{style: string, ratio: string, fit: string, loop: bool, autoplay: bool}
+     */
+    public static function gallery_style_values( $gallery ) {
+        $gallery = is_array( $gallery ) ? $gallery : [];
+        return [
+            'style'    => isset( $gallery['style'] ) && in_array( $gallery['style'], [ 'dots', 'thumbs', 'none' ], true ) ? $gallery['style'] : 'dots',
+            'ratio'    => isset( $gallery['ratio'] ) && is_string( $gallery['ratio'] ) && array_key_exists( $gallery['ratio'], self::gallery_ratios() ) ? $gallery['ratio'] : '4/3',
+            'fit'      => isset( $gallery['fit'] ) && 'contain' === $gallery['fit'] ? 'contain' : 'cover',
+            'loop'     => ! isset( $gallery['loop'] ) || '0' !== (string) $gallery['loop'],
+            'autoplay' => isset( $gallery['autoplay'] ) && '1' === (string) $gallery['autoplay'],
+        ];
     }
 
     /**
@@ -645,7 +664,6 @@ class Shortcodes {
             '--cooked-gallery-thumb-width:' . absint( $option( 'thumbwidth', '75' ) ) . 'px',
             '--cooked-gallery-thumb-height:' . absint( $option( 'thumbheight', '75' ) ) . 'px',
             '--cooked-gallery-thumb-margin:' . absint( $option( 'thumbmargin', '10' ) ) . 'px',
-            '--cooked-gallery-thumb-border:' . absint( $option( 'thumbborderwidth', '5' ) ) . 'px',
         ];
         // Only a width the shortcode asks for: an inline max-width: 100% would override the
         // theme's content width (block themes) and stretch the gallery across the page.

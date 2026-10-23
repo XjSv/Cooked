@@ -43,6 +43,11 @@
                 item.classList.toggle( 'cooked-gallery-active', i === index );
                 if ( i === index ) {
                     item.setAttribute( 'aria-current', 'true' );
+                    // A strip of thumbnails wider than the gallery scrolls to keep this one in view.
+                    var strip = item.parentNode;
+                    if ( strip.scrollWidth > strip.clientWidth ) {
+                        strip.scrollTo( { left: item.offsetLeft - strip.offsetLeft - ( strip.clientWidth - item.offsetWidth ) / 2, behavior: 'smooth' } );
+                    }
                 } else {
                     item.removeAttribute( 'aria-current' );
                 }

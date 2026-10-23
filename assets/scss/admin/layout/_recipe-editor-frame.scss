@@ -157,8 +157,9 @@ body.cooked-recipe-editor {
         transform: translateX(-50%) scaleX(1);
     }
 
-    /* Layout tab */
-    #cooked-recipe-tab-content-content {
+    /* Layout and Gallery tabs */
+    #cooked-recipe-tab-content-content,
+    #cooked-recipe-tab-content-gallery {
         padding: 0;
     }
 
@@ -202,13 +203,6 @@ body.cooked-recipe-editor {
         font-size: 15px;
         font-weight: 600;
         line-height: 1.4;
-    }
-
-    // Field headings in the other tabs (Gallery), green like the section titles.
-    #cooked_recipe_settings .cooked-recipe-fields h3.cooked-settings-title {
-        color: var(--cooked-color-accent-strong);
-        font-size: 15px;
-        font-weight: 600;
     }
 
     .cooked-recipe-section-title-row {

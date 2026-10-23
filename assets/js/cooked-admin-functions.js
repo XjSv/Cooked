@@ -1118,7 +1118,13 @@ var cookedSortableTouchHandler = function(event) {
                         if (!media_attachments.hasOwnProperty(media_key)) continue;
                         var media_attachment = media_attachments[media_key];
                         thisThumbnail = media_attachment.sizes.thumbnail.url;
-                        $('#cooked-recipe-image-gallery').append( '<div data-attachment-id="' + media_attachment.id + '" class="cooked-recipe-gallery-item"><img src="' + thisThumbnail + '" /><span class="cooked-gallery-item-title">' + media_attachment.title + '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' + media_attachment.id + '" /><a href="#" data-attachment-id="' + media_attachment.id + '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>' );
+                        var galleryItem = '<div data-attachment-id="' + media_attachment.id + '" class="cooked-recipe-gallery-item"><img src="' + thisThumbnail + '" /><span class="cooked-gallery-item-title">' + media_attachment.title + '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' + media_attachment.id + '" /><a href="#" data-attachment-id="' + media_attachment.id + '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>';
+                        // The new layout's "Add images" tile stays last.
+                        if ( $('#cooked-recipe-image-gallery > .cooked-gallery-add-tile').length ) {
+                            $('#cooked-recipe-image-gallery > .cooked-gallery-add-tile').before( galleryItem );
+                        } else {
+                            $('#cooked-recipe-image-gallery').append( galleryItem );
+                        }
                     }
 
                     cooked_init_gallery_sorting();
@@ -1377,7 +1383,7 @@ function cooked_updateTotalTimeValue( prepTime, cookTime ) {
 // Assign a value to the hidden input field.
 // Init the jQuery UI Sort
 function cooked_init_gallery_sorting() {
-    jQuery('#cooked-recipe-image-gallery').sortable();
+    jQuery('#cooked-recipe-image-gallery').sortable({ items: '> .cooked-recipe-gallery-item' });
 }
 
 /** Syncs nutrition tab inputs with the live nutrition label preview (values and daily-value percents). */
@@ -2063,13 +2069,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 /**
- * Recipe editor › Gallery: "Preview Gallery" opens a dialog with the gallery as the recipe page
- * shows it (Cooked_Ajax::gallery_preview()), built from the tab's current, unsaved values.
+ * Recipe editor › Gallery: the gallery as the recipe page shows it (Cooked_Ajax::gallery_preview()),
+ * built from the tab's current, unsaved values. "Preview Gallery" opens it in a dialog; the new
+ * layout also keeps a small live preview next to the style fields.
  */
 document.addEventListener('DOMContentLoaded', function() {
     var dialog = document.getElementById('cooked-gallery-preview-dialog'),
-        opener = document.querySelector('.cooked-gallery-preview-button');
-    if (!dialog || !opener || typeof dialog.showModal !== 'function' || typeof cooked_admin_functions_js_vars === 'undefined') {
+        live = document.querySelector('.cooked-gallery-live-frame');
+    if (!dialog || typeof dialog.showModal !== 'function' || typeof cooked_admin_functions_js_vars === 'undefined') {
         return;
     }
 
@@ -2084,34 +2091,44 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
             return result;
+        },
+        previewUrl = function(mini) {
+            var items = Array.prototype.map.call(document.querySelectorAll('[name="_recipe_settings[gallery][items][]"]'), function(input) {
+                    return input.value;
+                }),
+                params = new URLSearchParams({
+                    action: 'cooked_gallery_preview',
+                    nonce: cooked_admin_functions_js_vars.cooked_gallery_preview_nonce,
+                    items: items.join(','),
+                    video_url: value('video_url'),
+                    style: value('style'),
+                    loop: value('loop'),
+                    autoplay: value('autoplay'),
+                    ratio: value('ratio'),
+                    fit: value('fit')
+                });
+            if (mini) {
+                params.set('mini', '1');
+            }
+            return cooked_admin_functions_js_vars.ajax_url + '?' + params.toString();
+        },
+        // The preview is on this site, so a frame can grow to fit it.
+        fitFrame = function(target) {
+            target.addEventListener('load', function() {
+                var doc = target.contentDocument;
+                if (doc && doc.body && target.src !== 'about:blank') {
+                    target.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px';
+                }
+            });
         };
 
-    // The preview is on this site, so the frame can grow to fit it (the dialog scrolls past the
-    // window's height).
-    frame.addEventListener('load', function() {
-        var doc = frame.contentDocument;
-        if (doc && doc.body && frame.src !== 'about:blank') {
-            frame.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px';
-        }
-    });
-
-    opener.addEventListener('click', function() {
-        var items = Array.prototype.map.call(document.querySelectorAll('[name="_recipe_settings[gallery][items][]"]'), function(input) {
-                return input.value;
-            }),
-            params = new URLSearchParams({
-                action: 'cooked_gallery_preview',
-                nonce: cooked_admin_functions_js_vars.cooked_gallery_preview_nonce,
-                items: items.join(','),
-                video_url: value('video_url'),
-                style: value('style'),
-                loop: value('loop'),
-                autoplay: value('autoplay'),
-                ratio: value('ratio'),
-                fit: value('fit')
-            });
-        frame.src = cooked_admin_functions_js_vars.ajax_url + '?' + params.toString();
-        dialog.showModal();
+    fitFrame(frame);
+    Array.prototype.forEach.call(document.querySelectorAll('.cooked-gallery-preview-button'), function(opener) {
+        opener.addEventListener('click', function() {
+            dialog.opener = opener;
+            frame.src = previewUrl(false);
+            dialog.showModal();
+        });
     });
     dialog.querySelector('.cooked-dialog-close').addEventListener('click', function() {
         dialog.close();
@@ -2124,6 +2141,65 @@ document.addEventListener('DOMContentLoaded', function() {
     dialog.addEventListener('close', function() {
         // Stops a playing video and the autoplay timer.
         frame.src = 'about:blank';
-        opener.focus();
+        if (dialog.opener) {
+            dialog.opener.focus();
+        }
     });
+
+    if (!live) {
+        return;
+    }
+
+    // The live preview loads once it is first on screen, then follows every change.
+    var timer = null,
+        shown = false,
+        refresh = function() {
+            if (!shown) {
+                return;
+            }
+            window.clearTimeout(timer);
+            timer = window.setTimeout(function() {
+                live.src = previewUrl(true);
+            }, 400);
+        },
+        tab = document.getElementById('cooked-recipe-tab-content-gallery'),
+        gallery = document.getElementById('cooked-recipe-image-gallery');
+
+    fitFrame(live);
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function(entries, observer) {
+            if (entries[0].isIntersecting) {
+                shown = true;
+                observer.disconnect();
+                live.src = previewUrl(true);
+            }
+        }).observe(live);
+    } else {
+        shown = true;
+        live.src = previewUrl(true);
+    }
+
+    if (tab) {
+        tab.addEventListener('change', refresh);
+        tab.addEventListener('input', function(e) {
+            if (e.target.name === '_recipe_settings[gallery][video_url]') {
+                refresh();
+            }
+        });
+    }
+    // Images added, removed, replaced or dragged into a new order.
+    if (gallery && 'MutationObserver' in window) {
+        new MutationObserver(function(mutations) {
+            var changed = mutations.some(function(mutation) {
+                return Array.prototype.some.call(mutation.addedNodes, function(node) {
+                    return node.classList && node.classList.contains('cooked-recipe-gallery-item');
+                }) || Array.prototype.some.call(mutation.removedNodes, function(node) {
+                    return node.classList && node.classList.contains('cooked-recipe-gallery-item');
+                });
+            });
+            if (changed) {
+                refresh();
+            }
+        }).observe(gallery, { childList: true });
+    }
 });

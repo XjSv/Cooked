@@ -107,6 +107,9 @@ class Ajax {
             $html = '<p class="cooked-gallery-preview-empty">' . esc_html__( 'Add images or a video to see the gallery.', 'cooked' ) . '</p>';
         }
 
+        // The live preview on the Gallery tab: no page padding, the full width of its frame.
+        $mini = ! empty( $_GET['mini'] );
+
         $asset = function ( $path ) {
             return esc_url( COOKED_URL . $path . '?ver=' . COOKED_VERSION );
         };
@@ -117,8 +120,8 @@ class Ajax {
         echo '<link rel="stylesheet" href="' . $asset( 'assets/css/essentials.min.css' ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
         echo '<link rel="stylesheet" href="' . $asset( 'assets/css/style.min.css' ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
         echo '<link rel="stylesheet" href="' . $asset( 'assets/vendor/photoswipe/photoswipe.css' ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
-        echo '<style>body{margin:0;padding:20px;background:#fff;color:#1e1e1e;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.cooked-gallery{max-width:720px;margin:0 auto}.cooked-gallery-preview-empty{margin:60px 0;text-align:center;color:#757575}</style>';
-        echo '</head><body>';
+        echo '<style>body{margin:0;padding:20px;background:#fff;color:#1e1e1e;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.cooked-gallery{max-width:720px;margin:0 auto}.cooked-gallery-preview-empty{margin:60px 0;text-align:center;color:#757575}body.is-mini{padding:0;background:transparent}.is-mini .cooked-gallery{max-width:none}.is-mini .cooked-gallery-preview-empty{margin:40px 16px;font-size:13px}</style>';
+        echo '</head><body' . ( $mini ? ' class="is-mini"' : '' ) . '>';
         echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built and escaped by Cooked_Shortcodes::cooked_gallery_html().
         echo '<script src="' . $asset( 'assets/vendor/photoswipe/photoswipe.umd.min.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
         echo '<script src="' . $asset( 'assets/vendor/photoswipe/photoswipe-lightbox.umd.min.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().

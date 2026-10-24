@@ -1,7 +1,7 @@
 ---
 name: cooked-build-and-test
 description: >-
-  How to run Cooked's checks (PHPUnit, PHPStan, PHPCS, Playwright, BackstopJS),
+  How to run Cooked's checks (PHPUnit, PHPStan, PHPCS, Playwright),
   the local WordPress environments (wp-env, DDEV) and the asset build. Use when
   testing a change, adding tests, adding CSS/JS files, or setting up the dev
   environment.
@@ -32,7 +32,6 @@ Scripts run with [Bun](https://bun.sh) (`bun run <script>`), PHP tools from
 |-------|---------|
 | Playwright E2E | `bun run test:e2e` (first time: `bun run test:e2e:install`) |
 | Playwright accessibility | `bun run test:e2e:a11y` |
-| BackstopJS visual | `bun run test:visual`; approve intended changes with `bun run test:visual:approve` |
 
 Playwright specs live in `tests/playwright/tests/` (`admin`, `browse`, `home`,
 `security`, `accessibility`). CSV fixtures are in `tests/test_data/`.

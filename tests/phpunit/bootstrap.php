@@ -135,6 +135,7 @@ function wp_editor( $content, $editor_id, $settings = [] ) {
     echo '<textarea id="' . esc_attr( $editor_id ) . '">' . $content . '</textarea>';
 }
 function sanitize_key( $key ) { return strtolower( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $key ) ); }
+function sanitize_html_class( $classname, $fallback = '' ) { $clean = preg_replace( '/%[a-fA-F0-9][a-fA-F0-9]|[^A-Za-z0-9_-]/', '', (string) $classname ); return '' === $clean ? $fallback : $clean; }
 function sanitize_title( $title ) { return strtolower( preg_replace( '/[^a-zA-Z0-9_\-]/', '-', $title ) ); }
 function sanitize_title_with_dashes( $title, $raw_title = '', $context = 'display' ) { return strtolower( preg_replace( '/[^a-zA-Z0-9_\-]/', '-', $title ) ); }
 function absint( $maybeint ) { return abs( (int) $maybeint ); }

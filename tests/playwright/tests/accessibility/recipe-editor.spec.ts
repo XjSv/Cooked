@@ -5,7 +5,8 @@ import { ADMIN_USER } from '../../utils/users';
 import { wpCliArgs } from '../../utils/wp-cli';
 
 // The recipe editor's new layout: the Cooked meta box (Layout tab) and the Allergens box, in
-// light and dark mode, with the Difficulty select open and a help tooltip showing. TinyMCE's
+// light and dark mode, with the Difficulty select open and a help tooltip showing; and the
+// Shortcodes tab with every options table open. TinyMCE's
 // toolbars are WordPress core markup (unnamed buttons nested in role="button" containers on
 // every classic editor), so the scans skip them.
 
@@ -57,6 +58,18 @@ for (const theme of ['light', 'dark'] as const) {
         });
         await expectAccessible(page, { include: ['.cooked-tooltip-floating'] });
       });
+    });
+
+    test('Shortcodes tab', async ({ adminContext }) => {
+      const page = await adminContext.newPage();
+      await page.goto(`/wp-admin/post.php?post=${seedRecipeId()}&action=edit`, { waitUntil: 'networkidle' });
+      await page.locator('#cooked-recipe-tab-shortcodes').click();
+      await page.locator('#cooked-recipe-tab-content-shortcodes .cooked-shortcode-list').first().waitFor();
+
+      for (const summary of await page.locator('.cooked-shortcode-options > summary').all()) {
+        await summary.click();
+      }
+      await expectAccessible(page, { include: ['#cooked-recipe-tab-content-shortcodes'] });
     });
   });
 }

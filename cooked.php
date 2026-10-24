@@ -45,6 +45,9 @@ if ( ! defined( 'COOKED_DEV' ) ) {
 }
 define( 'COOKED_VERSION', '2.0.0' );
 
+// The oldest Cooked Pro that works with this version of Cooked (an older one is paused, see Cooked\Admin\ProCompat).
+define( 'COOKED_REQUIRES_PRO', '2.0.0' );
+
 /**
  * The main function for that returns Cooked_Plugin.
  *

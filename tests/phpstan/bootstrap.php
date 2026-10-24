@@ -6,6 +6,7 @@
  */
 
 define( 'COOKED_VERSION', '2.0.0' );
+define( 'COOKED_REQUIRES_PRO', '2.0.0' );
 define( 'COOKED_DEV', false );
 define( 'COOKED_DIR', dirname( __DIR__, 2 ) . '/' );
 define( 'COOKED_URL', 'https://example.com/wp-content/plugins/cooked/' );

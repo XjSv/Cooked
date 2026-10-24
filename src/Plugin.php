@@ -222,6 +222,14 @@ final class Plugin {
     public $pixwell;
 
     /**
+     * Cooked Pro version check Object.
+     *
+     * @var object|\Cooked\Admin\ProCompat
+     * @since 2.0.0
+     */
+    public $pro_compat;
+
+    /**
      * Main Cooked_Plugin Instance.
      *
      * Insures that only one instance of Cooked_Plugin exists in memory at any one
@@ -277,6 +285,7 @@ final class Plugin {
             self::$instance->extra           = new \Cooked_Plugin_Extra();
             self::$instance->multilingual    = new \Cooked_Multilingual();
             self::$instance->pixwell         = new \Cooked_Pixwell();
+            self::$instance->pro_compat      = new \Cooked\Admin\ProCompat();
 
             self::$instance->module_setup();
 

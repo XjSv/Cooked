@@ -257,43 +257,45 @@ $cooked_shortcode_groups = apply_filters( 'cooked_recipe_editor_shortcodes', $co
                                     );
                                     ?>
                                 </summary>
-                                <table class="cooked-shortcode-options-table">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col"><?php esc_html_e( 'Option', 'cooked' ); ?></th>
-                                            <th scope="col"><?php esc_html_e( 'What it does', 'cooked' ); ?></th>
-                                            <th scope="col"><?php esc_html_e( 'Values', 'cooked' ); ?></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ( $cooked_item['options'] as $cooked_option => $cooked_option_info ) : ?>
+                                <div class="cooked-shortcode-options-body">
+                                    <table class="cooked-shortcode-options-table">
+                                        <thead>
                                             <tr>
-                                                <th scope="row"><code><?php echo esc_html( $cooked_option ); ?></code></th>
-                                                <td><?php echo esc_html( $cooked_option_info[0] ); ?></td>
-                                                <td class="cooked-shortcode-values"><?php echo esc_html( $cooked_option_info[1] ); ?></td>
+                                                <th scope="col"><?php esc_html_e( 'Option', 'cooked' ); ?></th>
+                                                <th scope="col"><?php esc_html_e( 'What it does', 'cooked' ); ?></th>
+                                                <th scope="col"><?php esc_html_e( 'Values', 'cooked' ); ?></th>
                                             </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                                <?php if ( ! empty( $cooked_item['names'][1] ) ) : ?>
-                                    <div class="cooked-shortcode-names">
-                                        <span class="cooked-shortcode-example-label"><?php echo esc_html( $cooked_item['names'][0] ); ?></span>
-                                        <ul>
-                                            <?php foreach ( $cooked_item['names'][1] as $cooked_name => $cooked_name_label ) : ?>
-                                                <li><code><?php echo esc_html( $cooked_name ); ?></code> <?php echo esc_html( $cooked_name_label ); ?></li>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ( $cooked_item['options'] as $cooked_option => $cooked_option_info ) : ?>
+                                                <tr>
+                                                    <th scope="row"><code><?php echo esc_html( $cooked_option ); ?></code></th>
+                                                    <td><?php echo esc_html( $cooked_option_info[0] ); ?></td>
+                                                    <td class="cooked-shortcode-values"><?php echo esc_html( $cooked_option_info[1] ); ?></td>
+                                                </tr>
                                             <?php endforeach; ?>
-                                        </ul>
-                                    </div>
-                                <?php endif; ?>
-                                <?php if ( ! empty( $cooked_item['example'] ) ) : ?>
-                                    <div class="cooked-shortcode-example">
-                                        <span class="cooked-shortcode-example-label"><?php esc_html_e( 'Example', 'cooked' ); ?></span>
-                                        <div class="cooked-shortcode-copy">
-                                            <code id="<?php echo esc_attr( $cooked_code_id ); ?>-example"><?php echo esc_html( $cooked_item['example'] ); ?></code>
-                                            <button type="button" class="button cooked-copy-code" data-target="<?php echo esc_attr( $cooked_code_id ); ?>-example" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: shortcode name, e.g. "Ingredients" */ __( 'Copy the %s example', 'cooked' ), $cooked_item['title'] ) ); ?>"><?php esc_html_e( 'Copy', 'cooked' ); ?></button>
+                                        </tbody>
+                                    </table>
+                                    <?php if ( ! empty( $cooked_item['names'][1] ) ) : ?>
+                                        <div class="cooked-shortcode-names">
+                                            <span class="cooked-shortcode-example-label"><?php echo esc_html( $cooked_item['names'][0] ); ?></span>
+                                            <ul>
+                                                <?php foreach ( $cooked_item['names'][1] as $cooked_name => $cooked_name_label ) : ?>
+                                                    <li><code><?php echo esc_html( $cooked_name ); ?></code> <?php echo esc_html( $cooked_name_label ); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
                                         </div>
-                                    </div>
-                                <?php endif; ?>
+                                    <?php endif; ?>
+                                    <?php if ( ! empty( $cooked_item['example'] ) ) : ?>
+                                        <div class="cooked-shortcode-example">
+                                            <span class="cooked-shortcode-example-label"><?php esc_html_e( 'Example', 'cooked' ); ?></span>
+                                            <div class="cooked-shortcode-copy">
+                                                <code id="<?php echo esc_attr( $cooked_code_id ); ?>-example"><?php echo esc_html( $cooked_item['example'] ); ?></code>
+                                                <button type="button" class="button cooked-copy-code" data-target="<?php echo esc_attr( $cooked_code_id ); ?>-example" aria-label="<?php echo esc_attr( sprintf( /* translators: %s: shortcode name, e.g. "Ingredients" */ __( 'Copy the %s example', 'cooked' ), $cooked_item['title'] ) ); ?>"><?php esc_html_e( 'Copy', 'cooked' ); ?></button>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                </div>
                             </details>
                         <?php endif; ?>
                     </li>

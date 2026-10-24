@@ -83,6 +83,8 @@ for (const theme of ['light', 'dark'] as const) {
       for (const summary of await page.locator('.cooked-shortcode-options > summary').all()) {
         await summary.click();
       }
+      // Scan once they have eased open (they fade in).
+      await page.waitForFunction(() => document.getAnimations().length === 0);
       await expectAccessible(page, { include: ['#cooked-recipe-tab-content-shortcodes'] });
     });
   });

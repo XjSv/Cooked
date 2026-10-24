@@ -127,9 +127,14 @@ body.cooked-recipe-editor .cooked-shortcodes-fields {
             }
         }
 
-        &[open] > summary .cooked-icon {
+        &[open]:not(.is-closing) > summary .cooked-icon {
             transform: rotate(90deg);
         }
+    }
+
+    // Eased open and closed by cooked-admin-functions.js.
+    .cooked-shortcode-options-body {
+        overflow: hidden;
     }
 
     .cooked-shortcode-options-table {

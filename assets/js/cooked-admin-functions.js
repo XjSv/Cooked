@@ -1355,6 +1355,40 @@ var cookedSortableTouchHandler = function(event) {
             window.cookedEnhanceSelects('.cooked-recipe-fields select, #post_author_override');
         }
 
+        /****   Shortcodes tab (new layout): options ease open and closed instead of jumping   ****/
+        $(document).on('click', '.cooked-shortcode-options > summary', function(e) {
+            var details = this.parentNode,
+                body = details.querySelector('.cooked-shortcode-options-body'),
+                height;
+            if (!body || !body.animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+            e.preventDefault();
+            if (details.cookedAnimation) {
+                details.cookedAnimation.cancel();
+            }
+            if (!details.open || details.classList.contains('is-closing')) {
+                details.classList.remove('is-closing');
+                details.open = true;
+                height = body.offsetHeight;
+                details.cookedAnimation = body.animate(
+                    [{ height: '0px', opacity: 0 }, { height: height + 'px', opacity: 1 }],
+                    { duration: 260, easing: 'cubic-bezier(.22, .61, .36, 1)' }
+                );
+            } else {
+                height = body.offsetHeight;
+                details.classList.add('is-closing');
+                details.cookedAnimation = body.animate(
+                    [{ height: height + 'px', opacity: 1 }, { height: '0px', opacity: 0 }],
+                    { duration: 200, easing: 'ease-in' }
+                );
+                details.cookedAnimation.onfinish = function() {
+                    details.open = false;
+                    details.classList.remove('is-closing');
+                };
+            }
+        });
+
         /****   Copy buttons (code blocks, recipe shortcode)   ****/
         $(document).on('click', '.cooked-copy-code', function() {
             var button = this,

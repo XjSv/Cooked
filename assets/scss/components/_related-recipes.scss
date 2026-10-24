@@ -24,34 +24,3 @@
     border-left-color: #0073aa;
     text-align: center;
 }
-
-/* Ensure related recipes grid uses existing Cooked styles */
-.cooked-related-recipes-grid .cooked-recipe-card {
-    margin-bottom: 20px;
-}
-
-/* Responsive adjustments */
-.cooked-related-recipes-grid.cooked-columns-3,
-.cooked-related-recipes-grid.cooked-columns-4 {
-    @media (max-width: 768px) {
-        margin-left: -1.5%;
-        width: 103%;
-    }
-}
-
-.cooked-related-recipes-grid.cooked-columns-3 .cooked-recipe,
-.cooked-related-recipes-grid.cooked-columns-4 .cooked-recipe {
-    @media (max-width: 768px) {
-        width: 47%;
-        min-width: 47%;
-    }
-}
-
-.cooked-related-recipes-grid.cooked-columns-2 .cooked-recipe,
-.cooked-related-recipes-grid.cooked-columns-3 .cooked-recipe,
-.cooked-related-recipes-grid.cooked-columns-4 .cooked-recipe {
-    @media (max-width: 480px) {
-        width: 97%;
-        min-width: 97%;
-    }
-}

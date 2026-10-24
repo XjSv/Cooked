@@ -649,6 +649,78 @@ endif;
     }
 
     /**
+     * Normalizes a taxonomy query value (a slug, a comma-separated list or an array).
+     *
+     * @param mixed $value Query value.
+     * @return array<int, string>
+     */
+    public static function taxonomy_query_terms( $value ) {
+        if ( is_array( $value ) ) {
+            $values = $value;
+        } else {
+            $values = explode( ',', (string) $value );
+        }
+
+        $terms = [];
+
+        foreach ( $values as $term ) {
+            if ( ! is_scalar( $term ) ) {
+                continue;
+            }
+
+            $term = trim( sanitize_text_field( (string) $term ) );
+
+            if ( '' !== $term ) {
+                $terms[] = $term;
+            }
+        }
+
+        return array_values( array_unique( $terms ) );
+    }
+
+    /**
+     * Whether a list of taxonomy terms should be queried by ID or by slug.
+     *
+     * @param array<int, string> $terms Normalized terms.
+     * @return string
+     */
+    public static function taxonomy_query_field( $terms ) {
+        $numeric = array_filter(
+            $terms,
+            static function ( $term ) {
+                return is_numeric( $term );
+            }
+        );
+
+        return count( $numeric ) === count( $terms ) ? 'id' : 'slug';
+    }
+
+    /**
+     * Resolves normalized taxonomy query terms to term objects.
+     *
+     * @param string             $taxonomy Taxonomy.
+     * @param array<int, string> $terms    Normalized terms.
+     * @param string             $field    Query field, id or slug.
+     * @return array<int, \WP_Term>
+     */
+    public static function resolve_taxonomy_terms( $taxonomy, $terms, $field ) {
+        $args = [
+            'taxonomy'   => $taxonomy,
+            'hide_empty' => false,
+        ];
+
+        if ( 'id' === $field ) {
+            $args['include'] = array_map( 'absint', $terms );
+        } else {
+            $args['slug'] = array_map( 'sanitize_title', $terms );
+        }
+
+        $term_objects = get_terms( $args );
+
+        return is_wp_error( $term_objects ) ? [] : $term_objects;
+    }
+
+    /**
      * The recipe list for [cooked-browse] and friends.
      *
      * @param array<string, mixed>|false $list_atts List attributes.
@@ -674,20 +746,30 @@ endif;
         }
 
         $recipe_query = $wp_query->query;
-        $tax_query    = [];
+
+        // The browse checkboxes use their own query var so WordPress does not treat the
+        // array as a taxonomy archive query before the recipe list is built.
+        if ( empty( $recipe_query['cp_recipe_category'] ) && ! empty( $recipe_query['cooked_category_filter'] ) ) {
+            $recipe_query['cp_recipe_category'] = $recipe_query['cooked_category_filter'];
+        }
+
+        $tax_query = [];
 
         do_action( 'cooked_check_recipe_query' );
 
         if ( isset( $_cooked_settings['recipe_taxonomies'] ) && ! empty( $_cooked_settings['recipe_taxonomies'] ) ) :
             foreach ( $_cooked_settings['recipe_taxonomies'] as $taxonomy ) :
                 if ( isset( $recipe_query[ $taxonomy ] ) && $recipe_query[ $taxonomy ] ) :
-                    $field_type            = is_numeric( $recipe_query[ $taxonomy ] ) ? 'id' : 'slug';
-                    $tax_query['relation'] = 'AND';
-                    $tax_query[]           = [
-                        'taxonomy' => $taxonomy,
-                        'field'    => $field_type,
-                        'terms'    => array_map( 'trim', explode( ',', esc_html( $recipe_query[ $taxonomy ] ) ) ),
-                    ];
+                    $terms = self::taxonomy_query_terms( $recipe_query[ $taxonomy ] );
+
+                    if ( ! empty( $terms ) ) :
+                        $tax_query['relation'] = 'AND';
+                        $tax_query[]           = [
+                            'taxonomy' => $taxonomy,
+                            'field'    => self::taxonomy_query_field( $terms ),
+                            'terms'    => $terms,
+                        ];
+                    endif;
                 endif;
             endforeach;
 
@@ -708,12 +790,16 @@ endif;
         if ( empty( $tax_query ) ) :
 
             if ( $atts['category'] ) :
-                $tax_query['relation'] = 'AND';
-                $tax_query[]           = [
-                    'taxonomy' => 'cp_recipe_category',
-                    'field'    => ( is_numeric( $atts['category'] ) ? 'id' : 'slug' ),
-                    'terms'    => array_map( 'trim', explode( ',', esc_html( $atts['category'] ) ) ),
-                ];
+                $terms = self::taxonomy_query_terms( $atts['category'] );
+
+                if ( ! empty( $terms ) ) :
+                    $tax_query['relation'] = 'AND';
+                    $tax_query[]           = [
+                        'taxonomy' => 'cp_recipe_category',
+                        'field'    => self::taxonomy_query_field( $terms ),
+                        'terms'    => $terms,
+                    ];
+                endif;
             endif;
 
             $tax_query = apply_filters( 'cooked_tax_query_filter', $tax_query, $atts );
@@ -1630,90 +1716,81 @@ endif;
         global $_cooked_settings, $recipe_args, $tax_col_count, $active_taxonomy;
 
         $tax_col_count          = 0;
-        $filters_set            = [];
+        $selected_terms         = [];
+        $selected_category_ids  = [];
+        $selected_filter_count  = 0;
         $taxonomy_search_fields = '';
+        $options                = is_array( $options ) ? $options : [];
 
-        if ( isset( $recipe_args['tax_query'] ) ) :
+        if ( isset( $recipe_args['tax_query'] ) && is_array( $recipe_args['tax_query'] ) ) :
             foreach ( $recipe_args['tax_query'] as $query ) :
                 // Only process inclusion queries (default operator or explicit 'IN')
                 // Skip exclusion queries ('NOT IN') and other complex operators.
                 $operator = isset( $query['operator'] ) ? $query['operator'] : 'IN';
-                if ( 'IN' === $operator && isset( $query['taxonomy'] ) && isset( $query['terms'] ) ) :
-                    $filters_set[ $query['taxonomy'] ] = implode( ',', $query['terms'] );
-                endif;
+
+                if ( 'IN' !== $operator || empty( $query['taxonomy'] ) || empty( $query['terms'] ) ) {
+                    continue;
+                }
+
+                $terms = self::taxonomy_query_terms( $query['terms'] );
+
+                if ( empty( $terms ) ) {
+                    continue;
+                }
+
+                $field        = isset( $query['field'] ) ? $query['field'] : self::taxonomy_query_field( $terms );
+                $term_objects = self::resolve_taxonomy_terms( $query['taxonomy'], $terms, $field );
+
+                if ( empty( $term_objects ) ) {
+                    continue;
+                }
+
+                $selected_terms[ $query['taxonomy'] ] = $term_objects;
+                $selected_filter_count               += count( $term_objects );
+
+                if ( 'cp_recipe_category' === $query['taxonomy'] ) {
+                    $selected_category_ids = array_merge( $selected_category_ids, wp_list_pluck( $term_objects, 'term_id' ) );
+                }
+
+                if ( ! isset( $active_taxonomy ) ) {
+                    $active_taxonomy = $term_objects[0]->name;
+                }
             endforeach;
 
-            if ( isset( $filters_set ) ) :
-                foreach ( $filters_set as $taxonomy => $filter ) :
-                    $this_tax = get_term_by( 'slug', $filter, $taxonomy );
-                    $this_tax = $this_tax ? $this_tax : get_term_by( 'id', $filter, $taxonomy );
-                    if ( $this_tax && ! is_wp_error( $this_tax ) ) :
-                        $filters_set[ $taxonomy ] = $this_tax->term_id;
-                        $active_taxonomy          = ! isset( $active_taxonomy ) ? $this_tax->name : $active_taxonomy;
-                    endif;
-                endforeach;
-            endif;
+            $selected_category_ids = array_values( array_unique( array_map( 'absint', $selected_category_ids ) ) );
         endif;
 
+        $page_id       = (int) \Cooked_Multilingual::get_browse_page_id();
+        $page_id       = $page_id ? $page_id : (int) get_the_ID();
+        $form_redirect = $page_id ? get_permalink( $page_id ) : false;
+        $form_redirect = $form_redirect ? $form_redirect : home_url( '/' );
+
         $total_taxonomies = 0;
+        $browse_html      = '';
+        $inline_browse    = ! empty( $options['inline_browse'] );
 
-        $inline_browse = isset( $options['inline_browse'] ) && $options['inline_browse'] ? true : false;
-
-        ob_start();
         if ( ! empty( $_cooked_settings['recipe_taxonomies'] ) ) :
-
-            if ( ! $inline_browse ) :
-
-                echo '<div class="cooked-field-wrap cooked-field-wrap-select' . ( isset( $active_taxonomy ) ? ' cooked-taxonomy-selected' : '' ) . '">';
-                echo '<span class="cooked-browse-select">';
-                echo '<span class="cooked-field-title">' . ( isset( $active_taxonomy ) ? esc_html( $active_taxonomy ) : esc_html__( 'Browse', 'cooked' ) ) . '</span>';
-                echo '<span class="cooked-browse-select-block cooked-clearfix">';
-
-            endif;
 
             ob_start();
 
             do_action( 'cooked_before_search_filter_columns' );
 
-            if ( isset( $active_taxonomy ) ) :
-                $recipes_page_id      = \Cooked_Multilingual::get_browse_page_id();
-                $recipes_page_id      = $recipes_page_id ? $recipes_page_id : get_the_ID();
-                $view_all_recipes_url = get_permalink( $recipes_page_id );
-            else :
-                $view_all_recipes_url = false;
-            endif;
-
             if ( in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies'], true ) ) :
-                $terms_array = \Cooked_Settings::terms_array( 'cp_recipe_category', false, __( 'No categories', 'cooked' ), true, true, false );
-                if ( ! empty( $terms_array ) ) :
-                    echo '<span class="cooked-tax-column">';
-                        echo '<span class="cooked-tax-column-title">' . esc_html__( 'Categories', 'cooked' ) . '</span>';
+                $category_options = self::category_filter_options( 0, $selected_category_ids, $total_taxonomies );
+
+                if ( '' !== $category_options ) :
+                    echo '<span class="cooked-tax-column cooked-tax-column-categories">';
+                        echo '<div class="cooked-tax-column-head">';
+                            echo '<span class="cooked-tax-column-title">' . esc_html__( 'Categories', 'cooked' ) . '</span>';
+                            echo '<a class="cooked-filter-all' . ( empty( $selected_category_ids ) ? ' cooked-filter-all-hidden' : '' ) . '" href="' . esc_url( $form_redirect ) . '">' . esc_html__( 'Clear filters', 'cooked' ) . '</a>';
+                        echo '</div>';
                         echo '<div class="cooked-tax-scrollable">';
-                            echo ( $view_all_recipes_url ? '<a href="' . esc_url( $view_all_recipes_url ) . '">' . esc_html__( 'All Categories', 'cooked' ) . '</a>' : '' );
-					foreach ( $terms_array as $key => $val ) :
-						if ( $key ) :
-							$term      = get_term( $key );
-							$term_link = ( ! empty( $term ) ? get_term_link( $term ) : false );
-							$term_name = apply_filters( 'cooked_term_name', $term->name, $term->ID, $term->taxonomy );
-							echo ( $term_link ? ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $term_link ) . '">' . wp_kses_post( $term_name ) . '</a>' . ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $val ? '</strong>' : '' ) : '' );
-							++$total_taxonomies;
-							$sub_terms_array = \Cooked_Settings::terms_array( 'cp_recipe_category', false, false, true, false, $key );
-							if ( ! empty( $sub_terms_array ) ) :
-								foreach ( $sub_terms_array as $sub_key => $sub_val ) :
-									if ( $sub_key ) :
-										$sub_term      = get_term( $sub_key );
-										$sub_term_link = ( ! empty( $sub_term ) ? get_term_link( $sub_term ) : false );
-										$sub_term_name = apply_filters( 'cooked_term_name', $sub_term->name, $sub_term->ID, $sub_term->taxonomy );
-										echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>' : '' ) . '<a href="' . esc_url( $sub_term_link ) . '">' . wp_kses_post( $sub_term_name ) . '</a>' . ( isset( $active_taxonomy ) && (string) $active_taxonomy === (string) $sub_val ? '</strong>' : '' ) . '</span>' : '' );
-										++$total_taxonomies;
-									endif;
-								endforeach;
-							endif;
-						endif;
-                            endforeach;
-                            ++$tax_col_count;
+                            echo '<div class="cooked-filter-options">';
+                                echo $category_options; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while the options are built.
+                            echo '</div>';
                         echo '</div>';
                     echo '</span>';
+                    ++$tax_col_count;
                 endif;
             endif;
 
@@ -1721,25 +1798,54 @@ endif;
 
             $browse_html = ob_get_clean();
 
-            if ( ! $inline_browse ) :
-
-                echo wp_kses_post( $browse_html );
-                echo '</span></span></div>';
-
-            endif;
+            if ( ! is_string( $browse_html ) ) {
+                $browse_html = '';
+            }
 
         endif;
 
-        if ( $total_taxonomies ) :
-            $taxonomy_search_fields = ob_get_clean();
-        else :
-            ob_clean();
-            $taxonomy_search_fields = false;
+        $browse_allowed_html          = wp_kses_allowed_html( 'post' );
+        $browse_allowed_html['input'] = array_fill_keys(
+            [ 'type', 'name', 'value', 'checked', 'class', 'id', 'disabled', 'aria-label', 'aria-labelledby' ],
+            true
+        );
+
+        $taxonomy_search_fields = false;
+        $browse_label           = __( 'Browse', 'cooked' );
+
+        if ( 1 === $selected_filter_count && ! empty( $selected_terms ) ) {
+            $first_terms  = reset( $selected_terms );
+            $browse_label = $first_terms[0]->name;
+        } elseif ( $selected_filter_count > 1 ) {
+            $browse_label = sprintf(
+                /* translators: %s: number of selected recipe filters. */
+                _n( '%s filter', '%s filters', $selected_filter_count, 'cooked' ),
+                number_format_i18n( $selected_filter_count )
+            );
+        }
+
+        $browse_aria_label = $selected_filter_count
+            ? sprintf(
+                /* translators: 1: visible browse label, 2: number of selected recipe filters. */
+                __( '%1$s, browse recipe filters, %2$s selected', 'cooked' ),
+                $browse_label,
+                number_format_i18n( $selected_filter_count )
+            )
+            : __( 'Browse recipe filters', 'cooked' );
+
+        if ( $total_taxonomies && ! $inline_browse ) :
+            $browse_panel_id = wp_unique_id( 'cooked-browse-panel-' );
+
+            $taxonomy_search_fields  = '<div class="cooked-field-wrap cooked-field-wrap-select' . ( $selected_filter_count ? ' cooked-taxonomy-selected' : '' ) . '">';
+            $taxonomy_search_fields .= '<button type="button" class="cooked-browse-select" aria-expanded="false" aria-controls="' . esc_attr( $browse_panel_id ) . '" aria-label="' . esc_attr( $browse_aria_label ) . '">';
+            $taxonomy_search_fields .= '<span class="cooked-field-title">' . esc_html( $browse_label ) . '</span>';
+            $taxonomy_search_fields .= '</button>';
+            $taxonomy_search_fields .= '<div class="cooked-browse-select-block" id="' . esc_attr( $browse_panel_id ) . '">' . wp_kses( $browse_html, $browse_allowed_html ) . '</div>';
+            $taxonomy_search_fields .= '</div>';
         endif;
 
-        $page_id       = \Cooked_Multilingual::get_browse_page_id();
-        $page_id       = $page_id ? $page_id : get_the_ID();
-        $form_redirect = get_permalink( $page_id );
+        $show_browse                  = empty( $options['hide_browse'] );
+        $category_checkboxes_rendered = ( $show_browse && $taxonomy_search_fields ) || ( $inline_browse && $total_taxonomies );
 
         $cooked_search_s = get_query_var( 'cooked_search_s', '' );
         $cooked_search_s = urldecode( $cooked_search_s );
@@ -1747,22 +1853,43 @@ endif;
 
         ob_start();
 
-        echo '<section class="cooked-recipe-search cooked-clearfix' . ( isset( $options['compact'] ) && $options['compact'] ? ' cooked-search-compact' : '' ) . ( isset( $options['hide_sorting'] ) && $options['hide_sorting'] ? ' cooked-search-no-sorting' : '' ) . ( isset( $options['hide_browse'] ) && $options['hide_browse'] ? ' cooked-search-no-browse' : '' ) . '">';
+        echo '<section class="cooked-recipe-search cooked-clearfix' . ( ! empty( $options['compact'] ) ? ' cooked-search-compact' : '' ) . ( ! empty( $options['hide_sorting'] ) ? ' cooked-search-no-sorting' : '' ) . ( ! $show_browse ? ' cooked-search-no-browse' : '' ) . '">';
 
             echo '<form action="' . esc_url( $form_redirect ) . '" method="get">';
 
                 echo '<input type="hidden" name="page_id" value="' . intval( $page_id ) . '">';
-		if ( isset( $recipe_args['tax_query'][0]['taxonomy'] ) ) :
-			echo '<input type="hidden" name="' . esc_attr( $recipe_args['tax_query'][0]['taxonomy'] ) . '" value="' . esc_attr( $recipe_args['tax_query'][0]['terms'][0] ) . '">';
-                endif;
+
+        if ( isset( $recipe_args['tax_query'] ) && is_array( $recipe_args['tax_query'] ) ) :
+            foreach ( $recipe_args['tax_query'] as $query ) :
+                if ( empty( $query['taxonomy'] ) || empty( $query['terms'] ) ) {
+                    continue;
+                }
+
+                $operator = isset( $query['operator'] ) ? $query['operator'] : 'IN';
+
+                if ( 'IN' !== $operator || ( 'cp_recipe_category' === $query['taxonomy'] && $category_checkboxes_rendered ) ) {
+                    continue;
+                }
+
+                $terms = self::taxonomy_query_terms( $query['terms'] );
+
+                if ( ! empty( $terms ) ) {
+                    echo '<input type="hidden" name="' . esc_attr( $query['taxonomy'] ) . '" value="' . esc_attr( implode( ',', $terms ) ) . '">';
+                }
+            endforeach;
+        endif;
 
                 echo '<div class="cooked-fields-wrap cooked-' . esc_attr( $tax_col_count ) . '-search-fields">';
 
-                    echo ! $options['hide_browse'] && $taxonomy_search_fields ? wp_kses_post( $taxonomy_search_fields ) : '';
+                    echo $show_browse && $taxonomy_search_fields ? $taxonomy_search_fields : ''; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while the markup is built above.
 
-                    echo '<input aria-label="' . esc_attr__( 'Find a recipe...', 'cooked' ) . '" class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( ! empty( $cooked_search_s ) ? esc_attr( $cooked_search_s ) : '' ) . '" placeholder="' . esc_attr__( 'Find a recipe...', 'cooked' ) . '" />';
+                    echo '<div class="cooked-search-field">';
 
-                    echo '<a aria-label="' . esc_attr__( 'Search', 'cooked' ) . '" href="#" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search"></i></a>';
+                        echo '<input aria-label="' . esc_attr__( 'Find a recipe...', 'cooked' ) . '" class="cooked-browse-search" type="text" name="cooked_search_s" value="' . ( ! empty( $cooked_search_s ) ? esc_attr( $cooked_search_s ) : '' ) . '" placeholder="' . esc_attr__( 'Find a recipe...', 'cooked' ) . '" />';
+
+                        echo '<button type="submit" aria-label="' . esc_attr__( 'Search', 'cooked' ) . '" class="cooked-browse-search-button"><i class="cooked-icon cooked-icon-search" aria-hidden="true"></i></button>';
+
+                    echo '</div>';
 
                 echo '</div>';
 
@@ -1805,17 +1932,200 @@ endif;
 
                 endif;
 
-            echo '</form>';
-
-        echo '</section>';
-
-        if ( $inline_browse ) :
-            echo '<div class="cooked-browse-select-inline-block cooked-clearfix">';
-                echo wp_kses_post( $browse_html );
+        if ( $inline_browse && $total_taxonomies ) :
+            echo '<div class="cooked-browse-select-inline-block">';
+                echo wp_kses( $browse_html, $browse_allowed_html );
             echo '</div>';
         endif;
 
+            echo '</form>';
+
+            echo '<p class="cooked-browse-status" role="status" aria-live="polite"></p>';
+
+        echo '</section>';
+
         return ob_get_clean();
+    }
+
+    /**
+     * The form field name used to filter by a taxonomy.
+     *
+     * Categories use their own field so an array value is not parsed as a
+     * taxonomy archive query by WordPress.
+     *
+     * @param string $taxonomy Taxonomy.
+     * @return string
+     */
+    private static function taxonomy_filter_field( $taxonomy ) {
+        return 'cp_recipe_category' === $taxonomy ? 'cooked_category_filter' : $taxonomy;
+    }
+
+    /**
+     * Renders the category checkbox options for the browse filter.
+     *
+     * @param int             $parent_id Parent term ID, or 0 for the top level.
+     * @param array<int, int> $selected  Selected term IDs.
+     * @param int             $total     Running count of rendered terms.
+     * @param bool            $is_child  Whether these options are nested.
+     * @return string
+     */
+    private static function category_filter_options( $parent_id, $selected, &$total, $is_child = false ) {
+        $terms_array = \Cooked_Settings::terms_array(
+            'cp_recipe_category',
+            false,
+            false,
+            true,
+            ! $is_child,
+            $is_child ? $parent_id : false
+        );
+
+        if ( empty( $terms_array ) ) {
+            return '';
+        }
+
+        $html = $is_child ? '<div class="cooked-filter-sub-options">' : '';
+
+        foreach ( $terms_array as $term_id => $term_name ) {
+            if ( ! $term_id ) {
+                continue;
+            }
+
+            $term = get_term( $term_id );
+
+            if ( empty( $term ) || is_wp_error( $term ) ) {
+                continue;
+            }
+
+            $name = apply_filters( 'cooked_term_name', $term_name, $term->term_id, $term->taxonomy );
+
+            $html .= '<label class="cooked-filter-option">';
+            $html .= '<input type="checkbox" name="' . esc_attr( self::taxonomy_filter_field( 'cp_recipe_category' ) ) . '[]" value="' . esc_attr( $term->slug ) . '"' . checked( in_array( (int) $term->term_id, $selected, true ), true, false ) . '>';
+            $html .= '<span class="cooked-filter-option-label">' . wp_kses_post( $name ) . '</span>';
+            $html .= '</label>';
+
+            ++$total;
+
+            $children = self::category_filter_options( $term->term_id, $selected, $total, true );
+
+            if ( '' !== $children ) {
+                $html .= $children;
+            }
+        }
+
+        if ( $is_child ) {
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Renders the active taxonomy filters as removable chips.
+     *
+     * @param array<string, mixed> $recipe_args Recipe query arguments.
+     * @param array<string, mixed> $atts        Recipe list attributes.
+     * @return string
+     */
+    public static function filter_chips( $recipe_args, $atts ) {
+        if ( empty( $recipe_args['tax_query'] ) || ! isset( $atts['search'] ) || 'true' !== (string) $atts['search'] ) {
+            return '';
+        }
+
+        $entries = [];
+
+        foreach ( $recipe_args['tax_query'] as $query ) {
+            if ( ! is_array( $query ) || empty( $query['taxonomy'] ) || empty( $query['terms'] ) ) {
+                continue;
+            }
+
+            $operator = isset( $query['operator'] ) ? $query['operator'] : 'IN';
+
+            if ( 'IN' !== $operator ) {
+                continue;
+            }
+
+            $terms = self::taxonomy_query_terms( $query['terms'] );
+
+            if ( empty( $terms ) ) {
+                continue;
+            }
+
+            $field   = isset( $query['field'] ) ? $query['field'] : self::taxonomy_query_field( $terms );
+            $objects = self::resolve_taxonomy_terms( $query['taxonomy'], $terms, $field );
+
+            if ( ! empty( $objects ) ) {
+                $entries[] = [
+                    'taxonomy' => $query['taxonomy'],
+                    'terms'    => $objects,
+                ];
+            }
+        }
+
+        if ( empty( $entries ) ) {
+            return '';
+        }
+
+        $page_id  = (int) \Cooked_Multilingual::get_browse_page_id();
+        $page_id  = $page_id ? $page_id : (int) get_the_ID();
+        $base_url = get_permalink( $page_id );
+
+        if ( ! $base_url ) {
+            return '';
+        }
+
+        $search = \Cooked_Functions::sanitize_text_field( urldecode( (string) get_query_var( 'cooked_search_s', '' ) ) );
+        $sort   = sanitize_key( get_query_var( 'cooked_browse_sort_by', '' ) );
+        $author = sanitize_key( get_query_var( 'recipe_author', '' ) );
+        $chips  = '';
+
+        foreach ( $entries as $entry ) {
+            foreach ( $entry['terms'] as $term ) {
+                $query_args = [];
+
+                foreach ( $entries as $other ) {
+                    $slugs = [];
+
+                    foreach ( $other['terms'] as $other_term ) {
+                        if ( $other['taxonomy'] === $entry['taxonomy'] && $other_term->term_id === $term->term_id ) {
+                            continue;
+                        }
+
+                        $slugs[] = $other_term->slug;
+                    }
+
+                    if ( ! empty( $slugs ) ) {
+                        $query_args[ self::taxonomy_filter_field( $other['taxonomy'] ) ] = implode( ',', $slugs );
+                    }
+                }
+
+                if ( $search ) {
+                    $query_args['cooked_search_s'] = $search;
+                }
+
+                if ( $sort ) {
+                    $query_args['cooked_browse_sort_by'] = $sort;
+                }
+
+                if ( $author ) {
+                    $query_args['recipe_author'] = $author;
+                }
+
+                $remove_url = add_query_arg( $query_args, $base_url );
+                $name       = apply_filters( 'cooked_term_name', $term->name, $term->term_id, $term->taxonomy );
+                $aria_label = sprintf(
+                    /* translators: %s: recipe filter term name. */
+                    __( 'Remove %s filter', 'cooked' ),
+                    wp_strip_all_tags( $name )
+                );
+
+                $chips .= '<a class="cooked-filter-chip" href="' . esc_url( $remove_url ) . '" data-cooked-filter-chip data-taxonomy="' . esc_attr( $entry['taxonomy'] ) . '" data-field="' . esc_attr( self::taxonomy_filter_field( $entry['taxonomy'] ) ) . '" data-term="' . esc_attr( $term->slug ) . '" aria-label="' . esc_attr( $aria_label ) . '">';
+                $chips .= '<span class="cooked-filter-chip-label">' . wp_kses_post( $name ) . '</span>';
+                $chips .= '<i class="cooked-icon cooked-icon-close" aria-hidden="true"></i>';
+                $chips .= '</a>';
+            }
+        }
+
+        return '<div class="cooked-filter-chips">' . $chips . '</div>';
     }
 
     /**

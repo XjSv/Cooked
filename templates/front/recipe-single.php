@@ -25,7 +25,7 @@ if ( is_array( $recipe_classes ) && ! empty( $recipe_classes ) ) {
 	$recipe_classes = [];
 }
 
-echo '<article class="' . esc_attr( implode( ' ', $recipe_classes ) ) . ' cooked-recipe-card cooked-recipe-card-modern-centered">';
+echo '<article class="' . esc_attr( implode( ' ', $recipe_classes ) ) . ' cooked-recipe-card cooked-recipe-card-modern">';
 
     do_action( 'cooked_recipe_grid_before_recipe', $recipe );
 

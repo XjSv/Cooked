@@ -65,17 +65,41 @@ class Enqueues {
         ];
 
         $cooked_i18n_js_vars = [
-            'i18n_timer'       => __( 'Timer', 'cooked' ),
-            'i18n_timer_pause' => __( 'Pause timer', 'cooked' ),
-            'i18n_timer_play'  => __( 'Resume timer', 'cooked' ),
-            'i18n_timer_reset' => __( 'Restart timer', 'cooked' ),
-            'i18n_timer_close' => __( 'Close timer', 'cooked' ),
+            'i18n_timer'               => __( 'Timer', 'cooked' ),
+            'i18n_timer_pause'         => __( 'Pause timer', 'cooked' ),
+            'i18n_timer_play'          => __( 'Resume timer', 'cooked' ),
+            'i18n_timer_reset'         => __( 'Restart timer', 'cooked' ),
+            'i18n_timer_close'         => __( 'Close timer', 'cooked' ),
+            'i18n_browse_loading'      => __( 'Loading recipes…', 'cooked' ),
+            'i18n_browse_results_one'  => __( '1 recipe found.', 'cooked' ),
+            /* translators: %s: number of recipes found. */
+            'i18n_browse_results_many' => __( '%s recipes found.', 'cooked' ),
+            'i18n_browse_no_results'   => __( 'No recipes found.', 'cooked' ),
         ];
 
         $min = COOKED_DEV ? '' : '.min';
 
         wp_enqueue_style( 'cooked-essentials', COOKED_URL . 'assets/css/essentials.min.css', [], COOKED_VERSION );
         wp_enqueue_style( 'cooked-styling', COOKED_URL . 'assets/css/style.min.css', [ 'cooked-essentials' ], COOKED_VERSION );
+
+        wp_register_style( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.default' . $min . '.css', [], '2.6.2' );
+        wp_register_script( 'cooked-tom-select', COOKED_URL . 'assets/vendor/tom-select/tom-select.complete' . $min . '.js', [], '2.6.2', true );
+
+        $load_tom_select = $browse_page_id && is_page( absint( $browse_page_id ) );
+
+        if ( ! $load_tom_select && is_singular() ) {
+            $queried_post = get_queried_object();
+
+            if ( $queried_post instanceof \WP_Post && ( has_shortcode( $queried_post->post_content, 'cooked-browse' ) || has_shortcode( $queried_post->post_content, 'cooked-search' ) ) ) {
+                $load_tom_select = true;
+            }
+        }
+
+        if ( $load_tom_select ) {
+            wp_enqueue_style( 'cooked-tom-select' );
+            wp_enqueue_script( 'cooked-tom-select' );
+        }
+
         wp_register_style( 'cooked-photoswipe', COOKED_URL . 'assets/vendor/photoswipe/photoswipe.css', [], '5.4.4' );
         wp_register_script( 'cooked-photoswipe', COOKED_URL . 'assets/vendor/photoswipe/photoswipe.umd.min.js', [], '5.4.4', true );
         wp_register_script( 'cooked-photoswipe-lightbox', COOKED_URL . 'assets/vendor/photoswipe/photoswipe-lightbox.umd.min.js', [ 'cooked-photoswipe' ], '5.4.4', true );

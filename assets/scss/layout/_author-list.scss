@@ -15,11 +15,15 @@
 .cooked-author-list-heading .cooked-author-avatar img {
     display: block;
     margin: 0;
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
 }
 
 .cooked-author-list-heading .cooked-meta-title {
+    display: inline-block;
     font-size: 1.25rem;
-    line-height: 1.2rem;
+    line-height: 1.4;
     margin: 0;
 }
 

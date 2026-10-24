@@ -83,6 +83,20 @@ else :
 		echo wp_kses_post( $child_taxonomies );
 	endif;
 
+    $recipe_count = 0;
+
+    if ( ! empty( $recipes ) ) :
+        foreach ( $recipes as $recipe_key => $recipe_item ) :
+            if ( 'raw' !== $recipe_key ) :
+                ++$recipe_count;
+            endif;
+        endforeach;
+    endif;
+
+    echo '<div class="cooked-recipe-results" data-cooked-results data-cooked-recipe-count="' . esc_attr( $recipe_count ) . '">';
+
+    echo \Cooked_Recipes::filter_chips( $recipe_args, $atts ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped while the chips are built.
+
     if ( ( ! empty( $recipes ) && ! isset( $recipes['raw'] ) && count( $recipes ) >= 1 ) || ( ! empty( $recipes ) && isset( $recipes['raw'] ) && count( $recipes ) > 1 ) ) :
 
 		++$list_id_counter;
@@ -113,6 +127,8 @@ else :
 		$post_type_obj = get_post_type_object( 'cp_recipe' );
 		echo '<p class="cooked-none-found">' . wp_kses_post( $post_type_obj->labels->not_found ) . '</p>';
 	endif;
+
+    echo '</div>';
 
 endif;
 // END 'cooked_author_template_override' Filter.

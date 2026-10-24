@@ -1058,24 +1058,6 @@ parameters:
 			path: src/Recipe/Recipes.php
 
 		-
-			message: '#^Cannot access offset ''hide_browse'' on array\<string, mixed\>\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Recipe/Recipes.php
-
-		-
-			message: '#^Cannot access offset ''hide_sorting'' on array\<string, mixed\>\|false\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Recipe/Recipes.php
-
-		-
-			message: '#^Cannot access property \$ID on WP_Error\|WP_Term\|null\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: src/Recipe/Recipes.php
-
-		-
 			message: '#^Cannot access property \$ID on WP_Post\|null\.$#'
 			identifier: property.nonObject
 			count: 4
@@ -1088,12 +1070,6 @@ parameters:
 			path: src/Recipe/Recipes.php
 
 		-
-			message: '#^Cannot access property \$name on WP_Error\|WP_Term\|null\.$#'
-			identifier: property.nonObject
-			count: 2
-			path: src/Recipe/Recipes.php
-
-		-
 			message: '#^Cannot access property \$post_title on WP_Post\|null\.$#'
 			identifier: property.nonObject
 			count: 2
@@ -1103,12 +1079,6 @@ parameters:
 			message: '#^Cannot access property \$slug on WP_Term\|false\.$#'
 			identifier: property.nonObject
 			count: 1
-			path: src/Recipe/Recipes.php
-
-		-
-			message: '#^Cannot access property \$taxonomy on WP_Error\|WP_Term\|null\.$#'
-			identifier: property.nonObject
-			count: 2
 			path: src/Recipe/Recipes.php
 
 		-
@@ -1138,7 +1108,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$data of function wp_kses_post expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 2
 			path: src/Recipe/Recipes.php
 
 		-
@@ -1156,7 +1126,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$post of function get_permalink expects int\|WP_Post, bool\|int given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 2
 			path: src/Recipe/Recipes.php
 
 		-
@@ -1180,13 +1150,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$term of function get_term expects int\|object, int\<min, \-1\>\|int\<1, max\>\|string given\.$#'
 			identifier: argument.type
-			count: 2
-			path: src/Recipe/Recipes.php
-
-		-
-			message: '#^Parameter \#1 \$term of function get_term_link expects int\|string\|WP_Term, WP_Error\|WP_Term given\.$#'
-			identifier: argument.type
-			count: 2
+			count: 1
 			path: src/Recipe/Recipes.php
 
 		-
@@ -1214,15 +1178,9 @@ parameters:
 			path: src/Recipe/Recipes.php
 
 		-
-			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|WP_Error given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Recipe/Recipes.php
-
-		-
 			message: '#^Parameter \#1 \$url of function esc_url expects string, string\|false given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 4
 			path: src/Recipe/Recipes.php
 
 		-
@@ -1264,18 +1222,6 @@ parameters:
 		-
 			message: '#^Right side of && is always true\.$#'
 			identifier: booleanAnd.rightAlwaysTrue
-			count: 1
-			path: src/Recipe/Recipes.php
-
-		-
-			message: '#^Variable \$browse_html might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: src/Recipe/Recipes.php
-
-		-
-			message: '#^Variable \$filters_set in isset\(\) always exists and is not nullable\.$#'
-			identifier: isset.variable
 			count: 1
 			path: src/Recipe/Recipes.php
 

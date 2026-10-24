@@ -22,9 +22,9 @@ $_cooked_main_color_hover = Cooked_Functions::accessible_color( $_cooked_setting
 .cooked-browse-search-button,
 .cooked-icon-loading,
 .cooked-progress span,
-.cooked-recipe-search .cooked-taxonomy-selected,
-.cooked-recipe-card-modern:hover .cooked-recipe-card-sep,
-.cooked-recipe-card-modern-centered:hover .cooked-recipe-card-sep { background:<?php echo esc_html( $_cooked_main_color ); ?>; }
+.cooked-recipe-search .cooked-field-wrap-select.cooked-taxonomy-selected .cooked-browse-select,
+.cooked-recipe-card-modern .cooked-recipe-card-sep,
+.cooked-recipe-card-modern-centered .cooked-recipe-card-sep { background:<?php echo esc_html( $_cooked_main_color ); ?>; }
 .cooked-timer-obj,
 .cooked-fsm a { color:<?php echo esc_html( $_cooked_main_color ); ?>; }
 /* A ring, not text: the main colour as set. */
@@ -32,7 +32,7 @@ $_cooked_main_color_hover = Cooked_Functions::accessible_color( $_cooked_setting
 
 /* Main Color Darker */
 .cooked-button:hover,
-.cooked-recipe-search .cooked-taxonomy-selected:hover,
+.cooked-recipe-search .cooked-field-wrap-select.cooked-taxonomy-selected .cooked-browse-select:hover,
 .cooked-browse-search-button:hover { background:<?php echo esc_html( $_cooked_main_color_hover ); ?>; }
 <?php
 
@@ -44,18 +44,31 @@ if ( false !== $_cooked_dark_css_scope ) :
 
 	?>
     /* Dark Mode */
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select' ), [] ); ?> { background:rgba(255,255,255,0.075); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select:hover' ), [] ); ?> { background:rgba(255,255,255,0.10); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.05); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block' ), [] ); ?> { background:rgba(0,0,0,0.95); box-shadow:none; border-radius:5px; }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search input[type="text"]' ), [] ); ?> { background:rgba(0,0,0,0.25); border-color:rgba(255,255,255,0.15); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap' ), [] ); ?> { background:rgba(255,255,255,0.10); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap:hover' ), [] ); ?> { background:rgba(255,255,255,0.15); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap' ), [] ); ?> > select { border-color:rgba(0,0,0,0.15); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap' ), [] ); ?> > select > option { color:#333; }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column' ), [] ); ?> > span.cooked-tax-column-title { border-bottom-color:rgba(255,255,255,0.15); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column i.cooked-icon' ), [] ); ?> { color:rgba(255,255,255,0.5); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-field-wrap-select:before, .cooked-recipe-search .cooked-sortby-wrap:before' ), [] ); ?> { color:#fff; }
-	<?php echo wp_kses( $dm( '.cooked-recipe-grid .cooked-recipe-inside' ), [] ); ?> { background:rgba(0,0,0,0.25); box-shadow:none !important }
+	<?php echo wp_kses( $dm( '.cooked-recipe-card' ), [] ); ?> { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.12) !important; box-shadow:none; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-card:hover' ), [] ); ?> { border-color:rgba(255,255,255,0.3) !important; box-shadow:none; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-card-image, .cooked-recipe-card .cooked-recipe-image-empty' ), [] ); ?> { background-color:rgba(255,255,255,0.08); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-card-author, .cooked-recipe-card-excerpt' ), [] ); ?> { color:rgba(255,255,255,0.65); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-grid .cooked-recipe:hover .cooked-recipe-card-title' ), [] ); ?> { color:#00e0a9; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select' ), [] ); ?> { background:rgba(255,255,255,0.075); border-color:rgba(255,255,255,0.15); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select:hover' ), [] ); ?> { background:rgba(255,255,255,0.10); border-color:rgba(255,255,255,0.25); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block' ), [] ); ?> { background:rgba(0,0,0,0.95); border-color:rgba(255,255,255,0.15); box-shadow:0 16px 40px rgba(0,0,0,0.5); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search input[type="text"].cooked-browse-search' ), [] ); ?> { background:rgba(0,0,0,0.25); border-color:rgba(255,255,255,0.15); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search input[type="text"].cooked-browse-search:focus' ), [] ); ?> { border-color:rgba(255,255,255,0.6); box-shadow:0 0 0 1px rgba(255,255,255,0.6); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap > select' ), [] ); ?> { background:rgba(255,255,255,0.075); border-color:rgba(255,255,255,0.15); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single .ts-control' ), [] ); ?> { background:rgba(255,255,255,0.075); border-color:rgba(255,255,255,0.15); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single.focus .ts-control, .cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single.dropdown-active .ts-control' ), [] ); ?> { border-color:rgba(255,255,255,0.6); box-shadow:0 0 0 1px rgba(255,255,255,0.6); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap .ts-dropdown' ), [] ); ?> { background:#1f2328; border-color:rgba(255,255,255,0.15); color:#fff; box-shadow:0 12px 32px rgba(0,0,0,0.5); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap .ts-dropdown .active' ), [] ); ?> { background:rgba(255,255,255,0.12); color:#fff; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column a:hover, .cooked-recipe-search .cooked-browse-select-block .cooked-tax-column a:focus-visible, .cooked-browse-select-inline-block .cooked-tax-column a:hover, .cooked-browse-select-inline-block .cooked-tax-column a:focus-visible' ), [] ); ?> { background:rgba(255,255,255,0.08); color:#fff; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > span.cooked-tax-column-title, .cooked-browse-select-inline-block .cooked-tax-column > span.cooked-tax-column-title' ), [] ); ?> { border-bottom-color:rgba(255,255,255,0.15); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column i.cooked-icon, .cooked-browse-select-inline-block .cooked-tax-column i.cooked-icon' ), [] ); ?> { color:rgba(255,255,255,0.5); }
+	<?php echo wp_kses( $dm( '.cooked-browse-select-inline-block' ), [] ); ?> { background:rgba(255,255,255,0.05); border-color:rgba(255,255,255,0.12); box-shadow:none; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-filter-option:hover' ), [] ); ?> { background:rgba(255,255,255,0.08); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-filter-option input[type="checkbox"]' ), [] ); ?> { accent-color:#00e0a9; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-filter-all' ), [] ); ?> { color:#00e0a9; }
+	<?php echo wp_kses( $dm( '.cooked-filter-chip' ), [] ); ?> { background:rgba(255,255,255,0.1); color:#fff; }
+	<?php echo wp_kses( $dm( '.cooked-filter-chip:hover, .cooked-filter-chip:focus-visible' ), [] ); ?> { background:rgba(255,255,255,0.18); color:#fff; }
+	<?php echo wp_kses( $dm( '.cooked-recipe-results.cooked-is-loading::after' ), [] ); ?> { border-color:rgba(255,255,255,0.2); border-top-color:#00e0a9; }
 	<?php echo wp_kses( $dm( '.cooked-pagination-numbered' ), [] ); ?> > span { color:rgba(255,255,255,0.5); }
 	<?php echo wp_kses( $dm( '.cooked-recipe-info span.cooked-print' ), [] ); ?> > a,
 	<?php echo wp_kses( $dm( '.cooked-recipe-info span.cooked-fsm-button' ), [] ); ?> { color:rgba(255,255,255,0.5); }
@@ -71,10 +84,7 @@ if ( false !== $_cooked_dark_css_scope ) :
 	<?php echo wp_kses( $dm( '.single-cp_recipe .cooked-nutrition-label .cooked-nut-hr' ), [] ); ?> { border-color:rgba(255,255,255,0.15); }
 	<?php echo wp_kses( $dm( '.cooked-nutrition-label dt.cooked-nut-spacer, .cooked-nutrition-label dl.cooked-nut-spacer' ), [] ); ?> { background:rgba(255,255,255,0.15); }
 	<?php echo wp_kses( $dm( '.cooked-nutrition-label dt, .cooked-nutrition-label dl.cooked-nut-bottom dt, .cooked-nutrition-label dl.cooked-nut-bottom dt:nth-last-child(2):nth-child(2n)' ), [] ); ?> { border-color:rgba(255,255,255,0.15); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-card' ), [] ); ?> { background:rgba(0,0,0,0.25); box-shadow:none !important; }
-	<?php echo wp_kses( $dm( '.cooked-recipe-card-modern, .cooked-recipe-card-modern-centered' ), [] ); ?> { box-shadow:none !important; }
 	<?php echo wp_kses( $dm( '.cooked-recipe-card-modern .cooked-recipe-card-sep, .cooked-recipe-card-modern-centered .cooked-recipe-card-sep' ), [] ); ?> { background:rgba(255,255,255,0.25); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-grid .cooked-recipe-image-empty' ), [] ); ?> { background:rgba(255,255,255,0.15); }
 	<?php echo wp_kses( $dm( '.cooked-fsm' ), [] ); ?> { background:#000; color:#fff; }
 	<?php echo wp_kses( $dm( '.cooked-fsm .cooked-fsm-ingredients' ), [] ); ?> { background:rgba(255,255,255,0.1); }
 	<?php echo wp_kses( $dm( '.cooked-recipe .cooked-rating-stars' ), [] ); ?> > .cooked-rating-star.cooked-rating-star-empty,

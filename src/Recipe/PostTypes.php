@@ -251,6 +251,7 @@ class PostTypes {
     public static function add_query_vars_filter( $vars ) {
         $vars[] = 'servings';
         $vars[] = 'measurement_system';
+        $vars[] = 'cooked_category_filter';
 
         return $vars;
     }

@@ -6,10 +6,22 @@ import { getCookedSettings, setCookedSettings, wpCli, wpCliArgs } from './wp-cli
 
 export const BROWSE_SLUG = 'browse-recipes';
 export const SEED_CATEGORY = { name: 'Bread', slug: 'bread' };
+export const SEED_BREAKFAST_CATEGORY = { name: 'Breakfast', slug: 'breakfast' };
+
+interface SeedRecipe {
+  title: string;
+  date: string;
+  categories?: string[];
+}
 
 // Old dates keep the seed recipes at the end of "newest first" and the start of "oldest first".
-export const SEED_RECIPES = {
-  bread: { title: 'E2E Seed Bread', date: '2000-01-01 10:00:00', category: SEED_CATEGORY.slug },
+export const SEED_RECIPES: Record<'bread' | 'beef' | 'chicken', SeedRecipe> = {
+  // Bread has two categories so the multi-select filter has something to combine.
+  bread: {
+    title: 'E2E Seed Bread',
+    date: '2000-01-01 10:00:00',
+    categories: [SEED_CATEGORY.slug, SEED_BREAKFAST_CATEGORY.slug],
+  },
   beef: { title: 'E2E Seed Beef Stew', date: '2000-01-02 10:00:00' },
   chicken: { title: 'E2E Seed Chicken Soup', date: '2000-01-03 10:00:00' },
 };
@@ -46,11 +58,11 @@ function ensureMedia(): void {
   wpCli(`wp media import ${SEED_IMAGE} --title="E2E image"`);
 }
 
-function ensureCategory(): void {
+function ensureCategory(category: { name: string; slug: string }): void {
   try {
-    wpCliArgs(['term', 'get', 'cp_recipe_category', SEED_CATEGORY.slug, '--by=slug', '--field=term_id']);
+    wpCliArgs(['term', 'get', 'cp_recipe_category', category.slug, '--by=slug', '--field=term_id']);
   } catch {
-    wpCliArgs(['term', 'create', 'cp_recipe_category', SEED_CATEGORY.name, `--slug=${SEED_CATEGORY.slug}`]);
+    wpCliArgs(['term', 'create', 'cp_recipe_category', category.name, `--slug=${category.slug}`]);
   }
 }
 
@@ -60,18 +72,28 @@ function ensureRecipes(): void {
   const cookedVersion = wpCliArgs(['eval', 'echo COOKED_VERSION;']);
 
   for (const recipe of Object.values(SEED_RECIPES)) {
-    if (firstId(wpCliArgs(['post', 'list', '--post_type=cp_recipe', '--post_status=publish', `--title=${recipe.title}`, '--field=ID']))) {
-      continue;
+    let recipeId = firstId(wpCliArgs(['post', 'list', '--post_type=cp_recipe', '--post_status=publish', `--title=${recipe.title}`, '--field=ID']));
+
+    if (!recipeId) {
+      recipeId = Number(wpCliArgs([
+        'post', 'create', '--post_type=cp_recipe', '--post_status=publish', `--post_title=${recipe.title}`,
+        `--post_date=${recipe.date}`, `--post_author=${authorId}`, '--porcelain',
+      ]));
+      // What the recipe editor saves; without cooked_version Cooked reads the post as a 2.x recipe.
+      wpCliArgs(['post', 'meta', 'update', String(recipeId), '_recipe_settings', JSON.stringify({ cooked_version: cookedVersion }), '--format=json']);
     }
-    const recipeId = wpCliArgs([
-      'post', 'create', '--post_type=cp_recipe', '--post_status=publish', `--post_title=${recipe.title}`,
-      `--post_date=${recipe.date}`, `--post_author=${authorId}`, '--porcelain',
-    ]);
-    // What the recipe editor saves; without cooked_version Cooked reads the post as a 2.x recipe.
-    wpCliArgs(['post', 'meta', 'update', recipeId, '_recipe_settings', JSON.stringify({ cooked_version: cookedVersion }), '--format=json']);
-    if ('category' in recipe) {
-      ensureCategory();
-      wpCliArgs(['post', 'term', 'set', recipeId, 'cp_recipe_category', recipe.category, '--by=slug']);
+
+    if (recipe.categories) {
+      const names: Record<string, string> = {
+        [SEED_CATEGORY.slug]: SEED_CATEGORY.name,
+        [SEED_BREAKFAST_CATEGORY.slug]: SEED_BREAKFAST_CATEGORY.name,
+      };
+
+      for (const slug of recipe.categories) {
+        ensureCategory({ name: names[slug] || slug, slug });
+      }
+
+      wpCliArgs(['post', 'term', 'set', String(recipeId), 'cp_recipe_category', ...recipe.categories, '--by=slug']);
     }
   }
 }

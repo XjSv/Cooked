@@ -196,13 +196,41 @@ body.cooked-recipe-editor .cooked-gallery-fields {
         }
     }
 
+    // Frames stack in the view: a new one loads hidden under the current one, then fades in
+    // (cooked-admin-functions.js).
+    .cooked-gallery-live-view {
+        position: relative;
+        max-width: 640px;
+        height: 360px; // until it loads; then the height of its content
+        margin: 0 auto;
+        overflow: hidden;
+        transition: height 250ms cubic-bezier(.22, .61, .36, 1);
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
     .cooked-gallery-live-frame {
+        position: absolute;
+        inset: 0;
         display: block;
         width: 100%;
-        max-width: 640px;
-        height: 360px; // until it loads; then the height of its content (cooked-admin-functions.js)
-        margin: 0 auto;
+        height: 100%;
         border: 0;
+        // The preview page is light; matching it keeps the frame transparent on a dark editor
+        // (a frame whose colour scheme differs from its page's is painted opaque white).
+        color-scheme: light;
+        transition: opacity 200ms ease;
+
+        &.is-loading {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
     }
 
     .cooked-gallery-controls {

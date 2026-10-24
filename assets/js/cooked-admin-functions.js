@@ -2150,33 +2150,76 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
 
-    // The live preview loads once it is first on screen, then follows every change.
+    // The live preview loads once it is first on screen, then follows every change. Each change
+    // loads into a new frame under the current one; once loaded it fades in over it and the view
+    // eases to its height, so the preview never goes blank.
     var timer = null,
         shown = false,
+        view = live.parentNode,
+        pending = null,
+        resizer = null,
+        setHeight = function(target) {
+            var doc = target.contentDocument;
+            if (doc && doc.body) {
+                view.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px';
+            }
+        },
+        load = function() {
+            var next = live.cloneNode(false);
+            if (pending) {
+                pending.remove();
+            }
+            pending = next;
+            next.classList.add('is-loading');
+            next.addEventListener('load', function() {
+                if (next !== pending || !next.contentDocument || !next.contentDocument.body) {
+                    return;
+                }
+                pending = null;
+                var previous = live;
+                live = next;
+                setHeight(next);
+                // The content's height follows the frame's width (a narrower window).
+                if (resizer) {
+                    resizer.disconnect();
+                }
+                if ('ResizeObserver' in window) {
+                    resizer = new ResizeObserver(function() {
+                        setHeight(next);
+                    });
+                    resizer.observe(next.contentDocument.body);
+                }
+                next.classList.remove('is-loading');
+                window.setTimeout(function() {
+                    if (previous !== live) {
+                        previous.remove();
+                    }
+                }, 250);
+            });
+            next.src = previewUrl(true);
+            view.appendChild(next);
+        },
         refresh = function() {
             if (!shown) {
                 return;
             }
             window.clearTimeout(timer);
-            timer = window.setTimeout(function() {
-                live.src = previewUrl(true);
-            }, 400);
+            timer = window.setTimeout(load, 300);
         },
         tab = document.getElementById('cooked-recipe-tab-content-gallery'),
         gallery = document.getElementById('cooked-recipe-image-gallery');
 
-    fitFrame(live);
     if ('IntersectionObserver' in window) {
         new IntersectionObserver(function(entries, observer) {
             if (entries[0].isIntersecting) {
                 shown = true;
                 observer.disconnect();
-                live.src = previewUrl(true);
+                load();
             }
-        }).observe(live);
+        }).observe(view);
     } else {
         shown = true;
-        live.src = previewUrl(true);
+        load();
     }
 
     if (tab) {

@@ -118,7 +118,9 @@ $cooked_gallery_controls = [
         </div>
 
         <div class="cooked-gallery-live-stage">
-            <iframe class="cooked-gallery-live-frame" title="<?php esc_attr_e( 'Gallery preview', 'cooked' ); ?>"></iframe>
+            <div class="cooked-gallery-live-view">
+                <iframe class="cooked-gallery-live-frame" title="<?php esc_attr_e( 'Gallery preview', 'cooked' ); ?>"></iframe>
+            </div>
         </div>
 
         <div class="cooked-gallery-controls">

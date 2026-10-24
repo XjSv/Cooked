@@ -21,6 +21,15 @@ async function sectionSlugs(page: Page): Promise<string[]> {
   );
 }
 
+function proActive(): boolean {
+  try {
+    wpCliArgs(['plugin', 'is-active', 'cooked-pro']);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 for (const theme of ['light', 'dark'] as const) {
   test.describe(`Admin screens accessibility (${theme})`, () => {
     test.describe.configure({ mode: 'serial' });
@@ -52,6 +61,8 @@ for (const theme of ['light', 'dark'] as const) {
 
     for (const screen of ['cooked_welcome', 'cooked_pro']) {
       test(`${screen}`, async ({ adminContext }) => {
+        // Upgrade to Pro is not registered while Cooked Pro is active.
+        test.skip(screen === 'cooked_pro' && proActive(), 'Cooked Pro is active');
         const page = await adminContext.newPage();
         await openScreen(page, screen);
         await expectAccessible(page, { exclude: ['#adminmenumain'] });

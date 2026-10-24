@@ -36,9 +36,7 @@ $cooked_settings_tabs_fields = $cooked_settings->tabs_fields();
 
     </div>
 
-    <?php
-    // The header's Update Settings button clicks this one; it also makes Enter submit the form.
-    submit_button( __( 'Update Settings', 'cooked' ), 'primary', 'submit', false, [ 'hidden' => 'hidden' ] );
-    ?>
+    <?php // The header's Update Settings button clicks this one; it also makes Enter submit the form. ?>
+    <div class="cooked-settings-submit"><?php submit_button( __( 'Update Settings', 'cooked' ), 'primary', 'submit', false ); ?></div>
 
 </form>

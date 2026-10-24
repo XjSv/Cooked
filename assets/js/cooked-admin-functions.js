@@ -48,6 +48,16 @@ window.cookedEnhanceSelects = function(selector) {
                 tomSelect.control_input.setAttribute('aria-labelledby', labelledBy);
             }
         }
+        // A disabled select (e.g. one Cooked Pro turns off until a WordPress setting is on): Tom
+        // Select greys its control out but doesn't say it is disabled.
+        if (select.disabled) {
+            tomSelect.control.setAttribute('aria-disabled', 'true');
+        }
+        // A disabled select (e.g. one Cooked Pro turns off until a WordPress setting is on): Tom
+        // Select greys its control out but doesn't say it is disabled.
+        if (select.disabled) {
+            tomSelect.control.setAttribute('aria-disabled', 'true');
+        }
         if (select.parentNode.classList.contains('cooked-select-wrapper')) {
             select.parentNode.classList.add('is-enhanced');
         }

@@ -56,6 +56,13 @@
         color: var(--cooked-color-text-muted);
     }
 
+    // Links in notices (e.g. Cooked Pro's license notice) read on the dark surface.
+    .notice a,
+    div.updated a,
+    div.error a {
+        color: var(--cooked-color-accent-strong);
+    }
+
     // Frame.
     .cooked-admin-frame.components-card {
         background: var(--cooked-color-surface);

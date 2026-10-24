@@ -811,7 +811,9 @@
         }, [] );
 
         useEffect( function () {
-            var referer = document.querySelector( '.cooked-admin-screen[data-screen="' + screen + '"] input[name="_wp_http_referer"]' );
+            // Every one: fields added to the form (e.g. Cooked Pro's License nonce) bring their own,
+            // and PHP keeps the last one posted.
+            var referers = document.querySelectorAll( '.cooked-admin-screen[data-screen="' + screen + '"] input[name="_wp_http_referer"]' );
             Array.prototype.forEach.call( document.querySelectorAll( '.cooked-admin-screen[data-screen="' + screen + '"] .cooked-settings-tab-content' ), function ( content ) {
                 content.style.display = content.id === 'cooked-settings-tab-content-' + section ? 'block' : 'none';
             } );
@@ -835,9 +837,9 @@
             }
             // The form was rendered on whichever frame page loaded first; send it back
             // to its own screen (and section) after saving.
-            if ( referer ) {
+            Array.prototype.forEach.call( referers, function ( referer ) {
                 referer.value = screenUrl( screen, section );
-            }
+            } );
         }, [ screen, section ] );
 
         function scrollToContent() {

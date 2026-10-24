@@ -616,6 +616,12 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
     padding: 0;
 }
 
+// Its submit button: the header's Update Settings clicks it. (WordPress's .button display rule
+// outranks the hidden attribute, so the wrapper hides it.)
+#cooked-settings-panel .cooked-settings-submit {
+    display: none;
+}
+
 .cooked-admin-body {
     @media screen and (max-width: 960px) {
         grid-template-columns: minmax(0, 1fr);

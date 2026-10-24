@@ -58,7 +58,7 @@ class Menus {
         add_submenu_page( 'cooked_recipes_menu', __( 'What\'s New?', 'cooked' ), __( 'What\'s New?', 'cooked' ), 'edit_cooked_settings', 'cooked_welcome', [ &$this, 'cooked_app_page' ] );
 
         if ( ! class_exists( 'Cooked_Pro_Plugin' ) ) {
-            add_submenu_page( 'cooked_recipes_menu', __( 'Upgrade to Pro', 'cooked' ), '<span class="admin-menu-cooked-upgrade">' . __( 'Upgrade to Pro', 'cooked' ) . '</span>', 'edit_cooked_settings', 'cooked_pro', [ &$this, 'cooked_app_page' ] );
+            add_submenu_page( 'cooked_recipes_menu', __( 'Upgrade to Pro', 'cooked' ), '<span class="admin-menu-cooked-upgrade"><i class="cooked-icon cooked-icon-star" aria-hidden="true"></i>' . __( 'Upgrade to Pro', 'cooked' ) . '</span>', 'edit_cooked_settings', 'cooked_pro', [ &$this, 'cooked_app_page' ] );
         }
     }
 

@@ -58,8 +58,16 @@ test.describe('Upgrade to Pro', () => {
     await expect(screen.locator('.cooked-pro-coupon .cooked-copy-code')).toBeVisible();
 
     // In the menu and the page tabs.
-    await expect(page.locator('#adminmenu a[href="admin.php?page=cooked_pro"]')).toHaveCount(1);
+    const menuItem = page.locator('#adminmenu a[href="admin.php?page=cooked_pro"]');
+    await expect(menuItem).toHaveCount(1);
     await expect(page.locator('.cooked-admin-page-tab[href*="cooked_pro"]')).toHaveCount(1);
+
+    // Both carry the same star, from the icon font rather than a dashicon.
+    for (const star of [menuItem.locator('.cooked-icon-star'), page.locator('.cooked-admin-page-tab[href*="cooked_pro"] .cooked-icon-star')]) {
+      await expect(star).toHaveCount(1);
+      await expect(star).toHaveAttribute('aria-hidden', 'true');
+      await expect(star).toHaveCSS('font-family', 'CookedIcons');
+    }
   });
 
   test('hidden with Cooked Pro active', async ({ adminContext }) => {

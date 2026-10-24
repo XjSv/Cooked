@@ -563,6 +563,18 @@ function wp_reset_postdata() {
 }
 function wp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) { return []; }
 function wp_kses( $string, $allowed_html, $allowed_protocols = [] ) { return $string; }
+function wp_kses_allowed_html( $context = 'post' ) {
+    return [
+        'a'      => [ 'href' => true, 'class' => true, 'aria-label' => true ],
+        'div'    => [ 'class' => true, 'id' => true ],
+        'span'   => [ 'class' => true ],
+        'input'  => [],
+        'form'   => [ 'action' => true, 'method' => true, 'class' => true ],
+        'label'  => [ 'class' => true, 'for' => true ],
+        'select' => [ 'name' => true, 'id' => true, 'class' => true ],
+        'option' => [ 'value' => true, 'selected' => true ],
+    ];
+}
 function wp_json_encode( $data, $options = 0, $depth = 512 ) { return json_encode( $data, $options, $depth ); }
 function get_admin_url() { return 'http://example.com/wp-admin/'; }
 function get_the_author_meta( $field = '', $user_id = false ) { return 'Admin User'; }

@@ -54,7 +54,7 @@ if ( false !== $_cooked_dark_css_scope ) :
 	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-browse-select-block' ), [] ); ?> { background:rgba(0,0,0,0.95); border-color:rgba(255,255,255,0.15); box-shadow:0 16px 40px rgba(0,0,0,0.5); color:#fff; }
 	<?php echo wp_kses( $dm( '.cooked-recipe-search input[type="text"].cooked-browse-search' ), [] ); ?> { background:rgba(0,0,0,0.25); border-color:rgba(255,255,255,0.15); }
 	<?php echo wp_kses( $dm( '.cooked-recipe-search input[type="text"].cooked-browse-search:focus' ), [] ); ?> { border-color:rgba(255,255,255,0.6); box-shadow:0 0 0 1px rgba(255,255,255,0.6); }
-	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap > select' ), [] ); ?> { background:rgba(255,255,255,0.075); border-color:rgba(255,255,255,0.15); }
+	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap select' ), [] ); ?> { background:rgba(255,255,255,0.075); border-color:rgba(255,255,255,0.15); }
 	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single .ts-control' ), [] ); ?> { background:rgba(255,255,255,0.075); border-color:rgba(255,255,255,0.15); }
 	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single.focus .ts-control, .cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single.dropdown-active .ts-control' ), [] ); ?> { border-color:rgba(255,255,255,0.6); box-shadow:0 0 0 1px rgba(255,255,255,0.6); }
 	<?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-sortby-wrap .ts-dropdown' ), [] ); ?> { background:#1f2328; border-color:rgba(255,255,255,0.15); color:#fff; box-shadow:0 12px 32px rgba(0,0,0,0.5); }

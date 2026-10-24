@@ -1414,9 +1414,14 @@ endif;
 			/* translators: singular and plural "serving" sizes */
 			$servings_string = sprintf( esc_html( _n( '%s Serving', '%s Servings', (int) ceil( (float) $servings ), 'cooked' ) ), $servings );
 
+			// Desktop gets Tom Select (cooked-functions.js); touch devices keep the native picker.
+			wp_enqueue_style( 'cooked-tom-select' );
+			wp_enqueue_script( 'cooked-tom-select' );
+
 			echo '<a aria-label="' . esc_attr( $servings_string ) . '" href="#">' . esc_html( $servings_string ) . '</a>';
 			echo '<label for="cooked-servings-changer" class="screen-reader-text">' . esc_html__( 'Servings', 'cooked' ) . '</label>';
-			echo '<select id="cooked-servings-changer" name="servings" class="cooked-servings-changer">';
+			// Tom Select points the label at its own control, so the select keeps its name here too.
+			echo '<select id="cooked-servings-changer" name="servings" class="cooked-servings-changer" aria-label="' . esc_attr__( 'Servings', 'cooked' ) . '">';
 			foreach ( $servings_array as $stype ) :
 				echo '<option value="' . esc_attr( $stype['value'] ) . '"' . ( (float) $stype['value'] === (float) $servings ? ' selected' : '' ) . '>' . esc_html( $stype['name'] ) . '</option>';
 				endforeach;

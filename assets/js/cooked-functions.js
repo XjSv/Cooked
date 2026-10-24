@@ -49,6 +49,41 @@ var cooked_loading = false;
 
     	if ( $('.cooked-servings').length ) {
     		var servingsSelectField = $('.cooked-servings').find('select');
+
+            // Desktop: Tom Select, showing the current servings ("4 Servings") as the value.
+            // Touch devices keep the native picker laid over the link.
+            // On DOM ready: Tom Select is enqueued with the switcher and can print after this file.
+            $(function() {
+                if ( window.TomSelect && ! window.matchMedia('(pointer: coarse)').matches ) {
+                    servingsSelectField.each(function() {
+                        var select = this,
+                            wrap = select.closest('.cooked-servings'),
+                            current = wrap ? wrap.querySelector('a') : null,
+                            currentLabel = current ? current.textContent : '';
+
+                        if ( select.tomselect ) {
+                            return;
+                        }
+
+                        var tomSelect = new window.TomSelect(select, {
+                            maxOptions: null,
+                            controlInput: null,
+                            dropdownParent: 'body',
+                            render: {
+                                item: function(data, escape) {
+                                    return '<div>' + escape(currentLabel || data.text) + '</div>';
+                                }
+                            }
+                        });
+
+                        tomSelect.dropdown.classList.add('cooked-servings-dropdown');
+                        if ( wrap ) {
+                            wrap.classList.add('is-enhanced');
+                        }
+                    });
+                }
+            });
+
     		servingsSelectField.on('change', function(e) {
     			e.preventDefault();
     			var servings = $(this).children("option:selected").val();

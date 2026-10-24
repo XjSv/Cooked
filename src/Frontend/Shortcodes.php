@@ -1002,9 +1002,10 @@ class Shortcodes {
      */
     public function cooked_kses_servings_switcher( $tags ) {
         $tags['select'] = [
-            'name'  => true,
-            'id'    => true,
-            'class' => true,
+            'name'       => true,
+            'id'         => true,
+            'class'      => true,
+            'aria-label' => true,
         ];
         $tags['option'] = [
             'value'    => true,

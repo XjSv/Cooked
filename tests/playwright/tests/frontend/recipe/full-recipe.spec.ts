@@ -75,7 +75,9 @@ test.describe('Full recipe (anonymous user)', () => {
     const flour = page.locator('.cooked-recipe-ingredients .cooked-ing-amount').first();
     await expect(flour).toHaveAttribute('data-decimal', '2');
 
-    await page.locator('.cooked-servings-changer').first().selectOption(String(FULL_RECIPE.servings * 2));
+    // Tom Select on desktop: open the menu and pick double.
+    await page.locator('.cooked-recipe-info .cooked-servings .ts-control').first().click();
+    await page.locator(`.cooked-servings-dropdown .option[data-value="${FULL_RECIPE.servings * 2}"]`).click();
     await page.waitForURL(/servings=8/);
     await expect(page.locator('.cooked-recipe-ingredients .cooked-ing-amount').first()).toHaveAttribute('data-decimal', '4');
   });

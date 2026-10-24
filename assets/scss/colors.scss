@@ -355,3 +355,9 @@
     border-color: rgba(255, 255, 255, 0.2);
     color: inherit;
 }
+
+@include cooked-dark('.ts-dropdown.cooked-servings-dropdown') {
+    border-color: rgba(255, 255, 255, 0.14);
+    background: #1f2328;
+    color: #fff;
+}

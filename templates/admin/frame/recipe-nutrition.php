@@ -124,7 +124,7 @@ $cooked_nutrition_field = function ( $slug, $nf ) use ( $recipe_settings ) {
         <aside class="cooked-nutrition-preview" aria-labelledby="cooked-nutrition-preview-title">
             <div class="cooked-nutrition-preview-head">
                 <h3 class="cooked-nutrition-preview-title" id="cooked-nutrition-preview-title"><?php esc_html_e( 'Preview', 'cooked' ); ?></h3>
-                <span class="cooked-nutrition-preview-caption"><?php esc_html_e( 'Shown on the recipe page', 'cooked' ); ?></span>
+                <span class="cooked-nutrition-preview-caption"><?php esc_html_e( 'Updates as you type', 'cooked' ); ?></span>
             </div>
             <div class="cooked-nutrition-stage">
                 <?php do_action( 'cooked_before_nutrition_information', $post_id ); ?>

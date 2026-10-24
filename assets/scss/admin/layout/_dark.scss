@@ -390,7 +390,7 @@
         }
 
         // The classic layout's tabs: their older styles have fixed light colours. (The new
-        // Nutrition tab's label keeps the recipe page's black values on its white card.)
+        // Nutrition tab's preview takes the admin colours, _recipe-editor-nutrition.scss.)
         #cooked_recipe_settings h3.cooked-settings-title,
         #cooked_recipe_settings .recipe-setting-block #cooked-nutrition-label .cooked-nut-label {
             color: var(--cooked-color-accent-strong);
@@ -465,7 +465,7 @@
             background: var(--cooked-color-border);
         }
 
-        // Nutrition Facts preview: keeps the look of a printed label, so it stays light.
+        // Classic Nutrition Facts preview: keeps the look of a printed label, so it stays light.
         #cooked_recipe_settings #cooked-nutrition-label {
             border-color: #aaa;
             background: #fff;

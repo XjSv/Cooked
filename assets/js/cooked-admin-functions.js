@@ -1112,13 +1112,11 @@ var cookedSortableTouchHandler = function(event) {
                 gallery_images_frame.on('select', function() {
                     // Grabs the attachment selection and creates a JSON representation of the model.
                     var media_attachments = gallery_images_frame.state().get('selection').toJSON();
-                    var thisThumbnail;
 
                     for (var media_key in media_attachments) {
                         if (!media_attachments.hasOwnProperty(media_key)) continue;
                         var media_attachment = media_attachments[media_key];
-                        thisThumbnail = media_attachment.sizes.thumbnail.url;
-                        var galleryItem = '<div data-attachment-id="' + media_attachment.id + '" class="cooked-recipe-gallery-item"><img src="' + thisThumbnail + '" /><span class="cooked-gallery-item-title">' + media_attachment.title + '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' + media_attachment.id + '" /><a href="#" data-attachment-id="' + media_attachment.id + '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>';
+                        var galleryItem = cooked_gallery_item( media_attachment );
                         // The new layout's "Add images" tile stays last.
                         if ( $('#cooked-recipe-image-gallery > .cooked-gallery-add-tile').length ) {
                             $('#cooked-recipe-image-gallery > .cooked-gallery-add-tile').before( galleryItem );
@@ -1168,13 +1166,11 @@ var cookedSortableTouchHandler = function(event) {
                 image_edit_frame.on('select', function() {
                     // Grabs the attachment selection and creates a JSON representation of the model.
                     var media_attachments = image_edit_frame.state().get('selection').toJSON();
-                    var thisThumbnail;
 
                     for (var media_key in media_attachments) {
                         if (!media_attachments.hasOwnProperty(media_key)) continue;
                         var media_attachment = media_attachments[media_key];
-                        thisThumbnail = media_attachment.sizes.thumbnail.url;
-                        thisButton.parent().replaceWith( '<div data-attachment-id="' + media_attachment.id + '" class="cooked-recipe-gallery-item"><img src="' + thisThumbnail + '" /><span class="cooked-gallery-item-title">' + media_attachment.title + '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' + media_attachment.id + '" /><a href="#" data-attachment-id="' + media_attachment.id + '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>' );
+                        thisButton.parent().replaceWith( cooked_gallery_item( media_attachment ) );
                     }
 
                     cooked_init_gallery_sorting();
@@ -1380,6 +1376,25 @@ function cooked_updateTotalTimeValue( prepTime, cookTime ) {
 }
 
 // Reset the Gallery Builder
+/**
+ * A Gallery tab image tile for a media library attachment. The title and URL are set as text and
+ * attributes, never parsed as HTML.
+ */
+function cooked_gallery_item( attachment ) {
+    var $ = jQuery,
+        id = parseInt( attachment.id, 10 ),
+        // Small images have no thumbnail size.
+        thumbnail = attachment.sizes && attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;
+
+    return $( '<div class="cooked-recipe-gallery-item"></div>' ).attr( 'data-attachment-id', id ).append(
+        $( '<img />' ).attr( 'src', thumbnail ),
+        $( '<span class="cooked-gallery-item-title"></span>' ).text( attachment.title || '' ),
+        $( '<input type="hidden" name="_recipe_settings[gallery][items][]" />' ).val( id ),
+        $( '<a href="#" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a>' ).attr( 'data-attachment-id', id ),
+        $( '<a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>' )
+    );
+}
+
 // Assign a value to the hidden input field.
 // Init the jQuery UI Sort
 function cooked_init_gallery_sorting() {

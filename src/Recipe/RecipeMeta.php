@@ -32,6 +32,73 @@ class RecipeMeta {
     }
 
     /**
+     * The post types that get the Cooked Settings box (filterable; recipes by default).
+     *
+     * @since 2.0.0
+     * @return string[]
+     */
+    public static function post_types() {
+        return (array) apply_filters(
+            'cooked_recipe_metabox_post_types',
+            apply_filters( 'cp_recipe_metabox_post_types', [ 'cp_recipe' ] )
+        );
+    }
+
+    /**
+     * The top-level keys a saved recipe keeps; meta_cleanup() drops any other submitted key.
+     * Add-ons that store their own fields in _recipe_settings add them through the filter.
+     *
+     * @since 2.0.0
+     * @return string[]
+     */
+    public static function allowed_keys() {
+        return (array) apply_filters(
+            'cooked_recipe_settings_keys',
+            [
+                'content',
+                'excerpt',
+                'notes',
+                'seo_description',
+                'post_title',
+                'difficulty_level',
+                'prep_time',
+                'cook_time',
+                'total_time',
+                'ingredients',
+                'directions',
+                'nutrition',
+                'gallery',
+                'allergens',
+                'cooked_version',
+                // Cooked Pro's front-end submissions.
+                'guest_name',
+                'guest_email',
+            ]
+        );
+    }
+
+    /**
+     * Plain text from a value that may hold HTML, however many times its entities are encoded.
+     * Decodes and strips until nothing changes, so the decode in Cooked_Recipes::format_content()
+     * cannot turn what is left back into a tag (e.g. "&amp;lt;a&amp;gt;").
+     *
+     * @since 2.0.0
+     * @param string $value Submitted value.
+     * @return string
+     */
+    public static function strip_all_html( $value ) {
+        $value = (string) $value;
+        for ( $i = 0; $i < 10; $i++ ) {
+            $stripped = wp_strip_all_tags( html_entity_decode( $value, ENT_QUOTES | ENT_HTML5, 'UTF-8' ) );
+            if ( $stripped === $value ) {
+                break;
+            }
+            $value = $stripped;
+        }
+        return $value;
+    }
+
+    /**
      * Sanitizes the recipe settings submitted from the editor.
      *
      * @param array<string, mixed> $recipe_settings Submitted recipe settings.
@@ -48,8 +115,13 @@ class RecipeMeta {
             $wp_editor_roles_allowed = isset( $_cooked_settings['recipe_wp_editor_roles'] ) && ! empty( array_intersect( $user_roles, $_cooked_settings['recipe_wp_editor_roles'] ) ) ? true : false;
         }
 
+        $allowed_keys = self::allowed_keys();
+
         if ( ! empty( $recipe_settings ) ) {
             foreach ( $recipe_settings as $key => $val ) {
+                if ( ! in_array( $key, $allowed_keys, true ) ) {
+                    continue;
+                }
                 if ( ! is_array( $val ) ) {
                     if ( 'content' === $key || 'excerpt' === $key || 'notes' === $key ) {
                         if ( $wp_editor_roles_allowed ) {
@@ -57,10 +129,7 @@ class RecipeMeta {
                             $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
                             $_recipe_settings[ $key ] = wp_kses_post( $decoded_val );
                         } else {
-                            // Strip all HTML tags - don't encode entities since format_content() will decode them
-                            // Decode entities first in case they're already encoded.
-                            $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
-                            $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
+                            $_recipe_settings[ $key ] = self::strip_all_html( $val );
                         }
                     } elseif ( 'seo_description' === $key ) {
                         $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
@@ -75,53 +144,77 @@ class RecipeMeta {
 					} else {
 						$_recipe_settings[ $key ] = \Cooked_Functions::sanitize_text_field( $val );
                     }
-                } else {
-                    foreach ( $val as $subkey => $subval ) {
-                        if ( ! is_array( $subval ) ) {
-                            $_recipe_settings[ $key ][ $subkey ] = \Cooked_Functions::sanitize_text_field( $subval );
-                        } else {
-                            foreach ( $subval as $sub_subkey => $sub_subval ) {
-                                if ( ! is_array( $sub_subval ) ) {
-                                    if (
-                                        // For content keys: allow 'content'.
-                                        ( 'content' === $sub_subkey ) ||
-                                        // For ingredients: allow 'name' and section heading fields.
-                                        ( 'ingredients' === $key && ( 'name' === $sub_subkey || 'section_heading_name' === $sub_subkey || 'section_heading_element' === $sub_subkey ) ) ||
-                                        // For directions: allow 'content' and section heading fields.
-                                        ( 'directions' === $key && ( 'content' === $sub_subkey || 'section_heading_name' === $sub_subkey || 'section_heading_element' === $sub_subkey ) )
-                                    ) {
-                                        if ( $wp_editor_roles_allowed ) {
-                                            // Decode HTML entities first so wp_kses_post can see actual HTML tags.
-                                            $decoded_sub_subval                                 = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
-                                            $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = wp_kses_post( $decoded_sub_subval );
-                                        } else {
-                                            // Strip all HTML tags - don't encode entities since format_content() will decode them
-                                            // Decode entities first in case they're already encoded.
-                                            $decoded_sub_subval                                 = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
-                                            $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = wp_strip_all_tags( $decoded_sub_subval );
-                                        }
-                                    } else {
-                                        $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ] = \Cooked_Functions::sanitize_text_field( $sub_subval );
-                                    }
-                                } else {
-                                    foreach ( $sub_subval as $sub_sub_subkey => $sub_sub_subval ) {
-                                        if ( ! is_array( $sub_sub_subval ) ) {
-                                            $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ][ $sub_sub_subkey ] = \Cooked_Functions::sanitize_text_field( $sub_sub_subval );
-                                        } else {
-                                            foreach ( $sub_sub_subval as $sub_sub_sub_subkey => $sub_sub_sub_subval ) {
-                                                $_recipe_settings[ $key ][ $subkey ][ $sub_subkey ][ $sub_sub_subkey ][ $sub_sub_sub_subkey ] = \Cooked_Functions::sanitize_text_field( $sub_sub_sub_subval );
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                } elseif ( ! empty( $val ) ) {
+                    $clean = self::clean_values( $val, $key, 1, $wp_editor_roles_allowed );
+                    if ( ! empty( $clean ) ) {
+                        $_recipe_settings[ $key ] = $clean;
                     }
                 }
             }
         }
 
         return $_recipe_settings;
+    }
+
+    /**
+     * Sanitizes a nested recipe setting (ingredients, directions, nutrition, gallery...), up to
+     * four levels deep. Keys go through sanitize_key(). A step's or ingredient's text keeps HTML
+     * for the editor roles (wp_kses_post) and is stripped to plain text for everyone else; every
+     * other value is a text field. Empty arrays are left out.
+     *
+     * @since 2.0.0
+     * @param array<mixed> $values  Submitted values.
+     * @param string       $setting Top-level setting key, e.g. "directions".
+     * @param int          $depth   1 for the setting's own items.
+     * @param bool         $html    Whether the user may store HTML.
+     * @return array<string, mixed>
+     */
+    private static function clean_values( $values, $setting, $depth, $html ) {
+        $clean = [];
+
+        foreach ( $values as $key => $value ) {
+            $key = sanitize_key( (string) $key );
+
+            if ( is_array( $value ) ) {
+                if ( $depth < 4 && ! empty( $value ) ) {
+                    $nested = self::clean_values( $value, $setting, $depth + 1, $html );
+                    if ( ! empty( $nested ) ) {
+                        $clean[ $key ] = $nested;
+                    }
+                }
+                continue;
+            }
+
+            if ( 2 === $depth && self::is_rich_text( $setting, $key ) ) {
+                // Decode entities first so wp_kses_post sees the actual tags.
+                $clean[ $key ] = $html ? wp_kses_post( wp_specialchars_decode( (string) $value, ENT_QUOTES ) ) : self::strip_all_html( (string) $value );
+            } else {
+                $clean[ $key ] = \Cooked_Functions::sanitize_text_field( $value );
+            }
+        }
+
+        return $clean;
+    }
+
+    /**
+     * Whether a field of an ingredient or direction (or any item's "content") is rich text.
+     *
+     * @since 2.0.0
+     * @param string $setting Top-level setting key.
+     * @param string $field   Field key inside one item.
+     * @return bool
+     */
+    private static function is_rich_text( $setting, $field ) {
+        if ( 'content' === $field ) {
+            return true;
+        }
+        if ( 'ingredients' === $setting ) {
+            return in_array( $field, [ 'name', 'section_heading_name', 'section_heading_element' ], true );
+        }
+        if ( 'directions' === $setting ) {
+            return in_array( $field, [ 'section_heading_name', 'section_heading_element' ], true );
+        }
+        return false;
     }
 
     /**
@@ -132,12 +225,7 @@ class RecipeMeta {
      */
     public function add_recipe_meta_box( $post_type ) {
         // Limit meta box to Cooked Recipes.
-        $post_types = apply_filters(
-            'cooked_recipe_metabox_post_types',
-            apply_filters( 'cp_recipe_metabox_post_types', [ 'cp_recipe' ] )
-        );
-
-        if ( in_array( $post_type, $post_types, true ) ) {
+        if ( in_array( $post_type, self::post_types(), true ) ) {
             add_meta_box( 'cooked_recipe_settings', __( 'Cooked Settings', 'cooked' ), [ &$this, 'render_recipe_meta_box' ], $post_type, 'normal', 'high' );
             add_filter( 'get_user_option_meta-box-order_' . $post_type, [ __CLASS__, 'keep_meta_box_in_main_column' ] );
         }
@@ -197,8 +285,9 @@ class RecipeMeta {
 			return $post_id;
         }
 
-        // Check the user's permissions.
-        if ( ! current_user_can( 'edit_cooked_recipes', $post_id ) ) {
+        // Only the post types with the box, and only a post this user can edit (edit_cooked_recipes
+        // is a general capability, so it says nothing about this post).
+        if ( ! in_array( get_post_type( $post_id ), self::post_types(), true ) || ! current_user_can( 'edit_post', $post_id ) ) {
 			return $post_id;
         }
 

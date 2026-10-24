@@ -998,18 +998,6 @@ parameters:
 			path: src/Recipe/PostTypes.php
 
 		-
-			message: '#^Cannot access offset \(int\|string\) on non\-empty\-array\<non\-empty\-array\<non\-empty\-array\<non\-empty\-array\<string\>\|string\>\|string\>\|string\>\|float\|int\<min, \-1\>\|int\<1, max\>\|string\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
-			path: src/Recipe/RecipeMeta.php
-
-		-
-			message: '#^Cannot assign offset \(''content''\|''name''\|''section_heading…''\|''section_heading_name''\) to array\<array\<array\<string\>\|string\>\|string\>\|string\.$#'
-			identifier: offsetAssign.dimType
-			count: 2
-			path: src/Recipe/RecipeMeta.php
-
-		-
 			message: '#^Method Cooked\\Recipe\\RecipeMeta\:\:save_recipe_meta_box\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1

@@ -11,7 +11,7 @@
  * License:             GPLv2 or later
  * License URI:         https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least:   6.8
- * Tested up to:        7.2
+ * Tested up to:        7.1
  * Requires PHP:        8.2
  * Contributors:        xjsv, mgiannopoulos24, boxystudio
  * Tags:                recipe, recipes, food, cooking, nutrition

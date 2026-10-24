@@ -240,8 +240,8 @@ body.cooked-recipe-editor #cooked_recipe_settings .cooked-nutrition-fields {
             }
         }
 
-        li ul ul {
-            margin: 0 0 0 14px;
+        li.cooked-nut-indent {
+            margin-left: 14px;
         }
 
         // % Daily Value as a pill at the right.

@@ -116,6 +116,10 @@
     margin: 0 0 0 20px;
 }
 
+#cooked_recipe_settings #cooked-nutrition-label li.cooked-nut-indent {
+    margin-left: 20px;
+}
+
 #cooked_recipe_settings #cooked-nutrition-label li ul.cooked-right {
     margin: 0;
 }
@@ -193,11 +197,6 @@
     width: 100%;
     box-sizing: border-box;
 }
-
-/* @TODO: This does not work because the last child could be hidden. */
-/* #cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-bottom li:last-child {
-   border-bottom:none;
-   } */
 
 #cooked_recipe_settings .cooked-measurement-inputs .cooked-select-wrapper:before {
     top: 8px;

@@ -1614,8 +1614,8 @@ function cooked_gallery_item( attachment ) {
         $( '<img />' ).attr( 'src', thumbnail ),
         $( '<span class="cooked-gallery-item-title"></span>' ).text( attachment.title || '' ),
         $( '<input type="hidden" name="_recipe_settings[gallery][items][]" />' ).val( id ),
-        $( '<a href="#" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a>' ).attr( 'data-attachment-id', id ),
-        $( '<a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a>' )
+        $( '<button type="button" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button>' ).attr( { 'data-attachment-id': id, 'aria-label': cooked_admin_functions_js_vars.i18n_change_image } ),
+        $( '<button type="button" class="remove-image-button"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button>' ).attr( 'aria-label', cooked_admin_functions_js_vars.i18n_remove_image )
     );
 }
 

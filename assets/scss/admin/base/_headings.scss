@@ -1,10 +1,8 @@
 /* Heading Element Styles */
 #cooked-ingredients-builder .cooked-ingredient-block:hover > .cooked-heading-name,
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded > .cooked-heading-name,
-#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-heading-element > .cooked-heading-name,
 #cooked-directions-builder .cooked-direction-block:hover > .cooked-heading-name,
-#cooked-directions-builder .cooked-direction-block.cooked-expanded > .cooked-heading-name,
-#cooked-directions-builder .cooked-direction-block.cooked-has-heading-element > .cooked-heading-name {
+#cooked-directions-builder .cooked-direction-block.cooked-expanded > .cooked-heading-name {
     padding-right: 32px;
 }
 
@@ -25,19 +23,15 @@
 
 #cooked-ingredients-builder .cooked-ingredient-block:hover .cooked-show-heading-element,
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-heading-element,
-#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-heading-element .cooked-show-heading-element,
 #cooked-directions-builder .cooked-direction-block:hover .cooked-show-heading-element,
-#cooked-directions-builder .cooked-direction-block.cooked-expanded .cooked-show-heading-element,
-#cooked-directions-builder .cooked-direction-block.cooked-has-heading-element .cooked-show-heading-element {
+#cooked-directions-builder .cooked-direction-block.cooked-expanded .cooked-show-heading-element {
     opacity: 1;
 }
 
 #cooked-ingredients-builder .cooked-ingredient-block .cooked-show-heading-element .cooked-icon:hover,
 #cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded .cooked-show-heading-element .cooked-icon,
-#cooked-ingredients-builder .cooked-ingredient-block.cooked-has-heading-element .cooked-show-heading-element .cooked-icon,
 #cooked-directions-builder .cooked-direction-block .cooked-show-heading-element .cooked-icon:hover,
-#cooked-directions-builder .cooked-direction-block.cooked-expanded .cooked-show-heading-element .cooked-icon,
-#cooked-directions-builder .cooked-direction-block.cooked-has-heading-element .cooked-show-heading-element .cooked-icon {
+#cooked-directions-builder .cooked-direction-block.cooked-expanded .cooked-show-heading-element .cooked-icon {
     color: #0685ba;
 }
 

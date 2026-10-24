@@ -44,6 +44,14 @@
     display: inline-block;
 }
 
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .remove-image-button,
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .cooked-gallery-edit-button {
+    border: 0;
+    font-size: inherit;
+    line-height: 1;
+    cursor: pointer;
+}
+
 #cooked-recipe-image-gallery .cooked-recipe-gallery-item .remove-image-button {
     border-radius: 0 3px 0 0;
     display: inline-block;

@@ -216,6 +216,7 @@ class Enqueues {
      * here instead of registering its own copy at the pre-2.0 path.
      *
      * @since 2.0.0
+     * @return void
      */
     public function register_shared_scripts() {
         $min = COOKED_DEV ? '' : '.min';
@@ -227,6 +228,7 @@ class Enqueues {
      *
      * @since 2.0.0
      * @param string $hook The current admin page hook.
+     * @return void
      */
     public function admin_app_enqueues( $hook ) {
         $current = self::app_screen_for( $hook );
@@ -354,7 +356,6 @@ class Enqueues {
             'rest_nonce' => wp_create_nonce( 'wp_rest' ),
         ];
 
-        // Gonna need jQuery.
         wp_enqueue_script( 'jquery' );
 
         // Tom Select (searchable select fields).
@@ -440,7 +441,7 @@ class Enqueues {
                     $total_old_recipes = 0;
                 endif;
 
-                // Gonna need jQuery.
+                // The recipe editor uses the media library and the WordPress editor.
                 wp_enqueue_media();
                 wp_enqueue_editor();
                 wp_enqueue_script( 'jquery' );
@@ -474,6 +475,8 @@ class Enqueues {
                     'i18n_gallery_image_title'             => __( 'Add to Gallery', 'cooked' ),
                     'i18n_edit_image_title'                => __( 'Edit Gallery Item', 'cooked' ),
                     'i18n_edit_image_button'               => __( 'Update Gallery Item', 'cooked' ),
+                    'i18n_change_image'                    => __( 'Change image', 'cooked' ),
+                    'i18n_remove_image'                    => __( 'Remove image', 'cooked' ),
                     'i18n_saved'                           => __( 'Saved', 'cooked' ),
                     'i18n_copied'                          => __( 'Copied', 'cooked' ),
                     'i18n_applied'                         => __( 'Applied', 'cooked' ),
@@ -500,7 +503,7 @@ class Enqueues {
                     'i18n_confirm_calculate_related'       => __( 'Pre-calculate related recipes for all published recipes? This may take a while on large sites.', 'cooked' ),
                     /* translators: 1: date and time, 2: number of recipes */
                     'i18n_last_calculated'                 => __( 'Last: %1$s · %2$s recipes', 'cooked' ),
-                    'wp_editor_roles_allowed'              => esc_attr( $wp_editor_roles_allowed ),
+                    'wp_editor_roles_allowed'              => $wp_editor_roles_allowed ? '1' : '',
                     'cooked_bulk_add_nonce'                => wp_create_nonce( 'cooked_bulk_add' ),
                     'cooked_import_nonce'                  => wp_create_nonce( 'cooked_admin_import' ),
                     'cooked_migrate_nonce'                 => wp_create_nonce( 'cooked_migrate_recipes' ),

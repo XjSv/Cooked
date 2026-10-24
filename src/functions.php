@@ -185,6 +185,7 @@ function cooked_render_substitution_fields( $ing_key, $substitutions, $measureme
  *
  * @since 1.0.0
  * @param int $post_id Recipe ID.
+ * @return void
  */
 function cooked_render_recipe_fields( $post_id ) {
     global $_cooked_settings;
@@ -456,10 +457,10 @@ endif;
 
                 <p class="cooked-builder-buttons">
                     <?php do_action( 'cooked_ingredient_buttons_start' ); ?>
-                    <a href="#" class="button cooked-add-ingredient-button"><?php esc_html_e( 'Add Ingredient', 'cooked' ); ?></a>
-                    <a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
+                    <button type="button" class="button cooked-add-ingredient-button"><?php esc_html_e( 'Add Ingredient', 'cooked' ); ?></button>
+                    <button type="button" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></button>
                     <?php do_action( 'cooked_ingredient_buttons_end' ); ?>
-                    <a href="#" class="button cooked-bulk-add-button" data-type="ingredients"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
+                    <button type="button" class="button cooked-bulk-add-button" data-type="ingredients"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></button>
                 </p>
 
                 <!-- TEMPLATES -->
@@ -695,10 +696,10 @@ endif;
 
                 <p class="cooked-builder-buttons">
                     <?php do_action( 'cooked_direction_buttons_start' ); ?>
-                    <a href="#" class="button cooked-add-direction-button"><?php esc_html_e( 'Add Direction', 'cooked' ); ?></a>
-                    <a href="#" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></a>
+                    <button type="button" class="button cooked-add-direction-button"><?php esc_html_e( 'Add Direction', 'cooked' ); ?></button>
+                    <button type="button" class="button cooked-add-heading-button"><?php esc_html_e( 'Add Section Heading', 'cooked' ); ?></button>
                     <?php do_action( 'cooked_direction_buttons_end' ); ?>
-                    <a href="#" class="button cooked-bulk-add-button" data-type="directions"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></a>
+                    <button type="button" class="button cooked-bulk-add-button" data-type="directions"><?php esc_html_e( 'Bulk Add', 'cooked' ); ?></button>
                 </p>
 
                 <!-- TEMPLATES -->

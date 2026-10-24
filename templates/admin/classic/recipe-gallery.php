@@ -72,7 +72,7 @@
                 $image_thumb = wp_get_attachment_image( $g_item, 'thumbnail' );
                 $image_title = get_the_title( $g_item );
 
-                echo '<div data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-recipe-gallery-item">' . wp_kses_post( $image_thumb ) . '<span class="cooked-gallery-item-title">' . esc_html( $image_title ) . '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' . esc_attr( $g_item ) . '" /><a href="#" data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>';
+                echo '<div data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-recipe-gallery-item">' . wp_kses_post( $image_thumb ) . '<span class="cooked-gallery-item-title">' . esc_html( $image_title ) . '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' . esc_attr( $g_item ) . '" /><button type="button" data-attachment-id="' . esc_attr( $g_item ) . '" class="cooked-gallery-edit-button" aria-label="' . esc_attr__( 'Change image', 'cooked' ) . '"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button><button type="button" class="remove-image-button" aria-label="' . esc_attr__( 'Remove image', 'cooked' ) . '"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button></div>';
 
                 endforeach;
             endif;

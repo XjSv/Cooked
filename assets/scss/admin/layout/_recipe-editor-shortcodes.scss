@@ -182,7 +182,7 @@ body.cooked-recipe-editor .cooked-shortcodes-fields {
 
         code {
             padding: 1px 5px;
-            border-radius: 3px;
+            border-radius: var(--cooked-radius-sm);
             background: var(--cooked-color-surface-muted);
             color: var(--cooked-color-text);
             font-size: 12px;

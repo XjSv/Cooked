@@ -104,7 +104,7 @@
         bottom: 2px;
         left: 2px;
         width: calc(50% - 2px);
-        border-radius: 3px;
+        border-radius: var(--cooked-radius-sm);
         background: var(--cooked-color-surface);
         box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
         transition: transform 250ms cubic-bezier(.22, .61, .36, 1);
@@ -123,7 +123,7 @@
         min-width: 110px;
         padding: 4px 14px;
         border: 0;
-        border-radius: 3px;
+        border-radius: var(--cooked-radius-sm);
         background: transparent;
         color: var(--cooked-color-text-muted);
         font-size: 13px;

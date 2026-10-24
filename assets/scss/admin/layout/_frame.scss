@@ -120,7 +120,7 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
     border-top: 4px solid var(--cooked-color-accent);
     border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
     background: var(--cooked-color-surface);
-    transition: box-shadow 150ms ease;
+    transition: box-shadow var(--cooked-transition);
 }
 
 .cooked-admin-sticky.is-stuck .cooked-admin-sticky-inner {
@@ -330,7 +330,7 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
     left: 50%;
     width: 24px;
     height: 3px;
-    border-radius: 3px;
+    border-radius: var(--cooked-radius-sm);
     background: var(--cooked-color-accent);
     opacity: 0.4;
     transform: translateX(-50%) scaleX(0);

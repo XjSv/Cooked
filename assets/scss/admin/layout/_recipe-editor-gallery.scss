@@ -89,13 +89,15 @@ body.cooked-recipe-editor .cooked-gallery-fields {
             width: 26px;
             height: 26px;
             padding: 0;
+            border: 0;
             border-radius: 50%;
+            cursor: pointer;
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
             color: var(--cooked-color-text);
             font-size: 11px;
             opacity: 0;
-            transition: opacity 150ms ease;
+            transition: opacity var(--cooked-transition);
 
             &:focus-visible {
                 outline: var(--cooked-focus-ring);
@@ -153,7 +155,7 @@ body.cooked-recipe-editor .cooked-gallery-fields {
         font-size: 13px;
         font-weight: 600;
         cursor: pointer;
-        transition: border-color 150ms ease, background-color 150ms ease;
+        transition: border-color var(--cooked-transition), background-color var(--cooked-transition);
 
         .cooked-icon {
             font-size: 18px;
@@ -305,7 +307,7 @@ body.cooked-recipe-editor .cooked-gallery-fields {
             bottom: 2px;
             left: 2px;
             width: calc((100% - 4px) / var(--cooked-segments));
-            border-radius: 3px;
+            border-radius: var(--cooked-radius-sm);
             background: var(--cooked-color-surface);
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
             transition: transform 250ms cubic-bezier(.22, .61, .36, 1);
@@ -350,7 +352,7 @@ body.cooked-recipe-editor .cooked-gallery-fields {
         }
 
         input:focus-visible + span {
-            border-radius: 3px;
+            border-radius: var(--cooked-radius-sm);
             outline: var(--cooked-focus-ring);
             outline-offset: 0;
         }

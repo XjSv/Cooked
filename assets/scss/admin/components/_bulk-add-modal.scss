@@ -135,7 +135,7 @@
     max-height: 200px;
     overflow-y: auto;
     border: 1px solid #ddd;
-    border-radius: 4px;
+    border-radius: var(--cooked-radius-sm);
     padding: 4px;
 }
 
@@ -169,7 +169,7 @@
 .cooked-bulk-add-preview-text {
     flex: 1;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: var(--cooked-radius-sm);
     padding: 4px 8px;
     font-size: 13px;
 }
@@ -207,7 +207,7 @@
     flex: 1;
     min-width: 0;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: var(--cooked-radius-sm);
     padding: 4px 8px;
     font-size: 13px;
     font-weight: 600;
@@ -249,7 +249,7 @@
     width: 72px;
     flex-shrink: 0;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: var(--cooked-radius-sm);
     padding: 4px 6px;
     font-size: 13px;
     text-align: center;
@@ -259,7 +259,7 @@
     width: 108px;
     flex-shrink: 0;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: var(--cooked-radius-sm);
     padding: 4px 6px;
     font-size: 13px;
 }
@@ -267,7 +267,7 @@
 .cooked-bulk-add-parsed-name {
     flex: 1;
     border: 1px solid #ddd;
-    border-radius: 3px;
+    border-radius: var(--cooked-radius-sm);
     padding: 4px 6px;
     font-size: 13px;
 }

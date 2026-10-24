@@ -96,7 +96,7 @@ $cooked_times = [
             <div id="cooked-save-default-panel" class="cooked-save-default-panel" hidden>
                 <strong class="cooked-tooltip-heading"><?php esc_html_e( 'Default Recipe Template', 'cooked' ); ?></strong>
                 <p><?php esc_html_e( 'Choose from the options below to use this layout as the default for new recipes or for all recipes.', 'cooked' ); ?></p>
-                <span class="cooked-tooltip-buttons"><a href="#" class="cooked-save-default-new button" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></a><a href="#" class="cooked-save-default-all button-primary" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-bulk-nonce="<?php echo esc_attr( $nonce_bulk ); ?>"><?php esc_html_e( 'Apply to All', 'cooked' ); ?></a></span>
+                <span class="cooked-tooltip-buttons"><button type="button" class="cooked-save-default-new button" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></button><button type="button" class="cooked-save-default-all button button-primary" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-bulk-nonce="<?php echo esc_attr( $nonce_bulk ); ?>"><?php esc_html_e( 'Apply to All', 'cooked' ); ?></button></span>
                 <span id="cooked-template-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span>
                 <span id="cooked-template-progress-text" class="cooked-progress-text">0 / 0</span>
             </div>

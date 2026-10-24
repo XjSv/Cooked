@@ -41,4 +41,22 @@ test.describe('Search Browse Recipes (anonymous user)', () => {
     await expect(titles.filter({ hasText: SEED_RECIPES.chicken.title })).toBeVisible();
     await expect(titles.filter({ hasText: SEED_RECIPES.beef.title })).toHaveCount(0);
   });
+
+  test('Search results update while typing', async ({ page }) => {
+    await page.goto('/browse-recipes', { waitUntil: 'networkidle' });
+
+    const search = page.locator('.cooked-recipe-search:not(.cooked-search-compact) .cooked-browse-search');
+    const titles = page.locator('.cooked-recipe .cooked-recipe-card-title');
+
+    await search.fill('beef');
+    await page.waitForURL(/\/browse-recipes\/search\/beef\/sort\/date_desc\/?$/);
+
+    await expect(titles.filter({ hasText: SEED_RECIPES.beef.title })).toBeVisible();
+    await expect(titles.filter({ hasText: SEED_RECIPES.chicken.title })).toHaveCount(0);
+
+    await search.fill('');
+    await page.waitForURL(/\/browse-recipes\/sort\/date_desc\/?$/);
+
+    await expect(titles.filter({ hasText: SEED_RECIPES.chicken.title })).toBeVisible();
+  });
 });

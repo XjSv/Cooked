@@ -27,15 +27,16 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 	.cooked-recipe-info > section.cooked-left > span:last-child, .cooked-recipe-info > span:last-child { margin-right:1rem; }
 	.cooked-recipe-info > section.cooked-right > span:first-child { margin-left:1rem; }
 
-	.cooked-recipe-search form { display:flex; flex-direction:column; gap:0.75rem; }
-	.cooked-recipe-search .cooked-fields-wrap { flex-wrap:wrap; padding:0; }
-	.cooked-recipe-search .cooked-field-wrap-select { flex:1 1 100%; width:100%; }
-	.cooked-recipe-search .cooked-browse-select { width:100%; max-width:none; }
-	.cooked-recipe-search .cooked-search-field { flex:1 1 100%; width:100%; }
-	.cooked-recipe-search .cooked-sortby-wrap { width:100%; }
+	/* Keep the browse filter and search on one row, with sorting below. */
+	.cooked-recipe-search form { display:flex; flex-wrap:wrap; gap:0.5rem; }
+	.cooked-recipe-search .cooked-fields-wrap { flex:1 1 100%; flex-wrap:nowrap; padding:0; }
+	.cooked-recipe-search .cooked-field-wrap-select { flex:0 1 auto; width:auto; position:static; }
+	.cooked-recipe-search .cooked-browse-select { width:auto; max-width:9rem; }
+	.cooked-recipe-search .cooked-search-field { flex:1 1 auto; width:auto; }
+	.cooked-recipe-search .cooked-sortby-wrap { flex:1 1 100%; width:100%; }
 	.cooked-recipe-search .cooked-browse-select-block { top:calc(100% + 0.5rem); left:0; width:100%; min-width:0; max-width:none; max-height:60vh; flex-wrap:wrap; }
 	.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column { flex:1 1 100%; width:100%; }
-	.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div { max-height:none; }
+	.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div:not(.cooked-tax-column-head) { max-height:none; }
 
 	#cooked-timers-wrap { width:32rem; }
 	#cooked-timers-wrap .cooked-timer-block.cooked-visible { padding:1.25rem 3.25rem 1.5rem 1.25rem; }

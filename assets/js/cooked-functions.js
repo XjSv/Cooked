@@ -83,6 +83,7 @@ var cooked_loading = false;
             var browseRequestId       = 0;
             var browseDesiredUrl      = null;
             var browseCategoryTimer   = null;
+            var browseSearchTimer     = null;
 
             function cookedStripTags(value) {
                 return wp.sanitize.stripTags(String(value || ''));
@@ -231,7 +232,8 @@ var cooked_loading = false;
                 var currentSearch  = document.querySelector('.cooked-recipe-search .cooked-browse-search');
                 var incomingSearch = doc.querySelector('.cooked-recipe-search .cooked-browse-search');
 
-                if (currentSearch && incomingSearch) {
+                // Never overwrite a search field the visitor is still typing in.
+                if (currentSearch && incomingSearch && document.activeElement !== currentSearch) {
                     currentSearch.value = incomingSearch.value;
                 }
 
@@ -302,13 +304,15 @@ var cooked_loading = false;
                     return;
                 }
 
+                if (options.history === 'push' && target !== cookedNormalizeUrl(window.location.href)) {
+                    window.history.pushState({ cookedBrowse: true }, '', url);
+                } else if (options.history === 'replace' && target !== cookedNormalizeUrl(window.location.href)) {
+                    window.history.replaceState({ cookedBrowse: true }, '', url);
+                }
+
                 // A sort change already triggers the form submit event; do not fetch the same results twice.
                 if (results.getAttribute('data-cooked-url') === target) {
                     return;
-                }
-
-                if (options.history === 'push' && target !== cookedNormalizeUrl(window.location.href)) {
-                    window.history.pushState({ cookedBrowse: true }, '', url);
                 }
 
                 if (browseRequest) {
@@ -417,8 +421,33 @@ var cooked_loading = false;
                 var url = cookedBrowseUrl(this);
 
                 window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
                 browseDesiredUrl = cookedNormalizeUrl(url);
                 cookedLoadBrowse(url, { history: 'push' });
+            });
+
+            $('body').on('input', '.cooked-recipe-search .cooked-browse-search', function(e) {
+                var form = cookedBrowseForm(this);
+
+                if (!form || !cookedBrowseResults()) {
+                    return;
+                }
+
+                var originalEvent = e.originalEvent || e;
+
+                // Wait until IME composition (e.g. Japanese) has finished.
+                if (originalEvent.isComposing) {
+                    return;
+                }
+
+                var url = cookedBrowseUrl(form);
+
+                window.clearTimeout(browseSearchTimer);
+                browseDesiredUrl = cookedNormalizeUrl(url);
+                browseSearchTimer = window.setTimeout(function() {
+                    // Typing replaces the current history entry; Enter remains a deliberate navigation.
+                    cookedLoadBrowse(url, { history: 'replace' });
+                }, 300);
             });
 
             $('body').on('change', '.cooked-recipe-search input[name="cooked_category_filter[]"]', function() {
@@ -431,6 +460,7 @@ var cooked_loading = false;
                 var url = cookedBrowseUrl(form);
 
                 window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
                 browseDesiredUrl = cookedNormalizeUrl(url);
                 browseCategoryTimer = window.setTimeout(function() {
                     cookedLoadBrowse(url, { history: 'push' });
@@ -447,6 +477,7 @@ var cooked_loading = false;
                 var url = cookedBrowseUrl(form);
 
                 window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
                 browseDesiredUrl = cookedNormalizeUrl(url);
                 cookedLoadBrowse(url, { history: 'push' });
             });
@@ -460,6 +491,7 @@ var cooked_loading = false;
 
                 e.preventDefault();
                 window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
                 $(form).find('input[name="cooked_category_filter[]"]').prop('checked', false);
 
                 var url = cookedBrowseUrl(form);
@@ -485,6 +517,7 @@ var cooked_loading = false;
 
                 e.preventDefault();
                 window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
                 input.checked = false;
 
                 var url = cookedBrowseUrl(form);
@@ -498,6 +531,8 @@ var cooked_loading = false;
                     return;
                 }
 
+                window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
                 browseDesiredUrl = cookedNormalizeUrl(window.location.href);
                 cookedLoadBrowse(window.location.href, { history: 'none' });
             });

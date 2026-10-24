@@ -1,0 +1,125 @@
+// Read-only code block with a copy button (e.g. the WPML config on the settings screen).
+
+.cooked-code-block {
+    position: relative;
+    margin: 16px 0 0;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    interpolate-size: allow-keywords;
+}
+
+// Open and close smoothly where ::details-content is supported; elsewhere it toggles instantly.
+.cooked-code-block::details-content {
+    height: 0;
+    overflow: hidden;
+    transition: height 300ms ease, content-visibility 300ms allow-discrete;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-code-block[open]::details-content {
+    height: auto;
+}
+
+.cooked-code-block summary {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 12px 16px;
+    color: var(--cooked-color-accent-strong);
+    font-weight: 600;
+    list-style: none;
+    cursor: pointer;
+}
+
+.cooked-code-block summary::-webkit-details-marker {
+    display: none;
+}
+
+.cooked-code-block summary .cooked-icon {
+    font-size: 12px;
+    transition: transform 300ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-code-block[open] summary .cooked-icon {
+    transform: rotate(90deg);
+}
+
+.cooked-code-block .cooked-copy-code {
+    position: absolute;
+    top: 52px;
+    right: 12px;
+    min-height: 0;
+    margin: 0;
+    padding: 6px 14px;
+    border: 0;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent-fill);
+    box-shadow: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-code-block .cooked-copy-code:hover,
+.cooked-code-block .cooked-copy-code:focus {
+    background: var(--cooked-color-accent-hover);
+    color: #fff;
+}
+
+.cooked-code-block .cooked-copy-code:active {
+    background: var(--cooked-color-accent-active);
+}
+
+.cooked-code-block .cooked-copy-code:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.cooked-code-block pre {
+    margin: 0;
+    padding: 16px;
+    overflow-x: auto;
+    border-radius: 0 0 var(--cooked-radius-sm) var(--cooked-radius-sm);
+    background: #1e1e1e;
+    color: #d4d4d4;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.cooked-code-block code {
+    padding: 0;
+    background: none;
+    color: inherit;
+    font-size: inherit;
+}
+
+// XML syntax colours (VS Code dark theme).
+.cooked-xml-punct {
+    color: #808080;
+}
+
+.cooked-xml-tag {
+    color: #569cd6;
+}
+
+.cooked-xml-attr {
+    color: #9cdcfe;
+}
+
+.cooked-xml-value {
+    color: #ce9178;
+}

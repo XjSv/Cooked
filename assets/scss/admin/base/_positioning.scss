@@ -1,0 +1,424 @@
+/* Positioning */
+.cooked-left {
+    float: left;
+    display: inline-block;
+    width: auto;
+}
+
+.cooked-right {
+    float: right;
+    display: inline-block;
+    width: auto;
+}
+
+#cooked_field--cooked_pro_license_key {
+    font-family: monospace;
+}
+
+#cooked_recipe_settings .cooked-bm-5 {
+    margin-bottom: 5px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-10 {
+    margin-bottom: 10px !important;
+}
+
+#cooked_recipe_settings .cooked-tm-10 {
+    margin-top: 10px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-15 {
+    margin-bottom: 15px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-20 {
+    margin-bottom: 20px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-30 {
+    margin-bottom: 30px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-5-up {
+    margin-bottom: -5px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-10-up {
+    margin-bottom: -10px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-15-up {
+    margin-bottom: -15px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-20-up {
+    margin-bottom: -20px !important;
+}
+
+#cooked_recipe_settings .cooked-bm-30-up {
+    margin-bottom: -30px !important;
+}
+
+#cooked_recipe_settings .cooked-hr {
+    border: none;
+    border-top: 2px solid #ddd;
+    margin: 10px 0 0 0;
+    padding: 15px 0 0 0;
+}
+
+#cooked_recipe_settings .cooked-conditional-hidden {
+    display: none;
+}
+
+#cooked_recipe_settings .cooked-recipe-tab-content {
+    padding: 23px 30px 15px 30px;
+}
+
+#cooked_recipe_settings .recipe-setting-block {
+    margin: 0 0 20px;
+    width: 100%;
+}
+
+#cooked_recipe_settings .recipe-setting-block p {
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+    margin: 0 0 1rem;
+    padding: 0;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-option-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0 0 1rem;
+    line-height: 1.75rem;
+    font-size: 0.85rem;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-builder-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-conditional-hidden {
+    padding: 0;
+}
+
+#cooked_recipe_settings textarea {
+    width: 100%;
+    height: 75px;
+    padding: 15px;
+    box-sizing: border-box;
+    position: relative;
+    top: 5px;
+}
+
+#cooked_recipe_settings .recipe-setting-block > label.cooked-select-label {
+    top: 5px;
+}
+
+#cooked_recipe_settings select {
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-shadow: none;
+    border-radius: 3px;
+    padding: 0 45px 0 9px;
+    line-height: 31px;
+    height: 33px;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+#cooked_recipe_settings .cooked-select-wrapper {
+    background: #fff;
+    position: relative;
+    width: auto;
+    display: inline-block;
+    border-radius: 3px;
+    margin: 0 5px 0 0;
+}
+
+#cooked_recipe_settings .cooked-select-wrapper select {
+    margin: 0;
+    background: transparent;
+    position: relative;
+}
+
+#cooked_recipe_settings .cooked-select-wrapper:before {
+    font-family: 'CookedIcons';
+    display: block;
+    width: 15px;
+    height: 15px;
+    line-height: 14px;
+    color: #000;
+    font-size: 14px;
+    content: "\f00b";
+    position: absolute;
+    right: 12px;
+    top: 11px;
+    color: rgba(0,0,0,0.3);
+}
+
+#cooked_recipe_settings .cooked-select-wrapper:hover:before {
+    color: #000;
+}
+
+#cooked_recipe_settings .cooked-select-wrapper:hover select {
+    border-color: #ccc;
+}
+
+#cooked_recipe_settings .cooked-checkbox-radio-label {
+    position: relative;
+    left: 1px;
+}
+
+#cooked_recipe_settings .recipe-setting-block input[type="checkbox"],
+#cooked_recipe_settings .recipe-setting-block input[type="radio"] {
+    margin-top: 0;
+}
+
+#cooked_recipe_settings .recipe-setting-block input[type="number"] {
+    width: 65px;
+}
+
+// Not Tom Select's search box (.ts-control > input): it shares a line with the selected value
+// and Tom Select hides and sizes it itself.
+#cooked_recipe_settings .recipe-setting-block input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .recipe-setting-block input[type="password"] {
+    width: 75%;
+}
+
+#cooked_recipe_settings .recipe-setting-block input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .recipe-setting-block input[type="password"],
+#cooked_recipe_settings .recipe-setting-block input[type="number"] {
+    margin: 0 6px 5px 0;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    height: 33px;
+    box-shadow: none;
+    position: relative;
+    top: 2px;
+    padding: 0 10px;
+}
+
+#cooked_recipe_settings .recipe-setting-block p.cooked-measurement-inputs .cooked-measurement-column {
+    width: 43%;
+    margin-right: 3%;
+    display: inline-block;
+}
+
+#cooked_recipe_settings .recipe-setting-block p.cooked-measurement-inputs label,
+#cooked_recipe_settings .recipe-setting-block p.cooked-measurement-inputs input,
+#cooked_recipe_settings .recipe-setting-block p.cooked-measurement-inputs .cooked-select-wrapper {
+    width: 100%;
+    display: block;
+}
+
+#cooked_recipe_settings .recipe-setting-block p.cooked-measurement-inputs .cooked-select-wrapper select {
+    width: 100%;
+}
+
+#cooked_recipe_settings .recipe-setting-block input[type="number"],
+#cooked_recipe_settings .recipe-setting-block input[type="text"].cooked-small-textfield,
+#cooked_recipe_settings .recipe-setting-block input[type="password"].cooked-small-textfield {
+    width: 150px;
+}
+
+#cooked_recipe_settings small {
+    display: block;
+    line-height: 1.5;
+    font-size: 12px;
+    color: #888;
+    padding: 10px 0 0;
+}
+
+#cooked_recipe_settings .recipe-setting-block em {
+    color: #aaa;
+}
+
+#cooked_recipe_settings .recipe-setting-block,
+#cooked_recipe_settings .recipe-setting-block .cooked-repositioned {
+    display: block;
+    position: relative;
+    box-sizing: border-box;
+    line-height: 1;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-repositioned {
+    padding-left: 157px;
+}
+
+#cooked_recipe_settings .recipe-setting-block h3.cooked-settings-title {
+    width: 70%;
+    position: relative;
+    z-index: 2;
+    padding: 0.5rem 0 0.5rem;
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    font-weight: 600;
+}
+
+#cooked_recipe_settings .recipe-setting-block strong.cooked-heading {
+    font-size: 14px;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-repositioned > label {
+    position: absolute;
+    top: 1px;
+    left: 0;
+    width: 147px;
+    cursor: default;
+    font-weight: 600;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-tooltip-icon {
+    color: #aaa;
+    cursor: help;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-tooltip-icon:hover {
+    color: #eee;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-repositioned > .cooked-checkbox-radio-label {
+    top: 7px;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-repositioned > label {
+    top: auto;
+    height: 33px;
+    line-height: 30px;
+    padding: 0;
+    width: 130px;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-repositioned:first-child label:first-child {
+    padding-top: 12px;
+    margin-top: -12px;
+}
+
+#cooked_recipe_settings .recipe-setting-block .wp-picker-container .cooked-color-field.wp-color-picker {
+    padding: 5px;
+    height: 25px;
+    top: 0;
+    margin: 0;
+    width: 74px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    border: 1px solid #ccc;
+}
+
+#cooked_recipe_settings .recipe-setting-block input[type="text"].cooked-shortcode-field {
+    font-family: monospace;
+    background: #f5f5f5;
+    font-size: 12px;
+}
+
+#cooked_recipe_settings .cooked-banner-block {
+    margin: 30px -30px -17px;
+    display: block;
+    box-sizing: content-box;
+    padding: 10px 30px 15px;
+    background: #f9f9f9;
+    width: 100%;
+    border-top: 1px solid #e5e5e5;
+}
+
+#cooked_recipe_settings .cooked-advanced-options-hr {
+    border: none;
+    border-bottom: 1px solid #ddd;
+    height: 1px;
+    padding: 10px 0 0 0;
+    margin: 0 0 20px;
+}
+
+#cooked_recipe_settings .recipe-setting-block input.cooked-time-picker {
+    top: 0;
+    width: 100%;
+    padding-right: 70%;
+    margin: 0 0 3px;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-time-picker-text {
+    position: absolute;
+    bottom: 13px;
+    right: 40px;
+    color: #888;
+}
+
+#cooked_recipe_settings .cooked-alert-block {
+    background: #fffbdc;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    margin: 10px 0 15px;
+    padding: 10px 22px 2px;
+    border: 2px solid #ece8c4;
+}
+
+#cooked_recipe_settings .recipe-setting-block.cooked-template,
+#cooked_recipe_settings .cooked-substitution-row-template {
+    display: none;
+}
+
+#cooked_recipe_settings ul.cooked-admin-ul {
+    font-size: 0.9rem;
+    margin: 0 0 1rem 2rem;
+    list-style: disc;
+}
+
+#cooked_recipe_settings ul.cooked-admin-ul li {
+    font-size: 0.9rem;
+    padding: 0;
+    margin: 0 0 0.5rem;
+}
+
+#cooked_recipe_settings .cooked-html-block {
+    background: #fff;
+    width: auto;
+    min-width: 300px;
+    display: inline-block;
+    padding: 0.5rem 1.3rem 0.25rem;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block h3.cooked-settings-title {
+    width: 100%;
+    color: #333;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid {
+    background: #fff;
+    border: 2px solid #0aa780;
+    box-shadow: none;
+    border-radius: 5px;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid > .cooked-settings-title {
+    color: #0aa780;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired,
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid {
+    border: 2px solid #ca4a20;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired > .cooked-settings-title,
+#cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid > .cooked-settings-title {
+    color: #ca4a20;
+}

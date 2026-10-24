@@ -1,0 +1,301 @@
+/* Recipe Gallery */
+#cooked-recipe-image-gallery {
+    margin: 0 -1% 0;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item {
+    position: relative;
+    overflow: hidden;
+    cursor: move;
+    box-sizing: border-box;
+    display: inline-block;
+    width: 18%;
+    height: auto;
+    padding: 0;
+    margin: 0 1% 2% 1%;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item:hover {
+    opacity: 0.9;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 3px;
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-helper,
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-helper:hover {
+    opacity: 0.75;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-placeholder {
+    width: 18%;
+    height: auto;
+    visibility: visible !important;
+    border-radius: 3px;
+    background: #ddd;
+    display: inline-block;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .remove-image-button {
+    border-radius: 0 3px 0 0;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .remove-image-button:hover {
+    background: #ff0100;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .cooked-gallery-edit-button {
+    border-radius: 3px 0 0 0;
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .cooked-gallery-edit-button:hover {
+    background: #0084bc;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item .cooked-gallery-item-title {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    box-sizing: border-box;
+    width: 100%;
+    border-radius: 0 0 3px 3px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    padding: 10px 10px 11px;
+    text-align: center;
+    background: #000;
+    background: rgba(0,0,0,0.3);
+    color: #fff;
+    font-size: 12px;
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item:hover .cooked-gallery-item-title {
+    background: #000;
+    background: rgba(0,0,0,0.75);
+}
+
+#cooked-recipe-image-gallery .cooked-recipe-gallery-item.ui-sortable-helper {
+    -webkit-animation: cooked-wiggle 0.4s infinite;
+    -moz-animation: cooked-wiggle 0.4s infinite;
+    -o-animation: cooked-wiggle 0.4s infinite;
+    animation: cooked-wiggle 0.4s infinite;
+}
+
+/* Gallery style (src/functions.php, Gallery tab): style cards with a small drawing of each,
+   shape, fit, loop and autoplay, and the preview dialog. */
+// The gallery type selects (Cooked, Envira, ...).
+#cooked-recipe-tab-content-gallery > .recipe-setting-block > select,
+#cooked-recipe-tab-content-gallery > .recipe-setting-block > .ts-wrapper {
+    max-width: 400px;
+}
+
+.cooked-gallery-style {
+    margin: 24px 0 0;
+    padding: 20px 0 0;
+    border-top: 1px solid var(--cooked-color-border);
+}
+
+.cooked-gallery-styles {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    max-width: 640px;
+    margin: 0 0 16px;
+}
+
+.cooked-gallery-style-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 12px;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-surface);
+    cursor: pointer;
+    transition: border-color 150ms ease, box-shadow 150ms ease;
+
+    // The radio stays for keyboard and screen readers; the card shows the choice.
+    input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    &:hover {
+        border-color: var(--cooked-color-neutral);
+    }
+
+    &:has(input:checked) {
+        border-color: var(--cooked-color-accent-strong);
+        box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+    }
+
+    &:has(input:focus-visible) {
+        outline: var(--cooked-focus-ring);
+        outline-offset: 2px;
+    }
+
+    strong {
+        margin-top: 8px;
+        color: var(--cooked-color-text);
+        font-size: 13px;
+    }
+
+    .cooked-gallery-style-desc {
+        color: var(--cooked-color-text-muted);
+        font-size: 12px;
+        line-height: 1.4;
+    }
+}
+
+.cooked-gallery-style-art {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-page);
+
+    .cooked-gallery-style-art-image {
+        position: relative;
+        height: 54px;
+        border-radius: 3px;
+        background: linear-gradient(160deg, #b8d8c9, #6fae93);
+
+        // Arrows on either side.
+        &::before,
+        &::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            width: 10px;
+            height: 10px;
+            margin-top: -5px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        &::before {
+            left: 4px;
+        }
+
+        &::after {
+            right: 4px;
+        }
+    }
+
+    .cooked-gallery-style-art-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        height: 12px;
+
+        i {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--cooked-color-neutral);
+
+            &:first-child {
+                width: 12px;
+                border-radius: 3px;
+                background: var(--cooked-color-accent-strong);
+            }
+        }
+    }
+
+    &.is-thumbs .cooked-gallery-style-art-nav {
+        justify-content: flex-start;
+
+        i,
+        i:first-child {
+            width: 16px;
+            height: 12px;
+            border-radius: 2px;
+            background: #b8d8c9;
+        }
+
+        i:first-child {
+            box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+        }
+    }
+
+    &.is-none .cooked-gallery-style-art-nav {
+        visibility: hidden;
+    }
+}
+
+.cooked-gallery-style-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 24px;
+    max-width: 640px;
+    margin: 0 0 16px;
+
+    p {
+        margin: 0;
+    }
+
+    label {
+        display: block;
+        margin: 0 0 4px;
+        font-weight: 600;
+    }
+
+    select {
+        min-width: 200px;
+    }
+
+    .cooked-gallery-style-toggle {
+        display: flex;
+        flex-basis: 100%;
+        align-items: center;
+
+        label {
+            margin: 0;
+            font-weight: 400;
+        }
+    }
+}
+
+// Two classes: .cooked-dialog (components/layout-compare) comes later in admin.min.css.
+.cooked-dialog.cooked-gallery-preview-dialog {
+    width: min(820px, calc(100vw - 32px));
+
+    .cooked-dialog-body {
+        padding: 0;
+    }
+}
+
+.cooked-gallery-preview-frame {
+    display: block;
+    width: 100%;
+    height: 480px; // until it loads; then the height of its content (cooked-admin-functions.js)
+    border: 0;
+}

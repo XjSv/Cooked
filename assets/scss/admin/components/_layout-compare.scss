@@ -1,0 +1,262 @@
+/* Settings › General › Admin Screens: "Compare layouts" button and dialog
+   (Cooked_Settings::layout_compare_button(), templates/admin/parts/layout-compare.php) */
+#cooked_recipe_settings .cooked-layout-compare-open {
+    margin: 10px 0 0;
+}
+
+.cooked-dialog {
+    width: min(1040px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px);
+    padding: 0;
+    overflow: auto;
+    border: 0;
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-surface);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    color: var(--cooked-color-text);
+
+    &::backdrop {
+        background: rgba(0, 0, 0, 0.6);
+    }
+}
+
+// Dialogs (Compare layouts, gallery preview): header like the Bulk Add modal, a title and a
+// small red close button.
+.cooked-dialog-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 14px 14px 24px;
+    border-bottom: 1px solid var(--cooked-color-border);
+
+    h2 {
+        margin: 0;
+        padding: 0;
+        color: var(--cooked-color-text);
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+}
+
+.cooked-dialog-close {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--cooked-radius-sm);
+    background: none;
+    color: #d63638;
+    cursor: pointer;
+
+    .cooked-icon {
+        font-size: 12px;
+    }
+
+    &:hover {
+        background: rgba(214, 54, 56, 0.1);
+        color: #b32d2e;
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--cooked-color-accent-strong);
+        outline-offset: -2px;
+    }
+}
+
+.cooked-dialog-body {
+    padding: 16px 24px 24px;
+
+    @media screen and (max-width: 600px) {
+        padding: 12px 16px 16px;
+    }
+}
+
+.cooked-layout-compare-intro {
+    margin: 0 0 12px;
+    color: var(--cooked-color-text-muted);
+    font-size: 13px;
+}
+
+.cooked-layout-compare-head {
+    margin: 0 0 12px;
+}
+
+// Screen tabs: a segmented control like the editor's Visual / Code switch, its thumb sliding
+// to the selected tab.
+.cooked-layout-compare-tabs {
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 2px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-border);
+
+    &::before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        bottom: 2px;
+        left: 2px;
+        width: calc(50% - 2px);
+        border-radius: 3px;
+        background: var(--cooked-color-surface);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+        transition: transform 250ms cubic-bezier(.22, .61, .36, 1);
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    &:has(button:nth-child(2)[aria-selected="true"])::before {
+        transform: translateX(100%);
+    }
+
+    button {
+        position: relative; // above the thumb
+        min-width: 110px;
+        padding: 4px 14px;
+        border: 0;
+        border-radius: 3px;
+        background: transparent;
+        color: var(--cooked-color-text-muted);
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1.6;
+        cursor: pointer;
+        transition: color 250ms ease;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+
+        &[aria-selected="true"] {
+            color: var(--cooked-color-accent-strong);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--cooked-color-accent-strong);
+            outline-offset: 1px;
+        }
+    }
+}
+
+// The slider: the new screenshot underneath, the classic one clipped to the left of the divider.
+.cooked-compare {
+    --cooked-compare-pos: 50%;
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 1120 / 700;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-surface-muted);
+    user-select: none;
+
+    &[hidden] {
+        display: none;
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        pointer-events: none;
+    }
+
+    .cooked-compare-classic {
+        position: absolute;
+        inset: 0;
+        clip-path: inset(0 calc(100% - var(--cooked-compare-pos)) 0 0);
+    }
+}
+
+.cooked-compare-label {
+    position: absolute;
+    top: 12px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    background: rgba(30, 30, 30, 0.72);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    pointer-events: none;
+
+    &.is-classic {
+        left: 12px;
+    }
+
+    &.is-new {
+        right: 12px;
+    }
+}
+
+.cooked-compare-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--cooked-compare-pos);
+    width: 2px;
+    transform: translateX(-1px);
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18);
+    pointer-events: none;
+}
+
+// The handle: a round grip with arrows pointing both ways.
+.cooked-compare-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    transform: translate(-50%, -50%);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--cooked-color-accent-fill);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        width: 0;
+        height: 0;
+        margin-top: -5px;
+        border: 5px solid transparent;
+    }
+
+    &::before {
+        left: 7px;
+        border-right-color: #fff;
+    }
+
+    &::after {
+        right: 7px;
+        border-left-color: #fff;
+    }
+}
+
+// The range input covers the screenshots: drag anywhere, or use the arrow keys once focused.
+.cooked-compare-range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    appearance: none;
+}
+
+.cooked-compare:has(.cooked-compare-range:focus-visible) .cooked-compare-handle {
+    outline: 3px solid var(--cooked-color-accent-strong);
+    outline-offset: 2px;
+}

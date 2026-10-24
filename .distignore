@@ -32,3 +32,5 @@ notes
 *.bak
 .env
 .env.example
+/.agents
+*.map

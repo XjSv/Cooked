@@ -29,7 +29,7 @@
 
 	<!-- Configs -->
 	<config name="minimum_supported_wp_version" value="6.0" />
-	<config name="testVersion" value="7.4-" />
+	<config name="testVersion" value="8.2-" />
 
     <!-- Rules -->
 	<rule ref="WordPress">
@@ -69,10 +69,12 @@
 	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
 		<exclude-pattern>cooked.php</exclude-pattern>
 		<exclude-pattern>/includes/</exclude-pattern>
+		<exclude-pattern>/src/</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
 		<exclude-pattern>/includes/</exclude-pattern>
+		<exclude-pattern>/src/</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase">

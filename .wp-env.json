@@ -1,6 +1,6 @@
 {
   "core": null,
-  "phpVersion": "7.4",
+  "phpVersion": "8.2",
   "themes": ["WordPress/twentytwentyfive"],
   "plugins": [
     "https://downloads.wordpress.org/plugin/plugin-check.zip"
@@ -15,10 +15,12 @@
     "WP_DEBUG_LOG": true,
     "WP_DEBUG_DISPLAY": false,
     "SCRIPT_DEBUG": true,
+    "COOKED_DEV": true,
     "WP_ENVIRONMENT_TYPE": "local",
-    "DISALLOW_FILE_EDIT": false
+    "DISALLOW_FILE_EDIT": false,
+    "DISALLOW_UNFILTERED_HTML": true
   },
   "lifecycleScripts": {
-    "afterStart": "wp-env run cli bash -c 'curl -fsSL -o /tmp/wp-cli.phar https://github.com/wp-cli/builds/raw/gh-pages/phar/wp-cli.phar && chmod +x /tmp/wp-cli.phar && sudo cp /tmp/wp-cli.phar /usr/local/bin/wp && sudo chmod +x /usr/local/bin/wp' && wp-env run cli wp plugin activate cooked"
+    "afterStart": "wp-env run cli wp plugin activate cooked"
   }
 }

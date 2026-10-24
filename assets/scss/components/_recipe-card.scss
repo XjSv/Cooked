@@ -1,0 +1,174 @@
+/* Recipe Card */
+.cooked-recipe-card {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    box-sizing: border-box;
+    text-align: left;
+    background: var(--cooked-color-surface);
+    text-decoration: none !important;
+    border: 1px solid var(--cooked-color-border) !important;
+    color: inherit !important;
+    overflow: hidden;
+    border-radius: var(--cooked-radius);
+    margin: 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    transition: transform var(--cooked-transition), box-shadow var(--cooked-transition), border-color var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-card > span,
+.cooked-recipe-card-content > span {
+    display: block !important;
+}
+
+.cooked-recipe-card:hover {
+    text-decoration: none !important;
+    color: inherit !important;
+    border-color: color-mix(in srgb, var(--cooked-color-accent) 45%, var(--cooked-color-border)) !important;
+    transform: translate3d(0, -2px, 0);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+.cooked-recipe-card:focus-within {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 3px;
+}
+
+.cooked-recipe-card:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 3px;
+}
+
+/* Media */
+.cooked-recipe-card-image {
+    background-size: cover;
+    background-position: center;
+    background-color: var(--cooked-color-surface-muted);
+    display: block;
+    margin: 0;
+    padding: 0;
+    height: 200px;
+    width: 100%;
+    position: relative;
+}
+
+.cooked-recipe-card .cooked-recipe-image-empty {
+    position: relative;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    height: 200px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background: var(--cooked-color-surface-muted);
+    color: var(--cooked-color-neutral);
+}
+
+.cooked-recipe-card .cooked-recipe-image-empty::before {
+    content: "\f008";
+    font-family: "CookedIcons";
+    font-size: 2rem;
+    line-height: 1;
+    opacity: 0.55;
+}
+
+@supports (aspect-ratio: 1) {
+    .cooked-recipe-card-image,
+    .cooked-recipe-card .cooked-recipe-image-empty {
+        height: auto;
+        aspect-ratio: 3 / 2;
+    }
+}
+
+/* Content */
+.cooked-recipe-card-content {
+    display: flex !important;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 1.125rem 1.25rem 1.375rem;
+    margin: 0;
+}
+
+.cooked-recipe-card-title {
+    display: block;
+    font-weight: 600;
+    margin: 0;
+    font-size: clamp(1.05rem, 0.4vw + 0.95rem, 1.3rem);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+}
+
+.cooked-recipe-card-author {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: var(--cooked-color-text-muted);
+}
+
+.cooked-recipe-card-author strong {
+    font-weight: 600;
+    color: inherit;
+}
+
+.cooked-recipe-card-excerpt {
+    display: -webkit-box;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--cooked-color-text-muted);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+}
+
+.cooked-recipe-card .cooked-recipe-card-sep {
+    display: block;
+    width: 2rem;
+    height: 2px;
+    margin: 0.35rem 0 0.45rem;
+    border-radius: 1px;
+    background: var(--cooked-color-accent);
+    opacity: 0.35;
+    transition: width var(--cooked-transition), opacity var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-card:hover .cooked-recipe-card-sep {
+    width: 2.75rem;
+    opacity: 1;
+}
+
+.cooked-recipe-card-centered,
+.cooked-recipe-card-modern-centered {
+    text-align: center;
+}
+
+.cooked-recipe-card-centered .cooked-recipe-card-sep,
+.cooked-recipe-card-modern-centered .cooked-recipe-card-sep {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.cooked-recipe-card-modern,
+.cooked-recipe-card-modern-centered {
+    border-radius: var(--cooked-radius);
+}
+
+.widget .cooked-recipe-card {
+    margin: 0 auto;
+}

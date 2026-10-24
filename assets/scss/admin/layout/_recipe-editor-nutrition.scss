@@ -1,0 +1,426 @@
+// Recipe editor, new layout: Nutrition tab (templates/admin/frame/recipe-nutrition.php). The
+// grouped fields beside the Nutrition Facts label, which stays in view as you scroll; below the
+// container breakpoint the label goes under the fields.
+
+// Through #cooked_recipe_settings: the editor's field rules carry that ID.
+body.cooked-recipe-editor #cooked_recipe_settings .cooked-nutrition-fields {
+    container: cooked-nutrition / inline-size;
+
+    .cooked-nutrition-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 340px;
+        gap: 0 32px;
+        align-items: start;
+
+        @container cooked-nutrition (max-width: 720px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    // Under the sticky tab bar (its height plus the admin bar), as the editor scrolls.
+    .cooked-nutrition-preview {
+        position: sticky;
+        top: calc(var(--wp-admin--admin-bar--height, 32px) + 40px);
+        padding: 24px 0;
+
+        @container cooked-nutrition (max-width: 720px) {
+            position: static;
+            padding-top: 0;
+        }
+    }
+
+    .cooked-nutrition-preview-head {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2px 10px;
+        align-items: baseline;
+        justify-content: space-between;
+        margin: 0 0 10px;
+    }
+
+    .cooked-nutrition-preview-title {
+        margin: 0;
+        padding: 0;
+        color: var(--cooked-color-accent-strong);
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .cooked-nutrition-preview-caption {
+        color: var(--cooked-color-text-muted);
+        font-size: 12px;
+    }
+
+    // The label on a tinted stage, like the Gallery tab's live preview.
+    .cooked-nutrition-stage {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 16px;
+        border-radius: var(--cooked-radius);
+        background: var(--cooked-color-page);
+    }
+
+    // The editor's own take on the label (the recipe page keeps the printed one): no heavy bars
+    // or grey frames; thin dividers in the admin's colours, small captions, the calories as the
+    // headline and each % Daily Value as a pill. Through .cooked-nutrition-stage so these
+    // outrank the classic label rules and its dark-mode colours (_nutrition-label.scss, _dark.scss).
+    .cooked-nutrition-stage #cooked-nutrition-label {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: 360px;
+        margin: 0;
+        padding: 18px 20px 14px;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: 12px;
+        background: var(--cooked-color-surface);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        color: var(--cooked-color-text);
+        font-family: inherit;
+        font-size: 13px;
+        line-height: 1.5;
+
+        h2 {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            color: var(--cooked-color-text);
+            font-size: 20px;
+            font-weight: 700;
+            line-height: 1.3;
+            letter-spacing: -0.01em;
+        }
+
+        strong,
+        span,
+        p,
+        li {
+            color: inherit;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        // flow-root holds the floated % pills (the classic rules clear them with ::after).
+        li {
+            display: flow-root;
+            padding: 7px 0;
+            border-top: 1px solid var(--cooked-color-border);
+            font-size: 13px;
+
+            &::after {
+                content: none;
+            }
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        strong.cooked-nut-label {
+            font-weight: 400;
+        }
+
+        // Servings and serving size: quiet rows under the title.
+        ul.cooked-nut-servings {
+            margin: 2px 0 12px;
+
+            li {
+                padding: 2px 0;
+                border: 0;
+            }
+        }
+
+        ul.cooked-nut-servings .cooked-nut-servings-count {
+            color: var(--cooked-color-text-muted);
+            font-size: 13px;
+
+            strong.cooked-nut-label {
+                color: var(--cooked-color-text);
+                font-weight: 600;
+            }
+        }
+
+        .cooked-serving-size {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+
+            strong,
+            strong.cooked-nut-label {
+                font-size: 13px;
+            }
+
+            strong:first-child {
+                color: var(--cooked-color-text-muted);
+                font-weight: 400;
+            }
+
+            strong.cooked-nut-label {
+                font-weight: 600;
+            }
+        }
+
+        ul.cooked-right,
+        li ul.cooked-right {
+            margin: 0;
+
+            li {
+                padding: 0;
+                border: 0;
+            }
+        }
+
+        // The heavy bars become plain dividers between the label's parts.
+        .cooked-nut-hr {
+            margin: 0;
+            border: 0;
+            border-top: 1px solid var(--cooked-color-border);
+        }
+
+        li.cooked-nut-spacer {
+            height: 0;
+            padding: 0;
+            border: 0;
+            background: none;
+        }
+
+        // Small captions: "Amount per serving", "% Daily Value *".
+        strong.cooked-nut-heading {
+            color: var(--cooked-color-text-muted);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+        }
+
+        > ul > li:first-child {
+            padding-top: 12px;
+            border: 0;
+        }
+
+        li.cooked-nut-no-border {
+            padding: 12px 0 4px;
+            border: 0;
+        }
+
+        // Calories, the headline.
+        .cooked-calories {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            padding: 0 0 4px;
+            border: 0;
+
+            > strong {
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            ul.cooked-right li strong.cooked-nut-label,
+            strong.cooked-nut-label {
+                color: var(--cooked-color-accent-strong);
+                font-size: 30px;
+                font-weight: 700;
+                line-height: 1.1;
+            }
+        }
+
+        // Parts of a nutrient (saturated fat, fiber, …): indented and quieter.
+        li ul {
+            margin: 6px 0 -7px 14px;
+
+            li {
+                margin: 0;
+                padding: 6px 0;
+                color: var(--cooked-color-text-muted);
+            }
+        }
+
+        li ul ul {
+            margin: 0 0 0 14px;
+        }
+
+        // % Daily Value as a pill at the right.
+        .cooked-nut-right {
+            float: right;
+            min-width: 34px;
+            padding: 0 7px;
+            border-radius: 999px;
+            background: var(--cooked-color-accent-soft);
+            color: var(--cooked-color-accent-strong);
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 20px;
+            text-align: center;
+        }
+
+        // …except the "% Daily Value *" caption, which shares the class.
+        li.cooked-nut-no-border .cooked-nut-right {
+            min-width: 0;
+            padding: 0;
+            border-radius: 0;
+            background: none;
+            color: var(--cooked-color-text-muted);
+            line-height: inherit;
+        }
+
+        ul.cooked-nut-bottom {
+            margin: 0;
+
+            li {
+                float: none;
+                width: auto;
+                border-top: 1px solid var(--cooked-color-border);
+                border-bottom: 0;
+            }
+        }
+
+        .cooked-daily-value-text {
+            margin: 10px 0 0;
+            padding: 0;
+            color: var(--cooked-color-text-muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+    }
+
+    .cooked-nutrition-empty {
+        display: none;
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+        margin: 0;
+        padding: 36px 16px;
+        color: var(--cooked-color-text-muted);
+        font-size: 13px;
+        line-height: 1.5;
+        text-align: center;
+
+        .cooked-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--cooked-color-accent-soft);
+            color: var(--cooked-color-accent-strong);
+            font-size: 18px;
+        }
+    }
+
+    .cooked-nutrition-stage.is-empty {
+        #cooked-nutrition-label {
+            display: none;
+        }
+
+        .cooked-nutrition-empty {
+            display: flex;
+        }
+    }
+
+    .cooked-nutrition-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+
+        @container cooked-nutrition (max-width: 1000px) {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        @container cooked-nutrition (max-width: 420px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    // Nutrients: one per row, with its parts (saturated fat under total fat, …) indented below.
+    .cooked-nutrition-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 16px;
+
+        @container cooked-nutrition (max-width: 560px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    // A nutrient with parts takes the whole row: itself in the first column, its parts below.
+    .cooked-nutrition-group.has-parts {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 16px;
+
+        @container cooked-nutrition (max-width: 560px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        > .cooked-nutrition-parts {
+            grid-column: 1 / -1;
+        }
+    }
+
+    .cooked-nutrition-parts {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px 16px;
+        margin: 12px 0 0 6px;
+        padding: 2px 0 2px 16px;
+        border-left: 2px solid var(--cooked-color-border);
+
+        @container cooked-nutrition (max-width: 560px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .cooked-nutrition-field label {
+            color: var(--cooked-color-text-muted);
+            font-weight: 500;
+        }
+    }
+
+    // Serving size is the one text field.
+    input[type="text"] {
+        box-sizing: border-box;
+        width: 100%;
+        max-width: none;
+        min-height: 40px;
+        margin: 0;
+        padding: 8px 12px;
+        border: 1px solid #8c8f94;
+        border-radius: var(--cooked-radius-sm);
+        background-color: var(--cooked-color-surface);
+        color: var(--cooked-color-text);
+        font-size: 14px;
+        line-height: 1.5;
+        box-shadow: none;
+
+        &:focus {
+            border-color: var(--cooked-color-accent-strong);
+            box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+            outline: none;
+        }
+    }
+
+    // The unit sits inside the field, at the right, like the Layout tab's "minutes".
+    .cooked-input-suffix.has-unit input[type="number"] {
+        padding-right: 48px;
+    }
+
+    .cooked-input-suffix:not(.has-unit) input[type="number"] {
+        padding-right: 12px;
+    }
+
+    .cooked-input-unit {
+        position: absolute;
+        top: 50%;
+        right: 12px;
+        transform: translateY(-50%);
+        color: var(--cooked-color-text-muted);
+        font-size: 13px;
+        pointer-events: none;
+    }
+}

@@ -1,58 +1,46 @@
 const { src, dest, watch, series } = require('gulp');
 const sass = require('gulp-sass')(require('sass'));
-const cleanCSS = require('gulp-clean-css');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
+const concat = require('gulp-concat');
 
-// CSS Task.
-function css() {
-  return src(['assets/css/icons.css', 'assets/css/print-only.css', 'assets/css/print.css', 'assets/css/style.css'])
-    .pipe(cleanCSS())
+// SCSS entry points: essentials (everywhere), front end, print view and admin.
+const styleEntries = ['assets/scss/essentials.scss', 'assets/scss/style.scss', 'assets/scss/print.scss', 'assets/scss/admin/admin.scss'];
+const frontendScripts = ['assets/js/cooked-functions.js'];
+const adminScripts = ['assets/js/cooked-admin-functions.js', 'assets/js/cooked-migration.js'];
+
+// Compile SCSS entry points to minified CSS.
+function buildStyles() {
+  return src(styleEntries)
+    .pipe(sass({ style: 'compressed' }).on('error', sass.logError))
     .pipe(rename({ suffix: '.min' }))
     .pipe(dest('assets/css'));
 }
 
-function cssAdmin() {
-  return src(['assets/admin/css/essentials.css', 'assets/admin/css/style.css'])
-    .pipe(cleanCSS())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(dest('assets/admin/css'));
-}
-
-// JavaScript Task.
-function js() {
-  return src('assets/js/cooked-functions.js')
+function buildFrontendScripts() {
+  return src(frontendScripts)
     .pipe(uglify())
     .pipe(rename({ suffix: '.min' }))
     .pipe(dest('assets/js'));
 }
 
-function jsFotorama() {
-  return src('assets/js/fotorama/fotorama.js')
+// Admin scripts ship as a single bundle; COOKED_DEV loads the sources separately.
+function buildAdminScripts() {
+  return src(adminScripts)
+    .pipe(concat('cooked-admin-functions.min.js'))
     .pipe(uglify())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(dest('assets/js/fotorama'));
+    .pipe(dest('assets/js'));
 }
 
-function jsAdmin() {
-  return src(['assets/admin/js/cooked-functions.js', 'assets/admin/js/cooked-migration.js'])
-    .pipe(uglify())
-    .pipe(rename({ suffix: '.min' }))
-    .pipe(dest('assets/admin/js'));
-}
-
-// Watch Task.
-function watchFiles() {
-  watch(['assets/css/icons.css', 'assets/css/print-only.css', 'assets/css/print.css', 'assets/css/style.css'], css);
-  watch(['assets/admin/css/essentials.css', 'assets/admin/css/style.css'], cssAdmin);
-  watch('assets/js/cooked-functions.js', js);
-  watch('assets/js/fotorama/fotorama.js', jsFotorama);
-  watch(['assets/admin/js/cooked-functions.js', 'assets/admin/js/cooked-migration.js'], jsAdmin);
+function watchSources() {
+  watch('assets/scss/**/*.scss', buildStyles);
+  watch(frontendScripts, buildFrontendScripts);
+  watch(adminScripts, buildAdminScripts);
 }
 
 // Task for building for production.
-const build = series(css, cssAdmin, js, jsFotorama, jsAdmin);
+const build = series(buildStyles, buildFrontendScripts, buildAdminScripts);
 exports.build = build;
 
 // Export the default Gulp task.
-exports.default = series(css, cssAdmin, js, jsFotorama, jsAdmin, watchFiles);
+exports.default = series(build, watchSources);

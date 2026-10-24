@@ -1,0 +1,129 @@
+/* Direction Video */
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video .cooked-direction-video-preview {
+    display: none;
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video .cooked-direction-video-placeholder {
+    box-sizing: border-box;
+    cursor: pointer;
+    border-radius: 3px;
+    width: 100%;
+    padding-bottom: 100%;
+    background: none;
+    border: 2px dashed #ddd;
+    margin-top: 15px;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video .cooked-direction-video-placeholder:hover {
+    background: #ddd;
+    border: 2px solid #ddd;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video .direction-video-button {
+    width: 100%;
+    text-align: center;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video.cooked-has-video .cooked-direction-video-placeholder {
+    display: none;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video.cooked-has-video .cooked-direction-video-preview {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    margin-top: 15px;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video .remove-video-button {
+    display: none;
+    position: absolute;
+    top: 43px;
+    right: 15px;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video.cooked-has-video .remove-video-button {
+    display: inline-block;
+    padding: 10px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+}
+
+#cooked-directions-builder .cooked-direction-block > .cooked-direction-video.cooked-has-video .remove-video-button:hover {
+    background: #ff0100;
+}
+
+/* Direction Steps: Responsive (below 1440px) — stack content above image+video */
+#cooked-directions-builder .cooked-direction-block:not(.cooked-direction-heading) {
+    @media screen and (max-width: 1440px) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "content content" "image video";
+        gap: 10px;
+        padding: 15px 0px 15px 0px;
+    }
+}
+
+#cooked-directions-builder .cooked-direction-block:not(.cooked-direction-heading) > .cooked-direction-content {
+    @media screen and (max-width: 1440px) {
+        grid-area: content;
+        padding: 14px 14px 0 14px !important;
+        min-height: 80px;
+    }
+}
+
+#cooked-directions-builder .cooked-direction-block:not(.cooked-direction-heading) > .cooked-direction-image {
+    @media screen and (max-width: 1440px) {
+        grid-area: image;
+        position: relative;
+        width: auto;
+        left: auto;
+        top: auto;
+        padding-left: 15px;
+        padding-right: 0;
+    }
+}
+
+#cooked-directions-builder .cooked-direction-block:not(.cooked-direction-heading) > .cooked-direction-video {
+    @media screen and (max-width: 1440px) {
+        grid-area: video;
+        position: relative;
+        width: auto;
+        right: auto;
+        top: auto;
+    }
+}
+
+#cooked-recipe-tabs {
+    @media screen and (max-width: 1440px) {
+        white-space: nowrap;
+        overflow-x: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        width: 100%;
+    }
+}
+
+#cooked-recipe-tabs::-webkit-scrollbar {
+    @media screen and (max-width: 1440px) {
+        display: none;
+    }
+}
+
+#cooked-recipe-tabs li {
+    @media screen and (max-width: 1440px) {
+        float: none;
+    }
+}
+
+#cooked_recipe_settings .cooked-recipe-tab-content {
+    @media screen and (max-width: 1024px) {
+        padding: 10px;
+    }
+}

@@ -1,0 +1,67 @@
+/* Cooked Colors */
+#cooked_recipe_settings .recipe-setting-block h3.cooked-settings-title,
+#cooked_recipe_settings #cooked-nutrition-label .cooked-nut-label {
+    color: #0173aa;
+}
+
+/* #cooked_recipe_settings #cooked-nutrition-label .cooked-calories .cooked-right .cooked-nut-label,
+   #cooked_recipe_settings #cooked-nutrition-label .cooked-serving-size .cooked-right .cooked-nut-label { color: unset; } */
+
+#cooked_recipe_settings .recipe-setting-block.cooked-danger h3.cooked-settings-title {
+    color: #d44d1f;
+}
+
+#cooked_recipe_settings .cooked-alert-block h3.cooked-settings-title {
+    color: #c02a2a;
+}
+
+#cooked-recipe-tabs {
+    background: #fff;
+}
+
+#cooked-recipe-tabs li {
+    background: #454b52;
+    color: #fff;
+    color: rgba(255,255,255,0.75);
+    border-right: 1px solid rgba(0,0,0,0.15);
+}
+
+#cooked-recipe-tabs li:hover {
+    background: #535a62;
+    color: #fff;
+    border-right: 1px solid rgba(0,0,0,0.15);
+}
+
+#cooked-recipe-tabs li.active {
+    background: #fff;
+    color: #333;
+    border-right: 1px solid #fff;
+}
+
+#cooked-settings-tabs {
+    background: #454b52;
+}
+
+#cooked-settings-tabs a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#cooked-settings-tabs li {
+    background: #454b52;
+    color: #fff;
+    color: rgba(255,255,255,0.75);
+}
+
+#cooked-settings-tabs li:hover {
+    background: #535a62;
+    color: #fff;
+}
+
+#cooked-settings-tabs li.active {
+    background: #fff;
+}
+
+#cooked-settings-tabs li.active a {
+    color: #000;
+}

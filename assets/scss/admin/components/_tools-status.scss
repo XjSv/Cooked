@@ -1,0 +1,18 @@
+/* Related Recipes Tools status (last run + completed) */
+.cooked-related-status {
+    margin: 0 0 12px 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1.4;
+    border-radius: 4px;
+    border-left: 3px solid #00a878;
+    background: #f0f9f6;
+    color: #2d4a42;
+    max-width: 480px;
+}
+
+#cooked-related-last-done.cooked-related-status {
+    border-left-color: #8c9b99;
+    background: #f6f8f7;
+    color: #5c6b69;
+}

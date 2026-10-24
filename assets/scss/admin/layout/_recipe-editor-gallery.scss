@@ -1,0 +1,374 @@
+// Recipe editor, new layout: Gallery tab (templates/admin/frame/recipe-gallery.php). Media (the
+// gallery source, an image grid ending in an "Add images" tile, the video URL) and Appearance
+// (the style fields beside a live preview).
+
+body.cooked-recipe-editor .cooked-gallery-fields {
+    container: cooked-gallery / inline-size;
+
+    .cooked-gallery-label,
+    .cooked-gallery-source label,
+    .cooked-gallery-video label {
+        display: block;
+        margin: 0 0 6px;
+        color: var(--cooked-color-text);
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .cooked-gallery-hint {
+        margin: 8px 0 0;
+        color: var(--cooked-color-text-muted);
+        font-size: 12px;
+    }
+
+    .cooked-gallery-source {
+        max-width: 360px;
+        margin: 0 0 20px;
+    }
+
+    // Images: square tiles; the edit and remove buttons show on hover or keyboard focus.
+    #cooked-recipe-image-gallery {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+        gap: 12px;
+        margin: 0;
+
+        .cooked-recipe-gallery-item,
+        .cooked-recipe-gallery-item.ui-sortable-placeholder {
+            width: auto;
+            margin: 0;
+            aspect-ratio: 1;
+            border-radius: var(--cooked-radius);
+        }
+
+        .cooked-recipe-gallery-item {
+            display: block;
+            background: var(--cooked-color-page);
+            box-shadow: 0 0 0 1px var(--cooked-color-border);
+            cursor: grab;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            img {
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+                object-fit: cover;
+            }
+
+            &.ui-sortable-helper {
+                cursor: grabbing;
+            }
+        }
+
+        .cooked-recipe-gallery-item.ui-sortable-placeholder {
+            border: 2px dashed var(--cooked-color-border);
+            background: var(--cooked-color-surface-muted);
+            box-shadow: none;
+        }
+
+        .cooked-gallery-item-title {
+            right: 0;
+            padding: 16px 8px 6px;
+            overflow: hidden;
+            background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+            font-size: 11px;
+            text-align: left;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .cooked-gallery-edit-button,
+        .remove-image-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            top: 6px;
+            width: 26px;
+            height: 26px;
+            padding: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+            color: var(--cooked-color-text);
+            font-size: 11px;
+            opacity: 0;
+            transition: opacity 150ms ease;
+
+            &:focus-visible {
+                outline: var(--cooked-focus-ring);
+                outline-offset: 1px;
+            }
+        }
+
+        .cooked-gallery-edit-button {
+            left: 6px;
+
+            &:hover {
+                background: #fff;
+                color: var(--cooked-color-accent-strong);
+            }
+        }
+
+        .remove-image-button {
+            right: 6px;
+            left: auto;
+
+            &:hover {
+                background: #fff;
+                color: #d63638;
+            }
+        }
+
+        .cooked-recipe-gallery-item:hover,
+        .cooked-recipe-gallery-item:focus-within {
+            .cooked-gallery-edit-button,
+            .remove-image-button {
+                opacity: 1;
+            }
+        }
+
+        @media (hover: none) {
+            .cooked-gallery-edit-button,
+            .remove-image-button {
+                opacity: 1;
+            }
+        }
+    }
+
+    .cooked-gallery-add-tile {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+        padding: 8px;
+        border: 2px dashed var(--cooked-color-border);
+        border-radius: var(--cooked-radius);
+        background: var(--cooked-color-surface);
+        color: var(--cooked-color-accent-strong);
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: border-color 150ms ease, background-color 150ms ease;
+
+        .cooked-icon {
+            font-size: 18px;
+        }
+
+        &:hover {
+            border-color: var(--cooked-color-accent-strong);
+            background: var(--cooked-color-accent-soft);
+        }
+
+        &:focus-visible {
+            outline: var(--cooked-focus-ring);
+            outline-offset: 2px;
+        }
+    }
+
+    .cooked-gallery-video {
+        max-width: 560px;
+        margin: 24px 0 0;
+
+        label .cooked-icon {
+            margin-right: 4px;
+            color: var(--cooked-color-text-muted);
+        }
+
+        input {
+            width: 100%;
+        }
+    }
+
+    // Appearance: the live preview on a stage, and a bar of controls under it.
+    .cooked-gallery-live-stage {
+        padding: 24px;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
+        background: var(--cooked-color-page);
+
+        @container cooked-gallery (max-width: 600px) {
+            padding: 12px;
+        }
+    }
+
+    // Frames stack in the view: a new one loads hidden under the current one, then fades in
+    // (cooked-admin-functions.js).
+    .cooked-gallery-live-view {
+        position: relative;
+        max-width: 640px;
+        height: 360px; // until it loads; then the height of its content
+        margin: 0 auto;
+        overflow: hidden;
+        transition: height 250ms cubic-bezier(.22, .61, .36, 1);
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    .cooked-gallery-live-frame {
+        position: absolute;
+        inset: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        // The preview page is light; matching it keeps the frame transparent on a dark editor
+        // (a frame whose colour scheme differs from its page's is painted opaque white).
+        color-scheme: light;
+        transition: opacity 200ms ease;
+
+        &.is-loading {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+
+    .cooked-gallery-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px 28px;
+        align-items: flex-end;
+        padding: 16px 20px;
+        border: 1px solid var(--cooked-color-border);
+        border-top: 0;
+        border-radius: 0 0 var(--cooked-radius) var(--cooked-radius);
+        background: var(--cooked-color-surface);
+
+        @container cooked-gallery (max-width: 600px) {
+            padding: 14px;
+        }
+    }
+
+    .cooked-gallery-control-toggles {
+        display: flex;
+        flex: 1 1 100%;
+        flex-wrap: wrap;
+        gap: 12px 24px;
+        align-items: center;
+        padding-top: 14px;
+        border-top: 1px solid var(--cooked-color-border);
+
+        .cooked-gallery-toggle {
+            display: inline-flex;
+            align-items: center;
+
+            label {
+                font-size: 13px;
+            }
+        }
+
+        .cooked-gallery-preview-button {
+            display: inline-flex;
+            gap: 4px;
+            align-items: center;
+            margin-left: auto;
+            color: var(--cooked-color-accent-strong);
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+
+            .cooked-icon {
+                font-size: 11px;
+            }
+
+            &:hover {
+                color: var(--cooked-color-accent-hover);
+                text-decoration: underline;
+            }
+        }
+    }
+
+    // A row of radio buttons as one switch, the thumb sliding to the checked one (like the
+    // Visual / Code switch and the Compare layouts tabs).
+    .cooked-segmented {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(var(--cooked-segments), minmax(0, 1fr));
+        padding: 2px;
+        border-radius: var(--cooked-radius-sm);
+        background: var(--cooked-color-border);
+
+        &::before {
+            content: "";
+            position: absolute;
+            top: 2px;
+            bottom: 2px;
+            left: 2px;
+            width: calc((100% - 4px) / var(--cooked-segments));
+            border-radius: 3px;
+            background: var(--cooked-color-surface);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+            transition: transform 250ms cubic-bezier(.22, .61, .36, 1);
+
+            @media (prefers-reduced-motion: reduce) {
+                transition: none;
+            }
+        }
+
+        @for $i from 2 through 4 {
+            &:has(> label:nth-child(#{$i}) input:checked)::before {
+                transform: translateX(#{($i - 1) * 100%});
+            }
+        }
+
+        label {
+            position: relative; // above the thumb
+            margin: 0;
+            cursor: pointer;
+        }
+
+        input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        span {
+            display: block;
+            padding: 4px 14px;
+            color: var(--cooked-color-text-muted);
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.6;
+            text-align: center;
+            white-space: nowrap;
+            transition: color 250ms ease;
+        }
+
+        input:checked + span {
+            color: var(--cooked-color-accent-strong);
+        }
+
+        input:focus-visible + span {
+            border-radius: 3px;
+            outline: var(--cooked-focus-ring);
+            outline-offset: 0;
+        }
+
+        label:hover input:not(:checked) + span {
+            color: var(--cooked-color-text);
+        }
+
+        @container cooked-gallery (max-width: 600px) {
+            span {
+                padding: 4px 8px;
+            }
+        }
+    }
+
+    @container cooked-gallery (max-width: 600px) {
+        .cooked-gallery-control {
+            flex: 1 1 100%;
+        }
+    }
+}

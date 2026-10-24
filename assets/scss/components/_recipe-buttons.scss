@@ -1,0 +1,36 @@
+/* Print Button */
+.cooked-recipe-info span.cooked-print,
+.cooked-recipe-info span.cooked-print > a {
+    height: 2rem;
+    display: inline-block;
+}
+
+.cooked-recipe-info span.cooked-print > a {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.cooked-recipe-info span.cooked-print > a:hover {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.cooked-recipe-info span.cooked-print .cooked-icon {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+}
+
+/* Full-Screen Button */
+.cooked-recipe-info span.cooked-fsm-button {
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.4);
+    height: 2rem;
+    display: inline-block;
+}
+
+.cooked-recipe-info span.cooked-fsm-button:hover {
+    color: rgba(0, 0, 0, 0.6);
+}
+
+.cooked-recipe-info span.cooked-fsm-button .cooked-icon {
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+}

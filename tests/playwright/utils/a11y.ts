@@ -3,10 +3,22 @@ import AxeBuilder from '@axe-core/playwright';
 import type { Result } from 'axe-core';
 import { recordA11yScan } from './a11y-report-store';
 
-export function scanPage(page: Page) {
-  return new AxeBuilder({ page })
+export type ScanScope = {
+  /** Only scan inside these selectors (e.g. a modal). */
+  include?: string[];
+  /** Also skip these selectors (the admin bar and theme navigation are always skipped). */
+  exclude?: string[];
+};
+
+export function scanPage(page: Page, scope: ScanScope = {}) {
+  const builder = new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-    .exclude('#wpadminbar');
+    .exclude('#wpadminbar')
+    // The theme's navigation block is core/theme markup, not Cooked's.
+    .exclude('.wp-block-navigation');
+  (scope.include || []).forEach((selector) => builder.include(selector));
+  (scope.exclude || []).forEach((selector) => builder.exclude(selector));
+  return builder;
 }
 
 function formatViolations(violations: Result[]): string {
@@ -26,8 +38,8 @@ function formatViolations(violations: Result[]): string {
     .join('\n\n');
 }
 
-export async function expectAccessible(page: Page): Promise<void> {
-  const results = await scanPage(page).analyze();
+export async function expectAccessible(page: Page, scope: ScanScope = {}): Promise<void> {
+  const results = await scanPage(page, scope).analyze();
   const testInfo = test.info();
 
   recordA11yScan(

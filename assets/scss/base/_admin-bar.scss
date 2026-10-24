@@ -1,0 +1,7 @@
+/* Admin Bar Menu Icon */
+#wp-admin-bar-cooked-ab .ab-icon:before {
+    font-family: "CookedIcons";
+    content: "\f035";
+    font-size: 17px;
+    top: -2px;
+}

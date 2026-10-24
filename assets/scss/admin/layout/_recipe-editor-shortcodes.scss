@@ -1,0 +1,301 @@
+// Recipe editor, new layout: Shortcodes tab (templates/admin/frame/recipe-shortcodes.php). A list
+// card per group; each row is an icon, the name and description, and the shortcode with a Copy
+// button; its options open below in a table with an example.
+
+body.cooked-recipe-editor .cooked-shortcodes-fields {
+    container: cooked-shortcodes / inline-size;
+
+    .cooked-shortcode-list {
+        margin: 0;
+        padding: 0;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: var(--cooked-radius);
+        background: var(--cooked-color-surface);
+        list-style: none;
+    }
+
+    .cooked-shortcode-item {
+        margin: 0;
+        padding: 14px 16px;
+
+        & + .cooked-shortcode-item {
+            border-top: 1px solid var(--cooked-color-border);
+        }
+    }
+
+    .cooked-shortcode-main {
+        display: grid;
+        grid-template-columns: 32px minmax(0, 1fr) auto;
+        gap: 4px 14px;
+        align-items: center;
+
+        @container cooked-shortcodes (max-width: 640px) {
+            grid-template-columns: 32px minmax(0, 1fr);
+
+            > .cooked-shortcode-copy {
+                grid-column: 2;
+            }
+        }
+    }
+
+    .cooked-shortcode-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--cooked-color-accent-soft);
+        color: var(--cooked-color-accent-strong);
+        font-size: 14px;
+    }
+
+    .cooked-shortcode-title {
+        margin: 0;
+        color: var(--cooked-color-text);
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.4;
+    }
+
+    .cooked-shortcode-desc {
+        margin: 2px 0 0;
+        color: var(--cooked-color-text-muted);
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    // The shortcode wraps rather than pushing the row wider than the box.
+    .cooked-shortcode-copy {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        justify-content: flex-end;
+        min-width: 0;
+
+        @container cooked-shortcodes (max-width: 640px) {
+            justify-content: flex-start;
+        }
+
+        code {
+            min-width: 0;
+            font-size: 12px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .button {
+            flex: none;
+        }
+    }
+
+    .cooked-shortcode-options {
+        margin: 8px 0 0 46px; // under the text, past the icon
+
+        > summary {
+            display: inline-flex;
+            gap: 6px;
+            align-items: center;
+            padding: 2px 0;
+            border-radius: var(--cooked-radius-sm);
+            color: var(--cooked-color-accent-strong);
+            font-size: 12px;
+            font-weight: 600;
+            list-style: none;
+            cursor: pointer;
+
+            &::-webkit-details-marker {
+                display: none;
+            }
+
+            .cooked-icon {
+                font-size: 10px;
+                transition: transform 200ms ease;
+
+                @media (prefers-reduced-motion: reduce) {
+                    transition: none;
+                }
+            }
+
+            &:hover {
+                color: var(--cooked-color-accent-hover);
+            }
+
+            &:focus-visible {
+                outline: var(--cooked-focus-ring);
+                outline-offset: 2px;
+            }
+        }
+
+        &[open]:not(.is-closing) > summary .cooked-icon {
+            transform: rotate(90deg);
+        }
+    }
+
+    // Eased open and closed by cooked-admin-functions.js.
+    .cooked-shortcode-options-body {
+        overflow: hidden;
+    }
+
+    .cooked-shortcode-options-table {
+        width: 100%;
+        margin: 10px 0 0;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: var(--cooked-radius-sm);
+        border-collapse: separate;
+        border-spacing: 0;
+        font-size: 12px;
+        line-height: 1.5;
+
+        th,
+        td {
+            padding: 7px 10px;
+            border-top: 1px solid var(--cooked-color-border);
+            color: var(--cooked-color-text);
+            text-align: left;
+            vertical-align: top;
+        }
+
+        thead th {
+            border-top: 0;
+            background: var(--cooked-color-surface-muted);
+            color: var(--cooked-color-text); // muted text on the muted fill is 4.49:1
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        thead th:first-child {
+            border-top-left-radius: var(--cooked-radius-sm);
+        }
+
+        thead th:last-child {
+            border-top-right-radius: var(--cooked-radius-sm);
+        }
+
+        tbody th {
+            width: 1%;
+            font-weight: 400;
+            white-space: nowrap;
+        }
+
+        code {
+            padding: 1px 5px;
+            border-radius: 3px;
+            background: var(--cooked-color-surface-muted);
+            color: var(--cooked-color-text);
+            font-size: 12px;
+        }
+
+        .cooked-shortcode-values {
+            width: 30%;
+            color: var(--cooked-color-text-muted);
+            font-family: Consolas, Monaco, monospace;
+            font-size: 11px;
+            overflow-wrap: anywhere;
+        }
+
+        // A phone: each option as a block, values under the description.
+        @container cooked-shortcodes (max-width: 520px) {
+            thead {
+                display: none;
+            }
+
+            tr,
+            th,
+            td {
+                display: block;
+                width: auto;
+            }
+
+            tbody tr + tr {
+                border-top: 1px solid var(--cooked-color-border);
+            }
+
+            th,
+            td {
+                border-top: 0;
+            }
+
+            tbody th {
+                padding-bottom: 0;
+            }
+
+            td {
+                padding-top: 2px;
+                padding-bottom: 0;
+            }
+
+            td:last-child {
+                padding-bottom: 8px;
+            }
+
+            .cooked-shortcode-values {
+                width: auto;
+            }
+        }
+    }
+
+    .cooked-shortcode-example {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px 10px;
+        align-items: center;
+        margin: 10px 0 0;
+
+        .cooked-shortcode-copy {
+            justify-content: flex-start;
+        }
+    }
+
+    // Names an option takes (e.g. [cooked-info]'s details), as chips.
+    .cooked-shortcode-names {
+        margin: 10px 0 0;
+
+        ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 6px 0 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        li {
+            margin: 0;
+            padding: 2px 8px 2px 2px;
+            border: 1px solid var(--cooked-color-border);
+            border-radius: 999px;
+            color: var(--cooked-color-text);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        code {
+            padding: 1px 6px;
+            border-radius: 999px;
+            background: var(--cooked-color-surface-muted);
+            color: var(--cooked-color-text);
+            font-size: 11px;
+        }
+    }
+
+    .cooked-shortcode-example-label {
+        color: var(--cooked-color-text-muted);
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    @container cooked-shortcodes (max-width: 640px) {
+        .cooked-shortcode-item {
+            padding: 12px;
+        }
+
+        .cooked-shortcode-options {
+            margin-left: 0;
+        }
+    }
+}

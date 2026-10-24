@@ -28,6 +28,7 @@ function _e( $text, $domain = 'default' ) { echo $text; }
 function esc_html__( $text, $domain = 'default' ) { return $text; }
 function esc_html_e( $text, $domain = 'default' ) { echo $text; }
 function esc_html_x( $text, $context, $domain = 'default' ) { return $text; }
+function esc_attr_x( $text, $context, $domain = 'default' ) { return $text; }
 function esc_attr__( $text, $domain = 'default' ) { return $text; }
 function esc_attr_e( $text, $domain = 'default' ) { echo $text; }
 
@@ -134,6 +135,7 @@ function wp_editor( $content, $editor_id, $settings = [] ) {
     echo '<textarea id="' . esc_attr( $editor_id ) . '">' . $content . '</textarea>';
 }
 function sanitize_key( $key ) { return strtolower( preg_replace( '/[^a-zA-Z0-9_\-]/', '', $key ) ); }
+function sanitize_html_class( $classname, $fallback = '' ) { $clean = preg_replace( '/%[a-fA-F0-9][a-fA-F0-9]|[^A-Za-z0-9_-]/', '', (string) $classname ); return '' === $clean ? $fallback : $clean; }
 function sanitize_title( $title ) { return strtolower( preg_replace( '/[^a-zA-Z0-9_\-]/', '-', $title ) ); }
 function sanitize_title_with_dashes( $title, $raw_title = '', $context = 'display' ) { return strtolower( preg_replace( '/[^a-zA-Z0-9_\-]/', '-', $title ) ); }
 function absint( $maybeint ) { return abs( (int) $maybeint ); }
@@ -163,18 +165,29 @@ function load_plugin_textdomain( $domain, $deprecated, $plugin_rel_path ) { retu
  */
 function wpautop( $pee, $br = true ) { return $pee; }
 function make_clickable( $text ) { return $text; }
+$GLOBALS['_cooked_test_settings_errors'] = [];
+function add_settings_error( $setting, $code, $message, $type = 'error' ) {
+    $GLOBALS['_cooked_test_settings_errors'][] = [ 'setting' => $setting, 'code' => $code, 'message' => $message, 'type' => $type ];
+}
+function get_settings_errors( $setting = '' ) {
+    return array_values( array_filter( $GLOBALS['_cooked_test_settings_errors'], function ( $error ) use ( $setting ) {
+        return '' === $setting || $error['setting'] === $setting;
+    } ) );
+}
+function sanitize_hex_color( $color ) { if ( '' === $color ) { return ''; } return preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ? $color : null; }
+function is_serialized( $data ) { return is_string( $data ) && ( 'N;' === trim( $data ) || (bool) preg_match( '/^[aOsbidC]:/', trim( $data ) ) ); }
 function wp_unslash( $value ) { return is_string( $value ) ? stripslashes( $value ) : $value; }
 function rest_sanitize_boolean( $value ) {
-	if ( is_bool( $value ) ) {
-		return $value;
-	}
-	if ( is_string( $value ) ) {
-		$value = strtolower( $value );
-		if ( in_array( $value, [ 'false', '0', 'no', 'off', '' ], true ) ) {
-			return false;
-		}
-	}
-	return (bool) $value;
+    if ( is_bool( $value ) ) {
+        return $value;
+    }
+    if ( is_string( $value ) ) {
+        $value = strtolower( $value );
+        if ( in_array( $value, [ 'false', '0', 'no', 'off', '' ], true ) ) {
+            return false;
+        }
+    }
+    return (bool) $value;
 }
 
 /**
@@ -226,7 +239,7 @@ function wp_get_attachment_image( $attachment_id, $size = 'thumbnail', $icon = f
     if ( isset( $GLOBALS['_cooked_test_attachment_image_html'] ) ) {
         return $GLOBALS['_cooked_test_attachment_image_html'];
     }
-    return $attachment_id ? '<img src="http://example.com/image-' . (int) $attachment_id . '.jpg" class="size-' . $size . '" />' : '';
+    return $attachment_id ? '<img src="http://example.com/image-' . (int) $attachment_id . '.jpg" class="size-' . ( is_array( $size ) ? implode( 'x', $size ) : $size ) . '" />' : '';
 }
 function get_the_title( $post_id = 0 ) {
     if ( is_object( $post_id ) && isset( $post_id->post_title ) ) {
@@ -550,6 +563,18 @@ function wp_reset_postdata() {
 }
 function wp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) { return []; }
 function wp_kses( $string, $allowed_html, $allowed_protocols = [] ) { return $string; }
+function wp_kses_allowed_html( $context = 'post' ) {
+    return [
+        'a'      => [ 'href' => true, 'class' => true, 'aria-label' => true ],
+        'div'    => [ 'class' => true, 'id' => true ],
+        'span'   => [ 'class' => true ],
+        'input'  => [],
+        'form'   => [ 'action' => true, 'method' => true, 'class' => true ],
+        'label'  => [ 'class' => true, 'for' => true ],
+        'select' => [ 'name' => true, 'id' => true, 'class' => true ],
+        'option' => [ 'value' => true, 'selected' => true ],
+    ];
+}
 function wp_json_encode( $data, $options = 0, $depth = 512 ) { return json_encode( $data, $options, $depth ); }
 function get_admin_url() { return 'http://example.com/wp-admin/'; }
 function get_the_author_meta( $field = '', $user_id = false ) { return 'Admin User'; }
@@ -834,26 +859,23 @@ function wp_get_current_user() {
     ];
 }
 
+function wp_parse_url( $url, $component = -1 ) {
+    return parse_url( $url, $component );
+}
+
+function _deprecated_file( $file, $version, $replacement = '', $message = '' ) {
+    $GLOBALS['_cooked_test_deprecated_files'][] = [ $file, $version, $replacement ];
+}
+
 /**
  * Load Composer autoloader
  */
 require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../../src/aliases.php';
 
 /**
  * Load plugin class files needed for testing
  */
-require_once COOKED_DIR . 'includes/class.cooked-measurements.php';
-require_once COOKED_DIR . 'includes/class.cooked-unit-converter.php';
-require_once COOKED_DIR . 'includes/class.cooked-functions.php';
-require_once COOKED_DIR . 'includes/class.cooked-recipes.php';
-require_once COOKED_DIR . 'includes/class.cooked-multilingual.php';
-require_once COOKED_DIR . 'includes/class.cooked-settings.php';
-require_once COOKED_DIR . 'includes/class.cooked-enqueues.php';
-require_once COOKED_DIR . 'includes/class.cooked-users.php';
-require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
-require_once COOKED_DIR . 'includes/class.cooked-csv-import.php';
-require_once COOKED_DIR . 'includes/class.cooked-ajax.php';
-require_once COOKED_DIR . 'includes/class.cooked-related-recipes.php';
-require_once COOKED_DIR . 'includes/class.cooked-updates.php';
-require_once COOKED_DIR . 'includes/class.cooked-seo.php';
-require_once __DIR__ . '/FilterTestCase.php';
+$GLOBALS['Cooked_Recipes'] = new Cooked_Recipes();
+require_once COOKED_DIR . 'src/functions.php';
+require_once __DIR__ . '/framework/FilterTestCase.php';

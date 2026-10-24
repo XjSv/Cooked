@@ -1,0 +1,314 @@
+/* Cooked recipe gallery (assets/js/cooked-gallery.js) */
+.cooked-gallery {
+    --cooked-gallery-ratio: 4 / 3;
+    --cooked-gallery-fit: cover;
+    --cooked-gallery-thumb-width: 75px;
+    --cooked-gallery-thumb-height: 75px;
+    --cooked-gallery-thumb-margin: 10px;
+    width: 100%;
+    margin: 0 0 2rem;
+}
+
+.cooked-gallery-stage {
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+}
+
+.cooked-gallery-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    aspect-ratio: var(--cooked-gallery-ratio);
+    background: #1e1e1e;
+}
+
+.cooked-gallery-track::-webkit-scrollbar {
+    display: none;
+}
+
+.cooked-gallery-noswipe .cooked-gallery-track {
+    overflow-x: hidden;
+}
+
+.cooked-gallery .cooked-gallery-slide {
+    position: relative;
+    flex: 0 0 100%;
+    margin: 0;
+    padding: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+}
+
+.cooked-gallery-image,
+.cooked-gallery .cooked-gallery-slide iframe {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+.cooked-gallery-image {
+    cursor: zoom-in;
+}
+
+.cooked-gallery[data-allowfullscreen="false"] .cooked-gallery-image {
+    cursor: default;
+}
+
+.cooked-gallery .cooked-gallery-image img {
+    display: block;
+    width: 100%;
+    max-width: none;
+    height: 100%;
+    margin: 0;
+    object-fit: var(--cooked-gallery-fit);
+}
+
+.cooked-gallery .cooked-gallery-slide iframe {
+    position: absolute;
+    inset: 0;
+}
+
+.cooked-gallery .cooked-gallery-caption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: 0;
+    padding: 2.5em 1.1em 0.8em;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+    color: #fff;
+    font-size: 0.85em;
+    line-height: 1.4;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+    pointer-events: none;
+}
+
+.cooked-gallery-playing .cooked-gallery-caption,
+.cooked-gallery-playing .cooked-gallery-play {
+    display: none;
+}
+
+/* Buttons: reset theme button styles first. */
+.cooked-gallery button {
+    box-sizing: border-box;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+    color: inherit;
+    font: inherit;
+    line-height: 1;
+    text-transform: none;
+    cursor: pointer;
+}
+
+.cooked-gallery button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -4px;
+}
+
+// Themes often outline any focused button; a click shouldn't leave one on the arrows or thumbnails.
+.cooked-gallery button:focus:not(:focus-visible) {
+    outline: none;
+}
+
+.cooked-gallery .cooked-gallery-play {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #222;
+}
+
+.cooked-gallery-play-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 64px;
+    height: 64px;
+    margin: -32px 0 0 -32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+.cooked-gallery-play-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -12px 0 0 -7px;
+    border-style: solid;
+    border-width: 12px 0 12px 20px;
+    border-color: transparent transparent transparent #333;
+}
+
+.cooked-gallery .cooked-gallery-arrow {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    transform: translateY(-50%);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+    color: #1e1e1e;
+    opacity: 0;
+    transition: opacity 200ms ease, background-color 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+
+    &:hover {
+        background-color: #fff;
+    }
+
+    // Cooked's own chevrons (the icon font).
+    .cooked-icon {
+        font-size: 18px;
+        line-height: 1;
+    }
+}
+
+.cooked-gallery-loaded .cooked-gallery-arrow {
+    opacity: 1;
+}
+
+.cooked-gallery .cooked-gallery-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.cooked-gallery .cooked-gallery-arrow:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+}
+
+.cooked-gallery .cooked-gallery-prev {
+    left: 12px;
+}
+
+.cooked-gallery .cooked-gallery-next {
+    right: 12px;
+}
+
+// Right-to-left: the arrows point the other way.
+[dir="rtl"] .cooked-gallery .cooked-gallery-arrow .cooked-icon {
+    scale: -1 1;
+}
+
+.cooked-gallery-nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.cooked-gallery-nav-dots {
+    gap: 8px;
+    padding: 12px 0 0;
+}
+
+.cooked-gallery .cooked-gallery-nav-dots .cooked-gallery-nav-item {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #c8c8c8;
+    transition: width 200ms ease, background-color 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-gallery .cooked-gallery-nav-dots .cooked-gallery-active {
+    width: 22px;
+    background: #333;
+}
+
+// One row; it scrolls sideways when the thumbnails are wider than the gallery.
+.cooked-gallery-nav-thumbs {
+    flex-wrap: nowrap;
+    justify-content: safe center;
+    gap: var(--cooked-gallery-thumb-margin);
+    padding: var(--cooked-gallery-thumb-margin) 0 0;
+    overflow-x: auto;
+    scrollbar-width: thin;
+}
+
+// Thumbnails: the others a little faded; the current one full strength with a thin ring in the
+// main colour (assets/css/colors.php), drawn inside the image.
+.cooked-gallery .cooked-gallery-nav-thumbs .cooked-gallery-nav-item {
+    position: relative;
+    flex: none;
+    width: var(--cooked-gallery-thumb-width);
+    height: var(--cooked-gallery-thumb-height);
+    overflow: hidden;
+    border: 0;
+    border-radius: 8px;
+    background: #333;
+    opacity: 0.65;
+    transition: opacity 200ms ease;
+
+    &::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+        pointer-events: none;
+    }
+
+    // Dark only behind the video's play icon; image corners stay clean.
+    &:has(img) {
+        background: transparent;
+    }
+
+    &:hover {
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-gallery .cooked-gallery-nav-thumbs .cooked-gallery-active {
+    opacity: 1;
+
+    &::after {
+        box-shadow: inset 0 0 0 2px var(--cooked-color-accent);
+    }
+}
+
+.cooked-gallery .cooked-gallery-nav-thumbs img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.cooked-gallery-nav-thumbs .cooked-gallery-play-icon {
+    transform: scale(0.5);
+}
+
+/* Caption inside PhotoSwipe. */
+.pswp__cooked-caption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 0.75em 1em;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    text-align: center;
+}

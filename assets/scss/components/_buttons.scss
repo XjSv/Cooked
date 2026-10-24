@@ -1,0 +1,37 @@
+/* Buttons */
+.cooked-button,
+input[type="submit"].cooked-button,
+input[type="button"].cooked-button,
+button.cooked-button {
+    box-sizing: border-box;
+    cursor: pointer;
+    display: inline-block;
+    padding: 0.4rem 0.65rem;
+    height: 2.1rem;
+    line-height: 1.25rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.03rem;
+    color: #fff;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.cooked-button i.cooked-icon {
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.cooked-button.cooked-square-button {
+    padding: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    line-height: 2.25rem;
+    text-align: center;
+}
+
+.cooked-button.cooked-square-button i.cooked-icon {
+    font-size: 1rem;
+}

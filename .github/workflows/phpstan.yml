@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php: [8.5, 8.4, 8.3, 8.2, 8.1, 8.0, 7.4]
+        php: [8.5, 8.4, 8.3, 8.2]
 
     name: PHP ${{ matrix.php }}
 
@@ -34,4 +34,4 @@ jobs:
         run: composer install --no-interaction --no-progress
 
       - name: Run PHPStan
-        run: ./vendor/bin/phpstan analyse --memory-limit=512M --no-progress
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G --no-progress

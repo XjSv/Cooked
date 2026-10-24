@@ -86,8 +86,12 @@ class Users {
             }
         }
 
-        $_user      = get_userdata( $user_id );
-        $_user_meta = get_user_meta( $user_id, 'cooked_user_meta', true );
+        if ( ! $user_id ) {
+            return false;
+        }
+
+        $_user      = get_userdata( (int) $user_id );
+        $_user_meta = get_user_meta( (int) $user_id, 'cooked_user_meta', true );
 
         if ( ! empty( $_user ) ) {
             if ( isset( $_user_meta['profile_photo_id'] ) && $_user_meta['profile_photo_id'] && wp_attachment_is_image( $_user_meta['profile_photo_id'] ) ) {
@@ -141,7 +145,7 @@ class Users {
 
         global $_cooked_settings;
 
-        $_cooked_settings = ! $_cooked_settings || ( $_cooked_settings && empty( $_cooked_settings ) ) ? \Cooked_Settings::get() : $_cooked_settings;
+        $_cooked_settings = empty( $_cooked_settings ) ? \Cooked_Settings::get() : $_cooked_settings;
 
         if ( ! $format && isset( $_cooked_settings['author_name_format'] ) && $_cooked_settings['author_name_format'] ) :
             $format = $_cooked_settings['author_name_format'];
@@ -239,9 +243,9 @@ class Users {
         }
 
         // Only filter if orderby is set to 'cooked_recipe_count'.
-        if ( isset( $query->query_vars ) && isset( $query->query_vars['orderby'] ) && ( 'cooked_recipe_count' === $query->query_vars['orderby'] ) ) {
+        if ( isset( $query->query_vars['orderby'] ) && ( 'cooked_recipe_count' === $query->query_vars['orderby'] ) ) {
             // We need the order - default is ASC.
-            $order = isset( $query->query_vars ) && isset( $query->query_vars['order'] ) && 0 === strcasecmp( $query->query_vars['order'], 'desc' ) ? 'DESC' : 'ASC';
+            $order = isset( $query->query_vars['order'] ) && 0 === strcasecmp( $query->query_vars['order'], 'desc' ) ? 'DESC' : 'ASC';
 
             // Order the posts by recipe count.
             $query->query_orderby = "ORDER BY ( SELECT COUNT(*) FROM {$wpdb->posts} posts WHERE posts.post_type = 'cp_recipe' AND posts.post_status IN ('publish', 'pending', 'draft') AND posts.post_author = {$wpdb->users}.ID ) {$order}";

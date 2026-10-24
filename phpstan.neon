@@ -18,3 +18,11 @@ parameters:
     treatPhpDocTypesAsCertain: false
 
     phpVersion: 80200
+    dynamicConstantNames:
+        - COOKED_DEV
+
+    ignoreErrors:
+        # WordPress's escaping functions cast scalars to strings, so numbers are safe to pass.
+        -
+            message: '#^Parameter \#1 \$text of function esc_(attr|html) expects string, (float|int(<[^>]+>)?)(\|(float|int(<[^>]+>)?|string))* given\.$#'
+            identifier: argument.type

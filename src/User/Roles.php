@@ -73,7 +73,7 @@ class Roles {
             }
         }
 
-        if ( is_object( $wp_roles ) ) {
+        if ( $wp_roles instanceof \WP_Roles ) {
             $wp_roles->add_cap( 'contributor', 'edit_cooked_recipes' ); // General Edit Recipes.
             $wp_roles->add_cap( 'author', 'edit_cooked_recipes' ); // General Edit Recipes.
 
@@ -110,7 +110,7 @@ class Roles {
             }
         }
 
-        if ( is_object( $wp_roles ) ) {
+        if ( $wp_roles instanceof \WP_Roles ) {
             $roles = [ 'subscriber', 'contributor', 'author', 'editor', 'cooked_recipe_editor', 'administrator' ];
 
             foreach ( $roles as $role ) {
@@ -137,7 +137,7 @@ class Roles {
             }
         }
 
-        if ( is_object( $wp_roles ) ) {
+        if ( $wp_roles instanceof \WP_Roles ) {
             $singular = 'cp_recipe';
             $plural   = 'cp_recipes';
             $roles    = [ 'subscriber', 'contributor', 'author', 'editor', 'cooked_recipe_editor', 'administrator' ];

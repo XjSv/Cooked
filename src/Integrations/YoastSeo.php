@@ -86,16 +86,16 @@ class YoastSeo {
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
         // Only modify for browse page with category.
-        if ( is_page( $browse_page_id ) &&
+        if ( $browse_page_id && is_page( $browse_page_id ) &&
             isset( $wp_query->query['cp_recipe_category'] ) &&
             taxonomy_exists( 'cp_recipe_category' ) &&
             term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) {
 
             // Build the canonical URL based on permalink structure.
             if ( get_option( 'permalink_structure' ) ) {
-                $new_canonical = untrailingslashit( get_permalink( $browse_page_id ) ) . '/' . $_cooked_settings['recipe_category_permalink'] . '/' . $wp_query->query['cp_recipe_category'];
+                $new_canonical = untrailingslashit( (string) get_permalink( $browse_page_id ) ) . '/' . $_cooked_settings['recipe_category_permalink'] . '/' . $wp_query->query['cp_recipe_category'];
             } else {
-                $new_canonical = add_query_arg( 'cp_recipe_category', $wp_query->query['cp_recipe_category'], get_permalink( $browse_page_id ) );
+                $new_canonical = add_query_arg( 'cp_recipe_category', $wp_query->query['cp_recipe_category'], (string) get_permalink( $browse_page_id ) );
             }
 
             return $new_canonical;

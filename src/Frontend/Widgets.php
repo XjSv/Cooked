@@ -66,8 +66,8 @@ class Widgets {
         echo '<div style="margin:-10px 0 0 0;"><a href="#" class="button cooked-recipe-finder-show" id="' . esc_attr( $field_id ) . '-SHOW">' . esc_html( $button_title ) . '</a></div>';
         echo '<select multiple class="widefat cooked-recipe-finder" id="' . esc_attr( $field_id ) . '" name="' . esc_attr( $field_name ) . '" placeholder="' . esc_attr__( 'Choose recipe(s)...', 'cooked' ) . '">';
         if ( ! empty( $included ) ) :
-            foreach ( $included as $recipe ) :
-                $recipe_status = get_post_status( $recipe );
+            foreach ( (array) $included as $recipe ) :
+                $recipe_status = get_post_status( (int) $recipe );
                 if ( 'publish' === $recipe_status ) :
                     $_recipe = \Cooked_Recipes::get( $recipe, true, false, false, true );
                     echo '<option selected="selected" value="' . esc_attr( $_recipe['id'] ) . '">' . esc_html( $_recipe['title'] ) . '</option>';

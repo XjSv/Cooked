@@ -26,7 +26,7 @@ class Functions {
     /**
      * Guest message ID
      *
-     * @var string
+     * @var string|false
      */
     private static $guest_message_id = false;
 
@@ -60,9 +60,11 @@ class Functions {
                 $offset = $key_indexes[ $offset ];
                 $offset = (int) $offset + 1;
             }
+            $offset = (int) $offset;
             if ( isset( $input[ $length ] ) && is_string( $length ) ) {
                 $length = $key_indexes[ $length ] - $offset;
             }
+            $length = (int) $length;
 
             $input = array_slice( $input, 0, $offset, true )
                     + $replacement
@@ -118,8 +120,9 @@ class Functions {
      * @return string Escaped HTML.
      */
     public static function highlight_xml_line( $line ) {
-        $html = '';
-        foreach ( preg_split( '#(<[^>]+>)#', $line, -1, PREG_SPLIT_DELIM_CAPTURE ) as $part ) {
+        $html  = '';
+        $parts = preg_split( '#(<[^>]+>)#', $line, -1, PREG_SPLIT_DELIM_CAPTURE );
+        foreach ( false === $parts ? [] : $parts as $part ) {
             if ( ! preg_match( '#^<(/?)([\w:-]+)(.*?)(/?)>$#s', $part, $tag ) ) {
                 $html .= esc_html( $part );
                 continue;

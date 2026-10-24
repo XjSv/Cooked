@@ -41,6 +41,8 @@ class Pixwell {
 
     /**
      * Suggest Auto when Pixwell's toggle is on and Cooked is not set to Auto.
+     *
+     * @return void
      */
     public function forced_dark_mode_notice() {
         if ( ! self::is_pixwell_dark_mode_enabled() || ! current_user_can( 'manage_options' ) ) {

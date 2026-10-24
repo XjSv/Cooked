@@ -83,8 +83,8 @@ class Multilingual {
      * This method returns the translated browse page ID when a multilingual plugin is active.
      * Use this when checking is_page() or generating URLs with get_permalink().
      *
-     * @param int|bool $browse_page_id Optional. The default browse page ID. If not provided, gets from settings.
-     * @return int|bool The translated page ID or original, false if not set
+     * @param int|string|false|null $browse_page_id Optional. The default browse page ID. If not provided, gets from settings.
+     * @return int|false The translated page ID or original, false if not set
      */
     public static function get_browse_page_id( $browse_page_id = null ) {
         // If no ID provided, get from settings.
@@ -101,17 +101,17 @@ class Multilingual {
         if ( self::is_polylang_active() ) {
             $translated_id = pll_get_post( $browse_page_id );
             if ( $translated_id ) {
-                return $translated_id;
+                return (int) $translated_id;
             }
         } elseif ( self::is_wpml_active() ) {
             // WPML support (only if Polylang is not active).
             $translated_id = icl_object_id( $browse_page_id, 'page', true );
             if ( $translated_id ) {
-                return $translated_id;
+                return (int) $translated_id;
             }
         }
 
-        return $browse_page_id;
+        return (int) $browse_page_id;
     }
 
     /**
@@ -120,7 +120,7 @@ class Multilingual {
      * Returns an array of all translated browse page IDs and slugs.
      * Useful for creating rewrite rules for each language.
      *
-     * @return array Array of ['lang' => ['id' => int, 'slug' => string]]
+     * @return array<string, array{id: int, slug: string|null}> Browse pages keyed by language code; a null slug means the page does not exist.
      */
     public static function get_all_browse_pages() {
         global $_cooked_settings;
@@ -134,7 +134,7 @@ class Multilingual {
 
         // Default page (always include).
         $pages['default'] = [
-            'id'   => $default_page_id,
+            'id'   => (int) $default_page_id,
             'slug' => self::get_page_slug( $default_page_id ),
         ];
 
@@ -144,7 +144,7 @@ class Multilingual {
             foreach ( $translations as $lang => $translated_id ) {
                 if ( $translated_id && (int) $translated_id !== (int) $default_page_id ) {
                     $pages[ $lang ] = [
-                        'id'   => $translated_id,
+                        'id'   => (int) $translated_id,
                         'slug' => self::get_page_slug( $translated_id ),
                     ];
                 }
@@ -191,7 +191,7 @@ class Multilingual {
     /**
      * Check if browse page has translations
      *
-     * @return array Array of missing language codes
+     * @return string[] Missing language codes.
      */
     public static function get_missing_translations() {
         global $_cooked_settings;
@@ -231,6 +231,8 @@ class Multilingual {
 
     /**
      * Display admin notice about missing browse page translations
+     *
+     * @return void
      */
     public function translation_notice() {
         // Only show on Cooked settings page.

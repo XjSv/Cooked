@@ -123,7 +123,7 @@ class Ajax {
         echo '<link rel="stylesheet" href="' . $asset( 'assets/vendor/photoswipe/photoswipe.css' ) . '">'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
         echo '<style>body{margin:0;padding:20px;background:#fff;color:#1e1e1e;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.cooked-gallery{max-width:720px;margin:0 auto}.cooked-gallery-preview-empty{margin:60px 0;text-align:center;color:#757575}body.is-mini{padding:0;overflow:hidden;background:transparent}.is-mini .cooked-gallery{max-width:none;margin:0}.is-mini .cooked-gallery-preview-empty{margin:0;padding:40px 16px;font-size:13px}</style>';
         echo '</head><body' . ( $mini ? ' class="is-mini"' : '' ) . '>';
-        echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Built and escaped by Cooked_Shortcodes::cooked_gallery_html().
+        echo $html; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped by Shortcodes::gallery_preview_html(), or the escaped empty message above.
         echo '<script src="' . $asset( 'assets/vendor/photoswipe/photoswipe.umd.min.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
         echo '<script src="' . $asset( 'assets/vendor/photoswipe/photoswipe-lightbox.umd.min.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
         echo '<script src="' . $asset( 'assets/js/cooked-gallery.js' ) . '"></script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Escaped in $asset().
@@ -139,6 +139,10 @@ class Ajax {
      * @return int[]
      */
     private static function recipe_ids_from_json( $json ) {
+        if ( ! is_string( $json ) ) {
+            return [];
+        }
+
         $decoded = json_decode( $json, true );
         if ( ! is_array( $decoded ) || empty( $decoded ) ) {
             return [];
@@ -465,10 +469,11 @@ class Ajax {
         ];
 
         $query      = new \WP_Query( $args );
-        $recipe_ids = $query->posts;
+        $recipe_ids = (array) $query->posts;
         $updated    = 0;
 
         foreach ( $recipe_ids as $rid ) {
+            $rid             = $rid instanceof \WP_Post ? $rid->ID : (int) $rid;
             $recipe_settings = get_post_meta( $rid, '_recipe_settings', true );
             if ( ! empty( $recipe_settings ) ) {
                 $recipe_settings['content'] = $content;
@@ -537,6 +542,8 @@ class Ajax {
 
     /**
      * Handle CSV file upload
+     *
+     * @return void
      */
     public function upload_csv() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
@@ -649,6 +656,8 @@ class Ajax {
 
     /**
      * Process CSV file and import recipes
+     *
+     * @return void
      */
     public function process_csv() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
@@ -797,7 +806,7 @@ class Ajax {
             ];
             // "1½" must become "1 1/2", not "11/2".
             foreach ( $fraction_map as $symbol => $replacement ) {
-                $raw = preg_replace( '/(\d)' . preg_quote( $symbol, '/' ) . '/u', '$1 ' . $replacement, $raw );
+                $raw = (string) preg_replace( '/(\d)' . preg_quote( $symbol, '/' ) . '/u', '$1 ' . $replacement, $raw );
             }
             foreach ( $fraction_map as $symbol => $replacement ) {
                 $raw = str_replace( $symbol, $replacement, $raw );

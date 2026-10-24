@@ -70,9 +70,6 @@ class RecipeList extends \WP_Widget {
         $hide_image  = isset( $instance['hide_image'] ) && $instance['hide_image'] ? true : false;
         $hide_author = isset( $instance['hide_author'] ) && $instance['hide_author'] ? true : false;
 
-        $recipes_style = 'date' === $orderby ? ' style="display:none;' : '';
-        $show_style    = 'ids' === $orderby ? ' style="display:none;' : '';
-
         ?>
 
         <p>
@@ -83,27 +80,27 @@ class RecipeList extends \WP_Widget {
         <p>
         <label for="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>"><?php esc_attr_e( 'Sorted by:', 'cooked' ); ?></label>
         <select class="cooked-widget-conditional widefat" id="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'orderby' ) ); ?>">
-            <option value="date"<?php echo ( ! $orderby || 'date' === $orderby ? ' selected' : '' ); ?>><?php esc_html_e( 'Most Recent', 'cooked' ); ?></option>
-            <option value="ids"<?php echo ( ! $orderby || 'ids' === $orderby ? ' selected' : '' ); ?>><?php esc_html_e( 'Choose Recipes', 'cooked' ); ?></option>
+            <option value="date"<?php echo ( 'date' === $orderby ? ' selected' : '' ); ?>><?php esc_html_e( 'Most Recent', 'cooked' ); ?></option>
+            <option value="ids"<?php echo ( 'ids' === $orderby ? ' selected' : '' ); ?>><?php esc_html_e( 'Choose Recipes', 'cooked' ); ?></option>
         </select>
         </p>
 
         <?php $max_show = 15; ?>
-        <p data-condition="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>" data-value="date"<?php echo esc_attr( $show_style ); ?>>
+        <p data-condition="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>" data-value="date"<?php echo 'ids' === $orderby ? ' style="display:none;"' : ''; ?>>
             <label for="<?php echo esc_attr( $this->get_field_id( 'show' ) ); ?>"><?php esc_attr_e( 'Show:', 'cooked' ); ?></label>
             <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'show' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'show' ) ); ?>">
                 <?php
                 $temp_counter = 0; do {
                     ++$temp_counter;
                     ?>
-                    <option value="<?php echo esc_attr( $temp_counter ); ?>"<?php echo ( ! $show || (string) $show === (string) $temp_counter ? ' selected' : '' ); ?>><?php echo esc_html( $temp_counter ); ?></option>
+                    <option value="<?php echo esc_attr( $temp_counter ); ?>"<?php echo ( (string) $show === (string) $temp_counter ? ' selected' : '' ); ?>><?php echo esc_html( $temp_counter ); ?></option>
                     <?php
                 } while ( $temp_counter < $max_show );
                 ?>
             </select>
         </p>
 
-        <div data-condition="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>" data-value="ids"<?php echo esc_attr( $recipes_style ); ?>>
+        <div data-condition="<?php echo esc_attr( $this->get_field_id( 'orderby' ) ); ?>" data-value="ids"<?php echo 'date' === $orderby ? ' style="display:none;"' : ''; ?>>
             <p>
             <label for="<?php echo esc_attr( $this->get_field_id( 'recipes' ) ); ?>"><?php esc_attr_e( 'Recipes:', 'cooked' ); ?></label>
             </p>

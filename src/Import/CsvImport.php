@@ -29,7 +29,7 @@ class CsvImport {
      * Parse and import recipes from CSV file
      *
      * @param string $file_path Path to the CSV file.
-     * @return array Results array with success count and errors
+     * @return array<string, mixed> Results with the success count and errors.
      */
     public static function import_from_file( $file_path ) {
         global $_cooked_settings;
@@ -60,7 +60,8 @@ class CsvImport {
         // The escape character is passed explicitly (PHP 8.4 deprecates the default); '\\' is
         // the previous default, so parsing is unchanged.
         $headers = fgetcsv( $handle, null, ',', '"', '\\' );
-        if ( false === $headers || empty( $headers ) ) {
+        // A blank first line reads as [ null ].
+        if ( false === $headers || [ null ] === $headers ) {
             $results['errors'][] = __( 'CSV file is empty or invalid.', 'cooked' );
             fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- CSV row streaming.
             return $results;
@@ -69,8 +70,12 @@ class CsvImport {
         /**
          * Normalize headers (trim and lowercase)
          */
-        $headers = array_map( 'trim', $headers );
-        $headers = array_map( 'strtolower', $headers );
+        $headers = array_map(
+            function ( $header ) {
+                return strtolower( trim( (string) $header ) );
+            },
+            $headers
+        );
 
         /**
          * Check for required title column
@@ -117,9 +122,9 @@ class CsvImport {
                     $results['errors'][] = $error_msg;
 
                     if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                        // phpcs:disable
+                        // phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging behind WP_DEBUG.
                         error_log( 'Cooked CSV Import Error Row ' . $row_number . ': ' . $error_msg );
-                        // phpcs:enable
+                        // phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_error_log
                     }
                 }
             } catch ( \Exception $e ) {
@@ -128,10 +133,10 @@ class CsvImport {
                 $results['errors'][] = sprintf( __( 'Row %1$d: %2$s', 'cooked' ), $row_number, $error_msg );
 
                 if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    // phpcs:disable
+                    // phpcs:disable WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug logging behind WP_DEBUG.
                     error_log( 'Cooked CSV Import Exception Row ' . $row_number . ': ' . $error_msg );
                     error_log( 'Stack trace: ' . $e->getTraceAsString() );
-                    // phpcs:enable
+                    // phpcs:enable WordPress.PHP.DevelopmentFunctions.error_log_error_log
                 }
             }
         }
@@ -143,9 +148,9 @@ class CsvImport {
     /**
      * Import a single recipe from CSV data
      *
-     * @param array $data       Recipe data from CSV row.
-     * @param int   $row_number Row number for error reporting.
-     * @return array Result with success status and error message if any
+     * @param array<string, string> $data       Recipe data from CSV row.
+     * @param int                   $row_number Row number for error reporting.
+     * @return array<string, mixed> Result with success status and error message if any.
      */
     public static function import_recipe( $data, $row_number = 0 ) {
         global $_cooked_settings;
@@ -534,8 +539,8 @@ class CsvImport {
     /**
      * Match a measurement string to a measurement key (see Measurements::match()).
      *
-     * @param string $measurement_string The measurement string from CSV.
-     * @param array  $measurements Full measurements array.
+     * @param string               $measurement_string The measurement string from CSV.
+     * @param array<string, mixed> $measurements Full measurements array.
      * @return string|false The measurement key or false if not found
      */
     private static function match_measurement( $measurement_string, $measurements ) {
@@ -545,9 +550,9 @@ class CsvImport {
     /**
      * Parse ingredient parts into ingredient array
      *
-     * @param array $parts Array of ingredient parts (amount, measurement, name, etc.).
-     * @param array $measurements Full measurements array.
-     * @return array|false Ingredient array or false on error
+     * @param array<int|string, mixed> $parts Ingredient parts (amount, measurement, name, etc.).
+     * @param array<string, mixed>     $measurements Full measurements array.
+     * @return array<string, mixed>|false Ingredient array or false on error.
      */
     private static function parse_ingredient_parts( $parts, $measurements ) {
         if ( empty( $parts ) ) {

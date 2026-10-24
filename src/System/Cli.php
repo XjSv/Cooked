@@ -35,7 +35,8 @@ class Cli {
      *     wp cooked tools run remove_recipes_from_cooked_user_meta
      *     wp cooked tools run update_rewrite_rules
      *
-     * @param array $args Positional args. 0 = tool name.
+     * @param string[] $args Positional args. 0 = tool name.
+     * @return void
      */
     public function run( $args ) {
         if ( empty( $args[0] ) ) {
@@ -58,6 +59,8 @@ class Cli {
      * ## EXAMPLES
      *
      *     wp cooked tools list
+     *
+     * @return void
      */
     public function list_tools() {
         $tools = \Cooked_Updates::get_runnable_tools();

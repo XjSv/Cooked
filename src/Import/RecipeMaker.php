@@ -33,11 +33,10 @@ class RecipeMaker {
     public $import_type = 'wp_recipe_maker';
 
     /**
-     * The constructor (empty for now).
+     * The constructor.
      *
      * @since 1.11.2
      * @access public
-     * @var string
      */
     public function __construct() {}
 
@@ -46,6 +45,7 @@ class RecipeMaker {
      *
      * @since 1.11.2
      * @access public
+     * @return int[] Recipe post IDs.
      */
     public static function get_recipes() {
         $wp_recipe_maker_recipes = [];
@@ -68,7 +68,7 @@ class RecipeMaker {
 
         if ( ! empty( $_recipes->posts ) ) {
             foreach ( $_recipes->posts as $rid ) {
-                $wp_recipe_maker_recipes[] = $rid;
+                $wp_recipe_maker_recipes[] = $rid instanceof \WP_Post ? $rid->ID : (int) $rid;
             }
         }
 
@@ -81,6 +81,7 @@ class RecipeMaker {
      * @since 1.11.2
      * @access public
      * @param int $id Recipe ID to import.
+     * @return array{status: bool, message: string}|void An error, or nothing on success.
      */
     public static function import_recipe( $id ) {
         global $_cooked_settings;
@@ -90,16 +91,15 @@ class RecipeMaker {
         $wprm_notes = isset( $post_meta['wprm_notes'][0] ) ? \Cooked_Functions::safe_unserialize( $post_meta['wprm_notes'][0] ) : '';
 
         // Create new cp_recipe post.
-        $new_cp_recipe                    = [];
-        $new_cp_recipe['post_type']       = 'cp_recipe';
-        $new_cp_recipe['post_status']     = 'draft';
-        $new_cp_recipe['post_title']      = isset( $post->post_title ) ? sanitize_text_field( $post->post_title ) : '';
-        $new_cp_recipe['post_content']    = isset( $post->post_content ) ? sanitize_text_field( $post->post_content ) : '';
-        $new_cp_recipe['post_author']     = isset( $post->post_author ) ? absint( $post->post_author ) : '';
-        $new_cp_recipe['post_excerpt']    = isset( $post->post_excerpt ) ? sanitize_text_field( $post->post_excerpt ) : '';
-        $new_cp_recipe['ping_status']     = isset( $post->ping_status ) ? sanitize_text_field( $post->ping_status ) : '';
-        $new_cp_recipe['commnets_status'] = isset( $post->comment_status ) ? sanitize_text_field( $post->comment_status ) : '';
-        $new_cp_recipe['comment_count']   = isset( $post->comment_count ) ? absint( $post->comment_count ) : '';
+        $new_cp_recipe                   = [];
+        $new_cp_recipe['post_type']      = 'cp_recipe';
+        $new_cp_recipe['post_status']    = 'draft';
+        $new_cp_recipe['post_title']     = isset( $post->post_title ) ? sanitize_text_field( $post->post_title ) : '';
+        $new_cp_recipe['post_content']   = isset( $post->post_content ) ? sanitize_text_field( $post->post_content ) : '';
+        $new_cp_recipe['post_author']    = isset( $post->post_author ) ? absint( $post->post_author ) : 0;
+        $new_cp_recipe['post_excerpt']   = isset( $post->post_excerpt ) ? sanitize_text_field( $post->post_excerpt ) : '';
+        $new_cp_recipe['ping_status']    = isset( $post->ping_status ) ? sanitize_text_field( $post->ping_status ) : '';
+        $new_cp_recipe['comment_status'] = isset( $post->comment_status ) ? sanitize_text_field( $post->comment_status ) : '';
 
         $new_recipe_id = wp_insert_post( $new_cp_recipe );
         if ( is_wp_error( $new_recipe_id ) ) {
@@ -245,8 +245,8 @@ class RecipeMaker {
                     'comment_author_url'   => $comment->comment_author_url,
                     'comment_content'      => $comment->comment_content,
                     'comment_type'         => $comment->comment_type,
-                    'comment_parent'       => $comment->comment_parent,
-                    'user_id'              => $comment->user_id,
+                    'comment_parent'       => (int) $comment->comment_parent,
+                    'user_id'              => (int) $comment->user_id,
                     'comment_author_IP'    => $comment->comment_author_IP,
                     'comment_agent'        => $comment->comment_agent,
                     'comment_date'         => $comment->comment_date,

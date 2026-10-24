@@ -635,17 +635,17 @@ class Measurements {
         if ( 'decimal' === $format ) :
             $amount = $float_amount ? number_format_i18n( floatval( $float_amount ), 2 ) : 0;
         else :
-            $float_parts = explode( '.', $float_amount );
+            $float_parts = explode( '.', (string) $float_amount );
             if ( isset( $float_parts[1] ) ) :
-                $float_parts[0] = preg_replace( '/[^0-9\/\.]/', '', $float_parts[0] );
-                $float_parts[1] = preg_replace( '/[^0-9\/\.]/', '', $float_parts[1] );
-                $decimal_part   = $float_amount - $float_parts[0];
+                $float_parts[0] = (string) preg_replace( '/[^0-9\/\.]/', '', $float_parts[0] );
+                $float_parts[1] = (string) preg_replace( '/[^0-9\/\.]/', '', $float_parts[1] );
+                $decimal_part   = (float) $float_amount - (float) $float_parts[0];
                 if ( $decimal_part > 0.075 ) :
                     $fraction          = self::float2rat( $decimal_part );
                     $fraction          = self::fraction_cleaner( $fraction );
                     $allowed_fractions = self::get_fraction_array();
                     foreach ( $allowed_fractions['fractions_b'] as $key => $f ) :
-                        $fraction = str_replace( $f, $allowed_fractions['fractions_c'][ $key ], $fraction );
+                        $fraction = str_replace( $f, $allowed_fractions['fractions_c'][ $key ], (string) $fraction );
                     endforeach;
                     $amount = ( $float_parts[0] ? $float_parts[0] . ' ' . $fraction : $fraction );
                 else :
@@ -667,7 +667,7 @@ class Measurements {
      */
     public function math( $expression = false ) {
         if ( $expression ) {
-            $expression = preg_replace( '/[^0-9\+\-\*\/\(\)\.\,]/', '', esc_html( $expression ) );
+            $expression = (string) preg_replace( '/[^0-9\+\-\*\/\(\)\.\,]/', '', esc_html( (string) $expression ) );
 
             $invalid = '/' === substr( $expression, -1 ) ? true : false; // More checks can be done here if needed.
 
@@ -695,7 +695,7 @@ class Measurements {
      */
     public function calculate( $amount, $type = 'decimal' ) {
         if ( 'decimal' === $type ) {
-            $amount_parts = explode( ' ', $amount );
+            $amount_parts = explode( ' ', (string) $amount );
             $total_parts  = count( $amount_parts );
 
             if ( 1 === $total_parts ) {
@@ -710,16 +710,16 @@ class Measurements {
                 $amount = floatval( $amount );
             }
         } else {
-            $amount_parts = explode( '.', $amount );
+            $amount_parts = explode( '.', (string) $amount );
             $total_parts  = count( $amount_parts );
 
             if ( 2 === $total_parts ) {
                 $full_part       = intval( $amount_parts[0] );
-                $fractional_part = self::float2rat( $amount - $full_part );
+                $fractional_part = self::float2rat( (float) $amount - $full_part );
                 if ( 0 === $full_part && $fractional_part ) {
                     $amount = $fractional_part;
                 } elseif ( $fractional_part ) {
-                    $amount = ( '1' === (string) $fractional_part ) ? $full_part + $fractional_part : "$full_part $fractional_part";
+                    $amount = ( '1' === (string) $fractional_part ) ? $full_part + 1 : "$full_part $fractional_part";
                 } else {
                     $amount = $full_part;
                 }
@@ -738,8 +738,11 @@ class Measurements {
      * @return float|int|string|void
      */
     public function fraction_cleaner( $fraction ) {
-        $fraction_parts = explode( '/', $fraction );
-        $decimal        = $fraction_parts[0] / $fraction_parts[1];
+        $fraction_parts = explode( '/', (string) $fraction );
+        if ( 2 !== count( $fraction_parts ) || ! (float) $fraction_parts[1] ) {
+            return $fraction;
+        }
+        $decimal = (float) $fraction_parts[0] / (float) $fraction_parts[1];
 
         if ( $decimal < 1 ) :
             $decimal_array   = [ 0.125, 0.166, 0.200, 0.250, 0.333, 0.500, 0.666, 0.750, 0.875 ];
@@ -792,9 +795,14 @@ class Measurements {
      *
      * @param float|int|string $n         Decimal.
      * @param float            $tolerance Allowed error.
-     * @return string
+     * @return string The fraction, or '' when $n is not positive.
      */
     public function float2rat( $n, $tolerance = 1.e-6 ) {
+        $n = (float) $n;
+        if ( $n <= 0 ) {
+            return '';
+        }
+
         $h1 = 1;
 		$h2 = 0;
         $k1 = 0;
@@ -885,7 +893,7 @@ class Measurements {
 
         if ( is_numeric( $value ) ) {
             $minutes = (float) $value;
-        } elseif ( is_string( $value ) && preg_match( '/-?\d+(?:[.,]\d+)?/', $value, $matches ) ) {
+        } elseif ( preg_match( '/-?\d+(?:[.,]\d+)?/', (string) $value, $matches ) ) {
             $minutes = (float) str_replace( ',', '.', $matches[0] );
         } else {
             return 0;

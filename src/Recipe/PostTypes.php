@@ -90,9 +90,9 @@ class PostTypes {
         global $wp_query, $post, $_cooked_settings;
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
-        if ( is_page( $browse_page_id ) && (int) $id === (int) $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
+        if ( $browse_page_id && is_page( $browse_page_id ) && (int) $id === (int) $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
             $cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
-            return $cooked_term->name;
+            return $cooked_term ? $cooked_term->name : $title;
         endif;
 
         return $title;
@@ -108,9 +108,9 @@ class PostTypes {
         global $wp_query, $post, $_cooked_settings;
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
-        if ( is_page( $browse_page_id ) && (int) $post->ID === (int) $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
+        if ( $browse_page_id && is_page( $browse_page_id ) && (int) $post->ID === (int) $browse_page_id && isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) :
             $cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
-            return $cooked_term->name;
+            return $cooked_term ? $cooked_term->name : $title;
         endif;
 
         return $title;
@@ -159,14 +159,15 @@ class PostTypes {
         global $_cooked_settings;
         $blog_page_id   = get_option( 'page_for_posts', false );
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
+        $object_id      = isset( $item->object_id ) ? (int) $item->object_id : 0;
 
         if ( ( is_post_type_archive( 'cp_recipe' ) || is_singular( 'cp_recipe' ) )
-            && (int) $item->object_id === (int) $blog_page_id ) {
+            && $object_id === (int) $blog_page_id ) {
             $classes = array_diff( $classes, [ 'current_page_parent' ] );
         }
 
         if ( ( is_post_type_archive( 'cp_recipe' ) || is_singular( 'cp_recipe' ) )
-            && (int) $item->object_id === (int) $browse_page_id && is_array( $classes ) && ! in_array( 'current_page_parent', $classes, true ) ) {
+            && $object_id === (int) $browse_page_id && is_array( $classes ) && ! in_array( 'current_page_parent', $classes, true ) ) {
             $classes[] = 'current_page_parent';
         }
 
@@ -179,18 +180,19 @@ class PostTypes {
      * @return void
      */
     public static function cooked_meta_tags() {
-        global $_cooked_settings, $post, $wp_query;
+        global $_cooked_settings, $wp_query;
 
         if ( isset( $_cooked_settings['advanced'] ) && ! empty( $_cooked_settings['advanced'] ) && in_array( 'disable_meta_tags', $_cooked_settings['advanced'], true ) ) {
             return;
         }
 
+        $cooked_term = false;
         if ( isset( $wp_query->query['cp_recipe_category'] ) && taxonomy_exists( 'cp_recipe_category' ) && term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) {
             $cooked_term = get_term_by( 'slug', $wp_query->query['cp_recipe_category'], 'cp_recipe_category' );
         }
 
         // Browse page.
-        if ( isset( $cooked_term ) && $cooked_term->name ) {
+        if ( $cooked_term && $cooked_term->name ) {
             ?><title><?php echo esc_html( $cooked_term->name ) . ' / ' . esc_html( get_bloginfo( 'name' ) ); ?></title>
             <meta name="description" content="<?php echo esc_attr( $cooked_term->description ); ?>">
             <meta property="og:title" content="<?php echo esc_attr( $cooked_term->name ); ?>">
@@ -199,10 +201,11 @@ class PostTypes {
         }
 
         // Single recipe.
-        if ( isset( $post->post_type ) && 'cp_recipe' === $post->post_type ) {
+        $post = get_post();
+        if ( $post && 'cp_recipe' === $post->post_type ) {
             ob_start();
 
-            $recipe          = get_post( $post->ID );
+            $recipe          = $post;
             $recipe_settings = \Cooked_Recipes::get( $post->ID, true );
             $image_url       = false;
 
@@ -212,9 +215,9 @@ class PostTypes {
 
             $description = '';
             if ( ! empty( $recipe_settings['seo_description'] ) ) :
-                $description = wp_strip_all_tags( preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) );
+                $description = wp_strip_all_tags( (string) preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) );
             elseif ( ! empty( $recipe_settings['excerpt'] ) ) :
-                $description = wp_strip_all_tags( preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $recipe_settings['excerpt'] ) );
+                $description = wp_strip_all_tags( (string) preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $recipe_settings['excerpt'] ) );
             elseif ( ! empty( $recipe_settings['title'] ) ) :
                 $description = $recipe_settings['title'];
             endif;
@@ -224,13 +227,13 @@ class PostTypes {
             <meta property="og:type" content="website">
             <meta property="og:title" content="<?php echo esc_attr( $post->post_title ); ?>">
             <meta property="og:description" content="<?php echo esc_attr( $description ); ?>">
-            <meta property="og:image" content="<?php echo esc_attr( $image_url ); ?>">
+            <meta property="og:image" content="<?php echo esc_url( (string) $image_url ); ?>">
             <meta property="og:locale" content="<?php echo esc_attr( get_locale() ); ?>">
-            <meta property="og:url" content="<?php echo esc_url( get_permalink( $post->ID ) ); ?>">
+            <meta property="og:url" content="<?php echo esc_url( (string) get_permalink( $post ) ); ?>">
             <?php
 
             echo wp_kses(
-                ob_get_clean(),
+                (string) ob_get_clean(),
                 [
 					'meta' => [
 						'name'     => true,
@@ -317,7 +320,7 @@ class PostTypes {
 
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only Settings API query vars.
         $page             = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
-        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
+        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( sanitize_text_field( wp_unslash( $_GET['settings-updated'] ) ) ) : false;
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         // Security check: Only allow settings update from admin area with proper permissions.
@@ -326,36 +329,36 @@ class PostTypes {
             $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
-                    $part                    = sanitize_title_with_dashes( $part, null, 'save' );
-                    $permalink_parts[ $key ] = sanitize_title_with_dashes( $part, null, 'save' );
+                    $part                    = sanitize_title_with_dashes( $part, '', 'save' );
+                    $permalink_parts[ $key ] = sanitize_title_with_dashes( $part, '', 'save' );
                 endforeach;
                 $recipe_permalink = implode( '/', $permalink_parts );
             else :
-                $recipe_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_permalink'] ?? '' ), null, 'save' );
+                $recipe_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_permalink'] ?? '' ), '', 'save' );
             endif;
 
             // Recipe Author Permalink.
             $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_author_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
-                    $part                    = sanitize_title_with_dashes( $part, null, 'save' );
-                    $permalink_parts[ $key ] = sanitize_title_with_dashes( $part, null, 'save' );
+                    $part                    = sanitize_title_with_dashes( $part, '', 'save' );
+                    $permalink_parts[ $key ] = sanitize_title_with_dashes( $part, '', 'save' );
                 endforeach;
                 $recipe_author_permalink = implode( '/', $permalink_parts );
             else :
-                $recipe_author_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_author_permalink'] ?? '' ), null, 'save' );
+                $recipe_author_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_author_permalink'] ?? '' ), '', 'save' );
             endif;
 
             // Recipe Category Permalink.
             $permalink_parts = explode( '/', (string) ( $_cooked_settings['recipe_category_permalink'] ?? '' ) );
             if ( isset( $permalink_parts[1] ) ) :
                 foreach ( $permalink_parts as $key => $part ) :
-                    $part                    = sanitize_title_with_dashes( $part, null, 'save' );
-                    $permalink_parts[ $key ] = sanitize_title_with_dashes( $part, null, 'save' );
+                    $part                    = sanitize_title_with_dashes( $part, '', 'save' );
+                    $permalink_parts[ $key ] = sanitize_title_with_dashes( $part, '', 'save' );
                 endforeach;
                 $recipe_category_permalink = implode( '/', $permalink_parts );
             else :
-                $recipe_category_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_category_permalink'] ?? '' ), null, 'save' );
+                $recipe_category_permalink = sanitize_title_with_dashes( (string) ( $_cooked_settings['recipe_category_permalink'] ?? '' ), '', 'save' );
             endif;
 
             $taxonomy_settings_update = apply_filters(
@@ -408,6 +411,10 @@ class PostTypes {
         $post_types = self::get();
         if ( ! empty( $post_types ) ) {
             foreach ( $post_types as $slug => $args ) {
+                $slug = sanitize_key( $slug );
+                if ( '' === $slug ) {
+                    continue;
+                }
                 register_post_type( $slug, $args );
             }
         }
@@ -416,9 +423,10 @@ class PostTypes {
     /**
      * Add rewrite rules for a specific browse page
      *
-     * @param int         $page_id    The browse page ID.
-     * @param string|null $page_slug  The browse page slug/path (empty string for homepage, null if invalid).
-     * @param array       $taxonomies The registered taxonomies.
+     * @param int                                 $page_id    The browse page ID.
+     * @param string|null                         $page_slug  The browse page slug/path (empty string for homepage, null if invalid).
+     * @param array<string, array<string, mixed>> $taxonomies The registered taxonomies.
+     * @return void
      */
     private static function add_browse_page_rewrite_rules( $page_id, $page_slug, $taxonomies ) {
         // Page ID is required, but slug can be empty string (for homepage).
@@ -634,8 +642,9 @@ class PostTypes {
     /**
      * Add a post display state for special Cooked pages in the page list table.
      *
-     * @param array    $post_states An array of post display states.
-     * @param \WP_Post $post        The current post object.
+     * @param array<string, string> $post_states An array of post display states.
+     * @param \WP_Post              $post        The current post object.
+     * @return array<string, string>
      */
     public function add_display_post_states( $post_states, $post ) {
         global $_cooked_settings;

@@ -28,7 +28,7 @@ class RelatedRecipes {
     /**
      * Get default shortcode attributes.
      *
-     * @return array
+     * @return array<string, mixed>
      */
     public static function get_default_atts() {
         $default_atts = [
@@ -61,13 +61,13 @@ class RelatedRecipes {
      * Get related recipes (on-demand query, no cache).
      * Uses all enabled taxonomies with OR relation and orderby rand.
      *
-     * @param int   $recipe_id Recipe ID.
-     * @param array $atts      Shortcode attributes.
-     * @return array Array of [ 'id' => int ].
+     * @param int                  $recipe_id Recipe ID.
+     * @param array<string, mixed> $atts      Shortcode attributes.
+     * @return array<int, array{id: int}>
      */
     public static function get_related_recipes( $recipe_id, $atts ) {
         $source_recipe = \Cooked_Recipes::get( $recipe_id, true );
-        if ( ! $source_recipe || empty( $source_recipe ) ) {
+        if ( empty( $source_recipe ) ) {
             return [];
         }
 
@@ -78,9 +78,9 @@ class RelatedRecipes {
      * Find related recipes: pinned include_ids first, then one WP_Query with
      * tax_query (all taxonomies OR) and orderby rand to fill remaining slots.
      *
-     * @param array $source_recipe Source recipe data.
-     * @param array $atts          Shortcode attributes.
-     * @return array [ ['id' => int], ... ]
+     * @param array<string, mixed> $source_recipe Source recipe data.
+     * @param array<string, mixed> $atts          Shortcode attributes.
+     * @return array<int, array{id: int}>
      */
     public static function find_related_recipes( $source_recipe, $atts ) {
         $recipe_id   = $source_recipe['id'];
@@ -141,7 +141,7 @@ class RelatedRecipes {
 
         $result = [];
         foreach ( array_merge( $include_ids, $related_ids ) as $id ) {
-            $result[] = [ 'id' => (int) $id ];
+            $result[] = [ 'id' => $id instanceof \WP_Post ? $id->ID : (int) $id ];
         }
 
         /**
@@ -159,8 +159,8 @@ class RelatedRecipes {
     /**
      * Parse include_ids into unique positive IDs, excluding the source recipe.
      *
-     * @param array $atts      Shortcode attributes.
-     * @param int   $recipe_id Source recipe ID.
+     * @param array<string, mixed> $atts      Shortcode attributes.
+     * @param int                  $recipe_id Source recipe ID.
      * @return int[]
      */
     private static function parse_include_ids( $atts, $recipe_id ) {
@@ -191,7 +191,7 @@ class RelatedRecipes {
      *
      * @param int    $recipe_id Recipe ID.
      * @param string $taxonomy  Taxonomy name.
-     * @return array
+     * @return int[]
      */
     public static function get_recipe_terms( $recipe_id, $taxonomy ) {
         if ( ! taxonomy_exists( $taxonomy ) ) {

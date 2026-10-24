@@ -101,17 +101,18 @@ endif;
 			return;
         }
 
-        $term = get_term( $term_id );
-        if ( ! empty( $term ) ) :
+        $term = get_term( (int) $term_id );
+        if ( $term && ! is_wp_error( $term ) ) :
 
             if ( 'block' === $style ) :
                 echo '<div class="cooked-term-block cooked-col-25">';
-                    echo do_shortcode( '[cooked-recipe-card style="modern-centered" category="' . esc_attr( $term_id ) . '"]' );
+                    echo do_shortcode( '[cooked-recipe-card style="modern-centered" category="' . esc_attr( (string) $term_id ) . '"]' );
                 echo '</div>';
             elseif ( 'list' === $style ) :
                 echo '<div class="cooked-term-item">';
                     $term_name = apply_filters( 'cooked_term_name', $term->name, $term->term_id, $taxonomy );
-                    echo '<a href="' . esc_url( get_term_link( $term->term_id, $taxonomy ) ) . '">' . wp_kses_post( $term_name ) . '</a>';
+                    $term_link = get_term_link( $term->term_id, $taxonomy );
+                    echo '<a href="' . esc_url( is_wp_error( $term_link ) ? '' : $term_link ) . '">' . wp_kses_post( $term_name ) . '</a>';
                 echo '</div>';
             endif;
 
@@ -133,8 +134,8 @@ endif;
 			return false;
         }
 
-        $term = get_term( $term_id );
-        if ( ! empty( $term ) ) :
+        $term = get_term( (int) $term_id );
+        if ( $term && ! is_wp_error( $term ) ) :
 
             $args = [
                 'post_type'      => 'cp_recipe',
@@ -148,17 +149,18 @@ endif;
                 ],
             ];
 
-            $recipes       = \Cooked_Recipes::get( $args );
-            $recent_recipe = $recipes[0];
+            $recipes       = (array) \Cooked_Recipes::get( $args );
+            $recent_recipe = isset( $recipes[0] ) ? $recipes[0] : null;
             $total_recipes = count( $recipes ) - 1; // Total items in array minus the single ['raw'] item.
-            $thumbnail     = get_the_post_thumbnail_url( $recent_recipe['id'], [ 450, 450 ] );
-            $term_link     = ( ! empty( $term ) ? get_term_link( $term ) : false );
+            $thumbnail     = $recent_recipe ? get_the_post_thumbnail_url( $recent_recipe['id'], [ 450, 450 ] ) : false;
+            $term_link     = get_term_link( $term );
+            $term_link     = is_wp_error( $term_link ) ? '' : $term_link;
             $style_class   = ( $style ? ' cooked-recipe-card-' . esc_attr( $style ) : '' );
             $width         = ( ! $width ? '100%' : $width );
             $pixel_width   = stristr( $width, 'px', true );
             $percent_width = stristr( $width, '%', true );
             $width         = ( $pixel_width ? $pixel_width . 'px' : ( $percent_width ? $percent_width . '%' : ( is_numeric( $width ) ? $width . 'px' : '100%' ) ) );
-            $term_name     = apply_filters( 'cooked_term_name', $term->name, $term->ID, $term->taxonomy );
+            $term_name     = apply_filters( 'cooked_term_name', $term->name, $term->term_id, $term->taxonomy );
 
             ob_start();
 
@@ -205,20 +207,18 @@ endif;
         $cooked_taxonomies       = [ 'cp_recipe_category' ];
 
         if ( $parent_page_browse_page && in_array( $taxonomy, $cooked_taxonomies, true ) ) {
-            if ( 'cp_recipe_category' === $taxonomy ) {
-                $custom_cooked_tax_setting = 'recipe_category_permalink';
-            }
+            $custom_cooked_tax_setting = 'recipe_category_permalink';
 
             if ( (int) $parent_page_browse_page !== (int) $front_page && get_option( 'permalink_structure' ) ) {
-                $url = esc_url_raw( untrailingslashit( get_permalink( $parent_page_browse_page ) ) . '/' . $_cooked_settings[ $custom_cooked_tax_setting ] . '/' . $term->slug );
+                $url = esc_url_raw( untrailingslashit( (string) get_permalink( $parent_page_browse_page ) ) . '/' . $_cooked_settings[ $custom_cooked_tax_setting ] . '/' . $term->slug );
             } elseif ( (int) $parent_page_browse_page === (int) $front_page ) {
                 if ( get_option( 'permalink_structure' ) ) {
                     $url = esc_url_raw( get_home_url() . '/' . $_cooked_settings[ $custom_cooked_tax_setting ] . '/' . $term->slug );
                 } else {
-                    $url = esc_url_raw( get_home_url() . '?' . $taxonomy . '=' . ( isset( $term->slug ) ? $term->slug : $taxonomy ) );
+                    $url = esc_url_raw( get_home_url() . '?' . $taxonomy . '=' . $term->slug );
                 }
             } else {
-                $url = esc_url_raw( get_permalink( $parent_page_browse_page ) . '&' . $taxonomy . '=' . ( isset( $term->slug ) ? $term->slug : $taxonomy ) );
+                $url = esc_url_raw( get_permalink( $parent_page_browse_page ) . '&' . $taxonomy . '=' . $term->slug );
             }
         }
 

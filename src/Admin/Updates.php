@@ -78,6 +78,8 @@ class Updates {
 
     /**
      * Initialize the updates
+     *
+     * @return void
      */
     public static function init() {
         self::$cooked_settings_saved = get_option( 'cooked_settings_saved', false );
@@ -124,6 +126,8 @@ class Updates {
 
     /**
      * Run all necessary updates
+     *
+     * @return void
      */
     private static function run_updates() {
         // Store the previous version for logging.
@@ -148,6 +152,8 @@ class Updates {
 
     /**
      * Run version-specific updates
+     *
+     * @return void
      */
     private static function run_version_updates() {
         $updates = self::get_version_updates();
@@ -155,9 +161,10 @@ class Updates {
         foreach ( $updates as $version => $update_methods ) {
             if ( version_compare( self::$previous_version, $version, '<' ) ) {
                 foreach ( $update_methods as $method ) {
-                    if ( method_exists( __CLASS__, $method ) ) {
+                    $callback = [ __CLASS__, $method ];
+                    if ( is_callable( $callback ) ) {
                         try {
-                            call_user_func( [ __CLASS__, $method ] );
+                            call_user_func( $callback );
                         } catch ( \Exception $e ) {
                             if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
                                 // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
@@ -173,7 +180,7 @@ class Updates {
     /**
      * Get list of tools that can be run on demand (for Tools page and WP-CLI).
      *
-     * @return array[] List of tools: [ 'id' => method_name, 'name' => label, 'description' => desc ]
+     * @return array<int, array{id: string, name: string, description: string}>
      */
     public static function get_runnable_tools() {
         $labels = [
@@ -238,13 +245,14 @@ class Updates {
             /* translators: %s: site health tool name */
             return new \WP_Error( 'cooked_tool_invalid', sprintf( __( 'Unknown tool: %s.', 'cooked' ), $tool_name ) );
         }
-        if ( ! method_exists( __CLASS__, $tool_name ) ) {
+        $callback = [ __CLASS__, $tool_name ];
+        if ( ! is_callable( $callback ) ) {
             /* translators: %s: PHP method name */
             return new \WP_Error( 'cooked_tool_missing', sprintf( __( 'Tool method %s does not exist.', 'cooked' ), $tool_name ) );
         }
 
         try {
-            call_user_func( [ __CLASS__, $tool_name ] );
+            call_user_func( $callback );
             return true;
         } catch ( \Exception $e ) {
             return new \WP_Error( 'cooked_tool_error', $e->getMessage() );
@@ -254,7 +262,7 @@ class Updates {
     /**
      * Define version-specific updates
      *
-     * @return array Array of version updates with their corresponding methods
+     * @return array<string, string[]> Update method names, keyed by the version that added them.
      */
     private static function get_version_updates() {
         return apply_filters(
@@ -291,6 +299,7 @@ class Updates {
      * Fix line endings in existing recipes to prevent WordPress exporter/importer issues
      *
      * @since 1.11.2
+     * @return void
      */
     private static function fix_recipe_line_endings() {
         // Get all recipe posts.
@@ -376,6 +385,7 @@ class Updates {
      * One-time cleanup when moving to on-demand related recipes with no cache.
      *
      * @since 1.13.0
+     * @return void
      */
     private static function purge_legacy_related_recipes_cache() {
         global $wpdb;
@@ -395,6 +405,7 @@ class Updates {
      * Recipes are computed on demand in Cooked_Users::get(); they must not be stored in user meta.
      *
      * @since 1.13.0
+     * @return void
      */
     private static function remove_recipes_from_cooked_user_meta() {
         $user_ids = get_users(
@@ -499,7 +510,7 @@ class Updates {
      * Rewrite rules added this request with add_rewrite_rule().
      *
      * @since 1.16.0
-     * @return array
+     * @return array<string, string> Rewrite regexes and their queries.
      */
     private static function registered_extra_rewrite_rules() {
         global $wp_rewrite;
@@ -550,6 +561,7 @@ class Updates {
      * Update rewrite rules if needed
      *
      * @since 1.11.2
+     * @return void
      */
     private static function update_rewrite_rules() {
         if ( self::$rewrite_rules_flushed ) {

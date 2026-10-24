@@ -62,10 +62,14 @@ class Seo {
             $rpost = get_post( $recipe['id'] );
         endif;
 
+        if ( ! $rpost || ! is_array( $recipe ) ) {
+            return [];
+        }
+
         $_nutrition_facts = \Cooked_Measurements::nutrition_facts();
 
         $recipe_thumbnail = has_post_thumbnail( $rpost ) ? get_the_post_thumbnail_url( $rpost, 'cooked-medium' ) : '';
-        $recipe_author    = \Cooked_Users::format_author_name( get_the_author_meta( 'display_name', $rpost->post_author ) );
+        $recipe_author    = \Cooked_Users::format_author_name( get_the_author_meta( 'display_name', (int) $rpost->post_author ) );
         if ( ! $recipe_author ) :
             $recipe_author = '';
         endif;
@@ -78,7 +82,7 @@ class Seo {
 endif;
                 $ingredient = \Cooked_Recipes::single_ingredient( $ing, false, true );
                 if ( ! empty( $ingredient ) ) :
-                    $ingredient_cleaned = wp_strip_all_tags( preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $ingredient ) );
+                    $ingredient_cleaned = wp_strip_all_tags( (string) preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $ingredient ) );
                     $ingredients[]      = $ingredient_cleaned;
                 endif;
             endforeach;
@@ -95,7 +99,7 @@ endif;
 
                 $direction = \Cooked_Recipes::single_direction( $dir, false, true );
                 if ( ! empty( $direction ) ) :
-                    $direction_cleaned = wp_strip_all_tags( preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $direction ) );
+                    $direction_cleaned = wp_strip_all_tags( (string) preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $direction ) );
                     $image_id          = isset( $dir['image'] ) ? $dir['image'] : false;
 
                     $image = '';
@@ -141,9 +145,9 @@ endif;
 
         $description = '';
         if ( ! empty( $recipe['seo_description'] ) ) :
-            $description = wp_strip_all_tags( preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', wp_specialchars_decode( $recipe['seo_description'], ENT_QUOTES ) ) );
+            $description = wp_strip_all_tags( (string) preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', wp_specialchars_decode( $recipe['seo_description'], ENT_QUOTES ) ) );
         elseif ( ! empty( $recipe['excerpt'] ) ) :
-            $description = wp_strip_all_tags( preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $recipe['excerpt'] ) );
+            $description = wp_strip_all_tags( (string) preg_replace( '~(?:\[/?)[^/\]]+/?\]~s', '', $recipe['excerpt'] ) );
         elseif ( ! empty( $recipe['title'] ) ) :
             $description = $recipe['title'];
         endif;
@@ -161,7 +165,7 @@ endif;
                 '@type' => 'Person',
                 'name'  => $recipe_author,
             ],
-            'datePublished'      => get_the_date( 'Y-m-d', $recipe['id'] ),
+            'datePublished'      => get_the_date( 'Y-m-d', $rpost ),
             'name'               => ( isset( $recipe['title'] ) ? $recipe['title'] : '' ),
             'image'              => $recipe_thumbnail,
             'description'        => $description,

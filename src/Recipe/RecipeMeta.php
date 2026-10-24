@@ -260,6 +260,7 @@ class RecipeMeta {
      * Save the meta when the post is saved.
      *
      * @param int $post_id The ID of the post being saved.
+     * @return void
      */
     public function save_recipe_meta_box( $post_id ) {
         /*
@@ -269,12 +270,12 @@ class RecipeMeta {
 
         // Check if our nonce is set.
         if ( ! isset( $_POST['cooked_recipe_custom_box_nonce'] ) ) {
-			return $post_id;
+			return;
         }
 
         $nonce = wp_unslash( $_POST['cooked_recipe_custom_box_nonce'] ); // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
         if ( ! wp_verify_nonce( $nonce, 'cooked_recipe_custom_box' ) ) {
-			return $post_id;
+			return;
         }
 
         /*
@@ -282,13 +283,13 @@ class RecipeMeta {
          * so we don't want to do anything.
          */
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-			return $post_id;
+			return;
         }
 
         // Only the post types with the box, and only a post this user can edit (edit_cooked_recipes
         // is a general capability, so it says nothing about this post).
         if ( ! in_array( get_post_type( $post_id ), self::post_types(), true ) || ! current_user_can( 'edit_post', $post_id ) ) {
-			return $post_id;
+			return;
         }
 
         global $recipe_settings;
@@ -421,7 +422,7 @@ class RecipeMeta {
      * @return void
      */
     public static function bulk_add_modal() {
-        // Frontend submit form uses cooked-button + colors.php; wp-admin uses core .button styles.
+        // Frontend submit form uses cooked-button + the colours stylesheet; wp-admin uses core .button styles.
         if ( is_admin() ) {
             $bulk_cancel_class = 'button cooked-bulk-add-cancel';
             $bulk_submit_class = 'button button-primary cooked-bulk-add-submit';

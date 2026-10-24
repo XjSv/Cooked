@@ -26,7 +26,7 @@ class PluginExtra {
      * Registers the plugin list links.
      */
     public function __construct() {
-        add_action( 'plugin_action_links_cooked/cooked.php', [ &$this, 'cooked_plugin_action_links_action' ], 10, 1 );
+        add_filter( 'plugin_action_links_cooked/cooked.php', [ &$this, 'cooked_plugin_action_links_action' ], 10, 1 );
     }
 
     /**
@@ -36,7 +36,7 @@ class PluginExtra {
      *
      * @since 1.8.8
      * @param array<int|string, string> $links Plugin action links.
-     * @return array
+     * @return array<int|string, string>
      */
     public function cooked_plugin_action_links_action( $links ) {
         if ( ! class_exists( 'Cooked_Pro_Plugin' ) ) {

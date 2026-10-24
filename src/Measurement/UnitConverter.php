@@ -31,7 +31,7 @@ class UnitConverter {
      * Maps Cooked unit keys to [PhysicalQuantity class, library unit name].
      *
      * @since 1.15.0
-     * @var array
+     * @var array<string, array{0: class-string<\PhpUnitsOfMeasure\AbstractPhysicalQuantity>, 1: string}>
      */
     private static $unit_map = [
         'cup'  => [ Volume::class, 'cup' ],
@@ -55,7 +55,7 @@ class UnitConverter {
      * Default opposite-system target for each unit.
      *
      * @since 1.15.0
-     * @var array
+     * @var array<string, string>
      */
     private static $default_targets = [
         'cup'  => 'ml',
@@ -82,7 +82,7 @@ class UnitConverter {
      * @param float  $amount The numeric amount to convert.
      * @param string $from   The measurement key to convert from.
      * @param string $to     The target measurement key.
-     * @return array|null Array with 'amount' (float) and 'unit' (string), or null.
+     * @return array{amount: float, unit: string}|null The converted amount and unit, or null.
      */
     public static function convert( $amount, $from, $to ) {
         if ( ! isset( self::$unit_map[ $from ], self::$unit_map[ $to ] ) ) {

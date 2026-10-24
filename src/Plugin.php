@@ -24,15 +24,15 @@ final class Plugin {
     /**
      * The single plugin instance.
      *
-     * @var \Cooked_Plugin
+     * @var \Cooked_Plugin|null
      * @since 1.0.0
      */
-    private static $instance;
+    private static $instance = null;
 
     /**
      * Cooked Roles Object.
      *
-     * @var object|\Cooked_Roles
+     * @var \Cooked_Roles
      * @since 1.0.0
      */
     public $roles;
@@ -40,7 +40,7 @@ final class Plugin {
     /**
      * Cooked Admin Menus Object.
      *
-     * @var object|\Cooked_Admin_Menus
+     * @var \Cooked_Admin_Menus
      * @since 1.0.0
      */
     public $admin_menus;
@@ -48,7 +48,7 @@ final class Plugin {
     /**
      * Cooked Admin Enqueues Object.
      *
-     * @var object|\Cooked_Admin_Enqueues
+     * @var \Cooked_Admin_Enqueues
      * @since 1.0.0
      */
     public $admin_enqueues;
@@ -56,7 +56,7 @@ final class Plugin {
     /**
      * Cooked Enqueues Object.
      *
-     * @var object|\Cooked_Enqueues
+     * @var \Cooked_Enqueues
      * @since 1.0.0
      */
     public $enqueues;
@@ -64,7 +64,7 @@ final class Plugin {
     /**
      * Cooked Settings Object.
      *
-     * @var object|\Cooked_Settings
+     * @var \Cooked_Settings
      * @since 1.0.0
      */
     public $admin_settings;
@@ -72,7 +72,7 @@ final class Plugin {
     /**
      * Cooked Migration Object.
      *
-     * @var object|\Cooked_Migration
+     * @var \Cooked_Migration
      * @since 1.0.0
      */
     public $migration;
@@ -80,7 +80,7 @@ final class Plugin {
     /**
      * Cooked Updates Object.
      *
-     * @var object|\Cooked_Updates
+     * @var \Cooked_Updates
      * @since 1.0.0
      */
     public $updates;
@@ -88,7 +88,7 @@ final class Plugin {
     /**
      * Cooked Post Types Object.
      *
-     * @var object|\Cooked_Post_Types
+     * @var \Cooked_Post_Types
      * @since 1.0.0
      */
     public $post_types;
@@ -96,7 +96,7 @@ final class Plugin {
     /**
      * Cooked Recipe Meta Object.
      *
-     * @var object|\Cooked_Recipe_Meta
+     * @var \Cooked_Recipe_Meta
      * @since 1.0.0
      */
     public $recipe_meta;
@@ -104,7 +104,7 @@ final class Plugin {
     /**
      * Cooked Measurements Object.
      *
-     * @var object|\Cooked_Measurements
+     * @var \Cooked_Measurements
      * @since 1.0.0
      */
     public $measurements;
@@ -112,7 +112,7 @@ final class Plugin {
     /**
      * Cooked Users Object.
      *
-     * @var object|\Cooked_Users
+     * @var \Cooked_Users
      * @since 1.0.0
      */
     public $users;
@@ -120,7 +120,7 @@ final class Plugin {
     /**
      * Cooked Recipes Object.
      *
-     * @var object|\Cooked_Recipes
+     * @var \Cooked_Recipes
      * @since 1.0.0
      */
     public $recipes;
@@ -128,7 +128,7 @@ final class Plugin {
     /**
      * Cooked Shortcodes Object.
      *
-     * @var object|\Cooked_Shortcodes
+     * @var \Cooked_Shortcodes
      * @since 1.0.0
      */
     public $shortcodes;
@@ -136,7 +136,7 @@ final class Plugin {
     /**
      * Cooked Ajax Object.
      *
-     * @var object|\Cooked_Ajax
+     * @var \Cooked_Ajax
      * @since 1.0.0
      */
     public $ajax;
@@ -144,7 +144,7 @@ final class Plugin {
     /**
      * Cooked Functions Object.
      *
-     * @var object|\Cooked_Functions
+     * @var \Cooked_Functions
      * @since 1.0.0
      */
     public $functions;
@@ -152,7 +152,7 @@ final class Plugin {
     /**
      * Cooked Widgets Object.
      *
-     * @var object|\Cooked_Widgets
+     * @var \Cooked_Widgets
      * @since 1.0.0
      */
     public $widget;
@@ -160,7 +160,7 @@ final class Plugin {
     /**
      * Cooked Gutenberg Object.
      *
-     * @var object|\Cooked_Gutenberg
+     * @var \Cooked_Gutenberg
      * @since 1.0.0
      */
     public $gutenberg;
@@ -168,7 +168,7 @@ final class Plugin {
     /**
      * Cooked Elementor Object.
      *
-     * @var object|\Cooked_Elementor
+     * @var \Cooked_Elementor
      * @since 1.0.0
      */
     public $elementor;
@@ -176,7 +176,7 @@ final class Plugin {
     /**
      * Cooked Rank Math SEO Object.
      *
-     * @var object|\Cooked_RankMathSEO
+     * @var \Cooked_RankMathSEO
      * @since 1.8.9
      */
     public $rankmathseo;
@@ -184,7 +184,7 @@ final class Plugin {
     /**
      * Cooked Yoast SEO Object.
      *
-     * @var object|\Cooked_YoastSEO
+     * @var \Cooked_YoastSEO
      * @since 1.8.9
      */
     public $yoastseo;
@@ -192,7 +192,7 @@ final class Plugin {
     /**
      * Cooked Multilingual Object.
      *
-     * @var object|\Cooked_Multilingual
+     * @var \Cooked_Multilingual
      * @since 1.12.0
      */
     public $multilingual;
@@ -200,7 +200,7 @@ final class Plugin {
     /**
      * Cooked Related Recipes Object.
      *
-     * @var object|\Cooked_Related_Recipes
+     * @var \Cooked_Related_Recipes
      * @since 1.12.0
      */
     public $related_recipes;
@@ -208,7 +208,7 @@ final class Plugin {
     /**
      * Cooked Extra Object.
      *
-     * @var object|\Cooked_Plugin_Extra
+     * @var \Cooked_Plugin_Extra
      * @since 1.8.7
      */
     public $extra;
@@ -216,7 +216,7 @@ final class Plugin {
     /**
      * Cooked Pixwell Theme Support Object.
      *
-     * @var object|\Cooked_Pixwell
+     * @var \Cooked_Pixwell
      * @since 1.16.0
      */
     public $pixwell;
@@ -224,7 +224,7 @@ final class Plugin {
     /**
      * Cooked Pro version check Object.
      *
-     * @var object|\Cooked\Admin\ProCompat
+     * @var \Cooked\Admin\ProCompat
      * @since 2.0.0
      */
     public $pro_compat;
@@ -242,10 +242,10 @@ final class Plugin {
      * @uses Cooked_Plugin::includes() Include the required files.
      * @uses Cooked_Plugin::load_textdomain() load the language files.
      * @see Cooked()
-     * @return object|\Cooked_Plugin
+     * @return \Cooked_Plugin
      */
     public static function instance() {
-        if ( ! isset( self::$instance ) && ! ( self::$instance instanceof \Cooked_Plugin ) ) {
+        if ( null === self::$instance ) {
             self::$instance = new \Cooked_Plugin();
             self::$instance->setup_constants();
 
@@ -353,11 +353,11 @@ final class Plugin {
      */
     public function initialize_plugin_support() {
         if ( in_array( 'wordpress-seo/wp-seo.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
-            self::$instance->yoastseo = new \Cooked_YoastSEO();
+            $this->yoastseo = new \Cooked_YoastSEO();
         }
 
         if ( in_array( 'seo-by-rank-math/rank-math.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ), true ) ) {
-            self::$instance->rankmathseo = new \Cooked_RankMathSEO();
+            $this->rankmathseo = new \Cooked_RankMathSEO();
         }
     }
 
@@ -365,6 +365,7 @@ final class Plugin {
      * Check for plugin updates and run migrations if needed
      *
      * @since 1.10.0
+     * @return void
      */
     public function check_plugin_update() {
         $current_version = get_option( 'cooked_version', '0' );
@@ -389,7 +390,7 @@ final class Plugin {
      * @return void
      */
     public function __clone() {
-        // Nope, can't do that.
+        // Cooked is a singleton, so it cannot be cloned.
     }
 
     /**
@@ -400,7 +401,7 @@ final class Plugin {
      * @return void
      */
     public function __wakeup() {
-        // Nope, can't do that either.
+        // Cooked is a singleton, so it cannot be unserialized.
     }
 
     /**

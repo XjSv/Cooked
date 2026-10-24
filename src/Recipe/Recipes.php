@@ -106,7 +106,7 @@ class Recipes {
             ];
 
 			// Default Query.
-        elseif ( ! $args || ! is_array( $args ) ) :
+        elseif ( ! $args ) :
 
             $args = [
                 'post_type'      => 'cp_recipe',
@@ -125,7 +125,7 @@ class Recipes {
             endif;
 
 			// Search Query.
-        elseif ( $args && isset( $args['s'] ) && isset( $args['meta_query'] ) ) :
+        elseif ( isset( $args['s'] ) && isset( $args['meta_query'] ) ) :
 
             $meta_query = $args['meta_query'];
             $recipe_ids = [];
@@ -138,7 +138,7 @@ class Recipes {
 
             $recipes_pre_search = new \WP_Query( $pre_search_args );
             if ( $recipes_pre_search->have_posts() ) :
-                $recipe_ids = $recipes_pre_search->posts;
+                $recipe_ids = (array) $recipes_pre_search->posts;
             endif;
 
             $pre_search_args['meta_query'] = $meta_query; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query -- Recipe search filters need meta queries.
@@ -146,11 +146,18 @@ class Recipes {
 
             $recipes_pre_search = new \WP_Query( $pre_search_args );
             if ( $recipes_pre_search->have_posts() ) :
-                $rposts     = $recipes_pre_search->posts;
+                $rposts     = (array) $recipes_pre_search->posts;
                 $recipe_ids = ! empty( $recipe_ids ) ? array_merge( $recipe_ids, $rposts ) : $rposts;
             endif;
 
-            $recipe_ids = array_unique( $recipe_ids );
+            $recipe_ids = array_unique(
+                array_map(
+                    function ( $id ) {
+                        return $id instanceof \WP_Post ? $id->ID : (int) $id;
+                    },
+                    $recipe_ids
+                )
+            );
 
             if ( ! empty( $recipe_ids ) ) :
                 unset( $args['s'] );
@@ -168,17 +175,25 @@ class Recipes {
             } elseif ( $ids_and_titles_only ) {
                 while ( $recipes_results->have_posts() ) {
                     $recipes_results->the_post();
-                    $recipes[ $counter ]['id']    = $recipes_results->post->ID;
-                    $recipes[ $counter ]['title'] = $recipes_results->post->post_title;
+                    $recipe_post = $recipes_results->post;
+                    if ( ! $recipe_post ) {
+                        continue;
+                    }
+                    $recipes[ $counter ]['id']    = $recipe_post->ID;
+                    $recipes[ $counter ]['title'] = $recipe_post->post_title;
 
                     ++$counter;
                 }
             } else {
                 while ( $recipes_results->have_posts() ) {
                     $recipes_results->the_post();
-                    $recipes[ $counter ]['id']    = $recipes_results->post->ID;
-                    $recipes[ $counter ]['title'] = $recipes_results->post->post_title;
-                    $recipe_settings              = self::get_settings( $recipes_results->post->ID );
+                    $recipe_post = $recipes_results->post;
+                    if ( ! $recipe_post ) {
+                        continue;
+                    }
+                    $recipes[ $counter ]['id']    = $recipe_post->ID;
+                    $recipes[ $counter ]['title'] = $recipe_post->post_title;
+                    $recipe_settings              = (array) self::get_settings( $recipe_post->ID );
 
                     foreach ( $recipe_settings as $key => $setting ) {
                         $recipes[ $counter ][ $key ] = $setting;
@@ -242,7 +257,7 @@ class Recipes {
         endif;
 
         // Get the author information.
-        $recipe_settings['author'] = \Cooked_Users::get( $recipe_post->post_author, true );
+        $recipe_settings['author'] = \Cooked_Users::get( (int) $recipe_post->post_author, true );
 
         // Include the Post ID.
         $recipe_settings['id'] = $post_id;
@@ -347,15 +362,15 @@ endif;
 			foreach ( $recipes as $key => $recipe ) :
 
 				$rid             = $recipe['id'];
-				$has_image_class = has_post_thumbnail( $rid ) && ! $hide_image ? ' cooked-srl-has-image' : '';
+				$has_image_class = has_post_thumbnail( (int) $rid ) && ! $hide_image ? ' cooked-srl-has-image' : '';
 
 				echo '<div class="cooked-srl-single' . esc_attr( $has_image_class ) . '" style="width:100%; max-width:' . esc_attr( $width ) . '">';
 
-					echo has_post_thumbnail( $rid ) && ! $hide_image ? '<div class="cooked-srl-image"><a href="' . esc_url( get_permalink( $rid ) ) . '">' . wp_kses_post( get_the_post_thumbnail( $rid, 'thumbnail' ) ) . '</a></div>' : '';
+					echo has_post_thumbnail( (int) $rid ) && ! $hide_image ? '<div class="cooked-srl-image"><a href="' . esc_url( (string) get_permalink( (int) $rid ) ) . '">' . wp_kses_post( get_the_post_thumbnail( $rid, 'thumbnail' ) ) . '</a></div>' : '';
 
 					echo '<div class="cooked-srl-content">';
 
-						echo '<div class="cooked-srl-title"><a href="' . esc_url( get_permalink( $rid ) ) . '">' . esc_html( $recipe['title'] ) . '</a></div>';
+						echo '<div class="cooked-srl-title"><a href="' . esc_url( (string) get_permalink( (int) $rid ) ) . '">' . esc_html( $recipe['title'] ) . '</a></div>';
 
 				if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! $hide_author ) :
 					echo '<div class="cooked-srl-author">';
@@ -400,13 +415,13 @@ endif;
 
         ob_start();
 
-        echo '<a href="' . esc_url( get_permalink( $rid ) ) . '" class="cooked-recipe-card' . esc_attr( $style_class ) . '" style="width:100%; max-width:' . esc_attr( $width ) . '">';
+        echo '<a href="' . esc_url( (string) get_permalink( (int) $rid ) ) . '" class="cooked-recipe-card' . esc_attr( $style_class ) . '" style="width:100%; max-width:' . esc_attr( $width ) . '">';
 
             do_action( 'cooked_recipe_grid_before_recipe', $recipe );
 
             do_action( 'cooked_recipe_grid_before_image', $recipe );
 
-            echo has_post_thumbnail( $rid ) && ! $hide_image ? '<span class="cooked-recipe-card-image" style="background-image:url(' . esc_url( get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) ) . ');"></span>' : '';
+            echo has_post_thumbnail( (int) $rid ) && ! $hide_image ? '<span class="cooked-recipe-card-image" style="background-image:url(' . esc_url( (string) get_the_post_thumbnail_url( $recipe['id'], 'cooked-medium' ) ) . ');"></span>' : '';
 
             echo '<span class="cooked-recipe-card-content">';
 
@@ -608,7 +623,7 @@ endif;
                     // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only admin taxonomy filter.
                     $selected       = isset( $_GET[ $taxonomy ] ) ? absint( wp_unslash( $_GET[ $taxonomy ] ) ) : '';
                     $info_taxonomy  = get_taxonomy( $taxonomy );
-                    $taxonomy_label = $info_taxonomy->label;
+                    $taxonomy_label = $info_taxonomy ? $info_taxonomy->label : $taxonomy;
 
                     /* translators: For showing "All" of a taxonomy (ex: "All Burgers")  */
                     $all_string = sprintf( __( 'All %s', 'cooked' ), $taxonomy_label );
@@ -642,8 +657,10 @@ endif;
 
         foreach ( $taxonomies as $taxonomy ) :
             if ( 'edit.php' === $pagenow && isset( $q_vars['post_type'] ) && 'cp_recipe' === $q_vars['post_type'] && isset( $q_vars[ $taxonomy ] ) && is_numeric( $q_vars[ $taxonomy ] ) && 0 !== (int) $q_vars[ $taxonomy ] ) :
-                $term                = get_term_by( 'id', $q_vars[ $taxonomy ], $taxonomy );
-                $q_vars[ $taxonomy ] = $term->slug;
+                $term = get_term_by( 'id', (int) $q_vars[ $taxonomy ], $taxonomy );
+                if ( $term ) {
+                    $q_vars[ $taxonomy ] = $term->slug;
+                }
             endif;
         endforeach;
     }
@@ -846,7 +863,7 @@ endif;
             $prep_text = preg_replace( '/\s+/', ' ', $prep_text );
 
             // Explode into an array of search terms.
-            $words = explode( ' ', $prep_text );
+            $words = explode( ' ', (string) $prep_text );
 
             if ( ! empty( $words ) ) :
                 $meta_query['relation'] = 'AND';
@@ -964,7 +981,7 @@ endif;
         }
 
         $big  = 999999999;
-        $base = '?paged=%#%' === $format ? $base = str_replace( $big, '%#%', get_pagenum_link( $big ) ) : $base = add_query_arg( 'paged', '%#%' );
+        $base = '?paged=%#%' === $format ? $base = str_replace( (string) $big, '%#%', get_pagenum_link( $big ) ) : $base = add_query_arg( 'paged', '%#%' );
 
         $recipe_pagination = apply_filters(
             'cooked_pagination_args',
@@ -979,7 +996,8 @@ endif;
 				'next_text' => '<i class="cooked-icon cooked-icon-angle-right"></i>',
 			]
         );
-        return '<div class="cooked-pagination-numbered cooked-clearfix">' . paginate_links( $recipe_pagination ) . '</div>';
+        $links             = paginate_links( $recipe_pagination );
+        return '<div class="cooked-pagination-numbered cooked-clearfix">' . ( is_string( $links ) ? $links : '' ) . '</div>';
     }
 
     /**
@@ -1085,8 +1103,8 @@ endif;
      * Returns the fullscreen modal (FSM) markup for a recipe.
      * Used by the recipe template and by the Elementor filter when appending FSM.
      *
-     * @param int   $recipe_id Recipe post ID.
-     * @param array $settings  Recipe settings (from get_settings() or global $recipe_settings).
+     * @param int                  $recipe_id Recipe post ID.
+     * @param array<string, mixed> $settings  Recipe settings (from get_settings() or global $recipe_settings).
      * @return string FSM HTML block.
      */
     public static function get_fsm_markup( $recipe_id, array $settings ) {
@@ -1259,7 +1277,7 @@ endif;
                     if ( $gallery_query->have_posts() ) :
                         while ( $gallery_query->have_posts() ) :
                             $gallery_query->the_post();
-                            $results[ $gallery_query->post->ID ] = get_the_title();
+                            $results[ get_the_ID() ] = get_the_title();
                         endwhile;
                     endif;
 
@@ -1329,8 +1347,8 @@ endif;
         $printing = ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) );
 
         if ( ! $printing && ! $switcher_disabled ) :
-            $default  = $servings;
-            $servings = (float) esc_html( get_query_var( 'servings', $servings ) );
+            $default  = (float) $servings;
+            $servings = (float) esc_html( (string) get_query_var( 'servings', $servings ) );
             $servings = ( ! $servings ? $default : $servings );
             $counter  = 1;
 
@@ -1339,19 +1357,20 @@ endif;
             $double  = $default * 2;
             $triple  = $default * 3;
 
-            /* translators: singular and plural quarter "serving" size */
-            $quarter_string = sprintf( esc_html( _n( 'Quarter (%s Serving)', 'Quarter (%s Servings)', $quarter, 'cooked' ) ), $quarter );
+            // Fractional servings round up for the plural form, so 1.5 reads "Servings".
+            /* translators: %s: number of servings, a quarter of the default */
+            $quarter_string = sprintf( esc_html( _n( 'Quarter (%s Serving)', 'Quarter (%s Servings)', (int) ceil( $quarter ), 'cooked' ) ), $quarter );
 
-            /* translators: singular and plural quarter "serving" size */
-            $half_string = sprintf( esc_html( _n( 'Half (%s Serving)', 'Half (%s Servings)', $half, 'cooked' ) ), $half );
+            /* translators: %s: number of servings, half of the default */
+            $half_string = sprintf( esc_html( _n( 'Half (%s Serving)', 'Half (%s Servings)', (int) ceil( $half ), 'cooked' ) ), $half );
 
-            /* translators: singular and plural quarter "serving" size */
-            $default_string = sprintf( esc_html( _n( 'Default (%s Serving)', 'Default (%s Servings)', $default, 'cooked' ) ), $default );
+            /* translators: %s: default number of servings */
+            $default_string = sprintf( esc_html( _n( 'Default (%s Serving)', 'Default (%s Servings)', (int) ceil( $default ), 'cooked' ) ), $default );
 
-            /* translators: singular and plural quarter "serving" size */
+            /* translators: %s: number of servings, double the default */
             $double_string = sprintf( __( 'Double (%s Servings)', 'cooked' ), $double );
 
-            /* translators: singular and plural quarter "serving" size */
+            /* translators: %s: number of servings, triple the default */
             $triple_string = sprintf( __( 'Triple (%s Servings)', 'cooked' ), $triple );
 
             $servings_array = apply_filters(
@@ -1393,7 +1412,7 @@ endif;
 		if ( ! $printing && ! $switcher_disabled ) :
 
 			/* translators: singular and plural "serving" sizes */
-			$servings_string = sprintf( esc_html( _n( '%s Serving', '%s Servings', $servings, 'cooked' ) ), $servings );
+			$servings_string = sprintf( esc_html( _n( '%s Serving', '%s Servings', (int) ceil( (float) $servings ), 'cooked' ) ), $servings );
 
 			echo '<a aria-label="' . esc_attr( $servings_string ) . '" href="#">' . esc_html( $servings_string ) . '</a>';
 			echo '<label for="cooked-servings-changer" class="screen-reader-text">' . esc_html__( 'Servings', 'cooked' ) . '</label>';
@@ -1404,7 +1423,7 @@ endif;
                 echo '</select>';
             else :
                 /* translators: singular and plural "serving" sizes */
-                echo '<span>' . esc_html( sprintf( _n( '%s Serving', '%s Servings', $servings, 'cooked' ), $servings ) ) . '</span>';
+                echo '<span>' . esc_html( sprintf( _n( '%s Serving', '%s Servings', (int) ceil( (float) $servings ), 'cooked' ), $servings ) ) . '</span>';
             endif;
 			echo '</span>';
     }
@@ -1512,23 +1531,23 @@ endif;
             if ( ! $multiplier || $multiplier === (float) $default_serving_size ) {
                 $multiplier = 1;
 			} else {
-                $multiplier = $multiplier / $default_serving_size;
+                $multiplier = $multiplier / (float) $default_serving_size;
 			}
 
 			if ( 1 === $multiplier ) {
 				$amount       = ( isset( $ing['amount'] ) && $ing['amount'] ? esc_html( $ing['amount'] ) : false );
-				$amount       = $Cooked_Measurements->cleanup_amount( $amount );
+				$amount       = (string) $Cooked_Measurements->cleanup_amount( $amount );
 				$format       = ( strpos( $amount, '/' ) === false ? ( strpos( $amount, '.' ) !== false || strpos( $amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
 				$float_amount = $Cooked_Measurements->calculate( $amount, 'decimal' );
 				$amount       = $Cooked_Measurements->format_amount( $float_amount, $format );
 			} else {
 				$amount       = ( isset( $ing['amount'] ) && $ing['amount'] ? esc_html( $ing['amount'] ) : false );
-				$amount       = $Cooked_Measurements->cleanup_amount( $amount );
+				$amount       = (string) $Cooked_Measurements->cleanup_amount( $amount );
 				$format       = ( strpos( $amount, '/' ) === false ? ( strpos( $amount, '.' ) !== false || strpos( $amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
 				$float_amount = $Cooked_Measurements->calculate( $amount, 'decimal' );
 
 				if ( $float_amount ) {
-					$float_amount = $float_amount * $multiplier;
+					$float_amount = (float) $float_amount * $multiplier;
 					$amount       = $Cooked_Measurements->format_amount( $float_amount, $format );
 				}
 			}
@@ -1540,7 +1559,7 @@ endif;
 				$source_system = $measurements[ $measurement_key ]['system'];
 				if ( $source_system && $source_system !== $measurement_system ) {
 					$target = \Cooked_Unit_Converter::get_target_unit( $measurement_key );
-					$result = $target ? \Cooked_Unit_Converter::convert( $float_amount, $measurement_key, $target ) : null;
+					$result = $target ? \Cooked_Unit_Converter::convert( (float) $float_amount, $measurement_key, $target ) : null;
 					if ( $result ) {
 						$float_amount    = $result['amount'];
 						$measurement_key = $result['unit'];
@@ -1552,23 +1571,23 @@ endif;
 				}
 			}
 
-            $measurement = ( $measurement_key && $float_amount && isset( $measurements[ $measurement_key ] ) ? $Cooked_Measurements->singular_plural( $measurements[ $measurement_key ]['singular_abbr'], $measurements[ $measurement_key ]['plural_abbr'], $float_amount ) : false );
+            $measurement = ( $measurement_key && $float_amount && isset( $measurements[ $measurement_key ] ) ? $Cooked_Measurements->singular_plural( $measurements[ $measurement_key ]['singular_abbr'], $measurements[ $measurement_key ]['plural_abbr'], (float) $float_amount ) : false );
 
-            $name = ( isset( $ing['name'] ) && $ing['name'] ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['name'] ), $ing ) : false );
+            $name = ( ! empty( $ing['name'] ) ? apply_filters( 'cooked_ingredient_name', wp_kses_post( $ing['name'] ), $ing ) : false );
 
             // Substitutes, each scaled and converted like the ingredient itself.
             $substitutions = [];
             foreach ( self::ingredient_substitutions( $ing ) as $substitution ) {
                 $sub_name         = wp_kses_post( $substitution['name'] );
                 $sub_amount       = $substitution['amount'] ? esc_html( $substitution['amount'] ) : false;
-                $sub_amount       = $Cooked_Measurements->cleanup_amount( $sub_amount );
+                $sub_amount       = (string) $Cooked_Measurements->cleanup_amount( $sub_amount );
                 $sub_format       = ( strpos( $sub_amount, '/' ) === false ? ( strpos( $sub_amount, '.' ) !== false || strpos( $sub_amount, ',' ) !== false ? 'decimal' : 'fraction' ) : 'fraction' );
                 $sub_float_amount = $Cooked_Measurements->calculate( $sub_amount, 'decimal' );
 
                 if ( 1 === $multiplier ) {
                     $sub_amount = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
                 } elseif ( $sub_float_amount ) {
-                    $sub_float_amount = $sub_float_amount * $multiplier;
+                    $sub_float_amount = (float) $sub_float_amount * $multiplier;
                     $sub_amount       = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
                 }
 
@@ -1578,7 +1597,7 @@ endif;
                     $sub_source_system = $measurements[ $sub_measurement_key ]['system'];
                     if ( $sub_source_system && $sub_source_system !== $measurement_system ) {
                         $sub_target = \Cooked_Unit_Converter::get_target_unit( $sub_measurement_key );
-                        $sub_result = $sub_target ? \Cooked_Unit_Converter::convert( $sub_float_amount, $sub_measurement_key, $sub_target ) : null;
+                        $sub_result = $sub_target ? \Cooked_Unit_Converter::convert( (float) $sub_float_amount, $sub_measurement_key, $sub_target ) : null;
                         if ( $sub_result ) {
                             $sub_float_amount    = $sub_result['amount'];
                             $sub_measurement_key = $sub_result['unit'];
@@ -1594,7 +1613,7 @@ endif;
                     'name'         => $sub_name,
                     'amount'       => $sub_amount,
                     'float_amount' => $sub_float_amount,
-                    'measurement'  => ( $sub_measurement_key && $sub_float_amount && isset( $measurements[ $sub_measurement_key ] ) ? $Cooked_Measurements->singular_plural( $measurements[ $sub_measurement_key ]['singular_abbr'], $measurements[ $sub_measurement_key ]['plural_abbr'], $sub_float_amount ) : false ),
+                    'measurement'  => ( $sub_measurement_key && $sub_float_amount && isset( $measurements[ $sub_measurement_key ] ) ? $Cooked_Measurements->singular_plural( $measurements[ $sub_measurement_key ]['singular_abbr'], $measurements[ $sub_measurement_key ]['plural_abbr'], (float) $sub_float_amount ) : false ),
                 ];
             }
 
@@ -1613,7 +1632,7 @@ endif;
 				echo '<div itemprop="recipeIngredient" class="cooked-single-ingredient cooked-ingredient' . ( ! $checkboxes ? ' cooked-ing-no-checkbox' : '' ) . '">';
 					echo ( $checkboxes ? '<span class="cooked-ingredient-checkbox"></span>' : '' );
 					do_action( 'cooked_ingredient_after_checkbox', $ing );
-					echo ( $amount ? '<span class="cooked-ing-amount" data-decimal="' . esc_html( $float_amount ) . '">' . wp_kses_post( $amount ) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( $measurement ) . '</span> ' : '' );
+					echo ( $amount ? '<span class="cooked-ing-amount" data-decimal="' . esc_attr( (string) $float_amount ) . '">' . wp_kses_post( (string) $amount ) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( (string) $measurement ) . '</span> ' : '' );
 					do_action( 'cooked_ingredient_after_amount', $ing );
 					echo ( $name ? '<span class="cooked-ing-name">' . wp_kses_post( $name ) . '</span>' : '' );
 					do_action( 'cooked_ingredient_after_name', $ing );
@@ -1621,7 +1640,7 @@ endif;
 				foreach ( $substitutions as $sub ) {
 					echo '<span class="cooked-ingredient-substitution">';
 						echo ' <span class="cooked-ing-sub-label">' . esc_html__( 'or', 'cooked' ) . '</span> ';
-						echo ( $sub['amount'] ? '<span class="cooked-ing-amount" data-decimal="' . esc_html( $sub['float_amount'] ) . '">' . wp_kses_post( $sub['amount'] ) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( $sub['measurement'] ) . '</span> ' : '' );
+						echo ( $sub['amount'] ? '<span class="cooked-ing-amount" data-decimal="' . esc_attr( (string) $sub['float_amount'] ) . '">' . wp_kses_post( (string) $sub['amount'] ) . '</span> <span class="cooked-ing-measurement">' . wp_kses_post( (string) $sub['measurement'] ) . '</span> ' : '' );
 						echo '<span class="cooked-ing-name">' . wp_kses_post( $sub['name'] ) . '</span>';
 					echo '</span>';
 				}
@@ -1676,7 +1695,7 @@ endif;
                 /* translators: singular and plural "steps" */
                 $step_string = sprintf( __( 'Step %d', 'cooked' ), $step );
 
-                echo '<div id="cooked-single-direction-step-' . esc_attr( $number ) . '" class="cooked-single-direction cooked-direction' . ( $image ? ' cooked-direction-has-image' : '' ) . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . esc_attr( $step_string ) . '"' : '' ) . '>';
+                echo '<div id="cooked-single-direction-step-' . esc_attr( (string) $number ) . '" class="cooked-single-direction cooked-direction' . ( $image ? ' cooked-direction-has-image' : '' ) . ( $number ? ' cooked-direction-has-number' . ( $number > 9 ? '-wide' : '' ) : '' ) . '"' . ( $step ? ' data-step="' . esc_attr( $step_string ) . '"' : '' ) . '>';
 				echo $number ? '<span class="cooked-direction-number">' . esc_html( $number ) . '</span>' : '';
 				echo '<div class="cooked-dir-content">' . do_shortcode( $content ) . ( $image ? wp_kses_post( wpautop( $image ) ) : '' ) . ( $video ? '<video class="cooked-direction-video" src="' . esc_url( $video ) . '" controls preload="metadata" playsinline></video>' : '' ) . '</div>';
                 echo '</div>';
@@ -1986,6 +2005,7 @@ endif;
         $html = $is_child ? '<div class="cooked-filter-sub-options">' : '';
 
         foreach ( $terms_array as $term_id => $term_name ) {
+            $term_id = (int) $term_id;
             if ( ! $term_id ) {
                 continue;
             }
@@ -2354,16 +2374,16 @@ endif;
         $browse_page_id = \Cooked_Multilingual::get_browse_page_id();
 
         // Only modify for browse page with category.
-        if ( is_page( $browse_page_id ) &&
+        if ( $browse_page_id && is_page( $browse_page_id ) &&
             isset( $wp_query->query['cp_recipe_category'] ) &&
             taxonomy_exists( 'cp_recipe_category' ) &&
             term_exists( $wp_query->query['cp_recipe_category'], 'cp_recipe_category' ) ) {
 
             // Build the canonical URL based on permalink structure.
             if ( get_option( 'permalink_structure' ) ) {
-                $new_canonical = untrailingslashit( get_permalink( $browse_page_id ) ) . '/' . $_cooked_settings['recipe_category_permalink'] . '/' . $wp_query->query['cp_recipe_category'];
+                $new_canonical = untrailingslashit( (string) get_permalink( $browse_page_id ) ) . '/' . $_cooked_settings['recipe_category_permalink'] . '/' . $wp_query->query['cp_recipe_category'];
             } else {
-                $new_canonical = add_query_arg( 'cp_recipe_category', $wp_query->query['cp_recipe_category'], get_permalink( $browse_page_id ) );
+                $new_canonical = add_query_arg( 'cp_recipe_category', $wp_query->query['cp_recipe_category'], (string) get_permalink( $browse_page_id ) );
             }
 
             return $new_canonical;

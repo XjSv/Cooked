@@ -146,98 +146,173 @@ var cookedSortableTouchHandler = function(event) {
             }
         }
 
-        // Save as Default
+        // Save as Default (click-toggle popover anchored to the button, see #cooked-save-default-panel)
         if ($_CookedRecipeSaveDefault.length) {
-            var saveDefaultTooltip = $_CookedRecipeSaveDefault.tooltipster({
-                theme			: ['tooltipster-light', 'tooltipster-sideTip-cooked'],
-                trigger			: 'click',
-                animation		: 'grow',
-                delay			: 0,
-                speed			: 200,
-                maxWidth		: 275,
-                contentAsHTML	: true,
-                interactive		: true,
-                functionReady: function(instance, helper) {
-                    $('.cooked-save-default-all').on('click', function(e) {
-                        e.preventDefault();
+            var $_CookedSaveDefaultPanel = $('#cooked-save-default-panel'),
+                saveDefaultPanelArrow = $('<div class="cooked-tooltip-arrow" />').appendTo($_CookedSaveDefaultPanel)[0],
+                saveDefaultPanelFloating = !!(window.FloatingUICore && window.FloatingUIDOM),
+                saveDefaultPanelCleanup = null;
 
-                        var thisButton = $(this),
-                            cooked_save_default_nonce = thisButton.data('nonce'),
-                            cooked_save_default_bulk_nonce = thisButton.data('bulk-nonce'),
-                            thisContainer = thisButton.parent(),
-                            confirm_save = confirm(cooked_admin_functions_js_vars.i18n_confirm_save_default_all),
-                            recipe_editor_textarea = $( "#_recipe_settings_content" ),
-                            recipe_editor = tinymce.get('_recipe_settings_content');
+            // With Floating UI the panel grows open like the tooltips: it becomes the
+            // positioned shell and its contents (arrow included) move into the bubble.
+            if (saveDefaultPanelFloating) {
+                $_CookedSaveDefaultPanel.addClass('cooked-tooltip-shell').wrapInner('<div class="cooked-tooltip-bubble" />');
+            }
 
-                        if (recipe_editor === null) {
-                            var recipe_editor_content = recipe_editor_textarea.val();
-                        } else {
-                            var recipe_editor_content = recipe_editor.getContent();
+            // While closing, the panel is still visible but already counts as closed.
+            var cooked_save_default_panel_is_open = function() {
+                if (!$_CookedSaveDefaultPanel.length) {
+                    return false;
+                }
+                return saveDefaultPanelFloating ? $_CookedSaveDefaultPanel.hasClass('cooked-tooltip-open') : !$_CookedSaveDefaultPanel.prop('hidden');
+            };
+
+            var cooked_toggle_save_default_panel = function(show) {
+                if (!$_CookedSaveDefaultPanel.length) {
+                    return;
+                }
+
+                var reference = $_CookedRecipeSaveDefault[0],
+                    panel = $_CookedSaveDefaultPanel[0];
+
+                $_CookedRecipeSaveDefault.attr('aria-expanded', show ? 'true' : 'false');
+
+                // Without Floating UI the panel opens and closes instantly, in the normal flow.
+                if (!saveDefaultPanelFloating) {
+                    panel.hidden = !show;
+                    return;
+                }
+
+                if (show) {
+                    panel.hidden = false;
+                    if (!saveDefaultPanelCleanup) {
+                        saveDefaultPanelCleanup = window.FloatingUIDOM.autoUpdate(reference, panel, function() {
+                            cooked_position_floating(reference, panel, saveDefaultPanelArrow, ['top', 'bottom'], function() {
+                                return !panel.hidden;
+                            });
+                        });
+                    }
+                    cooked_grow_open(panel);
+                } else if (cooked_save_default_panel_is_open()) {
+                    // Keep positioning while it scales down, then hide.
+                    cooked_grow_close(panel, function() {
+                        if (saveDefaultPanelCleanup) {
+                            saveDefaultPanelCleanup();
+                            saveDefaultPanelCleanup = null;
                         }
+                        panel.hidden = true;
+                    });
+                }
+            };
 
-                        if (confirm_save && !thisButton.hasClass('disabled')) {
-                            thisContainer.find('.button, .button-primary').addClass('disabled');
+            $_CookedRecipeSaveDefault.on('click', function(e) {
+                e.preventDefault();
+                cooked_toggle_save_default_panel(!cooked_save_default_panel_is_open());
+            });
 
+            $_CookedRecipeSaveDefault.on('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    cooked_toggle_save_default_panel(!cooked_save_default_panel_is_open());
+                }
+            });
+
+            $(document).on('click', function(e) {
+                if (!cooked_save_default_panel_is_open()) {
+                    return;
+                }
+
+                if (!$(e.target).closest('.cooked-layout-save-default, #cooked-save-default-panel').length) {
+                    cooked_toggle_save_default_panel(false);
+                }
+            });
+
+            $(document).on('keydown', function(e) {
+                if (e.key === 'Escape' && cooked_save_default_panel_is_open()) {
+                    cooked_toggle_save_default_panel(false);
+                    $_CookedRecipeSaveDefault.focus();
+                }
+            });
+
+            // Save as Default panel buttons.
+            $('.cooked-save-default-all').on('click', function(e) {
+                e.preventDefault();
+
+                var thisButton = $(this),
+                    cooked_save_default_nonce = thisButton.data('nonce'),
+                    cooked_save_default_bulk_nonce = thisButton.data('bulk-nonce'),
+                    thisContainer = thisButton.parent(),
+                    confirm_save = confirm(cooked_admin_functions_js_vars.i18n_confirm_save_default_all),
+                    recipe_editor_textarea = $( "#_recipe_settings_content" ),
+                    recipe_editor = tinymce.get('_recipe_settings_content');
+
+                if (recipe_editor === null) {
+                    var recipe_editor_content = recipe_editor_textarea.val();
+                } else {
+                    var recipe_editor_content = recipe_editor.getContent();
+                }
+
+                if (confirm_save && !thisButton.hasClass('disabled')) {
+                    thisContainer.find('.button, .button-primary').addClass('disabled');
+
+                    $.post(
+                        cooked_admin_functions_js_vars.ajax_url,
+                        {
+                            action: 'cooked_save_default',
+                            'default_content': recipe_editor_content,
+                            nonce: cooked_save_default_nonce
+                        },
+                        function() {
                             $.post(
                                 cooked_admin_functions_js_vars.ajax_url,
                                 {
-                                    action: 'cooked_save_default',
-                                    'default_content': recipe_editor_content,
-                                    nonce: cooked_save_default_nonce
+                                    action: 'cooked_get_recipe_count',
+                                    nonce: cooked_save_default_bulk_nonce
                                 },
-                                function() {
-                                    $.post(
-                                        cooked_admin_functions_js_vars.ajax_url,
-                                        {
-                                            action: 'cooked_get_recipe_count',
-                                            nonce: cooked_save_default_bulk_nonce
-                                        },
-                                        function(response) {
-                                            thisButton.removeClass("button-primary").addClass("button");
+                                function(response) {
+                                    thisButton.removeClass("button-primary").addClass("button");
 
-                                            if (response && response.success && response.data.total > 0) {
-                                                cooked_recipe_update_counter = 0;
-                                                cooked_set_default_template(0, response.data.total, recipe_editor_content, cooked_save_default_bulk_nonce, instance);
-                                            }
-                                        },
-                                        'json'
-                                    );
-                                }
+                                    if (response && response.success && response.data.total > 0) {
+                                        cooked_recipe_update_counter = 0;
+                                        cooked_set_default_template(0, response.data.total, recipe_editor_content, cooked_save_default_bulk_nonce);
+                                    }
+                                },
+                                'json'
                             );
                         }
-                    });
+                    );
+                }
+            });
 
-                    $('.cooked-save-default-new').on('click', function(e) {
-                        e.preventDefault();
-                        var thisButton = $(this),
-                            nonce = thisButton.data('nonce'),
-                            thisContainer = thisButton.parent(),
-                            recipe_editor_textarea = $("#_recipe_settings_content"),
-                            recipe_editor = tinymce.get('_recipe_settings_content');
+            $('.cooked-save-default-new').on('click', function(e) {
+                e.preventDefault();
+                var thisButton = $(this),
+                    nonce = thisButton.data('nonce'),
+                    thisContainer = thisButton.parent(),
+                    recipe_editor_textarea = $("#_recipe_settings_content"),
+                    recipe_editor = tinymce.get('_recipe_settings_content');
 
-                        if (recipe_editor === null) {
-                            var recipe_editor_content = recipe_editor_textarea.val();
-                        } else {
-                            var recipe_editor_content = recipe_editor.getContent();
+                if (recipe_editor === null) {
+                    var recipe_editor_content = recipe_editor_textarea.val();
+                } else {
+                    var recipe_editor_content = recipe_editor.getContent();
+                }
+
+                if (!thisButton.hasClass('disabled')) {
+                    thisContainer.find('.button, .button-primary').addClass('disabled');
+                    var ajax__save_default_new = $.post(
+                        cooked_admin_functions_js_vars.ajax_url,
+                        {
+                            action: 'cooked_save_default',
+                            'default_content': recipe_editor_content,
+                            nonce: nonce
+                        },
+                        function(result) {
+                            thisButton.text( cooked_admin_functions_js_vars.i18n_saved );
+                            thisContainer.find('.button-primary').removeClass('disabled');
                         }
-
-                        if (!thisButton.hasClass('disabled')) {
-                            thisContainer.find('.button, .button-primary').addClass('disabled');
-                            var ajax__save_default_new = $.post(
-                                cooked_admin_functions_js_vars.ajax_url,
-                                {
-                                    action: 'cooked_save_default',
-                                    'default_content': recipe_editor_content,
-                                    nonce: nonce
-                                },
-                                function(result) {
-                                    thisButton.text( cooked_admin_functions_js_vars.i18n_saved );
-                                    thisContainer.find('.button-primary').removeClass('disabled');
-                                }
-                            ).fail(function(result) {
-                                //console.log( 'Error: ' + result );
-                            });
-                        }
+                    ).fail(function(result) {
+                        //console.log( 'Error: ' + result );
                     });
                 }
             });
@@ -281,17 +356,164 @@ var cookedSortableTouchHandler = function(event) {
             });
         }
 
-        // Cooked Tooltips
-        if ($_CookedTooltips.length){
-            $_CookedTooltips.tooltipster({
-                theme			: ['tooltipster-light', 'tooltipster-sideTip-cooked'],
-                animation		: 'grow',
-                delay			: 100,
-                speed			: 200,
-                maxWidth		: 275,
-                contentAsHTML	: true,
-                interactive		: true
-            });
+        // Cooked Tooltips (Floating UI, vendored — see assets/vendor/floating-ui/README.md).
+        // .cooked-tooltip elements carry their (HTML) content in data-tooltip and an optional
+        // comma-separated placement preference in data-positions, e.g. "top,bottom".
+        // Handlers are delegated, so one setup covers present and future elements.
+        if ($_CookedTooltips.length && window.FloatingUICore && window.FloatingUIDOM) {
+            // One shared tooltip: an outer shell that Floating UI positions and an inner
+            // bubble (content and arrow) that grows open and closed.
+            // tooltipReference is the trigger the tooltip is for; tooltipAnchor is the one
+            // it is placed against, which outlives the reference while the close plays.
+            var FloatingUI = window.FloatingUIDOM,
+                tooltip = document.createElement('div'),
+                tooltipBubble = document.createElement('div'),
+                tooltipContent = document.createElement('div'),
+                tooltipArrow = document.createElement('div'),
+                tooltipReference = null,
+                tooltipAnchor = null,
+                tooltipDescribedBy = null,
+                tooltipReasons = {},
+                tooltipOpenTimer = null,
+                tooltipCleanup = null;
+
+            tooltip.id = 'cooked-tooltip-floating';
+            tooltip.className = 'cooked-tooltip-floating';
+            tooltip.setAttribute('role', 'tooltip');
+            tooltip.hidden = true;
+            tooltipBubble.className = 'cooked-tooltip-bubble';
+            tooltipArrow.className = 'cooked-tooltip-arrow';
+            tooltipBubble.appendChild(tooltipContent);
+            tooltipBubble.appendChild(tooltipArrow);
+            tooltip.appendChild(tooltipBubble);
+            document.body.appendChild(tooltip);
+
+            var tooltipPlacements = function(el) {
+                var placements = [];
+                String(el.getAttribute('data-positions') || '').split(',').forEach(function(placement) {
+                    placement = placement.trim().toLowerCase();
+                    if (/^(top|right|bottom|left)(-start|-end)?$/.test(placement) && placements.indexOf(placement) === -1) {
+                        placements.push(placement);
+                    }
+                });
+                return placements.length ? placements : ['bottom'];
+            };
+
+            var finishHideTooltip = function() {
+                if (tooltipCleanup) {
+                    tooltipCleanup();
+                    tooltipCleanup = null;
+                }
+                tooltipAnchor = null;
+                tooltip.hidden = true;
+            };
+
+            // animate: grow closed (hover/focus leaving, Escape). Otherwise hide at once,
+            // cancelling any open or close in progress.
+            var hideTooltip = function(animate) {
+                clearTimeout(tooltipOpenTimer);
+                tooltipOpenTimer = null;
+                if (tooltipReference) {
+                    if (tooltipDescribedBy === null) {
+                        tooltipReference.removeAttribute('aria-describedby');
+                    } else {
+                        tooltipReference.setAttribute('aria-describedby', tooltipDescribedBy);
+                    }
+                }
+                tooltipReference = null;
+                tooltipDescribedBy = null;
+                tooltipReasons = {};
+
+                if (!animate || !tooltipAnchor) {
+                    cooked_grow_cancel(tooltip);
+                    tooltip.classList.remove('cooked-tooltip-open');
+                    finishHideTooltip();
+                } else if (tooltip.classList.contains('cooked-tooltip-open')) {
+                    cooked_grow_close(tooltip, finishHideTooltip);
+                }
+                // Otherwise it is already closing.
+            };
+
+            var updateTooltip = function() {
+                var anchor = tooltipAnchor;
+                if (!anchor || !anchor.isConnected) {
+                    hideTooltip(false);
+                    return;
+                }
+
+                cooked_position_floating(anchor, tooltip, tooltipArrow, tooltipPlacements(anchor), function() {
+                    // A newer show/hide may have happened while this was computing.
+                    return tooltipAnchor === anchor;
+                });
+            };
+
+            var openTooltip = function(el) {
+                tooltipOpenTimer = null;
+                if (!el.isConnected) {
+                    hideTooltip(false);
+                    return;
+                }
+                tooltipContent.innerHTML = el.getAttribute('data-tooltip');
+                tooltipAnchor = el;
+                tooltip.hidden = false;
+                if (!tooltipCleanup) {
+                    tooltipCleanup = FloatingUI.autoUpdate(el, tooltip, updateTooltip);
+                }
+                cooked_grow_open(tooltip);
+            };
+
+            // Hover opens after 100ms (Tooltipster's delay); leaving sooner shows nothing.
+            // Focus opens at once.
+            var showTooltip = function(el, reason) {
+                var content = el.getAttribute('data-tooltip');
+                if (!content) {
+                    return;
+                }
+                tooltipReasons[reason] = true;
+                if (tooltipReference === el) {
+                    if (tooltipOpenTimer && reason !== 'hover') {
+                        clearTimeout(tooltipOpenTimer);
+                        openTooltip(el);
+                    } else if (!tooltipOpenTimer) {
+                        tooltipContent.innerHTML = content;
+                    }
+                    return;
+                }
+
+                hideTooltip(false);
+                tooltipReasons[reason] = true;
+                tooltipReference = el;
+                tooltipDescribedBy = el.getAttribute('aria-describedby');
+                el.setAttribute('aria-describedby', tooltipDescribedBy ? tooltipDescribedBy + ' ' + tooltip.id : tooltip.id);
+
+                if (reason === 'hover') {
+                    tooltipOpenTimer = setTimeout(function() { openTooltip(el); }, 100);
+                } else {
+                    openTooltip(el);
+                }
+            };
+
+            // Hover and focus each keep the tooltip open; it hides once neither does.
+            var releaseTooltip = function(el, reason) {
+                if (tooltipReference !== el) {
+                    return;
+                }
+                delete tooltipReasons[reason];
+                if ($.isEmptyObject(tooltipReasons)) {
+                    hideTooltip(true);
+                }
+            };
+
+            $(document)
+                .on('mouseenter', '.cooked-tooltip[data-tooltip]', function() { showTooltip(this, 'hover'); })
+                .on('mouseleave', '.cooked-tooltip[data-tooltip]', function() { releaseTooltip(this, 'hover'); })
+                .on('focusin', '.cooked-tooltip[data-tooltip]', function() { showTooltip(this, 'focus'); })
+                .on('focusout', '.cooked-tooltip[data-tooltip]', function() { releaseTooltip(this, 'focus'); })
+                .on('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        hideTooltip(true);
+                    }
+                });
         }
 
         // Cooked Shortcode Fields
@@ -893,8 +1115,91 @@ var cookedSortableTouchHandler = function(event) {
 var cooked_recipe_update_counter = 0;
 var cooked_bulk_per_page = 20;
 
+/**
+ * Positions a floating element (tooltip or popover) next to its reference with
+ * Floating UI: first placement preferred, the rest as flip fallbacks. Sets
+ * data-placement on the floating element and moves its arrow to the right side.
+ * isCurrent() lets callers drop a result that arrives after they closed.
+ */
+function cooked_position_floating(reference, floating, arrow, placements, isCurrent) {
+    var FloatingUI = window.FloatingUIDOM,
+        arrowSides = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' };
+
+    return FloatingUI.computePosition(reference, floating, {
+        placement: placements[0],
+        strategy: 'fixed',
+        middleware: [
+            FloatingUI.offset(10),
+            FloatingUI.flip({ fallbackPlacements: placements.length > 1 ? placements.slice(1) : undefined, padding: 4 }),
+            FloatingUI.shift({ padding: 4 }),
+            FloatingUI.arrow({ element: arrow, padding: 6 })
+        ]
+    }).then(function(position) {
+        if (isCurrent && !isCurrent()) {
+            return;
+        }
+        var side = position.placement.split('-')[0],
+            arrowData = position.middlewareData.arrow || {};
+
+        floating.setAttribute('data-placement', side);
+        floating.style.left = position.x + 'px';
+        floating.style.top = position.y + 'px';
+
+        arrow.style.left = arrowData.x != null ? arrowData.x + 'px' : '';
+        arrow.style.top = arrowData.y != null ? arrowData.y + 'px' : '';
+        arrow.style.right = '';
+        arrow.style.bottom = '';
+        arrow.style[arrowSides[side]] = '-6px';
+    });
+}
+
+/**
+ * Grow animation for a floating shell (Tooltipster's "grow"): the shell's
+ * .cooked-tooltip-bubble scales from 0 to 1 via .cooked-tooltip-open (see the
+ * admin stylesheet). The shell must already be visible. Also used by Cooked Pro.
+ */
+function cooked_grow_open(shell) {
+    cooked_grow_cancel(shell);
+    shell.classList.remove('cooked-tooltip-open');
+    void shell.offsetWidth; // Commit scale(0) so the transition plays.
+    shell.classList.add('cooked-tooltip-open');
+}
+
+/**
+ * Scales the bubble back down, then calls done() (on transitionend, or after
+ * 400ms if that never fires). cooked_grow_open() and cooked_grow_cancel() stop it.
+ */
+function cooked_grow_close(shell, done) {
+    var bubble = shell.querySelector('.cooked-tooltip-bubble'),
+        timer = null,
+        finish = function(e) {
+            if (e && (e.target !== bubble || e.propertyName !== 'transform')) {
+                return;
+            }
+            cooked_grow_cancel(shell);
+            done();
+        };
+
+    cooked_grow_cancel(shell);
+    shell.classList.remove('cooked-tooltip-open');
+    bubble.addEventListener('transitionend', finish);
+    timer = setTimeout(finish, 400);
+    shell.cookedGrowCancel = function() {
+        clearTimeout(timer);
+        bubble.removeEventListener('transitionend', finish);
+        shell.cookedGrowCancel = null;
+    };
+}
+
+/** Stops a pending cooked_grow_close() without calling its done(). */
+function cooked_grow_cancel(shell) {
+    if (shell.cookedGrowCancel) {
+        shell.cookedGrowCancel();
+    }
+}
+
 /** Applies default recipe content in paginated AJAX batches and updates the progress UI. */
-function cooked_set_default_template(page, total_recipes, content, nonce, instance) {
+function cooked_set_default_template(page, total_recipes, content, nonce) {
     if (total_recipes <= 0) {
         return;
     }
@@ -907,7 +1212,6 @@ function cooked_set_default_template(page, total_recipes, content, nonce, instan
         progress.addClass('cooked-active');
         progress_text.addClass('cooked-active');
         progress_bar.css({ "width" : "0%" });
-        instance.reposition();
     }
 
     jQuery.post(
@@ -927,15 +1231,13 @@ function cooked_set_default_template(page, total_recipes, content, nonce, instan
                 progress_text.text(cooked_recipe_update_counter + " / " + total_recipes);
 
                 if (response.data.has_more) {
-                    cooked_set_default_template(page + 1, total_recipes, content, nonce, instance);
+                    cooked_set_default_template(page + 1, total_recipes, content, nonce);
                 } else {
                     jQuery('.cooked-save-default-all').text(cooked_admin_functions_js_vars.i18n_applied);
                     progress_bar.css({ "width" : "100%" });
                     progress_text.text(total_recipes + " / " + total_recipes);
                     progress.removeClass('cooked-active');
                     progress_text.removeClass('cooked-active').text("");
-
-                    instance.reposition();
                 }
             }
         },

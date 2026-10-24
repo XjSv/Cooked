@@ -920,6 +920,41 @@ var cookedSortableTouchHandler = function(event) {
                     .find('.cooked-show-substitution').attr('aria-expanded', 'true');
             }
 
+            // New layout: Cooked Pro's ingredient link button opens its own panel (the link and
+            // description fields) instead of sharing the substitutes' "expanded" state, as in 1.x;
+            // stopping the click here keeps Pro's handler on the parent from toggling both. The
+            // button is a <span>, so it also gets a role and keyboard focus.
+            if ($('body').hasClass('cooked-recipe-editor')) {
+                var cooked_prepare_ingredient_addons = function() {
+                    $_CookedIngredientBuilder.find('.cooked-show-url').not('[role]').attr({ role: 'button', tabindex: '0', 'aria-expanded': 'false' });
+                    $_CookedIngredientBuilder.find('.cooked-ingredient-block').each(function() {
+                        var $desc = $(this).find('input[data-ingredient-part="description"]');
+                        $(this).toggleClass('cooked-has-description', $desc.length > 0 && $.trim($desc.val() || '') !== '');
+                    });
+                };
+                cooked_prepare_ingredient_addons();
+                new MutationObserver(cooked_prepare_ingredient_addons).observe($_CookedIngredientBuilder[0], { childList: true });
+
+                $_CookedIngredientBuilder.on('click keydown', '.cooked-show-url', function(e) {
+                    if ('keydown' === e.type && 'Enter' !== e.key && ' ' !== e.key) {
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var $block = $(this).closest('.cooked-ingredient-block'),
+                        open = !$block.hasClass('cooked-url-open');
+                    $block.toggleClass('cooked-url-open', open);
+                    $(this).attr('aria-expanded', open ? 'true' : 'false');
+                    if (open) {
+                        $block.find('input[data-ingredient-part="url"]').trigger('focus');
+                    }
+                });
+
+                $_CookedIngredientBuilder.on('input', 'input[data-ingredient-part="description"]', function() {
+                    $(this).closest('.cooked-ingredient-block').toggleClass('cooked-has-description', $.trim(this.value) !== '');
+                });
+            }
+
             // Substitute toggle: adds the first substitute, then shows or hides them.
             $_CookedIngredientBuilder.parent().on('click', '.cooked-show-substitution', function(e) {
                 e.preventDefault();

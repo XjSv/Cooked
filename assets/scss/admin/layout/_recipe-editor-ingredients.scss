@@ -329,6 +329,96 @@ body.cooked-recipe-editor {
             color: var(--cooked-color-accent-strong);
         }
 
+        // Cooked Pro's ingredient link button: a third action between the substitute and remove
+        // buttons, in a wider actions column, instead of its absolute position over them.
+        .cooked-ingredient-block:has(> .cooked-show-url) {
+            grid-template-columns: 20px 72px minmax(96px, 132px) minmax(0, 1fr) 96px;
+
+            @media screen and (max-width: 600px) {
+                grid-template-columns: 20px 64px minmax(0, 1fr) 96px;
+            }
+        }
+
+        .cooked-ingredient-block > .cooked-show-url {
+            position: static;
+            top: auto;
+            right: auto;
+            grid-row: 1;
+            grid-column: 5;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            justify-self: center;
+            width: 28px;
+            height: 28px;
+            border-radius: var(--cooked-radius-sm);
+            opacity: 0;
+            cursor: pointer;
+            transition: opacity 120ms ease;
+
+            @media screen and (max-width: 600px) {
+                grid-column: 4;
+            }
+
+            @media (hover: none) {
+                opacity: 1;
+            }
+
+            .cooked-icon {
+                color: var(--cooked-color-text-muted);
+                font-size: 13px;
+            }
+
+            &:hover {
+                background: var(--cooked-color-surface);
+            }
+
+            &:focus-visible {
+                opacity: 1;
+                outline: 2px solid var(--cooked-color-accent-strong);
+                outline-offset: 1px;
+            }
+        }
+
+        .cooked-ingredient-block:hover > .cooked-show-url,
+        .cooked-ingredient-block:focus-within > .cooked-show-url,
+        .cooked-ingredient-block.cooked-url-open > .cooked-show-url,
+        .cooked-ingredient-block.cooked-has-url > .cooked-show-url {
+            opacity: 1;
+        }
+
+        .cooked-ingredient-block.cooked-url-open > .cooked-show-url .cooked-icon,
+        .cooked-ingredient-block.cooked-has-url > .cooked-show-url .cooked-icon,
+        .cooked-ingredient-block > .cooked-show-url:hover .cooked-icon {
+            color: var(--cooked-color-accent-strong);
+        }
+
+        // Its link and description fields: lines under the row, shown while its panel is open
+        // (a saved description stays shown), whatever the substitutes do.
+        .cooked-ingredient-block > .cooked-ingredient-url,
+        .cooked-ingredient-block > .cooked-ingredient-description {
+            display: none;
+            grid-column: 2 / 6;
+            float: none;
+            width: auto;
+            margin: 0 0 4px;
+            padding: 0;
+
+            @media screen and (max-width: 600px) {
+                grid-column: 2 / 5;
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+
+        .cooked-ingredient-block.cooked-url-open > .cooked-ingredient-url,
+        .cooked-ingredient-block.cooked-url-open > .cooked-ingredient-description,
+        .cooked-ingredient-block.cooked-has-description > .cooked-ingredient-description {
+            display: block;
+        }
+
         // Substitutes: a stack of tinted "or" lines under the ingredient, fields in its columns
         // and each line's remove button in the actions column; "Add substitute" below them.
         // The "Substitutions:" label stays for screen readers; each line's badge says "or".

@@ -37,7 +37,7 @@ test.describe('Create a new complete recipe (admin)', () => {
     await expect(seoField).toBeVisible();
     await seoField.fill(seoDescription);
 
-    await adminPage.click('#cooked-recipe-tab-nutrition', { force: true });
+    await adminPage.click('#cooked-recipe-tab-nutrition');
     await adminPage.fill('input[name="_recipe_settings[nutrition][servings]"]', '4');
 
     const category = adminPage.locator('input[name="tax_input[cp_recipe_category][]"][type="checkbox"]').first();

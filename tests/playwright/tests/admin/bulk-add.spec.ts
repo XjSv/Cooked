@@ -20,7 +20,7 @@ test.describe('Bulk Add directions with cooked-timer shortcode', () => {
     await adminPage.goto('/wp-admin/post-new.php?post_type=cp_recipe', { waitUntil: 'networkidle' });
     await adminPage.getByLabel('Recipe title ...').fill(title);
 
-    await adminPage.click('#cooked-recipe-tab-directions', { force: true });
+    await adminPage.click('#cooked-recipe-tab-directions');
     await adminPage.locator('#cooked-recipe-tab-content-directions .cooked-bulk-add-button').click();
 
     const textarea = adminPage.locator('#cooked-bulk-add-textarea');

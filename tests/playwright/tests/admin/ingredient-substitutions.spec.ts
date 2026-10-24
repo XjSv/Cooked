@@ -34,7 +34,7 @@ test.describe('Ingredient substitutions (admin)', () => {
     const page = await adminContext.newPage();
     await page.goto('/wp-admin/post-new.php?post_type=cp_recipe', { waitUntil: 'networkidle' });
     await page.getByLabel('Recipe title ...').fill('Substitutions Playwright: ' + Date.now());
-    await page.click('#cooked-recipe-tab-ingredients', { force: true });
+    await page.click('#cooked-recipe-tab-ingredients');
 
     const row = butterRow(page);
     await row.locator('input[data-ingredient-part="amount"]').fill('1');
@@ -69,7 +69,7 @@ test.describe('Ingredient substitutions (admin)', () => {
   test('keeps them when reopened, and removes one', async ({ adminContext }) => {
     const page = await adminContext.newPage();
     await page.goto(`/wp-admin/post.php?post=${postId}&action=edit`, { waitUntil: 'networkidle' });
-    await page.click('#cooked-recipe-tab-ingredients', { force: true });
+    await page.click('#cooked-recipe-tab-ingredients');
 
     const subs = butterRow(page).locator('.cooked-substitution-row');
     await expect(subs).toHaveCount(2);

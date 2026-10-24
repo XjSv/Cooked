@@ -19,20 +19,20 @@ tests/
 │   ├── framework/           shared FilterTestCase
 │   ├── bootstrap.php        WordPress function stubs
 │   └── .cache/              PHPUnit result cache (ignored)
-├── playwright/              Playwright against wp-env or DDEV
-│   ├── playwright.config.ts
-│   ├── global-setup.ts      creates the test users before the run
-│   ├── reporters/           accessibility HTML/JSON reporter
-│   ├── tests/
-│   │   ├── admin/           settings, recipes, CSV import, bulk add
-│   │   ├── frontend/
-│   │   │   ├── browse/      browse, search, filters, sorting
-│   │   │   └── home/        home page
-│   │   ├── accessibility/   axe checks for public and single-recipe pages
-│   │   └── security/        XSS and import/migrate authorization
-│   ├── test-data/images/    image fixtures
-│   └── utils/               auth, fixtures, forms, settings, WP-CLI, accessibility
-└── backstop/                BackstopJS workspace (configuration pending)
+└── playwright/              Playwright against wp-env or DDEV
+    ├── playwright.config.ts
+    ├── global-setup.ts      creates the test users before the run
+    ├── reporters/           accessibility HTML/JSON reporter
+    ├── tests/
+    │   ├── admin/           settings, recipes, CSV import, bulk add
+    │   ├── frontend/
+    │   │   ├── browse/      browse, search, filters, sorting
+    │   │   ├── home/        home page
+    │   │   └── recipe/      the seed's full recipe: every feature on the single recipe page
+    │   ├── accessibility/   axe checks for public and single-recipe pages
+    │   └── security/        XSS and import/migrate authorization
+    ├── test-data/images/    image fixtures
+    └── utils/               auth, fixtures, forms, settings, WP-CLI, accessibility
 ```
 
 CSV import tests use the plugin's `sample-data/` directory instead of keeping a
@@ -75,17 +75,6 @@ bun run test:e2e:report
 The Playwright suite is intentionally serial because the admin tests change
 settings and import data that later tests depend on. Keep tests that mutate
 shared state in the same `test.describe.configure({ mode: 'serial' })` block.
-
-## Visual regression
-
-The BackstopJS file layout and scenario plan are documented in
-`cooked-notes/backstop-test-plan.md`.
-
-```bash
-bun run test:visual
-bun run test:visual:ref
-bun run test:visual:approve
-```
 
 ## Future work
 

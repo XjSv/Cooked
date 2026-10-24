@@ -1,20 +1,19 @@
 import { test } from '../../utils/fixtures';
 import { expectAccessible } from '../../utils/a11y';
-import { SEED_RECIPES } from '../../utils/seed';
+import { fullRecipeId } from '../../utils/seed';
 import { ADMIN_USER } from '../../utils/users';
 import { wpCliArgs } from '../../utils/wp-cli';
 
-// The recipe editor's new layout: the Cooked meta box (Layout tab) and the Allergens box, in
-// light and dark mode, with the Difficulty select open and a help tooltip showing; the
-// Nutrition tab with its label filled in; and the Shortcodes tab with every options table open. TinyMCE's
+// The recipe editor's new layout, on the seed's full recipe so every tab has content: the Cooked
+// meta box (Layout tab) and the Allergens box, in light and dark mode, with the Difficulty select
+// open and a help tooltip showing; the Ingredients, Directions, Nutrition and Gallery tabs; and
+// the Shortcodes tab with every options table open. TinyMCE's
 // toolbars are WordPress core markup (unnamed buttons nested in role="button" containers on
 // every classic editor), so the scans skip them.
 
 const TINYMCE_TOOLBARS = '.mce-toolbar-grp';
 
-function seedRecipeId(): string {
-  return wpCliArgs(['post', 'list', '--post_type=cp_recipe', `--title=${SEED_RECIPES.bread.title}`, '--field=ID']).split('\n')[0];
-}
+const seedRecipeId = fullRecipeId;
 
 for (const theme of ['light', 'dark'] as const) {
   test.describe(`Recipe editor accessibility (${theme})`, () => {
@@ -59,6 +58,17 @@ for (const theme of ['light', 'dark'] as const) {
         await expectAccessible(page, { include: ['.cooked-tooltip-floating'] });
       });
     });
+
+    for (const tab of ['ingredients', 'directions', 'gallery'] as const) {
+      test(`${tab[0].toUpperCase()}${tab.slice(1)} tab`, async ({ adminContext }) => {
+        const page = await adminContext.newPage();
+        await page.goto(`/wp-admin/post.php?post=${seedRecipeId()}&action=edit`, { waitUntil: 'networkidle' });
+        await page.locator(`#cooked-recipe-tab-${tab}`).click();
+        await page.locator(`#cooked-recipe-tab-content-${tab}`).waitFor();
+        await page.waitForFunction(() => document.getAnimations().length === 0);
+        await expectAccessible(page, { include: [`#cooked-recipe-tab-content-${tab}`], exclude: [TINYMCE_TOOLBARS] });
+      });
+    }
 
     test('Nutrition tab', async ({ adminContext }) => {
       const page = await adminContext.newPage();

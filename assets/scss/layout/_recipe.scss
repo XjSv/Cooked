@@ -11,7 +11,9 @@ body .cooked-post-featured-image img {
     display: block;
     width: 100%;
     height: auto;
-    border-radius: 12px;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border-radius: var(--cooked-radius);
 }
 
 /* Ingredients */
@@ -92,18 +94,20 @@ body .cooked-post-featured-image img {
 }
 
 /* Substitution Styles */
+/* Each substitute on its own line under the ingredient, one step in. */
 .cooked-ingredient-substitution {
+    display: block;
+    margin: 0.1rem 0 0 1rem;
+    color: var(--cooked-color-text-muted);
+    font-size: 0.92em;
     font-style: italic;
-    color: #777;
-    margin-left: 5px;
-    display: inline-block;
 }
 
 .cooked-ing-sub-label {
     font-style: normal;
     font-weight: 600;
     font-size: 0.85em;
-    color: #999;
+    color: var(--cooked-color-text-muted);
     margin-right: 2px;
 }
 
@@ -129,13 +133,16 @@ body .cooked-post-featured-image img {
     font-size: inherit;
 }
 
+/* Capped by width, not max-width, so a theme's img { max-width: 100% } (often ID-scoped) cannot undo it. */
 .cooked-recipe-directions .cooked-direction img {
+    display: block;
+    width: min(100%, 36rem);
     max-width: 100%;
     height: auto;
-    display: block;
-    margin: 0 0 2rem;
+    margin: 0.75rem 0 2rem;
     padding: 0;
     border: none;
+    border-radius: var(--cooked-radius);
 }
 
 .cooked-recipe-directions .cooked-direction.cooked-direction-has-number .cooked-dir-content {
@@ -153,7 +160,7 @@ body .cooked-post-featured-image img {
 }
 
 .cooked-recipe-directions .cooked-direction-number {
-    opacity: 0.35;
+    color: var(--cooked-main-color, #128666);
     position: absolute;
     display: inline-block;
     width: auto;
@@ -172,56 +179,63 @@ body .cooked-post-featured-image img {
     margin: 0 0 1rem;
 }
 
-/* Info */
+/* Info: author, category, times and the like, as a row that wraps. */
 .cooked-recipe-info {
-    display: block;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    margin: 0 0 1.5rem;
     padding: 0;
-    margin: 0 0 1rem;
+}
+
+.cooked-recipe-info > section.cooked-left,
+.cooked-recipe-info > section.cooked-right {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    float: none;
+    width: auto;
+}
+
+.cooked-recipe-info > section.cooked-right {
+    margin-left: auto;
 }
 
 .cooked-recipe-info > span,
-.cooked-recipe-info > section.cooked-left > span {
-    line-height: 1.25rem;
+.cooked-recipe-info > section > span {
     position: relative;
-    box-sizing: border-box;
-    vertical-align: top;
-    margin: 0 2rem 1rem 0;
     display: inline-block;
+    box-sizing: border-box;
     width: auto;
-}
-
-.cooked-recipe-info > section.cooked-right > span {
+    margin: 0;
     line-height: 1.3rem;
-    position: relative;
-    box-sizing: border-box;
     vertical-align: top;
-    margin: 0 0 1rem 2rem;
-    display: inline-block;
-    width: auto;
-}
-
-.cooked-recipe-info > span:last-child,
-.cooked-recipe-info > section.cooked-left > span:last-child {
-    margin-right: 0;
-}
-
-.cooked-recipe-info > section.cooked-right > span:first-child {
-    margin-left: 0;
 }
 
 .cooked-recipe-info strong {
-    font-size: 0.75rem;
-    letter-spacing: 0.03rem;
-    font-weight: 800;
-    text-transform: uppercase;
     display: block;
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.03rem;
+    text-transform: uppercase;
 }
 
 /* Notes */
 .cooked-recipe-notes {
     display: block;
-    padding: 0;
     margin: 0 0 2rem;
+    padding: 1rem 1.25rem;
+    border-left: 3px solid var(--cooked-main-color, #128666);
+    border-radius: 0 var(--cooked-radius) var(--cooked-radius) 0;
+    background: var(--cooked-color-surface-muted);
+    background: color-mix(in srgb, var(--cooked-main-color, #128666) 6%, transparent);
+}
+
+.cooked-recipe-notes > :last-child {
+    margin-bottom: 0;
 }
 
 .cooked-recipe-notes .cooked-heading {

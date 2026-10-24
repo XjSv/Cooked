@@ -1,21 +1,30 @@
 /* Timer */
-.cooked-timer {
-    padding-left: 2px;
-}
-
-.cooked-timer i.cooked-icon {
-    opacity: 0.6;
-}
-
+/* A timer in a direction: the marked text, with a small clock after it. */
 body .cooked-timer a {
     font-weight: 600;
     color: inherit;
     cursor: pointer;
-    text-decoration: none;
+    text-decoration: underline dotted;
+    text-decoration-color: var(--cooked-main-color, #128666);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
 }
 
 body .cooked-timer a:hover {
-    text-decoration: none;
+    text-decoration-style: solid;
+}
+
+body .cooked-timer a:focus-visible {
+    outline: 2px solid var(--cooked-main-color, #128666);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.cooked-timer i.cooked-icon {
+    margin-left: 0.3em;
+    color: var(--cooked-main-color, #128666);
+    font-size: 0.75em;
+    vertical-align: 0.05em;
 }
 
 body .cooked-timer a:focus-visible {

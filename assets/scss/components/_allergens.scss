@@ -50,10 +50,44 @@
     padding: 0 1rem 0.4rem;
 }
 
-.cooked-recipe-info .cooked-allergens-info .cooked-allergens {
-    display: inline-flex;
-    margin: 0;
-    vertical-align: middle;
+/* The name is read out everywhere, and shown as a chip on the recipe page. */
+.cooked-allergen-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.cooked-recipe-info .cooked-allergens {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin: 0.35rem 0 0;
+}
+
+.cooked-recipe-info .cooked-allergen {
+    gap: 0.35rem;
+    padding: 0.2rem 0.65rem 0.2rem 0.45rem;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: 999px;
+    color: var(--cooked-color-text);
+    font-size: 0.8rem;
+    line-height: 1.4;
+
+    .cooked-icon {
+        color: var(--cooked-color-text-muted);
+        font-size: 1.1rem;
+    }
+
+    .cooked-allergen-name {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
+    }
 }
 
 .cooked-recipe-directions .cooked-direction video.cooked-direction-video {

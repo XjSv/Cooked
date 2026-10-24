@@ -28,6 +28,7 @@ class Allergens {
      * Initialize allergen hooks.
      *
      * @since 1.15.0
+     * @return void
      */
     public static function init() {
         // Hooks use the pre-2.0 class name so remove_action()/remove_filter() calls keep matching.
@@ -49,7 +50,7 @@ class Allergens {
      * Recipe card hooks used by Cooked list styles.
      *
      * @since 1.15.0
-     * @return array
+     * @return string[] Hook names.
      */
     public static function get_recipe_card_hooks() {
         return apply_filters(
@@ -66,8 +67,8 @@ class Allergens {
      * Add allergen display settings to the General settings tab.
      *
      * @since 1.15.0
-     * @param array $settings Settings tabs and fields.
-     * @return array
+     * @param array<string, mixed> $settings Settings tabs and fields.
+     * @return array<string, mixed>
      */
     public static function settings_tabs_fields( $settings ) {
         if ( ! isset( $settings['recipe_settings']['fields'] ) ) {
@@ -117,6 +118,7 @@ class Allergens {
      * Register the allergens meta box for the sidebar.
      *
      * @since 1.15.0
+     * @return void
      */
     public static function register_meta_box() {
         add_meta_box(
@@ -134,6 +136,7 @@ class Allergens {
      *
      * @since 1.15.0
      * @param \WP_Post $post The post object.
+     * @return void
      */
     public static function render_meta_box( $post ) {
         $recipe_settings = get_post_meta( $post->ID, '_recipe_settings', true );
@@ -147,7 +150,8 @@ class Allergens {
      * Render allergen checkbox field markup (admin metabox and front-end form).
      *
      * @since 1.15.0
-     * @param array $selected Selected allergen storage keys.
+     * @param string[] $selected Selected allergen storage keys.
+     * @return void
      */
     public static function render_field_checkboxes( $selected = [] ) {
         if ( ! is_array( $selected ) ) {
@@ -177,8 +181,8 @@ class Allergens {
      * Whitelist selected allergen keys against known definitions.
      *
      * @since 1.15.0
-     * @param array $selected Submitted allergen keys.
-     * @return array
+     * @param mixed[] $selected Submitted allergen keys.
+     * @return string[]
      */
     public static function sanitize_selected( $selected ) {
         if ( ! is_array( $selected ) ) {
@@ -194,7 +198,7 @@ class Allergens {
      * Get the list of major allergens (FDA + EU).
      *
      * @since 1.15.0
-     * @return array
+     * @return array<string, array{label: string, icon: string}>
      */
     public static function get_allergens() {
         return apply_filters(
@@ -264,7 +268,7 @@ class Allergens {
      * Get the CookedIcons class for an allergen.
      *
      * @since 1.15.0
-     * @param array $allergen Allergen definition.
+     * @param array{label: string, icon: string} $allergen Allergen definition.
      * @return string
      */
     public static function get_icon_class( $allergen ) {
@@ -275,7 +279,8 @@ class Allergens {
      * Render allergen badges from recipe array (used in hooks).
      *
      * @since 1.15.0
-     * @param array $recipe Recipe data array with 'id' key.
+     * @param array<string, mixed> $recipe Recipe data array with 'id' key.
+     * @return void
      */
     public static function render_from_recipe( $recipe ) {
         if ( ! self::show_on_recipe_cards() ) {
@@ -294,7 +299,7 @@ class Allergens {
      * Render allergen badges HTML.
      *
      * @since 1.15.0
-     * @param array $recipe_settings Recipe settings array.
+     * @param array<string, mixed>|null $recipe_settings Recipe settings array.
      * @return string HTML output.
      */
     public static function render( $recipe_settings ) {
@@ -313,11 +318,12 @@ class Allergens {
 
             $allergen = $allergens[ $key ];
             $output  .= sprintf(
-                '<span class="cooked-allergen cooked-allergen-%1$s" title="%2$s"><i class="cooked-icon %3$s" aria-hidden="true"></i></span>',
+                '<span class="cooked-allergen cooked-allergen-%1$s" title="%2$s"><i class="cooked-icon %3$s" aria-hidden="true"></i><span class="cooked-allergen-name">%4$s</span></span>',
                 esc_attr( $key ),
                 /* translators: %s: allergen name */
                 esc_attr( sprintf( __( 'Contains %s', 'cooked' ), $allergen['label'] ) ),
-                esc_attr( self::get_icon_class( $allergen ) )
+                esc_attr( self::get_icon_class( $allergen ) ),
+                esc_html( $allergen['label'] )
             );
         }
 
@@ -330,8 +336,8 @@ class Allergens {
      * Register `allergens` in the [cooked-info] default info array.
      *
      * @since 1.15.0
-     * @param array $info Default info array.
-     * @return array
+     * @param array<string, string> $info Default info array.
+     * @return array<string, string>
      */
     public static function register_info_field( $info ) {
         $info['allergens'] = __( 'Allergens', 'cooked' );
@@ -342,8 +348,8 @@ class Allergens {
      * Register the handler that renders the `allergens` info field.
      *
      * @since 1.15.0
-     * @param array $methods Method map keyed by function name.
-     * @return array
+     * @param array<string, string> $methods Method map keyed by function name.
+     * @return array<string, string>
      */
     public static function register_info_method( $methods ) {
         $methods['cooked_info_allergens'] = 'Cooked_Allergens';
@@ -354,8 +360,8 @@ class Allergens {
      * Add `allergens` to the documented variables in the Shortcodes tab.
      *
      * @since 1.15.0
-     * @param array $vars Documented variables.
-     * @return array
+     * @param array<string, string> $vars Documented variables.
+     * @return array<string, string>
      */
     public static function register_info_var( $vars ) {
         $vars['allergens'] = __( 'Allergens', 'cooked' );
@@ -368,7 +374,8 @@ class Allergens {
      * Outputs nothing when no allergens are selected on the recipe.
      *
      * @since 1.15.0
-     * @param array $recipe_settings Recipe settings array.
+     * @param array<string, mixed> $recipe_settings Recipe settings array.
+     * @return void
      */
     public static function cooked_info_allergens( $recipe_settings ) {
         $html = self::render( $recipe_settings );

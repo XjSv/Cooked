@@ -45,7 +45,7 @@ echo '<article class="' . esc_attr( implode( ' ', $recipe_classes ) ) . ' cooked
 
         do_action( 'cooked_recipe_grid_after_name', $recipe );
 
-if ( ( ! in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) || ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && ! $recipe_settings['excerpt'] && in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) ) :
+if ( ( ! in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) || ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && empty( $recipe_settings['excerpt'] ) && in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) ) :
 	echo '<span class="cooked-recipe-card-sep"></span>';
         endif;
 
@@ -61,13 +61,13 @@ if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true 
 
         do_action( 'cooked_recipe_grid_after_author', $recipe );
 
-if ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && $recipe_settings['excerpt'] ) :
+if ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && ! empty( $recipe_settings['excerpt'] ) ) :
 	echo '<span class="cooked-recipe-card-sep"></span>';
         endif;
 
         do_action( 'cooked_recipe_grid_before_excerpt', $recipe );
 
-if ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && $recipe_settings['excerpt'] ) :
+if ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && ! empty( $recipe_settings['excerpt'] ) ) :
 	if ( ( isset( $args['hide_excerpt'] ) && 'true' !== $args['hide_excerpt'] ) ) :
 		echo '<span class="cooked-recipe-card-excerpt">' . wp_kses_post( $recipe_settings['excerpt'] ) . '</span>';
 	endif;

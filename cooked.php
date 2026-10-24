@@ -5,13 +5,13 @@
  * Description: 	    A recipe plugin for WordPress.
  * Author:              Gora Tech
  * Author URI: 	        https://goratech.dev
- * Version: 		    1.16.2
+ * Version: 		    1.17.0
  * Text Domain: 	    cooked
  * Domain Path: 	    /languages
  * License:     	    GPLv2 or later
  * License URI:         https://www.gnu.org/licenses/gpl-2.0.html
  * Requires at least:   6.8
- * Tested up to:        7.1
+ * Tested up to:        7.2
  * Requires PHP:        7.4
  * Contributors:        xjsv, mgiannopoulos24, boxystudio
  * Tags:                recipe, recipes, food, cooking, nutrition
@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 define( 'COOKED_DEV', false );
-define( 'COOKED_VERSION', '1.16.2' );
+define( 'COOKED_VERSION', '1.17.0' );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
 

@@ -1291,8 +1291,17 @@ var cookedSortableTouchHandler = function(event) {
         if ( $_CookedNutritionFactsTab.length ) {
             init_nutrition_facts( $_CookedNutritionFactsTab );
 
-            $_CookedNutritionFactsTab.on('keyup', 'input', function(e) {
+            // input: typing, pasting and the number arrows; keyup kept for old browsers.
+            $_CookedNutritionFactsTab.on('input keyup', 'input', function(e) {
                 init_nutrition_facts( $_CookedNutritionFactsTab );
+            });
+
+            // New layout: empty every field (after confirming), and the label with them.
+            $_CookedNutritionFactsTab.on('click', '.cooked-nutrition-clear', function() {
+                if ( window.confirm( cooked_admin_functions_js_vars.i18n_confirm_clear_nutrition ) ) {
+                    $_CookedNutritionFactsTab.find('input[name^="_recipe_settings[nutrition]"]').not('[type="hidden"]').val('');
+                    init_nutrition_facts( $_CookedNutritionFactsTab );
+                }
             });
         }
 
@@ -1499,6 +1508,12 @@ function cooked_init_gallery_sorting() {
 
 /** Syncs nutrition tab inputs with the live nutrition label preview (values and daily-value percents). */
 function init_nutrition_facts( nutritionTab ) {
+    // New layout: an empty state in place of a label with nothing on it.
+    var hasValues = nutritionTab.find('input[name^="_recipe_settings[nutrition]"]').not('[type="hidden"]').filter(function() {
+        return jQuery.trim(this.value) !== '';
+    }).length > 0;
+    nutritionTab.find('.cooked-nutrition-stage').toggleClass('is-empty', !hasValues);
+
     nutritionTab.find('input').each(function() {
         var thisInput = jQuery(this),
             thisID = thisInput.attr('id'),

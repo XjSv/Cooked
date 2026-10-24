@@ -5,8 +5,8 @@ import { ADMIN_USER } from '../../utils/users';
 import { wpCliArgs } from '../../utils/wp-cli';
 
 // The recipe editor's new layout: the Cooked meta box (Layout tab) and the Allergens box, in
-// light and dark mode, with the Difficulty select open and a help tooltip showing; and the
-// Shortcodes tab with every options table open. TinyMCE's
+// light and dark mode, with the Difficulty select open and a help tooltip showing; the
+// Nutrition tab with its label filled in; and the Shortcodes tab with every options table open. TinyMCE's
 // toolbars are WordPress core markup (unnamed buttons nested in role="button" containers on
 // every classic editor), so the scans skip them.
 
@@ -58,6 +58,20 @@ for (const theme of ['light', 'dark'] as const) {
         });
         await expectAccessible(page, { include: ['.cooked-tooltip-floating'] });
       });
+    });
+
+    test('Nutrition tab', async ({ adminContext }) => {
+      const page = await adminContext.newPage();
+      await page.goto(`/wp-admin/post.php?post=${seedRecipeId()}&action=edit`, { waitUntil: 'networkidle' });
+      await page.locator('#cooked-recipe-tab-nutrition').click();
+      await page.locator('#cooked-recipe-tab-content-nutrition .cooked-nutrition-layout').waitFor();
+
+      // Some values, so the label's rows and % Daily Values show.
+      await page.fill('#servings', '4');
+      await page.fill('#calories', '320');
+      await page.fill('#fat', '12');
+      await page.fill('#sat_fat', '3');
+      await expectAccessible(page, { include: ['#cooked-recipe-tab-content-nutrition'] });
     });
 
     test('Shortcodes tab', async ({ adminContext }) => {

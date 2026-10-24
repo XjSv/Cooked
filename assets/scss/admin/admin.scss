@@ -37,5 +37,6 @@
 @use 'layout/recipe-editor-directions';
 @use 'layout/recipe-editor-gallery';
 @use 'layout/recipe-editor-shortcodes';
+@use 'layout/recipe-editor-nutrition';
 @use 'components/tom-select';
 @use 'layout/dark'; // last: overrides the light colours above

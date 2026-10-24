@@ -389,10 +389,10 @@
             }
         }
 
-        // Tabs not redesigned yet (Directions, Nutrition, Gallery, Shortcodes):
-        // their older styles have fixed light colours.
+        // The classic layout's tabs: their older styles have fixed light colours. (The new
+        // Nutrition tab's label keeps the recipe page's black values on its white card.)
         #cooked_recipe_settings h3.cooked-settings-title,
-        #cooked_recipe_settings #cooked-nutrition-label .cooked-nut-label {
+        #cooked_recipe_settings .recipe-setting-block #cooked-nutrition-label .cooked-nut-label {
             color: var(--cooked-color-accent-strong);
         }
 
@@ -471,10 +471,6 @@
             background: #fff;
             color: #1e1e1e;
 
-            .cooked-nut-label {
-                color: #0173aa;
-            }
-
             h2,
             strong,
             p,
@@ -486,6 +482,11 @@
             a {
                 color: #007a55;
             }
+        }
+
+        // The classic layout's label shows the entered values in blue (the new one keeps them black).
+        #cooked_recipe_settings .recipe-setting-block #cooked-nutrition-label .cooked-nut-label {
+            color: #0173aa;
         }
 
         // Bulk Add modal (rendered at the end of <body>).

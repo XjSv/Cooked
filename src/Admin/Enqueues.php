@@ -477,6 +477,7 @@ class Enqueues {
                     'i18n_applied'                         => __( 'Applied', 'cooked' ),
                     'i18n_confirm_save_default_all'        => __( 'Are you sure you want to apply this new template to all of your recipes?', 'cooked' ),
                     'i18n_confirm_load_default'            => __( 'Are you sure you want to reset this recipe template to the Cooked plugin default?', 'cooked' ),
+                    'i18n_confirm_clear_nutrition'         => __( 'Clear every nutrition value for this recipe? Nothing is saved until you update the recipe.', 'cooked' ),
                     /* translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration. */
                     'i18n_confirm_migrate_recipes'         => sprintf( __( 'Please confirm that you are ready to migrate all %s recipes.', 'cooked' ), number_format( $total_old_recipes ) ),
                     'i18n_confirm_import_recipes'          => __( 'Please confirm that you are ready to import all recipes.', 'cooked' ),

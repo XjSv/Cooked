@@ -64,8 +64,11 @@
     font-size: 0.9rem;
 }
 
-#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-servings p {
+// "4 servings": a list item (it was a <p> directly in the list).
+#cooked_recipe_settings #cooked-nutrition-label ul.cooked-nut-servings .cooked-nut-servings-count {
+    margin: 0;
     font-size: 1.5rem;
+    line-height: 1.4;
 }
 
 #cooked_recipe_settings #cooked-nutrition-label ul {

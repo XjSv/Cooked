@@ -63,7 +63,87 @@ body.cooked-recipe-editor {
     }
 
     /* Tabs */
+    // The bar is the sticky part here (the classic layout makes the list itself sticky), so the
+    // arrows stay over the ends of the scrolling list.
+    .cooked-recipe-tabs-bar {
+        position: sticky;
+        top: var(--wp-admin--admin-bar--height, 0px);
+        z-index: 1000;
+
+        @media screen and (max-width: 600px) {
+            top: 0;
+        }
+    }
+
+    &.mce-fullscreen .cooked-recipe-tabs-bar {
+        z-index: auto;
+    }
+
+    .cooked-recipe-tabs-arrow {
+        display: none;
+        flex: none;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        width: 30px;
+        height: 30px;
+        padding: 0;
+        border: 1px solid var(--cooked-color-border);
+        border-radius: 50%;
+        background: var(--cooked-color-surface);
+        color: var(--cooked-color-text-muted);
+        cursor: pointer;
+        transition: color 200ms ease, border-color 200ms ease, opacity 200ms ease;
+
+        &:hover:not(:disabled) {
+            border-color: var(--cooked-color-accent);
+            color: var(--cooked-color-accent-strong);
+        }
+
+        &:disabled {
+            opacity: 0.35;
+            cursor: default;
+        }
+
+        &:focus-visible {
+            outline: var(--cooked-focus-ring);
+            outline-offset: 1px;
+        }
+
+        .cooked-icon {
+            font-size: 14px;
+            line-height: 1;
+        }
+    }
+
+    // Shown only while the tabs are wider than the box, either side of the tabs that fit whole
+    // (cooked-admin-functions.js); disabled at either end.
+    .cooked-recipe-tabs-bar.has-overflow {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 8px;
+        border-bottom: 1px solid var(--cooked-color-border);
+        background: var(--cooked-color-surface);
+
+        .cooked-recipe-tabs-arrow {
+            display: inline-flex;
+        }
+
+        #cooked-recipe-tabs {
+            flex: 0 1 auto;
+            min-width: 0;
+            padding: 0;
+            overflow: hidden;
+            border-bottom: 0;
+        }
+    }
+
     #cooked-recipe-tabs {
+        position: relative; // the underline's box; the bar is the sticky part
+        top: auto;
+        z-index: auto; // under the arrows
         display: flex;
         gap: 28px;
         padding: 0 32px;
@@ -103,8 +183,12 @@ body.cooked-recipe-editor {
         }
     }
 
-    #cooked_recipe_settings.stuck #cooked-recipe-tabs {
+    #cooked_recipe_settings.stuck .cooked-recipe-tabs-bar {
         box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.2);
+    }
+
+    #cooked_recipe_settings.stuck #cooked-recipe-tabs {
+        box-shadow: none;
     }
 
     #cooked-recipe-tabs li,
@@ -123,10 +207,18 @@ body.cooked-recipe-editor {
         transition: color 200ms ease;
     }
 
+    // Icon and label centred on each other (the icon box is shorter than the label's line).
+    // Conditionally hidden tabs keep their display: none.
+    #cooked-recipe-tabs li:not(.cooked-conditional-hidden) {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
     #cooked-recipe-tabs li .cooked-icon {
-        margin-right: 6px;
+        margin: 0;
         font-size: 13px;
-        vertical-align: -1px;
+        line-height: 1;
     }
 
     #cooked-recipe-tabs li:hover,
@@ -480,9 +572,39 @@ body.cooked-recipe-editor {
         }
     }
 
+    // Room for the Visual / Code switch (about 172px). The wrap in the Code view's selector
+    // outranks the toolbar's padding further down.
     .cooked-recipe-fields div.mce-toolbar-grp > div,
-    .cooked-recipe-fields .quicktags-toolbar {
-        padding-right: 180px; // room for the Visual / Code switch (about 172px)
+    .cooked-recipe-fields .wp-editor-wrap .quicktags-toolbar {
+        padding-right: 180px;
+    }
+
+    // On a phone that room would leave the buttons a narrow column: the switch gets a row of
+    // its own above the toolbar instead.
+    @media screen and (max-width: 600px) {
+        .cooked-recipe-fields .wp-editor-tools {
+            position: static;
+            display: flex;
+            justify-content: flex-end;
+            padding: 6px 8px 2px;
+            background: var(--cooked-color-surface);
+        }
+
+        .cooked-recipe-fields .wp-editor-tools:has(.wp-editor-container) {
+            display: block;
+            padding: 0;
+
+            .wp-editor-tabs {
+                position: static;
+                width: max-content;
+                margin: 6px 8px 2px auto;
+            }
+        }
+
+        .cooked-recipe-fields div.mce-toolbar-grp > div,
+        .cooked-recipe-fields .wp-editor-wrap .quicktags-toolbar {
+            padding-right: 6px;
+        }
     }
 
     // Visual/Code: a segmented control whose thumb slides to the active side. WordPress

@@ -649,7 +649,100 @@ var cookedSortableTouchHandler = function(event) {
 
                 thisTab.addClass('active');
                 cooked_move_tab_indicator(true);
+                cooked_reveal_tab(this);
             });
+
+            // New layout: when the tabs are wider than the box, arrows either side page through
+            // them. The list is cut to the tabs that fit whole, so no label is ever cut off.
+            var tabsBar = $_CookedRecipeTabs.parent('.cooked-recipe-tabs-bar')[0],
+                tabsList = $_CookedRecipeTabs[0],
+                cooked_reveal_tab = function() {};
+            if (tabsBar) {
+                var arrowLeft = tabsBar.querySelector('.cooked-recipe-tabs-arrow.is-left'),
+                    arrowRight = tabsBar.querySelector('.cooked-recipe-tabs-arrow.is-right'),
+                    first = 0,
+                    room = 0,
+                    smooth = function() {
+                        return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+                    },
+                    shown = function() {
+                        return $_CookedRecipeTab.filter(':visible').get();
+                    },
+                    // Width of tabs[from..to], gaps included.
+                    span = function(tabs, from, to) {
+                        return tabs[to].offsetLeft + tabs[to].offsetWidth - tabs[from].offsetLeft;
+                    },
+                    // The last tab that fits whole after tabs[from], or the first one before tabs[to].
+                    lastFrom = function(tabs, from, room) {
+                        var to = from;
+                        while (to + 1 < tabs.length && span(tabs, from, to + 1) <= room) {
+                            to++;
+                        }
+                        return to;
+                    },
+                    firstTo = function(tabs, to, room) {
+                        var from = to;
+                        while (from > 0 && span(tabs, from - 1, to) <= room) {
+                            from--;
+                        }
+                        return from;
+                    },
+                    layout = function(animate) {
+                        var tabs = shown();
+                        tabsList.style.width = '';
+                        tabsBar.classList.remove('has-overflow');
+                        if (!tabs.length || tabsList.scrollWidth <= tabsList.clientWidth + 1) {
+                            tabsList.scrollLeft = 0;
+                            cooked_move_tab_indicator(false);
+                            return;
+                        }
+                        tabsBar.classList.add('has-overflow');
+                        var last;
+                        room = tabsList.clientWidth;
+                        first = Math.min(first, tabs.length - 1);
+                        // Fill the last page rather than leave it short.
+                        first = Math.min(first, firstTo(tabs, tabs.length - 1, room));
+                        last = lastFrom(tabs, first, room);
+                        tabsList.style.width = Math.ceil(span(tabs, first, last)) + 'px';
+                        tabsList.scrollTo({ left: tabs[first].offsetLeft - tabs[0].offsetLeft, behavior: animate ? smooth() : 'auto' });
+                        arrowLeft.disabled = first === 0;
+                        arrowRight.disabled = last === tabs.length - 1;
+                        tabsBar.dataset.last = last;
+                        cooked_move_tab_indicator(false);
+                    },
+                    page = function(direction) {
+                        var tabs = shown(),
+                            last = parseInt(tabsBar.dataset.last, 10);
+                        first = direction > 0 ? Math.min(last + 1, tabs.length - 1) : firstTo(tabs, Math.max(first - 1, 0), room);
+                        layout(true);
+                    };
+                cooked_reveal_tab = function(tab) {
+                    var index = shown().indexOf(tab);
+                    if (tabsBar.classList.contains('has-overflow') && index > -1 && (index < first || index > parseInt(tabsBar.dataset.last, 10))) {
+                        first = index;
+                        layout(true);
+                    }
+                };
+                arrowLeft.addEventListener('click', function() {
+                    page(-1);
+                });
+                arrowRight.addEventListener('click', function() {
+                    page(1);
+                });
+                $(window).on('load resize', function() {
+                    layout(false);
+                });
+                // Tabs shown or hidden by a setting (data-condition) change what fits.
+                if ('ResizeObserver' in window) {
+                    var tabsObserver = new ResizeObserver(function() {
+                        layout(false);
+                    });
+                    $_CookedRecipeTab.each(function() {
+                        tabsObserver.observe(this);
+                    });
+                }
+                layout(false);
+            }
         }
 
         // Settings Tabs

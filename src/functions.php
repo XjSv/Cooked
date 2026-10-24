@@ -256,6 +256,12 @@ function cooked_render_recipe_fields( $post_id ) {
     }
 
     if ( ! empty( $recipe_tabs ) ) :
+        // New layout: arrows either side scroll the tabs when they don't fit (cooked-admin-functions.js).
+        $tab_arrows = ! Cooked_Admin_Enqueues::use_classic_ui();
+        if ( $tab_arrows ) :
+            echo '<div class="cooked-recipe-tabs-bar">';
+            echo '<button type="button" class="cooked-recipe-tabs-arrow is-left" aria-label="' . esc_attr__( 'Scroll tabs left', 'cooked' ) . '" disabled><i class="cooked-icon cooked-icon-angle-left" aria-hidden="true"></i></button>';
+        endif;
         echo '<ul id="cooked-recipe-tabs">';
         $first_tab = true;
 
@@ -277,6 +283,10 @@ endif;
         endforeach;
 
         echo '</ul>';
+        if ( $tab_arrows ) :
+            echo '<button type="button" class="cooked-recipe-tabs-arrow is-right" aria-label="' . esc_attr__( 'Scroll tabs right', 'cooked' ) . '" disabled><i class="cooked-icon cooked-icon-angle-right" aria-hidden="true"></i></button>';
+            echo '</div>';
+        endif;
 
     endif;
     ?>

@@ -132,9 +132,10 @@ body.cooked-recipe-editor {
         }
 
         #cooked-recipe-tabs {
+            box-sizing: content-box;
             flex: 0 1 auto;
             min-width: 0;
-            padding: 0;
+            padding: 0 6px; // room for the focus ring at either end
             overflow: hidden;
             border-bottom: 0;
         }
@@ -224,6 +225,16 @@ body.cooked-recipe-editor {
     #cooked-recipe-tabs li:hover,
     #cooked-recipe-tabs li.active {
         color: var(--cooked-color-accent-strong);
+    }
+
+    #cooked-recipe-tabs li:focus {
+        outline: none;
+    }
+
+    #cooked-recipe-tabs li:focus-visible {
+        border-radius: var(--cooked-radius-sm);
+        outline: 2px solid var(--cooked-color-accent-strong);
+        outline-offset: 4px;
     }
 
     // Hover hint on inactive tabs, as on the admin frame's page tabs.

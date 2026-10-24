@@ -641,6 +641,43 @@ var cookedSortableTouchHandler = function(event) {
                 cooked_move_tab_indicator(false);
             });
 
+            // A tab list for keyboards and screen readers: the active tab is in the Tab order, the
+            // arrow keys (and Home / End) move between tabs, Enter or Space opens one.
+            $_CookedRecipeTabs.attr('role', 'tablist');
+            var cooked_mark_tabs = function() {
+                $_CookedRecipeTab.each(function() {
+                    var id = this.id.split('cooked-recipe-tab-')[1],
+                        active = $(this).hasClass('active');
+                    $(this).attr({ role: 'tab', 'aria-selected': active ? 'true' : 'false', 'aria-controls': 'cooked-recipe-tab-content-' + id, tabindex: active ? '0' : '-1' });
+                    $('#cooked-recipe-tab-content-' + id).attr({ role: 'tabpanel', 'aria-labelledby': this.id });
+                });
+            };
+            cooked_mark_tabs();
+
+            $_CookedRecipeTabs.on('keydown', 'li', function(e) {
+                var tabs = $_CookedRecipeTab.filter(':visible').get(),
+                    index = tabs.indexOf(this),
+                    next = null;
+                if ('Enter' === e.key || ' ' === e.key) {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                    return;
+                }
+                if ('ArrowRight' === e.key) {
+                    next = tabs[(index + 1) % tabs.length];
+                } else if ('ArrowLeft' === e.key) {
+                    next = tabs[(index - 1 + tabs.length) % tabs.length];
+                } else if ('Home' === e.key) {
+                    next = tabs[0];
+                } else if ('End' === e.key) {
+                    next = tabs[tabs.length - 1];
+                }
+                if (next) {
+                    e.preventDefault();
+                    $(next).trigger('click').trigger('focus');
+                }
+            });
+
             $_CookedRecipeTab.on('click', function(e) {
                 e.preventDefault();
                 $_CookedRecipeTab.removeClass('active');
@@ -658,6 +695,7 @@ var cookedSortableTouchHandler = function(event) {
                 $newTab.addClass('is-entering');
 
                 thisTab.addClass('active');
+                cooked_mark_tabs();
                 cooked_move_tab_indicator(true);
                 cooked_reveal_tab(this);
             });
@@ -708,7 +746,7 @@ var cookedSortableTouchHandler = function(event) {
                         }
                         tabsBar.classList.add('has-overflow');
                         var last;
-                        room = tabsList.clientWidth;
+                        room = tabsList.clientWidth - 12; // its side padding (the focus ring's room)
                         first = Math.min(first, tabs.length - 1);
                         // Fill the last page rather than leave it short.
                         first = Math.min(first, firstTo(tabs, tabs.length - 1, room));
@@ -902,8 +940,10 @@ var cookedSortableTouchHandler = function(event) {
         if ($_CookedIngredientBuilder.length) {
             cooked_reset_ingredient_builder();
 
+            // Enter (and in the classic layout Tab) in the last ingredient's name adds a row. The
+            // new layout leaves Tab alone, so it reaches the row's buttons and leaves the list.
             $_CookedIngredientBuilder.on('keydown', 'input[data-ingredient-part="name"]', function(e) {
-                if ( e.keyCode === 9 || e.keyCode === 13 ) {
+                if ( e.keyCode === 13 || ( e.keyCode === 9 && !e.shiftKey && !$('body').hasClass('cooked-recipe-editor') ) ) {
                     if ( $(this).parents('.cooked-ingredient-block').is(':last-child') ) {
                         e.preventDefault();
                         $('#cooked-recipe-tab-content-ingredients').find('.cooked-add-ingredient-button').trigger('click');

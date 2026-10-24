@@ -165,6 +165,15 @@ function load_plugin_textdomain( $domain, $deprecated, $plugin_rel_path ) { retu
  */
 function wpautop( $pee, $br = true ) { return $pee; }
 function make_clickable( $text ) { return $text; }
+$GLOBALS['_cooked_test_settings_errors'] = [];
+function add_settings_error( $setting, $code, $message, $type = 'error' ) {
+    $GLOBALS['_cooked_test_settings_errors'][] = [ 'setting' => $setting, 'code' => $code, 'message' => $message, 'type' => $type ];
+}
+function get_settings_errors( $setting = '' ) {
+    return array_values( array_filter( $GLOBALS['_cooked_test_settings_errors'], function ( $error ) use ( $setting ) {
+        return '' === $setting || $error['setting'] === $setting;
+    } ) );
+}
 function sanitize_hex_color( $color ) { if ( '' === $color ) { return ''; } return preg_match( '|^#([A-Fa-f0-9]{3}){1,2}$|', $color ) ? $color : null; }
 function is_serialized( $data ) { return is_string( $data ) && ( 'N;' === trim( $data ) || (bool) preg_match( '/^[aOsbidC]:/', trim( $data ) ) ); }
 function wp_unslash( $value ) { return is_string( $value ) ? stripslashes( $value ) : $value; }

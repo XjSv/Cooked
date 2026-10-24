@@ -15,6 +15,8 @@
 global $_cooked_settings;
 
 $stacked_types = [ 'html', 'permalink_field', 'migrate_button', 'misc_button', 'nonce' ];
+// Settings whose value was not kept on the last save: their rows are marked.
+$rejected_fields = Cooked_Settings::rejected_fields();
 
 foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
     echo '<div id="cooked-settings-tab-content-' . esc_attr( $tab_slug ) . '" class="cooked-settings-tab-content">';
@@ -56,7 +58,7 @@ foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
                 || in_array( $field['type'], $stacked_types, true )
                 || ( in_array( $field['type'], [ 'checkboxes', 'radio' ], true ) && is_array( $field_options ) && count( $field_options ) > 2 );
 
-            echo '<div' . wp_kses( $conditional_requirement, array() ) . ' class="recipe-setting-block cooked-setting-row ' . esc_attr( $field['type'] ) . ( $is_stacked ? ' is-stacked' : '' ) . esc_attr( $class ) . '">';
+            echo '<div' . wp_kses( $conditional_requirement, array() ) . ' class="recipe-setting-block cooked-setting-row ' . esc_attr( $field['type'] ) . ( $is_stacked ? ' is-stacked' : '' ) . ( in_array( $name, $rejected_fields, true ) ? ' has-error' : '' ) . esc_attr( $class ) . '">';
             // The grid lives on an inner wrapper: conditional fields toggle the row's display.
             echo '<div class="cooked-setting-row-inner">';
             if ( ! $notitle || $has_desc ) :

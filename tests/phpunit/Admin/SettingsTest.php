@@ -175,4 +175,30 @@ class SettingsTest extends TestCase {
             $prefixed
         );
     }
+
+    public function test_is_rejected_value_by_field_type() {
+        $number = [ 'type' => 'number_field' ];
+        $color  = [ 'type' => 'color_field' ];
+        $select = [ 'type' => 'select', 'options' => [ 'a' => 'A', 'b' => 'B' ] ];
+
+        $this->assertFalse( Cooked_Settings::is_rejected_value( '', $number ), 'empty means default' );
+        $this->assertFalse( Cooked_Settings::is_rejected_value( '750', $number ) );
+        $this->assertTrue( Cooked_Settings::is_rejected_value( 'wide', $number ) );
+        $this->assertTrue( Cooked_Settings::is_rejected_value( '-5', $number ) );
+        $this->assertFalse( Cooked_Settings::is_rejected_value( '#16a780', $color ) );
+        $this->assertTrue( Cooked_Settings::is_rejected_value( '#zzzzzz', $color ) );
+        $this->assertFalse( Cooked_Settings::is_rejected_value( 'b', $select ) );
+        $this->assertTrue( Cooked_Settings::is_rejected_value( 'c', $select ) );
+        $this->assertFalse( Cooked_Settings::is_rejected_value( 'anything', [ 'type' => 'text' ] ) );
+    }
+
+    public function test_rejected_fields_reads_the_reported_settings_errors() {
+        $GLOBALS['_cooked_test_settings_errors'] = [];
+        add_settings_error( 'cooked_settings_group', 'cooked_settings_updated', 'Saved', 'updated' );
+        add_settings_error( 'cooked_settings_group', 'cooked_invalid_main_color', 'Main Color: not valid', 'error' );
+        add_settings_error( 'general', 'cooked_invalid_elsewhere', 'Another group', 'error' );
+
+        $this->assertSame( [ 'main_color' ], Cooked_Settings::rejected_fields() );
+        $GLOBALS['_cooked_test_settings_errors'] = [];
+    }
 }

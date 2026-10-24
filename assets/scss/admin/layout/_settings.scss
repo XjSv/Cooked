@@ -120,6 +120,28 @@
         }
     }
 
+    // A value that was not kept on the last save (Cooked_Settings::rejected_fields()), and a
+    // field the browser finds invalid once it has been edited.
+    .cooked-setting-row.has-error {
+        margin: 0 -12px;
+        padding-right: 12px;
+        padding-left: 12px;
+        border-radius: var(--cooked-radius-sm);
+        background: rgba(214, 54, 56, 0.06);
+        box-shadow: inset 3px 0 0 var(--cooked-color-danger);
+
+        .cooked-setting-head .cooked-settings-title {
+            color: var(--cooked-color-danger);
+        }
+    }
+
+
+    .cooked-setting-control input:user-invalid,
+    .cooked-setting-row.has-error .cooked-setting-control input {
+        border-color: var(--cooked-color-danger);
+        box-shadow: 0 0 0 1px var(--cooked-color-danger);
+    }
+
     .cooked-setting-row-inner {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(240px, 0.9fr);
@@ -738,4 +760,10 @@
     @media screen and (max-width:500px) {
         font-size: 15px;
     }
+}
+
+// A setting whose value was not kept: its title too (the settings title rule carries two IDs,
+// _frame.scss).
+#cooked-admin-app #cooked_recipe_settings .cooked-setting-row.has-error h3.cooked-settings-title {
+    color: var(--cooked-color-danger);
 }

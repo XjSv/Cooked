@@ -152,6 +152,82 @@ class Settings {
     }
 
     /**
+     * Whether a submitted value can't be kept and will fall back to the field's default: a
+     * number field that isn't a number, a colour that isn't a hex colour, a choice that isn't
+     * one of the field's options. (Empty values are fine: they mean "use the default".)
+     *
+     * @since 2.0.0
+     * @param mixed                $value Submitted value.
+     * @param array<string, mixed> $field Field definition from tabs_fields().
+     * @return bool
+     */
+    public static function is_rejected_value( $value, $field ) {
+        if ( ! is_scalar( $value ) || '' === trim( (string) $value ) ) {
+            return false;
+        }
+        $value = trim( (string) $value );
+
+        switch ( $field['type'] ) {
+            case 'number_field':
+                return ! is_numeric( $value ) || (float) $value < 0;
+            case 'color_field':
+                return ! sanitize_hex_color( $value );
+            case 'select':
+            case 'radio':
+                return isset( $field['options'] ) && is_array( $field['options'] ) && ! array_key_exists( $value, $field['options'] );
+        }
+
+        return false;
+    }
+
+    /**
+     * Tells the person saving that a value was not kept (shown in the Settings card after the
+     * save, the row marked; templates/admin/parts/settings-fields.php). Once per field, though
+     * WordPress can run the sanitize callback twice on a first save.
+     *
+     * @since 2.0.0
+     * @param string               $field_name Setting key.
+     * @param array<string, mixed> $field      Field definition.
+     * @param mixed                $value      Submitted value.
+     * @return void
+     */
+    private static function report_rejected_value( $field_name, $field, $value ) {
+        static $reported = [];
+        if ( isset( $reported[ $field_name ] ) ) {
+            return;
+        }
+        $reported[ $field_name ] = true;
+
+        add_settings_error(
+            'cooked_settings_group',
+            'cooked_invalid_' . $field_name,
+            sprintf(
+                /* translators: 1: setting title, 2: the value that was entered */
+                __( '%1$s: "%2$s" is not a valid value, so the setting was set back to its default.', 'cooked' ),
+                wp_strip_all_tags( isset( $field['title'] ) ? (string) $field['title'] : $field_name ),
+                is_scalar( $value ) ? (string) $value : ''
+            ),
+            'error'
+        );
+    }
+
+    /**
+     * Setting keys whose submitted value was not kept on the last save (see report_rejected_value()).
+     *
+     * @since 2.0.0
+     * @return string[]
+     */
+    public static function rejected_fields() {
+        $fields = [];
+        foreach ( get_settings_errors( 'cooked_settings_group' ) as $error ) {
+            if ( isset( $error['code'] ) && 0 === strpos( (string) $error['code'], 'cooked_invalid_' ) ) {
+                $fields[] = substr( (string) $error['code'], strlen( 'cooked_invalid_' ) );
+            }
+        }
+        return $fields;
+    }
+
+    /**
      * Sanitizes the submitted settings field by field.
      *
      * @param array<string, mixed> $settings Submitted settings.
@@ -188,6 +264,9 @@ class Settings {
                     }
 
                     if ( isset( $settings[ $field_name ] ) ) {
+                        if ( self::is_rejected_value( $settings[ $field_name ], $field ) ) {
+                            self::report_rejected_value( $field_name, $field, $settings[ $field_name ] );
+                        }
                         $settings[ $field_name ] = self::sanitize_field_value( $settings[ $field_name ], $field );
                     }
                 }
@@ -1138,7 +1217,7 @@ class Settings {
         global $_cooked_settings;
 
         echo '<p>';
-            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" type="number" step="any" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
+            echo '<input aria-labelledby="' . esc_attr( self::title_id( $field_name ) ) . '" type="number" min="0" step="any" name="cooked_settings[' . esc_attr( $field_name ) . ']" value="' . ( isset( $_cooked_settings[ $field_name ] ) && $_cooked_settings[ $field_name ] ? esc_attr( $_cooked_settings[ $field_name ] ) : '' ) . '">';
         echo '</p>';
     }
 

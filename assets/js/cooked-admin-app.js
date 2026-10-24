@@ -817,12 +817,38 @@
                 }
             }
 
+            // A field the browser finds invalid on submit may be in a hidden section, where it can't
+            // be shown or focused (the save then does nothing): open its section, then let the
+            // browser show its message there.
+            var form = document.getElementById( 'cooked-settings-panel' ),
+                reporting = false;
+            function onInvalid( e ) {
+                var field = e.target,
+                    tab = field.closest && field.closest( '.cooked-settings-tab-content' );
+                if ( reporting || ! tab ) {
+                    return;
+                }
+                reporting = true;
+                e.preventDefault();
+                setSection( tab.id.replace( 'cooked-settings-tab-content-', '' ) );
+                window.setTimeout( function () {
+                    field.reportValidity();
+                    reporting = false;
+                }, 80 );
+            }
+            if ( form ) {
+                form.addEventListener( 'invalid', onInvalid, true );
+            }
+
             var content = contentRef.current;
             window.addEventListener( 'popstate', onPopState );
             content.addEventListener( 'click', onContentClick );
             return function () {
                 window.removeEventListener( 'popstate', onPopState );
                 content.removeEventListener( 'click', onContentClick );
+                if ( form ) {
+                    form.removeEventListener( 'invalid', onInvalid, true );
+                }
             };
         }, [] );
 

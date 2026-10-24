@@ -85,6 +85,8 @@ class Enqueues {
      */
     public static function recipe_editor_content_style( $template = false ) {
         $css = 'body{margin:12px 14px;color:#1e1e1e;font:14px/1.6 -apple-system,BlinkMacSystemFont,\'Segoe UI\',Roboto,Oxygen-Sans,Ubuntu,Cantarell,\'Helvetica Neue\',sans-serif}p{margin:0 0 10px}a{color:#007a55}';
+        // Cooked's thin green scrollbar (as in the frame's modals and menus), when the text overflows.
+        $css .= '::-webkit-scrollbar{width:6px;height:6px;background:transparent}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{border-radius:6px;background:rgba(0,192,134,.45)}::-webkit-scrollbar-thumb:hover{background:#00c086}@supports not selector(::-webkit-scrollbar){html{scrollbar-width:thin;scrollbar-color:rgba(0,192,134,.45) transparent}}';
         if ( $template ) {
             $css .= 'body{margin:12px}body>*{margin:0 0 8px;padding:8px 12px;border:1px solid #e3e5e8;border-radius:6px;background:#f6f7f8;color:#1e1e1e;font:13px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}body>ul,body>ol{padding-left:32px}';
             // Headings keep their box but read as headings.
@@ -530,6 +532,9 @@ class Enqueues {
                 wp_enqueue_style( 'cooked-tom-select' );
                 wp_enqueue_style( 'cooked-admin', COOKED_URL . 'assets/css/admin.min.css', [ 'cooked-tom-select' ], COOKED_VERSION );
                 wp_enqueue_style( 'wp-color-picker' );
+
+                // Styles inside the direction step editors that the script creates (new layout).
+                $cooked_js_vars['editor_content_style'] = self::use_classic_ui() ? '' : self::recipe_editor_content_style();
 
                 // Cooked Admin Script.
                 wp_localize_script( 'cooked-admin-functions', 'cooked_admin_functions_js_vars', $cooked_js_vars );

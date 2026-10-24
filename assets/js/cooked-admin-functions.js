@@ -1779,7 +1779,7 @@ function cooked_is_int(val) {
  * @return {Object}
  */
 function cooked_direction_editor_settings(textareaName) {
-    return {
+    var settings = {
         tinymce: {
             wpautop: false,
             toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,unlink,fullscreen',
@@ -1793,6 +1793,11 @@ function cooked_direction_editor_settings(textareaName) {
         quicktags: true,
         mediaButtons: false
     };
+    // New layout: the same look inside the editor as the Layout tab's (font, scrollbar, dark mode).
+    if ( typeof cooked_admin_functions_js_vars !== 'undefined' && cooked_admin_functions_js_vars.editor_content_style ) {
+        settings.tinymce.content_style = cooked_admin_functions_js_vars.editor_content_style;
+    }
+    return settings;
 }
 
 function cooked_init_conditional_field(thisID) {

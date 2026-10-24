@@ -749,6 +749,7 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
 .cooked-modal .cooked-modal-scroll-x,
 #cooked-admin-app .ts-dropdown .ts-dropdown-content,
 body.cooked-recipe-editor .ts-dropdown .ts-dropdown-content,
+body.cooked-recipe-editor .cooked-recipe-fields textarea,
 .cooked-bulk-add-modal .cooked-bulk-add-body {
     overscroll-behavior: contain;
     scroll-behavior: smooth;

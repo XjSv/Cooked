@@ -178,7 +178,7 @@ class Shortcodes {
 
         wp_enqueue_script( 'cooked-timer' );
 
-        return '<span class="cooked-timer"><a aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . esc_attr( $desc ) . '"><i class="cooked-icon cooked-icon-clock"></i> ' . wp_kses_post( $content ) . '</a></span>';
+        return '<span class="cooked-timer"><a role="button" tabindex="0" aria-label="' . esc_attr( $desc ) . '" data-timer-id="' . esc_attr( $timer_id ) . '" data-seconds="' . esc_attr( $seconds ) . '" data-desc="' . esc_attr( $desc ) . '"><i class="cooked-icon cooked-icon-clock" aria-hidden="true"></i> ' . wp_kses_post( $content ) . '</a></span>';
     }
 
     /**

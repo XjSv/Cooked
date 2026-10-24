@@ -176,19 +176,21 @@ var cooked_loading = false;
 
                 // This timer is already here, let's just flash it.
                 if ($('div#' + timerID).length) {
-                    $('div#' + timerID).css({ 'background' : '#eeeeee' });
+                    var existingTimer = $('div#' + timerID);
+                    existingTimer.addClass('cooked-timer-flash');
                     setTimeout(function() {
-                        $('div#' + timerID).css({ 'background' : '' });
-                    }, 200);
+                        existingTimer.removeClass('cooked-timer-flash');
+                    }, 300);
 
                     return;
                 } else {
                     // Only 4 timers allowed at a time.
                     if (totalTimers == 4) {
-                        $('#cooked-timers-wrap').css({ 'transform' : 'translate3d(0,0.5em,0)' });
+                        var timersWrap = $('#cooked-timers-wrap');
+                        timersWrap.addClass('cooked-timer-attention');
                         setTimeout(function() {
-                            $('#cooked-timers-wrap').css({ 'transform' : '' });
-                        },200);
+                            timersWrap.removeClass('cooked-timer-attention');
+                        },400);
                         return;
                     }
 
@@ -249,6 +251,14 @@ var cooked_loading = false;
                     }
                 }
             });
+
+            // The timer link is an anchor without an href, so give it button-like keyboard support.
+            Cooked_Timers.on('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                }
+            });
         }
 
         function cookedTimerBlock(Timer, visibleClass = 'cooked-visible') {
@@ -276,10 +286,14 @@ var cooked_loading = false;
                 'data-seconds-left': Timer.seconds
             }).appendTo(timerBlock);
 
-            // Create and append the icon
-            $('<i>', {
-                class: 'cooked-icon cooked-icon-times'
-            }).appendTo(timerBlock);
+            // Create and append the close button
+            $('<button>', {
+                type: 'button',
+                class: 'cooked-timer-close',
+                'aria-label': cooked_functions_i18n_js_vars.i18n_timer_close
+            }).append(
+                $('<i>', { class: 'cooked-icon cooked-icon-close', 'aria-hidden': 'true' })
+            ).appendTo(timerBlock);
 
             // Create and append the progress bar
             let progress = $('<div>', { class: 'cooked-progress' });
@@ -287,6 +301,31 @@ var cooked_loading = false;
             progress.appendTo(timerBlock);
 
             return timerBlock;
+        }
+
+        function cookedTimerControls(timerObj) {
+            var i18n = cooked_functions_i18n_js_vars;
+
+            function control(className, label, icon) {
+                var button = $('<button>', {
+                    type: 'button',
+                    class: 'cooked-timer-control ' + className,
+                    'aria-label': label
+                });
+
+                $('<i>', {
+                    class: 'cooked-icon cooked-icon-' + icon,
+                    'aria-hidden': 'true'
+                }).appendTo(button);
+
+                return button;
+            }
+
+            timerObj.prepend(
+                control('cooked-timer-reset', i18n.i18n_timer_reset, 'reverse'),
+                control('cooked-timer-pause', i18n.i18n_timer_pause, 'pause'),
+                control('cooked-timer-play', i18n.i18n_timer_play, 'play')
+            );
         }
 
         function cookedTimer(timerObj, startPaused) {
@@ -307,19 +346,19 @@ var cooked_loading = false;
                 },
                 onComplete: function() {
                     audio.play();
-                    timerObj.addClass('cooked-timer-complete');
+                    parentBlock.addClass('cooked-complete');
+                    parentBlock.find('.cooked-timer-hours').text('00:');
+                    parentBlock.find('.cooked-timer-minutes').text('00:');
+                    parentBlock.find('.cooked-timer-seconds').text('00');
+                    parentBlock.find('.cooked-progress > span').css({ 'width' : '100%' });
                 }
             });
 
-            timerObj.prepend( '<i class="cooked-icon cooked-icon-reverse"></i><i class="cooked-icon cooked-icon-pause"></i><i class="cooked-icon cooked-icon-play"></i>' );
+            cookedTimerControls(timerObj);
 
             if (startPaused){
                 timerObj.trigger('pause');
                 parentBlock.addClass('cooked-paused');
-                parentBlock.find('i.cooked-icon-pause').hide();
-                parentBlock.find('i.cooked-icon-play').css({'display':'inline-block'});
-                parentBlock.addClass('cooked-paused');
-                $(this).parent().find('i.cooked-icon-play').css({'display':'inline-block'});
             }
 
             cookedTimer_progress_bar( parentBlock, 10, 10 );
@@ -328,41 +367,29 @@ var cooked_loading = false;
                 cookedTimer_progress_bar( parentBlock,timeLeft,secondsLeft );
             });
 
-            timerObj.on( 'complete', function( e,timeLeft ){
-                audio.play();
-                parentBlock.find('i.cooked-icon-pause').hide();
-                parentBlock.find('i.cooked-icon-play').hide();
-                parentBlock.find('.cooked-timer-seconds').html('00');
-            });
-
-            timerObj.on( 'click', 'i.cooked-icon-pause', function(e) {
+            timerObj.on( 'click', '.cooked-timer-pause', function(e) {
                 e.preventDefault();
-                $(this).hide();
                 parentBlock.addClass('cooked-paused');
-                $(this).parent().find('i.cooked-icon-play').css({'display':'inline-block'});
                 timerObj.trigger('pause');
             });
 
-            timerObj.on( 'click', 'i.cooked-icon-play', function(e) {
+            timerObj.on( 'click', '.cooked-timer-play', function(e) {
                 e.preventDefault();
-                $(this).hide();
                 parentBlock.removeClass('cooked-paused cooked-complete');
-                $(this).parent().find('i.cooked-icon-pause').css({'display':'inline-block'});
                 timerObj.trigger('resume');
             });
 
-            timerObj.on( 'click', 'i.cooked-icon-reverse', function(e) {
+            timerObj.on( 'click', '.cooked-timer-reset', function(e) {
                 e.preventDefault();
                 parentBlock.removeClass('cooked-paused cooked-complete');
-                $(this).parent().find('i.cooked-icon-play').css({'display':'inline-block'});
-                $(this).parent().find('i.cooked-icon-pause').hide();
                 timerObj.remove();
                 $( '#' + thisTimerID ).append('<div class="cooked-timer-obj" data-seconds-left="' + secondsLeft + '"></div>');
                 var newTimer = $( '#' + thisTimerID ).find( '.cooked-timer-obj' );
                 cookedTimer( newTimer, true );
             });
 
-            parentBlock.on( 'click', 'i.cooked-icon-times', function(e) {
+            // Rebind, since a reset calls this function again on the same block.
+            parentBlock.off( 'click.cookedTimerClose', '.cooked-timer-close' ).on( 'click.cookedTimerClose', '.cooked-timer-close', function(e) {
                 e.preventDefault();
 
                 if ( $('#cooked-timers-wrap').find('.cooked-timer-block').length == 1 ){
@@ -380,7 +407,6 @@ var cooked_loading = false;
                 setTimeout(function(){
                     parentBlock.remove();
                 },200);
-
             });
 
         }

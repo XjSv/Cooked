@@ -59,6 +59,13 @@ class ShortcodesTimerTest extends TestCase {
         $this->assertStringNotContainsString( 'data-desc="' . $payload . '"', $output );
     }
 
+    public function test_timer_link_is_keyboard_accessible() {
+        $output = $this->timer_without_warning( [ 'minutes' => '5' ], '5 Minutes' );
+
+        $this->assertStringContainsString( 'role="button"', $output );
+        $this->assertStringContainsString( 'tabindex="0"', $output );
+    }
+
     /**
      * @param array<string, mixed> $atts
      */

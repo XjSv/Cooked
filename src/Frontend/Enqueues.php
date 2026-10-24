@@ -65,7 +65,11 @@ class Enqueues {
         ];
 
         $cooked_i18n_js_vars = [
-            'i18n_timer' => __( 'Timer', 'cooked' ),
+            'i18n_timer'       => __( 'Timer', 'cooked' ),
+            'i18n_timer_pause' => __( 'Pause timer', 'cooked' ),
+            'i18n_timer_play'  => __( 'Resume timer', 'cooked' ),
+            'i18n_timer_reset' => __( 'Restart timer', 'cooked' ),
+            'i18n_timer_close' => __( 'Close timer', 'cooked' ),
         ];
 
         $min = COOKED_DEV ? '' : '.min';

@@ -81,11 +81,14 @@ if ( false !== $_cooked_dark_css_scope ) :
 	<?php echo wp_kses( $dm( '.cooked-recipe .cooked-ratable .cooked-rating-stars.cooked-user-rated' ), [] ); ?> > .cooked-rating-star.cooked-rating-star-empty { color:rgba(255,255,255,0.25); }
 	<?php echo wp_kses( $dm( '.cooked-allergen, .cooked-allergen .cooked-icon' ), [] ); ?> { color:rgba(255,255,255,0.5); }
 	<?php echo wp_kses( $dm( '.cooked-allergen:hover .cooked-icon' ), [] ); ?> { color:#fff; }
-	<?php echo wp_kses( $dm( '#cooked-timers-wrap' ), [] ); ?> { background:#191919; color:#fff; box-shadow:0 -5px 30px rgba(0,0,0,0.4); }
-	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block i.cooked-icon-times' ), [] ); ?> { color:rgba(255,255,255,0.35); }
+	<?php echo wp_kses( $dm( '#cooked-timers-wrap' ), [] ); ?> { background:#191919; color:#fff; border-color:rgba(255,255,255,0.12); box-shadow:0 -10px 40px rgba(0,0,0,0.4); }
+	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block .cooked-timer-step' ), [] ); ?> { color:rgba(255,255,255,0.55); }
 	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block .cooked-timer-desc' ), [] ); ?> { color:rgba(255,255,255,0.65); }
+	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block .cooked-timer-close, #cooked-timers-wrap .cooked-timer-block .cooked-timer-control' ), [] ); ?> { color:rgba(255,255,255,0.6); }
+	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block .cooked-timer-close:hover, #cooked-timers-wrap .cooked-timer-block .cooked-timer-control:hover' ), [] ); ?> { background:rgba(255,255,255,0.08); color:#fff; }
 	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block.cooked-paused' ), [] ); ?> { background:rgba(255,255,255,0.05); }
 	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block.cooked-paused .cooked-timer-obj' ), [] ); ?> { color:rgba(255,255,255,0.5); }
+	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block.cooked-timer-flash' ), [] ); ?> { background:rgba(255,255,255,0.1); }
 	<?php echo wp_kses( $dm( '#cooked-timers-wrap .cooked-timer-block .cooked-progress' ), [] ); ?> { background:rgba(255,255,255,0.15); }
 	<?php
 	echo wp_kses( $dm( '.cooked-related-recipes-empty' ), [] );

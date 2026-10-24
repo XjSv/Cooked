@@ -12,8 +12,6 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 
 ?>@media screen and ( max-width: <?php echo esc_html( $_cooked_settings['responsive_breakpoint_1'] ); ?>px ) {
 
-	#cooked-timers-wrap { width:90%; margin:0 -45% 0 0; }
-
 	.cooked-recipe-grid,
 	.cooked-recipe-term-grid { margin:3% -1.5%; width: 103%; }
 	.cooked-term-block.cooked-col-25,
@@ -62,15 +60,10 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 	.cooked-recipe-search .cooked-fields-wrap.cooked-3-search-fields .cooked-browse-select-block .cooked-tax-column { width:100%; }
 	.cooked-recipe-search .cooked-fields-wrap.cooked-4-search-fields .cooked-browse-select-block .cooked-tax-column { width:100%; }
 
-	#cooked-timers-wrap { width:20rem; right:50%; margin:0 -10rem 0 0; transform:translate3d(0,11.2em,0); }
-	#cooked-timers-wrap.cooked-multiples { margin:0; right:0; border-radius:10px 0 0 0; width:20rem; }
-	#cooked-timers-wrap .cooked-timer-block { padding-left:3.25rem; }
-	#cooked-timers-wrap .cooked-timer-block.cooked-visible { padding-top:1rem; line-height:1.5rem; padding-left:3.25rem; }
-	#cooked-timers-wrap .cooked-timer-block .cooked-timer-step { font-size:0.9rem; }
-	#cooked-timers-wrap .cooked-timer-block .cooked-timer-desc { font-size:1rem; padding:0; }
-	#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj { top:auto; right:auto; width:auto; font-size:1.5rem; line-height:2rem; }
-	#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > i.cooked-icon { font-size:1.5rem; width:1.3rem; margin-right:0.5rem; }
-	#cooked-timers-wrap .cooked-timer-block i.cooked-icon-times { line-height:1rem; font-size:1rem; top:1.4rem; left:1.2rem; }
+	#cooked-timers-wrap { width:32rem; }
+	#cooked-timers-wrap .cooked-timer-block.cooked-visible { padding:1.25rem 3.25rem 1.5rem 1.25rem; }
+	#cooked-timers-wrap .cooked-timer-block .cooked-timer-desc { padding-right:0; }
+	#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj { position:static; transform:none; justify-content:flex-start; margin-top:0.35rem; font-size:1.75rem; }
 
 	body.cooked-fsm-active #cooked-timers-wrap { bottom:0; }
 
@@ -109,7 +102,9 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 	.cooked-fsm .cooked-fsm-directions p { font-size:1rem; }
 	.cooked-fsm .cooked-recipe-directions .cooked-heading { font-size:1.25rem; }
 
-	#cooked-timers-wrap { width:100%; right:0; margin:0; border-radius:0; }
+	#cooked-timers-wrap { width:100%; left:0; right:0; transform:translate3d(0,7.2em,0); }
+	#cooked-timers-wrap.cooked-visible { transform:translate3d(0,0,0); }
+	#cooked-timers-wrap.cooked-multiples { width:min(20rem, 100%); left:auto; right:0; }
 
 	.cooked-recipe-search .cooked-fields-wrap > .cooked-browse-search { margin:3% 0; }
 	.cooked-recipe-search .cooked-sortby-wrap { width:67%; }

@@ -647,12 +647,16 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
         gap: 4px;
     }
 
+    // One row of the sections that fit whole, centred between the arrows (cooked-admin-app.js
+    // sets the width and pages through them).
     @media screen and (max-width: 540px) {
+        box-sizing: content-box;
         min-width: 0;
+        max-width: calc(100% - 96px);
         flex-wrap: nowrap;
-        padding: 4px 52px;
-        overflow-x: auto;
-        overflow-y: hidden;
+        margin: 0 auto;
+        padding: 4px 0;
+        overflow: hidden;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
         -ms-overflow-style: none;
@@ -677,6 +681,8 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
 
     @media screen and (max-width: 540px) {
         flex: 0 0 auto;
+        gap: 8px;
+        padding: 8px 10px;
         white-space: nowrap;
     }
 }

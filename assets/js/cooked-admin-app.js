@@ -575,64 +575,124 @@
             setCanScroll = scrollState[1],
             orientationState = useState( window.matchMedia( '(max-width: 540px)' ).matches ? 'horizontal' : 'vertical' ),
             orientation = orientationState[0],
-            setOrientation = orientationState[1];
+            setOrientation = orientationState[1],
+            // Phones: the first section shown, and the last one that fits whole after it.
+            page = useRef( { first: 0, last: 0 } );
 
         function menu() {
             var root = document.getElementById( 'cooked-admin-app' );
             return root ? root.querySelector( '.cooked-admin-sections' ) : null;
         }
 
-        function updateScrollState() {
+        function buttons() {
             var scroller = menu();
-            if ( ! scroller ) {
+            return scroller ? Array.prototype.slice.call( scroller.querySelectorAll( '.cooked-admin-section' ) ) : [];
+        }
+
+        // Width of buttons[from..to], gaps included.
+        function span( list, from, to ) {
+            return list[ to ].offsetLeft + list[ to ].offsetWidth - list[ from ].offsetLeft;
+        }
+
+        // On a phone the menu is one row cut to the sections that fit whole (no label is cut
+        // off), centred between the arrows, which page through the rest, as the recipe editor's
+        // tabs do. Wider screens show them all.
+        function layout( animate ) {
+            var scroller = menu(),
+                list = buttons(),
+                room,
+                first,
+                last;
+            if ( ! scroller || ! list.length ) {
                 return;
             }
-            var next = {
-                left: scroller.scrollLeft > 1,
-                right: scroller.scrollLeft + scroller.clientWidth < scroller.scrollWidth - 1
-            };
+            scroller.style.width = '';
+            if ( ! window.matchMedia( '(max-width: 540px)' ).matches || scroller.scrollWidth <= scroller.clientWidth + 1 ) {
+                scroller.scrollLeft = 0;
+                page.current = { first: 0, last: list.length - 1 };
+                setCanScroll( function ( previous ) {
+                    return previous.left || previous.right ? { left: false, right: false } : previous;
+                } );
+                return;
+            }
+            room = scroller.parentNode.clientWidth - 96; // the arrows and their gaps
+            first = Math.min( page.current.first, list.length - 1 );
+            // Fill the last page rather than leave it short.
+            while ( first > 0 && span( list, first - 1, list.length - 1 ) <= room ) {
+                first--;
+            }
+            last = first;
+            while ( last + 1 < list.length && span( list, first, last + 1 ) <= room ) {
+                last++;
+            }
+            page.current = { first: first, last: last };
+            scroller.style.width = Math.ceil( span( list, first, last ) ) + 'px';
+            scroller.scrollTo( {
+                left: list[ first ].offsetLeft - list[0].offsetLeft,
+                behavior: animate && ! reducedMotion() ? 'smooth' : 'auto'
+            } );
             setCanScroll( function ( previous ) {
+                var next = { left: first > 0, right: last < list.length - 1 };
                 return previous.left === next.left && previous.right === next.right ? previous : next;
             } );
         }
 
         function scrollSections( direction ) {
-            var scroller = menu();
-            if ( ! scroller ) {
-                return;
+            var list = buttons(),
+                room = menu() ? menu().parentNode.clientWidth - 96 : 0,
+                first = page.current.first;
+            if ( direction > 0 ) {
+                page.current.first = Math.min( page.current.last + 1, list.length - 1 );
+            } else {
+                first = Math.max( first - 1, 0 );
+                while ( first > 0 && span( list, first - 1, page.current.first - 1 ) <= room ) {
+                    first--;
+                }
+                page.current.first = first;
             }
-            scroller.scrollBy( {
-                left: direction * Math.max( 120, scroller.clientWidth * 0.7 ),
-                behavior: reducedMotion() ? 'auto' : 'smooth'
-            } );
+            layout( true );
+        }
+
+        // A section chosen or focused (arrow keys) outside the page brings its page in.
+        function reveal( index, animate ) {
+            if ( index > -1 && ( index < page.current.first || index > page.current.last ) ) {
+                page.current.first = index;
+                layout( animate );
+            }
         }
 
         useEffect( function () {
             var scroller = menu(),
                 resizeObserver = null,
                 narrow = window.matchMedia( '(max-width: 540px)' ),
+                onResize = function () {
+                    layout( false );
+                },
+                onFocus = function ( e ) {
+                    reveal( buttons().indexOf( e.target.closest( '.cooked-admin-section' ) ), true );
+                },
                 onNarrowChange = function () {
                     setOrientation( narrow.matches ? 'horizontal' : 'vertical' );
-                    updateScrollState();
+                    layout( false );
                 };
             if ( ! scroller ) {
                 return;
             }
-            scroller.addEventListener( 'scroll', updateScrollState, { passive: true } );
-            window.addEventListener( 'resize', updateScrollState );
+            scroller.addEventListener( 'focusin', onFocus );
+            window.addEventListener( 'resize', onResize );
             if ( window.ResizeObserver ) {
-                resizeObserver = new window.ResizeObserver( updateScrollState );
-                resizeObserver.observe( scroller );
+                resizeObserver = new window.ResizeObserver( onResize );
+                resizeObserver.observe( scroller.parentNode );
             }
             if ( narrow.addEventListener ) {
                 narrow.addEventListener( 'change', onNarrowChange );
             } else {
                 narrow.addListener( onNarrowChange );
             }
-            updateScrollState();
+            layout( false );
             return function () {
-                scroller.removeEventListener( 'scroll', updateScrollState );
-                window.removeEventListener( 'resize', updateScrollState );
+                scroller.removeEventListener( 'focusin', onFocus );
+                window.removeEventListener( 'resize', onResize );
                 if ( resizeObserver ) {
                     resizeObserver.disconnect();
                 }
@@ -645,17 +705,12 @@
         }, [] );
 
         useEffect( function () {
-            var scroller = menu(),
-                active = scroller && scroller.querySelector( '.cooked-admin-section.is-active' );
-            // In the horizontal (phone) scroller, centre the active section. Scrolls only
-            // the menu: scrollIntoView() could also move the page.
+            var list = buttons(),
+                active = menu() && menu().querySelector( '.cooked-admin-section.is-active' );
+            layout( false );
             if ( 'horizontal' === orientation && active ) {
-                scroller.scrollTo( {
-                    left: active.offsetLeft - ( scroller.clientWidth - active.offsetWidth ) / 2,
-                    behavior: reducedMotion() ? 'auto' : 'smooth'
-                } );
+                reveal( list.indexOf( active ), false );
             }
-            updateScrollState();
         }, [ props.active, props.sections, orientation ] );
 
         function arrow( direction, disabled, label ) {

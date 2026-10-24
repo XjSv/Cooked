@@ -45,7 +45,7 @@ class Enqueues {
                 'title'            => __( 'Settings', 'cooked' ),
                 'template'         => 'frame/settings.php',
                 // The settings form is shared: the classic layout shows its own header and tabs.
-                'classic_template' => 'frame/settings.php',
+                'classic_template' => 'classic/settings.php',
                 'canSave'          => true,
             ],
             'cooked_import'   => [
@@ -284,7 +284,7 @@ class Enqueues {
         wp_enqueue_style( 'wp-components' );
         self::register_tom_select();
         wp_enqueue_style( 'cooked-tom-select' );
-        wp_enqueue_script( 'cooked-admin-app', COOKED_URL . 'assets/js/cooked-admin-app.js', [ 'wp-element', 'wp-components', 'cooked-admin-functions', 'cooked-tom-select' ], COOKED_VERSION, true );
+        wp_enqueue_script( 'cooked-admin-app', COOKED_URL . 'assets/js/cooked-admin-app.js', [ 'wp-element', 'wp-components', 'wp-a11y', 'cooked-admin-functions', 'cooked-tom-select' ], COOKED_VERSION, true );
         wp_localize_script(
             'cooked-admin-app',
             'cooked_admin_app_js_vars',
@@ -306,6 +306,9 @@ class Enqueues {
 					'sections'            => __( 'Sections', 'cooked' ),
 					'sectionsScrollLeft'  => __( 'Scroll sections left', 'cooked' ),
 					'sectionsScrollRight' => __( 'Scroll sections right', 'cooked' ),
+					'skipToContent'       => __( 'Skip to content', 'cooked' ),
+					/* translators: 1: Cooked screen, e.g. "Settings", 2: section, e.g. "General" */
+					'shownSection'        => __( '%1$s: %2$s', 'cooked' ),
 					'version'             => __( 'Version:', 'cooked' ),
 					'changelog'           => __( 'Changelog', 'cooked' ),
 					'changelogError'      => __( 'The changelog could not be loaded. Please try again.', 'cooked' ),

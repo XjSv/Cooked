@@ -156,6 +156,10 @@ class Menus {
             return;
         }
 
+        // WordPress moves every admin notice to just after .wp-header-end (else after the first
+        // heading in a .wrap, which was a hidden settings section): above the frame, on every screen.
+        // Cooked's own settings messages are "inline" and stay in the Settings card.
+        echo '<hr class="wp-header-end">';
         echo '<div id="cooked-admin-app"></div>';
         foreach ( $screens as $slug => $screen ) {
             echo '<div class="cooked-admin-screen" data-screen="' . esc_attr( $slug ) . '"' . ( $slug === $current ? '' : ' hidden' ) . '>';

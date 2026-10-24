@@ -5,6 +5,21 @@ body.cooked-admin-page #wpcontent {
     padding: 0;
 }
 
+// Admin notices (WordPress's and other plugins') sit above the frame, lined up with the card
+// (Menus::cooked_app_page() puts .wp-header-end there). #wpcontent has no padding on these
+// screens, so they take the app's inset.
+body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
+    box-sizing: border-box;
+    max-width: 1240px;
+    margin: 20px auto 0;
+    width: calc(100% - 40px);
+
+    @media screen and (max-width: 782px) {
+        width: calc(100% - 20px);
+        margin-top: 10px;
+    }
+}
+
 #cooked-admin-app {
     // WordPress components read these for buttons and focus rings.
     --wp-admin-theme-color: var(--cooked-color-accent-fill);
@@ -29,6 +44,34 @@ body.cooked-admin-page #wpcontent {
     @media screen and (max-width: 782px) {
         padding: 10px;
     }
+}
+
+// Visible only while focused, at the top left of the frame.
+.cooked-admin-skip-link {
+    position: absolute;
+    z-index: 1001; // above the sticky header
+    top: -9999px;
+    left: 30px;
+    padding: 10px 16px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: var(--cooked-color-accent-strong);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:focus {
+        top: 10px;
+    }
+}
+
+.cooked-admin {
+    position: relative; // the skip link's box
+}
+
+// The skip link's target: focusable from script, no ring around the whole section.
+.cooked-admin-content:focus {
+    outline: 0;
 }
 
 .cooked-admin-frame.components-card {
@@ -568,30 +611,7 @@ body.cooked-admin-page #wpcontent {
     color: #c02a2a;
 }
 
-/* The PHP-rendered settings form, once moved into the frame. */
-.cooked-admin-ready #cooked-settings-prewrap {
-    display: block;
-}
-
-.cooked-admin-ready #cooked-settings-wrap {
-    min-width: 0;
-    max-width: none;
-    margin: 0;
-    border-radius: 0;
-    background: none;
-    box-shadow: none;
-}
-
-.cooked-admin-ready .cooked-settings-header,
-.cooked-admin-ready #cooked-settings-tabs,
-.cooked-admin-ready .cooked-settings-update-button {
-    display: none !important;
-}
-
-.cooked-admin-ready #cooked-settings-panel.stuck {
-    padding-top: 0;
-}
-
+/* The PHP-rendered settings form (templates/admin/frame/settings.php) inside the frame. */
 .cooked-admin-ready #cooked-settings-panel .cooked-settings-tab-content {
     padding: 0;
 }

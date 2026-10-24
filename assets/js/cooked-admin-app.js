@@ -823,6 +823,11 @@
                     content.classList.add( 'is-entering' );
                 }
                 scrollToContent();
+                // Focus stays on the tab or section button that was used (arrow keys keep moving
+                // through them); screen readers hear what is now shown.
+                if ( wp.a11y && wp.a11y.speak ) {
+                    wp.a11y.speak( current ? vars.i18n.shownSection.replace( '%1$s', config.title ).replace( '%2$s', current.name ) : config.title );
+                }
             }
             switched.current = true;
             if ( window.history.replaceState ) {
@@ -897,6 +902,19 @@
                     csvSampleState[1]( null );
                 }
             } ),
+            // Past the header, tabs and section menu to the section's fields.
+            el( 'a', {
+                className: 'cooked-admin-skip-link',
+                href: '#cooked-admin-content',
+                onClick: function ( e ) {
+                    var target = document.getElementById( 'cooked-admin-content' );
+                    e.preventDefault();
+                    if ( target ) {
+                        scrollToContent();
+                        target.focus( { preventScroll: true } );
+                    }
+                }
+            }, vars.i18n.skipToContent ),
             el( 'div', { className: 'cooked-admin-sticky-sentinel', ref: sentinelRef } ),
             el( Card, { className: 'cooked-admin-frame' },
                 el( 'div', { className: 'cooked-admin-sticky' + ( stuckState[0] ? ' is-stuck' : '' ) },
@@ -914,7 +932,7 @@
                     hasSections && el( 'div', { className: 'cooked-admin-sidebar' },
                         el( SectionMenu, { sections: config.sections, active: section, onSelect: setSection } )
                     ),
-                    el( 'div', { className: 'cooked-admin-content' },
+                    el( 'div', { className: 'cooked-admin-content', id: 'cooked-admin-content', tabIndex: -1 },
                         current && el( 'div', { className: 'cooked-admin-section-header' },
                             el( 'span', { className: 'cooked-admin-section-icon' }, icon( current.icon ) ),
                             el( 'h2', null, current.name )

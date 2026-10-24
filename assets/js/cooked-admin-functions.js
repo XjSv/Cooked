@@ -809,7 +809,10 @@ var cookedSortableTouchHandler = function(event) {
                     window.scrollTo(0,0);
                 }
             });
+        }
 
+        // Settings fields, in both layouts (the new layout's form has no tab list).
+        if ($_CookedSettingsPanel.length) {
             var settings_image_frame;
 
             $_CookedSettingsPanel.on('click', '.cooked-settings-image-remove', function(e) {

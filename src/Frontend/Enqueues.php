@@ -29,8 +29,10 @@ class Enqueues {
     public function __construct() {
         add_action( 'wp_enqueue_scripts', [ &$this, 'enqueues' ], 10, 1 );
         add_action( 'wp_enqueue_scripts', [ &$this, 'css_colors' ], 11 );
-        add_action( 'wp_enqueue_scripts', [ &$this, 'css_responsive' ], 11 );
         add_action( 'wp_footer', [ &$this, 'footer_enqueues' ] );
+
+        // Runs before the template prints <html>, so the static dark-mode CSS can key off it.
+        add_filter( 'language_attributes', [ &$this, 'dark_mode_language_attributes' ] );
     }
 
     /**
@@ -42,11 +44,11 @@ class Enqueues {
         global $_cooked_settings;
 
         $browse_page_id      = \Cooked_Multilingual::get_browse_page_id();
-        $browse_page         = get_post( $browse_page_id );
+        $browse_page         = $browse_page_id ? get_post( $browse_page_id ) : null;
         $browse_recipes_slug = ! empty( $browse_page ) ? $browse_page->post_name : '';
 
         // Get the full browse page URL (includes language prefix when using Polylang/WPML).
-        $browse_page_url = $browse_page_id ? get_permalink( $browse_page_id ) : get_site_url();
+        $browse_page_url = $browse_page_id ? (string) get_permalink( $browse_page_id ) : get_site_url();
 
         $cooked_js_vars = [
             'ajax_url'                   => admin_url( 'admin-ajax.php' ),
@@ -119,42 +121,83 @@ class Enqueues {
     }
 
     /**
-     * Adds the custom colour CSS from the settings.
+     * Loads the static colour stylesheet and prints the configured colours as CSS variables.
      *
      * @return void
      */
     public function css_colors() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if ( ! isset( $_GET['print'] ) ) {
-            $file = COOKED_DIR . 'assets/css/colors.php';
-            $css  = self::get_dynamic_css( $file );
-            wp_add_inline_style( 'cooked-styling', $css );
+        if ( isset( $_GET['print'] ) ) {
+            return;
         }
+
+        wp_enqueue_style( 'cooked-colors', COOKED_URL . 'assets/css/colors.min.css', [ 'cooked-styling' ], COOKED_VERSION );
+
+        $settings = \Cooked_Settings::get();
+        wp_add_inline_style( 'cooked-colors', self::get_colors_css( $settings ) );
     }
 
     /**
-     * Adds the responsive-breakpoint CSS from the settings.
+     * The configured colours as CSS custom properties.
      *
-     * @return void
+     * @param array<string, mixed> $settings Cooked settings.
+     * @return string
      */
-    public function css_responsive() {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if ( ! isset( $_GET['print'] ) ) {
-            $file = COOKED_DIR . 'assets/css/responsive.php';
-            $css  = self::get_dynamic_css( $file );
-            wp_add_inline_style( 'cooked-styling', $css );
+    public static function get_colors_css( $settings ) {
+        $main_color       = isset( $settings['main_color'] ) && is_string( $settings['main_color'] ) ? sanitize_hex_color( $settings['main_color'] ) : '';
+        $main_color_hover = isset( $settings['main_color_hover'] ) && is_string( $settings['main_color_hover'] ) ? sanitize_hex_color( $settings['main_color_hover'] ) : '';
+
+        if ( ! $main_color ) {
+            $main_color = '#16a780';
         }
+
+        if ( ! $main_color_hover ) {
+            $main_color_hover = '#1b9371';
+        }
+
+        return ':root{'
+            . '--cooked-main-color:' . esc_html( \Cooked_Functions::accessible_color( $main_color ) ) . ';'
+            . '--cooked-main-color-hover:' . esc_html( \Cooked_Functions::accessible_color( $main_color_hover, 5.5 ) ) . ';'
+            . '--cooked-main-color-ring:' . esc_html( $main_color ) . ';'
+            . '}';
+    }
+
+    /**
+     * Marks <html> for the static dark-mode rules.
+     *
+     * @param string $output The language attributes.
+     * @return string
+     */
+    public function dark_mode_language_attributes( $output ) {
+        if ( false !== strpos( $output, 'data-cooked-dark-mode' ) ) {
+            return $output;
+        }
+
+        $settings = \Cooked_Settings::get();
+        $mode     = \Cooked_Settings::normalize_dark_mode( isset( $settings['dark_mode'] ) ? $settings['dark_mode'] : 'off' );
+
+        if ( 'enabled' === $mode ) {
+            return $output . ' data-cooked-dark-mode="enabled"';
+        }
+
+        if ( 'auto' === $mode ) {
+            return $output . ' data-cooked-dark-mode="auto"';
+        }
+
+        return $output;
     }
 
     /**
      * Renders a dynamic CSS template and returns it compressed.
      *
+     * Cooked itself no longer uses PHP stylesheets; this stays for Cooked Pro's templates.
+     *
      * @param string|false $file Template path.
-     * @return string|void
+     * @return string
      */
     public static function get_dynamic_css( $file = false ) {
-        if ( ! $file || ( $file && ! file_exists( $file ) ) ) {
-			return;
+        if ( ! $file || ! file_exists( $file ) ) {
+			return '';
         }
 
         ob_start();
@@ -173,7 +216,7 @@ class Enqueues {
      */
     public static function compress_css( $css ) {
         // Remove tabs, spaces, newlines, etc.
-        $css = str_replace( [ "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ], '', $css );
+        $css = str_replace( [ "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ], '', (string) $css );
         return $css;
     }
 

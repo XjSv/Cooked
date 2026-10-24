@@ -88,7 +88,7 @@ for (const theme of ['light', 'dark'] as const) {
     test('settings search with suggestions open', async ({ adminContext }) => {
       const page = await adminContext.newPage();
       await openScreen(page, 'cooked_welcome');
-      await page.locator('.cooked-admin-search-input').fill('break');
+      await page.locator('.cooked-admin-search-input').fill('main color');
       await page.locator('.cooked-admin-search-result').first().waitFor();
       await page.keyboard.press('ArrowDown');
       await expectAccessible(page, { exclude: ['#adminmenumain'] });

@@ -61,13 +61,13 @@ test.describe('Keyboard: admin frame', () => {
     const page = await adminContext.newPage();
     await openSettings(page);
     await tabTo(page, '.cooked-admin-search-input');
-    await page.keyboard.type('breakpoint');
+    await page.keyboard.type('recipe permalink');
     await page.locator('.cooked-admin-search-result').first().waitFor();
     await page.keyboard.press('ArrowDown');
     await page.keyboard.press('Enter');
-    await expect(page.locator('.cooked-admin-section.is-active')).toHaveText(/Design/);
+    await expect(page.locator('.cooked-admin-section.is-active')).toHaveText(/Permalinks/);
     // Focus moves to the setting's control.
-    await expect.poll(() => page.evaluate(() => (document.activeElement as HTMLInputElement | null)?.name || '')).toMatch(/breakpoint/);
+    await expect.poll(() => page.evaluate(() => (document.activeElement as HTMLInputElement | null)?.name || '')).toMatch(/recipe_permalink/);
   });
 });
 

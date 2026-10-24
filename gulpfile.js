@@ -5,7 +5,7 @@ const rename = require('gulp-rename');
 const concat = require('gulp-concat');
 
 // SCSS entry points: essentials (everywhere), front end, print view and admin.
-const styleEntries = ['assets/scss/essentials.scss', 'assets/scss/style.scss', 'assets/scss/print.scss', 'assets/scss/admin/admin.scss'];
+const styleEntries = ['assets/scss/essentials.scss', 'assets/scss/style.scss', 'assets/scss/colors.scss', 'assets/scss/print.scss', 'assets/scss/admin/admin.scss'];
 const frontendScripts = ['assets/js/cooked-functions.js'];
 const adminScripts = ['assets/js/cooked-admin-functions.js', 'assets/js/cooked-migration.js'];
 

@@ -72,20 +72,29 @@ test.describe('Cooked settings page', () => {
     expect(saved.includes('site_logo')).toBe(!wasChecked);
   });
 
-  test('persists a number field on the Design tab', async ({ adminContext }) => {
+  test('persists a colour field on the Design tab', async ({ adminContext }) => {
     const adminPage = await adminContext.newPage();
     await gotoSettingsSection(adminPage, 'design');
 
-    const input = adminPage.locator('input[name="cooked_settings[responsive_breakpoint_1]"]');
+    const input = adminPage.locator('input[name="cooked_settings[main_color]"]');
     const current = await input.inputValue();
-    const next = current === '1001' ? '1002' : '1001';
+    const next = current === '#123456' ? '#654321' : '#123456';
 
-    await input.fill(next);
+    // The text field sits inside WordPress's closed colour picker, so set it directly.
+    const setColour = (value: string) =>
+      adminPage.locator('input[name="cooked_settings[main_color]"]').evaluate((el, v) => {
+        (el as HTMLInputElement).value = v;
+      }, value);
+
+    await setColour(next);
     await saveSettings(adminPage);
 
     await gotoSettingsSection(adminPage, 'design');
-    await expect(adminPage.locator('input[name="cooked_settings[responsive_breakpoint_1]"]')).toHaveValue(next);
-    expect(String(getCookedSettings().responsive_breakpoint_1)).toBe(next);
+    await expect(adminPage.locator('input[name="cooked_settings[main_color]"]')).toHaveValue(next);
+    expect(String(getCookedSettings().main_color)).toBe(next);
+
+    await setColour(current);
+    await saveSettings(adminPage);
   });
 
   test('reports a value that was not kept and marks its row', async ({ adminContext }) => {
@@ -115,21 +124,22 @@ test.describe('Cooked settings page', () => {
     const adminPage = await adminContext.newPage();
     await gotoSettingsSection(adminPage, 'recipe_settings');
 
-    const input = adminPage.locator('input[name="cooked_settings[responsive_breakpoint_1]"]');
-    const original = await input.inputValue();
-    // A number field in a hidden section: the browser cannot show its message there.
+    // A field in a hidden section that fails the browser's validation: the browser cannot show
+    // its message there, so the frame has to open the field's section first.
+    const input = adminPage.locator('input[name="cooked_settings[recipe_permalink]"]');
     await input.evaluate((el) => {
-      (el as HTMLInputElement).value = '-5';
+      (el as HTMLInputElement).setCustomValidity('Invalid permalink');
     });
 
     await adminPage.getByRole('button', { name: 'Update Settings' }).first().click();
 
-    await expect(adminPage.locator('.cooked-admin-section.is-active')).toHaveText(/Design/);
+    await expect(adminPage.locator('.cooked-admin-section.is-active')).toHaveText(/Permalinks/);
     await expect(input).toBeFocused();
     expect(await input.evaluate((el: HTMLInputElement) => el.checkValidity())).toBe(false);
 
-    await input.fill(original);
-    await saveSettings(adminPage);
+    await input.evaluate((el) => {
+      (el as HTMLInputElement).setCustomValidity('');
+    });
   });
 });
 

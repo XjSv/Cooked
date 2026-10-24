@@ -291,7 +291,7 @@ class Settings {
     public function cooked_settings_saved_admin_notice() {
         // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Display-only Settings API query vars.
         $page             = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( $_GET['page'] ) ) : '';
-        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( wp_unslash( $_GET['settings-updated'] ) ) : false;
+        $settings_updated = isset( $_GET['settings-updated'] ) ? rest_sanitize_boolean( sanitize_text_field( wp_unslash( $_GET['settings-updated'] ) ) ) : false;
         // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         if ( $settings_updated && 'cooked_settings' === $page ) {
@@ -321,7 +321,7 @@ class Settings {
         $_cooked_settings = self::get();
 
         // Check if browse page is set.
-        if ( empty( $_cooked_settings['browse_page'] ) || ! $_cooked_settings['browse_page'] ) {
+        if ( empty( $_cooked_settings['browse_page'] ) ) {
             $class   = 'notice notice-warning is-dismissible';
             $message = sprintf(
                 '<strong>' . __( 'Cooked Plugin Setup', 'cooked' ) . '</strong> ' .
@@ -372,6 +372,11 @@ class Settings {
             }
         }
 
+        // The breakpoints are fixed in the stylesheet since 2.0. Cooked Pro's templates still read them.
+        $_cooked_settings['responsive_breakpoint_1'] = '1000';
+        $_cooked_settings['responsive_breakpoint_2'] = '750';
+        $_cooked_settings['responsive_breakpoint_3'] = '520';
+
         if ( isset( $_cooked_settings['dark_mode'] ) ) {
             $_cooked_settings['dark_mode'] = self::normalize_dark_mode( $_cooked_settings['dark_mode'] );
         }
@@ -404,16 +409,18 @@ class Settings {
     /**
      * Saves the per-user dark mode selects (Admin Dark Mode and Recipe Editor Dark Mode; user
      * preferences, not site settings) when the Settings form is submitted. Runs on
-     * sanitize_option_cooked_settings, after options.php has checked the form's nonce and the
-     * user's capability.
+     * sanitize_option_cooked_settings; checks the form's nonce and the user's capability itself,
+     * because the filter also runs when the option is updated outside the form.
      *
      * @since 2.0.0
      * @param mixed $value The sanitized cooked_settings value, returned unchanged.
      * @return mixed
      */
     public static function save_admin_dark_mode( $value ) {
-        // phpcs:disable WordPress.Security.NonceVerification.Missing -- options.php verified the settings form's nonce.
-        if ( isset( $_POST['option_page'] ) && 'cooked_settings_group' === $_POST['option_page'] && current_user_can( 'edit_cooked_settings' ) ) {
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- The nonce is verified in the condition below.
+        $nonce = isset( $_POST['_wpnonce'] ) ? sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ) : '';
+
+        if ( isset( $_POST['option_page'] ) && 'cooked_settings_group' === $_POST['option_page'] && wp_verify_nonce( $nonce, 'cooked_settings_group-options' ) && current_user_can( 'edit_cooked_settings' ) ) {
             foreach ( [ 'cooked_admin_dark_mode', 'cooked_editor_dark_mode' ] as $meta_key ) {
                 if ( isset( $_POST[ $meta_key ] ) ) {
                     update_user_meta( get_current_user_id(), $meta_key, self::normalize_dark_mode( sanitize_key( wp_unslash( $_POST[ $meta_key ] ) ) ) );
@@ -450,56 +457,6 @@ class Settings {
         }
 
         return 'off';
-    }
-
-    /**
-     * Dark mode CSS scope for dynamic styles.
-     *
-     * @return string|false Empty string when dark mode is forced on; theme selector when auto; false when off.
-     */
-    public static function get_dark_mode_scope() {
-        $settings = self::get();
-        $mode     = self::normalize_dark_mode( isset( $settings['dark_mode'] ) ? $settings['dark_mode'] : 'off' );
-
-        if ( 'auto' === $mode ) {
-            $scope = apply_filters( 'cooked_dark_mode_auto_scope', '[data-theme="dark"]' );
-
-            return $scope ? $scope : false;
-        }
-
-        if ( 'enabled' === $mode ) {
-            return '';
-        }
-
-        return false;
-    }
-
-    /**
-     * Prefix a comma-separated CSS selector list with the dark mode scope.
-     *
-     * @param string $selectors Comma-separated CSS selectors.
-     * @return string|false Prefixed selectors, or false when dark mode is off.
-     */
-    public static function prefix_dark_mode_css( $selectors ) {
-        $scope = self::get_dark_mode_scope();
-
-        if ( false === $scope ) {
-            return false;
-        }
-
-        if ( '' === $scope ) {
-            return wp_kses( $selectors, [] );
-        }
-
-        $parts = array_map( 'trim', explode( ',', $selectors ) );
-        $parts = array_map(
-            function ( $part ) use ( $scope ) {
-                return $scope . ' ' . $part;
-            },
-            $parts
-        );
-
-        return wp_kses( implode( ', ', $parts ), [] );
     }
 
     /**
@@ -739,7 +696,7 @@ class Settings {
 					'name'   => __( 'Design', 'cooked' ),
 					'icon'   => 'pencil',
 					'fields' => [
-						'dark_mode'               => [
+						'dark_mode'            => [
 							'title'   => __( 'Dark Mode', 'cooked' ),
 							'desc'    => apply_filters(
 								'cooked_dark_mode_field_desc',
@@ -757,7 +714,7 @@ class Settings {
 							),
 						],
 						// Per-user preferences, saved to user meta (save_admin_dark_mode()), not to cooked_settings.
-						'admin_dark_mode'         => [
+						'admin_dark_mode'      => [
 							'title'    => __( 'Admin Dark Mode', 'cooked' ),
 							'desc'     => __( 'Your own preference for the Settings, Import, What\'s New and Upgrade to Pro screens. <strong>Auto</strong> follows your computer\'s light or dark setting.', 'cooked' ),
 							'type'     => 'user_dark_mode',
@@ -769,7 +726,7 @@ class Settings {
 								'auto'    => __( 'Auto (match your system)', 'cooked' ),
 							],
 						],
-						'editor_dark_mode'        => [
+						'editor_dark_mode'     => [
 							'title'    => __( 'Recipe Editor Dark Mode', 'cooked' ),
 							'desc'     => __( 'Your own preference for the recipe editor. <strong>Auto</strong> follows your computer\'s light or dark setting.', 'cooked' ),
 							'type'     => 'user_dark_mode',
@@ -781,7 +738,7 @@ class Settings {
 								'auto'    => __( 'Auto (match your system)', 'cooked' ),
 							],
 						],
-						'hide_author_avatars'     => [
+						'hide_author_avatars'  => [
 							'title'   => __( 'Author Images', 'cooked' ),
 							'desc'    => __( 'If you do not want to display the author images (avatars), you can disable them here.', 'cooked' ),
 							'type'    => 'checkboxes',
@@ -794,46 +751,25 @@ class Settings {
 								]
 							),
 						],
-						'default_recipe_image'    => [
+						'default_recipe_image' => [
 							'title'   => __( 'Default Recipe Image', 'cooked' ),
 							'desc'    => __( 'Used as the featured image for recipes that do not have one set.', 'cooked' ),
 							'type'    => 'image_field',
 							'default' => 0,
 						],
-						'main_color'              => [
+						'main_color'           => [
 							'title'   => __( 'Main Color', 'cooked' ),
 							'desc'    => __( 'Used on buttons, cooking timer, etc.', 'cooked' ),
 							'type'    => 'color_field',
 							'default' => '#16a780',
 							'options' => '#16a780',
 						],
-						'main_color_hover'        => [
+						'main_color_hover'     => [
 							'title'   => __( 'Main Color (on hover)', 'cooked' ),
 							'desc'    => __( 'Used when hovering over buttons.', 'cooked' ),
 							'type'    => 'color_field',
 							'default' => '#1b9371',
 							'options' => '#1b9371',
-						],
-						'responsive_breakpoint_1' => [
-							'title'   => __( 'First Responsive Breakpoint', 'cooked' ),
-							'desc'    => __( 'Set the first responsive breakpoint. Best for large tablets.', 'cooked' ),
-							'type'    => 'number_field',
-							'default' => '1000',
-							'options' => '',
-						],
-						'responsive_breakpoint_2' => [
-							'title'   => __( 'Second Responsive Breakpoint', 'cooked' ),
-							'desc'    => __( 'Set the second responsive breakpoint. Best for small tablets.', 'cooked' ),
-							'type'    => 'number_field',
-							'default' => '750',
-							'options' => '',
-						],
-						'responsive_breakpoint_3' => [
-							'title'   => __( 'Third Responsive Breakpoint', 'cooked' ),
-							'desc'    => __( 'Set the third responsive breakpoint. Best for phones and other small devices.', 'cooked' ),
-							'type'    => 'number_field',
-							'default' => '520',
-							'options' => '',
 						],
 					],
 				],
@@ -932,15 +868,15 @@ class Settings {
 
         $args = [
             'taxonomy'   => $term,
-            'hide_empty' => $hide_empty,
+            // Shortcode attributes arrive as strings, so hide_empty="false" must not count as true.
+            'hide_empty' => rest_sanitize_boolean( $hide_empty ),
         ];
 
         if ( $parents_only ) {
-            $args['parent'] = '0';
+            $args['parent'] = 0;
         } elseif ( $child_of ) {
-            $_term          = is_numeric( $child_of ) ? $child_of : get_term_by( 'slug', $child_of, $term );
-            $term_id        = is_object( $_term ) ? $_term->term_id : $_term;
-            $args['parent'] = $term_id;
+            $_term          = is_numeric( $child_of ) ? null : get_term_by( 'slug', $child_of, $term );
+            $args['parent'] = is_numeric( $child_of ) ? (int) $child_of : ( $_term instanceof \WP_Term ? $_term->term_id : 0 );
         }
 
         $terms = get_terms( $args );

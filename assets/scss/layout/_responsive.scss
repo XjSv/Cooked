@@ -1,0 +1,67 @@
+// Responsive overrides. Loaded last in style.scss so these win over the base rules.
+
+$breakpoint-large: 1000px; // large tablets
+$breakpoint-medium: 750px; // small tablets
+$breakpoint-small: 520px; // phones
+
+@media screen and (max-width: $breakpoint-large) {
+    .cooked-recipe-term-grid { margin: 3% -1.5%; width: 103%; }
+    .cooked-term-block.cooked-col-25 { width: 47%; margin: 0 1.5% 3%; padding: 0; }
+}
+
+@media screen and (max-width: $breakpoint-medium) {
+    .cooked-recipe-term-grid { margin: 5% -2.5%; width: 105%; }
+    .cooked-term-block.cooked-col-25 { width: 95%; margin: 0 2.5% 5%; padding: 0; }
+
+    /* Info: a left-aligned grid of two columns; print and full screen stay a row of icons. */
+    .cooked-recipe-info { gap: 1rem; }
+    .cooked-recipe-info > section.cooked-left,
+    .cooked-recipe-info > section.cooked-right { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; width: 100%; margin: 0; }
+    .cooked-recipe-info > section:has(> .cooked-print, > .cooked-fsm-button) { display: flex; width: auto; }
+
+    /* Keep the browse filter and search on one row, with sorting below. */
+    .cooked-recipe-search form { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .cooked-recipe-search .cooked-fields-wrap { flex: 1 1 100%; flex-wrap: nowrap; padding: 0; }
+    .cooked-recipe-search .cooked-field-wrap-select { flex: 0 1 auto; width: auto; position: static; }
+    .cooked-recipe-search .cooked-browse-select { width: auto; max-width: 9rem; }
+    .cooked-recipe-search .cooked-search-field { flex: 1 1 auto; width: auto; }
+    .cooked-recipe-search .cooked-sortby-wrap { flex: 1 1 100%; width: 100%; }
+    .cooked-recipe-search .cooked-browse-select-block { top: calc(100% + 0.5rem); left: 0; width: 100%; min-width: 0; max-width: none; max-height: 60vh; flex-wrap: wrap; }
+    .cooked-recipe-search .cooked-browse-select-block .cooked-tax-column { flex: 1 1 100%; width: 100%; }
+    .cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div:not(.cooked-tax-column-head) { max-height: none; }
+
+    #cooked-timers-wrap { width: 32rem; }
+    #cooked-timers-wrap .cooked-timer-block.cooked-visible { padding: 1.25rem 3.25rem 1.5rem 1.25rem; }
+    #cooked-timers-wrap .cooked-timer-block .cooked-timer-desc { padding-right: 0; }
+    #cooked-timers-wrap .cooked-timer-block .cooked-timer-obj { position: static; transform: none; justify-content: flex-start; margin-top: 0.35rem; font-size: 1.75rem; }
+
+    body.cooked-fsm-active #cooked-timers-wrap { bottom: 0; }
+
+    /* "Slide up" on mobile */
+    .cooked-fsm { opacity: 1; transform: scale(1); top: 120%; transition: all 350ms cubic-bezier(0.42, 0, 0.15, 1); }
+    .cooked-fsm.cooked-active { top: 0; }
+    .cooked-fsm .cooked-fsm-mobile-nav { display: block; }
+    .cooked-fsm .cooked-fsm-ingredients,
+    .cooked-fsm .cooked-fsm-directions-wrap { padding: 9rem 2rem 1rem; width: 100%; display: none; left: 0; background: var(--cooked-fsm-panel-bg, #fff); }
+    .cooked-fsm .cooked-fsm-ingredients.cooked-active,
+    .cooked-fsm .cooked-fsm-directions-wrap.cooked-active { display: block; }
+}
+
+@media screen and (max-width: $breakpoint-small) {
+    .cooked-fsm .cooked-fsm-directions p { font-size: 1rem; }
+    .cooked-fsm .cooked-recipe-directions .cooked-heading { font-size: 1.25rem; }
+
+    #cooked-timers-wrap { width: 100%; left: 0; right: 0; transform: translate3d(0, 7.2em, 0); }
+    #cooked-timers-wrap.cooked-visible { transform: translate3d(0, 0, 0); }
+    #cooked-timers-wrap.cooked-multiples { width: min(20rem, 100%); left: auto; right: 0; }
+
+    .cooked-recipe-search .cooked-browse-select-block { max-height: 50vh; }
+
+    /* Search on its own row, Browse and sorting side by side below it. Browse is then on the
+       last row, so its panel opens right under it instead of under the sorting. */
+    .cooked-recipe-search .cooked-fields-wrap { display: contents; }
+    .cooked-recipe-search .cooked-search-field { order: -1; flex: 1 1 100%; }
+    .cooked-recipe-search .cooked-field-wrap-select { flex: 1 1 0; min-width: 0; }
+    .cooked-recipe-search .cooked-browse-select { width: 100%; max-width: none; }
+    .cooked-recipe-search .cooked-sortby-wrap { flex: 1 1 0; width: auto; min-width: 0; }
+}

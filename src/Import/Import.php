@@ -111,10 +111,11 @@ class Import {
                 'icon'   => 'migrate',
                 'fields' => [
                     'cooked_no_delicious_recipes' => [
-                        'title'   => 'WP Delicious (formerly Delicious Recipes)',
-                        'desc'    => '',
-                        'type'    => 'message',
-                        'message' => 'There are no recipes to import from WP Delicious.',
+                        'title'       => 'WP Delicious (formerly Delicious Recipes)',
+                        'desc'        => '',
+                        'type'        => 'message',
+                        'message'     => __( 'No recipes were found in WP Delicious. If you add recipes there, they will appear here ready to import.', 'cooked' ),
+                        'empty_state' => 'migrate',
                     ],
                 ],
             ];
@@ -166,10 +167,11 @@ class Import {
                 'icon'   => 'migrate',
                 'fields' => [
                     'cooked_no_wp_recipe_maker_recipes' => [
-                        'title'   => 'WP Recipe Maker',
-                        'desc'    => '',
-                        'type'    => 'message',
-                        'message' => 'There are no recipes to import from WP Recipe Maker.',
+                        'title'       => 'WP Recipe Maker',
+                        'desc'        => '',
+                        'type'        => 'message',
+                        'message'     => __( 'No recipes were found in WP Recipe Maker. If you add recipes there, they will appear here ready to import.', 'cooked' ),
+                        'empty_state' => 'migrate',
                     ],
                 ],
             ];
@@ -249,7 +251,8 @@ class Import {
     }
 
     /**
-     * Outputs a message field.
+     * Outputs a message field. A field flagged `empty_state` (an importer with nothing to
+     * import) reads as an empty state rather than a lone sentence.
      *
      * @param string               $name          Field key.
      * @param mixed                $field_options Unused.
@@ -258,6 +261,18 @@ class Import {
      * @return void
      */
     public static function field_message( $name, $field_options, $color, $field ) {
+        if ( ! empty( $field['empty_state'] ) ) {
+            $icon = is_string( $field['empty_state'] ) ? $field['empty_state'] : 'migrate';
+            echo '<div class="cooked-import-empty">';
+                echo '<span class="cooked-import-empty-icon" aria-hidden="true"><i class="cooked-icon cooked-icon-' . esc_attr( $icon ) . '"></i></span>';
+                echo '<div class="cooked-import-empty-body">';
+                    echo '<p class="cooked-import-empty-title">' . esc_html__( 'Nothing to import yet', 'cooked' ) . '</p>';
+                    echo '<p>' . wp_kses_post( $field['message'] ) . '</p>';
+                echo '</div>';
+            echo '</div>';
+            return;
+        }
+
         echo '<p>' . wp_kses_post( $field['message'] ) . '</p>';
     }
 

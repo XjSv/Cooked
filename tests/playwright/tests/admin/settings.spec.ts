@@ -87,6 +87,50 @@ test.describe('Cooked settings page', () => {
     await expect(adminPage.locator('input[name="cooked_settings[responsive_breakpoint_1]"]')).toHaveValue(next);
     expect(String(getCookedSettings().responsive_breakpoint_1)).toBe(next);
   });
+
+  test('reports a value that was not kept and marks its row', async ({ adminContext }) => {
+    const adminPage = await adminContext.newPage();
+    await gotoSettingsSection(adminPage, 'design');
+
+    const input = adminPage.locator('input[name="cooked_settings[main_color]"]');
+    const original = await input.inputValue();
+
+    // What a paste into the colour field sends: no browser validation blocks it, so the
+    // server falls back to the default and has to say so.
+    await input.evaluate((el, value) => {
+      (el as HTMLInputElement).value = value;
+    }, '#zzzzzz');
+    await adminPage.getByRole('button', { name: 'Update Settings' }).first().click();
+
+    await expect(adminPage.getByText(/Main Color: "#zzzzzz" is not a valid value/i)).toBeVisible();
+    const row = adminPage.locator('.cooked-setting-row.has-error').filter({ has: input });
+    await expect(row).toHaveCount(1);
+    await expect(input).toHaveCSS('border-color', 'rgb(212, 77, 31)');
+
+    await input.fill(original);
+    await saveSettings(adminPage);
+  });
+
+  test('opens the section of an invalid field before reporting it', async ({ adminContext }) => {
+    const adminPage = await adminContext.newPage();
+    await gotoSettingsSection(adminPage, 'recipe_settings');
+
+    const input = adminPage.locator('input[name="cooked_settings[responsive_breakpoint_1]"]');
+    const original = await input.inputValue();
+    // A number field in a hidden section: the browser cannot show its message there.
+    await input.evaluate((el) => {
+      (el as HTMLInputElement).value = '-5';
+    });
+
+    await adminPage.getByRole('button', { name: 'Update Settings' }).first().click();
+
+    await expect(adminPage.locator('.cooked-admin-section.is-active')).toHaveText(/Design/);
+    await expect(input).toBeFocused();
+    expect(await input.evaluate((el: HTMLInputElement) => el.checkValidity())).toBe(false);
+
+    await input.fill(original);
+    await saveSettings(adminPage);
+  });
 });
 
 test.afterAll(() => {

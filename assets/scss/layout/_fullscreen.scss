@@ -1,0 +1,197 @@
+/* Full-Screen Mode */
+.cooked-fsm {
+    box-sizing: border-box;
+    display: none;
+    opacity: 0;
+    transform: scale(0.95);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    z-index: 99998;
+}
+
+.cooked-fsm.cooked-visible {
+    display: block;
+}
+
+.cooked-fsm.cooked-active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.cooked-fsm .cooked-fsm-top {
+    font-size: 1.2rem;
+    font-weight: 300;
+    text-align: center;
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    color: #fff;
+    padding: 0 4rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 3.5rem;
+    height: 3.5rem;
+}
+
+.cooked-fsm .cooked-fsm-ingredients {
+    box-sizing: border-box;
+    padding: 5.5rem 2rem 1rem;
+    font-size: 1rem;
+    line-height: 1.6rem;
+    width: 30%;
+    height: 100%;
+    background: #f9f9f9;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.cooked-fsm .cooked-recipe-ingredients {
+    margin-top: -0.75rem;
+}
+
+.cooked-fsm .cooked-recipe-ingredients .cooked-ingredient {
+    padding: 0.75rem 0 0 2rem;
+}
+
+.cooked-fsm .cooked-recipe-ingredients .cooked-heading {
+    font-size: 1.25rem;
+}
+
+.cooked-fsm .cooked-recipe-ingredients .cooked-heading:first-child {
+    padding-top: 0.75rem;
+}
+
+.cooked-fsm .cooked-recipe-ingredients .cooked-ingredient-checkbox {
+    top: 0.75rem;
+}
+
+.cooked-fsm .cooked-fsm-directions-wrap {
+    box-sizing: border-box;
+    padding: 5.5rem 2rem 1rem;
+    font-size: 1rem;
+    line-height: 1.6rem;
+    width: 70%;
+    height: 100%;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    position: absolute;
+    top: 0;
+    left: 30%;
+}
+
+.cooked-fsm .cooked-fsm-directions p {
+    margin: 0 0 1.5rem;
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}
+
+.cooked-fsm .cooked-recipe-directions .cooked-heading {
+    font-size: 1.5rem;
+}
+
+.cooked-fsm .cooked-recipe-directions .cooked-direction-number {
+    font-size: 1.8rem;
+}
+
+.cooked-fsm .cooked-recipe-directions .cooked-direction.cooked-direction-has-number .cooked-dir-content {
+    padding-left: 3.05rem;
+}
+
+.cooked-fsm .cooked-recipe-directions .cooked-direction.cooked-direction-has-number-wide .cooked-dir-content {
+    padding-left: 3.05rem;
+}
+
+.cooked-fsm .cooked-close-fsm {
+    color: #fff;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 1.25rem;
+}
+
+.cooked-fsm h2 {
+    margin: 0 0 2rem;
+    padding: 0;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+    font-weight: 800;
+}
+
+.cooked-fsm-ingredients .cooked-panel,
+.cooked-fsm-directions .cooked-panel,
+.cooked-fsm-notes .cooked-panel {
+    padding-left: 1%;
+    padding-right: 2%;
+}
+
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes {
+    font-size: 1.2rem;
+    line-height: 1.6rem;
+}
+
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes {
+    margin: 0 0 1rem;
+}
+
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes ol,
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes ul {
+    padding-left: 1.5rem;
+}
+
+.cooked-fsm-notes .cooked-panel .cooked-recipe-notes ul li {
+    margin: 0 0 1rem 1rem;
+}
+
+.cooked-fsm .cooked-fsm-mobile-nav {
+    box-sizing: border-box;
+    position: absolute;
+    top: 3.5rem;
+    left: 0;
+    margin: -1px 0 0 0;
+    width: 100%;
+    padding: 0;
+    line-height: 3.5rem;
+    z-index: 9999999;
+}
+
+.cooked-fsm .cooked-fsm-mobile-nav a {
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.03rem;
+    display: block;
+    float: left;
+    width: 50%;
+    text-align: center;
+    color: #fff;
+    color: rgba(255, 255, 255, 0.6);
+    background: rgba(25, 25, 25, 0.3);
+    box-shadow: inset -1px 0 0 0 rgba(0, 0, 0, 0.15);
+}
+
+.cooked-fsm .cooked-fsm-mobile-nav a.cooked-active {
+    color: #fff;
+}
+
+.cooked-fsm .cooked-fsm-mobile-nav a.cooked-active {
+    box-shadow: none;
+}
+
+.cooked-fsm .cooked-fsm-mobile-nav a:last-child {
+    box-shadow: inset 1px 0 0 0 rgba(0, 0, 0, 0.15);
+}
+
+body.cooked-fsm-active #wpadminbar {
+    display: none;
+}

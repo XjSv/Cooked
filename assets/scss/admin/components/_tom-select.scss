@@ -1,0 +1,165 @@
+.cooked-recipe-finder + .ts-wrapper .ts-control {
+    overflow: visible !important;
+}
+
+.cooked-recipe-finder + .ts-wrapper.multi .ts-control > .item {
+    text-shadow: none;
+    background: #eee;
+    color: #333;
+    border: none;
+    padding: 3px 7px 4px;
+    margin: 0 0 3px;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: move;
+}
+
+.cooked-recipe-finder + .ts-wrapper.multi .ts-control > .item.active {
+    text-shadow: none;
+    background: #f5f5f5;
+    color: #666;
+    border: none;
+}
+
+/* Admin frame and recipe editor selects (cookedEnhanceSelects()): a WordPress-style input
+   with Cooked green focus and highlight. Lists of 8 options or fewer have no search box. */
+#cooked_recipe_settings .cooked-select-wrapper.is-enhanced {
+    min-width: 220px;
+    background: none;
+
+    // Tom Select draws its own caret.
+    &::before {
+        display: none;
+    }
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.single .ts-control,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.single .ts-control,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.single .ts-control,
+body.cooked-recipe-editor #authordiv .ts-wrapper.single .ts-control {
+    min-height: 40px;
+    padding: 0 var(--ts-pr-caret) 0 12px;
+    align-items: center;
+    border: 1px solid #8c8f94;
+    border-radius: var(--cooked-radius-sm);
+    box-shadow: none;
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: border-color var(--cooked-transition), box-shadow var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.single .ts-control:hover,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.single .ts-control:hover,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.single .ts-control:hover,
+body.cooked-recipe-editor #authordiv .ts-wrapper.single .ts-control:hover {
+    border-color: var(--cooked-color-accent-strong);
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.single.focus .ts-control,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.single.focus .ts-control,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.single.focus .ts-control,
+body.cooked-recipe-editor #authordiv .ts-wrapper.single.focus .ts-control,
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.single.dropdown-active .ts-control,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.single.dropdown-active .ts-control,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.single.dropdown-active .ts-control,
+body.cooked-recipe-editor #authordiv .ts-wrapper.single.dropdown-active .ts-control {
+    border-color: var(--cooked-color-accent-strong);
+    box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+}
+
+// Cooked's own chevron (the icon font's angle-down, as on native selects) in place of
+// Tom Select's CSS triangle; it flips while the list is open.
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.single .ts-control::after,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.single .ts-control::after,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.single .ts-control::after,
+body.cooked-recipe-editor #authordiv .ts-wrapper.single .ts-control::after,
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.single.dropdown-active .ts-control::after,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.single.dropdown-active .ts-control::after,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.single.dropdown-active .ts-control::after,
+body.cooked-recipe-editor #authordiv .ts-wrapper.single.dropdown-active .ts-control::after {
+    content: "\f00b";
+    top: 50%;
+    right: 12px;
+    width: auto;
+    height: auto;
+    margin: 0;
+    border: 0;
+    color: var(--cooked-color-text);
+    font-family: 'CookedIcons';
+    font-size: 11px;
+    line-height: 1;
+    transform: translateY(-50%);
+    transition: transform var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.single.dropdown-active .ts-control::after,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.single.dropdown-active .ts-control::after,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.single.dropdown-active .ts-control::after,
+body.cooked-recipe-editor #authordiv .ts-wrapper.single.dropdown-active .ts-control::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-wrapper.disabled .ts-control,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-wrapper.disabled .ts-control,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-wrapper.disabled .ts-control,
+body.cooked-recipe-editor #authordiv .ts-wrapper.disabled .ts-control {
+    opacity: 0.6;
+    cursor: default;
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-dropdown,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-dropdown,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-dropdown,
+body.cooked-recipe-editor #authordiv .ts-dropdown {
+    margin-top: 4px;
+    overflow: hidden;
+    border: 1px solid #8c8f94; // as dark as the control's, so the open list stands out
+    border-radius: var(--cooked-radius-sm);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    color: var(--cooked-color-text);
+    font-size: 14px;
+}
+
+// Fixed-height options, so the list below shows exactly 5 before it scrolls.
+#cooked-admin-app .cooked-admin-screen .ts-dropdown .option,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-dropdown .option,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-dropdown .option,
+body.cooked-recipe-editor #authordiv .ts-dropdown .option {
+    padding: 8px 12px;
+    line-height: 20px;
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-dropdown .active,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-dropdown .active,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-dropdown .active,
+body.cooked-recipe-editor #authordiv .ts-dropdown .active {
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-dropdown .selected,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-dropdown .selected,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-dropdown .selected,
+body.cooked-recipe-editor #authordiv .ts-dropdown .selected {
+    font-weight: 600;
+}
+
+#cooked-admin-app .cooked-admin-screen .ts-dropdown .ts-dropdown-content,
+body.cooked-recipe-editor .cooked-recipe-fields .ts-dropdown .ts-dropdown-content,
+body.cooked-recipe-editor #cooked-ingredients-builder .ts-dropdown .ts-dropdown-content,
+body.cooked-recipe-editor #authordiv .ts-dropdown .ts-dropdown-content {
+    max-height: calc(5 * 36px); // 5 options of 20px line + 16px padding
+}

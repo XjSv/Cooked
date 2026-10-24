@@ -70,7 +70,7 @@ This project uses [Bun](https://bun.sh) for package management and running scrip
 #### Development environment
 You can run the plugin locally with either wp-env or DDEV; pick one.
 
-**wp-env** — Requires Node.js and Docker; `@wordpress/env` is in devDependencies. Config in `.wp-env.json` (PHP 7.4, port 8888, plugin mounted from repo root).
+**wp-env** — Requires Node.js and Docker; `@wordpress/env` is in devDependencies. Config in `.wp-env.json` (PHP 8.2, port 8888, plugin mounted from repo root).
 ``` bash
 bun run start:wp-env   # start
 bun run stop:wp-env    # stop
@@ -95,18 +95,29 @@ bun run destroy:ddev # remove env and wordpress/
 #### Generating language files
 Run with wp-env or DDEV started. The script detects which environment you use.
 
-Add or change French strings in `bin/fix_fr_translations_data.py`, then:
-
 ``` bash
-bun run i18n              # make .pot, update all .po files, apply French, compile .mo
+bun run i18n              # make .pot, update all .po files, compile .mo
 bun run i18n:make-pot     # generate cooked.pot only
 bun run i18n:update-po    # update all .po files in languages/ from the .pot
-bun run i18n:apply-fr     # copy French from the data file into cooked-fr_FR.po
 bun run i18n:make-mo      # compile all .po files in languages/ to .mo
 ```
+#### Compiling assets (SCSS/JS)
+Styles are written in SCSS and compiled to minified bundles in `assets/css/`. Edit the partials, never the compiled CSS. `bun run watch` also writes source maps, so browser dev tools point at the SCSS partials.
 
-`bun run i18n` prints any French strings still empty after applying the data file (`MISSING:`). Add those msgids to the data file and run `i18n` again.
-#### Compiling assets (JS/CSS)
+```
+assets/scss/
+  abstracts/_variables.scss  design tokens (CSS custom properties, shared)
+  essentials.scss            -> essentials.min.css  icon font + admin menu/bar icons, loaded everywhere
+  style.scss                 -> style.min.css       front end
+  print.scss                 -> print.min.css       print view
+  base/  layout/  components/                       front-end partials
+  admin/
+    admin.scss               -> admin.min.css       wp-admin
+    base/  layout/  components/                     admin partials
+```
+
+JavaScript lives in `assets/js/`; `bun run build` minifies `cooked-functions.js`, `cooked-admin-functions.js` and `cooked-migration.js`.
+
 ``` bash
 bun run build   # one-off build
 bun run watch   # watch and rebuild on change
@@ -119,18 +130,23 @@ Runs build and i18n, then creates `build/cooked.zip` ready for distribution (exc
 
 #### Testing
 
-**PHPCS** — Lint PHP files against WordPress Coding Standards and PHPCompatibility (PHP 7.4+):
+**PHPCS** — Lint PHP files against WordPress Coding Standards and PHPCompatibility (PHP 8.2+):
 ``` bash
-bun run lint       # check for violations
-bun run lint-fix   # auto-fix violations
+bun run lint:php       # check for violations
+bun run lint:php:fix   # auto-fix violations
 ```
 
-**PHPUnit** — Run the test suite (14 test classes covering CSV import, recipes, settings, SEO, and more):
+**PHPStan** — Static analysis at level 8 against PHP 8.2:
+``` bash
+bun run analyze:php
+```
+
+**PHPUnit** — Run the test suite (27 test classes covering CSV import, recipes, settings, SEO, and more):
 ``` bash
 bun run test:php
 ```
 
-Tests are in `tests/phpunit/` with CSV fixtures in `tests/test_data/`. Requires a running wp-env or DDEV environment.
+PHPUnit tests are grouped by feature under `tests/phpunit/`. No WordPress install is needed: `tests/phpunit/bootstrap.php` stubs the WordPress functions the tests use. Playwright's CSV import tests use the plugin's `sample-data/` directory.
 
 ## Documentation
 

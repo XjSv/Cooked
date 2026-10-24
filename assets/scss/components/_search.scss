@@ -1,0 +1,793 @@
+/* Search Box */
+.cooked-recipe-search {
+    --cooked-search-height: 3rem;
+
+    box-sizing: border-box;
+    margin: 0 0 1.5rem;
+    padding: 0;
+    width: 100%;
+    display: block;
+    position: relative;
+    color: inherit;
+}
+
+.cooked-recipe-search form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: stretch;
+    margin: 0;
+}
+
+.cooked-recipe-search .cooked-fields-wrap {
+    display: flex;
+    align-items: stretch;
+    gap: 0.5rem;
+    min-width: 0;
+    margin: 0;
+}
+
+.cooked-recipe-search .cooked-field-wrap-select {
+    position: relative;
+    flex: 0 0 auto;
+    min-width: 0;
+}
+
+/* Browse trigger */
+.cooked-recipe-search .cooked-browse-select {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    box-sizing: border-box;
+    max-width: 14rem;
+    height: var(--cooked-search-height);
+    margin: 0;
+    padding: 0 0.875rem;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: inherit;
+    font: inherit;
+    font-size: 0.9rem;
+    line-height: 1;
+    text-align: left;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    transition: background-color var(--cooked-transition), border-color var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-browse-select::after {
+    content: "\f00b";
+    flex: 0 0 auto;
+    font-family: "CookedIcons";
+    font-size: 0.7rem;
+    line-height: 1;
+    opacity: 0.6;
+    transition: transform var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-browse-select:hover {
+    border-color: var(--cooked-color-neutral);
+    background: var(--cooked-color-surface-muted);
+}
+
+.cooked-recipe-search .cooked-browse-select:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 2px;
+}
+
+.cooked-recipe-search .cooked-browse-select[aria-expanded="true"]::after,
+.cooked-recipe-search .cooked-browse-select.cooked-active::after {
+    transform: rotate(180deg);
+}
+
+.cooked-recipe-search .cooked-browse-select .cooked-field-title {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cooked-field-wrap-select.cooked-taxonomy-selected .cooked-browse-select {
+    background: var(--cooked-color-accent-fill);
+    border-color: transparent;
+    color: #fff;
+}
+
+.cooked-field-wrap-select.cooked-taxonomy-selected .cooked-browse-select::after {
+    opacity: 0.8;
+}
+
+/* Browse panel */
+.cooked-recipe-search .cooked-browse-select-block {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    z-index: 99;
+    display: flex;
+    gap: 1.5rem;
+    box-sizing: border-box;
+    width: max-content;
+    min-width: min(20rem, calc(100vw - 2rem));
+    max-width: min(48rem, calc(100vw - 2rem));
+    max-height: min(70vh, 32rem);
+    padding: 1.25rem;
+    overflow: auto;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-surface);
+    color: inherit;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    cursor: default;
+    visibility: hidden;
+    opacity: 0;
+    transform: translate3d(0, -4px, 0);
+    transform-origin: top left;
+    transition: opacity var(--cooked-transition), transform var(--cooked-transition), visibility var(--cooked-transition);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+    pointer-events: none;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-browse-select[aria-expanded="true"] + .cooked-browse-select-block,
+.cooked-recipe-search .cooked-browse-select.cooked-active + .cooked-browse-select-block {
+    visibility: visible;
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+    pointer-events: auto;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column {
+    display: block;
+    flex: 1 1 11rem;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div:not(.cooked-tax-column-head) {
+    max-height: 16rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div > span {
+    display: block;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > span,
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div:not(.cooked-tax-column-head) > a {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > span.cooked-tax-column-title {
+    margin: 0 0 0.5rem;
+    padding: 0 0 0.5rem;
+    border-bottom: 1px solid var(--cooked-color-border);
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 0.5rem;
+    padding: 0 0 0.5rem;
+    border-bottom: 1px solid var(--cooked-color-border);
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column-head .cooked-filter-all {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column-head .cooked-filter-all:hover,
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column-head .cooked-filter-all:focus-visible {
+    background: none;
+    text-decoration: underline;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > span.cooked-tax-column-title,
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column-head .cooked-tax-column-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cooked-color-text-muted);
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column a:not(.cooked-filter-all) {
+    display: block;
+    margin: 0 -0.4rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: var(--cooked-radius-sm);
+    color: inherit;
+    line-height: 1.5;
+    text-decoration: none;
+    transition: background-color var(--cooked-transition), color var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column a:not(.cooked-filter-all):hover,
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column a:not(.cooked-filter-all):focus-visible {
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+    text-decoration: none;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column a:not(.cooked-filter-all):focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: -2px;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > div > span.cooked-tax-sub-item {
+    margin-left: 0.75rem;
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column i.cooked-icon {
+    margin-right: 0.5em;
+    font-size: 0.9rem;
+    color: var(--cooked-color-text-muted);
+}
+
+.cooked-recipe-search .cooked-browse-select-block .cooked-tax-column > strong a {
+    font-weight: 700;
+}
+
+/* Category checkboxes */
+.cooked-recipe-search .cooked-filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    margin: 0;
+    padding: 0;
+}
+
+.cooked-recipe-search .cooked-filter-option {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    margin: 0;
+    padding: 0.35rem 0.4rem;
+    border-radius: var(--cooked-radius-sm);
+    line-height: 1.4;
+    cursor: pointer;
+    transition: background-color var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-filter-option:hover {
+    background: var(--cooked-color-accent-soft);
+}
+
+.cooked-recipe-search .cooked-filter-option input[type="checkbox"] {
+    flex: 0 0 auto;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--cooked-color-accent-fill);
+    cursor: pointer;
+}
+
+.cooked-recipe-search .cooked-filter-option input[type="checkbox"]:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 2px;
+}
+
+.cooked-recipe-search .cooked-filter-option-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cooked-recipe-search .cooked-filter-sub-options {
+    margin-left: 1.35rem;
+}
+
+.cooked-recipe-search .cooked-filter-all {
+    display: inline-block;
+    margin: 0 0 0.4rem;
+    padding: 0;
+    font-size: 0.8rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--cooked-color-danger-strong);
+    text-decoration: none;
+}
+
+.cooked-recipe-search .cooked-filter-all:hover,
+.cooked-recipe-search .cooked-filter-all:focus-visible {
+    text-decoration: underline;
+}
+
+.cooked-recipe-search .cooked-filter-all:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 2px;
+}
+
+.cooked-recipe-search .cooked-filter-all-hidden {
+    display: none;
+}
+
+/* Search field */
+.cooked-recipe-search .cooked-search-field {
+    position: relative;
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.cooked-recipe-search input[type="text"].cooked-browse-search {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    height: var(--cooked-search-height);
+    margin: 0;
+    padding: 0 3.5rem 0 1rem;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: inherit;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: normal;
+    vertical-align: middle;
+    box-shadow: none;
+    transition: border-color var(--cooked-transition), box-shadow var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search input[type="text"].cooked-browse-search:focus {
+    outline: none;
+    border-color: var(--cooked-color-accent-strong);
+    box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+}
+
+.cooked-recipe-search input[type="text"].cooked-browse-search::placeholder {
+    color: var(--cooked-color-text-muted);
+    opacity: 1;
+}
+
+.cooked-recipe-search .cooked-browse-search-button {
+    position: absolute;
+    top: 50%;
+    right: 0.375rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent-fill);
+    color: #fff;
+    font-size: 1rem;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition: opacity var(--cooked-transition), transform var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-browse-search-button:hover {
+    color: #fff;
+    text-decoration: none;
+    opacity: 0.9;
+}
+
+.cooked-recipe-search .cooked-browse-search-button:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -3px;
+}
+
+/* Sorting */
+.cooked-recipe-search .cooked-sortby-wrap {
+    position: relative;
+    display: inline-flex;
+    min-width: 11rem;
+    box-sizing: border-box;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap > select {
+    box-sizing: border-box;
+    width: 100%;
+    height: var(--cooked-search-height);
+    margin: 0;
+    padding: 0 1.75rem 0 0.875rem;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap > select:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 2px;
+}
+
+/* Tom Select (loaded on browse pages) */
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper {
+    width: 100%;
+    min-width: 0;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single .ts-control {
+    box-sizing: border-box;
+    min-height: var(--cooked-search-height);
+    height: var(--cooked-search-height);
+    padding: 0 2rem 0 0.875rem;
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: inherit;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    cursor: pointer;
+    box-shadow: none;
+    transition: border-color var(--cooked-transition), box-shadow var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single .ts-control:hover {
+    border-color: var(--cooked-color-neutral);
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single.focus .ts-control,
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single.dropdown-active .ts-control {
+    border-color: var(--cooked-color-accent-strong);
+    box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+}
+
+/* The theme draws its own focus outline on the combobox; the border and ring above are enough. */
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper .ts-control:focus,
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper .ts-control:focus-visible {
+    outline: none;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single .ts-control::after {
+    content: "\f00b";
+    top: 50%;
+    right: 0.875rem;
+    width: auto;
+    height: auto;
+    margin: 0;
+    border: 0;
+    color: inherit;
+    font-family: "CookedIcons";
+    font-size: 0.7rem;
+    line-height: 1;
+    opacity: 0.6;
+    transform: translateY(-50%);
+    transition: transform var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single.dropdown-active .ts-control::after {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-wrapper.single .ts-control > .item {
+    color: inherit;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-dropdown {
+    margin-top: 0.375rem;
+    overflow: hidden;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: inherit;
+    font-size: 0.9rem;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.14);
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-dropdown .option {
+    padding: 0.55rem 0.75rem;
+    line-height: 1.4;
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-dropdown .active {
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+}
+
+.cooked-recipe-search .cooked-sortby-wrap .ts-dropdown .selected {
+    font-weight: 600;
+}
+
+/* Inline browse columns (inline_browse="true") */
+.cooked-browse-select-inline-block {
+    display: flex;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
+    gap: 1.5rem;
+    box-sizing: border-box;
+    width: 100%;
+    margin: 0.5rem 0 1.5rem;
+    padding: 1.25rem;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-surface);
+    color: inherit;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column {
+    display: block;
+    flex: 1 1 11rem;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > div:not(.cooked-tax-column-head) {
+    max-height: 16rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > div > span {
+    display: block;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > span,
+.cooked-browse-select-inline-block .cooked-tax-column > div:not(.cooked-tax-column-head) > a {
+    display: block;
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > span.cooked-tax-column-title {
+    margin: 0 0 0.5rem;
+    padding: 0 0 0.5rem;
+    border-bottom: 1px solid var(--cooked-color-border);
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0 0 0.5rem;
+    padding: 0 0 0.5rem;
+    border-bottom: 1px solid var(--cooked-color-border);
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column-head .cooked-filter-all {
+    flex: 0 0 auto;
+    margin: 0;
+    padding: 0;
+    line-height: 1.2;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column-head .cooked-filter-all:hover,
+.cooked-browse-select-inline-block .cooked-tax-column-head .cooked-filter-all:focus-visible {
+    background: none;
+    text-decoration: underline;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > span.cooked-tax-column-title,
+.cooked-browse-select-inline-block .cooked-tax-column-head .cooked-tax-column-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--cooked-color-text-muted);
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column a:not(.cooked-filter-all) {
+    display: block;
+    margin: 0 -0.4rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: var(--cooked-radius-sm);
+    color: inherit;
+    line-height: 1.5;
+    text-decoration: none;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column a:not(.cooked-filter-all):hover,
+.cooked-browse-select-inline-block .cooked-tax-column a:not(.cooked-filter-all):focus-visible {
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+    text-decoration: none;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column > div > span.cooked-tax-sub-item {
+    margin-left: 0.75rem;
+}
+
+.cooked-browse-select-inline-block .cooked-tax-column i.cooked-icon {
+    margin-right: 0.5em;
+    font-size: 0.9rem;
+    color: var(--cooked-color-text-muted);
+}
+
+/* Filter chips above the recipe grid */
+.cooked-filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1rem;
+}
+
+.cooked-filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    box-sizing: border-box;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-decoration: none;
+    transition: background-color var(--cooked-transition), color var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-filter-chip:hover,
+.cooked-filter-chip:focus-visible {
+    background: var(--cooked-color-accent-fill);
+    color: #fff;
+    text-decoration: none;
+}
+
+.cooked-filter-chip:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 2px;
+}
+
+.cooked-filter-chip .cooked-icon {
+    font-size: 0.65rem;
+    opacity: 0.7;
+}
+
+.cooked-filter-chip:hover .cooked-icon,
+.cooked-filter-chip:focus-visible .cooked-icon {
+    opacity: 1;
+}
+
+/* AJAX result loading */
+.cooked-recipe-results {
+    position: relative;
+    transition: opacity var(--cooked-transition);
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-recipe-results.cooked-is-loading {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.cooked-recipe-results.cooked-is-loading::after {
+    content: "";
+    position: absolute;
+    top: 3rem;
+    left: 50%;
+    z-index: 2;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: -0.875rem 0 0 -0.875rem;
+    border: 2px solid var(--cooked-color-border);
+    border-top-color: var(--cooked-color-accent-strong);
+    border-radius: 50%;
+    animation: cooked-browse-spin 0.8s linear infinite;
+}
+
+@keyframes cooked-browse-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .cooked-recipe-results.cooked-is-loading::after {
+        animation: none;
+    }
+}
+
+/* Announced by JavaScript, not shown. */
+.cooked-recipe-search .cooked-browse-status {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    clip-path: inset(50%);
+    border: 0;
+    white-space: nowrap;
+}
+
+/* Compact search (sidebar/widget) */
+.cooked-recipe-search.cooked-search-compact form {
+    display: flex;
+    flex-direction: column;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-fields-wrap {
+    flex-wrap: wrap;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-field-wrap-select,
+.cooked-recipe-search.cooked-search-compact .cooked-search-field,
+.cooked-recipe-search.cooked-search-compact .cooked-sortby-wrap {
+    flex: 1 1 100%;
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-browse-select {
+    width: 100%;
+    max-width: none;
+}
+
+.cooked-recipe-search.cooked-search-compact .cooked-browse-select-block {
+    left: 0;
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+}

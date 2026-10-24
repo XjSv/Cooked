@@ -18,29 +18,12 @@ var cooked_loading = false;
 
     /****   1. Variables   ****/
     $_Cooked_Ingredient_Boxes = $('.cooked-ingredient-checkbox');
-    $_Cooked_Fotorama = $('.cooked-recipe-gallery');
     $_Cooked_Ajax_List = $('.cooked-recipe-loader');
     $_Cooked_Recipe_Search = $('.cooked-recipe-search');
     $_Cooked_Timers = $('.cooked-timer > a');
     $_Cooked_FSM_Button = $('.cooked-fsm-button');
 
-    /****   2a. Cooked Gallery   ****/
-
-    if ( $_Cooked_Fotorama.length ) {
-        $_Cooked_Fotorama.on('fotorama:ready', function(e, fotorama){
-            setTimeout(function(){
-                $_Cooked_Fotorama.addClass('cooked-gallery-loaded');
-            },100);
-        });
-    }
-
     $(document).ready(function() {
-
-        /****   2b. Cooked Gallery   ****/
-
-        if ( $_Cooked_Fotorama.length ) {
-            $_Cooked_Fotorama.fotorama();
-        }
 
         /****   3. Ingredients   ****/
 
@@ -66,6 +49,41 @@ var cooked_loading = false;
 
     	if ( $('.cooked-servings').length ) {
     		var servingsSelectField = $('.cooked-servings').find('select');
+
+            // Desktop: Tom Select, showing the current servings ("4 Servings") as the value.
+            // Touch devices keep the native picker laid over the link.
+            // On DOM ready: Tom Select is enqueued with the switcher and can print after this file.
+            $(function() {
+                if ( window.TomSelect && ! window.matchMedia('(pointer: coarse)').matches ) {
+                    servingsSelectField.each(function() {
+                        var select = this,
+                            wrap = select.closest('.cooked-servings'),
+                            current = wrap ? wrap.querySelector('a') : null,
+                            currentLabel = current ? current.textContent : '';
+
+                        if ( select.tomselect ) {
+                            return;
+                        }
+
+                        var tomSelect = new window.TomSelect(select, {
+                            maxOptions: null,
+                            controlInput: null,
+                            dropdownParent: 'body',
+                            render: {
+                                item: function(data, escape) {
+                                    return '<div>' + escape(currentLabel || data.text) + '</div>';
+                                }
+                            }
+                        });
+
+                        tomSelect.dropdown.classList.add('cooked-servings-dropdown');
+                        if ( wrap ) {
+                            wrap.classList.add('is-enhanced');
+                        }
+                    });
+                }
+            });
+
     		servingsSelectField.on('change', function(e) {
     			e.preventDefault();
     			var servings = $(this).children("option:selected").val();
@@ -92,91 +110,497 @@ var cooked_loading = false;
             });
         }
 
-        /****   5. Browse Search Button   ****/
+        /****   5. Browse Search & Filters   ****/
 
         if ( $_Cooked_Recipe_Search.length ) {
-           $('body').on( 'click',function(e) {
-                var thisButton = false;
+            var browseResultsSelector = '[data-cooked-results]';
+            var browseRequest         = null;
+            var browseRequestId       = 0;
+            var browseDesiredUrl      = null;
+            var browseCategoryTimer   = null;
+            var browseSearchTimer     = null;
 
-                // Did someone click the Browse Button in one way or another?
-                if ( $('.cooked-browse-select').has(e.target).length > 0 ) {
-                    thisButton = $(e.target).parents('.cooked-browse-select');
-                } else if ( $(e.target).hasClass('cooked-browse-select') ) {
-                    thisButton = $(e.target);
+            function cookedStripTags(value) {
+                return wp.sanitize.stripTags(String(value || ''));
+            }
+
+            function cookedBrowseResults() {
+                return document.querySelector(browseResultsSelector);
+            }
+
+            function cookedBrowseForm(element) {
+                if (element) {
+                    return element.closest('form');
                 }
 
-                // Yep, they clicked the button!
-                if (thisButton) {
-                    if (thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-browse-select') || thisButton.hasClass('cooked-active') && $(e.target).hasClass('cooked-field-title')) {
-                        thisButton.removeClass('cooked-active');
-                    } else {
-                        thisButton.addClass('cooked-active');
-                    }
+                return document.querySelector('.cooked-recipe-search form');
+            }
 
-                // Nope, they clicked something else.
-                } else {
-                    $('.cooked-browse-select').removeClass('cooked-active');
-                }
-            });
+            function cookedEncodeTaxonomyValue(value) {
+                return String(value || '')
+                    .split(',')
+                    .map(function(term) {
+                        return encodeURIComponent(term.trim());
+                    })
+                    .filter(Boolean)
+                    .join(',');
+            }
 
-            var browseSearchButton = $('.cooked-browse-search-button');
-            browseSearchButton.on('click', function(e) {
-                e.preventDefault();
-                var thisButton = $(this);
-                thisButton.parents('form').trigger('submit');
-            });
+            function cookedBrowseUrl(form) {
+                var $form      = $(form);
+                var categories = $form.find('input[name="cooked_category_filter[]"]:checked').map(function() {
+                    return this.value;
+                }).get();
+                var values = {
+                    category: categories.length ? categories.join(',') : cookedStripTags($form.find('[name="cp_recipe_category"]').val() || ''),
+                    method: cookedStripTags($form.find('[name="cp_recipe_cooking_method"]').val() || ''),
+                    cuisine: cookedStripTags($form.find('[name="cp_recipe_cuisine"]').val() || ''),
+                    tags: cookedStripTags($form.find('[name="cp_recipe_tags"]').val() || ''),
+                    diet: cookedStripTags($form.find('[name="cp_recipe_diet"]').val() || ''),
+                    search: cookedStripTags($form.find('[name="cooked_search_s"]').val() || ''),
+                    sort: cookedStripTags($form.find('[name="cooked_browse_sort_by"]').val() || 'date_desc'),
+                };
 
-            // Add form submit handler for the Browse Search Form
-            if ( cooked_functions_js_vars.permalink_structure ) {
-                $('.cooked-recipe-search form').on('submit', function(e) {
-                    e.preventDefault();
+                // Without pretty permalinks, let WordPress read the form fields from the query string.
+                if (!cooked_functions_js_vars.permalink_structure) {
+                    var queryUrl = new URL(form.action, window.location.origin);
+                    var params   = new URLSearchParams();
 
-                    // Get form values
-                    const formValues = {
-                        category: wp.sanitize.stripTags($(this).find('[name="cp_recipe_category"]').val() || ''),
-                        method: wp.sanitize.stripTags($(this).find('[name="cp_recipe_cooking_method"]').val() || ''),
-                        cuisine: wp.sanitize.stripTags($(this).find('[name="cp_recipe_cuisine"]').val() || ''),
-                        tags: wp.sanitize.stripTags($(this).find('[name="cp_recipe_tags"]').val() || ''),
-                        diet: wp.sanitize.stripTags($(this).find('[name="cp_recipe_diet"]').val() || ''),
-                        search: wp.sanitize.stripTags($(this).find('[name="cooked_search_s"]').val() || ''),
-                        sort: wp.sanitize.stripTags($(this).find('[name="cooked_browse_sort_by"]').val() || 'date_desc'),
-                    };
-
-                    // Create URL segments with proper encoding
-                    const urlSegments = [];
-
-                    // Add taxonomy segments with improved encoding
-                    const taxonomyFields = [
-                        { value: formValues.category, prefix: cooked_functions_js_vars.recipe_category_slug },
-                        { value: formValues.method, prefix: cooked_functions_js_vars.recipe_cooking_method_slug },
-                        { value: formValues.cuisine, prefix: cooked_functions_js_vars.recipe_cuisine_slug },
-                        { value: formValues.tags, prefix: cooked_functions_js_vars.recipe_tags_slug },
-                        { value: formValues.diet, prefix: cooked_functions_js_vars.recipe_diet_slug },
-                    ];
-
-                    taxonomyFields.forEach(field => {
-                        if (field.value) {
-                            const safePrefix = encodeURIComponent(field.prefix);
-                            const safeValue = encodeURIComponent(field.value);
-                            urlSegments.push(`${safePrefix}/${safeValue}`);
-                        }
+                    queryUrl.search = '';
+                    new FormData(form).forEach(function(value, key) {
+                        params.append(key, value);
                     });
+                    queryUrl.search = params.toString();
 
-                    // Add search segment
-                    if (formValues.search) {
-                        urlSegments.push(`search/${encodeURIComponent(formValues.search)}`);
+                    return queryUrl.toString();
+                }
+
+                var segments       = [];
+                var taxonomyFields = [
+                    { value: values.category, prefix: cooked_functions_js_vars.recipe_category_slug, multiple: true },
+                    { value: values.method, prefix: cooked_functions_js_vars.recipe_cooking_method_slug },
+                    { value: values.cuisine, prefix: cooked_functions_js_vars.recipe_cuisine_slug },
+                    { value: values.tags, prefix: cooked_functions_js_vars.recipe_tags_slug },
+                    { value: values.diet, prefix: cooked_functions_js_vars.recipe_diet_slug },
+                ];
+
+                taxonomyFields.forEach(function(field) {
+                    if (!field.value) {
+                        return;
                     }
 
-                    // Add sort segment
-                    urlSegments.push(`sort/${encodeURIComponent(formValues.sort)}`);
+                    var safeValue = field.multiple ? cookedEncodeTaxonomyValue(field.value) : encodeURIComponent(field.value);
+                    segments.push(encodeURIComponent(field.prefix) + '/' + safeValue);
+                });
 
-                    // Build URL using browse_page_url as base (includes language prefix for multilingual sites)
-                    const prettyUrl = urlSegments.filter(Boolean).join('/');
-                    const baseUrl = cooked_functions_js_vars.browse_page_url || cooked_functions_js_vars.site_url;
-                    const finalUrl = `${baseUrl}/${prettyUrl}`.replace(/\/+/g, '/').replace(':/', '://');
+                if (values.search) {
+                    segments.push('search/' + encodeURIComponent(values.search));
+                }
 
-                    // Navigate to URL
-                    window.location.href = finalUrl;
+                segments.push('sort/' + encodeURIComponent(values.sort));
+
+                // Build URL using browse_page_url as base (includes language prefix for multilingual sites).
+                var baseUrl = cooked_functions_js_vars.browse_page_url || cooked_functions_js_vars.site_url;
+
+                return (baseUrl + '/' + segments.join('/')).replace(/\/+/g, '/').replace(':/', '://');
+            }
+
+            function cookedNormalizeUrl(url) {
+                try {
+                    var parsed = new URL(url, window.location.origin);
+                    parsed.hash = '';
+                    return parsed.href.replace(/\/+$/, '');
+                } catch (error) {
+                    return String(url || '');
+                }
+            }
+
+            function cookedBrowseStatus(message) {
+                var status = document.querySelector('.cooked-recipe-search .cooked-browse-status');
+
+                if (!status) {
+                    return;
+                }
+
+                status.textContent = '';
+                window.setTimeout(function() {
+                    status.textContent = message;
+                }, 50);
+            }
+
+            function cookedAnnounceResults(results) {
+                var i18n  = cooked_functions_i18n_js_vars || {};
+                var count = parseInt(results.getAttribute('data-cooked-recipe-count'), 10);
+
+                if (isNaN(count)) {
+                    count = results.querySelectorAll('.cooked-recipe').length;
+                }
+
+                if (count < 1) {
+                    cookedBrowseStatus(i18n.i18n_browse_no_results || 'No recipes found.');
+                    return;
+                }
+
+                if (1 === count) {
+                    cookedBrowseStatus(i18n.i18n_browse_results_one || '1 recipe found.');
+                    return;
+                }
+
+                cookedBrowseStatus((i18n.i18n_browse_results_many || '%s recipes found.').replace('%s', count));
+            }
+
+            function cookedSyncBrowseControls(doc) {
+                var currentBoxes   = document.querySelectorAll('.cooked-recipe-search input[name="cooked_category_filter[]"]');
+                var incomingBoxes  = doc.querySelectorAll('.cooked-recipe-search input[name="cooked_category_filter[]"]');
+                var checkedByValue = {};
+
+                incomingBoxes.forEach(function(input) {
+                    if (input.checked) {
+                        checkedByValue[input.value] = true;
+                    }
+                });
+
+                currentBoxes.forEach(function(input) {
+                    input.checked = Boolean(checkedByValue[input.value]);
+                });
+
+                var currentSearch  = document.querySelector('.cooked-recipe-search .cooked-browse-search');
+                var incomingSearch = doc.querySelector('.cooked-recipe-search .cooked-browse-search');
+
+                // Never overwrite a search field the visitor is still typing in.
+                if (currentSearch && incomingSearch && document.activeElement !== currentSearch) {
+                    currentSearch.value = incomingSearch.value;
+                }
+
+                var currentSort  = document.querySelector('.cooked-recipe-search .cooked-sortby-select');
+                var incomingSort = doc.querySelector('.cooked-recipe-search .cooked-sortby-select');
+
+                if (currentSort && incomingSort) {
+                    currentSort.value = incomingSort.value;
+
+                    if (currentSort.tomselect) {
+                        currentSort.tomselect.setValue(incomingSort.value, true);
+                    }
+                }
+
+                var currentWrap    = document.querySelector('.cooked-recipe-search .cooked-field-wrap-select');
+                var incomingWrap   = doc.querySelector('.cooked-recipe-search .cooked-field-wrap-select');
+                var currentTitle   = currentWrap ? currentWrap.querySelector('.cooked-field-title') : null;
+                var incomingTitle  = incomingWrap ? incomingWrap.querySelector('.cooked-field-title') : null;
+                var currentButton  = currentWrap ? currentWrap.querySelector('.cooked-browse-select') : null;
+                var incomingButton = incomingWrap ? incomingWrap.querySelector('.cooked-browse-select') : null;
+
+                if (currentWrap && incomingWrap) {
+                    currentWrap.classList.toggle('cooked-taxonomy-selected', incomingWrap.classList.contains('cooked-taxonomy-selected'));
+                }
+
+                if (currentTitle && incomingTitle) {
+                    currentTitle.textContent = incomingTitle.textContent;
+                }
+
+                if (currentButton && incomingButton && incomingButton.getAttribute('aria-label')) {
+                    currentButton.setAttribute('aria-label', incomingButton.getAttribute('aria-label'));
+                }
+
+                var currentClear  = document.querySelector('.cooked-recipe-search .cooked-filter-all');
+                var incomingClear = doc.querySelector('.cooked-recipe-search .cooked-filter-all');
+
+                if (currentClear) {
+                    currentClear.classList.toggle('cooked-filter-all-hidden', !incomingClear || incomingClear.classList.contains('cooked-filter-all-hidden'));
+                }
+            }
+
+            function cookedSetBrowseLoading(isLoading) {
+                var results = cookedBrowseResults();
+
+                if (!results) {
+                    return;
+                }
+
+                results.classList.toggle('cooked-is-loading', isLoading);
+                results.setAttribute('aria-busy', isLoading ? 'true' : 'false');
+            }
+
+            function cookedLoadBrowse(url, options) {
+                options = options || {};
+
+                var results = cookedBrowseResults();
+                var form    = cookedBrowseForm();
+
+                if (!results || !form || !window.fetch || !window.DOMParser || !window.URLSearchParams || !window.AbortController) {
+                    window.location.href = url;
+                    return;
+                }
+
+                var target = cookedNormalizeUrl(url);
+
+                // A newer checkbox change is still waiting for its debounce.
+                if (browseDesiredUrl && browseDesiredUrl !== target) {
+                    return;
+                }
+
+                if (options.history === 'push' && target !== cookedNormalizeUrl(window.location.href)) {
+                    window.history.pushState({ cookedBrowse: true }, '', url);
+                } else if (options.history === 'replace' && target !== cookedNormalizeUrl(window.location.href)) {
+                    window.history.replaceState({ cookedBrowse: true }, '', url);
+                }
+
+                // A sort change already triggers the form submit event; do not fetch the same results twice.
+                if (results.getAttribute('data-cooked-url') === target) {
+                    return;
+                }
+
+                if (browseRequest) {
+                    browseRequest.abort();
+                }
+
+                browseRequest = new AbortController();
+
+                var requestId = ++browseRequestId;
+                var signal    = browseRequest.signal;
+                var i18n      = cooked_functions_i18n_js_vars || {};
+
+                cookedSetBrowseLoading(true);
+                cookedBrowseStatus(i18n.i18n_browse_loading || 'Loading recipes…');
+
+                fetch(url, {
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    signal: signal
+                })
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('HTTP ' + response.status);
+                        }
+
+                        return response.text();
+                    })
+                    .then(function(html) {
+                        // Ignore a stale response while a newer filter change is pending.
+                        if (requestId !== browseRequestId || (browseDesiredUrl && browseDesiredUrl !== target)) {
+                            return;
+                        }
+
+                        var doc  = new DOMParser().parseFromString(html, 'text/html');
+                        var next = doc.querySelector(browseResultsSelector);
+
+                        if (!next) {
+                            throw new Error('No recipe results in response.');
+                        }
+
+                        var imported = document.importNode(next, true);
+
+                        imported.setAttribute('data-cooked-url', target);
+                        imported.classList.remove('cooked-is-loading');
+                        imported.setAttribute('aria-busy', 'false');
+
+                        results.replaceWith(imported);
+                        cookedSyncBrowseControls(doc);
+                        cookedAnnounceResults(imported);
+                        browseDesiredUrl = null;
+                    })
+                    .catch(function(error) {
+                        if (error && error.name === 'AbortError') {
+                            return;
+                        }
+
+                        if (requestId !== browseRequestId) {
+                            return;
+                        }
+
+                        browseDesiredUrl = null;
+                        cookedSetBrowseLoading(false);
+                        window.location.href = url;
+                    });
+            }
+
+            $('body').on('click', '.cooked-browse-select', function(e) {
+                e.preventDefault();
+
+                var thisButton = $(this),
+                    isOpen     = thisButton.attr('aria-expanded') === 'true';
+
+                $('.cooked-browse-select').not(thisButton).removeClass('cooked-active').attr('aria-expanded', 'false');
+
+                thisButton.toggleClass('cooked-active', !isOpen).attr('aria-expanded', isOpen ? 'false' : 'true');
+            });
+
+            $('body').on('click', function(e) {
+                if (!$(e.target).closest('.cooked-field-wrap-select').length) {
+                    $('.cooked-browse-select').removeClass('cooked-active').attr('aria-expanded', 'false');
+                }
+            });
+
+            $('body').on('keydown', function(e) {
+                if (e.key !== 'Escape') {
+                    return;
+                }
+
+                var openButton = $('.cooked-browse-select[aria-expanded="true"]').first();
+
+                if (openButton.length) {
+                    openButton.removeClass('cooked-active').attr('aria-expanded', 'false').trigger('focus');
+                }
+            });
+
+            // The submit event is dispatched directly in tests, so bind it directly instead of delegating.
+            $('.cooked-recipe-search form').on('submit', function(e) {
+                if (!cookedBrowseResults()) {
+                    return;
+                }
+
+                e.preventDefault();
+
+                var url = cookedBrowseUrl(this);
+
+                window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
+                browseDesiredUrl = cookedNormalizeUrl(url);
+                cookedLoadBrowse(url, { history: 'push' });
+            });
+
+            $('body').on('input', '.cooked-recipe-search .cooked-browse-search', function(e) {
+                var form = cookedBrowseForm(this);
+
+                if (!form || !cookedBrowseResults()) {
+                    return;
+                }
+
+                var originalEvent = e.originalEvent || e;
+
+                // Wait until IME composition (e.g. Japanese) has finished.
+                if (originalEvent.isComposing) {
+                    return;
+                }
+
+                var url = cookedBrowseUrl(form);
+
+                window.clearTimeout(browseSearchTimer);
+                browseDesiredUrl = cookedNormalizeUrl(url);
+                browseSearchTimer = window.setTimeout(function() {
+                    // Typing replaces the current history entry; Enter remains a deliberate navigation.
+                    cookedLoadBrowse(url, { history: 'replace' });
+                }, 300);
+            });
+
+            $('body').on('change', '.cooked-recipe-search input[name="cooked_category_filter[]"]', function() {
+                var form = cookedBrowseForm(this);
+
+                if (!form || !cookedBrowseResults()) {
+                    return;
+                }
+
+                var url = cookedBrowseUrl(form);
+
+                window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
+                browseDesiredUrl = cookedNormalizeUrl(url);
+                browseCategoryTimer = window.setTimeout(function() {
+                    cookedLoadBrowse(url, { history: 'push' });
+                }, 200);
+            });
+
+            $('body').on('change', '.cooked-recipe-search .cooked-sortby-select', function() {
+                var form = cookedBrowseForm(this);
+
+                if (!form || !cookedBrowseResults()) {
+                    return;
+                }
+
+                var url = cookedBrowseUrl(form);
+
+                window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
+                browseDesiredUrl = cookedNormalizeUrl(url);
+                cookedLoadBrowse(url, { history: 'push' });
+            });
+
+            $('body').on('click', '.cooked-recipe-search .cooked-filter-all', function(e) {
+                var form = cookedBrowseForm(this);
+
+                if (!form || !cookedBrowseResults()) {
+                    return;
+                }
+
+                e.preventDefault();
+                window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
+                $(form).find('input[name="cooked_category_filter[]"]').prop('checked', false);
+
+                var url = cookedBrowseUrl(form);
+
+                browseDesiredUrl = cookedNormalizeUrl(url);
+                cookedLoadBrowse(url, { history: 'push' });
+            });
+
+            $('body').on('click', '[data-cooked-filter-chip]', function(e) {
+                var form  = cookedBrowseForm();
+                var field = this.getAttribute('data-field') || this.getAttribute('data-taxonomy');
+                var term  = this.getAttribute('data-term');
+
+                if (!form || !field || !term || !cookedBrowseResults()) {
+                    return;
+                }
+
+                var input = form.querySelector('input[name="' + field + '[]"][value="' + term + '"]');
+
+                if (!input) {
+                    return;
+                }
+
+                e.preventDefault();
+                window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
+                input.checked = false;
+
+                var url = cookedBrowseUrl(form);
+
+                browseDesiredUrl = cookedNormalizeUrl(url);
+                cookedLoadBrowse(url, { history: 'push' });
+            });
+
+            window.addEventListener('popstate', function() {
+                if (!cookedBrowseResults()) {
+                    return;
+                }
+
+                window.clearTimeout(browseCategoryTimer);
+                window.clearTimeout(browseSearchTimer);
+                browseDesiredUrl = cookedNormalizeUrl(window.location.href);
+                cookedLoadBrowse(window.location.href, { history: 'none' });
+            });
+
+            // Remember the URL the server rendered so repeat submit events do not fetch it again.
+            $('[data-cooked-results]').each(function() {
+                this.setAttribute('data-cooked-url', cookedNormalizeUrl(window.location.href));
+            });
+
+            // Desktop: Tom Select for the sort menu. Touch devices keep the native picker,
+            // which suits them better (the same rule as the admin selects).
+            if (window.TomSelect && !window.matchMedia('(pointer: coarse)').matches) {
+                $('.cooked-recipe-search .cooked-sortby-select').each(function() {
+                    var select = this;
+
+                    if (select.tomselect) {
+                        return;
+                    }
+
+                    var tomSelect = new window.TomSelect(select, {
+                            allowEmptyOption: true,
+                            maxOptions: null,
+                            controlInput: null
+                        }),
+                        ariaLabel = select.getAttribute('aria-label');
+
+                    if (ariaLabel) {
+                        tomSelect.control.setAttribute('aria-label', ariaLabel);
+                    }
+
+                    if (select.parentNode) {
+                        select.parentNode.classList.add('is-enhanced');
+                    }
                 });
             }
         }
@@ -193,19 +617,21 @@ var cooked_loading = false;
 
                 // This timer is already here, let's just flash it.
                 if ($('div#' + timerID).length) {
-                    $('div#' + timerID).css({ 'background' : '#eeeeee' });
+                    var existingTimer = $('div#' + timerID);
+                    existingTimer.addClass('cooked-timer-flash');
                     setTimeout(function() {
-                        $('div#' + timerID).css({ 'background' : '' });
-                    }, 200);
+                        existingTimer.removeClass('cooked-timer-flash');
+                    }, 300);
 
                     return;
                 } else {
                     // Only 4 timers allowed at a time.
                     if (totalTimers == 4) {
-                        $('#cooked-timers-wrap').css({ 'transform' : 'translate3d(0,0.5em,0)' });
+                        var timersWrap = $('#cooked-timers-wrap');
+                        timersWrap.addClass('cooked-timer-attention');
                         setTimeout(function() {
-                            $('#cooked-timers-wrap').css({ 'transform' : '' });
-                        },200);
+                            timersWrap.removeClass('cooked-timer-attention');
+                        },400);
                         return;
                     }
 
@@ -266,6 +692,14 @@ var cooked_loading = false;
                     }
                 }
             });
+
+            // The timer link is an anchor without an href, so give it button-like keyboard support.
+            Cooked_Timers.on('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                }
+            });
         }
 
         function cookedTimerBlock(Timer, visibleClass = 'cooked-visible') {
@@ -293,10 +727,14 @@ var cooked_loading = false;
                 'data-seconds-left': Timer.seconds
             }).appendTo(timerBlock);
 
-            // Create and append the icon
-            $('<i>', {
-                class: 'cooked-icon cooked-icon-times'
-            }).appendTo(timerBlock);
+            // Create and append the close button
+            $('<button>', {
+                type: 'button',
+                class: 'cooked-timer-close',
+                'aria-label': cooked_functions_i18n_js_vars.i18n_timer_close
+            }).append(
+                $('<i>', { class: 'cooked-icon cooked-icon-close', 'aria-hidden': 'true' })
+            ).appendTo(timerBlock);
 
             // Create and append the progress bar
             let progress = $('<div>', { class: 'cooked-progress' });
@@ -304,6 +742,31 @@ var cooked_loading = false;
             progress.appendTo(timerBlock);
 
             return timerBlock;
+        }
+
+        function cookedTimerControls(timerObj) {
+            var i18n = cooked_functions_i18n_js_vars;
+
+            function control(className, label, icon) {
+                var button = $('<button>', {
+                    type: 'button',
+                    class: 'cooked-timer-control ' + className,
+                    'aria-label': label
+                });
+
+                $('<i>', {
+                    class: 'cooked-icon cooked-icon-' + icon,
+                    'aria-hidden': 'true'
+                }).appendTo(button);
+
+                return button;
+            }
+
+            timerObj.prepend(
+                control('cooked-timer-reset', i18n.i18n_timer_reset, 'reverse'),
+                control('cooked-timer-pause', i18n.i18n_timer_pause, 'pause'),
+                control('cooked-timer-play', i18n.i18n_timer_play, 'play')
+            );
         }
 
         function cookedTimer(timerObj, startPaused) {
@@ -324,19 +787,19 @@ var cooked_loading = false;
                 },
                 onComplete: function() {
                     audio.play();
-                    timerObj.addClass('cooked-timer-complete');
+                    parentBlock.addClass('cooked-complete');
+                    parentBlock.find('.cooked-timer-hours').text('00:');
+                    parentBlock.find('.cooked-timer-minutes').text('00:');
+                    parentBlock.find('.cooked-timer-seconds').text('00');
+                    parentBlock.find('.cooked-progress > span').css({ 'width' : '100%' });
                 }
             });
 
-            timerObj.prepend( '<i class="cooked-icon cooked-icon-reverse"></i><i class="cooked-icon cooked-icon-pause"></i><i class="cooked-icon cooked-icon-play"></i>' );
+            cookedTimerControls(timerObj);
 
             if (startPaused){
                 timerObj.trigger('pause');
                 parentBlock.addClass('cooked-paused');
-                parentBlock.find('i.cooked-icon-pause').hide();
-                parentBlock.find('i.cooked-icon-play').css({'display':'inline-block'});
-                parentBlock.addClass('cooked-paused');
-                $(this).parent().find('i.cooked-icon-play').css({'display':'inline-block'});
             }
 
             cookedTimer_progress_bar( parentBlock, 10, 10 );
@@ -345,41 +808,29 @@ var cooked_loading = false;
                 cookedTimer_progress_bar( parentBlock,timeLeft,secondsLeft );
             });
 
-            timerObj.on( 'complete', function( e,timeLeft ){
-                audio.play();
-                parentBlock.find('i.cooked-icon-pause').hide();
-                parentBlock.find('i.cooked-icon-play').hide();
-                parentBlock.find('.cooked-timer-seconds').html('00');
-            });
-
-            timerObj.on( 'click', 'i.cooked-icon-pause', function(e) {
+            timerObj.on( 'click', '.cooked-timer-pause', function(e) {
                 e.preventDefault();
-                $(this).hide();
                 parentBlock.addClass('cooked-paused');
-                $(this).parent().find('i.cooked-icon-play').css({'display':'inline-block'});
                 timerObj.trigger('pause');
             });
 
-            timerObj.on( 'click', 'i.cooked-icon-play', function(e) {
+            timerObj.on( 'click', '.cooked-timer-play', function(e) {
                 e.preventDefault();
-                $(this).hide();
                 parentBlock.removeClass('cooked-paused cooked-complete');
-                $(this).parent().find('i.cooked-icon-pause').css({'display':'inline-block'});
                 timerObj.trigger('resume');
             });
 
-            timerObj.on( 'click', 'i.cooked-icon-reverse', function(e) {
+            timerObj.on( 'click', '.cooked-timer-reset', function(e) {
                 e.preventDefault();
                 parentBlock.removeClass('cooked-paused cooked-complete');
-                $(this).parent().find('i.cooked-icon-play').css({'display':'inline-block'});
-                $(this).parent().find('i.cooked-icon-pause').hide();
                 timerObj.remove();
                 $( '#' + thisTimerID ).append('<div class="cooked-timer-obj" data-seconds-left="' + secondsLeft + '"></div>');
                 var newTimer = $( '#' + thisTimerID ).find( '.cooked-timer-obj' );
                 cookedTimer( newTimer, true );
             });
 
-            parentBlock.on( 'click', 'i.cooked-icon-times', function(e) {
+            // Rebind, since a reset calls this function again on the same block.
+            parentBlock.off( 'click.cookedTimerClose', '.cooked-timer-close' ).on( 'click.cookedTimerClose', '.cooked-timer-close', function(e) {
                 e.preventDefault();
 
                 if ( $('#cooked-timers-wrap').find('.cooked-timer-block').length == 1 ){
@@ -397,7 +848,6 @@ var cooked_loading = false;
                 setTimeout(function(){
                     parentBlock.remove();
                 },200);
-
             });
 
         }

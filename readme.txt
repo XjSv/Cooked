@@ -1,10 +1,10 @@
 === Cooked - Recipe Management ===
-Contributors: xjsv, boxystudio
+Contributors: xjsv, mgiannopoulos24, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 6.8
 Tested up to: 7.1
-Stable tag: 1.16.2
-Requires PHP: 7.4
+Stable tag: 2.0.0
+Requires PHP: 8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 Funding: https://github.com/sponsors/XjSv
@@ -81,6 +81,10 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
+= 2.0.0 =
+Cooked 2.0 requires PHP 8.2 or newer: check your PHP version before updating. Cooked's PHP files moved from includes/ to src/. Custom code should use the Cooked_* class names, which keep working, rather than loading Cooked files directly.
+
+= 1.16.2 =
 Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a new include_ids attribute to the cooked-related-recipes shortcode.
 
 == Changelog ==
@@ -329,7 +333,7 @@ Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a
 * **FIX:** Fixes an XSS vulnerability with the Serving Size picker.
 
 = 1.7.9 =
-** **NEW:** Added an `inline_browse` option to the `[cooked-browse]` and `[cooked-search]` shortcodes. Ex. `[cooked-browse inline_browse="true"]` This will show the taxonomies inline and not require the "Browse" button being clicked to view them.
+* **NEW:** Added an `inline_browse` option to the `[cooked-browse]` and `[cooked-search]` shortcodes. Ex. `[cooked-browse inline_browse="true"]` This will show the taxonomies inline and not require the "Browse" button being clicked to view them.
 
 = 1.7.8.5 =
 * **FIX:** Fixed an issue with large spaces between the recipe template shortcodes

@@ -1,0 +1,36 @@
+// Design tokens shared by the front-end and admin stylesheets, as CSS custom
+// properties so themes and Cooked Pro can read or override them at runtime.
+
+:root {
+    // Brand
+    --cooked-color-accent: #00c086;
+    --cooked-color-accent-strong: #007a55; // readable on white: text, links, buttons
+    --cooked-color-accent-hover: #00664a;
+    --cooked-color-accent-active: #00553e;
+    --cooked-color-accent-soft: #e8f7f1;
+    --cooked-color-accent-fill: #007a55; // backgrounds behind white text (buttons, badges)
+    --cooked-color-brand-dark: #33373c;
+    --cooked-color-brand-icon: #00e0a9;
+
+    // Status
+    --cooked-color-danger: #d44d1f;
+    --cooked-color-danger-strong: #b83c13; // readable on white: text links
+    --cooked-color-warning: #ffad18;
+    --cooked-color-neutral: #aaa;
+
+    // Neutrals
+    --cooked-color-text: #1e1e1e;
+    --cooked-color-text-muted: #757575;
+    --cooked-color-border: #e0e0e0;
+    --cooked-color-surface-muted: #fcfcfc;
+    --cooked-color-surface: #fff; // cards, frames, form fields
+    --cooked-color-page: #f0f0f1; // the WordPress admin page behind them
+
+    // Shape
+    --cooked-radius: 8px; // frames and cards
+    --cooked-radius-sm: 4px; // buttons, badges, menu items, code blocks
+
+    // Interaction
+    --cooked-focus-ring: 2px solid var(--cooked-color-accent-strong);
+    --cooked-transition: 150ms ease;
+}

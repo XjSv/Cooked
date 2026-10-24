@@ -1,0 +1,37 @@
+/* Measurement System Switcher */
+.cooked-recipe-info span.cooked-measurement-system {
+    padding-left: 3rem;
+}
+
+.cooked-recipe-info span.cooked-measurement-system select.cooked-measurement-system-changer {
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    border: none;
+    background: none;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+.cooked-recipe-info span.cooked-measurement-system-icon {
+    opacity: 0.5;
+    width: 1rem;
+    height: 1rem;
+    font-size: 2.2rem;
+    line-height: 1;
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin: -1.1rem 0 0 0;
+}
+
+.cooked-recipe-info span.cooked-measurement-system-icon i.cooked-icon {
+    display: block;
+}

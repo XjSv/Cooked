@@ -3,16 +3,6 @@ import { deletePostsByTitle } from '../../utils/wp-cli';
 
 const TIMER_SHORTCODE = '[cooked-timer minutes="5"]5 Minutes[/cooked-timer]';
 
-declare global {
-  interface Window {
-    tinyMCE: {
-      get: (id: string) => {
-        getContent: (args?: { format?: string }) => string;
-      } | null;
-    };
-  }
-}
-
 test.describe('Bulk Add directions with cooked-timer shortcode', () => {
   let title: string;
 
@@ -30,7 +20,7 @@ test.describe('Bulk Add directions with cooked-timer shortcode', () => {
     await adminPage.goto('/wp-admin/post-new.php?post_type=cp_recipe', { waitUntil: 'networkidle' });
     await adminPage.getByLabel('Recipe title ...').fill(title);
 
-    await adminPage.click('#cooked-recipe-tab-directions', { force: true });
+    await adminPage.click('#cooked-recipe-tab-directions');
     await adminPage.locator('#cooked-recipe-tab-content-directions .cooked-bulk-add-button').click();
 
     const textarea = adminPage.locator('#cooked-bulk-add-textarea');

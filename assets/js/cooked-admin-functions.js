@@ -1,0 +1,2498 @@
+var $_CookedConditionalTimeout  = false;
+
+/**
+ * Desktop: Tom Select for admin selects (the admin frame screens and the recipe editor), with a
+ * search box on long lists (e.g. the Browse/Search page). Touch devices keep the native picker,
+ * which suits them better. The <select> stays in the form, kept in sync by Tom Select.
+ */
+window.cookedEnhanceSelects = function(selector) {
+    if (!window.TomSelect || window.matchMedia('(pointer: coarse)').matches) {
+        return;
+    }
+    Array.prototype.forEach.call(document.querySelectorAll(selector), function(select) {
+        var settings = {
+            allowEmptyOption: true,
+            maxOptions: null
+        };
+        // Templates are cloned for new rows: enhance the clones, not the template (a cloned
+        // Tom Select is a dead copy with the same IDs).
+        if (select.tomselect || select.multiple || select.closest('.cooked-template')) {
+            return;
+        }
+        if (select.options.length <= 8) {
+            settings.controlInput = null;
+        }
+        // Tom Select points a <label for> at its own control, which would leave the original
+        // (hidden, still in the form) select without a name; name it from the label instead.
+        var label = select.id && !select.getAttribute('aria-labelledby') ? document.querySelector('label[for="' + select.id + '"]') : null;
+        if (label) {
+            label.id = label.id || select.id + '-label';
+            select.setAttribute('aria-labelledby', label.id);
+        }
+
+        var tomSelect = new window.TomSelect(select, settings),
+            labelledBy = select.getAttribute('aria-labelledby'),
+            ariaLabel = select.getAttribute('aria-label');
+        // Builder row selects are named by aria-label (they have no visible label).
+        if (ariaLabel && !labelledBy) {
+            tomSelect.control.setAttribute('aria-label', ariaLabel);
+            if (tomSelect.control_input) {
+                tomSelect.control_input.setAttribute('aria-label', ariaLabel);
+            }
+        }
+        // Tom Select names its control from a <label for>; settings selects are named by
+        // their title instead (aria-labelledby), so pass that on.
+        if (labelledBy) {
+            tomSelect.control.setAttribute('aria-labelledby', labelledBy);
+            if (tomSelect.control_input) {
+                tomSelect.control_input.setAttribute('aria-labelledby', labelledBy);
+            }
+        }
+        // A disabled select (e.g. one Cooked Pro turns off until a WordPress setting is on): Tom
+        // Select greys its control out but doesn't say it is disabled.
+        if (select.disabled) {
+            tomSelect.control.setAttribute('aria-disabled', 'true');
+        }
+        // A disabled select (e.g. one Cooked Pro turns off until a WordPress setting is on): Tom
+        // Select greys its control out but doesn't say it is disabled.
+        if (select.disabled) {
+            tomSelect.control.setAttribute('aria-disabled', 'true');
+        }
+        if (select.parentNode.classList.contains('cooked-select-wrapper')) {
+            select.parentNode.classList.add('is-enhanced');
+        }
+    });
+};
+
+/** Maps touch events on sortable drag handles to mouse events so sortable works on touch devices. */
+var cookedSortableTouchHandler = function(event) {
+    var target = event.target;
+    var types = {
+        touchstart: "mousedown",
+        touchmove: "mousemove",
+        touchend: "mouseup"
+    };
+
+    // Only handle touches on drag handles within cooked sortable containers
+    var dragHandle = target.closest('.cooked-icon-drag');
+    if (!dragHandle || !dragHandle.closest('.cooked-sortable')) {
+        return; // Let the event proceed normally (allows scrolling)
+    }
+
+    if (!event.changedTouches || !event.changedTouches.length || !types[event.type]) {
+        return;
+    }
+
+    var touch = event.changedTouches[0];
+
+    // Prevent default to stop page scrolling when dragging
+    event.preventDefault();
+
+    var simulatedEvent = new MouseEvent(types[event.type], {
+        bubbles: true,
+        cancelable: true,
+        view: window,
+        detail: 1,
+        screenX: touch.screenX,
+        screenY: touch.screenY,
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        ctrlKey: false,
+        altKey: false,
+        shiftKey: false,
+        metaKey: false,
+        button: 0,
+        relatedTarget: null
+    });
+    touch.target.dispatchEvent(simulatedEvent);
+};
+
+(function( $ ) {
+
+    $(document).ready(function() {
+        var $_CookedColorPickers 			= $('.cooked-color-field'),
+            $_CookedSelectFields 			= $('#cooked_recipe_settings').find('select'),
+            $_CookedRecipeTabs 				= $('#cooked-recipe-tabs'),
+            $_CookedRecipeSettingsWrap 		= $('#cooked-settings-wrap'),
+            $_CookedRecipeSettings 			= $('#cooked_recipe_settings'),
+            $_CookedRecipeSettingsSubmit 	= $_CookedRecipeSettings.find( 'input#submit' )
+            $_CookedTooltips 				= $('.cooked-tooltip'),
+            $_CookedConditionals			= $('.cooked-conditional-hidden'),
+            $_CookedSortable				= $('.cooked-sortable'),
+            $_CookedRecipeSaveDefault		= $('.cooked-layout-save-default'),
+            $_CookedShortcodeField 			= $('.cooked-shortcode-field'),
+            $_CookedIngredientBuilder		= $('#cooked-ingredients-builder'),
+            $_CookedAutoNutritionButton		= $('.cooked-auto-nutrition-button'),
+            $_CookedDirectionBuilder		= $('#cooked-directions-builder'),
+            $_CookedRecipeGallery			= $('#cooked-recipe-image-gallery'),
+            $_CookedNutritionFactsTab		= $('#cooked-recipe-tab-content-nutrition'),
+            $_CookedSettingsPanel 			= $('#cooked-settings-panel'),
+            $_CookedSettingsTabs 			= $('#cooked-settings-tabs');
+
+        // Cooked Color Pickers
+        if ($_CookedColorPickers.length) {
+            $_CookedColorPickers.wpColorPicker();
+        }
+
+        // Cooked Sortables
+        if ($_CookedSortable.length) {
+            document.addEventListener("touchstart", cookedSortableTouchHandler, { passive: false });
+            document.addEventListener("touchmove", cookedSortableTouchHandler, { passive: false });
+            document.addEventListener("touchend", cookedSortableTouchHandler, { passive: false });
+
+            if ($_CookedSortable.find('.cooked-icon-drag').length) {
+                $_CookedSortable.sortable({
+                    handle: '.cooked-icon-drag',
+                    // scroll: true,
+                    // scrollSensitivity: 80,
+                    // scrollSpeed: 30,
+                    stop: function(event, ui) {
+                        // Update direction step numbers when reordering directions
+                        if (ui.item.closest('#cooked-directions-builder').length) {
+                            cooked_reset_direction_builder();
+                        }
+
+                        let textarea = ui.item.find('textarea');
+                        var canUseWpEditor = !!(
+                            cooked_admin_functions_js_vars.wp_editor_roles_allowed &&
+                            typeof wp !== 'undefined' &&
+                            wp.editor &&
+                            typeof wp.editor.remove === 'function' &&
+                            typeof wp.editor.initialize === 'function'
+                        );
+
+                        if (textarea.length && canUseWpEditor) {
+                            let textareaName = textarea.attr('name');
+                            let fieldID = textarea.attr('id');
+
+                            wp.editor.remove(fieldID);
+                            wp.editor.initialize(fieldID, cooked_direction_editor_settings(textareaName));
+                        }
+                    }
+                });
+            } else {
+                $_CookedSortable.sortable({
+                    // scroll: true,
+                    // scrollSensitivity: 80,
+                    // scrollSpeed: 30,
+                    stop: function(event, ui) {
+                        // Update direction step numbers when reordering directions
+                        if (ui.item.closest('#cooked-directions-builder').length) {
+                            cooked_reset_direction_builder();
+                        }
+                    }
+                });
+            }
+        }
+
+        // Save as Default (click-toggle popover anchored to the button, see #cooked-save-default-panel)
+        if ($_CookedRecipeSaveDefault.length) {
+            var $_CookedSaveDefaultPanel = $('#cooked-save-default-panel'),
+                saveDefaultPanelArrow = $('<div class="cooked-tooltip-arrow" />').appendTo($_CookedSaveDefaultPanel)[0],
+                saveDefaultPanelFloating = !!(window.FloatingUICore && window.FloatingUIDOM),
+                saveDefaultPanelCleanup = null;
+
+            // With Floating UI the panel grows open like the tooltips: it becomes the
+            // positioned shell and its contents (arrow included) move into the bubble.
+            if (saveDefaultPanelFloating) {
+                $_CookedSaveDefaultPanel.addClass('cooked-tooltip-shell').wrapInner('<div class="cooked-tooltip-bubble" />');
+            }
+
+            // While closing, the panel is still visible but already counts as closed.
+            var cooked_save_default_panel_is_open = function() {
+                if (!$_CookedSaveDefaultPanel.length) {
+                    return false;
+                }
+                return saveDefaultPanelFloating ? $_CookedSaveDefaultPanel.hasClass('cooked-tooltip-open') : !$_CookedSaveDefaultPanel.prop('hidden');
+            };
+
+            var cooked_toggle_save_default_panel = function(show) {
+                if (!$_CookedSaveDefaultPanel.length) {
+                    return;
+                }
+
+                var reference = $_CookedRecipeSaveDefault[0],
+                    panel = $_CookedSaveDefaultPanel[0];
+
+                $_CookedRecipeSaveDefault.attr('aria-expanded', show ? 'true' : 'false');
+
+                // Without Floating UI the panel opens and closes instantly, in the normal flow.
+                if (!saveDefaultPanelFloating) {
+                    panel.hidden = !show;
+                    return;
+                }
+
+                if (show) {
+                    panel.hidden = false;
+                    if (!saveDefaultPanelCleanup) {
+                        saveDefaultPanelCleanup = window.FloatingUIDOM.autoUpdate(reference, panel, function() {
+                            cooked_position_floating(reference, panel, saveDefaultPanelArrow, ['top', 'bottom'], function() {
+                                return !panel.hidden;
+                            });
+                        });
+                    }
+                    cooked_grow_open(panel);
+                } else if (cooked_save_default_panel_is_open()) {
+                    // Keep positioning while it scales down, then hide.
+                    cooked_grow_close(panel, function() {
+                        if (saveDefaultPanelCleanup) {
+                            saveDefaultPanelCleanup();
+                            saveDefaultPanelCleanup = null;
+                        }
+                        panel.hidden = true;
+                    });
+                }
+            };
+
+            $_CookedRecipeSaveDefault.on('click', function(e) {
+                e.preventDefault();
+                cooked_toggle_save_default_panel(!cooked_save_default_panel_is_open());
+            });
+
+            $_CookedRecipeSaveDefault.on('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    cooked_toggle_save_default_panel(!cooked_save_default_panel_is_open());
+                }
+            });
+
+            $(document).on('click', function(e) {
+                if (!cooked_save_default_panel_is_open()) {
+                    return;
+                }
+
+                if (!$(e.target).closest('.cooked-layout-save-default, #cooked-save-default-panel').length) {
+                    cooked_toggle_save_default_panel(false);
+                }
+            });
+
+            $(document).on('keydown', function(e) {
+                if (e.key === 'Escape' && cooked_save_default_panel_is_open()) {
+                    cooked_toggle_save_default_panel(false);
+                    $_CookedRecipeSaveDefault.focus();
+                }
+            });
+
+            // Save as Default panel buttons.
+            $('.cooked-save-default-all').on('click', function(e) {
+                e.preventDefault();
+
+                var thisButton = $(this),
+                    cooked_save_default_nonce = thisButton.data('nonce'),
+                    cooked_save_default_bulk_nonce = thisButton.data('bulk-nonce'),
+                    thisContainer = thisButton.parent(),
+                    confirm_save = confirm(cooked_admin_functions_js_vars.i18n_confirm_save_default_all),
+                    recipe_editor_textarea = $( "#_recipe_settings_content" ),
+                    recipe_editor = tinymce.get('_recipe_settings_content');
+
+                if (recipe_editor === null) {
+                    var recipe_editor_content = recipe_editor_textarea.val();
+                } else {
+                    var recipe_editor_content = recipe_editor.getContent();
+                }
+
+                if (confirm_save && !thisButton.hasClass('disabled')) {
+                    thisContainer.find('.button, .button-primary').addClass('disabled');
+
+                    $.post(
+                        cooked_admin_functions_js_vars.ajax_url,
+                        {
+                            action: 'cooked_save_default',
+                            'default_content': recipe_editor_content,
+                            nonce: cooked_save_default_nonce
+                        },
+                        function() {
+                            $.post(
+                                cooked_admin_functions_js_vars.ajax_url,
+                                {
+                                    action: 'cooked_get_recipe_count',
+                                    nonce: cooked_save_default_bulk_nonce
+                                },
+                                function(response) {
+                                    thisButton.removeClass("button-primary").addClass("button");
+
+                                    if (response && response.success && response.data.total > 0) {
+                                        cooked_recipe_update_counter = 0;
+                                        cooked_set_default_template(0, response.data.total, recipe_editor_content, cooked_save_default_bulk_nonce);
+                                    }
+                                },
+                                'json'
+                            );
+                        }
+                    );
+                }
+            });
+
+            $('.cooked-save-default-new').on('click', function(e) {
+                e.preventDefault();
+                var thisButton = $(this),
+                    nonce = thisButton.data('nonce'),
+                    thisContainer = thisButton.parent(),
+                    recipe_editor_textarea = $("#_recipe_settings_content"),
+                    recipe_editor = tinymce.get('_recipe_settings_content');
+
+                if (recipe_editor === null) {
+                    var recipe_editor_content = recipe_editor_textarea.val();
+                } else {
+                    var recipe_editor_content = recipe_editor.getContent();
+                }
+
+                if (!thisButton.hasClass('disabled')) {
+                    thisContainer.find('.button, .button-primary').addClass('disabled');
+                    var ajax__save_default_new = $.post(
+                        cooked_admin_functions_js_vars.ajax_url,
+                        {
+                            action: 'cooked_save_default',
+                            'default_content': recipe_editor_content,
+                            nonce: nonce
+                        },
+                        function(result) {
+                            thisButton.text( cooked_admin_functions_js_vars.i18n_saved );
+                            thisContainer.find('.button-primary').removeClass('disabled');
+                        }
+                    ).fail(function(result) {
+                        //console.log( 'Error: ' + result );
+                    });
+                }
+            });
+
+            $('.cooked-layout-load-default').on('click', function(e) {
+                e.preventDefault();
+
+                var thisButton = $(this),
+                    thisContainer = thisButton.parent(),
+                    confirm_load = confirm( cooked_admin_functions_js_vars.i18n_confirm_load_default ),
+                    recipe_editor_textarea = $( "#_recipe_settings_content" ),
+                    recipe_editor = tinymce.get('_recipe_settings_content');
+
+                if (confirm_load && !thisButton.hasClass('disabled')) {
+                    thisContainer.find('.button, .button-primary').addClass('disabled');
+                    var ajax__save_default_all = $.post(
+                        cooked_admin_functions_js_vars.ajax_url,
+                        {
+                            action: 'cooked_load_default',
+                            nonce: cooked_admin_functions_js_vars.cooked_load_default_nonce
+                        },
+                        function (result) {
+                            if ( recipe_editor === null ) {
+                                recipe_editor_textarea.val( result );
+                            } else {
+                                recipe_editor_textarea.val( result );
+                                recipe_editor.setContent( result );
+                            }
+
+                            thisContainer.find('.button, .button-primary').removeClass('disabled');
+                        }).fail(function(result) {
+                            thisContainer.find('.button, .button-primary').removeClass('disabled');
+                        });
+                }
+            });
+        }
+
+        // Cooked Select Wrappers
+        if ($_CookedSelectFields.length) {
+            $_CookedSelectFields.each(function() {
+                $(this).wrap('<div class="cooked-select-wrapper" />');
+            });
+        }
+
+        // Cooked Tooltips (Floating UI, vendored — see assets/vendor/floating-ui/README.md).
+        // .cooked-tooltip elements carry their (HTML) content in data-tooltip and an optional
+        // comma-separated placement preference in data-positions, e.g. "top,bottom".
+        // Handlers are delegated, so one setup covers present and future elements.
+        if ($_CookedTooltips.length && window.FloatingUICore && window.FloatingUIDOM) {
+            // One shared tooltip: an outer shell that Floating UI positions and an inner
+            // bubble (content and arrow) that grows open and closed.
+            // tooltipReference is the trigger the tooltip is for; tooltipAnchor is the one
+            // it is placed against, which outlives the reference while the close plays.
+            var FloatingUI = window.FloatingUIDOM,
+                tooltip = document.createElement('div'),
+                tooltipBubble = document.createElement('div'),
+                tooltipContent = document.createElement('div'),
+                tooltipArrow = document.createElement('div'),
+                tooltipReference = null,
+                tooltipAnchor = null,
+                tooltipDescribedBy = null,
+                tooltipReasons = {},
+                tooltipOpenTimer = null,
+                tooltipCleanup = null;
+
+            tooltip.id = 'cooked-tooltip-floating';
+            tooltip.className = 'cooked-tooltip-floating';
+            tooltip.setAttribute('role', 'tooltip');
+            tooltip.hidden = true;
+            tooltipBubble.className = 'cooked-tooltip-bubble';
+            tooltipArrow.className = 'cooked-tooltip-arrow';
+            tooltipBubble.appendChild(tooltipContent);
+            tooltipBubble.appendChild(tooltipArrow);
+            tooltip.appendChild(tooltipBubble);
+            document.body.appendChild(tooltip);
+
+            var tooltipPlacements = function(el) {
+                var placements = [];
+                String(el.getAttribute('data-positions') || '').split(',').forEach(function(placement) {
+                    placement = placement.trim().toLowerCase();
+                    if (/^(top|right|bottom|left)(-start|-end)?$/.test(placement) && placements.indexOf(placement) === -1) {
+                        placements.push(placement);
+                    }
+                });
+                return placements.length ? placements : ['bottom'];
+            };
+
+            var finishHideTooltip = function() {
+                if (tooltipCleanup) {
+                    tooltipCleanup();
+                    tooltipCleanup = null;
+                }
+                tooltipAnchor = null;
+                tooltip.hidden = true;
+            };
+
+            // animate: grow closed (hover/focus leaving, Escape). Otherwise hide at once,
+            // cancelling any open or close in progress.
+            var hideTooltip = function(animate) {
+                clearTimeout(tooltipOpenTimer);
+                tooltipOpenTimer = null;
+                if (tooltipReference) {
+                    if (tooltipDescribedBy === null) {
+                        tooltipReference.removeAttribute('aria-describedby');
+                    } else {
+                        tooltipReference.setAttribute('aria-describedby', tooltipDescribedBy);
+                    }
+                }
+                tooltipReference = null;
+                tooltipDescribedBy = null;
+                tooltipReasons = {};
+
+                if (!animate || !tooltipAnchor) {
+                    cooked_grow_cancel(tooltip);
+                    tooltip.classList.remove('cooked-tooltip-open');
+                    finishHideTooltip();
+                } else if (tooltip.classList.contains('cooked-tooltip-open')) {
+                    cooked_grow_close(tooltip, finishHideTooltip);
+                }
+                // Otherwise it is already closing.
+            };
+
+            var updateTooltip = function() {
+                var anchor = tooltipAnchor;
+                if (!anchor || !anchor.isConnected) {
+                    hideTooltip(false);
+                    return;
+                }
+
+                cooked_position_floating(anchor, tooltip, tooltipArrow, tooltipPlacements(anchor), function() {
+                    // A newer show/hide may have happened while this was computing.
+                    return tooltipAnchor === anchor;
+                });
+            };
+
+            var openTooltip = function(el) {
+                tooltipOpenTimer = null;
+                if (!el.isConnected) {
+                    hideTooltip(false);
+                    return;
+                }
+                tooltipContent.innerHTML = el.getAttribute('data-tooltip');
+                tooltipAnchor = el;
+                tooltip.hidden = false;
+                if (!tooltipCleanup) {
+                    tooltipCleanup = FloatingUI.autoUpdate(el, tooltip, updateTooltip);
+                }
+                cooked_grow_open(tooltip);
+            };
+
+            // Hover opens after 100ms (Tooltipster's delay); leaving sooner shows nothing.
+            // Focus opens at once.
+            var showTooltip = function(el, reason) {
+                var content = el.getAttribute('data-tooltip');
+                if (!content) {
+                    return;
+                }
+                tooltipReasons[reason] = true;
+                if (tooltipReference === el) {
+                    if (tooltipOpenTimer && reason !== 'hover') {
+                        clearTimeout(tooltipOpenTimer);
+                        openTooltip(el);
+                    } else if (!tooltipOpenTimer) {
+                        tooltipContent.innerHTML = content;
+                    }
+                    return;
+                }
+
+                hideTooltip(false);
+                tooltipReasons[reason] = true;
+                tooltipReference = el;
+                tooltipDescribedBy = el.getAttribute('aria-describedby');
+                el.setAttribute('aria-describedby', tooltipDescribedBy ? tooltipDescribedBy + ' ' + tooltip.id : tooltip.id);
+
+                if (reason === 'hover') {
+                    tooltipOpenTimer = setTimeout(function() { openTooltip(el); }, 100);
+                } else {
+                    openTooltip(el);
+                }
+            };
+
+            // Hover and focus each keep the tooltip open; it hides once neither does.
+            var releaseTooltip = function(el, reason) {
+                if (tooltipReference !== el) {
+                    return;
+                }
+                delete tooltipReasons[reason];
+                if ($.isEmptyObject(tooltipReasons)) {
+                    hideTooltip(true);
+                }
+            };
+
+            $(document)
+                .on('mouseenter', '.cooked-tooltip[data-tooltip]', function() { showTooltip(this, 'hover'); })
+                .on('mouseleave', '.cooked-tooltip[data-tooltip]', function() { releaseTooltip(this, 'hover'); })
+                .on('focusin', '.cooked-tooltip[data-tooltip]', function() { showTooltip(this, 'focus'); })
+                .on('focusout', '.cooked-tooltip[data-tooltip]', function() { releaseTooltip(this, 'focus'); })
+                .on('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        hideTooltip(true);
+                    }
+                });
+        }
+
+        // Cooked Shortcode Fields
+        if ($_CookedShortcodeField.length) {
+            $_CookedShortcodeField.on('click',function(e) {
+                $(this).select();
+            });
+        }
+
+        // Conditional Fields (Recipes and Settings Pages)
+        if ($_CookedConditionals.length) {
+            var conditionalFields = [];
+            $_CookedConditionals.each(function() {
+                var thisBlock = $(this),
+                    thisBlockType,
+                    thisID = $(this).data('condition'),
+                    thisVal = $(this).data('value'),
+                    thisField = $('#'+thisID);
+
+                if (thisVal){
+                    thisVal = thisVal.split(' ');
+                } else {
+                    thisVal = false;
+                }
+
+                if ( thisBlock.is('li') || thisBlock.is('span') ) {
+                    thisBlockType = 'inline-block';
+                } else {
+                    thisBlockType = 'block';
+                }
+
+                if (thisField.is(":checkbox") && thisField.is(":checked") || thisField.is(":radio") && thisField.is(":checked")) {
+                    thisBlock.css({'display':thisBlockType});
+                } else if (thisField.is(":checkbox") && !thisField.is(":checked") || thisField.is(":radio") && !thisField.is(":checked")) {
+                    thisBlock.hide();
+                } else if (!thisField.is(":checkbox") && !thisVal && thisField.val() || !thisField.is(":checkbox") && thisVal && $.inArray(thisField.val(),thisVal) > -1){
+                    thisBlock.css({'display':thisBlockType});
+                } else if (!thisField.is(":radio") && !thisVal && thisField.val() || !thisField.is(":radio") && thisVal && $.inArray(thisField.val(),thisVal) > -1){
+                    thisBlock.css({'display':thisBlockType});
+                } else {
+                    thisBlock.hide();
+                }
+
+                if ($.inArray(thisID,conditionalFields) == -1){
+                    conditionalFields.push(thisID);
+                }
+
+                var conditionalsLength = conditionalFields.length;
+                for (var i = 0; i < conditionalsLength; i++) {
+                    cooked_init_conditional_field(thisID);
+                }
+
+            });
+        }
+
+        // Recipe Tabs
+        if ($_CookedRecipeTabs.length) {
+            var $_CookedRecipeTab = $_CookedRecipeTabs.find('li'),
+                $_CookedRecipeTabsOffset = $_CookedRecipeTabs.offset().top - 32; // 32px for the admin bar
+
+            $(window).on('load scroll',function() {
+                var scroll = $(window).scrollTop();
+                if (scroll >= $_CookedRecipeTabsOffset) {
+                    $_CookedRecipeSettings.addClass("stuck");
+                } else {
+                    $_CookedRecipeSettings.removeClass("stuck");
+                }
+            });
+
+            // New layout: one underline that slides to the active tab (CSS draws it from these variables).
+            var cooked_move_tab_indicator = function(animate) {
+                if (!$('body').hasClass('cooked-recipe-editor')) {
+                    return;
+                }
+                var active = $_CookedRecipeTab.filter('.active')[0];
+                if (!active) {
+                    return;
+                }
+                $_CookedRecipeTabs.toggleClass('is-animated', !!animate);
+                $_CookedRecipeTabs[0].style.setProperty('--cooked-tab-x', active.offsetLeft + 'px');
+                $_CookedRecipeTabs[0].style.setProperty('--cooked-tab-w', active.offsetWidth + 'px');
+            };
+            cooked_move_tab_indicator(false);
+            $(window).on('load resize', function() {
+                cooked_move_tab_indicator(false);
+            });
+
+            // A tab list for keyboards and screen readers: the active tab is in the Tab order, the
+            // arrow keys (and Home / End) move between tabs, Enter or Space opens one.
+            $_CookedRecipeTabs.attr('role', 'tablist');
+            var cooked_mark_tabs = function() {
+                $_CookedRecipeTab.each(function() {
+                    var id = this.id.split('cooked-recipe-tab-')[1],
+                        active = $(this).hasClass('active');
+                    $(this).attr({ role: 'tab', 'aria-selected': active ? 'true' : 'false', 'aria-controls': 'cooked-recipe-tab-content-' + id, tabindex: active ? '0' : '-1' });
+                    $('#cooked-recipe-tab-content-' + id).attr({ role: 'tabpanel', 'aria-labelledby': this.id });
+                });
+            };
+            cooked_mark_tabs();
+
+            $_CookedRecipeTabs.on('keydown', 'li', function(e) {
+                var tabs = $_CookedRecipeTab.filter(':visible').get(),
+                    index = tabs.indexOf(this),
+                    next = null;
+                if ('Enter' === e.key || ' ' === e.key) {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                    return;
+                }
+                if ('ArrowRight' === e.key) {
+                    next = tabs[(index + 1) % tabs.length];
+                } else if ('ArrowLeft' === e.key) {
+                    next = tabs[(index - 1 + tabs.length) % tabs.length];
+                } else if ('Home' === e.key) {
+                    next = tabs[0];
+                } else if ('End' === e.key) {
+                    next = tabs[tabs.length - 1];
+                }
+                if (next) {
+                    e.preventDefault();
+                    $(next).trigger('click').trigger('focus');
+                }
+            });
+
+            $_CookedRecipeTab.on('click', function(e) {
+                e.preventDefault();
+                $_CookedRecipeTab.removeClass('active');
+
+                var thisTab = $(this),
+                    thisTabID = thisTab.attr('id').split('cooked-recipe-tab-')[1];
+
+                $('.cooked-recipe-tab-content').hide();
+                var $newTab = $('#cooked-recipe-tab-content-' + thisTabID);
+                $newTab.show();
+
+                // Restart the fade-in (the same one as switching Settings sections).
+                $newTab.removeClass('is-entering');
+                void $newTab[0].offsetWidth;
+                $newTab.addClass('is-entering');
+
+                thisTab.addClass('active');
+                cooked_mark_tabs();
+                cooked_move_tab_indicator(true);
+                cooked_reveal_tab(this);
+            });
+
+            // New layout: when the tabs are wider than the box, arrows either side page through
+            // them. The list is cut to the tabs that fit whole, so no label is ever cut off.
+            var tabsBar = $_CookedRecipeTabs.parent('.cooked-recipe-tabs-bar')[0],
+                tabsList = $_CookedRecipeTabs[0],
+                cooked_reveal_tab = function() {};
+            if (tabsBar) {
+                var arrowLeft = tabsBar.querySelector('.cooked-recipe-tabs-arrow.is-left'),
+                    arrowRight = tabsBar.querySelector('.cooked-recipe-tabs-arrow.is-right'),
+                    first = 0,
+                    room = 0,
+                    smooth = function() {
+                        return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+                    },
+                    shown = function() {
+                        return $_CookedRecipeTab.filter(':visible').get();
+                    },
+                    // Width of tabs[from..to], gaps included.
+                    span = function(tabs, from, to) {
+                        return tabs[to].offsetLeft + tabs[to].offsetWidth - tabs[from].offsetLeft;
+                    },
+                    // The last tab that fits whole after tabs[from], or the first one before tabs[to].
+                    lastFrom = function(tabs, from, room) {
+                        var to = from;
+                        while (to + 1 < tabs.length && span(tabs, from, to + 1) <= room) {
+                            to++;
+                        }
+                        return to;
+                    },
+                    firstTo = function(tabs, to, room) {
+                        var from = to;
+                        while (from > 0 && span(tabs, from - 1, to) <= room) {
+                            from--;
+                        }
+                        return from;
+                    },
+                    layout = function(animate) {
+                        var tabs = shown();
+                        tabsList.style.width = '';
+                        tabsBar.classList.remove('has-overflow');
+                        if (!tabs.length || tabsList.scrollWidth <= tabsList.clientWidth + 1) {
+                            tabsList.scrollLeft = 0;
+                            cooked_move_tab_indicator(false);
+                            return;
+                        }
+                        tabsBar.classList.add('has-overflow');
+                        var last;
+                        room = tabsList.clientWidth - 12; // its side padding (the focus ring's room)
+                        first = Math.min(first, tabs.length - 1);
+                        // Fill the last page rather than leave it short.
+                        first = Math.min(first, firstTo(tabs, tabs.length - 1, room));
+                        last = lastFrom(tabs, first, room);
+                        tabsList.style.width = Math.ceil(span(tabs, first, last)) + 'px';
+                        tabsList.scrollTo({ left: tabs[first].offsetLeft - tabs[0].offsetLeft, behavior: animate ? smooth() : 'auto' });
+                        arrowLeft.disabled = first === 0;
+                        arrowRight.disabled = last === tabs.length - 1;
+                        tabsBar.dataset.last = last;
+                        cooked_move_tab_indicator(false);
+                    },
+                    page = function(direction) {
+                        var tabs = shown(),
+                            last = parseInt(tabsBar.dataset.last, 10);
+                        first = direction > 0 ? Math.min(last + 1, tabs.length - 1) : firstTo(tabs, Math.max(first - 1, 0), room);
+                        layout(true);
+                    };
+                cooked_reveal_tab = function(tab) {
+                    var index = shown().indexOf(tab);
+                    if (tabsBar.classList.contains('has-overflow') && index > -1 && (index < first || index > parseInt(tabsBar.dataset.last, 10))) {
+                        first = index;
+                        layout(true);
+                    }
+                };
+                arrowLeft.addEventListener('click', function() {
+                    page(-1);
+                });
+                arrowRight.addEventListener('click', function() {
+                    page(1);
+                });
+                $(window).on('load resize', function() {
+                    layout(false);
+                });
+                // Tabs shown or hidden by a setting (data-condition) change what fits.
+                if ('ResizeObserver' in window) {
+                    var tabsObserver = new ResizeObserver(function() {
+                        layout(false);
+                    });
+                    $_CookedRecipeTab.each(function() {
+                        tabsObserver.observe(this);
+                    });
+                }
+                layout(false);
+            }
+        }
+
+        // Settings Tabs
+        if ($_CookedSettingsTabs.length) {
+            var CookedSettingsTabHash = window.location.hash;
+            var $_CookedSettingsTab = $_CookedSettingsTabs.find('li'),
+                $_CookedSettingsTabOffset = $_CookedSettingsTabs.offset().top - 32; // 32px for the admin bar
+
+            $(window).on('load scroll',function() {
+                var scroll = $(window).scrollTop();
+                if (scroll >= $_CookedSettingsTabOffset) {
+                    $_CookedSettingsPanel.addClass("stuck");
+                    $("#cooked-settings-wrap").addClass("is-stuck");
+                } else {
+                    $_CookedSettingsPanel.removeClass("stuck");
+                    $("#cooked-settings-wrap").removeClass("is-stuck");
+                }
+            });
+
+            // A hash with no matching tab (e.g. a link from the new layout) opens the default tab.
+            if ( CookedSettingsTabHash && $_CookedSettingsTabs.find('a[href="'+CookedSettingsTabHash+'"]').length ) {
+                var activeTab = CookedSettingsTabHash;
+                activeTab = activeTab.split('#');
+                activeTab = activeTab[1];
+                $_CookedSettingsTabs.find('li').removeClass('active');
+                $_CookedSettingsTabs.find('a[href="'+CookedSettingsTabHash+'"]').parent().addClass('active');
+                if ( activeTab == 'migration' ) {
+                    $_CookedRecipeSettingsSubmit.hide();
+                } else {
+                    $_CookedRecipeSettingsSubmit.show();
+                }
+                $_CookedSettingsPanel.find('.cooked-settings-tab-content').hide();
+                $_CookedSettingsPanel.find('#cooked-settings-tab-content-'+activeTab).show();
+            } else {
+                var activeTab = $_CookedSettingsTabs.find('.active > a').attr('href');
+                activeTab = activeTab.split('#');
+                activeTab = activeTab[1];
+                $_CookedSettingsPanel.find('.cooked-settings-tab-content').hide();
+                $_CookedSettingsPanel.find('#cooked-settings-tab-content-'+activeTab).show();
+            }
+
+            $_CookedSettingsTab.on('click',function(e) {
+                $('.tab-content').hide();
+                var thisTab = $(this).find('a');
+                $_CookedSettingsTabs.find('li').removeClass('active');
+
+                $(this).addClass('active');
+                var activeTab = thisTab.attr('href');
+                activeTab = activeTab.split('#');
+                activeTab = activeTab[1];
+
+                if ( activeTab == 'migration' ) {
+                    $_CookedRecipeSettingsSubmit.hide();
+                } else {
+                    $_CookedRecipeSettingsSubmit.show();
+                }
+
+                $_CookedSettingsPanel.find('.cooked-settings-tab-content').hide();
+                $_CookedSettingsPanel.find('#cooked-settings-tab-content-'+activeTab).show();
+
+                if ( $('#cooked-settings-panel').hasClass('stuck') ) {
+                    window.scrollTo(0,130);
+                } else {
+                    window.scrollTo(0,0);
+                }
+            });
+        }
+
+        // Settings fields, in both layouts (the new layout's form has no tab list).
+        if ($_CookedSettingsPanel.length) {
+            var settings_image_frame;
+
+            $_CookedSettingsPanel.on('click', '.cooked-settings-image-remove', function(e) {
+                e.preventDefault();
+
+                var $field = $(this).closest('.cooked-settings-image-field');
+
+                $field.removeClass('cooked-has-image');
+                $field.find('.cooked-settings-image-preview-img').attr('src', '').removeAttr('srcset').removeAttr('sizes');
+                $field.find('.cooked-settings-image-input').val('0');
+                $field.find('.cooked-settings-image-button').val(cooked_admin_functions_js_vars.i18n_image_title);
+            });
+
+            $_CookedSettingsPanel.on('click', '.cooked-settings-image-button', function(e) {
+                e.preventDefault();
+
+                var $button = $(this);
+                var $field = $button.closest('.cooked-settings-image-field');
+
+                if (settings_image_frame) {
+                    settings_image_frame.off('select');
+                }
+
+                settings_image_frame = wp.media({
+                    title: cooked_admin_functions_js_vars.i18n_image_title,
+                    button: { text: cooked_admin_functions_js_vars.i18n_image_button },
+                    library: { type: 'image' }
+                });
+
+                settings_image_frame.on('select', function() {
+                    var media_attachment = settings_image_frame.state().get('selection').first().toJSON();
+                    var thumbUrl = media_attachment.sizes && media_attachment.sizes.thumbnail
+                        ? media_attachment.sizes.thumbnail.url
+                        : media_attachment.url;
+
+                    $field.addClass('cooked-has-image');
+                    $field.find('.cooked-settings-image-preview-img')
+                        .attr('src', thumbUrl)
+                        .removeAttr('srcset')
+                        .removeAttr('sizes');
+                    $field.find('.cooked-settings-image-input').val(media_attachment.id);
+                    $button.val(cooked_admin_functions_js_vars.i18n_image_change);
+                });
+
+                settings_image_frame.open();
+            });
+        }
+
+        // The Cooked Settings box is too wide for the sidebar: refuse drops there, and disable
+        // its "Move up" arrow while it is first in the main column, where that arrow would move
+        // it into the sidebar. A saved sidebar position is also fixed in PHP.
+        var $_CookedSettingsBox = $('#cooked_recipe_settings.postbox');
+        if ($_CookedSettingsBox.length && $('#side-sortables').length) {
+            $('#side-sortables').on('sortreceive', function(e, ui) {
+                if (ui.item.is($_CookedSettingsBox)) {
+                    $(ui.sender).sortable('cancel');
+                }
+            });
+
+            var cooked_lock_settings_box = function() {
+                if ($_CookedSettingsBox.is($('#normal-sortables').children('.postbox:visible').first())) {
+                    $_CookedSettingsBox.find('.handle-order-higher').attr('aria-disabled', 'true');
+                }
+            };
+            // postbox.js recalculates the arrows after every move; reapply after it.
+            if (window.postboxes && typeof window.postboxes.updateOrderButtonsProperties === 'function') {
+                var cooked_update_order_buttons = window.postboxes.updateOrderButtonsProperties;
+                window.postboxes.updateOrderButtonsProperties = function() {
+                    cooked_update_order_buttons.apply(this, arguments);
+                    cooked_lock_settings_box();
+                };
+            }
+            $(document).on('postbox-toggled', cooked_lock_settings_box);
+            cooked_lock_settings_box();
+        }
+
+        if ($_CookedIngredientBuilder.length) {
+            cooked_reset_ingredient_builder();
+
+            // Enter (and in the classic layout Tab) in the last ingredient's name adds a row. The
+            // new layout leaves Tab alone, so it reaches the row's buttons and leaves the list.
+            $_CookedIngredientBuilder.on('keydown', 'input[data-ingredient-part="name"]', function(e) {
+                if ( e.keyCode === 13 || ( e.keyCode === 9 && !e.shiftKey && !$('body').hasClass('cooked-recipe-editor') ) ) {
+                    if ( $(this).parents('.cooked-ingredient-block').is(':last-child') ) {
+                        e.preventDefault();
+                        $('#cooked-recipe-tab-content-ingredients').find('.cooked-add-ingredient-button').trigger('click');
+                        $_CookedIngredientBuilder.find('.cooked-ingredient-block:last-child input[data-ingredient-part="amount"]').focus();
+                    }
+                } else {
+                    return;
+                }
+            });
+
+            // The new editor layout shows saved substitutions without a click.
+            if ($('body').hasClass('cooked-recipe-editor')) {
+                $_CookedIngredientBuilder.find('.cooked-has-substitution').addClass('cooked-expanded')
+                    .find('.cooked-show-substitution').attr('aria-expanded', 'true');
+            }
+
+            // New layout: Cooked Pro's ingredient link button opens its own panel (the link and
+            // description fields) instead of sharing the substitutes' "expanded" state, as in 1.x;
+            // stopping the click here keeps Pro's handler on the parent from toggling both. The
+            // button is a <span>, so it also gets a role and keyboard focus.
+            if ($('body').hasClass('cooked-recipe-editor')) {
+                var cooked_prepare_ingredient_addons = function() {
+                    $_CookedIngredientBuilder.find('.cooked-show-url').not('[role]').attr({ role: 'button', tabindex: '0', 'aria-expanded': 'false' });
+                    $_CookedIngredientBuilder.find('.cooked-ingredient-block').each(function() {
+                        var $desc = $(this).find('input[data-ingredient-part="description"]');
+                        $(this).toggleClass('cooked-has-description', $desc.length > 0 && $.trim($desc.val() || '') !== '');
+                    });
+                };
+                cooked_prepare_ingredient_addons();
+                new MutationObserver(cooked_prepare_ingredient_addons).observe($_CookedIngredientBuilder[0], { childList: true });
+
+                $_CookedIngredientBuilder.on('click keydown', '.cooked-show-url', function(e) {
+                    if ('keydown' === e.type && 'Enter' !== e.key && ' ' !== e.key) {
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    var $block = $(this).closest('.cooked-ingredient-block'),
+                        open = !$block.hasClass('cooked-url-open');
+                    $block.toggleClass('cooked-url-open', open);
+                    $(this).attr('aria-expanded', open ? 'true' : 'false');
+                    if (open) {
+                        $block.find('input[data-ingredient-part="url"]').trigger('focus');
+                    }
+                });
+
+                $_CookedIngredientBuilder.on('input', 'input[data-ingredient-part="description"]', function() {
+                    $(this).closest('.cooked-ingredient-block').toggleClass('cooked-has-description', $.trim(this.value) !== '');
+                });
+            }
+
+            // Substitute toggle: adds the first substitute, then shows or hides them.
+            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-substitution', function(e) {
+                e.preventDefault();
+                var thisParent = $(this).parent();
+                if ( !thisParent.find('.cooked-substitution-row').length ) {
+                    cooked_add_substitution_row(thisParent);
+                } else if ( thisParent.hasClass('cooked-expanded') ) {
+                    thisParent.removeClass('cooked-expanded');
+                    $(this).attr('aria-expanded', 'false');
+                } else {
+                    thisParent.addClass('cooked-expanded');
+                    $(this).attr('aria-expanded', 'true');
+                    thisParent.find('.cooked-substitution-row input[data-substitution-part="amount"]').first().trigger('focus');
+                }
+            });
+
+            $_CookedIngredientBuilder.on('click', '.cooked-add-substitution', function(e) {
+                e.preventDefault();
+                cooked_add_substitution_row($(this).closest('.cooked-ingredient-block'));
+            });
+
+            $_CookedIngredientBuilder.on('click', '.cooked-delete-substitution', function(e) {
+                e.preventDefault();
+                var $block = $(this).closest('.cooked-ingredient-block');
+                $(this).closest('.cooked-substitution-row').remove();
+                if ( !$block.find('.cooked-substitution-row').length ) {
+                    $block.removeClass('cooked-expanded');
+                    $block.find('.cooked-show-substitution').attr('aria-expanded', 'false').trigger('focus');
+                } else {
+                    $block.find('.cooked-add-substitution').trigger('focus');
+                }
+                cooked_update_has_substitution($block);
+            });
+
+            $_CookedIngredientBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
+                e.preventDefault();
+                var thisParent = $(this).parent(),
+                    expanded = !thisParent.hasClass('cooked-expanded');
+                thisParent.toggleClass('cooked-expanded', expanded);
+                $(this).attr('aria-expanded', expanded ? 'true' : 'false');
+                if ( expanded ) {
+                    thisParent.find('select[data-ingredient-part="section_heading_element"]').focus();
+                }
+            });
+
+            $_CookedIngredientBuilder.on('keyup change', 'input[data-substitution-part="name"]', function() {
+                cooked_update_has_substitution($(this).closest('.cooked-ingredient-block'));
+            });
+
+            if ($_CookedAutoNutritionButton.length) {
+                $_CookedIngredientBuilder.on('change', 'input[data-ingredient-part="name"]', function(e) {
+                    var ingredient_name_value = false;
+
+                    $_CookedIngredientBuilder.find('input[data-ingredient-part="name"]').each(function() {
+                        if ($(this).val() != '') {
+                            ingredient_name_value = true;
+                            return false; // Break the loop
+                        }
+                    });
+
+                    if (ingredient_name_value) {
+                        $_CookedAutoNutritionButton.prop('disabled', false);
+                    } else {
+                        $_CookedAutoNutritionButton.prop('disabled', true);
+                    }
+                });
+            }
+
+            $_CookedIngredientBuilder.on('keyup', 'input[data-ingredient-part="url"]', function(e) {
+                var thisVal = $(this).val(),
+                    parentBlock = $(this).parents('.recipe-setting-block');
+                if (thisVal){
+                    parentBlock.addClass('cooked-has-url');
+                } else {
+                    parentBlock.removeClass('cooked-has-url');
+                }
+            });
+
+            $_CookedIngredientBuilder.parent().on('click', '.cooked-add-ingredient-button', function(e) {
+                e.preventDefault();
+                var clonedIngredientTemplate = $_CookedIngredientBuilder.parent().find('.cooked-ingredient-template').clone().removeClass('cooked-template cooked-ingredient-template').addClass('cooked-ingredient-block');
+                $_CookedIngredientBuilder.append(clonedIngredientTemplate);
+                cooked_reset_ingredient_builder();
+            });
+
+            $_CookedIngredientBuilder.parent().on('click','.cooked-add-heading-button',function(e) {
+                e.preventDefault();
+                var clonedHeadingTemplate = $_CookedIngredientBuilder.parent().find('.cooked-heading-template').clone().removeClass('cooked-template cooked-heading-template').addClass('cooked-ingredient-block cooked-ingredient-heading');
+                $_CookedIngredientBuilder.append(clonedHeadingTemplate);
+                cooked_reset_ingredient_builder();
+            });
+
+            $_CookedIngredientBuilder.parent().on('click','.cooked-delete-ingredient',function(e) {
+                e.preventDefault();
+                $(this).parent().remove();
+                cooked_reset_ingredient_builder();
+            });
+        }
+
+        if ($_CookedDirectionBuilder.length) {
+            cooked_reset_direction_builder();
+
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-show-heading-element', function(e) {
+                e.preventDefault();
+                var thisParent = $(this).parent();
+                if ( thisParent.hasClass('cooked-expanded') ) {
+                    thisParent.removeClass('cooked-expanded');
+                    $(this).attr('aria-expanded', 'false');
+                } else {
+                    thisParent.addClass('cooked-expanded');
+                    $(this).attr('aria-expanded', 'true');
+                    thisParent.find('select[data-direction-part="section_heading_element"]').focus();
+                }
+            });
+
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-add-direction-button', function(e) {
+                e.preventDefault();
+                var clonedDirectionTemplate = $_CookedDirectionBuilder.parent().find('.cooked-direction-template').clone().removeClass('cooked-template cooked-direction-template').addClass('cooked-direction-block');
+                $_CookedDirectionBuilder.append(clonedDirectionTemplate);
+                cooked_reset_direction_builder();
+            });
+
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-add-heading-button', function(e) {
+                e.preventDefault();
+                var clonedHeadingTemplate = $_CookedDirectionBuilder.parent().find('.cooked-heading-template').clone().removeClass('cooked-template cooked-heading-template').addClass('cooked-direction-block cooked-direction-heading');
+                $_CookedDirectionBuilder.append(clonedHeadingTemplate);
+                cooked_reset_direction_builder();
+            });
+
+            $_CookedDirectionBuilder.parent().on('click', '.cooked-delete-direction', function(e) {
+                e.preventDefault();
+                var directionBlock = $(this).parent();
+                var canRemoveWpEditor = !!(
+                    cooked_admin_functions_js_vars.wp_editor_roles_allowed &&
+                    typeof wp !== 'undefined' &&
+                    wp.editor &&
+                    typeof wp.editor.remove === 'function'
+                );
+
+                if (canRemoveWpEditor) {
+                    var directionTextarea = directionBlock.find('textarea[data-direction-part="content"]');
+                    var fieldID = directionTextarea.attr('id');
+
+                    if (fieldID) {
+                        wp.editor.remove(fieldID);
+                    }
+                }
+
+                directionBlock.remove();
+                cooked_reset_direction_builder();
+            });
+
+            $_CookedDirectionBuilder.parent().on('click', '.remove-image-button', function(e) {
+                e.preventDefault();
+                var $parent = $(this).parent();
+                $parent.removeClass('cooked-has-image');
+                $parent.find('img').attr('src', '').removeAttr('srcset').removeAttr('sizes');
+                $parent.find('input[data-direction-part="image"]').val('');
+                $parent.find('.direction-image-button').prop('value', cooked_admin_functions_js_vars.i18n_image_title);
+                cooked_reset_direction_builder();
+            });
+
+            $_CookedDirectionBuilder.parent().on('click', '.remove-video-button', function(e) {
+                e.preventDefault();
+                var $parent = $(this).parent();
+                $parent.removeClass('cooked-has-video');
+                $parent.find('.cooked-direction-video-preview').attr('src', '');
+                $parent.find('input[data-direction-part="video"]').val('');
+                $parent.find('.direction-video-button').prop('value', cooked_admin_functions_js_vars.i18n_video_title);
+                cooked_reset_direction_builder();
+            });
+
+            // Instantiates the variable that holds the media library frame.
+            var direction_image_frame, direction_video_frame, directionID;
+
+            $('body').on('click', '.cooked-direction-img-placeholder, .cooked-direction-img', function(e) {
+                e.preventDefault();
+                var thisButton = $(this).parent().find('.direction-image-button');
+                thisButton.trigger('click');
+            });
+
+            // Runs when the image button is clicked.
+            $('body').on('click', '.direction-image-button', function(e) {
+                var thisButton = $(this);
+                directionID = thisButton.data('id');
+
+                e.preventDefault();
+
+                // If the frame already exists, re-open it.
+                if ( direction_image_frame ) {
+                    direction_image_frame.open();
+                    return;
+                }
+
+                // Sets up the media library frame
+                direction_image_frame = wp.media.frames.direction_image_frame = wp.media({
+                    title: cooked_admin_functions_js_vars.i18n_image_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_image_button },
+                    library: { type: 'image' }
+                });
+
+                // Runs when an image is selected.
+                direction_image_frame.on('select', function() {
+                    // Grabs the attachment selection and creates a JSON representation of the model.
+                    var media_attachment = direction_image_frame.state().get('selection').first().toJSON();
+
+                    // Sends the attachment URL to our custom image input field.
+                    // Remove srcset/sizes so the UI updates when an image was previously loaded (WP outputs srcset on edit).
+                    var $directionImg = $('#direction-' + directionID + '-image-src'),
+                        // Small images have no thumbnail size.
+                        thumbUrl = media_attachment.sizes && media_attachment.sizes.thumbnail ? media_attachment.sizes.thumbnail.url : media_attachment.url;
+                    $directionImg.attr('src', thumbUrl)
+                        .removeAttr('srcset')
+                        .removeAttr('sizes')
+                        .parent().addClass('cooked-has-image');
+                    $('input[name="_recipe_settings[directions][' + directionID + '][image]"]').val( media_attachment.id );
+                    $('.direction-image-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_image_change );
+                });
+
+                // Opens the media library frame.
+                direction_image_frame.open();
+            });
+
+            $('body').on('click', '.cooked-direction-video-placeholder, .cooked-direction-video-preview', function(e) {
+                e.preventDefault();
+                var thisButton = $(this).parent().find('.direction-video-button');
+                thisButton.trigger('click');
+            });
+
+            // Runs when the video button is clicked.
+            $('body').on('click', '.direction-video-button', function(e) {
+                var thisButton = $(this);
+                directionID = thisButton.data('id');
+
+                e.preventDefault();
+
+                // If the frame already exists, re-open it.
+                if ( direction_video_frame ) {
+                    direction_video_frame.open();
+                    return;
+                }
+
+                // Sets up the media library frame
+                direction_video_frame = wp.media.frames.direction_video_frame = wp.media({
+                    title: cooked_admin_functions_js_vars.i18n_video_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_video_button },
+                    library: { type: 'video' }
+                });
+
+                // Runs when a video is selected.
+                direction_video_frame.on('select', function() {
+                    var media_attachment = direction_video_frame.state().get('selection').first().toJSON();
+
+                    var $videoBlock = $('.direction-video-button[data-id="' + directionID + '"]').closest('.cooked-direction-video');
+                    // #t=0.1: browsers then paint a frame, not just load metadata. Clear any
+                    // inline display:none from older markup so the stylesheet can show it.
+                    $videoBlock.find('.cooked-direction-video-preview').attr('src', media_attachment.url + '#t=0.1').css('display', '');
+                    $videoBlock.find('input[data-direction-part="video"]').val( media_attachment.id );
+                    $videoBlock.addClass('cooked-has-video');
+                    $('.direction-video-button[data-id="' + directionID + '"]').prop( 'value', cooked_admin_functions_js_vars.i18n_video_change );
+                });
+
+                // Opens the media library frame.
+                direction_video_frame.open();
+            });
+        }
+
+        // Bulk Add Modal
+        cooked_init_bulk_add($);
+
+        if ( $_CookedRecipeGallery.length ) {
+
+            var gallery_images_frame;
+            cooked_init_gallery_sorting();
+
+            // Runs when the Add Images button is clicked in the Gallery tab.
+            $('body').on('click','.cooked-gallery-add-button', function(e) {
+                var thisButton = $(this);
+                e.preventDefault();
+
+                // If the frame already exists, re-open it.
+                if ( gallery_images_frame ) {
+                    gallery_images_frame.open();
+                    return;
+                }
+
+                // Sets up the media library frame
+                gallery_images_frame = wp.media.frames.gallery_images_frame = wp.media({
+                    title: cooked_admin_functions_js_vars.i18n_gallery_image_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_gallery_image_title },
+                    library: { type: 'image' },
+                    multiple: true
+                });
+
+                // Runs when an image is selected.
+                gallery_images_frame.on('select', function() {
+                    // Grabs the attachment selection and creates a JSON representation of the model.
+                    var media_attachments = gallery_images_frame.state().get('selection').toJSON();
+
+                    for (var media_key in media_attachments) {
+                        if (!media_attachments.hasOwnProperty(media_key)) continue;
+                        var media_attachment = media_attachments[media_key];
+                        var galleryItem = cooked_gallery_item( media_attachment );
+                        // The new layout's "Add images" tile stays last.
+                        if ( $('#cooked-recipe-image-gallery > .cooked-gallery-add-tile').length ) {
+                            $('#cooked-recipe-image-gallery > .cooked-gallery-add-tile').before( galleryItem );
+                        } else {
+                            $('#cooked-recipe-image-gallery').append( galleryItem );
+                        }
+                    }
+
+                    cooked_init_gallery_sorting();
+                });
+
+                // Opens the media library frame.
+                gallery_images_frame.open();
+            });
+
+            $('body').on('click','.cooked-recipe-gallery-item img', function(e) {
+                e.preventDefault();
+                var thisButton = $(this).parent().find('.cooked-gallery-edit-button');
+                thisButton.trigger('click');
+            });
+
+            $('body').on('click','.cooked-gallery-edit-button', function(e) {
+                var thisButton = $(this),
+                    attachment_id = thisButton.data('attachment-id');
+
+                e.preventDefault();
+
+                // Sets up the media library frame
+                var image_edit_frame = wp.media.frames.gallery_images_frame = wp.media({
+                    title: cooked_admin_functions_js_vars.i18n_edit_image_title,
+                    button: { text:  cooked_admin_functions_js_vars.i18n_edit_image_button },
+                    library: { type: 'image' },
+                    multiple: false
+                });
+
+                image_edit_frame.on('open',function() {
+                      var selection = image_edit_frame.state().get('selection');
+                      attachment = wp.media.attachment(attachment_id);
+                      attachment.fetch();
+                      selection.add( attachment ? [ attachment ] : [] );
+                });
+
+                // Opens the media library frame.
+                image_edit_frame.open();
+
+                // Runs when an image is selected.
+                image_edit_frame.on('select', function() {
+                    // Grabs the attachment selection and creates a JSON representation of the model.
+                    var media_attachments = image_edit_frame.state().get('selection').toJSON();
+
+                    for (var media_key in media_attachments) {
+                        if (!media_attachments.hasOwnProperty(media_key)) continue;
+                        var media_attachment = media_attachments[media_key];
+                        thisButton.parent().replaceWith( cooked_gallery_item( media_attachment ) );
+                    }
+
+                    cooked_init_gallery_sorting();
+                });
+            });
+
+            $_CookedRecipeGallery.on('click', '.remove-image-button', function(e) {
+                var thisButton = $(this);
+                directionID = thisButton.data('id');
+                e.preventDefault();
+
+                if ( directionID ) {
+                    $('#direction-'+directionID+'-image-src').parent().removeClass('cooked-has-image').prop('src',false);
+                       $('input[name="_recipe_settings[directions]['+directionID+'][image]"]').val('');
+                    $('.direction-image-button[data-id="'+directionID+'"]').prop( 'value',cooked_admin_functions_js_vars.i18n_image_title );
+                } else {
+                    thisButton.parent().remove();
+                }
+            });
+        }
+
+        if ( $_CookedNutritionFactsTab.length ) {
+            init_nutrition_facts( $_CookedNutritionFactsTab );
+
+            // input: typing, pasting and the number arrows; keyup kept for old browsers.
+            $_CookedNutritionFactsTab.on('input keyup', 'input', function(e) {
+                init_nutrition_facts( $_CookedNutritionFactsTab );
+            });
+
+            // New layout: empty every field (after confirming), and the label with them.
+            $_CookedNutritionFactsTab.on('click', '.cooked-nutrition-clear', function() {
+                if ( window.confirm( cooked_admin_functions_js_vars.i18n_confirm_clear_nutrition ) ) {
+                    $_CookedNutritionFactsTab.find('input[name^="_recipe_settings[nutrition]"]').not('[type="hidden"]').val('');
+                    init_nutrition_facts( $_CookedNutritionFactsTab );
+                }
+            });
+        }
+
+        /****   Recipe editor (new layout): Tom Select on the Layout tab (after the selects are wrapped) and Author   ****/
+        if ($('body').hasClass('cooked-recipe-editor')) {
+            window.cookedEnhanceSelects('.cooked-recipe-fields select, #post_author_override');
+        }
+
+        /****   Shortcodes tab (new layout): options ease open and closed instead of jumping   ****/
+        $(document).on('click', '.cooked-shortcode-options > summary', function(e) {
+            var details = this.parentNode,
+                body = details.querySelector('.cooked-shortcode-options-body'),
+                height;
+            if (!body || !body.animate || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                return;
+            }
+            e.preventDefault();
+            if (details.cookedAnimation) {
+                details.cookedAnimation.cancel();
+            }
+            if (!details.open || details.classList.contains('is-closing')) {
+                details.classList.remove('is-closing');
+                details.open = true;
+                height = body.offsetHeight;
+                details.cookedAnimation = body.animate(
+                    [{ height: '0px', opacity: 0 }, { height: height + 'px', opacity: 1 }],
+                    { duration: 260, easing: 'cubic-bezier(.22, .61, .36, 1)' }
+                );
+            } else {
+                height = body.offsetHeight;
+                details.classList.add('is-closing');
+                details.cookedAnimation = body.animate(
+                    [{ height: height + 'px', opacity: 1 }, { height: '0px', opacity: 0 }],
+                    { duration: 200, easing: 'ease-in' }
+                );
+                details.cookedAnimation.onfinish = function() {
+                    details.open = false;
+                    details.classList.remove('is-closing');
+                };
+            }
+        });
+
+        /****   Copy buttons (code blocks, recipe shortcode)   ****/
+        $(document).on('click', '.cooked-copy-code', function() {
+            var button = this,
+                code = document.getElementById(button.getAttribute('data-target'));
+            if (!code || !window.navigator.clipboard) {
+                return;
+            }
+            window.navigator.clipboard.writeText(code.textContent).then(function() {
+                var label = button.textContent;
+                button.textContent = cooked_admin_functions_js_vars.i18n_copied;
+                window.setTimeout(function() {
+                    button.textContent = label;
+                }, 2000);
+            });
+        });
+
+        /****   Time Pickers   ****/
+        if ( $('#cooked-prep-time').length ) {
+            $( '#cooked-prep-time,#cooked-cook-time' ).on('change', function() {
+                var prepTimeValue = parseInt( $( '#cooked-prep-time' ).val() ),
+                    cookTimeValue = parseInt( $( '#cooked-cook-time' ).val() );
+                cooked_updateTotalTimeValue( prepTimeValue, cookTimeValue );
+            });
+        }
+
+    });
+
+})( jQuery );
+
+var cooked_recipe_update_counter = 0;
+var cooked_bulk_per_page = 20;
+
+/**
+ * Positions a floating element (tooltip or popover) next to its reference with
+ * Floating UI: first placement preferred, the rest as flip fallbacks. Sets
+ * data-placement on the floating element and moves its arrow to the right side.
+ * isCurrent() lets callers drop a result that arrives after they closed.
+ */
+function cooked_position_floating(reference, floating, arrow, placements, isCurrent) {
+    var FloatingUI = window.FloatingUIDOM,
+        arrowSides = { top: 'bottom', right: 'left', bottom: 'top', left: 'right' };
+
+    return FloatingUI.computePosition(reference, floating, {
+        placement: placements[0],
+        strategy: 'fixed',
+        middleware: [
+            FloatingUI.offset(10),
+            FloatingUI.flip({ fallbackPlacements: placements.length > 1 ? placements.slice(1) : undefined, padding: 4 }),
+            FloatingUI.shift({ padding: 4 }),
+            FloatingUI.arrow({ element: arrow, padding: 6 })
+        ]
+    }).then(function(position) {
+        if (isCurrent && !isCurrent()) {
+            return;
+        }
+        var side = position.placement.split('-')[0],
+            arrowData = position.middlewareData.arrow || {};
+
+        floating.setAttribute('data-placement', side);
+        floating.style.left = position.x + 'px';
+        floating.style.top = position.y + 'px';
+
+        arrow.style.left = arrowData.x != null ? arrowData.x + 'px' : '';
+        arrow.style.top = arrowData.y != null ? arrowData.y + 'px' : '';
+        arrow.style.right = '';
+        arrow.style.bottom = '';
+        arrow.style[arrowSides[side]] = '-6px';
+    });
+}
+
+/**
+ * Grow animation for a floating shell (Tooltipster's "grow"): the shell's
+ * .cooked-tooltip-bubble scales from 0 to 1 via .cooked-tooltip-open (see the
+ * admin stylesheet). The shell must already be visible. Also used by Cooked Pro.
+ */
+function cooked_grow_open(shell) {
+    cooked_grow_cancel(shell);
+    shell.classList.remove('cooked-tooltip-open');
+    void shell.offsetWidth; // Commit scale(0) so the transition plays.
+    shell.classList.add('cooked-tooltip-open');
+}
+
+/**
+ * Scales the bubble back down, then calls done() (on transitionend, or after
+ * 400ms if that never fires). cooked_grow_open() and cooked_grow_cancel() stop it.
+ */
+function cooked_grow_close(shell, done) {
+    var bubble = shell.querySelector('.cooked-tooltip-bubble'),
+        timer = null,
+        finish = function(e) {
+            if (e && (e.target !== bubble || e.propertyName !== 'transform')) {
+                return;
+            }
+            cooked_grow_cancel(shell);
+            done();
+        };
+
+    cooked_grow_cancel(shell);
+    shell.classList.remove('cooked-tooltip-open');
+    bubble.addEventListener('transitionend', finish);
+    timer = setTimeout(finish, 400);
+    shell.cookedGrowCancel = function() {
+        clearTimeout(timer);
+        bubble.removeEventListener('transitionend', finish);
+        shell.cookedGrowCancel = null;
+    };
+}
+
+/** Stops a pending cooked_grow_close() without calling its done(). */
+function cooked_grow_cancel(shell) {
+    if (shell.cookedGrowCancel) {
+        shell.cookedGrowCancel();
+    }
+}
+
+/** Applies default recipe content in paginated AJAX batches and updates the progress UI. */
+function cooked_set_default_template(page, total_recipes, content, nonce) {
+    if (total_recipes <= 0) {
+        return;
+    }
+
+    var progress = jQuery('#cooked-template-progress');
+    var progress_bar = progress.find('.cooked-progress-bar');
+    var progress_text = jQuery('#cooked-template-progress-text');
+
+    if (!progress.hasClass('cooked-active')) {
+        progress.addClass('cooked-active');
+        progress_text.addClass('cooked-active');
+        progress_bar.css({ "width" : "0%" });
+    }
+
+    jQuery.post(
+        cooked_admin_functions_js_vars.ajax_url,
+        {
+            action: 'cooked_save_default_bulk',
+            page: page,
+            default_content: content,
+            nonce: nonce
+        },
+        function(response) {
+            if (response && response.success) {
+                cooked_recipe_update_counter = Math.min((page + 1) * cooked_bulk_per_page, total_recipes);
+
+                var progress_percent = Math.round((cooked_recipe_update_counter / total_recipes) * 100);
+                progress_bar.css({ "width" : progress_percent + "%" });
+                progress_text.text(cooked_recipe_update_counter + " / " + total_recipes);
+
+                if (response.data.has_more) {
+                    cooked_set_default_template(page + 1, total_recipes, content, nonce);
+                } else {
+                    jQuery('.cooked-save-default-all').text(cooked_admin_functions_js_vars.i18n_applied);
+                    progress_bar.css({ "width" : "100%" });
+                    progress_text.text(total_recipes + " / " + total_recipes);
+                    progress.removeClass('cooked-active');
+                    progress_text.removeClass('cooked-active').text("");
+                }
+            }
+        },
+        'json'
+    );
+}
+
+/** Sets the total time field to prep time plus cook time. */
+function cooked_updateTotalTimeValue( prepTime, cookTime ) {
+    var totalTimeInput = jQuery( '#cooked-total-time' ),
+        totalTime = prepTime + cookTime;
+
+    totalTimeInput.val( totalTime );
+}
+
+// Reset the Gallery Builder
+/**
+ * A Gallery tab image tile for a media library attachment. The title and URL are set as text and
+ * attributes, never parsed as HTML.
+ */
+function cooked_gallery_item( attachment ) {
+    var $ = jQuery,
+        id = parseInt( attachment.id, 10 ),
+        // Small images have no thumbnail size.
+        thumbnail = attachment.sizes && attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;
+
+    return $( '<div class="cooked-recipe-gallery-item"></div>' ).attr( 'data-attachment-id', id ).append(
+        $( '<img />' ).attr( 'src', thumbnail ),
+        $( '<span class="cooked-gallery-item-title"></span>' ).text( attachment.title || '' ),
+        $( '<input type="hidden" name="_recipe_settings[gallery][items][]" />' ).val( id ),
+        $( '<button type="button" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil" aria-hidden="true"></i></button>' ).attr( { 'data-attachment-id': id, 'aria-label': cooked_admin_functions_js_vars.i18n_change_image } ),
+        $( '<button type="button" class="remove-image-button"><i class="cooked-icon cooked-icon-times" aria-hidden="true"></i></button>' ).attr( 'aria-label', cooked_admin_functions_js_vars.i18n_remove_image )
+    );
+}
+
+// Assign a value to the hidden input field.
+// Init the jQuery UI Sort
+function cooked_init_gallery_sorting() {
+    jQuery('#cooked-recipe-image-gallery').sortable({ items: '> .cooked-recipe-gallery-item' });
+}
+
+/** Syncs nutrition tab inputs with the live nutrition label preview (values and daily-value percents). */
+function init_nutrition_facts( nutritionTab ) {
+    // New layout: an empty state in place of a label with nothing on it.
+    var hasValues = nutritionTab.find('input[name^="_recipe_settings[nutrition]"]').not('[type="hidden"]').filter(function() {
+        return jQuery.trim(this.value) !== '';
+    }).length > 0;
+    nutritionTab.find('.cooked-nutrition-stage').toggleClass('is-empty', !hasValues);
+
+    nutritionTab.find('input').each(function() {
+        var thisInput = jQuery(this),
+            thisID = thisInput.attr('id'),
+            thisVal = thisInput.val(),
+            hasPercent = jQuery('.cooked-nut-percent[data-labeltype="' + thisID + '"]').length;
+
+        if ( jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').length ) {
+            if ( thisVal ) {
+                jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').text( thisVal );
+                jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('li').eq(0).show();
+                jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('p').eq(0).show();
+                if ( hasPercent ) {
+                    var thisPercentElem = jQuery('.cooked-nut-percent[data-labeltype="' + thisID + '"]'),
+                        pvd = thisPercentElem.data('pdv');
+                    if ( pvd ) {
+                        thisPercent = Math.ceil( ( thisVal / pvd ) * 100 );
+                        thisPercentElem.text( thisPercent );
+                    }
+                }
+            } else {
+                jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').text( '___' );
+                jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('li').eq(0).hide();
+                jQuery('.cooked-nut-label[data-labeltype="' + thisID + '"]').parents('p').eq(0).hide();
+            }
+        }
+    });
+}
+
+// Reset Time Picker Settings & Names
+/** Adds a substitute line to an ingredient row, opens its substitutes and focuses the amount. */
+function cooked_add_substitution_row($block) {
+    var $row = jQuery('.cooked-substitution-row-template').first().children('.cooked-substitution-row').clone();
+    $block.find('.cooked-add-substitution').before($row);
+    $block.addClass('cooked-expanded').find('.cooked-show-substitution').attr('aria-expanded', 'true');
+    cooked_reset_ingredient_builder();
+    $row.find('input[data-substitution-part="amount"]').trigger('focus');
+}
+
+/** Marks an ingredient row that has at least one named substitute. */
+function cooked_update_has_substitution($block) {
+    var hasSubstitute = $block.find('input[data-substitution-part="name"]').filter(function() {
+        return jQuery.trim(this.value) !== '';
+    }).length > 0;
+    $block.toggleClass('cooked-has-substitution', hasSubstitute);
+}
+
+function cooked_reset_ingredient_builder() {
+    var ingredientBlocks = jQuery('.cooked-ingredient-block'),
+        total_ingredients_blocks = 0,
+        total_blocks = 0,
+        ingredientNameValue = false;
+
+    if (ingredientBlocks.length > 0) {
+        ingredientBlocks.each(function() {
+            var randomKeyForInterval = cooked_get_random_int(10000000, 99999999);
+            total_blocks++;
+
+            // Set the input "name" values.
+            var $_this = jQuery(this);
+
+            if (!$_this.hasClass('cooked-ingredient-heading')) {
+                total_ingredients_blocks++;
+            }
+
+            $_this.find("[data-ingredient-part]").each(function() {
+                var thisField = jQuery(this);
+                if (thisField.attr('name') == '') {
+                    var ingredientPartName = thisField.data('ingredient-part');
+                    thisField.attr('name', '_recipe_settings[ingredients][' + randomKeyForInterval + '][' + ingredientPartName + ']');
+                }
+            });
+
+            // New substitutes: name them into this ingredient's substitutions list.
+            var ingredientPrefix = ( $_this.find('[data-ingredient-part="amount"]').attr('name') || '' ).match(/^_recipe_settings\[ingredients\]\[[^\]]+\]/);
+            if (ingredientPrefix) {
+                $_this.find('.cooked-substitution-row').each(function() {
+                    var $row = jQuery(this),
+                        index = $row.attr('data-index') || cooked_get_random_int(10000000, 99999999);
+                    $row.attr('data-index', index);
+                    $row.find('[data-substitution-part]').each(function() {
+                        var thisField = jQuery(this);
+                        if (!thisField.attr('name')) {
+                            thisField.attr('name', ingredientPrefix[0] + '[substitutions][' + index + '][' + thisField.data('substitution-part') + ']');
+                        }
+                    });
+                });
+            }
+        });
+
+        if ($_CookedAutoNutritionButton.length) {
+            jQuery('input[data-ingredient-part="name"]').each(function() {
+                if (jQuery(this).val() != '') {
+                    ingredientNameValue = true;
+                    return false; // Break the loop
+                }
+            });
+        }
+    }
+
+    if (total_ingredients_blocks) {
+        jQuery('.cooked-ingredient-headers').show();
+        if ($_CookedAutoNutritionButton.length) {
+            if (ingredientNameValue) {
+                $_CookedAutoNutritionButton.prop('disabled', false);
+            } else {
+                $_CookedAutoNutritionButton.prop('disabled', true);
+            }
+        }
+    } else {
+        jQuery('.cooked-ingredient-headers').hide();
+        if ($_CookedAutoNutritionButton.length) $_CookedAutoNutritionButton.prop('disabled', true);
+    }
+
+    if (total_blocks) {
+        jQuery('#cooked-ingredients-builder').css( { 'margin-bottom':'20px' } );
+    } else {
+        jQuery('#cooked-ingredients-builder').css( { 'margin-bottom':'12px' } );
+    }
+
+    // New layout: Tom Select on the rows' unit and heading selects (new rows included).
+    if (jQuery('body').hasClass('cooked-recipe-editor') && window.cookedEnhanceSelects) {
+        window.cookedEnhanceSelects('#cooked-ingredients-builder select');
+    }
+}
+
+// Reset Time Picker Settings & Names
+function cooked_reset_direction_builder() {
+    var directionBlocks = jQuery('.cooked-direction-block'),
+        total_blocks = 0;
+
+    directionBlocks.each(function() {
+        var randomKeyForInterval = cooked_get_random_int(10000000, 99999999);
+        total_blocks++;
+
+        // Set the input "name" values.
+        var $_this = jQuery(this);
+
+        $_this.find("[data-direction-part]").each(function() {
+            var thisField = jQuery(this);
+            var directionPartName = thisField.data('direction-part');
+
+            if ( thisField.attr('name') == '') {
+                thisField.attr( 'name', '_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']' );
+            }
+
+            if ( thisField.attr('data-id') == '') {
+                thisField.attr( 'data-id', randomKeyForInterval );
+            }
+
+            let theId = thisField.attr('id');
+
+            if ( theId == '' || theId == undefined ) {
+                directionPartName = directionPartName.replace( '_', '-' );
+                var fieldID = 'direction-' + randomKeyForInterval + '-' + directionPartName;
+                thisField.attr('id', fieldID);
+
+                var canInitializeWpEditor = !!(
+                    cooked_admin_functions_js_vars.wp_editor_roles_allowed &&
+                    typeof wp !== 'undefined' &&
+                    wp.editor &&
+                    typeof wp.editor.initialize === 'function'
+                );
+
+                if (directionPartName === 'content' && thisField.is('textarea') && canInitializeWpEditor) {
+                    // Init the WordPress Editor.
+                    wp.editor.initialize(fieldID, cooked_direction_editor_settings('_recipe_settings[directions][' + randomKeyForInterval + '][' + directionPartName + ']'));
+                }
+            }
+        });
+    });
+
+    // Update step numbers for direction blocks (skip section headings).
+    var stepNum = 0;
+    jQuery('#cooked-directions-builder').find('.cooked-direction-block').each(function() {
+        var $_block = jQuery(this);
+        if ( !$_block.hasClass('cooked-direction-heading') ) {
+            stepNum++;
+            $_block.find('.cooked-direction-number').text(stepNum);
+            $_block.toggleClass('cooked-direction-has-number-wide', stepNum > 9);
+            $_block.addClass('cooked-direction-has-number');
+        } else {
+            $_block.removeClass('cooked-direction-has-number cooked-direction-has-number-wide');
+        }
+    });
+
+    if ( total_blocks ) {
+        jQuery('#cooked-directions-builder').css( { 'margin-bottom': '20px' } );
+    } else {
+        jQuery('#cooked-directions-builder').css( { 'margin-bottom': '12px' } );
+    }
+
+    // New layout: Tom Select on the section headings' element selects (new ones included).
+    if (jQuery('body').hasClass('cooked-recipe-editor') && window.cookedEnhanceSelects) {
+        window.cookedEnhanceSelects('#cooked-directions-builder select');
+    }
+}
+
+// Get random integer for sortable lists (ingredients and directions)
+function cooked_get_random_int(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// Check if value is an integer (for amount field in Ingredients Builder)
+function cooked_is_int(val) {
+    if (Math.floor(val) == val && $.isNumeric(val)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+// Cooked Conditional Fields Function
+/**
+ * wp.editor settings for a direction's content: the same toolbar as the "teeny" wp_editor()
+ * the server renders for directions, so links use WordPress's inline link editor (wplink).
+ *
+ * @param {string} textareaName Field name for the editor's textarea.
+ * @return {Object}
+ */
+function cooked_direction_editor_settings(textareaName) {
+    var settings = {
+        tinymce: {
+            wpautop: false,
+            toolbar1: 'bold,italic,underline,blockquote,strikethrough,bullist,numlist,alignleft,aligncenter,alignright,undo,redo,link,unlink,fullscreen',
+            toolbar2: '',
+            toolbar3: '',
+            toolbar4: '',
+            height: 100,
+            textarea_name: textareaName,
+            plugins: 'lists fullscreen wordpress wplink'
+        },
+        quicktags: true,
+        mediaButtons: false
+    };
+    // New layout: the same look inside the editor as the Layout tab's (font, scrollbar, dark mode).
+    if ( typeof cooked_admin_functions_js_vars !== 'undefined' && cooked_admin_functions_js_vars.editor_content_style ) {
+        settings.tinymce.content_style = cooked_admin_functions_js_vars.editor_content_style;
+    }
+    return settings;
+}
+
+function cooked_init_conditional_field(thisID) {
+    var thisField = jQuery('#' + thisID);
+
+    if (thisField.is(':radio')) {
+        jQuery('body').find('input:radio').on('change', function() {
+            if (!thisField.is(':checked')) {
+                jQuery('body').find("[data-condition='" + thisID + "']").each(function() {
+                    jQuery(this).hide();
+                });
+            }
+        });
+    }
+
+    thisField.on('change', function() {
+        jQuery('#cooked_recipe_settings').addClass('cooked-loading');
+
+        window.clearTimeout($_CookedConditionalTimeout);
+
+        $_CookedConditionalTimeout = window.setTimeout(function() {
+            jQuery('body').find("[data-condition='" + thisID + "']").each(function() {
+                var thisBlock = jQuery(this),
+                    thisBlockType;
+
+                if ( thisBlock.is('li') || thisBlock.is('span') ) {
+                    thisBlockType = 'inline-block';
+                } else {
+                    thisBlockType = 'block';
+                }
+
+                var thisVal = thisBlock.data('value');
+
+                if (thisVal) {
+                    thisVal = thisVal.split(' ');
+                } else {
+                    thisVal = false;
+                }
+
+                if (thisField.is(":checkbox") && thisField.is(":checked") || thisField.is(":radio") && thisField.is(":checked")) {
+                    thisBlock.css({'display':thisBlockType});
+                } else if (thisField.is(":checkbox") && !thisField.is(":checked")) {
+                    thisBlock.hide();
+                } else if (!thisField.is(":checkbox") && !thisVal && thisField.val() || !thisField.is(":checkbox") && thisVal && jQuery.inArray(thisField.val(),thisVal) > -1) {
+                    thisBlock.css({'display':thisBlockType});
+                } else if (!thisField.is(":radio") && !thisVal && thisField.val() || !thisField.is(":radio") && thisVal && jQuery.inArray(thisField.val(),thisVal) > -1) {
+                    thisBlock.css({'display':thisBlockType});
+                } else {
+                    thisBlock.hide();
+                }
+            });
+
+            jQuery('#cooked_recipe_settings').removeClass('cooked-loading');
+
+        }, 25);
+    });
+}
+
+/** Wires the bulk-add modal (preview, parse, submit) for ingredients and directions. */
+function cooked_init_bulk_add($) {
+    var $overlay = $('#cooked-bulk-add-overlay');
+    if (!$overlay.length) return;
+
+    var $textarea = $('#cooked-bulk-add-textarea'),
+        $preview = $('#cooked-bulk-add-preview'),
+        $previewList = $('#cooked-bulk-add-preview-list'),
+        $title = $('#cooked-bulk-add-title'),
+        $typeField = $('#cooked-bulk-add-type'),
+        $submitBtn = $overlay.find('.cooked-bulk-add-submit'),
+        $spinner = $overlay.find('.cooked-bulk-add-spinner'),
+        jsVars = cooked_admin_functions_js_vars,
+        parseTimer = null,
+        lastParsedText = '';
+
+    /** Opens the bulk-add overlay for the given type and sets copy/placeholders. */
+    function openModal(type) {
+        $typeField.val(type);
+        $textarea.val('');
+        $previewList.empty();
+        $preview.attr('data-bulk-type', '');
+        $preview.hide();
+        $submitBtn.attr('disabled', 'disabled');
+        $spinner.hide();
+        lastParsedText = '';
+
+        if (type === 'ingredients') {
+            $title.text(jsVars.i18n_bulk_add_ingredients);
+            $textarea.attr('placeholder', jsVars.i18n_bulk_add_placeholder_ingredients);
+            $submitBtn.text(jsVars.i18n_bulk_add_submit_ingredients);
+        } else {
+            $title.text(jsVars.i18n_bulk_add_directions);
+            $textarea.attr('placeholder', jsVars.i18n_bulk_add_placeholder_directions);
+            $submitBtn.text(jsVars.i18n_bulk_add_submit_directions);
+        }
+
+        $overlay.show();
+        $textarea.focus();
+    }
+
+    /** Hides the bulk-add overlay and clears its state. */
+    function closeModal() {
+        $overlay.hide();
+        $textarea.val('');
+        $previewList.empty();
+        $preview.attr('data-bulk-type', '');
+        $preview.hide();
+        lastParsedText = '';
+        if (parseTimer) clearTimeout(parseTimer);
+    }
+
+    /** Strips leading list markers from a single line of bulk text. */
+    function cleanLine(line) {
+        line = line.trim();
+        line = line.replace(/^(\d+\)\s+|\d+\.\s+|[a-z]+\)\s+|[•·\-\*]\s+|[A-Z]+\.\s+|[IVX]+\.\s+)/, '');
+        return line.trim();
+    }
+
+    /** Splits bulk textarea content into non-empty cleaned lines. */
+    function parseTextToLines(text) {
+        var lines = text.split(/[\r\n]+/);
+        var result = [];
+        for (var i = 0; i < lines.length; i++) {
+            var cleaned = cleanLine(lines[i]);
+            if (cleaned) {
+                result.push(cleaned);
+            }
+        }
+        return result;
+    }
+
+    /** Escapes a string for safe insertion into HTML attribute strings. */
+    function escHtml(str) {
+        return $('<span>').text(str).html();
+    }
+
+    /** Renders bulk directions preview rows from parsed lines. */
+    function renderDirectionsPreview(lines) {
+        $previewList.empty();
+        if (!lines.length) {
+            $preview.attr('data-bulk-type', '');
+            $preview.hide();
+            $submitBtn.attr('disabled', 'disabled');
+            return;
+        }
+        $preview.attr('data-bulk-type', 'directions');
+        $preview.show();
+        $submitBtn.removeAttr('disabled');
+
+        for (var i = 0; i < lines.length; i++) {
+            var $row = $('<div class="cooked-bulk-add-preview-row"></div>');
+            var $cb = $('<label class="cooked-bulk-add-heading-toggle"><input type="checkbox" data-index="' + i + '" /><span>' + jsVars.i18n_bulk_add_section_heading + '</span></label>');
+            var $text = $('<input type="text" class="cooked-bulk-add-preview-text" data-index="' + i + '" />').val(lines[i]);
+            $row.append($cb).append($text);
+            $previewList.append($row);
+        }
+    }
+
+    /** Renders bulk ingredients preview rows (optionally with server-parsed amount/unit/name). */
+    function renderIngredientsPreview(lines, parsed) {
+        $previewList.empty();
+        if (!lines.length) {
+            $preview.attr('data-bulk-type', '');
+            $preview.hide();
+            $submitBtn.attr('disabled', 'disabled');
+            return;
+        }
+        $preview.attr('data-bulk-type', 'ingredients');
+        $preview.show();
+        $submitBtn.removeAttr('disabled');
+
+        if (!$previewList.find('.cooked-bulk-add-preview-header').length) {
+            $previewList.prepend(
+                '<div class="cooked-bulk-add-preview-header">' +
+                    '<span class="cooked-bulk-add-col-heading"></span>' +
+                    '<span class="cooked-bulk-add-col-amount">' + escHtml(jsVars.i18n_bulk_add_amount) + '</span>' +
+                    '<span class="cooked-bulk-add-col-unit">' + escHtml(jsVars.i18n_bulk_add_unit) + '</span>' +
+                    '<span class="cooked-bulk-add-col-name">' + escHtml(jsVars.i18n_bulk_add_name) + '</span>' +
+                '</div>'
+            );
+        }
+
+        for (var i = 0; i < lines.length; i++) {
+            var p = parsed && parsed[i] ? parsed[i] : { amount: '', measurement: '', name: lines[i] };
+            var $row = $('<div class="cooked-bulk-add-preview-row cooked-bulk-add-preview-row-ingredient" data-index="' + i + '"></div>');
+            var $cb = $('<label class="cooked-bulk-add-heading-toggle"><input type="checkbox" data-index="' + i + '" /><span>' + jsVars.i18n_bulk_add_section_heading + '</span></label>');
+            var $headingWrap = $('<div class="cooked-bulk-add-heading-line-wrap"></div>');
+            var $headingLbl = $('<span class="cooked-bulk-add-heading-line-label"></span>').text(jsVars.i18n_bulk_add_heading_line_label);
+            var $lineInput = $('<input type="text" class="cooked-bulk-add-preview-text" data-index="' + i + '" />').val(lines[i]);
+            $headingWrap.append($headingLbl).append($lineInput);
+            var $amt = $('<input type="text" class="cooked-bulk-add-parsed-amount" data-index="' + i + '" />').val(p.amount);
+            var $unit = $('<input type="text" class="cooked-bulk-add-parsed-unit" data-index="' + i + '" />').val(p.measurement);
+            var $name = $('<input type="text" class="cooked-bulk-add-parsed-name" data-index="' + i + '" />').val(p.name);
+            $row.append($cb).append($headingWrap).append($amt).append($unit).append($name);
+            $previewList.append($row);
+        }
+    }
+
+    /** Fetches AJAX-parsed ingredient lines and refreshes the preview. */
+    function fetchIngredientParse(lines) {
+        if (!lines.length) {
+            renderIngredientsPreview([], null);
+            return;
+        }
+
+        $spinner.show().css('visibility', 'visible');
+
+        $.post(jsVars.ajax_url, {
+            action: 'cooked_parse_bulk_ingredients',
+            nonce: jsVars.cooked_bulk_add_nonce,
+            lines: lines
+        }, function(response) {
+            $spinner.hide();
+            var parsed = (response.success && response.data && response.data.parsed) ? response.data.parsed : null;
+            renderIngredientsPreview(lines, parsed);
+        }).fail(function() {
+            $spinner.hide();
+            renderIngredientsPreview(lines, null);
+        });
+    }
+
+    $textarea.on('input', function() {
+        var type = $typeField.val();
+        var lines = parseTextToLines($(this).val());
+        var textKey = lines.join('\n');
+
+        if (type === 'directions') {
+            renderDirectionsPreview(lines);
+        } else {
+            if (textKey === lastParsedText) return;
+            lastParsedText = textKey;
+            renderIngredientsPreview(lines, null);
+            if (parseTimer) clearTimeout(parseTimer);
+            parseTimer = setTimeout(function() {
+                fetchIngredientParse(lines);
+            }, 400);
+        }
+    });
+
+    $(document).on('click', '.cooked-bulk-add-button', function(e) {
+        e.preventDefault();
+        var type = $(this).data('type');
+        openModal(type);
+    });
+
+    $overlay.on('click', '.cooked-bulk-add-close, .cooked-bulk-add-cancel', function(e) {
+        e.preventDefault();
+        closeModal();
+    });
+
+    $overlay.on('click', function(e) {
+        if ($(e.target).is($overlay)) {
+            closeModal();
+        }
+    });
+
+    $(document).on('keydown', function(e) {
+        if (e.key === 'Escape' && $overlay.is(':visible')) {
+            closeModal();
+        }
+    });
+
+    $previewList.on('change', 'input[type="checkbox"]', function() {
+        var $row = $(this).closest('.cooked-bulk-add-preview-row');
+        var isHeading = $(this).is(':checked');
+        $row.toggleClass('cooked-bulk-add-is-heading', isHeading);
+    });
+
+    $submitBtn.on('click', function(e) {
+        e.preventDefault();
+        if ($(this).attr('disabled')) return;
+
+        var type = $typeField.val();
+        var items = [];
+
+        if (type === 'ingredients') {
+            $previewList.find('.cooked-bulk-add-preview-row').each(function() {
+                var $row = $(this);
+                var isHeading = $row.find('input[type="checkbox"]').is(':checked');
+                var text = $row.find('.cooked-bulk-add-preview-text').val().trim();
+                if (!text) return;
+
+                if (isHeading) {
+                    items.push({ text: text, heading: true });
+                } else {
+                    items.push({
+                        heading: false,
+                        amount: $row.find('.cooked-bulk-add-parsed-amount').val().trim(),
+                        measurement: $row.find('.cooked-bulk-add-parsed-unit').val().trim(),
+                        name: $row.find('.cooked-bulk-add-parsed-name').val().trim() || text
+                    });
+                }
+            });
+        } else {
+            $previewList.find('.cooked-bulk-add-preview-row').each(function() {
+                var $row = $(this);
+                var text = $row.find('.cooked-bulk-add-preview-text').val().trim();
+                var isHeading = $row.find('input[type="checkbox"]').is(':checked');
+                if (text) {
+                    items.push({ text: text, heading: isHeading });
+                }
+            });
+        }
+
+        if (!items.length) return;
+
+        if (type === 'directions') {
+            cooked_bulk_add_directions(items);
+            closeModal();
+        } else {
+            cooked_bulk_add_ingredients_parsed(items);
+            closeModal();
+        }
+    });
+}
+
+/** Appends direction rows from bulk-add items (headings or plain steps) and resets the builder. */
+function cooked_bulk_add_directions(items) {
+    var $_builder = jQuery('#cooked-directions-builder');
+    var $_parent = $_builder.parent();
+
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+
+        if (item.heading) {
+            var $heading = $_parent.find('.cooked-heading-template').clone()
+                .removeClass('cooked-template cooked-heading-template')
+                .addClass('cooked-direction-block cooked-direction-heading');
+            $heading.find('[data-direction-part="section_heading_name"]').val(item.text);
+            $_builder.append($heading);
+        } else {
+            var $direction = $_parent.find('.cooked-direction-template').clone()
+                .removeClass('cooked-template cooked-direction-template')
+                .addClass('cooked-direction-block');
+            $direction.find('[data-direction-part="content"]').val(item.text);
+            $_builder.append($direction);
+        }
+    }
+
+    cooked_reset_direction_builder();
+}
+
+/** Appends ingredient rows from bulk-add items (headings or amount/unit/name) and resets the builder. */
+function cooked_bulk_add_ingredients_parsed(items) {
+    var $_builder = jQuery('#cooked-ingredients-builder');
+    var $_parent = $_builder.parent();
+
+    for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+
+        if (item.heading) {
+            var $heading = $_parent.find('.cooked-heading-template').clone()
+                .removeClass('cooked-template cooked-heading-template')
+                .addClass('cooked-ingredient-block cooked-ingredient-heading');
+            $heading.find('[data-ingredient-part="section_heading_name"]').val(item.text);
+            $_builder.append($heading);
+        } else {
+            var $ingredient = $_parent.find('.cooked-ingredient-template').clone()
+                .removeClass('cooked-template cooked-ingredient-template')
+                .addClass('cooked-ingredient-block');
+
+            $ingredient.find('[data-ingredient-part="amount"]').val(item.amount || '');
+
+            if (item.measurement) {
+                $ingredient.find('[data-ingredient-part="measurement"]').val(item.measurement);
+            }
+
+            $ingredient.find('[data-ingredient-part="name"]').val(item.name || '');
+
+            $_builder.append($ingredient);
+        }
+    }
+
+    cooked_reset_ingredient_builder();
+}
+
+/**
+ * Settings: the Admin Screens "Compare layouts" dialog (Cooked_Settings::layout_compare_button())
+ * and its slider (templates/admin/parts/layout-compare.php). The range input moves the divider;
+ * the tabs switch between screens.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    var dialog = document.getElementById('cooked-layout-compare-dialog'),
+        opener = document.querySelector('.cooked-layout-compare-open');
+    if (dialog && opener && typeof dialog.showModal === 'function') {
+        opener.addEventListener('click', function() {
+            dialog.showModal();
+        });
+        dialog.querySelector('.cooked-dialog-close').addEventListener('click', function() {
+            dialog.close();
+        });
+        // A click on the backdrop (outside the dialog box) closes it too.
+        dialog.addEventListener('click', function(e) {
+            if (e.target === dialog) {
+                dialog.close();
+            }
+        });
+        // Back to the button that opened it.
+        dialog.addEventListener('close', function() {
+            opener.focus();
+        });
+    }
+
+    Array.prototype.forEach.call(document.querySelectorAll('.cooked-layout-compare'), function(section) {
+        var tabs = Array.prototype.slice.call(section.querySelectorAll('[role="tab"]'));
+
+        Array.prototype.forEach.call(section.querySelectorAll('.cooked-compare'), function(compare) {
+            var range = compare.querySelector('.cooked-compare-range'),
+                update = function() {
+                    compare.style.setProperty('--cooked-compare-pos', range.value + '%');
+                    range.setAttribute('aria-valuetext', range.value + '%');
+                };
+            range.addEventListener('input', update);
+            update();
+        });
+
+        var select = function(tab) {
+            tabs.forEach(function(other) {
+                var selected = other === tab,
+                    panel = document.getElementById(other.getAttribute('aria-controls'));
+                other.setAttribute('aria-selected', selected ? 'true' : 'false');
+                other.tabIndex = selected ? 0 : -1;
+                if (panel) {
+                    panel.hidden = !selected;
+                }
+            });
+        };
+
+        tabs.forEach(function(tab, index) {
+            tab.addEventListener('click', function() {
+                select(tab);
+            });
+            // Arrow keys move between tabs (WAI-ARIA tabs pattern).
+            tab.addEventListener('keydown', function(e) {
+                var next = e.key === 'ArrowRight' ? index + 1 : e.key === 'ArrowLeft' ? index - 1 : null;
+                if (next === null) {
+                    return;
+                }
+                e.preventDefault();
+                var target = tabs[(next + tabs.length) % tabs.length];
+                select(target);
+                target.focus();
+            });
+        });
+    });
+});
+
+/**
+ * Recipe editor › Gallery: the gallery as the recipe page shows it (Cooked_Ajax::gallery_preview()),
+ * built from the tab's current, unsaved values. "Preview Gallery" opens it in a dialog; the new
+ * layout also keeps a small live preview next to the style fields.
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    var dialog = document.getElementById('cooked-gallery-preview-dialog'),
+        live = document.querySelector('.cooked-gallery-live-frame');
+    if (!dialog || typeof dialog.showModal !== 'function' || typeof cooked_admin_functions_js_vars === 'undefined') {
+        return;
+    }
+
+    var frame = dialog.querySelector('.cooked-gallery-preview-frame'),
+        value = function(name) {
+            var fields = document.querySelectorAll('[name="_recipe_settings[gallery][' + name + ']"]'),
+                result = '';
+            // A switch comes after its hidden "0", like PHP reads them: the last one that counts wins.
+            Array.prototype.forEach.call(fields, function(field) {
+                if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
+                    result = field.value;
+                }
+            });
+            return result;
+        },
+        previewUrl = function(mini) {
+            var items = Array.prototype.map.call(document.querySelectorAll('[name="_recipe_settings[gallery][items][]"]'), function(input) {
+                    return input.value;
+                }),
+                params = new URLSearchParams({
+                    action: 'cooked_gallery_preview',
+                    nonce: cooked_admin_functions_js_vars.cooked_gallery_preview_nonce,
+                    items: items.join(','),
+                    video_url: value('video_url'),
+                    style: value('style'),
+                    loop: value('loop'),
+                    autoplay: value('autoplay'),
+                    ratio: value('ratio'),
+                    fit: value('fit')
+                });
+            if (mini) {
+                params.set('mini', '1');
+            }
+            return cooked_admin_functions_js_vars.ajax_url + '?' + params.toString();
+        },
+        // The preview is on this site, so a frame can grow to fit it.
+        fitFrame = function(target) {
+            target.addEventListener('load', function() {
+                var doc = target.contentDocument;
+                if (doc && doc.body && target.src !== 'about:blank') {
+                    target.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px';
+                }
+            });
+        };
+
+    fitFrame(frame);
+    Array.prototype.forEach.call(document.querySelectorAll('.cooked-gallery-preview-button'), function(opener) {
+        opener.addEventListener('click', function() {
+            dialog.opener = opener;
+            frame.src = previewUrl(false);
+            dialog.showModal();
+        });
+    });
+    dialog.querySelector('.cooked-dialog-close').addEventListener('click', function() {
+        dialog.close();
+    });
+    dialog.addEventListener('click', function(e) {
+        if (e.target === dialog) {
+            dialog.close();
+        }
+    });
+    dialog.addEventListener('close', function() {
+        // Stops a playing video and the autoplay timer.
+        frame.src = 'about:blank';
+        if (dialog.opener) {
+            dialog.opener.focus();
+        }
+    });
+
+    if (!live) {
+        return;
+    }
+
+    // The live preview loads once it is first on screen, then follows every change. Each change
+    // loads into a new frame under the current one; once loaded it fades in over it and the view
+    // eases to its height, so the preview never goes blank.
+    var timer = null,
+        shown = false,
+        view = live.parentNode,
+        pending = null,
+        resizer = null,
+        setHeight = function(target) {
+            var doc = target.contentDocument;
+            if (doc && doc.body) {
+                view.style.height = Math.ceil(doc.body.getBoundingClientRect().height) + 'px';
+            }
+        },
+        load = function() {
+            var next = live.cloneNode(false);
+            if (pending) {
+                pending.remove();
+            }
+            pending = next;
+            next.classList.add('is-loading');
+            next.addEventListener('load', function() {
+                if (next !== pending || !next.contentDocument || !next.contentDocument.body) {
+                    return;
+                }
+                pending = null;
+                var previous = live;
+                live = next;
+                setHeight(next);
+                // The content's height follows the frame's width (a narrower window).
+                if (resizer) {
+                    resizer.disconnect();
+                }
+                if ('ResizeObserver' in window) {
+                    resizer = new ResizeObserver(function() {
+                        setHeight(next);
+                    });
+                    resizer.observe(next.contentDocument.body);
+                }
+                next.classList.remove('is-loading');
+                window.setTimeout(function() {
+                    if (previous !== live) {
+                        previous.remove();
+                    }
+                }, 250);
+            });
+            next.src = previewUrl(true);
+            view.appendChild(next);
+        },
+        refresh = function() {
+            if (!shown) {
+                return;
+            }
+            window.clearTimeout(timer);
+            timer = window.setTimeout(load, 300);
+        },
+        tab = document.getElementById('cooked-recipe-tab-content-gallery'),
+        gallery = document.getElementById('cooked-recipe-image-gallery');
+
+    if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function(entries, observer) {
+            if (entries[0].isIntersecting) {
+                shown = true;
+                observer.disconnect();
+                load();
+            }
+        }).observe(view);
+    } else {
+        shown = true;
+        load();
+    }
+
+    if (tab) {
+        tab.addEventListener('change', refresh);
+        tab.addEventListener('input', function(e) {
+            if (e.target.name === '_recipe_settings[gallery][video_url]') {
+                refresh();
+            }
+        });
+    }
+    // Images added, removed, replaced or dragged into a new order.
+    if (gallery && 'MutationObserver' in window) {
+        new MutationObserver(function(mutations) {
+            var changed = mutations.some(function(mutation) {
+                return Array.prototype.some.call(mutation.addedNodes, function(node) {
+                    return node.classList && node.classList.contains('cooked-recipe-gallery-item');
+                }) || Array.prototype.some.call(mutation.removedNodes, function(node) {
+                    return node.classList && node.classList.contains('cooked-recipe-gallery-item');
+                });
+            });
+            if (changed) {
+                refresh();
+            }
+        }).observe(gallery, { childList: true });
+    }
+});

@@ -20,10 +20,11 @@ test.describe('Browse filters accessibility (anonymous user)', () => {
     await page.locator(`${browseSearch} .cooked-browse-select`).click();
     await page.locator(`${browseSearch} .cooked-browse-select-block`).waitFor();
     await page
-      .locator(`${browseSearch} .cooked-tax-column:has-text("Categories") a[href*="/recipe-category/bread"]`)
-      .click();
-    await page.waitForURL('**/browse-recipes/recipe-category/bread');
+      .locator(`${browseSearch} .cooked-browse-select-block input[name="cooked_category_filter[]"][value="bread"]`)
+      .check();
+    await page.waitForURL(/\/browse-recipes\/recipe-category\/bread\/sort\/date_desc\/?$/);
     await page.waitForLoadState('networkidle');
+    await page.locator('.cooked-filter-chips .cooked-filter-chip:has-text("Bread")').waitFor();
     await page.locator('.cooked-recipe').first().waitFor();
     await expectAccessible(page);
   });

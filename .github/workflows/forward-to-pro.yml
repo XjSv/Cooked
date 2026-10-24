@@ -1,0 +1,112 @@
+name: Forward Pro Issues
+
+on:
+  issues:
+    types: [ opened ]
+  issue_comment:
+    types: [ created ]
+
+permissions:
+  issues: write
+
+jobs:
+  forward:
+    # Only run on the upstream repo (forks don't have PRO_REPO_TOKEN) and only for issues
+    # opened with the "pro" label, which the Pro Bug Report template applies.
+    if: >-
+      github.repository == 'XjSv/Cooked' &&
+      github.event_name == 'issues' &&
+      contains(github.event.issue.labels.*.name, 'pro')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create mirrored issue on Cooked Pro
+        id: mirror
+        uses: actions/github-script@v8
+        with:
+          github-token: ${{ secrets.PRO_REPO_TOKEN }}
+          script: |
+            const issue = context.payload.issue;
+            const body = `> Mirrored from public repo issue #${issue.number} by @${issue.user.login}\n> Public issue: ${issue.html_url}\n\n---\n\n${issue.body ?? ''}`;
+
+            const created = await github.rest.issues.create({
+              owner: 'XjSv',
+              repo: 'Cooked-Pro',
+              title: issue.title,
+              body: body,
+              labels: [ 'from-free-repo' ]
+            });
+
+            return created.data.number;
+
+      # Uses the default GITHUB_TOKEN so PRO_REPO_TOKEN only needs access to Cooked-Pro.
+      # The hidden marker records which mirror issue later comments are relayed to.
+      - name: Acknowledge on public issue
+        uses: actions/github-script@v8
+        env:
+          MIRROR_NUMBER: ${{ steps.mirror.outputs.result }}
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: `Thanks — this has been logged with our Pro support team internally. We'll follow up here with updates.\n\n<!-- mirror:${process.env.MIRROR_NUMBER} -->`
+            });
+
+  relay-author-comment:
+    # Copies the issue author's follow-up comments into the Cooked Pro mirror.
+    # Replies from the team are posted on the public issue directly; nothing comes back from Cooked Pro.
+    if: >-
+      github.repository == 'XjSv/Cooked' &&
+      github.event_name == 'issue_comment' &&
+      !github.event.issue.pull_request &&
+      contains(github.event.issue.labels.*.name, 'pro') &&
+      github.event.comment.user.login == github.event.issue.user.login
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Find the mirrored issue
+        id: mirror
+        uses: actions/github-script@v8
+        with:
+          result-encoding: string
+          script: |
+            const comments = await github.paginate( github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              per_page: 100
+            } );
+
+            // Only trust the marker left by this workflow, so the author can't point it at another issue.
+            for ( const comment of comments ) {
+              if ( comment.user.login !== 'github-actions[bot]' ) {
+                continue;
+              }
+
+              const match = ( comment.body ?? '' ).match( /<!-- mirror:(\d+) -->/ );
+              if ( match ) {
+                return parseInt( match[1], 10 );
+              }
+            }
+
+            core.info( 'No mirror marker found; nothing to relay.' );
+            return '';
+
+      - name: Relay comment to Cooked Pro
+        if: steps.mirror.outputs.result != ''
+        uses: actions/github-script@v8
+        env:
+          MIRROR_NUMBER: ${{ steps.mirror.outputs.result }}
+        with:
+          github-token: ${{ secrets.PRO_REPO_TOKEN }}
+          script: |
+            const comment = context.payload.comment;
+
+            await github.rest.issues.createComment({
+              owner: 'XjSv',
+              repo: 'Cooked-Pro',
+              issue_number: parseInt( process.env.MIRROR_NUMBER, 10 ),
+              body: `> @${comment.user.login} commented on the public issue: ${comment.html_url}\n\n---\n\n${comment.body ?? ''}`
+            });

@@ -1,9 +1,28 @@
 # PHPStan configuration for Cooked
 
+includes:
+    - phpstan-baseline.neon
+
 parameters:
     level: 8
     paths:
         - includes/
-    
-    # This ensures your code is compatible with PHP 7.4 syntax
-    phpVersion: 70400 
+        - src/
+    bootstrapFiles:
+        - src/aliases.php
+        - tests/phpstan/bootstrap.php
+    scanFiles:
+        - tests/phpstan/stubs.php
+
+    # WordPress docblocks are not reliable enough to treat as certain.
+    treatPhpDocTypesAsCertain: false
+
+    phpVersion: 80200
+    dynamicConstantNames:
+        - COOKED_DEV
+
+    ignoreErrors:
+        # WordPress's escaping functions cast scalars to strings, so numbers are safe to pass.
+        -
+            message: '#^Parameter \#1 \$text of function esc_(attr|html) expects string, (float|int(<[^>]+>)?)(\|(float|int(<[^>]+>)?|string))* given\.$#'
+            identifier: argument.type

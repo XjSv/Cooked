@@ -1,0 +1,39 @@
+name: Pro Bug Report
+description: Report a bug if you're using Cooked Pro
+title: "[Pro Bug]: "
+labels: ["pro", "bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting an issue with **Cooked Pro**! This will be
+        forwarded to our Pro support team — you'll get updates right here
+        on this issue.
+  - type: input
+    id: version
+    attributes:
+      label: Plugin Version
+      description: Which version of Cooked Pro are you using?
+      placeholder: "e.g. 1.4.2"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Describe the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. See error
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output or screenshots
+      render: shell

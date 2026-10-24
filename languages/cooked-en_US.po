@@ -1,0 +1,4076 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Cooked - Recipe Management 2.0.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cooked\n"
+"Last-Translator: mgiannopoulos24\n"
+"Language-Team: English (United States)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-24T17:54:54+00:00\n"
+"PO-Revision-Date: 2026-10-24 21:00+0300\n"
+"Language: en_US\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: WP-CLI 2.12.0\n"
+"X-Domain: cooked\n"
+
+#. Plugin Name of the plugin
+#: cooked.php
+msgid "Cooked - Recipe Management"
+msgstr ""
+
+#. Plugin URI of the plugin
+#: cooked.php
+msgid "https://wordpress.org/plugins/cooked"
+msgstr ""
+
+#. Description of the plugin
+#: cooked.php
+msgid "A recipe plugin for WordPress."
+msgstr ""
+
+#. Author of the plugin
+#: cooked.php
+msgid "Gora Tech"
+msgstr ""
+
+#. Author URI of the plugin
+#: cooked.php
+msgid "https://goratech.dev"
+msgstr ""
+
+#. translators: referring to the bottom of the Settings page.
+#: src/Admin/Enqueues.php:45
+#: src/Admin/Enqueues.php:265
+#: src/Admin/Menus.php:56
+#: src/Admin/Menus.php:104
+#: src/Frontend/Shortcodes.php:195
+#: templates/admin/classic/welcome.php:36
+#: templates/admin/frame/welcome.php:66
+#: templates/admin/parts/layout-compare.php:16
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/Enqueues.php:52
+#: src/Admin/Enqueues.php:269
+#: src/Admin/Menus.php:57
+msgid "Import"
+msgstr ""
+
+#: src/Admin/Enqueues.php:58
+#: src/Admin/Enqueues.php:273
+#: src/Admin/Menus.php:58
+msgid "What's New?"
+msgstr ""
+
+#: src/Admin/Enqueues.php:66
+#: src/Admin/Enqueues.php:279
+#: src/Admin/Menus.php:61
+#: templates/admin/classic/welcome.php:57
+#: templates/admin/frame/welcome.php:41
+msgid "Upgrade to Pro"
+msgstr ""
+
+#: src/Admin/Enqueues.php:247
+msgid "Developer"
+msgstr ""
+
+#: src/Admin/Enqueues.php:306
+msgid "Cooked"
+msgstr ""
+
+#: src/Admin/Enqueues.php:307
+#: templates/admin/classic/welcome.php:50
+#: templates/admin/frame/welcome.php:17
+msgid "Documentation"
+msgstr ""
+
+#: src/Admin/Enqueues.php:308
+#: templates/admin/classic/settings.php:19
+#: templates/admin/frame/settings.php:40
+msgid "Update Settings"
+msgstr ""
+
+#: src/Admin/Enqueues.php:309
+msgid "Cooked pages"
+msgstr ""
+
+#: src/Admin/Enqueues.php:310
+msgid "Sections"
+msgstr ""
+
+#: src/Admin/Enqueues.php:311
+msgid "Scroll sections left"
+msgstr ""
+
+#: src/Admin/Enqueues.php:312
+msgid "Scroll sections right"
+msgstr ""
+
+#: src/Admin/Enqueues.php:313
+msgid "Skip to content"
+msgstr ""
+
+#. translators: 1: Cooked screen, e.g. "Settings", 2: section, e.g. "General"
+#: src/Admin/Enqueues.php:315
+#, php-format
+msgid "%1$s: %2$s"
+msgstr ""
+
+#: src/Admin/Enqueues.php:316
+msgid "Version:"
+msgstr ""
+
+#: src/Admin/Enqueues.php:317
+msgid "Changelog"
+msgstr ""
+
+#: src/Admin/Enqueues.php:318
+msgid "The changelog could not be loaded. Please try again."
+msgstr ""
+
+#. translators: %s: a sample CSV file's name, e.g. "Small (1 recipe)"
+#: src/Admin/Enqueues.php:320
+#, php-format
+msgid "Sample CSV: %s"
+msgstr ""
+
+#: src/Admin/Enqueues.php:321
+msgid "The sample file could not be loaded. Please try again."
+msgstr ""
+
+#: src/Admin/Enqueues.php:322
+msgid "This browser could not start the import. Download the file and upload it instead."
+msgstr ""
+
+#: src/Admin/Enqueues.php:323
+msgid "Download"
+msgstr ""
+
+#: src/Admin/Enqueues.php:324
+msgid "Import Now"
+msgstr ""
+
+#: src/Admin/Enqueues.php:325
+msgid "Search settings"
+msgstr ""
+
+#: src/Admin/Enqueues.php:326
+msgid "Search settings…"
+msgstr ""
+
+#: src/Admin/Enqueues.php:327
+msgid "No settings found."
+msgstr ""
+
+#. translators: %d: number of matching settings
+#: src/Admin/Enqueues.php:329
+#, php-format
+msgid "%d settings found. Use the up and down arrows to choose one."
+msgstr ""
+
+#: src/Admin/Enqueues.php:468
+msgid "remaining"
+msgstr ""
+
+#: src/Admin/Enqueues.php:469
+#: src/Admin/Settings.php:1190
+#: src/functions.php:586
+#: src/functions.php:656
+#: src/functions.php:711
+msgid "Add Image"
+msgstr ""
+
+#: src/Admin/Enqueues.php:470
+#: src/Admin/Settings.php:1190
+#: src/functions.php:586
+msgid "Change Image"
+msgstr ""
+
+#: src/Admin/Enqueues.php:471
+msgid "Use this Image"
+msgstr ""
+
+#: src/Admin/Enqueues.php:472
+#: src/functions.php:596
+#: src/functions.php:683
+#: src/functions.php:721
+msgid "Add Video"
+msgstr ""
+
+#: src/Admin/Enqueues.php:473
+#: src/functions.php:596
+msgid "Change Video"
+msgstr ""
+
+#: src/Admin/Enqueues.php:474
+msgid "Use this Video"
+msgstr ""
+
+#: src/Admin/Enqueues.php:475
+#: templates/admin/classic/recipe-gallery.php:82
+msgid "Add to Gallery"
+msgstr ""
+
+#: src/Admin/Enqueues.php:476
+msgid "Edit Gallery Item"
+msgstr ""
+
+#: src/Admin/Enqueues.php:477
+msgid "Update Gallery Item"
+msgstr ""
+
+#: src/Admin/Enqueues.php:478
+#: templates/admin/classic/recipe-gallery.php:75
+#: templates/admin/frame/recipe-gallery.php:90
+msgid "Change image"
+msgstr ""
+
+#: src/Admin/Enqueues.php:479
+#: src/Admin/Settings.php:1206
+#: src/functions.php:589
+#: src/functions.php:659
+#: src/functions.php:714
+#: templates/admin/classic/recipe-gallery.php:75
+#: templates/admin/frame/recipe-gallery.php:90
+msgid "Remove image"
+msgstr ""
+
+#: src/Admin/Enqueues.php:480
+msgid "Saved"
+msgstr ""
+
+#: src/Admin/Enqueues.php:481
+msgid "Copied"
+msgstr ""
+
+#: src/Admin/Enqueues.php:482
+msgid "Applied"
+msgstr ""
+
+#: src/Admin/Enqueues.php:483
+msgid "Are you sure you want to apply this new template to all of your recipes?"
+msgstr ""
+
+#: src/Admin/Enqueues.php:484
+msgid "Are you sure you want to reset this recipe template to the Cooked plugin default?"
+msgstr ""
+
+#: src/Admin/Enqueues.php:485
+msgid "Clear every nutrition value for this recipe? Nothing is saved until you update the recipe."
+msgstr ""
+
+#. translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration.
+#: src/Admin/Enqueues.php:487
+#, php-format
+msgid "Please confirm that you are ready to migrate all %s recipes."
+msgstr ""
+
+#: src/Admin/Enqueues.php:488
+msgid "Please confirm that you are ready to import all recipes."
+msgstr ""
+
+#: src/Admin/Enqueues.php:489
+msgid "Are you sure you want to import recipes from this CSV file?"
+msgstr ""
+
+#: src/Admin/Enqueues.php:490
+msgid "Please select a CSV file."
+msgstr ""
+
+#: src/Admin/Enqueues.php:491
+msgid "Please select a valid CSV file."
+msgstr ""
+
+#: src/Admin/Enqueues.php:492
+msgid "Uploading..."
+msgstr ""
+
+#: src/Admin/Enqueues.php:493
+msgid "Processing..."
+msgstr ""
+
+#: src/Admin/Enqueues.php:494
+msgid "recipes imported"
+msgstr ""
+
+#: src/Admin/Enqueues.php:495
+msgid "Errors:"
+msgstr ""
+
+#: src/Admin/Enqueues.php:496
+msgid "Import failed."
+msgstr ""
+
+#: src/Admin/Enqueues.php:497
+msgid "Failed to process CSV file."
+msgstr ""
+
+#: src/Admin/Enqueues.php:498
+msgid "Failed to upload CSV file."
+msgstr ""
+
+#: src/Admin/Enqueues.php:499
+#: src/System/Ajax.php:555
+#: src/System/Ajax.php:560
+msgid "File upload failed."
+msgstr ""
+
+#: src/Admin/Enqueues.php:500
+msgid "Something went wrong"
+msgstr ""
+
+#: src/Admin/Enqueues.php:501
+msgid "hrs"
+msgstr ""
+
+#: src/Admin/Enqueues.php:502
+msgid "mins"
+msgstr ""
+
+#: src/Admin/Enqueues.php:503
+msgid "Pre-calculate related recipes for all published recipes? This may take a while on large sites."
+msgstr ""
+
+#. translators: 1: date and time, 2: number of recipes
+#: src/Admin/Enqueues.php:505
+#, php-format
+msgid "Last: %1$s · %2$s recipes"
+msgstr ""
+
+#: src/Admin/Enqueues.php:513
+msgid "Bulk Add Ingredients"
+msgstr ""
+
+#: src/Admin/Enqueues.php:514
+msgid "Bulk Add Directions"
+msgstr ""
+
+#: src/Admin/Enqueues.php:515
+msgid ""
+"2 cups flour\n"
+"1 tsp salt\n"
+"1/2 cup sugar\n"
+"3 large eggs"
+msgstr ""
+
+#: src/Admin/Enqueues.php:516
+msgid ""
+"Preheat oven to 350°F.\n"
+"Mix dry ingredients together.\n"
+"Add wet ingredients and stir."
+msgstr ""
+
+#: src/Admin/Enqueues.php:517
+#: src/functions.php:376
+#: src/functions.php:507
+#: src/functions.php:613
+#: src/functions.php:731
+#: templates/admin/classic/recipe-shortcodes.php:512
+msgid "Section heading"
+msgstr ""
+
+#: src/Admin/Enqueues.php:518
+msgid "Parsing..."
+msgstr ""
+
+#: src/Admin/Enqueues.php:519
+msgid "Add Ingredients"
+msgstr ""
+
+#: src/Admin/Enqueues.php:520
+msgid "Add Directions"
+msgstr ""
+
+#: src/Admin/Enqueues.php:521
+#: src/functions.php:312
+#: src/functions.php:340
+#: src/functions.php:421
+#: src/functions.php:474
+msgid "Amount"
+msgstr ""
+
+#: src/Admin/Enqueues.php:522
+#: src/functions.php:313
+#: src/functions.php:346
+#: src/functions.php:427
+#: src/functions.php:480
+msgid "Measurement"
+msgstr ""
+
+#: src/Admin/Enqueues.php:523
+#: src/functions.php:314
+#: src/functions.php:359
+#: src/functions.php:440
+#: src/functions.php:493
+msgid "Item"
+msgstr ""
+
+#: src/Admin/Enqueues.php:524
+msgid "Heading text"
+msgstr ""
+
+#: src/Admin/Menus.php:47
+#: src/Admin/Menus.php:78
+#: src/Recipe/PostTypes.php:592
+#: src/Recipe/PostTypes.php:604
+#: src/User/Users.php:193
+msgid "Recipes"
+msgstr ""
+
+#: src/Admin/Menus.php:48
+#: src/Admin/Menus.php:93
+#: src/Recipe/PostTypes.php:594
+msgid "Add New"
+msgstr ""
+
+#: src/Admin/Menus.php:85
+#: src/Recipe/PostTypes.php:599
+msgid "All Recipes"
+msgstr ""
+
+#: src/Admin/Menus.php:144
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#. translators: for displaying singular or plural versions depending on the number of recipes.
+#: src/Admin/Migration.php:65
+#, php-format
+msgid "There is %1$s recipe that should be migrated from %2$s to take advantage of new features and reliability."
+msgid_plural "There are %1$s recipes that should be migrated from %2$s to take advantage of new features and reliability."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Migration.php:67
+msgid "Please click the button below to migrate these recipes. Here is what will happen to your recipes:"
+msgstr ""
+
+#: src/Admin/Migration.php:69
+msgid "NO DATA LOSS, all fields will be remapped."
+msgstr ""
+
+#: src/Admin/Migration.php:70
+msgid "Remapped fields will greatly speed up recipe loading times."
+msgstr ""
+
+#: src/Admin/Migration.php:71
+msgid "If recipe excerpt exists, the short description will be moved to the top of the recipe template."
+msgstr ""
+
+#: src/Admin/Migration.php:72
+msgid "If no recipe excerpt exists, the short description will be used instead."
+msgstr ""
+
+#: src/Admin/Migration.php:73
+msgid "Version number will be applied to each recipe."
+msgstr ""
+
+#: src/Admin/Migration.php:76
+#: src/Import/Import.php:88
+#: src/Import/Import.php:144
+msgid "Wow, you have a lot of recipes!"
+msgstr ""
+
+#: src/Admin/Migration.php:76
+#: src/Import/Import.php:88
+#: src/Import/Import.php:144
+msgid "It is definitely recommended that you get yourself a cup of coffee or tea after clicking this button."
+msgstr ""
+
+#: src/Admin/Migration.php:78
+#: src/Import/Import.php:90
+#: src/Import/Import.php:146
+#: src/Import/Import.php:199
+msgid "Note:"
+msgstr ""
+
+#: src/Admin/Migration.php:78
+#: src/Import/Import.php:90
+#: src/Import/Import.php:146
+msgid "The more recipes you have, the longer this will take."
+msgstr ""
+
+#: src/Admin/Migration.php:83
+msgid "Migration"
+msgstr ""
+
+#. translators: 1: number of recipes, 2: migration link.
+#: src/Admin/Migration.php:111
+#, php-format
+msgid "There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe."
+msgid_plural "There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Migration.php:121
+msgid "click here"
+msgstr ""
+
+#: src/Admin/PluginExtra.php:45
+msgid "Required by Cooked Pro"
+msgstr ""
+
+#. translators: 1: Cooked Pro's installed version, 2: the Cooked Pro version this version of Cooked requires, 3: link to the Plugins screen
+#: src/Admin/ProCompat.php:85
+#, php-format
+msgid "<strong>Cooked Pro is paused.</strong> Version %1$s does not work with this version of Cooked, which requires Cooked Pro %2$s or newer. Your recipes and settings are safe; Pro's features come back as soon as it is updated. %3$s"
+msgstr ""
+
+#: src/Admin/ProCompat.php:88
+msgid "Update Cooked Pro"
+msgstr ""
+
+#. translators: 1: setting title, 2: the value that was entered
+#: src/Admin/Settings.php:206
+#, php-format
+msgid "%1$s: \"%2$s\" is not a valid value, so the setting was set back to its default."
+msgstr ""
+
+#: src/Admin/Settings.php:301
+msgid "Cooked settings has been updated!"
+msgstr ""
+
+#: src/Admin/Settings.php:327
+msgid "Cooked Plugin Setup"
+msgstr ""
+
+#. translators: %s: Browse/Search Recipes Page link
+#: src/Admin/Settings.php:329
+#, php-format
+msgid "To display your recipes properly, please set up your %s."
+msgstr ""
+
+#: src/Admin/Settings.php:330
+#: src/Admin/Settings.php:497
+msgid "Browse/Search Recipes Page"
+msgstr ""
+
+#: src/Admin/Settings.php:468
+msgid "Choose a page..."
+msgstr ""
+
+#: src/Admin/Settings.php:468
+msgid "No pages"
+msgstr ""
+
+#: src/Admin/Settings.php:469
+msgid "No default"
+msgstr ""
+
+#: src/Admin/Settings.php:469
+msgid "No categories"
+msgstr ""
+
+#: src/Admin/Settings.php:471
+#: src/Recipe/PostTypes.php:568
+msgid "Recipe Archive"
+msgstr ""
+
+#: src/Admin/Settings.php:493
+msgid "General"
+msgstr ""
+
+#. translators: a description on how to add the [cooked-browse] shortcode to a page
+#: src/Admin/Settings.php:499
+#, php-format
+msgid "Create a page with the %s shortcode on it, then choose it from this dropdown."
+msgstr ""
+
+#. translators: a description on how to add the [cooked-browse] shortcode to a page
+#: src/Admin/Settings.php:499
+msgid "<b>Note:</b> This setting is required for the plugin to function properly."
+msgstr ""
+
+#: src/Admin/Settings.php:505
+msgid "Recipes Per Page"
+msgstr ""
+
+#. translators: a description on how to choose the default number of recipes per page.
+#: src/Admin/Settings.php:507
+#, php-format
+msgid "Choose the default (set via the %s panel) or choose a different number here."
+msgstr ""
+
+#. translators: a description on how to choose the default number of recipes per page.
+#: src/Admin/Settings.php:507
+msgid "Settings > Reading"
+msgstr ""
+
+#: src/Admin/Settings.php:513
+msgid "Recipe Taxonomies"
+msgstr ""
+
+#: src/Admin/Settings.php:514
+msgid "Choose which taxonomies you want to enable for your recipes."
+msgstr ""
+
+#: src/Admin/Settings.php:520
+#: src/Recipe/Recipes.php:1808
+#: src/Recipe/Taxonomies.php:52
+#: src/Recipe/Taxonomies.php:62
+msgid "Categories"
+msgstr ""
+
+#: src/Admin/Settings.php:525
+msgid "Global Recipe Toggles"
+msgstr ""
+
+#: src/Admin/Settings.php:526
+msgid "You can quickly hide or show different recipe elements (site-wide) with these checkboxes."
+msgstr ""
+
+#: src/Admin/Settings.php:544
+#: src/Frontend/Shortcodes.php:863
+#: src/Frontend/Shortcodes.php:1068
+#: templates/admin/classic/recipe-shortcodes.php:66
+#: templates/admin/frame/recipe-shortcodes.php:22
+msgid "Author"
+msgstr ""
+
+#: src/Admin/Settings.php:545
+#: src/Frontend/Shortcodes.php:1211
+#: src/Frontend/Shortcodes.php:1215
+#: src/Recipe/Taxonomies.php:53
+#: templates/admin/classic/recipe-shortcodes.php:72
+#: templates/admin/frame/recipe-shortcodes.php:28
+msgid "Category"
+msgstr ""
+
+#: src/Admin/Settings.php:546
+#: templates/admin/classic/recipe-layout.php:116
+#: templates/admin/frame/recipe-layout.php:132
+msgid "Difficulty Level"
+msgstr ""
+
+#: src/Admin/Settings.php:547
+#: src/System/Functions.php:360
+#: templates/admin/classic/recipe-shortcodes.php:289
+#: templates/admin/frame/recipe-shortcodes.php:115
+msgid "Excerpt"
+msgstr ""
+
+#: src/Admin/Settings.php:548
+#: src/Frontend/Shortcodes.php:1285
+#: src/Import/Import.php:190
+#: src/Recipe/Recipes.php:1095
+#: src/System/Functions.php:364
+#: templates/admin/classic/recipe-shortcodes.php:313
+#: templates/admin/frame/recipe-shortcodes.php:141
+msgid "Notes"
+msgstr ""
+
+#: src/Admin/Settings.php:549
+#: src/Frontend/Shortcodes.php:866
+#: src/Frontend/Shortcodes.php:1147
+#: templates/admin/classic/recipe-layout.php:127
+#: templates/admin/classic/recipe-shortcodes.php:67
+#: templates/admin/frame/recipe-layout.php:37
+#: templates/admin/frame/recipe-shortcodes.php:23
+msgid "Prep Time"
+msgstr ""
+
+#: src/Admin/Settings.php:550
+#: src/Frontend/Shortcodes.php:867
+#: src/Frontend/Shortcodes.php:1162
+#: templates/admin/classic/recipe-layout.php:132
+#: templates/admin/classic/recipe-shortcodes.php:68
+#: templates/admin/frame/recipe-layout.php:41
+#: templates/admin/frame/recipe-shortcodes.php:24
+msgid "Cook Time"
+msgstr ""
+
+#: src/Admin/Settings.php:551
+#: src/Frontend/Shortcodes.php:868
+#: src/Frontend/Shortcodes.php:1179
+#: src/Frontend/Shortcodes.php:1186
+#: templates/admin/classic/recipe-layout.php:137
+#: templates/admin/classic/recipe-shortcodes.php:69
+#: templates/admin/frame/recipe-layout.php:45
+#: templates/admin/frame/recipe-shortcodes.php:25
+msgid "Total Time"
+msgstr ""
+
+#: src/Admin/Settings.php:552
+#: src/Measurement/Measurements.php:309
+#: src/Recipe/Recipes.php:1422
+#: src/Recipe/Recipes.php:1424
+msgid "Servings"
+msgstr ""
+
+#: src/Admin/Settings.php:557
+msgid "Print View"
+msgstr ""
+
+#: src/Admin/Settings.php:558
+msgid "When enabled, the website logo will appear at the top of the recipe print screen."
+msgstr ""
+
+#: src/Admin/Settings.php:564
+msgid "Show Website Logo"
+msgstr ""
+
+#: src/Admin/Settings.php:569
+msgid "Carbs Format"
+msgstr ""
+
+#: src/Admin/Settings.php:570
+msgid "You can display carbs as \"Total\" or \"Net\"."
+msgstr ""
+
+#: src/Admin/Settings.php:576
+msgid "Total Carbs"
+msgstr ""
+
+#: src/Admin/Settings.php:577
+msgid "Net Carbs"
+msgstr ""
+
+#: src/Admin/Settings.php:582
+msgid "Author Name Format"
+msgstr ""
+
+#: src/Admin/Settings.php:583
+msgid "You can show the full author's name or just a part of it."
+msgstr ""
+
+#: src/Admin/Settings.php:589
+msgid "Full name"
+msgstr ""
+
+#: src/Admin/Settings.php:590
+msgid "Full first name w/last name initial"
+msgstr ""
+
+#: src/Admin/Settings.php:591
+msgid "First name initial w/full last name"
+msgstr ""
+
+#: src/Admin/Settings.php:592
+msgid "First name only"
+msgstr ""
+
+#: src/Admin/Settings.php:597
+msgid "Author Links"
+msgstr ""
+
+#: src/Admin/Settings.php:598
+msgid "If you do not want the author names to link to the author recipe listings, you can disable them here."
+msgstr ""
+
+#: src/Admin/Settings.php:598
+msgid "<b>Note:</b> Author links require the Browse/Search Recipes Page to be set up correctly to function properly."
+msgstr ""
+
+#: src/Admin/Settings.php:605
+msgid "Disable Author Links"
+msgstr ""
+
+#: src/Admin/Settings.php:610
+msgid "Default Category"
+msgstr ""
+
+#. translators: a description on how to set the default recipe category for the [cooked-browse] shortcode.
+#: src/Admin/Settings.php:612
+#, php-format
+msgid "Optionally set the default recipe category for your %s shortcode display."
+msgstr ""
+
+#: src/Admin/Settings.php:618
+msgid "Default Sort Order"
+msgstr ""
+
+#. translators: a description on how to set the default sort order for the [cooked-browse] shortcode.
+#: src/Admin/Settings.php:620
+#, php-format
+msgid "Set the default sort order for your %s shortcode display."
+msgstr ""
+
+#: src/Admin/Settings.php:626
+msgid "Newest First"
+msgstr ""
+
+#: src/Admin/Settings.php:627
+msgid "Oldest First"
+msgstr ""
+
+#: src/Admin/Settings.php:628
+msgid "Alphabetical"
+msgstr ""
+
+#: src/Admin/Settings.php:629
+msgid "Alphabetical (reversed)"
+msgstr ""
+
+#: src/Admin/Settings.php:634
+msgid "Section Heading Default HTML Tag"
+msgstr ""
+
+#. translators: a description on how to set the default sort order for the [cooked-browse] shortcode.
+#: src/Admin/Settings.php:636
+msgid "Set the default HTML tag for your section headings."
+msgstr ""
+
+#: src/Admin/Settings.php:642
+msgid "div"
+msgstr ""
+
+#: src/Admin/Settings.php:643
+msgid "h2"
+msgstr ""
+
+#: src/Admin/Settings.php:644
+msgid "h3"
+msgstr ""
+
+#: src/Admin/Settings.php:645
+msgid "h4"
+msgstr ""
+
+#: src/Admin/Settings.php:646
+msgid "h5"
+msgstr ""
+
+#: src/Admin/Settings.php:647
+msgid "h6"
+msgstr ""
+
+#: src/Admin/Settings.php:652
+msgid "WP Editor Roles"
+msgstr ""
+
+#: src/Admin/Settings.php:653
+msgid "Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields."
+msgstr ""
+
+#: src/Admin/Settings.php:659
+msgid "Admin Screens"
+msgstr ""
+
+#: src/Admin/Settings.php:660
+msgid "Cooked 2.0 shows its Settings, Import, What's New and Upgrade to Pro screens, and the recipe editor, in a new layout. Switch to the classic layout if you prefer the previous one."
+msgstr ""
+
+#: src/Admin/Settings.php:664
+msgid "Use the Classic Layout"
+msgstr ""
+
+#: src/Admin/Settings.php:669
+msgid "Advanced Settings"
+msgstr ""
+
+#. translators: an option to only show recipes with the [cooked-recipe] shortcode.
+#: src/Admin/Settings.php:679
+msgid "Disable Public Recipes"
+msgstr ""
+
+#. translators: an option to only show recipes with the [cooked-recipe] shortcode.
+#: src/Admin/Settings.php:679
+#, php-format
+msgid "Only show recipes using the %s shortcode."
+msgstr ""
+
+#. translators: an option to disable "meta" tags.
+#: src/Admin/Settings.php:681
+#, php-format
+msgid "Disable %s Tags"
+msgstr ""
+
+#. translators: an option to disable "meta" tags.
+#: src/Admin/Settings.php:681
+msgid "Prevents duplicates when tags already exist."
+msgstr ""
+
+#: src/Admin/Settings.php:682
+msgid "Disable \"Servings Switcher\""
+msgstr ""
+
+#: src/Admin/Settings.php:682
+msgid "Removes the servings dropdown on recipes."
+msgstr ""
+
+#: src/Admin/Settings.php:683
+msgid "Enable \"Measurement System Switcher\""
+msgstr ""
+
+#: src/Admin/Settings.php:683
+msgid "Shows the Metric/Imperial toggle on recipes."
+msgstr ""
+
+#: src/Admin/Settings.php:684
+msgid "Disable Recipe Schema Output"
+msgstr ""
+
+#: src/Admin/Settings.php:684
+msgid "You should only do this if you're using something else to output schema information."
+msgstr ""
+
+#: src/Admin/Settings.php:685
+msgid "Disable Recipe Archive Page"
+msgstr ""
+
+#. translators: %s: recipe archive URL, e.g. https://example.com/recipe-archive
+#: src/Admin/Settings.php:687
+#, php-format
+msgid "Prevents the recipe archive from being displayed at %s."
+msgstr ""
+
+#: src/Admin/Settings.php:696
+msgid "Design"
+msgstr ""
+
+#: src/Admin/Settings.php:700
+msgid "Dark Mode"
+msgstr ""
+
+#: src/Admin/Settings.php:703
+msgid "For your recipes on the site. Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off."
+msgstr ""
+
+#: src/Admin/Settings.php:710
+#: src/Admin/Settings.php:724
+#: src/Admin/Settings.php:736
+msgid "Off"
+msgstr ""
+
+#: src/Admin/Settings.php:711
+#: src/Admin/Settings.php:725
+#: src/Admin/Settings.php:737
+msgid "On"
+msgstr ""
+
+#: src/Admin/Settings.php:712
+msgid "Auto (match theme dark mode)"
+msgstr ""
+
+#: src/Admin/Settings.php:718
+msgid "Admin Dark Mode"
+msgstr ""
+
+#: src/Admin/Settings.php:719
+msgid "Your own preference for the Settings, Import, What's New and Upgrade to Pro screens. <strong>Auto</strong> follows your computer's light or dark setting."
+msgstr ""
+
+#: src/Admin/Settings.php:726
+#: src/Admin/Settings.php:738
+msgid "Auto (match your system)"
+msgstr ""
+
+#: src/Admin/Settings.php:730
+msgid "Recipe Editor Dark Mode"
+msgstr ""
+
+#: src/Admin/Settings.php:731
+msgid "Your own preference for the recipe editor. <strong>Auto</strong> follows your computer's light or dark setting."
+msgstr ""
+
+#: src/Admin/Settings.php:742
+msgid "Author Images"
+msgstr ""
+
+#: src/Admin/Settings.php:743
+msgid "If you do not want to display the author images (avatars), you can disable them here."
+msgstr ""
+
+#: src/Admin/Settings.php:750
+msgid "Hide Author Images"
+msgstr ""
+
+#: src/Admin/Settings.php:755
+msgid "Default Recipe Image"
+msgstr ""
+
+#: src/Admin/Settings.php:756
+msgid "Used as the featured image for recipes that do not have one set."
+msgstr ""
+
+#: src/Admin/Settings.php:761
+msgid "Main Color"
+msgstr ""
+
+#: src/Admin/Settings.php:762
+msgid "Used on buttons, cooking timer, etc."
+msgstr ""
+
+#: src/Admin/Settings.php:768
+msgid "Main Color (on hover)"
+msgstr ""
+
+#: src/Admin/Settings.php:769
+msgid "Used when hovering over buttons."
+msgstr ""
+
+#: src/Admin/Settings.php:777
+msgid "Permalinks"
+msgstr ""
+
+#: src/Admin/Settings.php:781
+msgid "Recipe Permalink"
+msgstr ""
+
+#: src/Admin/Settings.php:784
+msgid "recipe-name"
+msgstr ""
+
+#: src/Admin/Settings.php:788
+msgid "Recipe Author Permalink"
+msgstr ""
+
+#: src/Admin/Settings.php:791
+msgid "author-name"
+msgstr ""
+
+#: src/Admin/Settings.php:795
+msgid "Recipe Category Permalink"
+msgstr ""
+
+#: src/Admin/Settings.php:798
+msgid "recipe-category-name"
+msgstr ""
+
+#. translators: posts_per_page default
+#: src/Admin/Settings.php:817
+#, php-format
+msgid "WordPress Default %s"
+msgstr ""
+
+#: src/Admin/Settings.php:822
+msgid "Show All (no pagination)"
+msgstr ""
+
+#: src/Admin/Settings.php:1019
+msgid "Compare layouts"
+msgstr ""
+
+#: src/Admin/Settings.php:1022
+msgid "Classic and new layouts"
+msgstr ""
+
+#: src/Admin/Settings.php:1023
+#: src/Recipe/RecipeMeta.php:438
+#: templates/admin/parts/gallery-preview-dialog.php:15
+msgid "Close"
+msgstr ""
+
+#: src/Admin/Settings.php:1026
+msgid "Drag the slider to see the same screen in the classic layout (left) and the new one (right)."
+msgstr ""
+
+#: src/Admin/Settings.php:1066
+msgid "Begin Migration"
+msgstr ""
+
+#: src/Admin/Settings.php:1071
+#: src/Import/Import.php:249
+#: src/Import/Import.php:308
+msgid "reload"
+msgstr ""
+
+#: src/Admin/Updates.php:188
+msgid "Flush rewrite rules"
+msgstr ""
+
+#: src/Admin/Updates.php:189
+msgid "Refreshes permalink rules for recipe and profile URLs."
+msgstr ""
+
+#: src/Admin/Updates.php:192
+msgid "Fix recipe line endings"
+msgstr ""
+
+#: src/Admin/Updates.php:193
+msgid "Normalizes line endings in recipe content for exporter/importer compatibility."
+msgstr ""
+
+#: src/Admin/Updates.php:196
+msgid "Purge legacy related recipes cache"
+msgstr ""
+
+#: src/Admin/Updates.php:197
+msgid "Removes old transients and options from the previous related-recipes cache."
+msgstr ""
+
+#: src/Admin/Updates.php:200
+msgid "Remove recipes from user meta"
+msgstr ""
+
+#: src/Admin/Updates.php:201
+msgid "Removes the legacy \"recipes\" key from all users' cooked_user_meta."
+msgstr ""
+
+#: src/Admin/Updates.php:234
+msgid "Tool name is required."
+msgstr ""
+
+#. translators: %s: site health tool name
+#: src/Admin/Updates.php:246
+#, php-format
+msgid "Unknown tool: %s."
+msgstr ""
+
+#. translators: %s: PHP method name
+#: src/Admin/Updates.php:251
+#, php-format
+msgid "Tool method %s does not exist."
+msgstr ""
+
+#: src/Frontend/Enqueues.php:70
+#: templates/admin/classic/recipe-shortcodes.php:344
+#: templates/admin/frame/recipe-shortcodes.php:176
+msgid "Timer"
+msgstr ""
+
+#: src/Frontend/Enqueues.php:71
+msgid "Pause timer"
+msgstr ""
+
+#: src/Frontend/Enqueues.php:72
+msgid "Resume timer"
+msgstr ""
+
+#: src/Frontend/Enqueues.php:73
+msgid "Restart timer"
+msgstr ""
+
+#: src/Frontend/Enqueues.php:74
+msgid "Close timer"
+msgstr ""
+
+#: src/Frontend/Enqueues.php:75
+msgid "Loading recipes…"
+msgstr ""
+
+#: src/Frontend/Enqueues.php:76
+msgid "1 recipe found."
+msgstr ""
+
+#. translators: %s: number of recipes found.
+#: src/Frontend/Enqueues.php:78
+#, php-format
+msgid "%s recipes found."
+msgstr ""
+
+#: src/Frontend/Enqueues.php:79
+#: src/Recipe/PostTypes.php:601
+msgid "No recipes found."
+msgstr ""
+
+#. translators: referring to the bottom of the Settings page.
+#: src/Frontend/Shortcodes.php:195
+#, php-format
+msgid "Public recipes are currently disabled. You can change this at the bottom of the %s page."
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:409
+msgid "(recipe not found or in draft status)"
+msgstr ""
+
+#. translators: %s: recipe embed shortcode
+#: src/Frontend/Shortcodes.php:447
+#, php-format
+msgid "This recipe could not be displayed because it is set up to include itself (containing shortcode %s). Remove the duplicate recipe embed from the Recipe Template."
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:590
+msgid "Standard (4:3)"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:591
+msgid "Photo (3:2)"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:592
+msgid "Wide (16:9)"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:593
+msgid "Square (1:1)"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:714
+msgid "carousel"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:714
+msgid "Recipe gallery"
+msgstr ""
+
+#. translators: 1: slide number, 2: number of slides.
+#: src/Frontend/Shortcodes.php:722
+#, php-format
+msgid "%1$d of %2$d"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:723
+msgid "slide"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:727
+msgid "Play video"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:728
+msgid "Watch the video"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:754
+msgid "Previous slide"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:755
+msgid "Next slide"
+msgstr ""
+
+#. translators: %d: slide number.
+#: src/Frontend/Shortcodes.php:764
+#, php-format
+msgid "Go to slide %d"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:864
+#: src/Frontend/Shortcodes.php:1085
+#: templates/admin/classic/recipe-shortcodes.php:70
+#: templates/admin/frame/recipe-shortcodes.php:26
+msgid "Difficulty"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:865
+#: src/Recipe/Recipes.php:1411
+msgid "Yields"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1121
+#: src/System/Functions.php:355
+msgid "Print"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1132
+msgid "Fullscreen"
+msgstr ""
+
+#. translators: 1: amount and unit, e.g. 10g, 2: nutrient name
+#: src/Frontend/Shortcodes.php:1548
+#, php-format
+msgid "Includes %1$s %2$s"
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1600
+msgid "Invalid recipe ID specified. Please provide a valid numeric recipe ID."
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1608
+msgid "No recipe found. Please specify a recipe ID using the id attribute, or use this shortcode on a recipe page."
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1615
+msgid "Recipe not found."
+msgstr ""
+
+#. translators: %d: post ID
+#: src/Frontend/Shortcodes.php:1620
+#, php-format
+msgid "The specified ID (%d) is not a recipe."
+msgstr ""
+
+#. translators: %d: post ID
+#: src/Frontend/Shortcodes.php:1623
+#, php-format
+msgid "No post found with ID %d."
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1632
+msgid "No related recipes found."
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1635
+msgid "This may be because there are no other recipes in the current language with matching attributes."
+msgstr ""
+
+#: src/Frontend/Shortcodes.php:1637
+msgid "Try adjusting the matching criteria or ensure you have other published recipes with shared categories, tags, or ingredients."
+msgstr ""
+
+#: src/Frontend/Widgets.php:65
+msgid "Edit Recipe(s)..."
+msgstr ""
+
+#: src/Frontend/Widgets.php:65
+#: src/Frontend/Widgets.php:67
+msgid "Choose recipe(s)..."
+msgstr ""
+
+#: src/Frontend/Widgets/Nutrition.php:62
+#: src/Frontend/Widgets/Search.php:68
+msgid "Title (optional):"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:109
+#: src/Frontend/Widgets/RecipeCategories.php:71
+#: src/Frontend/Widgets/RecipeList.php:76
+msgid "Widget Title (optional):"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:114
+msgid "Recipe:"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:123
+msgid "Style:"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:125
+msgid "Simple"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:126
+msgid "Simple Centered"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:127
+msgid "Modern"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:128
+msgid "Modern Centered"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:133
+#: src/Frontend/Widgets/RecipeList.php:115
+msgid "Width:"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:139
+#: src/Frontend/Widgets/RecipeList.php:121
+msgid "Hide Image"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:144
+msgid "Hide Title"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:149
+#: src/Frontend/Widgets/RecipeList.php:126
+msgid "Hide Author"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCard.php:154
+msgid "Hide Excerpt"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCategories.php:76
+#: src/Recipe/Taxonomies.php:56
+msgid "Parent Category"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCategories.php:81
+#: src/Recipe/Taxonomies.php:55
+msgid "All Categories"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeCategories.php:95
+msgid "Hide Empty Categories"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeList.php:81
+msgid "Sorted by:"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeList.php:83
+msgid "Most Recent"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeList.php:84
+msgid "Choose Recipes"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeList.php:90
+msgid "Show:"
+msgstr ""
+
+#: src/Frontend/Widgets/RecipeList.php:105
+msgid "Recipes:"
+msgstr ""
+
+#: src/Frontend/Widgets/Search.php:73
+msgid "Size:"
+msgstr ""
+
+#: src/Frontend/Widgets/Search.php:75
+msgid "Compact"
+msgstr ""
+
+#: src/Frontend/Widgets/Search.php:76
+msgid "Wide"
+msgstr ""
+
+#: src/Frontend/Widgets/Search.php:82
+msgid "Hide \"Browse\" dropdown"
+msgstr ""
+
+#: src/Frontend/Widgets/Search.php:87
+msgid "Hide \"Sorting\" dropdown"
+msgstr ""
+
+#: src/functions.php:30
+msgid "Display Recipe"
+msgstr ""
+
+#: src/functions.php:31
+msgid "This shortcode displays the recipe in its entirety, using the \"Recipe Template\" field in the first tab."
+msgstr ""
+
+#: src/functions.php:43
+msgid "Recipe Card"
+msgstr ""
+
+#: src/functions.php:44
+msgid "Displays a compact linked recipe card with image, title, author, and excerpt — not the full recipe. Use this to promote this recipe elsewhere on your site."
+msgstr ""
+
+#: src/functions.php:52
+msgid "Choose \"modern\" or \"modern-centered\"."
+msgstr ""
+
+#: src/functions.php:59
+msgid "Set the card width. Defaults to 100%. Use \"%\" or \"px\" after the number."
+msgstr ""
+
+#: src/functions.php:69
+msgid "Hide the recipe excerpt."
+msgstr ""
+
+#: src/functions.php:76
+msgid "Hide the recipe author."
+msgstr ""
+
+#: src/functions.php:86
+msgid "Hide the recipe image."
+msgstr ""
+
+#: src/functions.php:93
+msgid "Hide the recipe title."
+msgstr ""
+
+#: src/functions.php:103
+#: templates/admin/classic/recipe-shortcodes.php:59
+#: templates/admin/classic/recipe-shortcodes.php:110
+#: templates/admin/classic/recipe-shortcodes.php:141
+#: templates/admin/classic/recipe-shortcodes.php:166
+#: templates/admin/classic/recipe-shortcodes.php:190
+#: templates/admin/classic/recipe-shortcodes.php:250
+#: templates/admin/classic/recipe-shortcodes.php:298
+#: templates/admin/classic/recipe-shortcodes.php:328
+#: templates/admin/classic/recipe-shortcodes.php:375
+#: templates/admin/classic/recipe-shortcodes.php:508
+msgid "Available Variables"
+msgstr ""
+
+#: src/functions.php:105
+#: templates/admin/classic/recipe-shortcodes.php:510
+msgid "Recipe ID"
+msgstr ""
+
+#: src/functions.php:106
+msgid "Card width"
+msgstr ""
+
+#: src/functions.php:107
+msgid "modern, modern-centered"
+msgstr ""
+
+#: src/functions.php:108
+#: src/functions.php:109
+#: src/functions.php:110
+#: src/functions.php:111
+#: templates/admin/classic/recipe-shortcodes.php:515
+#: templates/admin/classic/recipe-shortcodes.php:516
+#: templates/admin/classic/recipe-shortcodes.php:517
+#: templates/admin/classic/recipe-shortcodes.php:518
+msgid "true/false"
+msgstr ""
+
+#: src/functions.php:113
+#: templates/admin/classic/recipe-shortcodes.php:520
+#: templates/admin/frame/recipe-shortcodes.php:291
+msgid "Example"
+msgstr ""
+
+#: src/functions.php:140
+msgctxt "ingredient substitution"
+msgid "or"
+msgstr ""
+
+#: src/functions.php:142
+msgid "Substitute amount"
+msgstr ""
+
+#: src/functions.php:145
+msgid "Substitute measurement"
+msgstr ""
+
+#: src/functions.php:153
+msgid "Substitute item"
+msgstr ""
+
+#: src/functions.php:153
+msgid "ex. Apple Sauce, Tofu, etc."
+msgstr ""
+
+#: src/functions.php:155
+msgid "Remove substitute"
+msgstr ""
+
+#: src/functions.php:172
+msgid "Substitutions:"
+msgstr ""
+
+#: src/functions.php:178
+msgid "Add substitute"
+msgstr ""
+
+#: src/functions.php:214
+msgid "Layout"
+msgstr ""
+
+#: src/functions.php:220
+#: src/Import/CsvImport.php:398
+#: src/Recipe/RecipeMeta.php:336
+#: src/Recipe/Recipes.php:1088
+#: src/Recipe/Recipes.php:1121
+#: src/System/Ajax.php:322
+#: src/System/Functions.php:362
+#: templates/admin/classic/recipe-shortcodes.php:95
+#: templates/admin/frame/recipe-shortcodes.php:121
+msgid "Ingredients"
+msgstr ""
+
+#: src/functions.php:226
+#: src/Import/CsvImport.php:398
+#: src/Recipe/RecipeMeta.php:336
+#: src/Recipe/Recipes.php:1092
+#: src/Recipe/Recipes.php:1122
+#: src/System/Ajax.php:322
+#: src/System/Functions.php:363
+#: templates/admin/classic/recipe-shortcodes.php:126
+#: templates/admin/frame/recipe-shortcodes.php:131
+msgid "Directions"
+msgstr ""
+
+#: src/functions.php:232
+#: src/System/Functions.php:365
+msgid "Nutrition"
+msgstr ""
+
+#: src/functions.php:238
+#: templates/admin/classic/recipe-shortcodes.php:207
+#: templates/admin/frame/recipe-gallery.php:56
+#: templates/admin/frame/recipe-shortcodes.php:161
+msgid "Gallery"
+msgstr ""
+
+#: src/functions.php:244
+msgid "Shortcodes"
+msgstr ""
+
+#: src/functions.php:265
+msgid "Scroll tabs left"
+msgstr ""
+
+#: src/functions.php:289
+msgid "Scroll tabs right"
+msgstr ""
+
+#: src/functions.php:359
+#: src/functions.php:440
+#: src/functions.php:493
+msgid "ex. Eggs, Milk, etc."
+msgstr ""
+
+#: src/functions.php:364
+#: src/functions.php:445
+#: src/functions.php:498
+msgid "Substitution"
+msgstr ""
+
+#: src/functions.php:365
+#: src/functions.php:401
+#: src/functions.php:446
+#: src/functions.php:499
+#: src/functions.php:532
+#: src/functions.php:605
+#: src/functions.php:638
+#: src/functions.php:688
+#: src/functions.php:726
+#: src/functions.php:756
+msgid "Remove"
+msgstr ""
+
+#: src/functions.php:376
+#: src/functions.php:507
+#: src/functions.php:613
+#: src/functions.php:731
+msgid "Section Heading"
+msgstr ""
+
+#: src/functions.php:380
+#: src/functions.php:511
+#: src/functions.php:617
+#: src/functions.php:735
+msgid "Heading Element:"
+msgstr ""
+
+#: src/functions.php:381
+#: src/functions.php:399
+#: src/functions.php:512
+#: src/functions.php:530
+#: src/functions.php:618
+#: src/functions.php:636
+#: src/functions.php:736
+#: src/functions.php:754
+msgid "Heading element"
+msgstr ""
+
+#: src/functions.php:460
+msgid "Add Ingredient"
+msgstr ""
+
+#: src/functions.php:461
+#: src/functions.php:700
+msgid "Add Section Heading"
+msgstr ""
+
+#: src/functions.php:463
+#: src/functions.php:702
+msgid "Bulk Add"
+msgstr ""
+
+#: src/functions.php:592
+#: src/functions.php:678
+#: src/functions.php:717
+msgid "Step"
+msgstr ""
+
+#: src/functions.php:603
+#: src/functions.php:686
+#: src/functions.php:724
+msgid "Remove video"
+msgstr ""
+
+#: src/functions.php:699
+msgid "Add Direction"
+msgstr ""
+
+#: src/Import/CsvImport.php:44
+msgid "CSV file not found."
+msgstr ""
+
+#: src/Import/CsvImport.php:53
+msgid "Could not open CSV file."
+msgstr ""
+
+#: src/Import/CsvImport.php:65
+msgid "CSV file is empty or invalid."
+msgstr ""
+
+#: src/Import/CsvImport.php:84
+msgid "CSV file must contain a \"title\" column."
+msgstr ""
+
+#. translators: %d: row number
+#: src/Import/CsvImport.php:119
+#, php-format
+msgid "Row %1$d: Unknown error"
+msgstr ""
+
+#. translators: 1: CSV row number, 2: error message
+#. translators: 1: row number, 2: error message
+#: src/Import/CsvImport.php:133
+#: src/Import/CsvImport.php:198
+#, php-format
+msgid "Row %1$d: %2$s"
+msgstr ""
+
+#. translators: %d: row number
+#: src/Import/CsvImport.php:166
+#, php-format
+msgid "Row %1$d: Title is required"
+msgstr ""
+
+#: src/Import/DeliciousRecipes.php:110
+msgid "Error importing WP Delicious recipe."
+msgstr ""
+
+#. translators: for displaying singular or plural versions depending on the number of recipes.
+#: src/Import/Import.php:73
+#: src/Import/Import.php:128
+#, php-format
+msgid "There is %1$s recipe that should be imported from %2$s."
+msgid_plural "There are %1$s recipes that should be imported from %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Import/Import.php:75
+#: src/Import/Import.php:130
+msgid "Before you begin, please make sure you <b>backup your database</b> in case something goes wrong."
+msgstr ""
+
+#: src/Import/Import.php:77
+#: src/Import/Import.php:132
+msgid "Click the button below to import these recipes. Here is what will happen to your recipes:"
+msgstr ""
+
+#: src/Import/Import.php:79
+#: src/Import/Import.php:134
+msgid "Recipes will be imported with the <b>'Draft'</b> status."
+msgstr ""
+
+#: src/Import/Import.php:80
+#: src/Import/Import.php:135
+msgid "Comments and ratings data will also be imported (ratings are available in Cooked Pro)."
+msgstr ""
+
+#: src/Import/Import.php:81
+#: src/Import/Import.php:137
+msgid "After the import is complete, you can bulk edit the recipes and change their status to <b>'Published'</b>."
+msgstr ""
+
+#: src/Import/Import.php:82
+msgid "The existing WP Delicious recipes and data will not be modified or deleted."
+msgstr ""
+
+#: src/Import/Import.php:83
+#: src/Import/Import.php:139
+msgid "Certain data that is not suppoted by Cooked will not be imported (such as Cooking Temp, Estimated Cost, Recipe Keywords, etc)."
+msgstr ""
+
+#: src/Import/Import.php:84
+#: src/Import/Import.php:140
+msgid "You can run the import multiple times, but keep in mind that duplicate recipes will be created."
+msgstr ""
+
+#: src/Import/Import.php:95
+#: src/Import/Import.php:110
+msgid "WP Delicious - Import"
+msgstr ""
+
+#: src/Import/Import.php:117
+msgid "No recipes were found in WP Delicious. If you add recipes there, they will appear here ready to import."
+msgstr ""
+
+#: src/Import/Import.php:136
+msgid "The difficulty level will be set to <b>Beginner</b> since it is not supported by WP Recipe Maker."
+msgstr ""
+
+#: src/Import/Import.php:138
+msgid "The existing WP Recipe Maker and data will not be modified or deleted."
+msgstr ""
+
+#: src/Import/Import.php:151
+#: src/Import/Import.php:166
+msgid "WP Recipe Maker - Import"
+msgstr ""
+
+#: src/Import/Import.php:173
+msgid "No recipes were found in WP Recipe Maker. If you add recipes there, they will appear here ready to import."
+msgstr ""
+
+#: src/Import/Import.php:181
+msgid "Import recipes from a CSV file. Your CSV file should include the following columns:"
+msgstr ""
+
+#: src/Import/Import.php:183
+msgid "Recipe title (required)"
+msgstr ""
+
+#: src/Import/Import.php:184
+msgid "Excerpt/description"
+msgstr ""
+
+#: src/Import/Import.php:185
+msgid "Prep time in minutes"
+msgstr ""
+
+#: src/Import/Import.php:186
+msgid "Cook time in minutes"
+msgstr ""
+
+#: src/Import/Import.php:187
+msgid "Difficulty level (1=Beginner, 2=Intermediate, 3=Advanced)"
+msgstr ""
+
+#: src/Import/Import.php:188
+msgid "Ingredients, separated by pipe <code>(|)</code>. <br>Format: <code>\"amount|measurement|name\"</code> or <code>\"name\"</code> for simple ingredients.<br>Add substitutions with double pipe <code>(||)</code>: <code>\"amount|measurement|name||sub_amount|sub_measurement|sub_name\"</code>. Add more with another double pipe."
+msgstr ""
+
+#: src/Import/Import.php:189
+msgid "Directions/instructions, separated by pipe <code>(|)</code>"
+msgstr ""
+
+#: src/Import/Import.php:191
+msgid "Category, separated by comma"
+msgstr ""
+
+#: src/Import/Import.php:193
+msgid "Cuisine, separated by comma"
+msgstr ""
+
+#: src/Import/Import.php:194
+msgid "Cooking method, separated by comma"
+msgstr ""
+
+#: src/Import/Import.php:195
+msgid "Tags, separated by comma"
+msgstr ""
+
+#: src/Import/Import.php:196
+msgid "Restricted diet type (Schema.org RestrictedDiet), separated by comma"
+msgstr ""
+
+#: src/Import/Import.php:199
+msgid "Recipes will be imported with the <b>'Draft'</b> status. After the import is complete, you can bulk edit the recipes and change their status to <b>'Published'</b>."
+msgstr ""
+
+#: src/Import/Import.php:202
+msgid "CSV Import"
+msgstr ""
+
+#: src/Import/Import.php:206
+msgid "Import Recipes via CSV"
+msgstr ""
+
+#: src/Import/Import.php:214
+msgid "More Imports are Coming Soon..."
+msgstr ""
+
+#: src/Import/Import.php:244
+msgid "Begin Import"
+msgstr ""
+
+#: src/Import/Import.php:269
+msgid "Nothing to import yet"
+msgstr ""
+
+#: src/Import/Import.php:287
+msgid "Small (1 recipe)"
+msgstr ""
+
+#: src/Import/Import.php:288
+msgid "Medium (3 recipes)"
+msgstr ""
+
+#: src/Import/Import.php:289
+msgid "Large (10 recipes)"
+msgstr ""
+
+#: src/Import/Import.php:296
+msgid "Download sample CSV files:"
+msgstr ""
+
+#: src/Import/Import.php:296
+msgid "Preview a sample CSV file:"
+msgstr ""
+
+#: src/Import/Import.php:303
+msgid "Upload and Import CSV"
+msgstr ""
+
+#: src/Import/Import.php:308
+msgid "Import Complete!"
+msgstr ""
+
+#: src/Import/Import.php:308
+msgid "You can now"
+msgstr ""
+
+#: src/Import/Import.php:308
+msgid "the import screen or"
+msgstr ""
+
+#: src/Import/Import.php:308
+msgid "view your recipes"
+msgstr ""
+
+#: src/Import/RecipeMaker.php:108
+msgid "Error importing WP Recipe Maker recipe."
+msgstr ""
+
+#: src/Integrations/Multilingual.php:264
+msgid "Multilingual Setup:"
+msgstr ""
+
+#: src/Integrations/Multilingual.php:265
+msgid "Your Browse/Search Recipes page is missing translations for:"
+msgstr ""
+
+#. translators: %s is the multilingual plugin name (Polylang or WPML)
+#: src/Integrations/Multilingual.php:270
+#, php-format
+msgid "Create translations of your browse page in %s for full multilingual support."
+msgstr ""
+
+#: src/Integrations/Pixwell.php:65
+msgid "Pixwell's dark mode toggle is enabled on your site. To keep recipe styles in sync when visitors use it, go to"
+msgstr ""
+
+#: src/Integrations/Pixwell.php:66
+msgid "Cooked → Settings → Design"
+msgstr ""
+
+#: src/Integrations/Pixwell.php:67
+msgid " and set Dark Mode to <strong>Auto</strong>."
+msgstr ""
+
+#: src/Integrations/Pixwell.php:84
+msgid "Pixwell's dark mode toggle is enabled. Choose <strong>Auto</strong> so Cooked follows it when visitors switch themes."
+msgstr ""
+
+#: src/Integrations/RankMathSeo.php:53
+msgid "Recipe Category"
+msgstr ""
+
+#: src/Integrations/RankMathSeo.php:54
+#: src/Integrations/YoastSeo.php:50
+msgid "Current recipe category being viewed."
+msgstr ""
+
+#: src/Measurement/Measurements.php:109
+msgctxt "Grams Abbreviation (Singular)"
+msgid "g"
+msgstr ""
+
+#: src/Measurement/Measurements.php:110
+msgctxt "Grams Abbreviation (Plural)"
+msgid "g"
+msgstr ""
+
+#: src/Measurement/Measurements.php:111
+msgid "gram"
+msgstr ""
+
+#: src/Measurement/Measurements.php:112
+msgid "grams"
+msgstr ""
+
+#: src/Measurement/Measurements.php:117
+msgctxt "Kilograms Abbreviation (Singular)"
+msgid "kg"
+msgstr ""
+
+#: src/Measurement/Measurements.php:118
+msgctxt "Kilograms Abbreviation (Plural)"
+msgid "kg"
+msgstr ""
+
+#: src/Measurement/Measurements.php:119
+msgid "kilogram"
+msgstr ""
+
+#: src/Measurement/Measurements.php:120
+msgid "kilograms"
+msgstr ""
+
+#: src/Measurement/Measurements.php:125
+#: src/Measurement/Measurements.php:126
+#: src/Measurement/Measurements.php:301
+msgid "mg"
+msgstr ""
+
+#: src/Measurement/Measurements.php:127
+msgid "milligram"
+msgstr ""
+
+#: src/Measurement/Measurements.php:128
+msgid "milligrams"
+msgstr ""
+
+#: src/Measurement/Measurements.php:133
+#: src/Measurement/Measurements.php:134
+msgid "oz"
+msgstr ""
+
+#: src/Measurement/Measurements.php:135
+msgid "ounce"
+msgstr ""
+
+#: src/Measurement/Measurements.php:136
+msgid "ounces"
+msgstr ""
+
+#: src/Measurement/Measurements.php:141
+#: src/Measurement/Measurements.php:142
+msgid "fl oz"
+msgstr ""
+
+#: src/Measurement/Measurements.php:143
+msgid "fluid ounce"
+msgstr ""
+
+#: src/Measurement/Measurements.php:144
+msgid "fluid ounces"
+msgstr ""
+
+#: src/Measurement/Measurements.php:149
+#: src/Measurement/Measurements.php:151
+msgid "cup"
+msgstr ""
+
+#: src/Measurement/Measurements.php:150
+#: src/Measurement/Measurements.php:152
+msgid "cups"
+msgstr ""
+
+#: src/Measurement/Measurements.php:157
+#: src/Measurement/Measurements.php:158
+msgid "tsp"
+msgstr ""
+
+#: src/Measurement/Measurements.php:159
+msgid "teaspoon"
+msgstr ""
+
+#: src/Measurement/Measurements.php:160
+msgid "teaspoons"
+msgstr ""
+
+#: src/Measurement/Measurements.php:165
+#: src/Measurement/Measurements.php:166
+msgid "tbsp"
+msgstr ""
+
+#: src/Measurement/Measurements.php:167
+msgid "tablespoon"
+msgstr ""
+
+#: src/Measurement/Measurements.php:168
+msgid "tablespoons"
+msgstr ""
+
+#: src/Measurement/Measurements.php:173
+#: src/Measurement/Measurements.php:174
+msgid "dl"
+msgstr ""
+
+#: src/Measurement/Measurements.php:175
+msgid "deciliter"
+msgstr ""
+
+#: src/Measurement/Measurements.php:176
+msgid "deciliters"
+msgstr ""
+
+#: src/Measurement/Measurements.php:181
+#: src/Measurement/Measurements.php:182
+msgid "ml"
+msgstr ""
+
+#: src/Measurement/Measurements.php:183
+msgid "milliliter"
+msgstr ""
+
+#: src/Measurement/Measurements.php:184
+msgid "milliliters"
+msgstr ""
+
+#: src/Measurement/Measurements.php:189
+#: src/Measurement/Measurements.php:190
+msgid "l"
+msgstr ""
+
+#: src/Measurement/Measurements.php:191
+msgid "liter"
+msgstr ""
+
+#: src/Measurement/Measurements.php:192
+msgid "liters"
+msgstr ""
+
+#: src/Measurement/Measurements.php:197
+#: src/Measurement/Measurements.php:199
+msgid "stick"
+msgstr ""
+
+#: src/Measurement/Measurements.php:198
+#: src/Measurement/Measurements.php:200
+msgid "sticks"
+msgstr ""
+
+#: src/Measurement/Measurements.php:204
+msgid "lb"
+msgstr ""
+
+#: src/Measurement/Measurements.php:205
+msgid "lbs"
+msgstr ""
+
+#: src/Measurement/Measurements.php:206
+msgid "pound"
+msgstr ""
+
+#: src/Measurement/Measurements.php:207
+msgid "pounds"
+msgstr ""
+
+#: src/Measurement/Measurements.php:212
+#: src/Measurement/Measurements.php:214
+msgid "dash"
+msgstr ""
+
+#: src/Measurement/Measurements.php:213
+#: src/Measurement/Measurements.php:215
+msgid "dashes"
+msgstr ""
+
+#: src/Measurement/Measurements.php:219
+#: src/Measurement/Measurements.php:221
+msgid "drop"
+msgstr ""
+
+#: src/Measurement/Measurements.php:220
+#: src/Measurement/Measurements.php:222
+msgid "drops"
+msgstr ""
+
+#: src/Measurement/Measurements.php:226
+msgid "gal"
+msgstr ""
+
+#: src/Measurement/Measurements.php:227
+msgid "gals"
+msgstr ""
+
+#: src/Measurement/Measurements.php:228
+msgid "gallon"
+msgstr ""
+
+#: src/Measurement/Measurements.php:229
+msgid "gallons"
+msgstr ""
+
+#: src/Measurement/Measurements.php:234
+#: src/Measurement/Measurements.php:236
+msgid "pinch"
+msgstr ""
+
+#: src/Measurement/Measurements.php:235
+#: src/Measurement/Measurements.php:237
+msgid "pinches"
+msgstr ""
+
+#: src/Measurement/Measurements.php:241
+#: src/Measurement/Measurements.php:242
+msgid "pt"
+msgstr ""
+
+#: src/Measurement/Measurements.php:243
+msgid "pint"
+msgstr ""
+
+#: src/Measurement/Measurements.php:244
+msgid "pints"
+msgstr ""
+
+#: src/Measurement/Measurements.php:249
+msgid "qt"
+msgstr ""
+
+#: src/Measurement/Measurements.php:250
+msgid "qts"
+msgstr ""
+
+#: src/Measurement/Measurements.php:251
+msgid "quart"
+msgstr ""
+
+#: src/Measurement/Measurements.php:252
+msgid "quarts"
+msgstr ""
+
+#: src/Measurement/Measurements.php:257
+#: src/Measurement/Measurements.php:258
+msgid "drizzle"
+msgstr ""
+
+#: src/Measurement/Measurements.php:259
+#: src/Measurement/Measurements.php:260
+msgid "Drizzle"
+msgstr ""
+
+#: src/Measurement/Measurements.php:264
+#: src/Measurement/Measurements.php:266
+msgid "clove"
+msgstr ""
+
+#: src/Measurement/Measurements.php:265
+#: src/Measurement/Measurements.php:267
+msgid "cloves"
+msgstr ""
+
+#: src/Measurement/Measurements.php:271
+#: src/Measurement/Measurements.php:273
+msgid "jar"
+msgstr ""
+
+#: src/Measurement/Measurements.php:272
+#: src/Measurement/Measurements.php:274
+msgid "jars"
+msgstr ""
+
+#: src/Measurement/Measurements.php:278
+#: src/Measurement/Measurements.php:280
+msgid "can"
+msgstr ""
+
+#: src/Measurement/Measurements.php:279
+#: src/Measurement/Measurements.php:281
+msgid "cans"
+msgstr ""
+
+#: src/Measurement/Measurements.php:300
+msgid "g"
+msgstr ""
+
+#: src/Measurement/Measurements.php:302
+msgid "mcg"
+msgstr ""
+
+#: src/Measurement/Measurements.php:313
+msgid "Serving size"
+msgstr ""
+
+#: src/Measurement/Measurements.php:320
+msgid "Calories"
+msgstr ""
+
+#: src/Measurement/Measurements.php:327
+msgid "Total Fat"
+msgstr ""
+
+#: src/Measurement/Measurements.php:333
+msgid "Saturated Fat"
+msgstr ""
+
+#: src/Measurement/Measurements.php:339
+msgid "Trans Fat"
+msgstr ""
+
+#: src/Measurement/Measurements.php:340
+msgid "<i>Trans</i> Fat"
+msgstr ""
+
+#: src/Measurement/Measurements.php:345
+msgid "Monounsaturated Fat"
+msgstr ""
+
+#: src/Measurement/Measurements.php:350
+msgid "Polyunsaturated Fat"
+msgstr ""
+
+#: src/Measurement/Measurements.php:357
+msgid "Cholesterol"
+msgstr ""
+
+#: src/Measurement/Measurements.php:363
+msgid "Sodium"
+msgstr ""
+
+#: src/Measurement/Measurements.php:369
+msgid "Total Carbohydrate"
+msgstr ""
+
+#: src/Measurement/Measurements.php:369
+msgid "Net Carbohydrate"
+msgstr ""
+
+#: src/Measurement/Measurements.php:375
+msgid "Dietary Fiber"
+msgstr ""
+
+#: src/Measurement/Measurements.php:381
+msgid "Total Sugars"
+msgstr ""
+
+#: src/Measurement/Measurements.php:387
+msgid "Added Sugars"
+msgstr ""
+
+#: src/Measurement/Measurements.php:395
+msgid "Protein"
+msgstr ""
+
+#: src/Measurement/Measurements.php:404
+msgid "Vitamin A"
+msgstr ""
+
+#: src/Measurement/Measurements.php:410
+msgid "Vitamin C"
+msgstr ""
+
+#: src/Measurement/Measurements.php:416
+msgid "Calcium"
+msgstr ""
+
+#: src/Measurement/Measurements.php:422
+msgid "Iron"
+msgstr ""
+
+#: src/Measurement/Measurements.php:428
+msgid "Potassium"
+msgstr ""
+
+#: src/Measurement/Measurements.php:434
+msgid "Vitamin D"
+msgstr ""
+
+#: src/Measurement/Measurements.php:440
+msgid "Vitamin E"
+msgstr ""
+
+#: src/Measurement/Measurements.php:446
+msgid "Vitamin K"
+msgstr ""
+
+#: src/Measurement/Measurements.php:452
+msgid "Thiamin"
+msgstr ""
+
+#: src/Measurement/Measurements.php:458
+msgid "Riboflavin"
+msgstr ""
+
+#: src/Measurement/Measurements.php:464
+msgid "Niacin"
+msgstr ""
+
+#: src/Measurement/Measurements.php:470
+msgid "Vitamin B6"
+msgstr ""
+
+#: src/Measurement/Measurements.php:476
+msgid "Folate"
+msgstr ""
+
+#: src/Measurement/Measurements.php:482
+msgid "Vitamin B12"
+msgstr ""
+
+#: src/Measurement/Measurements.php:488
+msgid "Biotin"
+msgstr ""
+
+#: src/Measurement/Measurements.php:494
+msgid "Pantothenic Acid"
+msgstr ""
+
+#: src/Measurement/Measurements.php:500
+msgid "Phosphorus"
+msgstr ""
+
+#: src/Measurement/Measurements.php:506
+msgid "Iodine"
+msgstr ""
+
+#: src/Measurement/Measurements.php:512
+msgid "Magnesium"
+msgstr ""
+
+#: src/Measurement/Measurements.php:518
+msgid "Zinc"
+msgstr ""
+
+#: src/Measurement/Measurements.php:524
+msgid "Selenium"
+msgstr ""
+
+#: src/Measurement/Measurements.php:530
+msgid "Copper"
+msgstr ""
+
+#: src/Measurement/Measurements.php:536
+msgid "Manganese"
+msgstr ""
+
+#: src/Measurement/Measurements.php:542
+msgid "Chromium"
+msgstr ""
+
+#: src/Measurement/Measurements.php:548
+msgid "Molybdenum"
+msgstr ""
+
+#: src/Measurement/Measurements.php:554
+msgid "Chloride"
+msgstr ""
+
+#. translators: singular and plural number of minutes (shorthand)
+#: src/Measurement/Measurements.php:926
+#: src/Measurement/Measurements.php:937
+#: src/Measurement/Measurements.php:955
+#, php-format
+msgid "%d min"
+msgstr ""
+
+#. translators: singular and plural number of minutes (shorthand)
+#: src/Measurement/Measurements.php:926
+#: src/Measurement/Measurements.php:937
+#: src/Measurement/Measurements.php:955
+#, php-format
+msgid "%d mins"
+msgstr ""
+
+#. translators: singular and plural number of hours (shorthand)
+#: src/Measurement/Measurements.php:935
+#: src/Measurement/Measurements.php:953
+#, php-format
+msgid "%d hr"
+msgstr ""
+
+#. translators: singular and plural number of hours (shorthand)
+#: src/Measurement/Measurements.php:935
+#: src/Measurement/Measurements.php:953
+#, php-format
+msgid "%d hrs"
+msgstr ""
+
+#. translators: singular and plural number of days
+#: src/Measurement/Measurements.php:951
+#, php-format
+msgid "%d day"
+msgstr ""
+
+#. translators: singular and plural number of days
+#: src/Measurement/Measurements.php:951
+#, php-format
+msgid "%d days"
+msgstr ""
+
+#: src/Recipe/Allergens.php:88
+msgid "Recipe List Allergens"
+msgstr ""
+
+#: src/Recipe/Allergens.php:89
+msgid "Show allergen icons on recipe cards in browse and list views."
+msgstr ""
+
+#: src/Recipe/Allergens.php:95
+msgid "Show Allergens on Recipe Cards"
+msgstr ""
+
+#: src/Recipe/Allergens.php:126
+#: src/Recipe/Allergens.php:343
+#: src/Recipe/Allergens.php:367
+#: src/Recipe/Allergens.php:387
+msgid "Allergens"
+msgstr ""
+
+#: src/Recipe/Allergens.php:208
+msgid "Celery"
+msgstr ""
+
+#: src/Recipe/Allergens.php:212
+msgid "Crustacean shellfish"
+msgstr ""
+
+#: src/Recipe/Allergens.php:216
+msgid "Eggs"
+msgstr ""
+
+#: src/Recipe/Allergens.php:220
+msgid "Fish"
+msgstr ""
+
+#: src/Recipe/Allergens.php:224
+msgid "Lupin"
+msgstr ""
+
+#: src/Recipe/Allergens.php:228
+msgid "Milk"
+msgstr ""
+
+#: src/Recipe/Allergens.php:232
+msgid "Molluscs"
+msgstr ""
+
+#: src/Recipe/Allergens.php:236
+msgid "Mustard"
+msgstr ""
+
+#: src/Recipe/Allergens.php:240
+msgid "Peanuts"
+msgstr ""
+
+#: src/Recipe/Allergens.php:244
+msgid "Sesame"
+msgstr ""
+
+#: src/Recipe/Allergens.php:248
+msgid "Soybeans"
+msgstr ""
+
+#: src/Recipe/Allergens.php:252
+msgid "Sulphur dioxide and sulphites"
+msgstr ""
+
+#: src/Recipe/Allergens.php:256
+msgid "Tree nuts"
+msgstr ""
+
+#: src/Recipe/Allergens.php:260
+msgid "Wheat"
+msgstr ""
+
+#. translators: %s: allergen name
+#: src/Recipe/Allergens.php:324
+#, php-format
+msgid "Contains %s"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:130
+msgid "Photo"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:590
+msgctxt "post type general name"
+msgid "Recipes"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:591
+msgctxt "post type singular name"
+msgid "Recipe"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:593
+msgid "Recipe"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:595
+msgid "Add New Recipe"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:596
+msgid "New Recipe"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:597
+msgid "Edit Recipe"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:598
+msgid "View Recipe"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:600
+msgid "Search Recipes"
+msgstr ""
+
+#: src/Recipe/PostTypes.php:602
+msgid "No recipes found in trash."
+msgstr ""
+
+#: src/Recipe/PostTypes.php:636
+msgid "Recipe title ..."
+msgstr ""
+
+#: src/Recipe/PostTypes.php:668
+msgid "Cooked Browse Recipes Page"
+msgstr ""
+
+#: src/Recipe/RecipeMeta.php:229
+#: templates/admin/classic/settings.php:23
+#: templates/admin/classic/welcome.php:52
+#: templates/admin/frame/welcome.php:29
+msgid "Cooked Settings"
+msgstr ""
+
+#. translators: %s: recipe embed shortcode
+#: src/Recipe/RecipeMeta.php:394
+#, php-format
+msgid "This recipe is set up to include itself in the Recipe Template (containing shortcode %s), which can break the page. Remove the embed that references this same recipe."
+msgstr ""
+
+#: src/Recipe/RecipeMeta.php:441
+msgid "Enter one item per line. Use the checkboxes below to mark section headings."
+msgstr ""
+
+#: src/Recipe/RecipeMeta.php:444
+#: templates/admin/frame/recipe-nutrition.php:126
+msgid "Preview"
+msgstr ""
+
+#: src/Recipe/RecipeMeta.php:448
+msgid "Please review the parsed fields before adding. Automatic parsing may misread amounts—for example, a range written as 2-3 could appear as 23 unless you correct it."
+msgstr ""
+
+#: src/Recipe/RecipeMeta.php:453
+msgid "Cancel"
+msgstr ""
+
+#. translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")
+#. translators: referring to the author (ex: By John Smith)
+#: src/Recipe/Recipes.php:379
+#: src/Recipe/Recipes.php:444
+#: templates/front/recipe-single.php:58
+#, php-format
+msgid "By %s"
+msgstr ""
+
+#: src/Recipe/Recipes.php:544
+msgid "Sorry, you are not allowed to view this recipe."
+msgstr ""
+
+#. translators: For showing "All" of a taxonomy (ex: "All Burgers")
+#: src/Recipe/Recipes.php:629
+#, php-format
+msgid "All %s"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1185
+msgid "Beginner"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1186
+msgid "Intermediate"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1187
+msgid "Advanced"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1232
+msgid "Cooked Gallery"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1236
+msgid "Envira Gallery"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1240
+msgid "Soliloquy Slider"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1244
+msgid "Slider Revolution"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1319
+#: src/Recipe/Recipes.php:1329
+msgid "Default"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1320
+#: src/Recipe/Recipes.php:1330
+msgid "Metric"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1321
+#: src/Recipe/Recipes.php:1331
+msgid "Imperial"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1325
+msgid "Units"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1327
+msgid "Measurement System"
+msgstr ""
+
+#. translators: %s: number of servings, a quarter of the default
+#: src/Recipe/Recipes.php:1362
+#, php-format
+msgid "Quarter (%s Serving)"
+msgid_plural "Quarter (%s Servings)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of servings, half of the default
+#: src/Recipe/Recipes.php:1365
+#, php-format
+msgid "Half (%s Serving)"
+msgid_plural "Half (%s Servings)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: default number of servings
+#: src/Recipe/Recipes.php:1368
+#, php-format
+msgid "Default (%s Serving)"
+msgid_plural "Default (%s Servings)"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: number of servings, double the default
+#: src/Recipe/Recipes.php:1371
+#, php-format
+msgid "Double (%s Servings)"
+msgstr ""
+
+#. translators: %s: number of servings, triple the default
+#: src/Recipe/Recipes.php:1374
+#, php-format
+msgid "Triple (%s Servings)"
+msgstr ""
+
+#. translators: singular and plural "serving" sizes
+#: src/Recipe/Recipes.php:1415
+#: src/Recipe/Recipes.php:1431
+#, php-format
+msgid "%s Serving"
+msgid_plural "%s Servings"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Recipe/Recipes.php:1630
+#: src/Recipe/Recipes.php:1647
+msgid "or"
+msgstr ""
+
+#. translators: singular and plural "steps"
+#. translators: %d: step number
+#: src/Recipe/Recipes.php:1701
+#: src/Recipe/Seo.php:114
+#, php-format
+msgid "Step %d"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1809
+msgid "Clear filters"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1838
+msgid "Browse"
+msgstr ""
+
+#. translators: %s: number of selected recipe filters.
+#: src/Recipe/Recipes.php:1846
+#, php-format
+msgid "%s filter"
+msgid_plural "%s filters"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: 1: visible browse label, 2: number of selected recipe filters.
+#: src/Recipe/Recipes.php:1854
+#, php-format
+msgid "%1$s, browse recipe filters, %2$s selected"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1858
+msgid "Browse recipe filters"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1912
+msgid "Find a recipe..."
+msgstr ""
+
+#: src/Recipe/Recipes.php:1914
+msgid "Search"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1931
+msgid "Newest first"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1935
+msgid "Oldest first"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1939
+msgid "Alphabetical (A-Z)"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1943
+msgid "Alphabetical (Z-A)"
+msgstr ""
+
+#: src/Recipe/Recipes.php:1951
+msgid "Sort recipes by"
+msgstr ""
+
+#. translators: %s: recipe filter term name.
+#: src/Recipe/Recipes.php:2142
+#, php-format
+msgid "Remove %s filter"
+msgstr ""
+
+#: src/Recipe/RelatedRecipes.php:37
+#: templates/admin/classic/recipe-shortcodes.php:418
+msgid "Related Recipes"
+msgstr ""
+
+#: src/Recipe/Taxonomies.php:54
+msgid "Search Categories"
+msgstr ""
+
+#: src/Recipe/Taxonomies.php:57
+msgid "Parent Category:"
+msgstr ""
+
+#: src/Recipe/Taxonomies.php:58
+msgid "Edit Category"
+msgstr ""
+
+#: src/Recipe/Taxonomies.php:59
+msgid "Update Category"
+msgstr ""
+
+#: src/Recipe/Taxonomies.php:60
+msgid "Add New Category"
+msgstr ""
+
+#: src/Recipe/Taxonomies.php:61
+msgid "New Category Name"
+msgstr ""
+
+#: src/Recipe/Taxonomies.php:63
+msgid "No Categories"
+msgstr ""
+
+#. translators: for displaying singular or plural versions depending on the number.
+#: src/Recipe/Taxonomies.php:179
+#, php-format
+msgid "%s Recipe"
+msgid_plural "%s Recipes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/System/Ajax.php:87
+#: src/System/Ajax.php:721
+msgid "Security check failed."
+msgstr ""
+
+#: src/System/Ajax.php:105
+msgid "Recipe video"
+msgstr ""
+
+#: src/System/Ajax.php:107
+msgid "Add images or a video to see the gallery."
+msgstr ""
+
+#: src/System/Ajax.php:455
+#: src/System/Ajax.php:513
+msgid "No default content provided."
+msgstr ""
+
+#: src/System/Ajax.php:551
+#: src/System/Ajax.php:665
+msgid "You do not have permission to import recipes."
+msgstr ""
+
+#: src/System/Ajax.php:567
+msgid "Invalid file type. Please upload a CSV file."
+msgstr ""
+
+#: src/System/Ajax.php:677
+msgid "CSV file not found. Please upload again."
+msgstr ""
+
+#. translators: %d: number of recipes imported
+#: src/System/Ajax.php:695
+#, php-format
+msgid "Successfully imported %d recipe(s)."
+msgstr ""
+
+#: src/System/Ajax.php:706
+msgid "No recipes were imported."
+msgstr ""
+
+#: src/System/Ajax.php:734
+msgid "No ingredients provided."
+msgstr ""
+
+#: src/System/Cli.php:43
+msgid "Please provide a tool name. Use `wp cooked tools list` to see available tools."
+msgstr ""
+
+#: src/System/Cli.php:53
+msgid "Tool completed successfully."
+msgstr ""
+
+#: src/System/Cli.php:69
+msgid "No tools available."
+msgstr ""
+
+#: src/System/Functions.php:109
+msgid "WPML config XML"
+msgstr ""
+
+#. translators: %s: shortcode name, e.g. "Ingredients"
+#: src/System/Functions.php:110
+#: templates/admin/frame/pro.php:59
+#: templates/admin/frame/recipe-layout.php:72
+#: templates/admin/frame/recipe-shortcodes.php:242
+#: templates/admin/frame/recipe-shortcodes.php:294
+msgid "Copy"
+msgstr ""
+
+#. translators: a title for the "What's new in Cooked?" section.
+#: src/System/Functions.php:240
+#, php-format
+msgid "What's new in %s?"
+msgstr ""
+
+#. translators: %s: a version number, e.g. 1.16.2
+#: src/System/Functions.php:263
+#, php-format
+msgid "Version %s"
+msgstr ""
+
+#: src/System/Functions.php:356
+msgid "Print Options:"
+msgstr ""
+
+#: src/System/Functions.php:358
+msgid "Title"
+msgstr ""
+
+#: src/System/Functions.php:359
+msgid "Information"
+msgstr ""
+
+#: src/System/Functions.php:361
+#: templates/admin/frame/recipe-gallery.php:38
+#: templates/admin/parts/gallery-style.php:42
+msgid "Images"
+msgstr ""
+
+#: src/User/Roles.php:43
+msgid "Recipe Editor"
+msgstr ""
+
+#: templates/admin/classic/import.php:16
+msgid "Cooked Import"
+msgstr ""
+
+#. translators: referring to "Cooked Pro"
+#: templates/admin/classic/pro.php:21
+#: templates/admin/frame/pro.php:39
+#, php-format
+msgid "Ready for %s?"
+msgstr ""
+
+#. translators: referring to "Cooked Pro"
+#: templates/admin/classic/pro.php:26
+#: templates/admin/frame/pro.php:45
+#, php-format
+msgid "The %s upgrade adds loads of new features like ratings, favorites, user profiles, automatic nutrition information and more. Check out the list below for all of the details."
+msgstr ""
+
+#: templates/admin/classic/pro.php:35
+#: templates/admin/frame/pro.php:12
+msgid "Premium Support"
+msgstr ""
+
+#: templates/admin/classic/pro.php:36
+#: templates/admin/frame/pro.php:13
+msgid "User Profiles"
+msgstr ""
+
+#: templates/admin/classic/pro.php:37
+#: templates/admin/frame/pro.php:14
+msgid "User Ratings"
+msgstr ""
+
+#: templates/admin/classic/pro.php:38
+#: templates/admin/frame/pro.php:15
+msgid "User Favorites"
+msgstr ""
+
+#: templates/admin/classic/pro.php:39
+#: templates/admin/frame/pro.php:16
+msgid "Ingredient Links"
+msgstr ""
+
+#: templates/admin/classic/pro.php:42
+#: templates/admin/frame/pro.php:17
+msgid "Social Sharing"
+msgstr ""
+
+#: templates/admin/classic/pro.php:43
+#: templates/admin/frame/pro.php:18
+msgid "Recipe Submissions"
+msgstr ""
+
+#: templates/admin/classic/pro.php:44
+#: templates/admin/frame/pro.php:19
+msgid "Modern Grid Layout"
+msgstr ""
+
+#: templates/admin/classic/pro.php:45
+#: templates/admin/frame/pro.php:20
+msgid "Full-Width Layout"
+msgstr ""
+
+#: templates/admin/classic/pro.php:46
+#: templates/admin/frame/pro.php:21
+msgid "Pagination Options"
+msgstr ""
+
+#: templates/admin/classic/pro.php:47
+#: templates/admin/frame/pro.php:22
+msgid "Auto Nutrition Facts"
+msgstr ""
+
+#: templates/admin/classic/pro.php:50
+#: templates/admin/frame/pro.php:23
+msgid "Compact List Layout"
+msgstr ""
+
+#: templates/admin/classic/pro.php:51
+#: templates/admin/frame/pro.php:24
+msgid "Fitness Layout"
+msgstr ""
+
+#: templates/admin/classic/pro.php:52
+#: templates/admin/frame/pro.php:25
+msgid "Cuisines"
+msgstr ""
+
+#: templates/admin/classic/pro.php:53
+#: templates/admin/frame/pro.php:26
+msgid "Cooking Methods"
+msgstr ""
+
+#: templates/admin/classic/pro.php:54
+#: templates/admin/frame/pro.php:27
+msgid "Tags"
+msgstr ""
+
+#. translators: referring to "Cooked Pro"
+#: templates/admin/classic/pro.php:61
+#: templates/admin/frame/pro.php:64
+#, php-format
+msgid "Get %s"
+msgstr ""
+
+#. translators: referring to the "COOKED10" coupon code to get "10%" off Cooked Pro
+#: templates/admin/classic/pro.php:67
+#: templates/admin/frame/pro.php:56
+#, php-format
+msgid "Use coupon code %1$s for %2$s off!"
+msgstr ""
+
+#: templates/admin/classic/recipe-gallery.php:17
+msgid "Recipe Gallery Type"
+msgstr ""
+
+#: templates/admin/classic/recipe-gallery.php:34
+#: templates/admin/frame/recipe-gallery.php:74
+msgid "Choose one..."
+msgstr ""
+
+#. translators: a title for the video section of the recipe editor, where users can paste a YouToub or Vimeo URL into the field below.
+#: templates/admin/classic/recipe-gallery.php:53
+#, php-format
+msgid "%1$s or %2$s Video"
+msgstr ""
+
+#. translators: a message describing how to display a video from YouTube or Vimeo.
+#: templates/admin/classic/recipe-gallery.php:59
+#, php-format
+msgid "If you would like to display a video as the first item in your gallery, you can paste a valid %1$s or %2$s URL below."
+msgstr ""
+
+#: templates/admin/classic/recipe-gallery.php:65
+msgid "Gallery Items"
+msgstr ""
+
+#: templates/admin/classic/recipe-gallery.php:85
+msgid "Gallery Style"
+msgstr ""
+
+#: templates/admin/classic/recipe-gallery.php:91
+msgid "Preview Gallery"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:21
+#: templates/admin/frame/recipe-layout.php:56
+msgid "Recipe Review Required"
+msgstr ""
+
+#. translators: for displaying singular or plural versions depending on the number of recipes.
+#. translators: %s: Cooked.
+#: templates/admin/classic/recipe-layout.php:25
+#: templates/admin/frame/recipe-layout.php:59
+#, php-format
+msgid "It looks like this recipe is from a different version of %s. Please review and click \"Update\" to save it."
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:34
+#: templates/admin/frame/recipe-layout.php:67
+msgid "Recipe Shortcode"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:35
+msgid "You can use the following shortcode to display your recipe anywhere:"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/frame/recipe-layout.php:82
+#: templates/admin/frame/recipe-layout.php:83
+msgid "Recipe Template"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/classic/recipe-layout.php:53
+#: templates/admin/frame/recipe-layout.php:90
+#: templates/admin/frame/recipe-layout.php:99
+msgid "Save as Default"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/frame/recipe-layout.php:89
+msgid "Reset"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/frame/recipe-layout.php:83
+msgid "Using the built-in recipe shortcodes found on the \"Shortcodes\" tab, you can create the layout of your recipe below. Use the \"Save as Default\" button to save your template."
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:51
+#: templates/admin/frame/recipe-layout.php:97
+msgid "Default Recipe Template"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:52
+#: templates/admin/frame/recipe-layout.php:98
+msgid "Choose from the options below to use this layout as the default for new recipes or for all recipes."
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:53
+#: templates/admin/frame/recipe-layout.php:99
+msgid "Apply to All"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:78
+#: templates/admin/frame/recipe-layout.php:157
+#: templates/admin/frame/recipe-layout.php:158
+msgid "Recipe Excerpt"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:78
+#: templates/admin/frame/recipe-layout.php:158
+msgid "The excerpt is used on recipe listing templates, where the full recipe should not be displayed."
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:105
+#: templates/admin/frame/recipe-layout.php:186
+#: templates/admin/frame/recipe-layout.php:187
+msgid "SEO Description"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:105
+#: templates/admin/frame/recipe-layout.php:187
+msgid "This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not."
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:129
+#: templates/admin/classic/recipe-layout.php:134
+#: templates/admin/classic/recipe-layout.php:139
+#: templates/admin/frame/recipe-layout.php:147
+msgid "minutes"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:145
+#: templates/admin/frame/recipe-layout.php:197
+#: templates/admin/frame/recipe-layout.php:198
+msgid "Recipe Notes"
+msgstr ""
+
+#: templates/admin/classic/recipe-layout.php:145
+#: templates/admin/frame/recipe-layout.php:198
+msgid "The notes are displayed in the recipe."
+msgstr ""
+
+#: templates/admin/classic/recipe-nutrition.php:16
+msgid "Nutrition Information"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:23
+msgid "Recipe Information"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:24
+msgid "This will display the recipe author, cooking times, etc."
+msgstr ""
+
+#. translators: "include and exclude" section title
+#. translators: "left and right" section title
+#: templates/admin/classic/recipe-shortcodes.php:34
+#: templates/admin/classic/recipe-shortcodes.php:46
+#, php-format
+msgid "\"%1$s\" and \"%2$s\""
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:37
+msgid "This will allow you to include or exclude content from the shortcode output."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:49
+msgid "Used like \"include\", but will position the content to the left or right."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:71
+#: templates/admin/frame/recipe-shortcodes.php:27
+msgid "Servings Switcher"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:73
+#: templates/admin/frame/recipe-shortcodes.php:29
+msgid "Print Mode"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:74
+#: templates/admin/frame/recipe-shortcodes.php:30
+msgid "Full-Screen Mode"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:96
+msgid "This will display the list of ingredients, added via the \"Ingredients\" tab."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:102
+msgid "This will allow you to hide or show the checkboxes:"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:112
+msgid "Show checkboxes"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:113
+msgid "Hide checkboxes"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:127
+msgid "This will display the list of directions, added via the \"Directions\" tab."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:133
+msgid "This will allow you to hide or show the numbers:"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:143
+msgid "Show numbers"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:144
+msgid "Hide numbers"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:157
+msgid "Featured Image"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:158
+msgid "This will display the featured image, if one is set."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:168
+#: templates/admin/classic/recipe-shortcodes.php:192
+#: templates/admin/classic/recipe-shortcodes.php:300
+msgid "None"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:181
+msgid "Nutrition Label"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:182
+msgid "This will display the Nutrition Facts label, if data is present."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:208
+msgid "This will display the gallery, if one is set or created from the \"Gallery\" tab."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:216
+msgid "Set the width of the gallery."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:223
+msgid "Set the image size ratio."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:233
+msgid "Set the navigation style."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:240
+msgid "Enable or disable \"Full-Screen\" mode."
+msgstr ""
+
+#. translators: related to the width of  slideshows: "80% or 300px" section title
+#: templates/admin/classic/recipe-shortcodes.php:255
+#, php-format
+msgid "ex: \"%1$s\" or \"%2$s\""
+msgstr ""
+
+#. translators: related to the image ratio for slideshows: "ex: 800/600" section title
+#: templates/admin/classic/recipe-shortcodes.php:261
+#, php-format
+msgid "ex: \"%s\""
+msgstr ""
+
+#. translators: related to the navigation style for slideshows: "dots, thumbs or false" section title
+#: templates/admin/classic/recipe-shortcodes.php:267
+#, php-format
+msgid "\"%1$s\", \"%2$s\", or \"%3$s\""
+msgstr ""
+
+#. translators: related to allowing full screen for slideshows: "true or false" section title
+#: templates/admin/classic/recipe-shortcodes.php:273
+#, php-format
+msgid "\"%1$s\" or \"%2$s\""
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:290
+msgid "This will display the excerpt, if one is available from the \"Layout & Content\" tab."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:314
+msgid "This will display the notes, if one is available from the \"Layout & Content\" tab."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:320
+msgid "This will allow you to hide or show the header for the notes section:"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:330
+msgid "Show header"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:331
+msgid "Hide header"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:345
+msgid "This will display a special link to start a cooking timer."
+msgstr ""
+
+#. translators: "seconds, minutes and hours" section title
+#: templates/admin/classic/recipe-shortcodes.php:355
+#, php-format
+msgid "\"%1$s\", \"%2$s\" and \"%3$s\""
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:358
+msgid "Use just one or a combination of all three to set the timer length"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:365
+msgid "Add a short description for this timer, if applicable."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:377
+msgid "Time in seconds"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:378
+msgid "Time in minutes"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:379
+msgid "Time in hours"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:380
+msgid "Timer Description"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:393
+msgid "Next & Previous Recipe Navigation"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:394
+msgid "This will display navigation links to the next and previous recipes."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:398
+msgid "This shortcode automatically displays the previous and next recipe links based on the current recipe page. No parameters are required."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:403
+msgid "Usage"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:405
+msgid "Simply add the shortcode to your recipe template or content area. The navigation will automatically show the previous and next recipes based on recipe ID order."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:419
+msgid "Displays a grid of related recipes based on shared terms in any of the recipe taxonomies (categories, cuisines, cooking methods, tags, diets), shown in random order. No cache or pre-calculation."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:427
+msgid "Specify a recipe ID. If not provided, uses the current recipe."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:434
+msgid "Comma-separated recipe IDs to pin at the start of the grid. Remaining slots are filled with related recipes."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:444
+msgid "Set the heading text for the related recipes section."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:451
+msgid "Number of recipes to display (default: 4)."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:461
+msgid "Number of columns in the grid (default: 2)."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:471
+msgid "Hide recipe card images."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:478
+msgid "Hide recipe card excerpts."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:488
+msgid "Hide recipe card authors."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:495
+msgid "Toggle which taxonomies are used: match_categories, match_cuisines, match_cooking_methods, match_tags, match_diets (default: true)."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:502
+msgid "Matching options:"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:503
+msgid "Set to false to exclude a taxonomy from related recipes, e.g. match_cuisines=\"false\" to ignore cuisines."
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:511
+msgid "Pinned recipe IDs"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:513
+msgid "Number of recipes"
+msgstr ""
+
+#: templates/admin/classic/recipe-shortcodes.php:514
+msgid "Grid columns"
+msgstr ""
+
+#. translators: referring to "Cooked"
+#: templates/admin/classic/welcome.php:26
+#: templates/admin/frame/welcome.php:56
+#, php-format
+msgid "Thank you for using %s!"
+msgstr ""
+
+#. translators: 1: plugin name, 2: Settings link, 3: documentation link, 4: Discord link
+#: templates/admin/classic/welcome.php:34
+#: templates/admin/frame/welcome.php:64
+#, php-format
+msgid "If this is your first time using %1$s, head over to the %2$s page for some initial configuration. You can also check out the %3$s if you get stuck or contact us on %4$s. If you just recently updated, you can find out what's new below."
+msgstr ""
+
+#: templates/admin/classic/welcome.php:37
+#: templates/admin/frame/welcome.php:67
+msgid "documentation"
+msgstr ""
+
+#: templates/admin/classic/welcome.php:38
+#: templates/admin/classic/welcome.php:51
+#: templates/admin/frame/welcome.php:23
+#: templates/admin/frame/welcome.php:68
+msgid "Discord"
+msgstr ""
+
+#: templates/admin/classic/welcome.php:48
+#: templates/admin/frame/welcome.php:77
+msgid "Quick Links"
+msgstr ""
+
+#: templates/admin/classic/welcome.php:53
+#: templates/admin/frame/welcome.php:34
+msgid "Create a Recipe"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:26
+msgid "Style"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:28
+#: templates/admin/parts/gallery-style.php:16
+msgid "Dots"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:28
+#: templates/admin/parts/gallery-style.php:16
+msgid "Dots under the image"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:29
+#: templates/admin/parts/gallery-style.php:17
+msgid "Thumbnails"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:29
+msgid "A strip of small images under the image"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:30
+#: templates/admin/parts/gallery-style.php:18
+msgid "Arrows only"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:30
+#: templates/admin/parts/gallery-style.php:18
+msgid "No dots or thumbnails"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:34
+#: templates/admin/parts/gallery-style.php:34
+msgid "Shape"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:40
+msgid "Fill"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:40
+msgid "Fill the frame; edges may be cropped"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:41
+msgid "Whole image"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:41
+msgid "Show the whole image, with bars if needed"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:50
+msgid "Media"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:51
+msgid "The images and video in the recipe's gallery."
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:95
+msgid "Add images"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:98
+msgid "Drag the images to change their order. Click one to replace it."
+msgstr ""
+
+#. translators: 1: YouTube, 2: Vimeo.
+#: templates/admin/frame/recipe-gallery.php:105
+#, php-format
+msgid "Video from %1$s or %2$s"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:109
+msgid "Optional. The video plays as the first slide."
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:116
+msgid "Appearance"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:117
+msgid "How the gallery looks on the recipe page."
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:122
+#: templates/admin/parts/gallery-preview-dialog.php:14
+#: templates/admin/parts/gallery-preview-dialog.php:18
+msgid "Gallery preview"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:145
+msgid "Loop"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:150
+msgid "Autoplay every 5 seconds"
+msgstr ""
+
+#: templates/admin/frame/recipe-gallery.php:152
+msgid "Full preview"
+msgstr ""
+
+#. translators: %s: a field title, e.g. "Recipe Excerpt".
+#: templates/admin/frame/recipe-layout.php:31
+#, php-format
+msgid "About %s"
+msgstr ""
+
+#: templates/admin/frame/recipe-layout.php:68
+msgid "Use this shortcode to display the recipe anywhere on your site."
+msgstr ""
+
+#: templates/admin/frame/recipe-layout.php:127
+msgid "Difficulty & Timing"
+msgstr ""
+
+#: templates/admin/frame/recipe-layout.php:128
+msgid "Total time fills in from the prep and cook times; you can change it."
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:22
+msgid "Servings & calories"
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:23
+msgid "The servings switcher scales ingredient amounts from Servings."
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:27
+msgid "Nutrients"
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:28
+msgid "Amounts per serving. A field left empty stays off the label."
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:32
+msgid "Vitamins & minerals"
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:33
+msgid "Amounts per serving; the label works out the % Daily Value."
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:85
+msgid "Clear values"
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:127
+msgid "Updates as you type"
+msgstr ""
+
+#: templates/admin/frame/recipe-nutrition.php:134
+msgid "The label builds itself as you enter servings, calories and nutrients."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:16
+msgid "true or false"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:33
+msgid "detail names, comma-separated"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:46
+msgid "Show this recipe anywhere"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:47
+msgid "Paste one into a post, a page or a widget."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:51
+msgid "Full recipe"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:52
+msgid "The whole recipe, laid out by its Recipe Template on the Layout tab."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:57
+msgid "Recipe card"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:58
+msgid "A compact card linking to the recipe: image, title, author and excerpt."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:61
+msgid "Card style."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:62
+msgid "Card width, in px or %. Defaults to 100%."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:63
+msgid "Hide the image."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:64
+msgid "Hide the title."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:65
+msgid "Hide the excerpt."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:66
+msgid "Hide the author."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:72
+msgid "Related recipes"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:73
+msgid "A grid of recipes that share a category, cuisine, cooking method, tag or diet with this one, in random order."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:76
+msgid "The recipe to match. Leave it out on a recipe page to use that recipe."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:76
+msgid "a recipe ID"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:77
+msgid "Recipes to pin at the start of the grid; related recipes fill the rest."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:77
+msgid "comma-separated recipe IDs"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:78
+msgid "The heading above the grid."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:78
+#: templates/admin/frame/recipe-shortcodes.php:183
+msgid "any text"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:79
+msgid "How many recipes to show. Defaults to 4."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:79
+#: templates/admin/frame/recipe-shortcodes.php:80
+#: templates/admin/frame/recipe-shortcodes.php:180
+#: templates/admin/frame/recipe-shortcodes.php:181
+#: templates/admin/frame/recipe-shortcodes.php:182
+msgid "a number"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:80
+msgid "Grid columns. Defaults to 2."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:81
+msgid "Hide the card images."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:82
+msgid "Hide the card excerpts."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:83
+msgid "Hide the card authors."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:84
+msgid "Set one to false to ignore that taxonomy: match_categories, match_cuisines, match_cooking_methods, match_tags, match_diets."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:86
+msgid "You May Also Like"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:95
+msgid "Recipe information"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:96
+msgid "A row of details: author, times, difficulty, servings, category, and print and full-screen buttons."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:99
+msgid "Show only these details."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:100
+msgid "Show every detail but these."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:101
+msgid "Details on the left of the row."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:102
+msgid "Details on the right of the row."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:105
+msgid "Details"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:109
+msgid "Featured image"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:110
+msgid "The recipe's featured image, if it has one."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:116
+msgid "The Recipe Excerpt from the Layout tab."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:122
+msgid "The ingredient list from the Ingredients tab."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:125
+msgid "Checkboxes to tick off each ingredient. Shown by default."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:132
+msgid "The steps from the Directions tab."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:135
+msgid "Step numbers. Shown by default."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:142
+msgid "The Recipe Notes from the Layout tab."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:145
+msgid "A \"Notes\" heading above them. Hidden by default."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:151
+msgid "Nutrition label"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:152
+msgid "The Nutrition Facts label, when the Nutrition tab has values."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:155
+msgid "Float the label so text wraps beside it."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:162
+msgid "The gallery from the Gallery tab. Its style there is the default; these options override it."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:165
+msgid "Dots, thumbnails or arrows only."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:166
+msgid "The shape of the slides."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:167
+msgid "Fill the frame (may crop) or show the whole image."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:168
+msgid "Gallery width, in px or %."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:169
+msgid "Go from the last image back to the first."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:170
+msgid "Open images full screen on click."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:177
+msgid "A link in the text that starts a cooking timer. Use it inside a direction step."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:178
+msgid "5 minutes"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:180
+msgid "Timer length; combine with minutes and seconds."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:181
+msgid "Timer length; combine with hours and seconds."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:182
+msgid "Timer length; combine with hours and minutes."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:183
+msgid "What the timer is for, shown with it. Defaults to the linked text."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:185
+msgid "Boil the pasta"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:185
+msgid "20 minutes"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:193
+msgid "Next and previous recipe"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:194
+msgid "Links to the recipes before and after this one."
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:200
+msgid "Recipe Template parts"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:201
+msgid "The pieces the Recipe Template on the Layout tab is built from. Arrange them there to change how every part of the recipe is laid out."
+msgstr ""
+
+#. translators: %s: shortcode name, e.g. "Ingredients"
+#: templates/admin/frame/recipe-shortcodes.php:242
+#, php-format
+msgid "Copy the %s shortcode"
+msgstr ""
+
+#. translators: %d: number of shortcode options
+#: templates/admin/frame/recipe-shortcodes.php:254
+#, php-format
+msgid "%d option"
+msgid_plural "%d options"
+msgstr[0] ""
+msgstr[1] ""
+
+#: templates/admin/frame/recipe-shortcodes.php:264
+msgid "Option"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:265
+msgid "What it does"
+msgstr ""
+
+#: templates/admin/frame/recipe-shortcodes.php:266
+msgid "Values"
+msgstr ""
+
+#. translators: %s: shortcode name, e.g. "Ingredients"
+#: templates/admin/frame/recipe-shortcodes.php:294
+#, php-format
+msgid "Copy the %s example"
+msgstr ""
+
+#: templates/admin/frame/welcome.php:86
+msgid "(opens in a new tab)"
+msgstr ""
+
+#: templates/admin/frame/welcome.php:98
+msgid "View Full Changelog"
+msgstr ""
+
+#: templates/admin/parts/gallery-style.php:17
+msgid "A strip of small images"
+msgstr ""
+
+#: templates/admin/parts/gallery-style.php:44
+msgid "Fill the frame (may crop)"
+msgstr ""
+
+#: templates/admin/parts/gallery-style.php:45
+msgid "Show the whole image"
+msgstr ""
+
+#: templates/admin/parts/gallery-style.php:51
+msgid "Loop: go from the last image back to the first"
+msgstr ""
+
+#: templates/admin/parts/gallery-style.php:56
+msgid "Autoplay: move to the next image every 5 seconds"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:17
+msgid "Cooked Settings in the classic layout"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:18
+msgid "Cooked Settings in the new layout"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:21
+msgid "Recipe editor"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:22
+msgid "The recipe editor's Ingredients tab in the classic layout"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:23
+msgid "The recipe editor's Ingredients tab in the new layout"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:33
+msgid "Screen to compare"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:44
+msgid "Classic"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:45
+msgid "New"
+msgstr ""
+
+#: templates/admin/parts/layout-compare.php:47
+msgid "Divider position: classic layout on the left, new layout on the right"
+msgstr ""
+
+#: templates/admin/parts/nutrition-label.php:16
+#: templates/front/nutrition-label.php:34
+msgid "Nutrition Facts"
+msgstr ""
+
+#: templates/admin/parts/nutrition-label.php:36
+#: templates/front/nutrition-label.php:69
+msgid "Amount per serving"
+msgstr ""
+
+#: templates/admin/parts/nutrition-label.php:48
+msgid "% Daily Value *"
+msgstr ""
+
+#: templates/admin/parts/nutrition-label.php:68
+msgid "Includes"
+msgstr ""
+
+#: templates/admin/parts/nutrition-label.php:103
+#: templates/front/nutrition-label.php:99
+msgid "The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice."
+msgstr ""
+
+#: templates/front/nutrition-label.php:58
+msgid "per serving"
+msgstr ""
+
+#: templates/front/nutrition-label.php:66
+msgid "Nutrients per serving"
+msgstr ""
+
+#: templates/front/nutrition-label.php:72
+#: templates/front/nutrition-label.php:74
+msgid "Daily Value"
+msgstr ""
+
+#: templates/front/nutrition-label.php:72
+msgid "% DV"
+msgstr ""
+
+#. translators: referring to the author (ex: Recipes by John Smith)
+#: templates/front/recipe-list.php:44
+#, php-format
+msgid "Recipes by %s"
+msgstr ""
+
+#: templates/front/recipe-list.php:46
+msgid "View all recipes"
+msgstr ""

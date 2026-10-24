@@ -1,0 +1,247 @@
+// What's New screen (templates/admin/welcome.php), rendered inside the admin frame.
+// The banner, intro and single-column body are shared frame styles (_frame.scss).
+
+.cooked-welcome-columns {
+    display: grid;
+    grid-template-columns: 280px minmax(0, 1fr);
+    gap: 24px;
+    align-items: stretch; // both cards as tall as the taller one
+
+    @media screen and (max-width: 900px) {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+    }
+}
+
+.cooked-welcome-card {
+    padding: 20px 24px;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+
+    @media screen and (max-width: 600px) {
+        padding: 16px;
+    }
+}
+
+// Card headings: "Quick Links", and the changelog's "What's new in Cooked x.y?"
+// (an h4 from Cooked_Functions::parse_readme_changelog()).
+#cooked-admin-app .cooked-welcome-card h3,
+#cooked-admin-app .cooked-welcome-card h4 {
+    margin: 0 0 12px;
+    color: var(--cooked-color-text);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.cooked-welcome-links ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cooked-welcome-links li {
+    margin: 0;
+}
+
+#cooked-admin-app .cooked-welcome-links a {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 0 -8px;
+    padding: 6px 8px;
+    border-radius: var(--cooked-radius-sm);
+    color: var(--cooked-color-text);
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        background: var(--cooked-color-accent-soft);
+        color: var(--cooked-color-accent-strong);
+    }
+
+    &.is-highlight {
+        color: #b26200;
+    }
+}
+
+.cooked-welcome-link-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+
+    .is-highlight & {
+        background: #fff4e0;
+        color: #b26200;
+    }
+}
+
+.cooked-welcome-link-label {
+    flex: 1 1 auto;
+}
+
+.cooked-welcome-link-external {
+    color: var(--cooked-color-text-muted);
+}
+
+// Changelog list from readme.txt.
+.cooked-welcome-changelog ul.cooked-whatsnew-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cooked-welcome-changelog ul.cooked-whatsnew-list li {
+    margin: 0;
+    padding: 10px 0;
+    border-top: 1px solid var(--cooked-color-border);
+    color: var(--cooked-color-text);
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.cooked-welcome-changelog ul.cooked-whatsnew-list li:first-child {
+    border-top: 0;
+    padding-top: 0;
+}
+
+.cooked-welcome-changelog ul.cooked-whatsnew-list + h4 {
+    margin-top: 24px;
+}
+
+// Change-type badges (classes from Cooked_Functions::parse_readme_changelog()): small
+// solid labels, one colour per type, with white text. The hues follow the reference
+// changelog, darkened enough for white text to read at this size.
+.cooked-welcome-changelog .cooked-change-label {
+    --cooked-change-color: var(--cooked-color-text-muted);
+    display: inline-block;
+    margin-right: 8px;
+    padding: 0 7px;
+    border-radius: 5px;
+    background: var(--cooked-change-color);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 18px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+}
+
+.cooked-welcome-changelog .cooked-change-colon {
+    display: none;
+}
+
+.cooked-welcome-changelog .cooked-change-fix .cooked-change-label {
+    --cooked-change-color: #b45309;
+}
+
+.cooked-welcome-changelog .cooked-change-new .cooked-change-label {
+    --cooked-change-color: #0b6bcb;
+}
+
+.cooked-welcome-changelog .cooked-change-tweak .cooked-change-label,
+.cooked-welcome-changelog .cooked-change-improved .cooked-change-label {
+    --cooked-change-color: #3f7d1c;
+}
+
+.cooked-welcome-changelog .cooked-change-security .cooked-change-label {
+    --cooked-change-color: #c62828;
+}
+
+// The changelog card: its button sits at the bottom when Quick Links is the taller card.
+.cooked-welcome-changelog {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.cooked-welcome-changelog > ul.cooked-whatsnew-list {
+    align-self: stretch;
+    margin-bottom: 16px; // minimum gap above the button
+}
+
+.cooked-full-changelog-button {
+    margin-top: auto;
+    padding: 8px 16px;
+    border: 0;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent-fill);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+
+    &:hover,
+    &:focus {
+        background: var(--cooked-color-accent-hover);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--cooked-color-accent-strong);
+        outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+// Full changelog modal (a .cooked-modal, see _frame.scss); the entry and badge styles
+// above still apply.
+.cooked-changelog-modal .components-modal__content {
+    // WordPress gives the modal body 4px of top padding; sticky version headings pin at
+    // that padding edge, leaving a strip where entries scroll past above them.
+    padding-top: 0;
+}
+
+.cooked-changelog-full h4.cooked-changelog-version {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    margin: 24px 0 8px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--cooked-color-border);
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-text);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.cooked-changelog-full h4.cooked-changelog-version:first-child {
+    margin-top: 4px;
+}
+
+.cooked-changelog-full ul.cooked-whatsnew-list li:first-child {
+    padding-top: 10px;
+}
+
+// Phones: each entry's badge on its own line above the text so wrapped lines keep a
+// clean left edge.
+@media screen and (max-width: 600px) {
+    .cooked-changelog-full h4.cooked-changelog-version {
+        font-size: 16px;
+    }
+
+    .cooked-changelog-full .cooked-change-label {
+        display: table;
+        margin: 0 0 6px;
+    }
+
+    .cooked-changelog-full ul.cooked-whatsnew-list li {
+        padding: 12px 0;
+        font-size: 14px;
+        line-height: 1.55;
+    }
+}
+
+

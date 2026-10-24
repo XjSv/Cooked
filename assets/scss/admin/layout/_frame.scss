@@ -1,0 +1,1003 @@
+// Cooked admin frame (assets/js/cooked-admin-app.js).
+// The frame owns its own inset, so remove WordPress's #wpcontent padding on the
+// framed screens only. The app keeps 20px gutters on desktop and 10px on smaller screens.
+body.cooked-admin-page #wpcontent {
+    padding: 0;
+}
+
+// Admin notices (WordPress's and other plugins') sit above the frame, lined up with the card
+// (Menus::cooked_app_page() puts .wp-header-end there). #wpcontent has no padding on these
+// screens, so they take the app's inset.
+body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
+    box-sizing: border-box;
+    max-width: 1240px;
+    margin: 20px auto 0;
+    width: calc(100% - 40px);
+
+    @media screen and (max-width: 782px) {
+        width: calc(100% - 20px);
+        margin-top: 10px;
+    }
+}
+
+#cooked-admin-app {
+    // WordPress components read these for buttons and focus rings.
+    --wp-admin-theme-color: var(--cooked-color-accent-fill);
+    --wp-admin-theme-color--rgb: 0, 122, 85;
+    --wp-admin-theme-color-darker-10: var(--cooked-color-accent-hover);
+    --wp-admin-theme-color-darker-10--rgb: 0, 102, 74;
+    --wp-admin-theme-color-darker-20: var(--cooked-color-accent-active);
+    --wp-admin-theme-color-darker-20--rgb: 0, 85, 62;
+    --wp-components-color-accent: var(--cooked-color-accent-strong);
+    --wp-components-color-accent-darker-10: var(--cooked-color-accent-hover);
+    --wp-components-color-accent-darker-20: var(--cooked-color-accent-active);
+    // WordPress floats the Screen Options toggle ahead of the app, so clear it and
+    // leave the card below that row. Wider screens use the app's top padding for
+    // the gap; at 782px and below WordPress's float margin already provides it.
+    clear: both;
+    max-width: 1280px;
+    margin: 0 auto 40px;
+    padding: 20px 20px 0;
+
+    // Below 782px WordPress already leaves 20px under the Screen Options row via
+    // the float's bottom margin. The app supplies a compact 10px inset.
+    @media screen and (max-width: 782px) {
+        padding: 10px;
+    }
+}
+
+// Visible only while focused, at the top left of the frame.
+.cooked-admin-skip-link {
+    position: absolute;
+    z-index: 1001; // above the sticky header
+    top: -9999px;
+    left: 30px;
+    padding: 10px 16px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    color: var(--cooked-color-accent-strong);
+    font-weight: 600;
+    text-decoration: none;
+
+    &:focus {
+        top: 10px;
+    }
+}
+
+.cooked-admin {
+    position: relative; // the skip link's box
+}
+
+// The skip link's target: focusable from script, no ring around the whole section.
+.cooked-admin-content:focus {
+    outline: 0;
+}
+
+.cooked-admin-frame.components-card {
+    overflow: visible;
+    border-radius: var(--cooked-radius);
+}
+
+.cooked-admin-frame.components-card > div {
+    display: flow-root; // keeps the sticky wrapper's negative margin from collapsing into the card
+    overflow: visible;
+    width: 100%; // WordPress Card's Content wrapper has a constrained width; force it to fill the frame
+}
+
+/* Header */
+// The sticky wrapper reserves 10px above the header (balanced by a negative margin,
+// so nothing moves when it sticks). While stuck it paints that gap and the area
+// around the rounded corners in the page colour, so the card behind doesn't show
+// square corners. On phones this leaves the card just off the top of the viewport.
+.cooked-admin-sticky {
+    position: sticky;
+    top: var(--wp-admin--admin-bar--height, 32px);
+    z-index: 20;
+    margin: -10px -1px 0;
+    padding: 10px 1px 0;
+
+    // At 600px and below WordPress positions the admin bar absolutely, so it
+    // scrolls away. Pin to the viewport, keeping the wrapper's 10px page-coloured
+    // gap so the header isn't flush against the top and content can't show through.
+    @media screen and (max-width: 600px) {
+        top: 0;
+        background: var(--cooked-color-page);
+    }
+
+    // Keep the wrapper flush inside the inset card so it cannot widen the page.
+    @media screen and (max-width: 782px) {
+        margin-inline: 0;
+        padding-inline: 0;
+    }
+}
+
+.cooked-admin-sticky.is-stuck {
+    background: var(--cooked-color-page);
+}
+
+.cooked-admin-sticky-inner {
+    border-top: 4px solid var(--cooked-color-accent);
+    border-radius: var(--cooked-radius) var(--cooked-radius) 0 0;
+    background: var(--cooked-color-surface);
+    transition: box-shadow var(--cooked-transition);
+}
+
+.cooked-admin-sticky.is-stuck .cooked-admin-sticky-inner {
+    box-shadow: 0 0 0 1px var(--cooked-color-border), 0 4px 8px rgba(0, 0, 0, 0.06);
+}
+
+// The stuck state deliberately keeps the header's size. This wrapper is sticky, so
+// shrinking it changes the page height under the reader; scroll anchoring then
+// chases that change and the content glides. Paint changes only.
+.cooked-admin-frame-header.components-card__header {
+    padding: 24px 32px;
+}
+
+// WP's generated CardHeader style adds a bottom radius with `:last-of-type`;
+// the ID keeps this override ahead of that emotion rule.
+#cooked-admin-app .cooked-admin-frame-header.components-card__header {
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.cooked-admin-sticky-sentinel {
+    height: 0;
+}
+
+.cooked-admin-header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.cooked-admin-brand {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.cooked-admin-logo {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: var(--cooked-color-brand-dark);
+    color: var(--cooked-color-brand-icon);
+    font-size: 26px;
+}
+
+#cooked-admin-app .cooked-admin-title {
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.cooked-admin-subtitle {
+    margin: 2px 0 0;
+    color: var(--cooked-color-text-muted);
+}
+
+.cooked-admin-header-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+// WordPress buttons use line-height: normal, which varies with the font; fix it so the
+// label sits the same everywhere.
+#cooked-admin-app .cooked-admin-save-button.components-button {
+    line-height: 1.4;
+}
+
+.cooked-admin-version {
+    padding: 2px 8px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-text);
+    font-size: 12px;
+}
+
+.cooked-admin-version-label {
+    margin-right: 4px;
+}
+
+.cooked-admin-version strong {
+    font-weight: 600;
+}
+
+@media screen and (max-width: 600px) {
+    .cooked-admin-frame-header.components-card__header {
+        padding: 20px 16px;
+    }
+
+    .cooked-admin-header {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            "brand save"
+            "version docs";
+        gap: 12px 16px;
+    }
+
+    .cooked-admin-brand {
+        grid-area: brand;
+        min-width: 0;
+        gap: 12px;
+    }
+
+    .cooked-admin-header-actions {
+        display: contents;
+    }
+
+    .cooked-admin-version {
+        grid-area: version;
+        justify-self: start;
+        white-space: nowrap;
+    }
+
+    .cooked-admin-docs-link {
+        grid-area: docs;
+        justify-self: end;
+        white-space: nowrap;
+    }
+
+    .cooked-admin-save-button {
+        grid-area: save;
+        justify-self: end;
+    }
+}
+
+@media screen and (max-width: 340px) {
+    .cooked-admin-brand {
+        gap: 8px;
+    }
+
+    .cooked-admin-logo {
+        width: 44px;
+        height: 44px;
+        font-size: 22px;
+    }
+
+    #cooked-admin-app .cooked-admin-title {
+        font-size: 20px;
+    }
+}
+
+/* Page tabs, with the settings search at the right end of the row */
+.cooked-admin-tabs-row {
+    display: flex;
+    gap: 8px 24px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 32px;
+    border-bottom: 1px solid var(--cooked-color-border);
+
+    @media screen and (max-width: 782px) {
+        flex-wrap: wrap;
+    }
+
+    @media screen and (max-width: 600px) {
+        padding: 0 16px;
+    }
+}
+
+.cooked-admin-page-tabs {
+    position: relative; // offset parent for the sliding underline
+    display: flex;
+    gap: 28px;
+}
+
+.cooked-admin-page-tab {
+    position: relative;
+    transition: color 200ms ease, border-color 200ms ease;
+    padding: 14px 0 12px;
+    border-bottom: 3px solid transparent;
+    color: var(--cooked-color-text);
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.cooked-admin-page-tab .cooked-icon {
+    margin-right: 6px;
+    font-size: 13px;
+    vertical-align: -1px;
+}
+
+.cooked-admin-page-tab:hover,
+.cooked-admin-page-tab:focus {
+    color: var(--cooked-color-accent-strong);
+}
+
+.cooked-admin-page-tab.is-active {
+    color: var(--cooked-color-accent-strong);
+}
+
+// Hover hint on inactive tabs: a faint line that grows out from the middle, on the
+// same track as the sliding underline.
+.cooked-admin-page-tab::after {
+    content: "";
+    position: absolute;
+    bottom: -3px;
+    left: 50%;
+    width: 24px;
+    height: 3px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent);
+    opacity: 0.4;
+    transform: translateX(-50%) scaleX(0);
+    transition: transform 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-admin-page-tab:not(.is-active):hover::after {
+    transform: translateX(-50%) scaleX(1);
+}
+
+// One underline for all tabs, moved under the active one (cooked-admin-app.js), so it
+// slides between tabs when switching screens. It covers the tabs' transparent border.
+.cooked-admin-page-tabs-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--cooked-color-accent);
+    pointer-events: none;
+
+    &.is-animated {
+        transition: transform 300ms ease, width 300ms ease;
+
+        @media (prefers-reduced-motion: reduce) {
+            transition: none;
+        }
+    }
+}
+
+.cooked-admin-page-tab.is-highlight {
+    color: #b26200;
+}
+
+@media screen and (max-width: 600px) {
+    .cooked-admin-page-tabs {
+        flex: 1 1 100%;
+        justify-content: center;
+        gap: 16px;
+    }
+
+    .cooked-admin-page-tab {
+        text-align: center;
+    }
+}
+
+/* Body: section menu + content */
+.cooked-admin-body {
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    min-height: 480px;
+}
+
+.cooked-admin-sidebar {
+    border-bottom-left-radius: var(--cooked-radius);
+    border-right: 1px solid var(--cooked-color-border);
+    background: var(--cooked-color-surface-muted);
+}
+
+.cooked-admin-sections {
+    position: sticky;
+    // Admin bar + the 163px header + an 8px gap. Keep the menu clear of the
+    // full-height sticky header.
+    top: calc(var(--wp-admin--admin-bar--height, 32px) + 171px);
+    padding: 24px 16px;
+}
+
+.cooked-admin-sections-arrow {
+    display: none;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: 50%;
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-text-muted);
+    cursor: pointer;
+    transition: color 200ms ease, border-color 200ms ease, opacity 200ms ease;
+
+    @media screen and (max-width: 540px) {
+        position: absolute;
+        top: 50%;
+        z-index: 2;
+        display: inline-flex;
+        transform: translateY(-50%);
+
+        &.is-left {
+            left: 8px;
+        }
+
+        &.is-right {
+            right: 8px;
+        }
+    }
+
+    &:hover:not(:disabled) {
+        border-color: var(--cooked-color-accent);
+        color: var(--cooked-color-accent-strong);
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+
+    .cooked-icon {
+        font-size: 16px;
+        line-height: 1;
+    }
+}
+
+.cooked-admin-sections-title {
+    margin: 0 12px 12px;
+    color: var(--cooked-color-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+#cooked-admin-app .cooked-admin-section.components-button {
+    transition: background-color 200ms ease, color 200ms ease, outline-color 200ms ease;
+    display: flex;
+    justify-content: flex-start; // wrapped names (e.g. Import's) stay left-aligned with the icon
+    gap: 12px;
+    text-align: left;
+    width: 100%;
+    height: auto;
+    margin: 0 0 4px;
+    padding: 10px 12px;
+    border-radius: var(--cooked-radius-sm);
+    color: var(--cooked-color-text);
+    font-size: 14px;
+}
+
+#cooked-admin-app .cooked-admin-section.components-button:hover {
+    color: var(--cooked-color-accent-strong);
+}
+
+#cooked-admin-app .cooked-admin-section.components-button.is-active {
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+    font-weight: 600;
+}
+
+.cooked-admin-section .cooked-icon {
+    transition: color 200ms ease;
+    width: 18px;
+    color: var(--cooked-color-text-muted);
+    text-align: center;
+}
+
+.cooked-admin-section.is-active .cooked-icon {
+    color: var(--cooked-color-accent);
+}
+
+.cooked-admin-content {
+    min-width: 0;
+}
+
+// Screens without sections (Upgrade to Pro, What's New).
+.cooked-admin-body.is-single {
+    grid-template-columns: minmax(0, 1fr);
+    min-height: 0;
+}
+
+.cooked-admin-body.is-single .cooked-admin-section-body.components-card__body {
+    padding: 32px;
+
+    @media screen and (max-width: 600px) {
+        padding: 16px;
+    }
+}
+
+// Full-width screen banner and the heading + lead paragraph below it.
+.cooked-admin-banner {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: var(--cooked-radius);
+}
+
+.cooked-admin-intro {
+    margin: 32px 0;
+
+    @media screen and (max-width: 600px) {
+        margin: 24px 0;
+    }
+}
+
+#cooked-admin-app .cooked-admin-intro h2 {
+    margin: 0 0 8px;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+.cooked-admin-intro p {
+    margin: 0;
+    color: var(--cooked-color-text-muted);
+    font-size: 15px;
+    line-height: 1.6;
+}
+
+// Native select widths are content-sized and can exceed the card on narrow phones.
+#cooked-admin-app #cooked_recipe_settings .cooked-select-wrapper,
+#cooked-admin-app #cooked_recipe_settings .cooked-select-wrapper select {
+    max-width: 100%;
+}
+
+.cooked-admin-section-header {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    padding: 24px 32px 0;
+}
+
+.cooked-admin-section-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+}
+
+#cooked-admin-app .cooked-admin-section-header h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.cooked-admin-section-body.components-card__body {
+    padding: 8px 32px 32px;
+}
+
+/* Links and headings in Cooked green. */
+#cooked-admin-app a:not(.cooked-admin-page-tab) {
+    color: var(--cooked-color-accent-strong);
+}
+
+#cooked-admin-app a:not(.cooked-admin-page-tab):hover,
+#cooked-admin-app a:not(.cooked-admin-page-tab):focus {
+    color: var(--wp-admin-theme-color-darker-20);
+}
+
+#cooked-admin-app #cooked_recipe_settings .recipe-setting-block h3.cooked-settings-title {
+    color: var(--cooked-color-accent-strong);
+}
+
+#cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block h3.cooked-settings-title {
+    color: #333;
+}
+
+#cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid > .cooked-settings-title {
+    color: #0aa780;
+}
+
+#cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired > .cooked-settings-title,
+#cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid > .cooked-settings-title {
+    color: #ca4a20;
+}
+
+#cooked-admin-app #cooked_recipe_settings .recipe-setting-block.cooked-danger h3.cooked-settings-title {
+    color: #b23a15; // 5.4:1 on white (WCAG AA)
+}
+
+#cooked-admin-app #cooked_recipe_settings .cooked-alert-block h3.cooked-settings-title {
+    color: #c02a2a;
+}
+
+/* The PHP-rendered settings form (templates/admin/frame/settings.php) inside the frame. */
+.cooked-admin-ready #cooked-settings-panel .cooked-settings-tab-content {
+    padding: 0;
+}
+
+// Its submit button: the header's Update Settings clicks it. (WordPress's .button display rule
+// outranks the hidden attribute, so the wrapper hides it.)
+#cooked-settings-panel .cooked-settings-submit {
+    display: none;
+}
+
+.cooked-admin-body {
+    @media screen and (max-width: 960px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.cooked-admin-sidebar {
+    @media screen and (max-width: 960px) {
+        border-right: 0;
+        border-bottom: 1px solid var(--cooked-color-border);
+    }
+
+    @media screen and (max-width: 540px) {
+        position: relative;
+    }
+}
+
+.cooked-admin-sections {
+    @media screen and (max-width: 960px) {
+        position: static;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+    }
+
+    // One row of the sections that fit whole, centred between the arrows (cooked-admin-app.js
+    // sets the width and pages through them).
+    @media screen and (max-width: 540px) {
+        box-sizing: content-box;
+        min-width: 0;
+        max-width: calc(100% - 96px);
+        flex-wrap: nowrap;
+        margin: 0 auto;
+        padding: 4px 0;
+        overflow: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+}
+
+.cooked-admin-sections-title {
+    @media screen and (max-width: 960px) {
+        display: none;
+    }
+}
+
+#cooked-admin-app .cooked-admin-section.components-button {
+    @media screen and (max-width: 960px) {
+        width: auto;
+        margin: 0;
+    }
+
+    @media screen and (max-width: 540px) {
+        flex: 0 0 auto;
+        gap: 8px;
+        padding: 8px 10px;
+        white-space: nowrap;
+    }
+}
+
+// WordPress draws focus outlines in its own blue; use Cooked green inside the frame.
+#cooked-admin-app :focus,
+#cooked-admin-app :focus-visible {
+    outline-color: var(--cooked-color-accent-strong);
+}
+
+// Links (page tabs, section menu): no focus ring after a mouse click, only for the keyboard.
+#cooked-admin-app a:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+}
+
+// Smooth hovers on the frame's buttons and links.
+#cooked-admin-app .components-button,
+#cooked-admin-app a {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, box-shadow 200ms ease, outline-color 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+#cooked-admin-app .cooked-admin-section.components-button:hover:not(.is-active) {
+    background-color: var(--cooked-color-accent-soft);
+}
+
+// Fade the content in when switching sections.
+.cooked-admin-content.is-entering {
+    animation: cooked-section-enter 250ms ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+    }
+}
+
+@keyframes cooked-section-enter {
+    from {
+        opacity: 0;
+        transform: translateY(6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Modals (Changelog, CSV preview). WordPress renders them outside #cooked-admin-app,
+   so these are not scoped to the frame. */
+.cooked-modal {
+    --wp-admin-theme-color: var(--cooked-color-accent-fill);
+    --wp-admin-theme-color-darker-10: var(--cooked-color-accent-hover);
+    --wp-admin-theme-color-darker-20: var(--cooked-color-accent-active);
+}
+
+// Thin Cooked-green scrollbar on scrolling areas (modal bodies, the CSV preview table,
+// Tom Select option lists here and in the recipe editor, the Bulk Add modal): transparent
+// track, rounded thumb that darkens on hover.
+.cooked-modal .components-modal__content,
+.cooked-modal .cooked-modal-scroll-x,
+#cooked-admin-app .ts-dropdown .ts-dropdown-content,
+body.cooked-recipe-editor .ts-dropdown .ts-dropdown-content,
+body.cooked-recipe-editor .cooked-recipe-fields textarea,
+.cooked-bulk-add-modal .cooked-bulk-add-body {
+    overscroll-behavior: contain;
+    scroll-behavior: smooth;
+
+    @media (prefers-reduced-motion: reduce) {
+        scroll-behavior: auto;
+    }
+
+    &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background-color: rgba(0, 192, 134, 0.45); // --cooked-color-accent at 45%
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--cooked-color-accent);
+    }
+
+    // Firefox. Chromium ignores the ::-webkit-scrollbar rules when these are set, so
+    // only apply them where those rules aren't supported.
+    @supports not selector(::-webkit-scrollbar) {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(0, 192, 134, 0.45) transparent;
+    }
+}
+
+// Centre the dialog in the space beside the admin menu and below the admin bar, not in
+// the whole window. The overlay itself still dims everything.
+.cooked-modal-overlay {
+    box-sizing: border-box;
+    padding: var(--wp-admin--admin-bar--height, 32px) 0 0 160px;
+}
+
+body.folded .cooked-modal-overlay {
+    padding-left: 36px;
+}
+
+@media screen and (max-width: 960px) {
+    body.auto-fold .cooked-modal-overlay {
+        padding-left: 36px;
+    }
+}
+
+// The admin menu is hidden here, and below 600px the admin bar scrolls away.
+@media screen and (max-width: 782px) {
+    body.auto-fold .cooked-modal-overlay,
+    .cooked-modal-overlay {
+        padding-left: 0;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .cooked-modal-overlay {
+        padding-top: 0;
+    }
+}
+
+// An inset, rounded dialog at every width: WordPress makes its large modal edge to edge
+// below 960px and a full-width bottom sheet on phones.
+.components-modal__frame.cooked-modal {
+    width: 100%;
+    max-width: min(960px, calc(100% - 32px)); // WordPress's "large" width, when there's room
+    max-height: calc(100% - 32px);
+    margin: auto;
+    border-radius: var(--cooked-radius);
+
+    @media screen and (max-width: 960px) {
+        height: auto;
+    }
+}
+
+// Phones: tighter gutters.
+@media screen and (max-width: 600px) {
+    .cooked-modal .components-modal__header,
+    .cooked-modal .components-modal__content {
+        padding-inline: 16px;
+    }
+}
+
+.cooked-modal-loading {
+    display: flex;
+    justify-content: center;
+    padding: 32px 0;
+}
+
+.cooked-modal-error {
+    color: var(--cooked-color-danger);
+}
+
+// Buttons in the frame share the small radius.
+#cooked-admin-app .components-button.is-primary {
+    border-radius: var(--cooked-radius-sm);
+}
+
+/* Settings search (cooked-admin-app.js SettingsSearch) */
+.cooked-admin-search {
+    position: relative;
+    flex: 0 1 260px;
+
+    // Narrow screens: a full-width row above the page tabs, so the tabs stay next to the
+    // section menu they lead into.
+    @media screen and (max-width: 782px) {
+        flex: 1 1 100%;
+        order: -1;
+        margin-top: 4px;
+    }
+
+    > .cooked-icon {
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        color: var(--cooked-color-text-muted);
+        font-size: 13px;
+        transform: translateY(-50%);
+        pointer-events: none;
+    }
+}
+
+#cooked-admin-app .cooked-admin-search-input {
+    width: 100%;
+    min-height: 34px;
+    margin: 0;
+    padding: 0 10px 0 32px;
+    border: 1px solid #8c8f94;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-text);
+    font-size: 13px;
+    box-shadow: none;
+
+    &:focus {
+        border-color: var(--cooked-color-accent-strong);
+        outline: none;
+        box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+    }
+
+    &::placeholder {
+        color: var(--cooked-color-text-muted);
+    }
+}
+
+.cooked-admin-search-results {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0;
+    z-index: 30;
+    width: max(100%, 360px);
+    max-width: calc(100vw - 32px);
+    max-height: 340px;
+    margin: 0;
+    padding: 4px 0;
+    overflow-y: auto;
+    border: 1px solid #8c8f94;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
+    list-style: none;
+
+    &[hidden] {
+        display: none;
+    }
+}
+
+.cooked-admin-search-result {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 2px 12px;
+    align-items: baseline;
+    margin: 0;
+    padding: 8px 12px;
+    color: var(--cooked-color-text);
+    cursor: pointer;
+
+    &.is-active {
+        background: var(--cooked-color-accent-soft);
+    }
+
+    // The muted grey is too faint on the highlighted row's tint.
+    &.is-active .cooked-admin-search-result-section {
+        color: var(--cooked-color-text);
+    }
+
+    mark {
+        background: none;
+        color: var(--cooked-color-accent-strong);
+        font-weight: 700;
+    }
+}
+
+.cooked-admin-search-result-title {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.cooked-admin-search-result-label {
+    grid-column: 1;
+    grid-row: 2;
+    color: var(--cooked-color-text-muted);
+    font-size: 12px;
+}
+
+.cooked-admin-search-result-section {
+    grid-column: 2;
+    grid-row: 1;
+    color: var(--cooked-color-text-muted);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.cooked-admin-search-empty {
+    margin: 0;
+    padding: 8px 12px;
+    color: var(--cooked-color-text-muted);
+    font-size: 13px;
+}
+
+// The setting a search jumped to: a short highlight.
+#cooked_recipe_settings .recipe-setting-block.is-search-target {
+    border-radius: var(--cooked-radius-sm);
+    animation: cooked-search-target 1.6s ease-out;
+
+    @media (prefers-reduced-motion: reduce) {
+        animation: none;
+        outline: 2px solid var(--cooked-color-accent);
+        outline-offset: 6px;
+    }
+}
+
+@keyframes cooked-search-target {
+    0%,
+    30% {
+        background: var(--cooked-color-accent-soft);
+        box-shadow: 0 0 0 8px var(--cooked-color-accent-soft);
+    }
+
+    100% {
+        background: transparent;
+        box-shadow: 0 0 0 8px transparent;
+    }
+}

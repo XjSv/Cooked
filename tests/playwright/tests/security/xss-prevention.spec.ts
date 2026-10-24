@@ -3,18 +3,6 @@ import { deletePost } from '../../utils/wp-cli';
 
 var postId: number;
 
-declare global {
-  interface Window {
-    tinyMCE: {
-      get: (id: string) => {
-        setContent: (content: string) => void;
-      };
-      editors: { [key: string]: any };
-    };
-    xssTriggered?: boolean;
-  }
-}
-
 const XSS_PAYLOADS = {
   scriptTag: '<script>window.xssTriggered=true;alert("XSS")</script>',
   imgOnerror: '<img src=x onerror="window.xssTriggered=true;alert(\'XSS\')">',

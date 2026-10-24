@@ -1,0 +1,314 @@
+/* Timer */
+/* A timer in a direction: the marked text, with a small clock after it. */
+body .cooked-timer a {
+    font-weight: 600;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: underline dotted;
+    text-decoration-color: var(--cooked-main-color, #128666);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.2em;
+}
+
+body .cooked-timer a:hover {
+    text-decoration-style: solid;
+}
+
+body .cooked-timer a:focus-visible {
+    outline: 2px solid var(--cooked-main-color, #128666);
+    outline-offset: 2px;
+    border-radius: 2px;
+}
+
+.cooked-timer i.cooked-icon {
+    margin-left: 0.3em;
+    color: var(--cooked-main-color, #128666);
+    font-size: 0.75em;
+    vertical-align: 0.05em;
+}
+
+body .cooked-timer a:focus-visible {
+    border-radius: var(--cooked-radius-sm);
+    outline: var(--cooked-focus-ring);
+    outline-offset: 3px;
+}
+
+#cooked-timers-wrap {
+    z-index: 99999;
+    overflow: hidden;
+    border: 1px solid var(--cooked-color-border);
+    border-bottom: 0;
+    border-radius: 12px 12px 0 0;
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-text);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.14);
+    line-height: 1.4;
+    font-size: 1rem;
+    width: min(44rem, calc(100% - 2rem));
+    height: 7.5rem;
+    position: fixed;
+    transform: translate3d(-50%, 7.2em, 0);
+    opacity: 0;
+    bottom: 0;
+    left: 50%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+#cooked-timers-wrap.cooked-visible {
+    transform: translate3d(-50%, 0, 0);
+    opacity: 1;
+}
+
+#cooked-timers-wrap .cooked-timer-block {
+    overflow: hidden;
+    position: relative;
+    display: block;
+    height: 0;
+    padding: 0;
+    width: 100%;
+    opacity: 0;
+    box-sizing: border-box;
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-visible {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    opacity: 1;
+    height: 7.5rem;
+    padding: 0 5rem 0 1.75rem;
+}
+
+#cooked-timers-wrap .cooked-timer-block > span {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: auto;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-step {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    line-height: 1.4;
+    text-transform: uppercase;
+    color: var(--cooked-color-text-muted);
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-desc {
+    font-size: 1.05rem;
+    width: 100%;
+    padding-right: 18rem;
+    box-sizing: border-box;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--cooked-color-text);
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj {
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    position: absolute;
+    top: 50%;
+    right: 4.75rem;
+    width: auto;
+    font-size: 2rem;
+    line-height: 1;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > div {
+    display: block;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > div.cooked-timer-clearDiv {
+    display: none;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > .cooked-timer-control {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.9rem;
+    height: 1.9rem;
+    margin: 0 0.15rem 0 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: inherit;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity var(--cooked-transition), background-color var(--cooked-transition);
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > .cooked-timer-control:hover {
+    opacity: 1;
+    background: rgba(0, 0, 0, 0.06);
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > .cooked-timer-control:focus-visible {
+    opacity: 1;
+    outline: var(--cooked-focus-ring);
+    outline-offset: 1px;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > .cooked-timer-control i.cooked-icon {
+    font-size: 1.1rem;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-obj > .cooked-timer-play {
+    display: none;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-close {
+    position: absolute;
+    top: 50%;
+    right: 1.25rem;
+    width: 2rem;
+    height: 2rem;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    color: var(--cooked-color-text-muted);
+    font-size: 1rem;
+    line-height: 2rem;
+    text-align: center;
+    transform: translateY(-50%);
+    cursor: pointer;
+    transition: background-color var(--cooked-transition), color var(--cooked-transition);
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-close:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--cooked-color-text);
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-timer-close:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 1px;
+}
+
+#cooked-timers-wrap.cooked-multiples {
+    width: 20rem;
+    left: auto;
+    right: 0;
+    transform: translate3d(0, 7.2em, 0);
+    border-radius: 12px 0 0 0;
+}
+
+#cooked-timers-wrap.cooked-multiples.cooked-visible {
+    transform: translate3d(0, 0, 0);
+}
+
+#cooked-timers-wrap.cooked-timer-attention {
+    border-color: var(--cooked-color-warning);
+    box-shadow: 0 -10px 40px rgba(255, 173, 24, 0.35);
+}
+
+#cooked-timers-wrap.cooked-multiples .cooked-timer-block.cooked-visible {
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 3rem 0 1.25rem;
+}
+
+#cooked-timers-wrap.cooked-multiples .cooked-timer-block .cooked-timer-step {
+    font-size: 0.65rem;
+}
+
+#cooked-timers-wrap.cooked-multiples .cooked-timer-block .cooked-timer-desc {
+    font-size: 0.95rem;
+    padding: 0;
+}
+
+#cooked-timers-wrap.cooked-multiples .cooked-timer-block .cooked-timer-obj {
+    position: static;
+    width: auto;
+    margin-top: 0.4rem;
+    font-size: 1.5rem;
+    line-height: 1.2;
+    transform: none;
+}
+
+#cooked-timers-wrap.cooked-multiples .cooked-timer-block .cooked-timer-obj > .cooked-timer-control {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.1rem;
+}
+
+#cooked-timers-wrap.cooked-multiples .cooked-timer-block .cooked-timer-obj > .cooked-timer-control i.cooked-icon {
+    font-size: 0.95rem;
+}
+
+#cooked-timers-wrap.cooked-multiples .cooked-timer-block .cooked-timer-close {
+    top: 1rem;
+    right: 0.9rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    font-size: 0.9rem;
+    line-height: 1.75rem;
+    transform: none;
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-progress {
+    display: block;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 4px;
+    width: 100%;
+    background: var(--cooked-color-border);
+}
+
+#cooked-timers-wrap .cooked-timer-block .cooked-progress span {
+    width: 0;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 4px;
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-paused {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-paused .cooked-timer-obj {
+    color: var(--cooked-color-text-muted);
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-paused .cooked-timer-pause {
+    display: none;
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-paused .cooked-timer-play {
+    display: inline-flex;
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-complete .cooked-timer-pause,
+#cooked-timers-wrap .cooked-timer-block.cooked-complete .cooked-timer-play {
+    display: none;
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-timer-flash {
+    background: var(--cooked-color-accent-soft);
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-complete {
+    background: rgba(212, 77, 31, 0.07);
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-complete .cooked-progress span {
+    background: var(--cooked-color-danger);
+}
+
+#cooked-timers-wrap .cooked-timer-block.cooked-complete .cooked-timer-obj {
+    color: var(--cooked-color-danger);
+}

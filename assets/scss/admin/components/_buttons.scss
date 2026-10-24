@@ -1,0 +1,130 @@
+/* Highlight button class */
+.cooked-auto-nutrition {
+    display: flex;
+    justify-content: end;
+    margin: 0 0 1rem;
+}
+
+#cooked-tooltip-auto-nutrition-notice {
+    margin: 0;
+}
+
+.cooked-settings-header {
+    border-radius: 10px 10px 0 0;
+    width: auto;
+    height: 90px;
+    line-height: 85px;
+    padding: 0 30px;
+    font-weight: 600;
+    box-sizing: border-box;
+    background: #33373c;
+    color: #fff;
+    font-size: 29px;
+    letter-spacing: -0.03rem;
+}
+
+.cooked-settings-header .cooked-icon {
+    color: #00e0a9;
+    margin-right: 0.5em;
+}
+
+#cooked_recipe_settings .recipe-setting-block .cooked-permalink-field-wrapper span {
+    font-size: 14px;
+    display: inline-block;
+    line-height: 32px;
+    padding: 5px 0 0 0;
+}
+
+#cooked_recipe_settings .recipe-setting-block input[type="text"].cooked-permalink-field {
+    position: relative;
+    top: 0;
+    display: inline-block;
+    width: 150px;
+    margin: 0 10px;
+}
+
+#cooked-settings-panel {
+    position: relative;
+    margin: 0;
+    padding: 0;
+}
+
+#cooked-settings-tabs {
+    display: flex;
+    width: auto;
+    padding: 0 20px 0 0;
+    margin: 0;
+    list-style: none;
+}
+
+#cooked-settings-tabs li {
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 400;
+    display: block;
+    padding: 0;
+    margin: 0;
+    color: #fff;
+}
+
+#cooked-settings-tabs li .cooked-icon {
+    font-size: 14px;
+    margin-right: 0.5em;
+}
+
+#cooked-settings-tabs li .cooked-icon.cooked-icon-recipe-icon {
+    font-size: 20px;
+    top: 2px;
+    position: relative;
+}
+
+#cooked-settings-tabs li:hover {
+    cursor: pointer;
+}
+
+#cooked-settings-tabs li.active,
+#cooked-settings-tabs li.active:hover {
+    cursor: default;
+}
+
+#cooked-settings-tabs a {
+    line-height: 41px;
+    font-size: 0.9rem;
+    letter-spacing: 0.03rem;
+    padding: 2px 15px 4px;
+    display: block;
+    outline: none;
+    box-shadow: none;
+    border: none;
+    white-space: nowrap;
+}
+
+#cooked-settings-panel.stuck {
+    padding-top: 41px;
+}
+
+#cooked-settings-panel.stuck #cooked-settings-tabs {
+    position: fixed;
+    width: calc(100% - 180px);
+    top: 32px;
+    left: 0;
+    z-index: 100000;
+    margin-left: 160px;
+}
+
+#cooked-settings-panel .cooked-settings-tab-content-wrapper .cooked-settings-tab-content {
+    display: none;
+}
+
+#cooked-settings-panel .cooked-settings-tab-content-wrapper .cooked-settings-tab-content:first-child {
+    display: block;
+}
+
+#cooked-settings-panel .cooked-settings-tab-content {
+    padding: 25px 35px;
+    margin-right: 0;
+}
+
+#cooked-settings-panel #cooked_recipe_settings .recipe-setting-block h3.cooked-settings-title {
+    padding-bottom: 0.2rem;
+}

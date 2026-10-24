@@ -1,0 +1,764 @@
+/* Settings Columns */
+// Shared by the recipe editor and the classic Settings layout. The columns are direct
+// children of a .cooked-clearfix, so that container becomes a 12-column grid instead of
+// relying on floats and percentage widths.
+#cooked_recipe_settings .cooked-clearfix:has(> [class*="cooked-setting-column-"]) {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 20px;
+}
+
+// Clearfix pseudos would become grid items.
+#cooked_recipe_settings .cooked-clearfix:has(> [class*="cooked-setting-column-"])::after {
+    content: none;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14,
+#cooked_recipe_settings .cooked-setting-column-13,
+#cooked_recipe_settings .cooked-setting-column-23,
+#cooked_recipe_settings .cooked-setting-column-12 {
+    position: relative;
+    min-width: 0;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14 {
+    grid-column: span 3;
+}
+
+#cooked_recipe_settings .cooked-setting-column-13 {
+    grid-column: span 4;
+}
+
+#cooked_recipe_settings .cooked-setting-column-23 {
+    grid-column: span 8;
+}
+
+#cooked_recipe_settings .cooked-setting-column-12 {
+    grid-column: span 6;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14 input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .cooked-setting-column-13 input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .cooked-setting-column-23 input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .cooked-setting-column-12 input[type="text"]:not(.ts-control > input),
+#cooked_recipe_settings .recipe-setting-block input[type="text"].cooked-shortcode-field {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#cooked_recipe_settings .cooked-setting-column-14 select,
+#cooked_recipe_settings .cooked-setting-column-13 select,
+#cooked_recipe_settings .cooked-setting-column-23 select,
+#cooked_recipe_settings .cooked-setting-column-12 select,
+#cooked_recipe_settings .cooked-setting-column-14 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-13 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-23 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-12 .cooked-select-wrapper,
+#cooked_recipe_settings .cooked-setting-column-14 .ts-wrapper,
+#cooked_recipe_settings .cooked-setting-column-13 .ts-wrapper,
+#cooked_recipe_settings .cooked-setting-column-23 .ts-wrapper,
+#cooked_recipe_settings .cooked-setting-column-12 .ts-wrapper {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+// Tablet: the four time fields keep two per row; wider columns stack.
+@media screen and (max-width: 782px) {
+    #cooked_recipe_settings .cooked-setting-column-13,
+    #cooked_recipe_settings .cooked-setting-column-23,
+    #cooked_recipe_settings .cooked-setting-column-12 {
+        grid-column: 1 / -1;
+    }
+
+    #cooked_recipe_settings .cooked-setting-column-14 {
+        grid-column: span 6;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    #cooked_recipe_settings .cooked-setting-column-14 {
+        grid-column: 1 / -1;
+    }
+}
+
+// The normalised Settings rows (templates/admin/frame/settings.php) are also used by the
+// classic layout, where they have no frame wrapper. The description reads as the paragraph
+// it replaced.
+#cooked_recipe_settings .cooked-settings-desc {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+}
+
+// In the frame, each setting is a row: heading and description on the left, control on the
+// right. Long or grouped fields (.is-stacked) keep the full width for their control.
+.cooked-admin-screen[data-screen="cooked_settings"] #cooked_recipe_settings {
+
+    .cooked-settings-notices {
+        margin: 0 0 8px;
+
+        &:empty {
+            display: none;
+        }
+
+        .notice {
+            margin: 0 0 16px;
+        }
+    }
+
+    .cooked-setting-row {
+        margin: 0;
+        padding: 18px 0;
+
+        & + .cooked-setting-row {
+            border-top: 1px solid var(--cooked-color-border);
+        }
+
+        @media screen and (max-width: 782px) {
+            padding: 16px 0;
+        }
+    }
+
+    // A value that was not kept on the last save (Cooked_Settings::rejected_fields()), and a
+    // field the browser finds invalid once it has been edited.
+    .cooked-setting-row.has-error {
+        margin: 0 -12px;
+        padding-right: 12px;
+        padding-left: 12px;
+        border-radius: var(--cooked-radius-sm);
+        background: rgba(214, 54, 56, 0.06);
+        box-shadow: inset 3px 0 0 var(--cooked-color-danger);
+
+        .cooked-setting-head .cooked-settings-title {
+            color: var(--cooked-color-danger);
+        }
+    }
+
+
+    .cooked-setting-control input:user-invalid,
+    .cooked-setting-row.has-error .cooked-setting-control input {
+        border-color: var(--cooked-color-danger);
+        box-shadow: 0 0 0 1px var(--cooked-color-danger);
+    }
+
+    .cooked-setting-row-inner {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(240px, 0.9fr);
+        align-items: start;
+        gap: 8px 40px;
+
+        @media screen and (max-width: 782px) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    .cooked-setting-row.is-stacked .cooked-setting-row-inner {
+        grid-template-columns: minmax(0, 1fr);
+        row-gap: 12px;
+    }
+
+    .cooked-setting-head {
+        min-width: 0;
+    }
+
+    .cooked-setting-row .cooked-setting-head .cooked-settings-title {
+        width: auto;
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .cooked-setting-row .cooked-setting-head .cooked-settings-desc {
+        margin: 4px 0 0;
+        color: var(--cooked-color-text-muted);
+        font-size: 13px;
+        line-height: 1.5;
+
+        p {
+            margin: 0 0 8px;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        p:last-child {
+            margin-bottom: 0;
+        }
+
+        ul {
+            margin: 6px 0 8px;
+            padding-left: 18px;
+            list-style: disc;
+        }
+
+        li {
+            margin: 2px 0;
+            font-size: inherit;
+            line-height: inherit;
+        }
+    }
+
+    .cooked-setting-control {
+        min-width: 0;
+
+        > p {
+            margin: 0;
+        }
+
+        // Not Tom Select's search box, which shares the line with the selected value.
+        input[type="text"]:not(.ts-control > input),
+        input[type="password"] {
+            width: 100%;
+            max-width: 420px;
+            margin-right: 0;
+            box-sizing: border-box;
+        }
+
+        input[type="text"].cooked-color-field {
+            width: 7rem;
+        }
+
+        select,
+        .cooked-select-wrapper {
+            width: 100%;
+            max-width: 420px;
+            box-sizing: border-box;
+        }
+
+        .cooked-select-wrapper {
+            display: block;
+            margin: 0;
+
+            select,
+            .ts-wrapper {
+                width: 100%;
+                max-width: none;
+            }
+        }
+
+        .cooked-option-list {
+            margin: 0;
+        }
+
+        // Image field: thumbnail, then Change Image and Remove beside it.
+        .cooked-settings-image-field {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px 12px;
+            max-width: none;
+            margin: 0;
+
+            .cooked-settings-image-preview-img {
+                order: -1;
+                width: 96px;
+                height: 96px;
+                margin: 0;
+                object-fit: cover;
+                border: 1px solid var(--cooked-color-border);
+                border-radius: var(--cooked-radius-sm);
+            }
+
+            .cooked-settings-image-remove {
+                position: static;
+                padding: 8px;
+                background: none;
+                color: var(--cooked-color-text-muted);
+                border-radius: var(--cooked-radius-sm);
+
+                &:hover,
+                &:focus-visible {
+                    background: none;
+                    color: #b32d2e;
+                }
+            }
+        }
+
+        // Permalinks: base URL, slug and example ending read as one joined URL field. On phones
+        // the base URL takes its own line above the slug.
+        .cooked-permalink-field-wrapper {
+            display: flex;
+            align-items: stretch;
+            max-width: 720px;
+            border: 1px solid #8c8f94;
+            border-radius: var(--cooked-radius-sm);
+            background: var(--cooked-color-surface);
+            overflow: hidden;
+
+            &:focus-within {
+                border-color: var(--cooked-color-accent-strong);
+                box-shadow: 0 0 0 1px var(--cooked-color-accent-strong);
+            }
+
+            span {
+                display: flex;
+                align-items: center;
+                padding: 0 10px;
+                background: var(--cooked-color-surface-muted);
+                color: var(--cooked-color-text-muted);
+                font-size: 13px;
+                line-height: 1.4;
+                white-space: nowrap;
+            }
+
+            span:first-child {
+                min-width: 0;
+                flex: 0 1 auto;
+                overflow-wrap: anywhere;
+                white-space: normal;
+                border-right: 1px solid var(--cooked-color-border);
+            }
+
+            span:last-child {
+                border-left: 1px solid var(--cooked-color-border);
+            }
+
+            input[type="text"].cooked-permalink-field {
+                flex: 1 1 140px;
+                width: auto;
+                min-width: 0;
+                max-width: none;
+                min-height: 38px;
+                margin: 0;
+                border: 0;
+                border-radius: 0;
+                box-shadow: none;
+                outline: 0;
+                background: transparent;
+            }
+
+            @media screen and (max-width: 600px) {
+                flex-wrap: wrap;
+
+                span:first-child {
+                    flex: 1 1 100%;
+                    padding: 6px 10px;
+                    border-right: 0;
+                    border-bottom: 1px solid var(--cooked-color-border);
+                }
+            }
+        }
+    }
+}
+
+#cooked-welcome-screen {
+    padding: 15px 50px 0 30px;
+    position: relative;
+}
+
+#cooked-welcome-screen .cooked-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#cooked-welcome-screen .cooked-badge img {
+    border: none;
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin: 0;
+}
+
+#cooked-welcome-screen .about-text {
+    margin-bottom: 40px;
+    line-height: 1.8;
+    font-size: 17px;
+    margin-right: 260px;
+}
+
+#cooked-welcome-screen .about-wrap {
+    margin: 25px auto 0;
+    max-width: 1000px;
+}
+
+#cooked-welcome-screen .about-wrap h1 {
+    font-size: 2.25rem;
+}
+
+#cooked-welcome-screen .about-wrap p {
+    font-size: 1rem;
+    margin: 0 0 2rem;
+    line-height: 1.7rem;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel {
+    background: #fff;
+    padding: 30px 30px 15px 30px;
+    -moz-border-radius: 15px;
+    -webkit-border-radius: 15px;
+    border-radius: 15px;
+    border: none;
+    box-shadow: 0 4px 4px rgba(0,0,0,.05),0 8px 8px rgba(0,0,0,.05),0 32px 32px rgba(0,0,0,.05),0 64px 64px rgba(0,0,0,.05);
+}
+
+#cooked-welcome-screen #cooked-welcome-panel img.cooked-welcome-banner {
+    border: none;
+    display: block;
+    padding: 0;
+    margin: 0 0 30px;
+    box-sizing: border-box;
+    border-radius: 5px 5px 0 0;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel .cooked-welcome-panel-intro {
+    text-align: center;
+    margin: 0 50px 2rem;
+    padding: 15px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel .cooked-welcome-panel-intro h1 {
+    font-size: 1.75rem;
+    margin: 0 0 1rem;
+    padding: 0;
+}
+
+#cooked-welcome-screen #cooked-welcome-panel .cooked-welcome-panel-intro p {
+    max-width: 600px;
+    font-size: 1.1rem;
+    line-height: 1.8rem;
+    margin: 0 auto 2rem;
+    padding: 0;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel a {
+    text-decoration: none;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column {
+    display: block !important;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column > strong {
+    font-size: 1rem;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 {
+    font-size: 1.75rem;
+    margin: 0 0 1rem;
+    position: relative;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 a {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 a i.fa {
+    position: relative;
+    top: 1px;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column li .cooked-icon {
+    margin-right: 0.5em;
+}
+
+.cooked-settings-title .cooked-icon-angle-right {
+    margin: 0 0.25em;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h4 {
+    font-size: 1.25rem;
+    margin: 0 0 1rem;
+    position: relative;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h4 a {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 12px;
+    font-weight: 400;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h4 a i.fa {
+    position: relative;
+    top: 1px;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-full {
+    width: 100%;
+    padding-right: 0;
+    float: none;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-last {
+    width: 70%;
+    padding-right: 0;
+    float: right;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column .fa-external-link {
+    color: #888;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-content {
+    min-height: 1px;
+    padding: 10px 50px 20px;
+    margin: 0;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel .cooked-welcome-panel-column-container {
+    display: flex;
+    justify-content: between !important;
+    padding: 0 !important;
+    flex-wrap: wrap;
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column {
+    box-sizing: border-box;
+    padding-right: 2rem;
+    width: 30%;
+}
+
+#cooked-welcome-screen .cooked-pro-features {
+    width: 85%;
+    margin: 0 auto;
+    padding: 0 0 10px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list {
+    margin-right: 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list li {
+    line-height: 1.7;
+    position: relative;
+    margin-right: 0;
+    border-top: 1px solid #e5e5e5;
+    padding: 8px 0 4px 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child {
+    border: none;
+    padding-top: 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.new,
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.tweak,
+#cooked-welcome-screen ul.cooked-whatsnew-list em.fix {
+    position: absolute;
+    font-style: normal;
+    display: inline-block;
+    background: #aaa;
+    text-transform: uppercase;
+    top: 11px;
+    left: 0;
+    color: #fff;
+    font-weight: 600;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    text-align: center;
+    width: 38px;
+    border-radius: 3px;
+    font-size: 10px;
+    line-height: 19px;
+    height: 19px;
+    padding: 0 6px;
+    margin: 0 6px 0 0;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child strong.new,
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child strong.tweak,
+#cooked-welcome-screen ul.cooked-whatsnew-list li:first-child em.fix {
+    top: 3px;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.new {
+    background: #56C477;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list strong.tweak {
+    background: #0073aa;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-list em.fix {
+    background: #ffad10;
+}
+
+#cooked-welcome-screen ul li.cooked-pro i.cooked-icon {
+    color: #ffad10;
+}
+
+#cooked-welcome-screen ul li.cooked-pro a {
+    font-weight: 600;
+    color: #ffad10;
+}
+
+#cooked-welcome-screen ul li.cooked-pro a:hover {
+    color: #D3910F;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro {
+    margin-bottom: 0;
+    flex: 1 0 auto;
+    width: 33.333%;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro li {
+    padding-left: 0;
+    font-size: 1.15rem;
+    font-weight: 400;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro li i.cooked-icon-star {
+    color: #ffad10;
+    margin: 0 7px 0 0;
+    font-size: 19px;
+    position: relative;
+    top: 1px;
+}
+
+#cooked-welcome-screen .cooked-welcome-bottom {
+    text-align: center;
+    background: #f9f9f9;
+    margin: 30px -80px -15px;
+    border-top: 1px solid #f1f1f1;
+}
+
+#cooked-welcome-screen .cooked-pro-button {
+    display: inline-block;
+    clear: both;
+    text-align: center;
+    width: auto;
+    margin: 30px auto;
+    padding: 20px 25px 21px;
+    font-size: 1.25rem;
+    line-height: 1rem;
+    font-weight: 600;
+    color: #fff;
+    background: #ffad10;
+    border-radius: 50px;
+}
+
+#cooked-welcome-screen .cooked-pro-button:hover {
+    background: #e08704;
+}
+
+#cooked-welcome-screen .cooked-coupon-code {
+    color: #4c5e65;
+    display: inline-block;
+    font-size: 17px;
+    padding: 0 0 0 1.5rem;
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro {
+    @media screen and (max-width:1050px) {
+        width: 100%;
+        margin-top: 0;
+    }
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro:first-child {
+    @media screen and (max-width:1050px) {
+        margin-top: 10px;
+    }
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro li:first-child {
+    @media screen and (max-width:1050px) {
+        border-top: 1px solid #e5e5e5;
+        padding-top: 8px;
+    }
+}
+
+#cooked-welcome-screen ul.cooked-whatsnew-pro:first-child li:first-child {
+    @media screen and (max-width:1050px) {
+        border: none;
+        padding-top: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-pro-features {
+    @media screen and (max-width:870px) {
+        width: 90%;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column {
+    @media screen and (max-width:870px) {
+        padding-right: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column.cooked-welcome-panel-last {
+    @media screen and (max-width:870px) {
+        width: 100%;
+        padding-top: 20px;
+    }
+}
+
+#cooked-welcome-screen .about-wrap {
+    @media screen and (max-width:870px) {
+        margin-top: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel .cooked-welcome-panel-column li {
+    @media screen and (max-width:870px) {
+        display: block;
+    }
+}
+
+#cooked-welcome-screen .cooked-pro-features {
+    @media screen and (max-width:782px) {
+        width: 100%;
+    }
+}
+
+#cooked-welcome-screen {
+    @media screen and (max-width:782px) {
+        padding: 15px 40px 0 30px;
+    }
+}
+
+#cooked-welcome-screen .cooked-badge {
+    @media screen and (max-width:782px) {
+        display: none;
+    }
+}
+
+#cooked-welcome-screen .about-wrap h1,
+#cooked-welcome-screen .about-text {
+    @media screen and (max-width:782px) {
+        margin-right: 0;
+    }
+}
+
+#cooked-welcome-screen .cooked-welcome-panel-column h3 a {
+    @media screen and (max-width:782px) {
+        display: block;
+        position: relative;
+    }
+}
+
+#cooked-welcome-screen #cooked-welcome-panel img.cooked-welcome-banner {
+    @media screen and (max-width:500px) {
+        display: none;
+    }
+}
+
+#cooked-welcome-screen .about-wrap h1 {
+    @media screen and (max-width:500px) {
+        font-size: 1.8rem;
+    }
+}
+
+#cooked-welcome-screen .about-text {
+    @media screen and (max-width:500px) {
+        font-size: 15px;
+    }
+}
+
+// A setting whose value was not kept: its title too (the settings title rule carries two IDs,
+// _frame.scss).
+#cooked-admin-app #cooked_recipe_settings .cooked-setting-row.has-error h3.cooked-settings-title {
+    color: var(--cooked-color-danger);
+}

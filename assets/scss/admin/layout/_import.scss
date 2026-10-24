@@ -1,0 +1,233 @@
+// Import screen (templates/admin/import.php), rendered inside the admin frame. Its
+// fields sit in #cooked_import_settings rather than the settings form, so the few
+// field styles they need are repeated here in the frame's look.
+
+#cooked_import_settings .cooked-settings-tab-content {
+    display: none;
+}
+
+#cooked_import_settings .recipe-setting-block {
+    margin: 0 0 20px;
+}
+
+#cooked-admin-app #cooked_import_settings h3.cooked-settings-title {
+    margin: 0;
+    padding: 0.5rem 0;
+    color: var(--cooked-color-accent-strong);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5rem;
+}
+
+#cooked_import_settings .cooked-settings-desc,
+#cooked_import_settings .recipe-setting-block p {
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+}
+
+#cooked_import_settings .cooked-settings-desc p {
+    margin: 0 0 1rem;
+}
+
+#cooked_import_settings ul.cooked-admin-ul {
+    margin: 0 0 1rem 1.5rem;
+    font-size: 0.9rem;
+    list-style: disc;
+}
+
+#cooked_import_settings ul.cooked-admin-ul li {
+    margin: 0 0 0.5rem;
+    padding: 0;
+}
+
+#cooked_import_settings .cooked-import-note {
+    padding: 12px 16px;
+    border-left: 3px solid var(--cooked-color-accent);
+    border-radius: 0 var(--cooked-radius-sm) var(--cooked-radius-sm) 0;
+    background: var(--cooked-color-accent-soft);
+}
+
+// An importer with nothing to import: an empty state instead of a lone sentence.
+.cooked-import-empty {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    max-width: 560px;
+    margin: 0 0 20px;
+    padding: 18px 20px;
+    border: 1px dashed var(--cooked-color-border);
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-surface-muted);
+}
+
+.cooked-import-empty-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+    font-size: 15px;
+}
+
+.cooked-import-empty-body {
+    min-width: 0;
+}
+
+#cooked_import_settings .cooked-import-empty p,
+#cooked-settings-panel .cooked-import-empty p,
+.cooked-import-empty p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+}
+
+#cooked_import_settings .cooked-import-empty .cooked-import-empty-title,
+#cooked-settings-panel .cooked-import-empty .cooked-import-empty-title,
+.cooked-import-empty .cooked-import-empty-title {
+    margin: 0 0 2px;
+    color: var(--cooked-color-text);
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+#cooked_import_settings input[type="file"] {
+    max-width: 100%;
+    color: var(--cooked-color-text-muted);
+    font-size: 13px;
+}
+
+// The file picker's button, in the style of a WordPress secondary button.
+#cooked_import_settings input[type="file"]::file-selector-button {
+    margin-right: 12px;
+    padding: 6px 14px;
+    border: 1px solid var(--cooked-color-accent-strong);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-accent-strong);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 200ms ease;
+
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+#cooked_import_settings input[type="file"]:hover::file-selector-button {
+    background: var(--cooked-color-accent-soft);
+}
+
+// Sample CSV links: open a preview (cooked-admin-app.js).
+#cooked-admin-app .cooked-csv-samples .cooked-csv-sample {
+    font-weight: 500;
+}
+
+/* CSV preview modal (a .cooked-modal, see _frame.scss). Wider than the changelog for the
+   CSV's columns. Only the table scrolls (both ways, header row pinned): the modal body is
+   a column in which the table takes the height left beside the title bar and buttons. */
+.components-modal__frame.cooked-csv-preview-modal {
+    max-width: min(1280px, calc(100% - 32px));
+}
+
+.cooked-csv-preview-modal .components-modal__content {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.cooked-csv-preview-modal .components-modal__children-container {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-height: 0;
+}
+
+.cooked-csv-preview:focus-visible {
+    outline: 2px solid var(--cooked-color-accent-strong);
+    outline-offset: 2px;
+}
+
+.cooked-csv-preview {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+}
+
+.cooked-csv-preview table {
+    min-width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.cooked-csv-preview th,
+.cooked-csv-preview td {
+    min-width: 120px;
+    max-width: 320px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--cooked-color-border);
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: break-word;
+}
+
+.cooked-csv-preview td.is-long {
+    min-width: 260px;
+}
+
+.cooked-csv-separator {
+    color: var(--cooked-color-text);
+    font-weight: 600;
+}
+
+.cooked-csv-preview th {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: var(--cooked-color-surface-muted);
+    box-shadow: inset 0 -1px 0 var(--cooked-color-border); // the cell border scrolls away when sticky
+    color: var(--cooked-color-text);
+    font-family: Menlo, Consolas, monospace;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.cooked-csv-preview tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.cooked-csv-preview tbody tr:nth-child(even) td {
+    background: var(--cooked-color-surface-muted);
+}
+
+// Footer actions below the table.
+.cooked-modal-actions {
+    display: flex;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    margin: 16px -24px 0;
+    padding: 16px 24px 0;
+    border-top: 1px solid var(--cooked-color-border);
+    background: var(--cooked-color-surface);
+
+    @media screen and (max-width: 600px) {
+        margin-inline: -16px;
+        padding-inline: 16px;
+
+        .components-button {
+            flex: 1 1 auto;
+            justify-content: center;
+        }
+    }
+}

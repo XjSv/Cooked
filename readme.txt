@@ -2,7 +2,7 @@
 Contributors: xjsv, mgiannopoulos24, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 6.8
-Tested up to: 7.1
+Tested up to: 7.2
 Stable tag: 2.0.0
 Requires PHP: 8.2
 License: GPLv2 or later

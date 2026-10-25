@@ -2,8 +2,8 @@
 Contributors: xjsv, boxystudio
 Tags: recipe, recipes, food, cooking, nutrition
 Requires at least: 6.8
-Tested up to: 7.1
-Stable tag: 1.16.2
+Tested up to: 7.2
+Stable tag: 1.17.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -81,9 +81,12 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a new include_ids attribute to the cooked-related-recipes shortcode.
+Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
 
 == Changelog ==
+
+= 1.17.0 =
+* **TWEAK:** Replaced Tooltipster with Floating UI tooltip library.
 
 = 1.16.2 =
 * **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).

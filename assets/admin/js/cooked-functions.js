@@ -1102,8 +1102,8 @@ var cookedSortableTouchHandler = function(event) {
         /****   Time Pickers   ****/
         if ( $('#cooked-prep-time').length ) {
             $( '#cooked-prep-time,#cooked-cook-time' ).on('change', function() {
-                var prepTimeValue = parseInt( $( '#cooked-prep-time' ).val() ),
-                    cookTimeValue = parseInt( $( '#cooked-cook-time' ).val() );
+                var prepTimeValue = parseFloat( $( '#cooked-prep-time' ).val() ) || 0,
+                    cookTimeValue = parseFloat( $( '#cooked-cook-time' ).val() ) || 0;
                 cooked_updateTotalTimeValue( prepTimeValue, cookTimeValue );
             });
         }
@@ -1248,7 +1248,7 @@ function cooked_set_default_template(page, total_recipes, content, nonce) {
 /** Sets the total time field to prep time plus cook time. */
 function cooked_updateTotalTimeValue( prepTime, cookTime ) {
     var totalTimeInput = jQuery( '#cooked-total-time' ),
-        totalTime = prepTime + cookTime;
+        totalTime = Math.round( ( prepTime + cookTime ) * 1000 ) / 1000;
 
     totalTimeInput.val( totalTime );
 }

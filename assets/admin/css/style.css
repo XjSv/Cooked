@@ -325,10 +325,8 @@ body.post-type-cp_recipe .switchery-small > small,
 #cooked_recipe_settings .cooked-layout-load-default { position:relative; top:-2px; z-index:10; margin:0 0 0 10px; padding:0 8px 1px; }
 .cooked-save-default-panel { background:#fff; border:1px solid #ccc; border-radius:3px; box-shadow:0 3px 8px rgba(0,0,0,.12); box-sizing:border-box; color:#666; font-size:12px; line-height:1.6; margin:10px 0 0; max-width:320px; padding:15px 18px; }
 .cooked-save-default-panel[hidden] { display:none; }
-/* Once Floating UI places it (data-placement set), the panel floats by the button like a tooltip. */
-.cooked-save-default-panel[data-placement] { position:fixed; top:0; left:0; z-index:2001; width:max-content; max-width:275px; min-width:min-content; margin:0; }
-/* With Floating UI, cooked-functions.js wraps the contents in a .cooked-tooltip-bubble that grows open. */
-.cooked-save-default-panel.cooked-tooltip-shell { background:none; border:0; border-radius:0; box-shadow:none; padding:0; }
+/* Floating UI adds .cooked-tooltip-shell before the first open. Fixed positioning lives there so the panel is out of flow before data-placement is set; that attribute only styles the arrow. */
+.cooked-save-default-panel.cooked-tooltip-shell { position:fixed; top:0; left:0; z-index:2001; width:max-content; max-width:275px; min-width:min-content; margin:0; background:none; border:0; border-radius:0; box-shadow:none; padding:0; }
 .cooked-save-default-panel > .cooked-tooltip-bubble { box-sizing:border-box; padding:15px 18px; background:#fff; border:1px solid #ccc; border-radius:3px; box-shadow:0 3px 8px rgba(0,0,0,.12); }
 .cooked-save-default-panel .cooked-tooltip-heading { color:#07a780; display:block; font-size:15px; margin:0 0 5px; white-space:nowrap; }
 .cooked-save-default-panel p { margin:0 0 5px; }

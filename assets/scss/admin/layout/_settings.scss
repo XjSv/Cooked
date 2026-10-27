@@ -111,7 +111,8 @@
         margin: 0;
         padding: 18px 0;
 
-        & + .cooked-setting-row {
+        // `~`, not `+`: hidden inputs (a section's nonce) can sit between rows.
+        & ~ .cooked-setting-row {
             border-top: 1px solid var(--cooked-color-border);
         }
 

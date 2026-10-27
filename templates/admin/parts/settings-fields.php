@@ -14,7 +14,7 @@
 
 global $_cooked_settings;
 
-$stacked_types = [ 'html', 'permalink_field', 'migrate_button', 'misc_button', 'nonce' ];
+$stacked_types = [ 'html', 'permalink_field', 'migrate_button', 'misc_button' ];
 // Settings whose value was not kept on the last save: their rows are marked.
 $rejected_fields = Cooked_Settings::rejected_fields();
 
@@ -22,6 +22,12 @@ foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
     echo '<div id="cooked-settings-tab-content-' . esc_attr( $tab_slug ) . '" class="cooked-settings-tab-content">';
 
     foreach ( $tab['fields'] as $name => $field ) :
+
+        // A nonce is a hidden input: no row of its own.
+        if ( isset( $field['type'] ) && 'nonce' === $field['type'] ) :
+            $cooked_settings->field_nonce( $name );
+            continue;
+        endif;
 
         $notitle                 = false;
         $conditional_requirement = '';
@@ -39,7 +45,7 @@ foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
         // Types without a field_*() renderer are drawn by whatever hooks their action.
         if ( $has_renderer || has_action( $field_hook ) ) :
 
-            if ( 'misc_button' === $field['type'] || 'nonce' === $field['type'] ) :
+            if ( 'misc_button' === $field['type'] ) :
                 $notitle       = true;
                 $field_options = ( isset( $field['title'] ) ? $field['title'] : false );
                 endif;

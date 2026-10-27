@@ -164,7 +164,6 @@ class Enqueues {
      * Registers the admin asset hooks.
      */
     public function __construct() {
-        add_action( 'admin_enqueue_scripts', [ &$this, 'register_shared_scripts' ], 5 );
         add_action( 'admin_enqueue_scripts', [ &$this, 'admin_enqueues' ], 10, 1 );
         add_action( 'admin_enqueue_scripts', [ &$this, 'widget_enqueues' ], 11, 1 );
         add_action( 'admin_enqueue_scripts', [ &$this, 'admin_app_enqueues' ], 20, 1 );
@@ -207,20 +206,6 @@ class Enqueues {
             }
         }
         return $classes;
-    }
-
-    /**
-     * Registers Vue for Cooked Pro's Pending Recipes screen. Cooked itself no longer uses it.
-     *
-     * Runs before Cooked Pro's admin_enqueue_scripts callback, so Pro finds the handle registered
-     * here instead of registering its own copy at the pre-2.0 path.
-     *
-     * @since 2.0.0
-     * @return void
-     */
-    public function register_shared_scripts() {
-        $min = COOKED_DEV ? '' : '.min';
-        wp_register_script( 'cooked-vue', COOKED_URL . 'assets/vendor/vue/vue' . $min . '.js', [], '2.7.16', false );
     }
 
     /**

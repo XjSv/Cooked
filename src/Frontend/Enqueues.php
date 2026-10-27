@@ -188,39 +188,6 @@ class Enqueues {
     }
 
     /**
-     * Renders a dynamic CSS template and returns it compressed.
-     *
-     * Cooked itself no longer uses PHP stylesheets; this stays for Cooked Pro's templates.
-     *
-     * @param string|false $file Template path.
-     * @return string
-     */
-    public static function get_dynamic_css( $file = false ) {
-        if ( ! $file || ! file_exists( $file ) ) {
-			return '';
-        }
-
-        ob_start();
-        include $file;
-        $css            = ob_get_clean();
-        $compressed_css = self::compress_css( $css );
-
-        return $compressed_css;
-    }
-
-    /**
-     * Strips line breaks, tabs and repeated spaces from CSS.
-     *
-     * @param string|false $css CSS to compress.
-     * @return string
-     */
-    public static function compress_css( $css ) {
-        // Remove tabs, spaces, newlines, etc.
-        $css = str_replace( [ "\r\n", "\r", "\n", "\t", '  ', '    ', '    ' ], '', (string) $css );
-        return $css;
-    }
-
-    /**
      * Prints the full-screen mode markup in the footer when a recipe needs it.
      *
      * @return void

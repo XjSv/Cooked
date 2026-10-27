@@ -372,11 +372,6 @@ class Settings {
             }
         }
 
-        // The breakpoints are fixed in the stylesheet since 2.0. Cooked Pro's templates still read them.
-        $_cooked_settings['responsive_breakpoint_1'] = '1000';
-        $_cooked_settings['responsive_breakpoint_2'] = '750';
-        $_cooked_settings['responsive_breakpoint_3'] = '520';
-
         if ( isset( $_cooked_settings['dark_mode'] ) ) {
             $_cooked_settings['dark_mode'] = self::normalize_dark_mode( $_cooked_settings['dark_mode'] );
         }

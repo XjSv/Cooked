@@ -312,7 +312,7 @@
 }
 
 #cooked_recipe_settings .cooked-html-block {
-    background: #fff;
+    background: var(--cooked-color-surface);
     width: auto;
     min-width: 300px;
     display: inline-block;
@@ -323,11 +323,11 @@
 
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block h3.cooked-settings-title {
     width: 100%;
-    color: #333;
+    color: var(--cooked-color-text);
 }
 
 #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid {
-    background: #fff;
+    background: var(--cooked-color-surface);
     border: 2px solid #0aa780;
     box-shadow: none;
     border-radius: 5px;

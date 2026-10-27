@@ -591,7 +591,7 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
 }
 
 #cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block h3.cooked-settings-title {
-    color: #333;
+    color: var(--cooked-color-text);
 }
 
 #cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid > .cooked-settings-title {

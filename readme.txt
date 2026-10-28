@@ -8,7 +8,6 @@ Stable tag: 1.17.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Funding: https://github.com/sponsors/XjSv
 
 Free WordPress recipe plugin: recipe schema, nutrition labels, timers, metric/imperial switching, allergens, step videos, recipe imports and more.
 

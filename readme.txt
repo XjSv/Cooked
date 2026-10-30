@@ -136,6 +136,7 @@ Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
 * **TWEAK:** Replaced Tooltipster with Floating UI tooltip library.
 * **FIX:** Fixed the Nutrition Facts bar stopping short under the serving size.
 * **FIX:** Fixed the [cooked-info] shortcode styles so both columns stay on one line when the content area is narrow.
+* **FIX:** Escaped the attachment titles when building the photo gallery HTML.
 
 = 1.16.2 =
 * **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).

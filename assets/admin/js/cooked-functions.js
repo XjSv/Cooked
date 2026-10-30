@@ -985,6 +985,33 @@ var cookedSortableTouchHandler = function(event) {
         // Bulk Add Modal
         cooked_init_bulk_add($);
 
+        function cookedGalleryItem(media_attachment, thumbnailUrl) {
+            var $item = $('<div>', {
+                'class': 'cooked-recipe-gallery-item',
+                'data-attachment-id': media_attachment.id
+            });
+            $('<img>', { src: thumbnailUrl }).appendTo($item);
+            $('<span>', {
+                'class': 'cooked-gallery-item-title',
+                text: media_attachment.title
+            }).appendTo($item);
+            $('<input>', {
+                type: 'hidden',
+                name: '_recipe_settings[gallery][items][]',
+                value: media_attachment.id
+            }).appendTo($item);
+            $('<a>', {
+                href: '#',
+                'class': 'cooked-gallery-edit-button',
+                'data-attachment-id': media_attachment.id
+            }).append($('<i>', { 'class': 'cooked-icon cooked-icon-pencil' })).appendTo($item);
+            $('<a>', {
+                href: '#',
+                'class': 'remove-image-button'
+            }).append($('<i>', { 'class': 'cooked-icon cooked-icon-times' })).appendTo($item);
+            return $item;
+        }
+
         if ( $_CookedRecipeGallery.length ) {
 
             var gallery_images_frame;
@@ -1019,7 +1046,7 @@ var cookedSortableTouchHandler = function(event) {
                         if (!media_attachments.hasOwnProperty(media_key)) continue;
                         var media_attachment = media_attachments[media_key];
                         thisThumbnail = media_attachment.sizes.thumbnail.url;
-                        $('#cooked-recipe-image-gallery').append( '<div data-attachment-id="' + media_attachment.id + '" class="cooked-recipe-gallery-item"><img src="' + thisThumbnail + '" /><span class="cooked-gallery-item-title">' + media_attachment.title + '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' + media_attachment.id + '" /><a href="#" data-attachment-id="' + media_attachment.id + '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>' );
+                        $('#cooked-recipe-image-gallery').append( cookedGalleryItem(media_attachment, thisThumbnail) );
                     }
 
                     cooked_init_gallery_sorting();
@@ -1069,7 +1096,7 @@ var cookedSortableTouchHandler = function(event) {
                         if (!media_attachments.hasOwnProperty(media_key)) continue;
                         var media_attachment = media_attachments[media_key];
                         thisThumbnail = media_attachment.sizes.thumbnail.url;
-                        thisButton.parent().replaceWith( '<div data-attachment-id="' + media_attachment.id + '" class="cooked-recipe-gallery-item"><img src="' + thisThumbnail + '" /><span class="cooked-gallery-item-title">' + media_attachment.title + '</span><input type="hidden" name="_recipe_settings[gallery][items][]" value="' + media_attachment.id + '" /><a href="#" data-attachment-id="' + media_attachment.id + '" class="cooked-gallery-edit-button"><i class="cooked-icon cooked-icon-pencil"></i></a><a href="#" class="remove-image-button"><i class="cooked-icon cooked-icon-times"></i></a></div>' );
+                        thisButton.parent().replaceWith( cookedGalleryItem(media_attachment, thisThumbnail) );
                     }
 
                     cooked_init_gallery_sorting();

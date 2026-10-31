@@ -372,7 +372,7 @@ endif;
 
 						echo '<div class="cooked-srl-title"><a href="' . esc_url( (string) get_permalink( (int) $rid ) ) . '">' . esc_html( $recipe['title'] ) . '</a></div>';
 
-				if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! $hide_author ) :
+				if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! $hide_author && ! empty( $recipe['author']['name'] ) ) :
 					echo '<div class="cooked-srl-author">';
 					$author = $recipe['author'];
 					/* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */
@@ -440,7 +440,7 @@ endif;
 
                 do_action( 'cooked_recipe_grid_before_author', $recipe );
 
-		if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! $hide_author ) :
+		if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! $hide_author && ! empty( $recipe['author']['name'] ) ) :
 			echo '<span class="cooked-recipe-card-author">';
 				$author = $recipe['author'];
 				/* translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")  */

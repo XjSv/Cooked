@@ -155,6 +155,34 @@ class TemplateFiltersTest extends FilterTestCase {
         $this->assertStringContainsString( 'filtered-recipe-class', $html );
     }
 
+    public function test_recipe_card_shows_the_author() {
+        $this->seed_recipe();
+        $GLOBALS['recipe_classes'] = false;
+
+        $html = $this->capture_output(
+            function () {
+                include COOKED_DIR . 'templates/front/recipe-single.php';
+            }
+        );
+
+        $this->assertStringContainsString( '<strong>Test Author</strong>', $html );
+    }
+
+    public function test_recipe_card_without_an_author_shows_no_byline() {
+        $this->seed_recipe();
+        $GLOBALS['recipe_classes']   = false;
+        $GLOBALS['recipe']['author'] = false;
+
+        $html = $this->capture_output(
+            function () {
+                include COOKED_DIR . 'templates/front/recipe-single.php';
+            }
+        );
+
+        $this->assertStringNotContainsString( 'cooked-recipe-card-author', $html );
+        $this->assertStringContainsString( 'Test Recipe', $html );
+    }
+
     public function test_cooked_welcome_banner_img_changes_src() {
         $html = $this->with_filter(
             'cooked_welcome_banner_img',

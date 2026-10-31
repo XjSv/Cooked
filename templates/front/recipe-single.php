@@ -45,13 +45,16 @@ echo '<article class="' . esc_attr( implode( ' ', $recipe_classes ) ) . ' cooked
 
         do_action( 'cooked_recipe_grid_after_name', $recipe );
 
-if ( ( ! in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) || ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && empty( $recipe_settings['excerpt'] ) && in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) ) :
+// A recipe whose author no longer exists (or never had one) shows no byline.
+$show_author = in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) && ! empty( $recipe['author']['name'] );
+
+if ( $show_author && ( ! in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) || empty( $recipe_settings['excerpt'] ) ) ) :
 	echo '<span class="cooked-recipe-card-sep"></span>';
         endif;
 
         do_action( 'cooked_recipe_grid_before_author', $recipe );
 
-if ( in_array( 'author', $_cooked_settings['recipe_info_display_options'], true ) ) :
+if ( $show_author ) :
 	echo '<span class="cooked-recipe-card-author">';
 		$author = $recipe['author'];
 		/* translators: referring to the author (ex: By John Smith) */

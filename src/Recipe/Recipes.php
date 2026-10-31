@@ -474,6 +474,11 @@ endif;
     public function print_recipe_template() {
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) ) :
+            // A password-protected recipe keeps its normal page, which asks for the password.
+            if ( post_password_required( get_queried_object_id() ) ) {
+                return;
+            }
+
             // With public recipes disabled, only print links from a [cooked-recipe] embed (which
             // carry the recipe's print key) or editors may open the print view.
             if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {

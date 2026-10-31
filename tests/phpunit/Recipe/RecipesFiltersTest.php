@@ -574,6 +574,23 @@ class RecipesFiltersTest extends FilterTestCase {
         $this->assertStringContainsString( 'Filtered Desserts', $html );
         $this->assertStringNotContainsString( '>Desserts<', $html );
     }
+
+    public function test_print_view_keeps_a_password_protected_recipe_closed() {
+        $GLOBALS['_cooked_test_is_singular']       = true;
+        $GLOBALS['_cooked_test_password_required'] = true;
+        $GLOBALS['_cooked_test_queried_object_id'] = 12;
+        $_GET['print']                             = '1';
+
+        $recipes = ( new ReflectionClass( Cooked_Recipes::class ) )->newInstanceWithoutConstructor();
+
+        ob_start();
+        $result = $recipes->print_recipe_template();
+        $output = ob_get_clean();
+
+        // It returns to the normal page (which asks for the password) instead of printing and exiting.
+        $this->assertNull( $result );
+        $this->assertSame( '', $output );
+    }
 }
 
 class Envira_Gallery {}
@@ -584,5 +601,5 @@ class Cooked_Filter_List_Renderer {
     public static function list_style_sentinel( $atts ) {
         echo '<div class="sentinel-list-style"></div>';
     }
-}
 
+}

@@ -49,6 +49,8 @@ class FilterTestCase extends TestCase {
         unset( $GLOBALS['_cooked_test_attachment_image_html'] );
         unset( $GLOBALS['_cooked_test_is_admin'] );
         unset( $GLOBALS['_cooked_test_is_singular'] );
+        unset( $GLOBALS['_cooked_test_password_required'] );
+        unset( $GLOBALS['_cooked_test_queried_object_id'] );
         unset( $GLOBALS['_cooked_test_is_feed'] );
         unset( $GLOBALS['_cooked_test_is_page'] );
         unset( $GLOBALS['_cooked_test_logged_in'] );

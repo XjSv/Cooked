@@ -24,7 +24,6 @@ playwright-report/
 test-results/
 tests/playwright/tests/.auth/
 tests/phpunit/.cache
-.phpunit.result.cache
 
 # Build
 build/*

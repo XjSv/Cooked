@@ -1215,7 +1215,7 @@ class Cooked_Recipes {
     }
 
     public static function format_content($content) {
-        return wpautop(wp_kses_post(html_entity_decode($content)));
+        return wpautop(wp_kses_post($content));
     }
 
     public static function difficulty_level($level) {

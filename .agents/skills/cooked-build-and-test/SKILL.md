@@ -39,7 +39,7 @@ Playwright specs live in `tests/playwright/tests/` (`admin`, `browse`, `home`,
 
 ## Local WordPress
 
-- **wp-env:** `bun run start:wp-env`. PHP 8.2 for development, site on port 8888, Cooked mounted from the repo root.
+- **wp-env:** `bun run start:wp-env`. PHP 7.4 (the lowest supported version), site on port 8888, Cooked mounted from the repo root.
 - **DDEV:** `bun run init:ddev` once, then `bun run start:ddev`. Prints the URL and credentials.
 
 ## Assets

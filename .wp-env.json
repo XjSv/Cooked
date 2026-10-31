@@ -1,6 +1,6 @@
 {
   "core": null,
-  "phpVersion": "8.2",
+  "phpVersion": "7.4",
   "themes": ["WordPress/twentytwentyfive"],
   "plugins": [
     "https://downloads.wordpress.org/plugin/plugin-check.zip"

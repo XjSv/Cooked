@@ -625,11 +625,10 @@ class Cooked_Shortcodes {
 
         if ( $cooked_info_html ):
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
-            add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_cooked_donut']);
             $cooked_info_html = '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
+            remove_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
             $cooked_info_html = apply_filters( 'cooked_info_shortcode_output', $cooked_info_html, $recipe_settings );
             return $cooked_info_html;
-            //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
         endif;
     }
 
@@ -642,13 +641,6 @@ class Cooked_Shortcodes {
         $tags['option'] = [
             'value' => true,
             'selected' => true
-        ];
-        return $tags;
-    }
-
-    function cooked_kses_cooked_donut($tags) {
-        $tags['script'] = [
-            'type' => true
         ];
         return $tags;
     }

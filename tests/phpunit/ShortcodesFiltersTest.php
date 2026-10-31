@@ -188,6 +188,26 @@ class ShortcodesFiltersTest extends FilterTestCase {
         $this->assertSame( '<div class="filtered-info">INFO</div>', $html );
     }
 
+    public function test_cooked_info_shortcode_removes_kses_allowlist_filter() {
+        $html = $this->shortcodes->cooked_info_shortcode( [ 'include' => 'servings' ] );
+
+        $this->assertStringContainsString( '<select', $html );
+
+        $callbacks = [];
+        if ( ! empty( $GLOBALS['_cooked_test_filters']['wp_kses_allowed_html'] ) ) {
+            foreach ( $GLOBALS['_cooked_test_filters']['wp_kses_allowed_html'] as $priority_callbacks ) {
+                foreach ( $priority_callbacks as $callback ) {
+                    $callbacks[] = $callback;
+                }
+            }
+        }
+
+        foreach ( $callbacks as $callback ) {
+            $is_shortcode_callback = is_array( $callback ) && isset( $callback[0] ) && $callback[0] instanceof Cooked_Shortcodes;
+            $this->assertFalse( $is_shortcode_callback );
+        }
+    }
+
     public function test_cooked_author_permalink_appears_in_author_info() {
         $GLOBALS['recipe_settings']['author'] = [
             'id'            => 3,

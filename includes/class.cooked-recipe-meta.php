@@ -24,6 +24,20 @@ class Cooked_Recipe_Meta {
         add_action( 'admin_notices', [&$this, 'recipe_embed_shortcode_admin_notice'] );
     }
 
+    private static function decode_html_entities( $value ) {
+        $value = (string) $value;
+        $previous = null;
+        $guard = 0;
+
+        while ( $value !== $previous && $guard < 10 ) {
+            $previous = $value;
+            $value = wp_specialchars_decode( $value, ENT_QUOTES );
+            $guard++;
+        }
+
+        return $value;
+    }
+
     public static function meta_cleanup( $recipe_settings ) {
         global $_cooked_settings;
         $_recipe_settings = [];
@@ -40,25 +54,21 @@ class Cooked_Recipe_Meta {
                 if (!is_array($val)) {
                     if ( $key === "content" || $key === "excerpt" || $key === "notes" ) {
                         if ($wp_editor_roles_allowed) {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $decoded_val = self::decode_html_entities( $val );
                             $_recipe_settings[$key] = wp_kses_post( $decoded_val );
                         } else {
-                            // Strip all HTML tags - don't encode entities since format_content() will decode them
-                            // Decode entities first in case they're already encoded
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $decoded_val = self::decode_html_entities( $val );
                             $_recipe_settings[$key] = wp_strip_all_tags( $decoded_val );
                         }
                     } elseif ( $key === 'seo_description' ) {
-                        $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                        $decoded_val = self::decode_html_entities( $val );
                         $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                     } elseif ( in_array( $key, [ 'prep_time', 'cook_time', 'total_time' ], true ) ) {
                         $minutes = Cooked_Measurements::normalize_minutes( $val );
                         $_recipe_settings[ $key ] = $minutes ? $minutes : '';
                     } else {
                         if ($key === "post_title") {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $decoded_val = self::decode_html_entities( $val );
                             $_recipe_settings[$key] = wp_kses_post( $decoded_val );
                         } else {
                             $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
@@ -80,13 +90,10 @@ class Cooked_Recipe_Meta {
                                         ($key === 'directions' && ($sub_subkey === 'content' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element'))
                                     ) {
                                         if ($wp_editor_roles_allowed) {
-                                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $decoded_sub_subval = self::decode_html_entities( $sub_subval );
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $decoded_sub_subval );
                                         } else {
-                                            // Strip all HTML tags - don't encode entities since format_content() will decode them
-                                            // Decode entities first in case they're already encoded
-                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $decoded_sub_subval = self::decode_html_entities( $sub_subval );
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = wp_strip_all_tags( $decoded_sub_subval );
                                         }
                                     } else {
@@ -535,7 +542,14 @@ function cooked_render_recipe_fields( $post_id ) {
             <div class="recipe-setting-block">
 
                 <?php if (current_user_can('edit_cooked_default_template')): ?>
-                    <h3 class="cooked-settings-title cooked-bm-30-up"><?php esc_html_e( 'Recipe Template', 'cooked' ); ?><span title="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Default Recipe Template','cooked') . '</strong>' . esc_html__( 'Choose from the options below to use this layout as the default for new recipes or for all recipes.', 'cooked') . '<span class="cooked-tooltip-buttons cooked-clearfix"><a href="#" class="cooked-save-default-new button" data-nonce="' . $nonce . '">' . esc_html__( 'Save as Default','cooked' ) . '</a>&nbsp;&nbsp;<a href="#" class="cooked-save-default-all button-primary" data-nonce="' . $nonce . '" data-bulk-nonce="' . $nonce_bulk . '">' . esc_html__( 'Apply to All','cooked' ) . '</a></span><span id="cooked-template-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span><span id="cooked-template-progress-text" class="cooked-progress-text">0 / 0</span>' ); ?>" class="button cooked-layout-save-default"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></span><span class="button button-cooked-reset cooked-layout-load-default"><?php esc_html_e( 'Reset', 'cooked' ); ?></span><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Template','cooked') . '</strong>' . esc_html__( 'Using the built-in recipe shortcodes found on the "Shortcodes" tab, you can create the layout of your recipe below. Use the "Save as Default" button to save your template.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                    <h3 class="cooked-settings-title cooked-bm-30-up"><?php esc_html_e( 'Recipe Template', 'cooked' ); ?><span class="button cooked-layout-save-default" role="button" tabindex="0" aria-expanded="false" aria-controls="cooked-save-default-panel"><?php esc_html_e( 'Save as Default', 'cooked' ); ?></span><span class="button button-cooked-reset cooked-layout-load-default"><?php esc_html_e( 'Reset', 'cooked' ); ?></span><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Template','cooked') . '</strong>' . esc_html__( 'Using the built-in recipe shortcodes found on the "Shortcodes" tab, you can create the layout of your recipe below. Use the "Save as Default" button to save your template.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                    <div id="cooked-save-default-panel" class="cooked-save-default-panel" hidden>
+                        <strong class="cooked-tooltip-heading"><?php esc_html_e( 'Default Recipe Template','cooked'); ?></strong>
+                        <p><?php esc_html_e( 'Choose from the options below to use this layout as the default for new recipes or for all recipes.', 'cooked'); ?></p>
+                        <span class="cooked-tooltip-buttons cooked-clearfix"><a href="#" class="cooked-save-default-new button" data-nonce="<?php echo esc_attr( $nonce ); ?>"><?php esc_html_e( 'Save as Default','cooked' ); ?></a>&nbsp;&nbsp;<a href="#" class="cooked-save-default-all button-primary" data-nonce="<?php echo esc_attr( $nonce ); ?>" data-bulk-nonce="<?php echo esc_attr( $nonce_bulk ); ?>"><?php esc_html_e( 'Apply to All','cooked' ); ?></a></span>
+                        <span id="cooked-template-progress" class="cooked-progress"><span class="cooked-progress-bar"></span></span>
+                        <span id="cooked-template-progress-text" class="cooked-progress-text">0 / 0</span>
+                    </div>
                 <?php endif; ?>
 
                 <div class="recipe-setting-block cooked-bm-30">
@@ -553,7 +567,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 </div>
 
                 <div class="recipe-setting-block">
-                    <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( esc_html__( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                    <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Excerpt', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Excerpt', 'cooked' ) . '</strong>' . esc_html__( 'The excerpt is used on recipe listing templates, where the full recipe should not be displayed.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <p>
                         <?php if ( $wp_editor_roles_allowed ): ?>
                             <?php $recipe_excerpt = isset($recipe_settings['excerpt']) ? wp_unslash(wp_specialchars_decode($recipe_settings['excerpt'])) : ''; ?>
@@ -576,7 +590,7 @@ function cooked_render_recipe_fields( $post_id ) {
 
                 <?php if ( !isset($_cooked_settings['advanced']) || empty($_cooked_settings['advanced']) || !in_array( 'disable_meta_tags', $_cooked_settings['advanced'] ) ): ?>
                     <div class="recipe-setting-block">
-                        <h3 class="cooked-settings-title"><?php esc_html_e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr( esc_html__( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.','cooked') ); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                        <h3 class="cooked-settings-title"><?php esc_html_e( 'SEO Description', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'SEO Description', 'cooked' ) . '</strong>' . esc_html__( 'This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                         <p><textarea name="_recipe_settings[seo_description]"><?php echo isset($recipe_settings['seo_description']) ? esc_textarea( wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) : ''; ?></textarea></p>
                     </div>
                 <?php endif; ?>
@@ -614,7 +628,7 @@ function cooked_render_recipe_fields( $post_id ) {
                 </div>
 
                 <div class="recipe-setting-block cooked-bm-30">
-                <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" title="<?php echo esc_attr__( 'The notes are displayed in the recipe.','cooked'); ?>"><i class="cooked-icon cooked-icon-question"></i></span></h3>
+                <h3 class="cooked-settings-title"><?php esc_html_e( 'Recipe Notes', 'cooked' ); ?><span class="cooked-tooltip cooked-tooltip-icon" data-tooltip="<?php echo esc_attr( '<strong class="cooked-tooltip-heading">' . esc_html__( 'Recipe Notes', 'cooked' ) . '</strong>' . esc_html__( 'The notes are displayed in the recipe.','cooked') ); ?>" data-positions="top"><i class="cooked-icon cooked-icon-question"></i></span></h3>
                     <?php if ( $wp_editor_roles_allowed ): ?>
                         <?php $recipe_notes = isset($recipe_settings['notes']) ? wp_unslash(wp_specialchars_decode($recipe_settings['notes'])) : ''; ?>
                         <?php

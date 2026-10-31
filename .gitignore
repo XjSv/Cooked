@@ -10,7 +10,7 @@
 
 # Dev dependencies
 node_modules/
-vendor
+/vendor
 .env
 
 # Tests

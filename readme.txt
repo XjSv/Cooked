@@ -1,19 +1,19 @@
 === Cooked - Recipe Management ===
-Contributors: xjsv, boxystudio
-Tags: recipe, recipes, food, cooking, nutrition
+Contributors: xjsv, goratech, boxystudio, mgiannopoulos24
+Donate link: https://github.com/sponsors/XjSv
+Tags: recipe, food blog, cooking, nutrition, recipe schema
 Requires at least: 6.8
-Tested up to: 7.1
-Stable tag: 1.16.2
+Tested up to: 7.2
+Stable tag: 1.17.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
-Funding: https://github.com/sponsors/XjSv
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized, galleries, timers, and much more.
+Free WordPress recipe plugin: recipe schema, nutrition labels, timers, metric/imperial switching, allergens, step videos, recipe imports and more.
 
 == Description ==
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Check out the full list below.
+Cooked makes it easy to create, display and share beautiful recipes in WordPress. You get Google-ready recipe schema, nutrition facts, interactive timers, printable recipes, metric/imperial switching and more, all free. Check out the full list below.
 
 Be sure to check out the **[Live Preview](https://wordpress.org/plugins/cooked/?preview=1)** as well as the **[Cooked Documentation](https://docs.cooked.pro/)** if you need some help!
 
@@ -23,30 +23,47 @@ Using the drag & drop recipe builder, you can create your recipes quickly and wi
 
 = Google-friendly =
 
-Cooked automatically includes semantic structure and schema.org microdata into each and every recipe you publish. This allows Google to display your recipes across a variety of device sizes and platforms.
+Cooked automatically adds Google-ready Recipe structured data (JSON-LD, schema.org) to every recipe you publish, including ingredients, step-by-step instructions, times and nutrition, so your recipes can show up as rich results in search.
 
 = Many premium features already included =
 
 Most recipe plugins require that you purchase a PRO version for features like nutrition facts, galleries, powerful searching, timers, etc. The standard version of Cooked includes all of these. Here's what you get out of the box:
 
-* Drag & drop ingredients and directions.
-* SEO Optimized - Google Structured Data and Schema.org support.
-* Beautiful grid-based masonry recipe lists.
-* Prep & Cooking Times
-* Photo Galleries
-* Nutrition Facts
-* Difficulty Levels
-* Recipe Notes
-* Powerful recipe search with a text search, categories & sorting options.
-* Author template to list recipes by a single author.
-* Cooking times with clickable, interactive timers.
-* Very developer-friendly with loads of hooks & filters.
-* Servings switcher to adjust ingredient amounts.
-* Ingredient Substitutions - Add alternative ingredients for dietary restrictions or preferences.
-* CSV Import - Bulk import recipes from CSV files with support for ingredients, directions, substitutions, and more.
-* And more to come...
+* Drag & drop recipe builder with section headings and Bulk Add for ingredients and directions.
+* Google Recipe schema (JSON-LD) on every recipe.
+* Responsive recipe grid that adapts to any screen size.
+* Servings switcher and metric/imperial unit conversion.
+* Allergen labels for the 14 major allergens (FDA + EU), with icons.
+* Ingredient substitutions for dietary needs and preferences.
+* Step images and step video clips.
+* Interactive cooking timers.
+* FDA-style Nutrition Facts label.
+* Printable recipes with print options and your site logo.
+* Full-Screen cook mode that keeps the screen awake.
+* Dark Mode (Off, On or Auto).
+* Powerful recipe search with categories and sorting.
+* Related recipes.
+* Photo galleries.
+* Prep & cook times, difficulty levels and recipe notes.
+* Author pages listing each author's recipes.
+* Import from WP Recipe Maker, Delicious Recipes or CSV.
+* WPML and Polylang support.
+* Works with Elementor and Divi.
+* Built for developers: 167 actions and filters, REST API and WP-CLI.
 
-Of course, if you want even more, you can always check out the [PRO](https://cooked.pro) version of Cooked. It adds features like ratings & favorites, recipe submissions, and so much more.
+= Cooked Pro =
+
+Want even more? [Cooked Pro](https://cooked.pro/get-cooked/) adds:
+
+* Star or thumbs ratings (guests too).
+* Favorites and user profiles.
+* Front-end recipe submissions with approval and email alerts.
+* Sharing to Facebook, X / Twitter, Pinterest, Threads, Bluesky, Viber, BigOven and Email.
+* Cuisines, Cooking Methods, Diets and Tags.
+* Automatic nutrition via Edamam.
+* Modern Grid, Fitness, Full-Width and Compact layouts, with Load More or infinite scroll.
+* Ingredient links (great for affiliate links).
+* Next & previous recipe navigation.
 
 = Developers love it =
 
@@ -63,7 +80,37 @@ Cooked has a whole bunch of actions and filters to customize Cooked as much as y
 == Frequently Asked Questions ==
 
 = Having issues with the plugin? =
-Be sure to check the [Cooked Documentation](https://docs.cooked.pro/) for guides and documentation. If you're still having issues, create a new support topic and let me know what's going on. I'm happy to help! Please don't post a bad review without discussing here first, I really appreciate it!
+Check the [Cooked Documentation](https://docs.cooked.pro/) first. If you're still stuck, open a new support topic here and we'll help.
+
+= Does Cooked add recipe schema for Google? =
+Yes. Every recipe outputs Recipe structured data as JSON-LD. If another plugin already handles your schema, you can turn Cooked's off in the settings.
+
+= Can I switch from WP Recipe Maker or Delicious Recipes? =
+Yes. Cooked includes importers for both, plus CSV import for bulk recipes, with sample files included.
+
+= Can readers change servings or units? =
+Yes. Readers can scale a recipe up or down and switch between metric and imperial. Ingredient amounts update instantly, including in the print view.
+
+= Does it work with Elementor or Divi? =
+Yes. Cooked shortcodes work in both.
+
+= Does Cooked use the block editor? =
+Recipes use Cooked's own drag & drop builder. To show a recipe in any post or page, use [cooked-recipe id="123"].
+
+= Can I translate Cooked? =
+Yes. It's translation-ready and supports WPML and Polylang.
+
+= Can I customize the output? =
+Yes. Each recipe has an editable shortcode template, and there are 167 actions and filters, a REST API (/wp-json/wp/v2/cooked_recipe) and WP-CLI commands.
+
+= Does Cooked collect any data? =
+No. The free plugin doesn't send any data to us or to third parties.
+
+= What's the difference between Cooked and Cooked Pro? =
+Cooked is fully featured and free forever. Cooked Pro adds community and growth features: ratings, favorites, user profiles, front-end recipe submissions, social sharing, extra taxonomies (Cuisine, Cooking Method, Diet, Tags), automatic nutrition and more layouts. See [cooked.pro](https://cooked.pro/get-cooked/).
+
+= Does Cooked Pro stop working if my license expires? =
+No. A license includes one year of support and updates. Cooked Pro keeps working after that, you just won't get new updates until you renew.
 
 = Where do I report security bugs found in this plugin? =
 Please report security bugs found in the source code of the Cooked plugin through the [Patchstack Vulnerability Disclosure Program](https://patchstack.com/database/vdp/9e5fbd28-34aa-4ce6-9dfd-8a2024a2170f). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
@@ -81,9 +128,17 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a new include_ids attribute to the cooked-related-recipes shortcode.
+Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
 
 == Changelog ==
+
+= 1.17.0 =
+* **TWEAK:** Replaced Tooltipster with Floating UI tooltip library.
+* **FIX:** Fixed the Nutrition Facts bar stopping short under the serving size.
+* **FIX:** Fixed the [cooked-info] shortcode styles so both columns stay on one line when the content area is narrow.
+* **FIX:** Fixed the [cooked-info] shortcode so its items center below the mobile breakpoint.
+* **FIX:** Escaped the attachment titles when building the photo gallery HTML.
+* **FIX:** Stop the [cooked-info] shortcode from allowing script tags in later recipe fields, preventing stored XSS in excerpts, notes, and directions.
 
 = 1.16.2 =
 * **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).
@@ -242,7 +297,7 @@ Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a
 * **FIX:** Fixed bug with the recipe print view not displaying the Notes section.
 
 = 1.8.7 =
-* **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanatized.
+* **FIX:** Fixed bug bad recipe data validation causing HTML characters to be sanitized.
 
 = 1.8.6 =
 * **FIX:** Fixed bug with recipe pagination. It now works with Plain and Custom Permalink structures.
@@ -279,7 +334,7 @@ Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a
 = 1.8.1 =
 * **FIX:** Persistent Cross-Site Scripting Vulnerability via the Cooked Timer.
 * **FIX:** Fixed text formatting being removed from recipe excerpt.
-* **NEW:** Added TinyMCE WYWIWYG editor to the recipe excerpt and directions fields.
+* **NEW:** Added TinyMCE WYSIWYG editor to the recipe excerpt and directions fields.
 * **FIX:** Enabled REST API for recipe categories.
 * **FIX:** Fixed permission bug with saving the recipe default template.
 * **FIX:** Fixed bug where in the recipe creation page the author field was previously showing all users.
@@ -401,7 +456,7 @@ Version 1.16.2 fixes a security issue with cooking timer descriptions and adds a
 * **FIX:** Added support for custom permalinks with slashes (i.e. `our-food/recipes`).
 
 = 1.6.1 =
-* **FIX:** Fixed a bug with the search form when multiple searh forms are on one page.
+* **FIX:** Fixed a bug with the search form when multiple search forms are on one page.
 
 = 1.6 =
 * **NEW:** WordPress 5.0 support.

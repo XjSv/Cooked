@@ -108,4 +108,12 @@ class RecipesTest extends TestCase {
 
         $this->assertSame( 0, $result );
     }
+
+    public function test_format_content_does_not_decode_script_entities() {
+        $stored = '&lt;script type=&quot;text/javascript&quot;&gt;alert(1)&lt;/script&gt;';
+        $result = Cooked_Recipes::format_content( $stored );
+
+        $this->assertStringNotContainsString( '<script', $result );
+        $this->assertStringContainsString( '&lt;script', $result );
+    }
 }

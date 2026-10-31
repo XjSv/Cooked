@@ -162,4 +162,28 @@ class RecipeMetaTest extends TestCase {
         $this->assertSame( 'Yum & more', $result['seo_description'] );
         $this->assertStringNotContainsString( '<b>', $result['seo_description'] );
     }
+
+    public function test_meta_cleanup_strips_double_encoded_script_from_excerpt() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'excerpt' => '&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;alert(1)&amp;lt;/script&amp;gt;',
+        ] );
+
+        $this->assertSame( 'alert(1)', $result['excerpt'] );
+        $this->assertStringNotContainsString( '<script', $result['excerpt'] );
+        $this->assertStringNotContainsString( '&lt;script', $result['excerpt'] );
+    }
+
+    public function test_meta_cleanup_strips_double_encoded_script_from_direction() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'directions' => [
+                [
+                    'content' => '&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;alert(1)&amp;lt;/script&amp;gt;',
+                ],
+            ],
+        ] );
+
+        $this->assertSame( 'alert(1)', $result['directions'][0]['content'] );
+        $this->assertStringNotContainsString( '<script', $result['directions'][0]['content'] );
+        $this->assertStringNotContainsString( '&lt;script', $result['directions'][0]['content'] );
+    }
 }

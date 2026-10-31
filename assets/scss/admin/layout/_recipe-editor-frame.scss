@@ -915,3 +915,32 @@ body.cooked-recipe-editor #cooked_allergens {
         }
     }
 }
+
+/* WordPress's own buttons on the recipe editor (Publish box, Add New Recipe, permalink Edit)
+   take Cooked's green, as they do in dark mode (_dark.scss). */
+body.cooked-recipe-editor .button-primary {
+    border-color: var(--cooked-color-accent-fill);
+    background: var(--cooked-color-accent-fill);
+    color: #fff;
+}
+
+body.cooked-recipe-editor .button-primary:hover,
+body.cooked-recipe-editor .button-primary:focus {
+    border-color: color-mix(in srgb, var(--cooked-color-accent-fill) 85%, #000);
+    background: color-mix(in srgb, var(--cooked-color-accent-fill) 85%, #000);
+    color: #fff;
+}
+
+body.cooked-recipe-editor .button:not(.button-primary),
+body.cooked-recipe-editor .page-title-action {
+    border-color: var(--cooked-color-accent-strong);
+    color: var(--cooked-color-accent-strong);
+}
+
+body.cooked-recipe-editor .button:not(.button-primary):hover,
+body.cooked-recipe-editor .button:not(.button-primary):focus,
+body.cooked-recipe-editor .page-title-action:hover,
+body.cooked-recipe-editor .page-title-action:focus {
+    border-color: var(--cooked-color-accent-hover);
+    color: var(--cooked-color-accent-hover);
+}

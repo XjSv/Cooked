@@ -24,6 +24,20 @@ class Cooked_Recipe_Meta {
         add_action( 'admin_notices', [&$this, 'recipe_embed_shortcode_admin_notice'] );
     }
 
+    private static function decode_html_entities( $value ) {
+        $value = (string) $value;
+        $previous = null;
+        $guard = 0;
+
+        while ( $value !== $previous && $guard < 10 ) {
+            $previous = $value;
+            $value = wp_specialchars_decode( $value, ENT_QUOTES );
+            $guard++;
+        }
+
+        return $value;
+    }
+
     public static function meta_cleanup( $recipe_settings ) {
         global $_cooked_settings;
         $_recipe_settings = [];
@@ -40,25 +54,21 @@ class Cooked_Recipe_Meta {
                 if (!is_array($val)) {
                     if ( $key === "content" || $key === "excerpt" || $key === "notes" ) {
                         if ($wp_editor_roles_allowed) {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $decoded_val = self::decode_html_entities( $val );
                             $_recipe_settings[$key] = wp_kses_post( $decoded_val );
                         } else {
-                            // Strip all HTML tags - don't encode entities since format_content() will decode them
-                            // Decode entities first in case they're already encoded
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $decoded_val = self::decode_html_entities( $val );
                             $_recipe_settings[$key] = wp_strip_all_tags( $decoded_val );
                         }
                     } elseif ( $key === 'seo_description' ) {
-                        $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                        $decoded_val = self::decode_html_entities( $val );
                         $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                     } elseif ( in_array( $key, [ 'prep_time', 'cook_time', 'total_time' ], true ) ) {
                         $minutes = Cooked_Measurements::normalize_minutes( $val );
                         $_recipe_settings[ $key ] = $minutes ? $minutes : '';
                     } else {
                         if ($key === "post_title") {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                            $decoded_val = wp_specialchars_decode( $val, ENT_QUOTES );
+                            $decoded_val = self::decode_html_entities( $val );
                             $_recipe_settings[$key] = wp_kses_post( $decoded_val );
                         } else {
                             $_recipe_settings[$key] = Cooked_Functions::sanitize_text_field( $val );
@@ -80,13 +90,10 @@ class Cooked_Recipe_Meta {
                                         ($key === 'directions' && ($sub_subkey === 'content' || $sub_subkey === 'section_heading_name' || $sub_subkey === 'section_heading_element'))
                                     ) {
                                         if ($wp_editor_roles_allowed) {
-                                            // Decode HTML entities first so wp_kses_post can see actual HTML tags
-                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $decoded_sub_subval = self::decode_html_entities( $sub_subval );
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = wp_kses_post( $decoded_sub_subval );
                                         } else {
-                                            // Strip all HTML tags - don't encode entities since format_content() will decode them
-                                            // Decode entities first in case they're already encoded
-                                            $decoded_sub_subval = wp_specialchars_decode( $sub_subval, ENT_QUOTES );
+                                            $decoded_sub_subval = self::decode_html_entities( $sub_subval );
                                             $_recipe_settings[$key][$subkey][$sub_subkey] = wp_strip_all_tags( $decoded_sub_subval );
                                         }
                                     } else {

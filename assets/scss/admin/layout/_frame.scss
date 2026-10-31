@@ -594,13 +594,14 @@ body.cooked-admin-page #wpbody-content > :is(.notice, div.updated, div.error) {
     color: var(--cooked-color-text);
 }
 
+// Licence status titles (Cooked Pro's licence screen), readable in light and dark mode.
 #cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.valid > .cooked-settings-title {
-    color: #0aa780;
+    color: var(--cooked-color-accent-strong);
 }
 
 #cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired > .cooked-settings-title,
 #cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid > .cooked-settings-title {
-    color: #ca4a20;
+    color: #b23a15; // 6:1 on white (WCAG AA)
 }
 
 #cooked-admin-app #cooked_recipe_settings .recipe-setting-block.cooked-danger h3.cooked-settings-title {

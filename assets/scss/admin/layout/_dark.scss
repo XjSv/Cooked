@@ -128,7 +128,9 @@
     }
 
     #cooked-admin-app #cooked_recipe_settings .recipe-setting-block.cooked-danger h3.cooked-settings-title,
-    #cooked-admin-app #cooked_recipe_settings .cooked-alert-block h3.cooked-settings-title {
+    #cooked-admin-app #cooked_recipe_settings .cooked-alert-block h3.cooked-settings-title,
+    #cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.expired > .cooked-settings-title,
+    #cooked-admin-app #cooked_recipe_settings .recipe-setting-block .cooked-html-block.invalid > .cooked-settings-title {
         color: #ff8a65;
     }
 

@@ -468,7 +468,8 @@ class Cooked_Settings {
                                     /* translators: %s: recipe archive URL, e.g. https://example.com/recipe-archive/ */
                                     __( 'Prevents the recipe archive from being displayed at %s.', 'cooked' ),
                                     '<code>' . esc_html( untrailingslashit( $recipe_archive_url ) ) . '/</code>'
-                                )
+                                ),
+                                'delete_cooked_data_on_uninstall' => '<strong>' . __( 'Delete Cooked Data on Uninstall', 'cooked' ) . '</strong> &mdash; ' . __( 'Removes recipes, settings, user profiles, and uploaded files when Cooked is deleted.', 'cooked' ),
                             ]
                         )
                     ],

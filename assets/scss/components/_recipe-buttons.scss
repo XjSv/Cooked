@@ -1,6 +1,8 @@
-/* Print and full-screen buttons: compact icon buttons in the recipe info bar. */
+/* Action buttons in the recipe info bar: print and full screen (Cooked Pro adds its favorite and
+   nutrition buttons in the same style). An outlined button with an icon and a label; on phones the
+   label goes under the icon (components/_recipe-info.scss). */
 .cooked-recipe-info span.cooked-print {
-    display: inline-block;
+    display: inline-flex;
 }
 
 .cooked-recipe-info span.cooked-print > a,
@@ -8,13 +10,19 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
     box-sizing: border-box;
-    width: 2.5rem;
-    height: 2.5rem;
+    min-height: 2.5rem;
+    padding: 0 0.9rem;
     border: 1px solid var(--cooked-color-border);
     border-radius: var(--cooked-radius-sm);
-    color: var(--cooked-color-text-muted);
+    background: transparent;
+    color: var(--cooked-color-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.2;
     text-decoration: none;
+    white-space: nowrap;
     cursor: pointer;
     transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
@@ -34,11 +42,6 @@
 
 .cooked-recipe-info span.cooked-print .cooked-icon,
 .cooked-recipe-info span.cooked-fsm-button .cooked-icon {
-    font-size: 1.35rem;
+    font-size: 1.15rem;
     line-height: 1;
-}
-
-/* The buttons sit closer together than the recipe details. */
-.cooked-recipe-info > section:has(> .cooked-print, > .cooked-fsm-button) {
-    gap: 0.5rem;
 }

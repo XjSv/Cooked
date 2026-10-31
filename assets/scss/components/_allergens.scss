@@ -67,17 +67,19 @@
     margin: 0.35rem 0 0;
 }
 
+// A soft warm chip, so the allergens stand out from the other details.
 .cooked-recipe-info .cooked-allergen {
     gap: 0.35rem;
     padding: 0.2rem 0.65rem 0.2rem 0.45rem;
-    border: 1px solid var(--cooked-color-border);
+    border: 0;
     border-radius: 999px;
-    color: var(--cooked-color-text);
+    background: #fdf2e9;
+    color: #8a3a06;
     font-size: 0.8rem;
     line-height: 1.4;
 
     .cooked-icon {
-        color: var(--cooked-color-text-muted);
+        color: inherit;
         font-size: 1.1rem;
     }
 

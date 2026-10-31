@@ -208,7 +208,7 @@
 
 @include cooked-dark('.cooked-recipe-info span.cooked-print > a', '.cooked-recipe-info span.cooked-fsm-button') {
     border-color: rgba(255, 255, 255, 0.18);
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 @include cooked-dark('.cooked-recipe-info span.cooked-print > a:hover', '.cooked-recipe-info span.cooked-fsm-button:hover') {
@@ -216,9 +216,9 @@
     color: #fff;
 }
 
-@include cooked-dark('.cooked-recipe-info span.cooked-time-icon', '.cooked-recipe-info span.cooked-servings-icon') {
-    color: #fff;
-    opacity: 0.5;
+@include cooked-dark('.cooked-recipe-info span.cooked-time-icon', '.cooked-recipe-info span.cooked-servings-icon', '.cooked-recipe-info span.cooked-measurement-system-icon') {
+    color: #00e0a9;
+    opacity: 1;
 }
 
 @include cooked-dark('.single-cp_recipe .cooked-recipe-ingredients') {
@@ -355,8 +355,8 @@
 }
 
 @include cooked-dark('.cooked-recipe-info .cooked-allergen') {
-    border-color: rgba(255, 255, 255, 0.2);
-    color: inherit;
+    background: rgba(253, 186, 116, 0.16);
+    color: #fdba74;
 }
 
 @include cooked-dark('.ts-dropdown.cooked-servings-dropdown') {

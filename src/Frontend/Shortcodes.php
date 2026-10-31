@@ -1118,7 +1118,7 @@ class Shortcodes {
         if ( \Cooked_Recipes::public_recipes_disabled() ) {
             $query_args['print_key'] = \Cooked_Recipes::print_key( $recipe_settings['id'] );
         }
-        echo '<span class="cooked-print"><a aria-label="' . esc_attr__( 'Print', 'cooked' ) . '" target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $recipe_post_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
+        echo '<span class="cooked-print"><a target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $recipe_post_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print" aria-hidden="true"></i><span class="cooked-action-label">' . esc_html__( 'Print', 'cooked' ) . '</span></a></span>';
     }
 
     /**
@@ -1129,7 +1129,7 @@ class Shortcodes {
     public static function cooked_info_fullscreen() {
         global $recipe_settings, $_cooked_settings;
 
-        echo '<span aria-label="' . esc_attr__( 'Fullscreen', 'cooked' ) . '" role="button" tabindex="0" class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen"></i></span>';
+        echo '<span role="button" tabindex="0" class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen" aria-hidden="true"></i><span class="cooked-action-label">' . esc_html__( 'Full screen', 'cooked' ) . '</span></span>';
         wp_enqueue_script( 'cooked-nosleep' );
     }
 

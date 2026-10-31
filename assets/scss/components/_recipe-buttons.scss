@@ -1,36 +1,44 @@
-/* Print Button */
-.cooked-recipe-info span.cooked-print,
-.cooked-recipe-info span.cooked-print > a {
-    height: 2rem;
+/* Print and full-screen buttons: compact icon buttons in the recipe info bar. */
+.cooked-recipe-info span.cooked-print {
     display: inline-block;
 }
 
-.cooked-recipe-info span.cooked-print > a {
-    color: rgba(0, 0, 0, 0.4);
-}
-
-.cooked-recipe-info span.cooked-print > a:hover {
-    color: rgba(0, 0, 0, 0.6);
-}
-
-.cooked-recipe-info span.cooked-print .cooked-icon {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
-}
-
-/* Full-Screen Button */
+.cooked-recipe-info span.cooked-print > a,
 .cooked-recipe-info span.cooked-fsm-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    color: var(--cooked-color-text-muted);
+    text-decoration: none;
     cursor: pointer;
-    color: rgba(0, 0, 0, 0.4);
-    height: 2rem;
-    display: inline-block;
+    transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
 }
 
+.cooked-recipe-info span.cooked-print > a:hover,
 .cooked-recipe-info span.cooked-fsm-button:hover {
-    color: rgba(0, 0, 0, 0.6);
+    border-color: var(--cooked-main-color, #128666);
+    background: color-mix(in srgb, var(--cooked-main-color, #128666) 8%, transparent);
+    color: var(--cooked-main-color, #128666);
 }
 
+.cooked-recipe-info span.cooked-print > a:focus-visible,
+.cooked-recipe-info span.cooked-fsm-button:focus-visible {
+    outline: 2px solid var(--cooked-main-color, #128666);
+    outline-offset: 2px;
+}
+
+.cooked-recipe-info span.cooked-print .cooked-icon,
 .cooked-recipe-info span.cooked-fsm-button .cooked-icon {
-    font-size: 2.25rem;
-    line-height: 2.5rem;
+    font-size: 1.35rem;
+    line-height: 1;
+}
+
+/* The buttons sit closer together than the recipe details. */
+.cooked-recipe-info > section:has(> .cooked-print, > .cooked-fsm-button) {
+    gap: 0.5rem;
 }

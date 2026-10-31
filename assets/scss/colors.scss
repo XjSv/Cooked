@@ -207,10 +207,12 @@
 }
 
 @include cooked-dark('.cooked-recipe-info span.cooked-print > a', '.cooked-recipe-info span.cooked-fsm-button') {
-    color: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.18);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 @include cooked-dark('.cooked-recipe-info span.cooked-print > a:hover', '.cooked-recipe-info span.cooked-fsm-button:hover') {
+    border-color: rgba(255, 255, 255, 0.6);
     color: #fff;
 }
 

@@ -1129,7 +1129,7 @@ class Shortcodes {
     public static function cooked_info_fullscreen() {
         global $recipe_settings, $_cooked_settings;
 
-        echo '<span aria-label="' . esc_attr__( 'Fullscreen', 'cooked' ) . '" role="button" class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen"></i></span>';
+        echo '<span aria-label="' . esc_attr__( 'Fullscreen', 'cooked' ) . '" role="button" tabindex="0" class="cooked-fsm-button" data-recipe-id="' . esc_attr( $recipe_settings['id'] ) . '"><i class="cooked-icon cooked-icon-fullscreen"></i></span>';
         wp_enqueue_script( 'cooked-nosleep' );
     }
 

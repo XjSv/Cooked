@@ -871,6 +871,14 @@ var cooked_loading = false;
         if ($_Cooked_FSM_Button.length) {
             var noSleep = new NoSleep();
 
+            // The button is a span, so Enter and Space open it as a click does.
+            $_Cooked_FSM_Button.on('keydown', function(e) {
+                if ('Enter' === e.key || ' ' === e.key) {
+                    e.preventDefault();
+                    $(this).trigger('click');
+                }
+            });
+
             $_Cooked_FSM_Button.on('click', function(e) {
                 e.preventDefault();
 

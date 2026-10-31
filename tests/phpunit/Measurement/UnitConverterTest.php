@@ -7,12 +7,11 @@
  */
 
 use Cooked\Measurement\UnitConverter;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class UnitConverterTest extends TestCase {
 
-    #[DataProvider( 'data_volume_conversions' )]
+    /** @dataProvider data_volume_conversions */
     public function test_volume_conversions( $amount, $from, $to, $expected, $tolerance ) {
         $result = UnitConverter::convert( $amount, $from, $to );
         $this->assertNotNull( $result );
@@ -35,7 +34,7 @@ class UnitConverterTest extends TestCase {
         ];
     }
 
-    #[DataProvider( 'data_weight_conversions' )]
+    /** @dataProvider data_weight_conversions */
     public function test_weight_conversions( $amount, $from, $to, $expected, $tolerance ) {
         $result = UnitConverter::convert( $amount, $from, $to );
         $this->assertNotNull( $result );

@@ -61,7 +61,7 @@ class CsvImport {
         // the previous default, so parsing is unchanged.
         $headers = fgetcsv( $handle, null, ',', '"', '\\' );
         // A blank first line reads as [ null ].
-        if ( false === $headers || [ null ] === $headers ) {
+        if ( ! is_array( $headers ) || [ null ] === $headers ) {
             $results['errors'][] = __( 'CSV file is empty or invalid.', 'cooked' );
             fclose( $handle ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- CSV row streaming.
             return $results;
@@ -87,7 +87,7 @@ class CsvImport {
         }
 
         $row_number = 1;
-        while ( ( $row = fgetcsv( $handle, null, ',', '"', '\\' ) ) !== false ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- Standard fgetcsv loop.
+        while ( is_array( $row = fgetcsv( $handle, null, ',', '"', '\\' ) ) ) { // phpcs:ignore Generic.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition -- Standard fgetcsv loop.
             ++$row_number;
             ++$results['total'];
 

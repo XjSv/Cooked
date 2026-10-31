@@ -6,7 +6,6 @@
  * @subpackage Tests
  */
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class DeprecatedFilesTest extends TestCase {
@@ -30,7 +29,7 @@ class DeprecatedFilesTest extends TestCase {
         $this->assertNotEmpty( self::placeholder_provider() );
     }
 
-    #[DataProvider( 'placeholder_provider' )]
+    /** @dataProvider placeholder_provider */
     public function test_placeholder_reports_deprecation_and_old_name_still_works( $file, $version, $replacement, $old_class ) {
         $GLOBALS['_cooked_test_deprecated_files'] = [];
 

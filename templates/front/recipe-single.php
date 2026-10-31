@@ -67,7 +67,8 @@ if ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true
 
         do_action( 'cooked_recipe_grid_before_excerpt', $recipe );
 
-if ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && ! empty( $recipe_settings['excerpt'] ) ) :
+// A password-protected recipe keeps its excerpt private, as WordPress does for posts.
+if ( in_array( 'excerpt', $_cooked_settings['recipe_info_display_options'], true ) && ! empty( $recipe_settings['excerpt'] ) && ! post_password_required( $recipe['id'] ) ) :
 	if ( ( isset( $args['hide_excerpt'] ) && 'true' !== $args['hide_excerpt'] ) ) :
 		echo '<span class="cooked-recipe-card-excerpt">' . wp_kses_post( $recipe_settings['excerpt'] ) . '</span>';
 	endif;

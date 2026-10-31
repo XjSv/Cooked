@@ -548,6 +548,9 @@ function is_page( $page = '' ) { return ! empty( $GLOBALS['_cooked_test_is_page'
 function is_singular( $post_types = '' ) { return ! empty( $GLOBALS['_cooked_test_is_singular'] ); }
 function is_feed() { return ! empty( $GLOBALS['_cooked_test_is_feed'] ); }
 function is_main_query() { return ! isset( $GLOBALS['_cooked_test_is_main_query'] ) || $GLOBALS['_cooked_test_is_main_query']; }
+if ( ! function_exists( 'get_the_password_form' ) ) {
+    function get_the_password_form( $post = 0 ) { return '<form class="post-password-form"><input name="post_password" type="password"></form>'; }
+}
 function post_password_required( $post = null ) { return ! empty( $GLOBALS['_cooked_test_password_required'] ); }
 if ( ! function_exists( 'get_queried_object_id' ) ) {
     function get_queried_object_id() { return isset( $GLOBALS['_cooked_test_queried_object_id'] ) ? (int) $GLOBALS['_cooked_test_queried_object_id'] : 0; }

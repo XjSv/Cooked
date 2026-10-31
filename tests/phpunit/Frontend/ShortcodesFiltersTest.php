@@ -60,6 +60,19 @@ class ShortcodesFiltersTest extends FilterTestCase {
         $this->assertSame( '<div class="filtered-recipe">X</div>', $output );
     }
 
+    public function test_cooked_recipe_shortcode_asks_for_the_password_of_a_protected_recipe() {
+        $this->seed_related_recipe( 41 );
+        $GLOBALS['_cooked_test_post_meta'][41]['_recipe_settings']['content']     = '[cooked-ingredients]';
+        $GLOBALS['_cooked_test_post_meta'][41]['_recipe_settings']['ingredients'] = [ 'a' => [ 'name' => 'SECRET_INGREDIENT' ] ];
+        $GLOBALS['_cooked_test_password_required']                                = true;
+
+        $output = $this->shortcodes->cooked_recipe_shortcode( [ 'id' => 41 ] );
+
+        $this->assertStringContainsString( 'post-password-form', $output );
+        $this->assertStringNotContainsString( 'SECRET_INGREDIENT', $output );
+        $this->assertStringContainsString( 'id="cooked-recipe-embed-41"', $output );
+    }
+
     public function test_cooked_recipe_embed_blocked_message_can_replace_text() {
         $property = new ReflectionProperty( 'Cooked_Shortcodes', 'recipe_embed_stack' );
         if ( PHP_VERSION_ID < 80100 ) {
@@ -183,6 +196,26 @@ class ShortcodesFiltersTest extends FilterTestCase {
         );
 
         $this->assertSame( '<div class="filtered-info">INFO</div>', $html );
+    }
+
+    public function test_cooked_info_shortcode_removes_kses_allowlist_filter() {
+        $html = $this->shortcodes->cooked_info_shortcode( [ 'include' => 'servings' ] );
+
+        $this->assertStringContainsString( '<select', $html );
+
+        $callbacks = [];
+        if ( ! empty( $GLOBALS['_cooked_test_filters']['wp_kses_allowed_html'] ) ) {
+            foreach ( $GLOBALS['_cooked_test_filters']['wp_kses_allowed_html'] as $priority_callbacks ) {
+                foreach ( $priority_callbacks as $callback ) {
+                    $callbacks[] = $callback;
+                }
+            }
+        }
+
+        foreach ( $callbacks as $callback ) {
+            $is_shortcode_callback = is_array( $callback ) && isset( $callback[0] ) && $callback[0] instanceof Cooked_Shortcodes;
+            $this->assertFalse( $is_shortcode_callback );
+        }
     }
 
     public function test_cooked_author_permalink_appears_in_author_info() {

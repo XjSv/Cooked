@@ -1,7 +1,5 @@
 <?php
 
-use PHPUnit\Framework\Attributes\DataProvider;
-
 class MeasurementsFiltersTest extends FilterTestCase {
 
     public function test_cooked_measurements_can_add_a_unit() {
@@ -48,7 +46,7 @@ class MeasurementsFiltersTest extends FilterTestCase {
         $this->assertSame( 'Omega-3', $facts['bottom']['omega3']['name'] );
     }
 
-    #[DataProvider( 'pdv_filter_provider' )]
+    /** @dataProvider pdv_filter_provider */
     public function test_cooked_pdv_filters_change_daily_values( $hook, $section, $key, $subkey ) {
         $facts = $this->with_filter(
             $hook,

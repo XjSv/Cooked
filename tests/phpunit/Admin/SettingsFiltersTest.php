@@ -1,7 +1,5 @@
 <?php
 
-use PHPUnit\Framework\Attributes\DataProvider;
-
 class SettingsFiltersTest extends FilterTestCase {
 
     public function test_cooked_get_settings_can_add_a_key() {
@@ -19,7 +17,7 @@ class SettingsFiltersTest extends FilterTestCase {
         $this->assertSame( 'yes', $settings['filter_sentinel'] );
     }
 
-    #[DataProvider( 'settings_option_filter_provider' )]
+    /** @dataProvider settings_option_filter_provider */
     public function test_settings_option_filters_change_tabs_fields( $hook, $path, $mode ) {
         $result = $this->with_filter(
             $hook,

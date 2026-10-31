@@ -491,7 +491,7 @@ final class Plugin {
      * @return string
      */
     public static function dev_asset_version( $src ) {
-        if ( ! is_string( $src ) || ! str_starts_with( $src, COOKED_URL ) ) {
+        if ( ! is_string( $src ) || 0 !== strpos( $src, COOKED_URL ) ) {
             return $src;
         }
 

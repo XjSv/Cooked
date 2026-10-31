@@ -1,6 +1,5 @@
 <?php
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class MeasurementsMatchTest extends TestCase {
@@ -17,7 +16,7 @@ class MeasurementsMatchTest extends TestCase {
         ];
     }
 
-    #[DataProvider( 'units_provider' )]
+    /** @dataProvider units_provider */
     public function test_match_maps_written_units_to_keys( string $unit, string $key ) {
         $this->assertSame( $key, Cooked_Measurements::match( $unit ) );
     }

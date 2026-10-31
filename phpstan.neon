@@ -17,7 +17,7 @@ parameters:
     # WordPress docblocks are not reliable enough to treat as certain.
     treatPhpDocTypesAsCertain: false
 
-    phpVersion: 80200
+    phpVersion: 70400
     dynamicConstantNames:
         - COOKED_DEV
 

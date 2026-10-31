@@ -153,7 +153,8 @@ class Enqueues {
             return false;
         }
         foreach ( array_keys( self::app_screens() ) as $slug ) {
-            if ( str_ends_with( $hook, '_page_' . $slug ) ) {
+            $suffix = '_page_' . $slug;
+            if ( substr( $hook, -strlen( $suffix ) ) === $suffix ) {
                 return $slug;
             }
         }

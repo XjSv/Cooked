@@ -15,16 +15,17 @@ Scripts run with [Bun](https://bun.sh) (`bun run <script>`), PHP tools from
 
 | Check | Command | Needs WordPress running? |
 |-------|---------|--------------------------|
-| PHPUnit 11 | `bun run test:php` | No. `tests/phpunit/bootstrap.php` stubs WordPress functions. |
-| PHPStan (level 8, PHP 8.2) | `bun run phpstan` | No |
-| PHPCS (WPCS + PHPCompatibility 8.2+) | `bun run lint` (`bun run lint-fix` to auto-fix) | No |
+| PHPUnit 9.6 | `bun run test:php` | No. `tests/phpunit/bootstrap.php` stubs WordPress functions. |
+| PHPStan (level 8, PHP 7.4) | `bun run phpstan` | No |
+| PHPCS (WPCS + PHPCompatibility, targeting PHP 7.4+) | `bun run lint` (`bun run lint-fix` to auto-fix) | No |
 
 - PHPStan has many existing findings. Compare against a run on the unchanged
   code and only fix what the change introduced.
 - PHPCS may insert tabs when auto-fixing. The project uses 4 spaces (`.editorconfig`); convert them back.
 - New PHPUnit tests: `tests/phpunit/*Test.php`. Data providers are `public static`
-  and attached with `#[DataProvider( 'name' )]`. Stub any missing WordPress
-  function in `tests/phpunit/bootstrap.php`.
+  and attached with `/** @dataProvider name */` (annotations, so the suite runs on
+  PHPUnit 9.6 through 12). Stub any missing WordPress function in
+  `tests/phpunit/bootstrap.php`.
 
 ## Browser tests (need wp-env or DDEV running)
 
@@ -38,7 +39,7 @@ Playwright specs live in `tests/playwright/tests/` (`admin`, `browse`, `home`,
 
 ## Local WordPress
 
-- **wp-env:** `bun run start:wp-env`. PHP 8.2, site on port 8888, Cooked mounted from the repo root.
+- **wp-env:** `bun run start:wp-env`. PHP 8.2 for development, site on port 8888, Cooked mounted from the repo root.
 - **DDEV:** `bun run init:ddev` once, then `bun run start:ddev`. Prints the URL and credentials.
 
 ## Assets

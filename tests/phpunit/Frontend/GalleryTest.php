@@ -6,7 +6,7 @@
  * @subpackage Tests
  */
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 
 class GalleryTest extends FilterTestCase {
 
@@ -40,7 +40,7 @@ class GalleryTest extends FilterTestCase {
         ];
     }
 
-    #[DataProvider( 'video_url_provider' )]
+    /** @dataProvider video_url_provider */
     public function test_video_embed_url( $url, $expected ) {
         $this->assertSame( $expected, Cooked_Shortcodes::gallery_video_embed_url( $url ) );
     }

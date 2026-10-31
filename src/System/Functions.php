@@ -37,7 +37,7 @@ class Functions {
      * @return string
      */
     public static function sanitize_text_field( $text ) {
-        $text = htmlentities( wp_unslash( $text ) );
+        $text = htmlentities( wp_unslash( $text ), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401, 'UTF-8' );
         $text = sanitize_text_field( $text );
         return $text;
     }

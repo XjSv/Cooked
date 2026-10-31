@@ -416,6 +416,12 @@ class Shortcodes {
             return $output;
         }
 
+        // A password-protected recipe shows WordPress's password form until the visitor has entered it.
+        if ( post_password_required( $recipe_id ) ) {
+            $output = '<div id="cooked-recipe-embed-' . intval( $recipe_id ) . '" class="cooked-recipe-embed">' . get_the_password_form( $recipe_id ) . '</div>';
+            return apply_filters( 'cooked_recipe_shortcode_output', $output, $recipe_id );
+        }
+
         self::$recipe_embed_stack[] = $recipe_id;
 
         try {
@@ -980,13 +986,11 @@ class Shortcodes {
         $cooked_info_html = ob_get_clean();
 
         if ( $cooked_info_html ) :
-            // Allow the servings switcher's <select> and Cooked Pro's nutrition donut <script>
-            // for this one call only; left in place they would loosen every later KSES call.
+            // Allow the servings switcher's <select> for this one call only; left in place it
+            // would loosen every later KSES call.
             add_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_servings_switcher' ] );
-            add_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_cooked_donut' ] );
             $cooked_info_html = '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
             remove_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_servings_switcher' ] );
-            remove_filter( 'wp_kses_allowed_html', [ $this, 'cooked_kses_cooked_donut' ] );
             $cooked_info_html = apply_filters( 'cooked_info_shortcode_output', $cooked_info_html, $recipe_settings );
             return $cooked_info_html;
         endif;
@@ -1010,19 +1014,6 @@ class Shortcodes {
         $tags['option'] = [
             'value'    => true,
             'selected' => true,
-        ];
-        return $tags;
-    }
-
-    /**
-     * Allows Cooked Pro's nutrition donut <script> through KSES.
-     *
-     * @param array<string, mixed> $tags Allowed tags and attributes.
-     * @return array<string, mixed>
-     */
-    public function cooked_kses_cooked_donut( $tags ) {
-        $tags['script'] = [
-            'type' => true,
         ];
         return $tags;
     }

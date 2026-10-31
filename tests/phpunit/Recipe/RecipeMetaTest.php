@@ -212,6 +212,30 @@ class RecipeMetaTest extends TestCase {
         $this->assertSame( 'Salt & pepper, 2 > 1', Cooked_Recipe_Meta::strip_all_html( 'Salt &amp; pepper, 2 &gt; 1' ) );
     }
 
+    public function test_meta_cleanup_strips_double_encoded_script_from_excerpt() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'excerpt' => '&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;alert(1)&amp;lt;/script&amp;gt;',
+        ] );
+
+        $this->assertSame( 'alert(1)', $result['excerpt'] );
+        $this->assertStringNotContainsString( '<script', $result['excerpt'] );
+        $this->assertStringNotContainsString( '&lt;script', $result['excerpt'] );
+    }
+
+    public function test_meta_cleanup_strips_double_encoded_script_from_direction() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'directions' => [
+                [
+                    'content' => '&amp;lt;script type=&amp;quot;text/javascript&amp;quot;&amp;gt;alert(1)&amp;lt;/script&amp;gt;',
+                ],
+            ],
+        ] );
+
+        $this->assertSame( 'alert(1)', $result['directions'][0]['content'] );
+        $this->assertStringNotContainsString( '<script', $result['directions'][0]['content'] );
+        $this->assertStringNotContainsString( '&lt;script', $result['directions'][0]['content'] );
+    }
+
     public function test_save_skips_post_types_without_the_box() {
         $_POST['cooked_recipe_custom_box_nonce'] = 'test_nonce';
         $_POST['_recipe_settings']               = [ 'excerpt' => 'Should not save' ];

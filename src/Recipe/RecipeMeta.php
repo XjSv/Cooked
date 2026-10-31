@@ -32,6 +32,32 @@ class RecipeMeta {
     }
 
     /**
+     * Decodes HTML entities until the value stops changing.
+     *
+     * A value can arrive encoded more than once (for example "&amp;lt;script&amp;gt;").
+     * Decoding it once and passing the result to wp_kses_post() leaves "&lt;script&gt;",
+     * which a later decode would turn back into a tag. Decode it all here first so KSES
+     * sees the real markup. The loop is bounded in case a value never settles.
+     *
+     * @since 2.0.0
+     * @param string $value Submitted value.
+     * @return string
+     */
+    private static function decode_html_entities( $value ) {
+        $value    = (string) $value;
+        $previous = null;
+        $guard    = 0;
+
+        while ( $value !== $previous && $guard < 10 ) {
+            $previous = $value;
+            $value    = wp_specialchars_decode( $value, ENT_QUOTES );
+            ++$guard;
+        }
+
+        return $value;
+    }
+
+    /**
      * The post types that get the Cooked Settings box (filterable; recipes by default).
      *
      * @since 2.0.0
@@ -79,8 +105,8 @@ class RecipeMeta {
 
     /**
      * Plain text from a value that may hold HTML, however many times its entities are encoded.
-     * Decodes and strips until nothing changes, so the decode in Cooked_Recipes::format_content()
-     * cannot turn what is left back into a tag (e.g. "&amp;lt;a&amp;gt;").
+     * Decodes and strips until nothing changes, so no later decode can turn what is left back
+     * into a tag (e.g. "&amp;lt;a&amp;gt;").
      *
      * @since 2.0.0
      * @param string $value Submitted value.
@@ -125,21 +151,21 @@ class RecipeMeta {
                 if ( ! is_array( $val ) ) {
                     if ( 'content' === $key || 'excerpt' === $key || 'notes' === $key ) {
                         if ( $wp_editor_roles_allowed ) {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags.
-                            $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
+                            // Decode every entity layer first so wp_kses_post sees its actual tags.
+                            $decoded_val              = self::decode_html_entities( $val );
                             $_recipe_settings[ $key ] = wp_kses_post( $decoded_val );
                         } else {
                             $_recipe_settings[ $key ] = self::strip_all_html( $val );
                         }
                     } elseif ( 'seo_description' === $key ) {
-                        $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
+                        $decoded_val              = self::decode_html_entities( $val );
                         $_recipe_settings[ $key ] = wp_strip_all_tags( $decoded_val );
                     } elseif ( in_array( $key, [ 'prep_time', 'cook_time', 'total_time' ], true ) ) {
                         $minutes                  = \Cooked_Measurements::normalize_minutes( $val );
                         $_recipe_settings[ $key ] = $minutes ? $minutes : '';
                     } elseif ( 'post_title' === $key ) {
-                            // Decode HTML entities first so wp_kses_post can see actual HTML tags.
-                            $decoded_val              = wp_specialchars_decode( $val, ENT_QUOTES );
+                            // Decode every entity layer first so wp_kses_post sees its actual tags.
+                            $decoded_val              = self::decode_html_entities( $val );
                             $_recipe_settings[ $key ] = wp_kses_post( $decoded_val );
 					} else {
 						$_recipe_settings[ $key ] = \Cooked_Functions::sanitize_text_field( $val );
@@ -186,8 +212,8 @@ class RecipeMeta {
             }
 
             if ( 2 === $depth && self::is_rich_text( $setting, $key ) ) {
-                // Decode entities first so wp_kses_post sees the actual tags.
-                $clean[ $key ] = $html ? wp_kses_post( wp_specialchars_decode( (string) $value, ENT_QUOTES ) ) : self::strip_all_html( (string) $value );
+                // Decode every entity layer first so wp_kses_post sees its actual tags.
+                $clean[ $key ] = $html ? wp_kses_post( self::decode_html_entities( $value ) ) : self::strip_all_html( (string) $value );
             } else {
                 $clean[ $key ] = \Cooked_Functions::sanitize_text_field( $value );
             }

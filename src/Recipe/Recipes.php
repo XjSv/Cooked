@@ -408,6 +408,9 @@ endif;
         $recipe      = self::get( $rid, true );
         $style_class = $style ? ' cooked-recipe-card-' . esc_attr( $style ) : '';
 
+        // A password-protected recipe keeps its excerpt private, as WordPress does for posts.
+        $hide_excerpt = $hide_excerpt || post_password_required( (int) $rid );
+
         $width         = ! $width ? '100%' : $width;
         $pixel_width   = stristr( $width, 'px', true );
         $percent_width = stristr( $width, '%', true );
@@ -1720,7 +1723,7 @@ endif;
      * @return string
      */
     public static function format_content( $content ) {
-        return wpautop( wp_kses_post( html_entity_decode( $content ) ) );
+        return wpautop( wp_kses_post( $content ) );
     }
 
     /**

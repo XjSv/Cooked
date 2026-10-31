@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-24T17:54:54+00:00\n"
+"POT-Creation-Date: 2026-10-31T19:25:59+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: cooked\n"
@@ -41,7 +41,7 @@ msgstr ""
 
 #. translators: referring to the bottom of the Settings page.
 #: src/Admin/Enqueues.php:45
-#: src/Admin/Enqueues.php:265
+#: src/Admin/Enqueues.php:251
 #: src/Admin/Menus.php:56
 #: src/Admin/Menus.php:104
 #: src/Frontend/Shortcodes.php:195
@@ -52,182 +52,182 @@ msgid "Settings"
 msgstr ""
 
 #: src/Admin/Enqueues.php:52
-#: src/Admin/Enqueues.php:269
+#: src/Admin/Enqueues.php:255
 #: src/Admin/Menus.php:57
 msgid "Import"
 msgstr ""
 
 #: src/Admin/Enqueues.php:58
-#: src/Admin/Enqueues.php:273
+#: src/Admin/Enqueues.php:259
 #: src/Admin/Menus.php:58
 msgid "What's New?"
 msgstr ""
 
 #: src/Admin/Enqueues.php:66
-#: src/Admin/Enqueues.php:279
+#: src/Admin/Enqueues.php:265
 #: src/Admin/Menus.php:61
 #: templates/admin/classic/welcome.php:57
 #: templates/admin/frame/welcome.php:41
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: src/Admin/Enqueues.php:247
+#: src/Admin/Enqueues.php:233
 msgid "Developer"
 msgstr ""
 
-#: src/Admin/Enqueues.php:306
+#: src/Admin/Enqueues.php:292
 msgid "Cooked"
 msgstr ""
 
-#: src/Admin/Enqueues.php:307
+#: src/Admin/Enqueues.php:293
 #: templates/admin/classic/welcome.php:50
 #: templates/admin/frame/welcome.php:17
 msgid "Documentation"
 msgstr ""
 
-#: src/Admin/Enqueues.php:308
+#: src/Admin/Enqueues.php:294
 #: templates/admin/classic/settings.php:19
 #: templates/admin/frame/settings.php:40
 msgid "Update Settings"
 msgstr ""
 
-#: src/Admin/Enqueues.php:309
+#: src/Admin/Enqueues.php:295
 msgid "Cooked pages"
 msgstr ""
 
-#: src/Admin/Enqueues.php:310
+#: src/Admin/Enqueues.php:296
 msgid "Sections"
 msgstr ""
 
-#: src/Admin/Enqueues.php:311
+#: src/Admin/Enqueues.php:297
 msgid "Scroll sections left"
 msgstr ""
 
-#: src/Admin/Enqueues.php:312
+#: src/Admin/Enqueues.php:298
 msgid "Scroll sections right"
 msgstr ""
 
-#: src/Admin/Enqueues.php:313
+#: src/Admin/Enqueues.php:299
 msgid "Skip to content"
 msgstr ""
 
 #. translators: 1: Cooked screen, e.g. "Settings", 2: section, e.g. "General"
-#: src/Admin/Enqueues.php:315
+#: src/Admin/Enqueues.php:301
 #, php-format
 msgid "%1$s: %2$s"
 msgstr ""
 
-#: src/Admin/Enqueues.php:316
+#: src/Admin/Enqueues.php:302
 msgid "Version:"
 msgstr ""
 
-#: src/Admin/Enqueues.php:317
+#: src/Admin/Enqueues.php:303
 msgid "Changelog"
 msgstr ""
 
-#: src/Admin/Enqueues.php:318
+#: src/Admin/Enqueues.php:304
 msgid "The changelog could not be loaded. Please try again."
 msgstr ""
 
 #. translators: %s: a sample CSV file's name, e.g. "Small (1 recipe)"
-#: src/Admin/Enqueues.php:320
+#: src/Admin/Enqueues.php:306
 #, php-format
 msgid "Sample CSV: %s"
 msgstr ""
 
-#: src/Admin/Enqueues.php:321
+#: src/Admin/Enqueues.php:307
 msgid "The sample file could not be loaded. Please try again."
 msgstr ""
 
-#: src/Admin/Enqueues.php:322
+#: src/Admin/Enqueues.php:308
 msgid "This browser could not start the import. Download the file and upload it instead."
 msgstr ""
 
-#: src/Admin/Enqueues.php:323
+#: src/Admin/Enqueues.php:309
 msgid "Download"
 msgstr ""
 
-#: src/Admin/Enqueues.php:324
+#: src/Admin/Enqueues.php:310
 msgid "Import Now"
 msgstr ""
 
-#: src/Admin/Enqueues.php:325
+#: src/Admin/Enqueues.php:311
 msgid "Search settings"
 msgstr ""
 
-#: src/Admin/Enqueues.php:326
+#: src/Admin/Enqueues.php:312
 msgid "Search settings…"
 msgstr ""
 
-#: src/Admin/Enqueues.php:327
+#: src/Admin/Enqueues.php:313
 msgid "No settings found."
 msgstr ""
 
 #. translators: %d: number of matching settings
-#: src/Admin/Enqueues.php:329
+#: src/Admin/Enqueues.php:315
 #, php-format
 msgid "%d settings found. Use the up and down arrows to choose one."
 msgstr ""
 
-#: src/Admin/Enqueues.php:468
+#: src/Admin/Enqueues.php:454
 msgid "remaining"
 msgstr ""
 
-#: src/Admin/Enqueues.php:469
-#: src/Admin/Settings.php:1190
+#: src/Admin/Enqueues.php:455
+#: src/Admin/Settings.php:1185
 #: src/functions.php:586
 #: src/functions.php:656
 #: src/functions.php:711
 msgid "Add Image"
 msgstr ""
 
-#: src/Admin/Enqueues.php:470
-#: src/Admin/Settings.php:1190
+#: src/Admin/Enqueues.php:456
+#: src/Admin/Settings.php:1185
 #: src/functions.php:586
 msgid "Change Image"
 msgstr ""
 
-#: src/Admin/Enqueues.php:471
+#: src/Admin/Enqueues.php:457
 msgid "Use this Image"
 msgstr ""
 
-#: src/Admin/Enqueues.php:472
+#: src/Admin/Enqueues.php:458
 #: src/functions.php:596
 #: src/functions.php:683
 #: src/functions.php:721
 msgid "Add Video"
 msgstr ""
 
-#: src/Admin/Enqueues.php:473
+#: src/Admin/Enqueues.php:459
 #: src/functions.php:596
 msgid "Change Video"
 msgstr ""
 
-#: src/Admin/Enqueues.php:474
+#: src/Admin/Enqueues.php:460
 msgid "Use this Video"
 msgstr ""
 
-#: src/Admin/Enqueues.php:475
+#: src/Admin/Enqueues.php:461
 #: templates/admin/classic/recipe-gallery.php:82
 msgid "Add to Gallery"
 msgstr ""
 
-#: src/Admin/Enqueues.php:476
+#: src/Admin/Enqueues.php:462
 msgid "Edit Gallery Item"
 msgstr ""
 
-#: src/Admin/Enqueues.php:477
+#: src/Admin/Enqueues.php:463
 msgid "Update Gallery Item"
 msgstr ""
 
-#: src/Admin/Enqueues.php:478
+#: src/Admin/Enqueues.php:464
 #: templates/admin/classic/recipe-gallery.php:75
 #: templates/admin/frame/recipe-gallery.php:90
 msgid "Change image"
 msgstr ""
 
-#: src/Admin/Enqueues.php:479
-#: src/Admin/Settings.php:1206
+#: src/Admin/Enqueues.php:465
+#: src/Admin/Settings.php:1201
 #: src/functions.php:589
 #: src/functions.php:659
 #: src/functions.php:714
@@ -236,117 +236,117 @@ msgstr ""
 msgid "Remove image"
 msgstr ""
 
-#: src/Admin/Enqueues.php:480
+#: src/Admin/Enqueues.php:466
 msgid "Saved"
 msgstr ""
 
-#: src/Admin/Enqueues.php:481
+#: src/Admin/Enqueues.php:467
 msgid "Copied"
 msgstr ""
 
-#: src/Admin/Enqueues.php:482
+#: src/Admin/Enqueues.php:468
 msgid "Applied"
 msgstr ""
 
-#: src/Admin/Enqueues.php:483
+#: src/Admin/Enqueues.php:469
 msgid "Are you sure you want to apply this new template to all of your recipes?"
 msgstr ""
 
-#: src/Admin/Enqueues.php:484
+#: src/Admin/Enqueues.php:470
 msgid "Are you sure you want to reset this recipe template to the Cooked plugin default?"
 msgstr ""
 
-#: src/Admin/Enqueues.php:485
+#: src/Admin/Enqueues.php:471
 msgid "Clear every nutrition value for this recipe? Nothing is saved until you update the recipe."
 msgstr ""
 
 #. translators: confirmation for migrating all ### recipes, where ### displays the total number for the migration.
-#: src/Admin/Enqueues.php:487
+#: src/Admin/Enqueues.php:473
 #, php-format
 msgid "Please confirm that you are ready to migrate all %s recipes."
 msgstr ""
 
-#: src/Admin/Enqueues.php:488
+#: src/Admin/Enqueues.php:474
 msgid "Please confirm that you are ready to import all recipes."
 msgstr ""
 
-#: src/Admin/Enqueues.php:489
+#: src/Admin/Enqueues.php:475
 msgid "Are you sure you want to import recipes from this CSV file?"
 msgstr ""
 
-#: src/Admin/Enqueues.php:490
+#: src/Admin/Enqueues.php:476
 msgid "Please select a CSV file."
 msgstr ""
 
-#: src/Admin/Enqueues.php:491
+#: src/Admin/Enqueues.php:477
 msgid "Please select a valid CSV file."
 msgstr ""
 
-#: src/Admin/Enqueues.php:492
+#: src/Admin/Enqueues.php:478
 msgid "Uploading..."
 msgstr ""
 
-#: src/Admin/Enqueues.php:493
+#: src/Admin/Enqueues.php:479
 msgid "Processing..."
 msgstr ""
 
-#: src/Admin/Enqueues.php:494
+#: src/Admin/Enqueues.php:480
 msgid "recipes imported"
 msgstr ""
 
-#: src/Admin/Enqueues.php:495
+#: src/Admin/Enqueues.php:481
 msgid "Errors:"
 msgstr ""
 
-#: src/Admin/Enqueues.php:496
+#: src/Admin/Enqueues.php:482
 msgid "Import failed."
 msgstr ""
 
-#: src/Admin/Enqueues.php:497
+#: src/Admin/Enqueues.php:483
 msgid "Failed to process CSV file."
 msgstr ""
 
-#: src/Admin/Enqueues.php:498
+#: src/Admin/Enqueues.php:484
 msgid "Failed to upload CSV file."
 msgstr ""
 
-#: src/Admin/Enqueues.php:499
+#: src/Admin/Enqueues.php:485
 #: src/System/Ajax.php:555
 #: src/System/Ajax.php:560
 msgid "File upload failed."
 msgstr ""
 
-#: src/Admin/Enqueues.php:500
+#: src/Admin/Enqueues.php:486
 msgid "Something went wrong"
 msgstr ""
 
-#: src/Admin/Enqueues.php:501
+#: src/Admin/Enqueues.php:487
 msgid "hrs"
 msgstr ""
 
-#: src/Admin/Enqueues.php:502
+#: src/Admin/Enqueues.php:488
 msgid "mins"
 msgstr ""
 
-#: src/Admin/Enqueues.php:503
+#: src/Admin/Enqueues.php:489
 msgid "Pre-calculate related recipes for all published recipes? This may take a while on large sites."
 msgstr ""
 
 #. translators: 1: date and time, 2: number of recipes
-#: src/Admin/Enqueues.php:505
+#: src/Admin/Enqueues.php:491
 #, php-format
 msgid "Last: %1$s · %2$s recipes"
 msgstr ""
 
-#: src/Admin/Enqueues.php:513
+#: src/Admin/Enqueues.php:499
 msgid "Bulk Add Ingredients"
 msgstr ""
 
-#: src/Admin/Enqueues.php:514
+#: src/Admin/Enqueues.php:500
 msgid "Bulk Add Directions"
 msgstr ""
 
-#: src/Admin/Enqueues.php:515
+#: src/Admin/Enqueues.php:501
 msgid ""
 "2 cups flour\n"
 "1 tsp salt\n"
@@ -354,14 +354,14 @@ msgid ""
 "3 large eggs"
 msgstr ""
 
-#: src/Admin/Enqueues.php:516
+#: src/Admin/Enqueues.php:502
 msgid ""
 "Preheat oven to 350°F.\n"
 "Mix dry ingredients together.\n"
 "Add wet ingredients and stir."
 msgstr ""
 
-#: src/Admin/Enqueues.php:517
+#: src/Admin/Enqueues.php:503
 #: src/functions.php:376
 #: src/functions.php:507
 #: src/functions.php:613
@@ -370,19 +370,19 @@ msgstr ""
 msgid "Section heading"
 msgstr ""
 
-#: src/Admin/Enqueues.php:518
+#: src/Admin/Enqueues.php:504
 msgid "Parsing..."
 msgstr ""
 
-#: src/Admin/Enqueues.php:519
+#: src/Admin/Enqueues.php:505
 msgid "Add Ingredients"
 msgstr ""
 
-#: src/Admin/Enqueues.php:520
+#: src/Admin/Enqueues.php:506
 msgid "Add Directions"
 msgstr ""
 
-#: src/Admin/Enqueues.php:521
+#: src/Admin/Enqueues.php:507
 #: src/functions.php:312
 #: src/functions.php:340
 #: src/functions.php:421
@@ -390,7 +390,7 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: src/Admin/Enqueues.php:522
+#: src/Admin/Enqueues.php:508
 #: src/functions.php:313
 #: src/functions.php:346
 #: src/functions.php:427
@@ -398,7 +398,7 @@ msgstr ""
 msgid "Measurement"
 msgstr ""
 
-#: src/Admin/Enqueues.php:523
+#: src/Admin/Enqueues.php:509
 #: src/functions.php:314
 #: src/functions.php:359
 #: src/functions.php:440
@@ -406,7 +406,7 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
-#: src/Admin/Enqueues.php:524
+#: src/Admin/Enqueues.php:510
 msgid "Heading text"
 msgstr ""
 
@@ -494,17 +494,25 @@ msgstr ""
 msgid "Migration"
 msgstr ""
 
-#. translators: 1: number of recipes, 2: migration link.
-#: src/Admin/Migration.php:111
+#. translators: %s: number of recipes.
+#: src/Admin/Migration.php:120
 #, php-format
-msgid "There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe."
-msgid_plural "There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes."
+msgid "%s recipe needs migrating"
+msgid_plural "%s recipes need migrating"
 msgstr[0] ""
 msgstr[1] ""
 
 #: src/Admin/Migration.php:121
-msgid "click here"
-msgstr ""
+msgid "It was saved by an older version of Cooked. Migrating moves it to the current format without losing any data, and it loads faster."
+msgid_plural "They were saved by an older version of Cooked. Migrating moves them to the current format without losing any data, and they load faster."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/Migration.php:123
+msgid "Migrate recipe"
+msgid_plural "Migrate recipes"
+msgstr[0] ""
+msgstr[1] ""
 
 #: src/Admin/PluginExtra.php:45
 msgid "Required by Cooked Pro"
@@ -541,127 +549,127 @@ msgid "To display your recipes properly, please set up your %s."
 msgstr ""
 
 #: src/Admin/Settings.php:330
-#: src/Admin/Settings.php:497
+#: src/Admin/Settings.php:492
 msgid "Browse/Search Recipes Page"
 msgstr ""
 
-#: src/Admin/Settings.php:468
+#: src/Admin/Settings.php:463
 msgid "Choose a page..."
 msgstr ""
 
-#: src/Admin/Settings.php:468
+#: src/Admin/Settings.php:463
 msgid "No pages"
 msgstr ""
 
-#: src/Admin/Settings.php:469
+#: src/Admin/Settings.php:464
 msgid "No default"
 msgstr ""
 
-#: src/Admin/Settings.php:469
+#: src/Admin/Settings.php:464
 msgid "No categories"
 msgstr ""
 
-#: src/Admin/Settings.php:471
+#: src/Admin/Settings.php:466
 #: src/Recipe/PostTypes.php:568
 msgid "Recipe Archive"
 msgstr ""
 
-#: src/Admin/Settings.php:493
+#: src/Admin/Settings.php:488
 msgid "General"
 msgstr ""
 
 #. translators: a description on how to add the [cooked-browse] shortcode to a page
-#: src/Admin/Settings.php:499
+#: src/Admin/Settings.php:494
 #, php-format
 msgid "Create a page with the %s shortcode on it, then choose it from this dropdown."
 msgstr ""
 
 #. translators: a description on how to add the [cooked-browse] shortcode to a page
-#: src/Admin/Settings.php:499
+#: src/Admin/Settings.php:494
 msgid "<b>Note:</b> This setting is required for the plugin to function properly."
 msgstr ""
 
-#: src/Admin/Settings.php:505
+#: src/Admin/Settings.php:500
 msgid "Recipes Per Page"
 msgstr ""
 
 #. translators: a description on how to choose the default number of recipes per page.
-#: src/Admin/Settings.php:507
+#: src/Admin/Settings.php:502
 #, php-format
 msgid "Choose the default (set via the %s panel) or choose a different number here."
 msgstr ""
 
 #. translators: a description on how to choose the default number of recipes per page.
-#: src/Admin/Settings.php:507
+#: src/Admin/Settings.php:502
 msgid "Settings > Reading"
 msgstr ""
 
-#: src/Admin/Settings.php:513
+#: src/Admin/Settings.php:508
 msgid "Recipe Taxonomies"
 msgstr ""
 
-#: src/Admin/Settings.php:514
+#: src/Admin/Settings.php:509
 msgid "Choose which taxonomies you want to enable for your recipes."
 msgstr ""
 
-#: src/Admin/Settings.php:520
-#: src/Recipe/Recipes.php:1808
+#: src/Admin/Settings.php:515
+#: src/Recipe/Recipes.php:1816
 #: src/Recipe/Taxonomies.php:52
 #: src/Recipe/Taxonomies.php:62
 msgid "Categories"
 msgstr ""
 
-#: src/Admin/Settings.php:525
+#: src/Admin/Settings.php:520
 msgid "Global Recipe Toggles"
 msgstr ""
 
-#: src/Admin/Settings.php:526
+#: src/Admin/Settings.php:521
 msgid "You can quickly hide or show different recipe elements (site-wide) with these checkboxes."
 msgstr ""
 
-#: src/Admin/Settings.php:544
-#: src/Frontend/Shortcodes.php:863
-#: src/Frontend/Shortcodes.php:1068
+#: src/Admin/Settings.php:539
+#: src/Frontend/Shortcodes.php:869
+#: src/Frontend/Shortcodes.php:1059
 #: templates/admin/classic/recipe-shortcodes.php:66
 #: templates/admin/frame/recipe-shortcodes.php:22
 msgid "Author"
 msgstr ""
 
-#: src/Admin/Settings.php:545
-#: src/Frontend/Shortcodes.php:1211
-#: src/Frontend/Shortcodes.php:1215
+#: src/Admin/Settings.php:540
+#: src/Frontend/Shortcodes.php:1202
+#: src/Frontend/Shortcodes.php:1206
 #: src/Recipe/Taxonomies.php:53
 #: templates/admin/classic/recipe-shortcodes.php:72
 #: templates/admin/frame/recipe-shortcodes.php:28
 msgid "Category"
 msgstr ""
 
-#: src/Admin/Settings.php:546
+#: src/Admin/Settings.php:541
 #: templates/admin/classic/recipe-layout.php:116
 #: templates/admin/frame/recipe-layout.php:132
 msgid "Difficulty Level"
 msgstr ""
 
-#: src/Admin/Settings.php:547
+#: src/Admin/Settings.php:542
 #: src/System/Functions.php:360
 #: templates/admin/classic/recipe-shortcodes.php:289
 #: templates/admin/frame/recipe-shortcodes.php:115
 msgid "Excerpt"
 msgstr ""
 
-#: src/Admin/Settings.php:548
-#: src/Frontend/Shortcodes.php:1285
+#: src/Admin/Settings.php:543
+#: src/Frontend/Shortcodes.php:1276
 #: src/Import/Import.php:190
-#: src/Recipe/Recipes.php:1095
+#: src/Recipe/Recipes.php:1103
 #: src/System/Functions.php:364
 #: templates/admin/classic/recipe-shortcodes.php:313
 #: templates/admin/frame/recipe-shortcodes.php:141
 msgid "Notes"
 msgstr ""
 
-#: src/Admin/Settings.php:549
-#: src/Frontend/Shortcodes.php:866
-#: src/Frontend/Shortcodes.php:1147
+#: src/Admin/Settings.php:544
+#: src/Frontend/Shortcodes.php:872
+#: src/Frontend/Shortcodes.php:1138
 #: templates/admin/classic/recipe-layout.php:127
 #: templates/admin/classic/recipe-shortcodes.php:67
 #: templates/admin/frame/recipe-layout.php:37
@@ -669,9 +677,9 @@ msgstr ""
 msgid "Prep Time"
 msgstr ""
 
-#: src/Admin/Settings.php:550
-#: src/Frontend/Shortcodes.php:867
-#: src/Frontend/Shortcodes.php:1162
+#: src/Admin/Settings.php:545
+#: src/Frontend/Shortcodes.php:873
+#: src/Frontend/Shortcodes.php:1153
 #: templates/admin/classic/recipe-layout.php:132
 #: templates/admin/classic/recipe-shortcodes.php:68
 #: templates/admin/frame/recipe-layout.php:41
@@ -679,10 +687,10 @@ msgstr ""
 msgid "Cook Time"
 msgstr ""
 
-#: src/Admin/Settings.php:551
-#: src/Frontend/Shortcodes.php:868
-#: src/Frontend/Shortcodes.php:1179
-#: src/Frontend/Shortcodes.php:1186
+#: src/Admin/Settings.php:546
+#: src/Frontend/Shortcodes.php:874
+#: src/Frontend/Shortcodes.php:1170
+#: src/Frontend/Shortcodes.php:1177
 #: templates/admin/classic/recipe-layout.php:137
 #: templates/admin/classic/recipe-shortcodes.php:69
 #: templates/admin/frame/recipe-layout.php:45
@@ -690,376 +698,376 @@ msgstr ""
 msgid "Total Time"
 msgstr ""
 
-#: src/Admin/Settings.php:552
+#: src/Admin/Settings.php:547
 #: src/Measurement/Measurements.php:309
-#: src/Recipe/Recipes.php:1422
-#: src/Recipe/Recipes.php:1424
+#: src/Recipe/Recipes.php:1430
+#: src/Recipe/Recipes.php:1432
 msgid "Servings"
 msgstr ""
 
-#: src/Admin/Settings.php:557
+#: src/Admin/Settings.php:552
 msgid "Print View"
 msgstr ""
 
-#: src/Admin/Settings.php:558
+#: src/Admin/Settings.php:553
 msgid "When enabled, the website logo will appear at the top of the recipe print screen."
 msgstr ""
 
-#: src/Admin/Settings.php:564
+#: src/Admin/Settings.php:559
 msgid "Show Website Logo"
 msgstr ""
 
-#: src/Admin/Settings.php:569
+#: src/Admin/Settings.php:564
 msgid "Carbs Format"
 msgstr ""
 
-#: src/Admin/Settings.php:570
+#: src/Admin/Settings.php:565
 msgid "You can display carbs as \"Total\" or \"Net\"."
 msgstr ""
 
-#: src/Admin/Settings.php:576
+#: src/Admin/Settings.php:571
 msgid "Total Carbs"
 msgstr ""
 
-#: src/Admin/Settings.php:577
+#: src/Admin/Settings.php:572
 msgid "Net Carbs"
 msgstr ""
 
-#: src/Admin/Settings.php:582
+#: src/Admin/Settings.php:577
 msgid "Author Name Format"
 msgstr ""
 
-#: src/Admin/Settings.php:583
+#: src/Admin/Settings.php:578
 msgid "You can show the full author's name or just a part of it."
 msgstr ""
 
-#: src/Admin/Settings.php:589
+#: src/Admin/Settings.php:584
 msgid "Full name"
 msgstr ""
 
-#: src/Admin/Settings.php:590
+#: src/Admin/Settings.php:585
 msgid "Full first name w/last name initial"
 msgstr ""
 
-#: src/Admin/Settings.php:591
+#: src/Admin/Settings.php:586
 msgid "First name initial w/full last name"
 msgstr ""
 
-#: src/Admin/Settings.php:592
+#: src/Admin/Settings.php:587
 msgid "First name only"
 msgstr ""
 
-#: src/Admin/Settings.php:597
+#: src/Admin/Settings.php:592
 msgid "Author Links"
 msgstr ""
 
-#: src/Admin/Settings.php:598
+#: src/Admin/Settings.php:593
 msgid "If you do not want the author names to link to the author recipe listings, you can disable them here."
 msgstr ""
 
-#: src/Admin/Settings.php:598
+#: src/Admin/Settings.php:593
 msgid "<b>Note:</b> Author links require the Browse/Search Recipes Page to be set up correctly to function properly."
 msgstr ""
 
-#: src/Admin/Settings.php:605
+#: src/Admin/Settings.php:600
 msgid "Disable Author Links"
 msgstr ""
 
-#: src/Admin/Settings.php:610
+#: src/Admin/Settings.php:605
 msgid "Default Category"
 msgstr ""
 
 #. translators: a description on how to set the default recipe category for the [cooked-browse] shortcode.
-#: src/Admin/Settings.php:612
+#: src/Admin/Settings.php:607
 #, php-format
 msgid "Optionally set the default recipe category for your %s shortcode display."
 msgstr ""
 
-#: src/Admin/Settings.php:618
+#: src/Admin/Settings.php:613
 msgid "Default Sort Order"
 msgstr ""
 
 #. translators: a description on how to set the default sort order for the [cooked-browse] shortcode.
-#: src/Admin/Settings.php:620
+#: src/Admin/Settings.php:615
 #, php-format
 msgid "Set the default sort order for your %s shortcode display."
 msgstr ""
 
-#: src/Admin/Settings.php:626
+#: src/Admin/Settings.php:621
 msgid "Newest First"
 msgstr ""
 
-#: src/Admin/Settings.php:627
+#: src/Admin/Settings.php:622
 msgid "Oldest First"
 msgstr ""
 
-#: src/Admin/Settings.php:628
+#: src/Admin/Settings.php:623
 msgid "Alphabetical"
 msgstr ""
 
-#: src/Admin/Settings.php:629
+#: src/Admin/Settings.php:624
 msgid "Alphabetical (reversed)"
 msgstr ""
 
-#: src/Admin/Settings.php:634
+#: src/Admin/Settings.php:629
 msgid "Section Heading Default HTML Tag"
 msgstr ""
 
 #. translators: a description on how to set the default sort order for the [cooked-browse] shortcode.
-#: src/Admin/Settings.php:636
+#: src/Admin/Settings.php:631
 msgid "Set the default HTML tag for your section headings."
 msgstr ""
 
-#: src/Admin/Settings.php:642
+#: src/Admin/Settings.php:637
 msgid "div"
 msgstr ""
 
-#: src/Admin/Settings.php:643
+#: src/Admin/Settings.php:638
 msgid "h2"
 msgstr ""
 
-#: src/Admin/Settings.php:644
+#: src/Admin/Settings.php:639
 msgid "h3"
 msgstr ""
 
-#: src/Admin/Settings.php:645
+#: src/Admin/Settings.php:640
 msgid "h4"
 msgstr ""
 
-#: src/Admin/Settings.php:646
+#: src/Admin/Settings.php:641
 msgid "h5"
 msgstr ""
 
-#: src/Admin/Settings.php:647
+#: src/Admin/Settings.php:642
 msgid "h6"
 msgstr ""
 
-#: src/Admin/Settings.php:652
+#: src/Admin/Settings.php:647
 msgid "WP Editor Roles"
 msgstr ""
 
-#: src/Admin/Settings.php:653
+#: src/Admin/Settings.php:648
 msgid "Choose which user roles can use the WP Editor for the Excerpt, Directions & Notes fields."
 msgstr ""
 
-#: src/Admin/Settings.php:659
+#: src/Admin/Settings.php:654
 msgid "Admin Screens"
 msgstr ""
 
-#: src/Admin/Settings.php:660
+#: src/Admin/Settings.php:655
 msgid "Cooked 2.0 shows its Settings, Import, What's New and Upgrade to Pro screens, and the recipe editor, in a new layout. Switch to the classic layout if you prefer the previous one."
 msgstr ""
 
-#: src/Admin/Settings.php:664
+#: src/Admin/Settings.php:659
 msgid "Use the Classic Layout"
 msgstr ""
 
-#: src/Admin/Settings.php:669
+#: src/Admin/Settings.php:664
 msgid "Advanced Settings"
 msgstr ""
 
 #. translators: an option to only show recipes with the [cooked-recipe] shortcode.
-#: src/Admin/Settings.php:679
+#: src/Admin/Settings.php:674
 msgid "Disable Public Recipes"
 msgstr ""
 
 #. translators: an option to only show recipes with the [cooked-recipe] shortcode.
-#: src/Admin/Settings.php:679
+#: src/Admin/Settings.php:674
 #, php-format
 msgid "Only show recipes using the %s shortcode."
 msgstr ""
 
 #. translators: an option to disable "meta" tags.
-#: src/Admin/Settings.php:681
+#: src/Admin/Settings.php:676
 #, php-format
 msgid "Disable %s Tags"
 msgstr ""
 
 #. translators: an option to disable "meta" tags.
-#: src/Admin/Settings.php:681
+#: src/Admin/Settings.php:676
 msgid "Prevents duplicates when tags already exist."
 msgstr ""
 
-#: src/Admin/Settings.php:682
+#: src/Admin/Settings.php:677
 msgid "Disable \"Servings Switcher\""
 msgstr ""
 
-#: src/Admin/Settings.php:682
+#: src/Admin/Settings.php:677
 msgid "Removes the servings dropdown on recipes."
 msgstr ""
 
-#: src/Admin/Settings.php:683
+#: src/Admin/Settings.php:678
 msgid "Enable \"Measurement System Switcher\""
 msgstr ""
 
-#: src/Admin/Settings.php:683
+#: src/Admin/Settings.php:678
 msgid "Shows the Metric/Imperial toggle on recipes."
 msgstr ""
 
-#: src/Admin/Settings.php:684
+#: src/Admin/Settings.php:679
 msgid "Disable Recipe Schema Output"
 msgstr ""
 
-#: src/Admin/Settings.php:684
+#: src/Admin/Settings.php:679
 msgid "You should only do this if you're using something else to output schema information."
 msgstr ""
 
-#: src/Admin/Settings.php:685
+#: src/Admin/Settings.php:680
 msgid "Disable Recipe Archive Page"
 msgstr ""
 
 #. translators: %s: recipe archive URL, e.g. https://example.com/recipe-archive
-#: src/Admin/Settings.php:687
+#: src/Admin/Settings.php:682
 #, php-format
 msgid "Prevents the recipe archive from being displayed at %s."
 msgstr ""
 
-#: src/Admin/Settings.php:696
+#: src/Admin/Settings.php:691
 msgid "Design"
 msgstr ""
 
-#: src/Admin/Settings.php:700
+#: src/Admin/Settings.php:695
 msgid "Dark Mode"
 msgstr ""
 
-#: src/Admin/Settings.php:703
+#: src/Admin/Settings.php:698
 msgid "For your recipes on the site. Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off."
 msgstr ""
 
-#: src/Admin/Settings.php:710
-#: src/Admin/Settings.php:724
-#: src/Admin/Settings.php:736
+#: src/Admin/Settings.php:705
+#: src/Admin/Settings.php:719
+#: src/Admin/Settings.php:731
 msgid "Off"
 msgstr ""
 
-#: src/Admin/Settings.php:711
-#: src/Admin/Settings.php:725
-#: src/Admin/Settings.php:737
+#: src/Admin/Settings.php:706
+#: src/Admin/Settings.php:720
+#: src/Admin/Settings.php:732
 msgid "On"
 msgstr ""
 
-#: src/Admin/Settings.php:712
+#: src/Admin/Settings.php:707
 msgid "Auto (match theme dark mode)"
 msgstr ""
 
-#: src/Admin/Settings.php:718
+#: src/Admin/Settings.php:713
 msgid "Admin Dark Mode"
 msgstr ""
 
-#: src/Admin/Settings.php:719
+#: src/Admin/Settings.php:714
 msgid "Your own preference for the Settings, Import, What's New and Upgrade to Pro screens. <strong>Auto</strong> follows your computer's light or dark setting."
 msgstr ""
 
-#: src/Admin/Settings.php:726
-#: src/Admin/Settings.php:738
+#: src/Admin/Settings.php:721
+#: src/Admin/Settings.php:733
 msgid "Auto (match your system)"
 msgstr ""
 
-#: src/Admin/Settings.php:730
+#: src/Admin/Settings.php:725
 msgid "Recipe Editor Dark Mode"
 msgstr ""
 
-#: src/Admin/Settings.php:731
+#: src/Admin/Settings.php:726
 msgid "Your own preference for the recipe editor. <strong>Auto</strong> follows your computer's light or dark setting."
 msgstr ""
 
-#: src/Admin/Settings.php:742
+#: src/Admin/Settings.php:737
 msgid "Author Images"
 msgstr ""
 
-#: src/Admin/Settings.php:743
+#: src/Admin/Settings.php:738
 msgid "If you do not want to display the author images (avatars), you can disable them here."
 msgstr ""
 
-#: src/Admin/Settings.php:750
+#: src/Admin/Settings.php:745
 msgid "Hide Author Images"
 msgstr ""
 
-#: src/Admin/Settings.php:755
+#: src/Admin/Settings.php:750
 msgid "Default Recipe Image"
 msgstr ""
 
-#: src/Admin/Settings.php:756
+#: src/Admin/Settings.php:751
 msgid "Used as the featured image for recipes that do not have one set."
 msgstr ""
 
-#: src/Admin/Settings.php:761
+#: src/Admin/Settings.php:756
 msgid "Main Color"
 msgstr ""
 
-#: src/Admin/Settings.php:762
+#: src/Admin/Settings.php:757
 msgid "Used on buttons, cooking timer, etc."
 msgstr ""
 
-#: src/Admin/Settings.php:768
+#: src/Admin/Settings.php:763
 msgid "Main Color (on hover)"
 msgstr ""
 
-#: src/Admin/Settings.php:769
+#: src/Admin/Settings.php:764
 msgid "Used when hovering over buttons."
 msgstr ""
 
-#: src/Admin/Settings.php:777
+#: src/Admin/Settings.php:772
 msgid "Permalinks"
 msgstr ""
 
-#: src/Admin/Settings.php:781
+#: src/Admin/Settings.php:776
 msgid "Recipe Permalink"
 msgstr ""
 
-#: src/Admin/Settings.php:784
+#: src/Admin/Settings.php:779
 msgid "recipe-name"
 msgstr ""
 
-#: src/Admin/Settings.php:788
+#: src/Admin/Settings.php:783
 msgid "Recipe Author Permalink"
 msgstr ""
 
-#: src/Admin/Settings.php:791
+#: src/Admin/Settings.php:786
 msgid "author-name"
 msgstr ""
 
-#: src/Admin/Settings.php:795
+#: src/Admin/Settings.php:790
 msgid "Recipe Category Permalink"
 msgstr ""
 
-#: src/Admin/Settings.php:798
+#: src/Admin/Settings.php:793
 msgid "recipe-category-name"
 msgstr ""
 
 #. translators: posts_per_page default
-#: src/Admin/Settings.php:817
+#: src/Admin/Settings.php:812
 #, php-format
 msgid "WordPress Default %s"
 msgstr ""
 
-#: src/Admin/Settings.php:822
+#: src/Admin/Settings.php:817
 msgid "Show All (no pagination)"
 msgstr ""
 
-#: src/Admin/Settings.php:1019
+#: src/Admin/Settings.php:1014
 msgid "Compare layouts"
 msgstr ""
 
-#: src/Admin/Settings.php:1022
+#: src/Admin/Settings.php:1017
 msgid "Classic and new layouts"
 msgstr ""
 
-#: src/Admin/Settings.php:1023
-#: src/Recipe/RecipeMeta.php:438
+#: src/Admin/Settings.php:1018
+#: src/Recipe/RecipeMeta.php:464
 #: templates/admin/parts/gallery-preview-dialog.php:15
 msgid "Close"
 msgstr ""
 
-#: src/Admin/Settings.php:1026
+#: src/Admin/Settings.php:1021
 msgid "Drag the slider to see the same screen in the classic layout (left) and the new one (right)."
 msgstr ""
 
-#: src/Admin/Settings.php:1066
+#: src/Admin/Settings.php:1061
 msgid "Begin Migration"
 msgstr ""
 
-#: src/Admin/Settings.php:1071
+#: src/Admin/Settings.php:1066
 #: src/Import/Import.php:249
 #: src/Import/Import.php:308
 msgid "reload"
@@ -1165,127 +1173,127 @@ msgid "(recipe not found or in draft status)"
 msgstr ""
 
 #. translators: %s: recipe embed shortcode
-#: src/Frontend/Shortcodes.php:447
+#: src/Frontend/Shortcodes.php:453
 #, php-format
 msgid "This recipe could not be displayed because it is set up to include itself (containing shortcode %s). Remove the duplicate recipe embed from the Recipe Template."
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:590
+#: src/Frontend/Shortcodes.php:596
 msgid "Standard (4:3)"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:591
+#: src/Frontend/Shortcodes.php:597
 msgid "Photo (3:2)"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:592
+#: src/Frontend/Shortcodes.php:598
 msgid "Wide (16:9)"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:593
+#: src/Frontend/Shortcodes.php:599
 msgid "Square (1:1)"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:714
+#: src/Frontend/Shortcodes.php:720
 msgid "carousel"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:714
+#: src/Frontend/Shortcodes.php:720
 msgid "Recipe gallery"
 msgstr ""
 
 #. translators: 1: slide number, 2: number of slides.
-#: src/Frontend/Shortcodes.php:722
+#: src/Frontend/Shortcodes.php:728
 #, php-format
 msgid "%1$d of %2$d"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:723
+#: src/Frontend/Shortcodes.php:729
 msgid "slide"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:727
+#: src/Frontend/Shortcodes.php:733
 msgid "Play video"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:728
+#: src/Frontend/Shortcodes.php:734
 msgid "Watch the video"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:754
+#: src/Frontend/Shortcodes.php:760
 msgid "Previous slide"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:755
+#: src/Frontend/Shortcodes.php:761
 msgid "Next slide"
 msgstr ""
 
 #. translators: %d: slide number.
-#: src/Frontend/Shortcodes.php:764
+#: src/Frontend/Shortcodes.php:770
 #, php-format
 msgid "Go to slide %d"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:864
-#: src/Frontend/Shortcodes.php:1085
+#: src/Frontend/Shortcodes.php:870
+#: src/Frontend/Shortcodes.php:1076
 #: templates/admin/classic/recipe-shortcodes.php:70
 #: templates/admin/frame/recipe-shortcodes.php:26
 msgid "Difficulty"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:865
-#: src/Recipe/Recipes.php:1411
+#: src/Frontend/Shortcodes.php:871
+#: src/Recipe/Recipes.php:1419
 msgid "Yields"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1121
+#: src/Frontend/Shortcodes.php:1112
 #: src/System/Functions.php:355
 msgid "Print"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1132
-msgid "Fullscreen"
+#: src/Frontend/Shortcodes.php:1123
+msgid "Full screen"
 msgstr ""
 
 #. translators: 1: amount and unit, e.g. 10g, 2: nutrient name
-#: src/Frontend/Shortcodes.php:1548
+#: src/Frontend/Shortcodes.php:1539
 #, php-format
 msgid "Includes %1$s %2$s"
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1600
+#: src/Frontend/Shortcodes.php:1591
 msgid "Invalid recipe ID specified. Please provide a valid numeric recipe ID."
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1608
+#: src/Frontend/Shortcodes.php:1599
 msgid "No recipe found. Please specify a recipe ID using the id attribute, or use this shortcode on a recipe page."
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1615
+#: src/Frontend/Shortcodes.php:1606
 msgid "Recipe not found."
 msgstr ""
 
 #. translators: %d: post ID
-#: src/Frontend/Shortcodes.php:1620
+#: src/Frontend/Shortcodes.php:1611
 #, php-format
 msgid "The specified ID (%d) is not a recipe."
 msgstr ""
 
 #. translators: %d: post ID
-#: src/Frontend/Shortcodes.php:1623
+#: src/Frontend/Shortcodes.php:1614
 #, php-format
 msgid "No post found with ID %d."
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1632
+#: src/Frontend/Shortcodes.php:1623
 msgid "No related recipes found."
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1635
+#: src/Frontend/Shortcodes.php:1626
 msgid "This may be because there are no other recipes in the current language with matching attributes."
 msgstr ""
 
-#: src/Frontend/Shortcodes.php:1637
+#: src/Frontend/Shortcodes.php:1628
 msgid "Try adjusting the matching criteria or ensure you have other published recipes with shared categories, tags, or ingredients."
 msgstr ""
 
@@ -1533,9 +1541,9 @@ msgstr ""
 
 #: src/functions.php:220
 #: src/Import/CsvImport.php:398
-#: src/Recipe/RecipeMeta.php:336
-#: src/Recipe/Recipes.php:1088
-#: src/Recipe/Recipes.php:1121
+#: src/Recipe/RecipeMeta.php:362
+#: src/Recipe/Recipes.php:1096
+#: src/Recipe/Recipes.php:1129
 #: src/System/Ajax.php:322
 #: src/System/Functions.php:362
 #: templates/admin/classic/recipe-shortcodes.php:95
@@ -1545,9 +1553,9 @@ msgstr ""
 
 #: src/functions.php:226
 #: src/Import/CsvImport.php:398
-#: src/Recipe/RecipeMeta.php:336
-#: src/Recipe/Recipes.php:1092
-#: src/Recipe/Recipes.php:1122
+#: src/Recipe/RecipeMeta.php:362
+#: src/Recipe/Recipes.php:1100
+#: src/Recipe/Recipes.php:1130
 #: src/System/Ajax.php:322
 #: src/System/Functions.php:363
 #: templates/admin/classic/recipe-shortcodes.php:126
@@ -2573,7 +2581,7 @@ msgstr ""
 msgid "Cooked Browse Recipes Page"
 msgstr ""
 
-#: src/Recipe/RecipeMeta.php:229
+#: src/Recipe/RecipeMeta.php:255
 #: templates/admin/classic/settings.php:23
 #: templates/admin/classic/welcome.php:52
 #: templates/admin/frame/welcome.php:29
@@ -2581,100 +2589,100 @@ msgid "Cooked Settings"
 msgstr ""
 
 #. translators: %s: recipe embed shortcode
-#: src/Recipe/RecipeMeta.php:394
+#: src/Recipe/RecipeMeta.php:420
 #, php-format
 msgid "This recipe is set up to include itself in the Recipe Template (containing shortcode %s), which can break the page. Remove the embed that references this same recipe."
 msgstr ""
 
-#: src/Recipe/RecipeMeta.php:441
+#: src/Recipe/RecipeMeta.php:467
 msgid "Enter one item per line. Use the checkboxes below to mark section headings."
 msgstr ""
 
-#: src/Recipe/RecipeMeta.php:444
+#: src/Recipe/RecipeMeta.php:470
 #: templates/admin/frame/recipe-nutrition.php:126
 msgid "Preview"
 msgstr ""
 
-#: src/Recipe/RecipeMeta.php:448
+#: src/Recipe/RecipeMeta.php:474
 msgid "Please review the parsed fields before adding. Automatic parsing may misread amounts—for example, a range written as 2-3 could appear as 23 unless you correct it."
 msgstr ""
 
-#: src/Recipe/RecipeMeta.php:453
+#: src/Recipe/RecipeMeta.php:479
 msgid "Cancel"
 msgstr ""
 
 #. translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")
 #. translators: referring to the author (ex: By John Smith)
 #: src/Recipe/Recipes.php:379
-#: src/Recipe/Recipes.php:444
-#: templates/front/recipe-single.php:58
+#: src/Recipe/Recipes.php:447
+#: templates/front/recipe-single.php:61
 #, php-format
 msgid "By %s"
 msgstr ""
 
-#: src/Recipe/Recipes.php:544
+#: src/Recipe/Recipes.php:552
 msgid "Sorry, you are not allowed to view this recipe."
 msgstr ""
 
 #. translators: For showing "All" of a taxonomy (ex: "All Burgers")
-#: src/Recipe/Recipes.php:629
+#: src/Recipe/Recipes.php:637
 #, php-format
 msgid "All %s"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1185
+#: src/Recipe/Recipes.php:1193
 msgid "Beginner"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1186
+#: src/Recipe/Recipes.php:1194
 msgid "Intermediate"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1187
+#: src/Recipe/Recipes.php:1195
 msgid "Advanced"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1232
+#: src/Recipe/Recipes.php:1240
 msgid "Cooked Gallery"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1236
+#: src/Recipe/Recipes.php:1244
 msgid "Envira Gallery"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1240
+#: src/Recipe/Recipes.php:1248
 msgid "Soliloquy Slider"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1244
+#: src/Recipe/Recipes.php:1252
 msgid "Slider Revolution"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1319
-#: src/Recipe/Recipes.php:1329
+#: src/Recipe/Recipes.php:1327
+#: src/Recipe/Recipes.php:1337
 msgid "Default"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1320
-#: src/Recipe/Recipes.php:1330
+#: src/Recipe/Recipes.php:1328
+#: src/Recipe/Recipes.php:1338
 msgid "Metric"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1321
-#: src/Recipe/Recipes.php:1331
+#: src/Recipe/Recipes.php:1329
+#: src/Recipe/Recipes.php:1339
 msgid "Imperial"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1325
+#: src/Recipe/Recipes.php:1333
 msgid "Units"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1327
+#: src/Recipe/Recipes.php:1335
 msgid "Measurement System"
 msgstr ""
 
 #. translators: %s: number of servings, a quarter of the default
-#: src/Recipe/Recipes.php:1362
+#: src/Recipe/Recipes.php:1370
 #, php-format
 msgid "Quarter (%s Serving)"
 msgid_plural "Quarter (%s Servings)"
@@ -2682,7 +2690,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of servings, half of the default
-#: src/Recipe/Recipes.php:1365
+#: src/Recipe/Recipes.php:1373
 #, php-format
 msgid "Half (%s Serving)"
 msgid_plural "Half (%s Servings)"
@@ -2690,7 +2698,7 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: default number of servings
-#: src/Recipe/Recipes.php:1368
+#: src/Recipe/Recipes.php:1376
 #, php-format
 msgid "Default (%s Serving)"
 msgid_plural "Default (%s Servings)"
@@ -2698,49 +2706,49 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: %s: number of servings, double the default
-#: src/Recipe/Recipes.php:1371
+#: src/Recipe/Recipes.php:1379
 #, php-format
 msgid "Double (%s Servings)"
 msgstr ""
 
 #. translators: %s: number of servings, triple the default
-#: src/Recipe/Recipes.php:1374
+#: src/Recipe/Recipes.php:1382
 #, php-format
 msgid "Triple (%s Servings)"
 msgstr ""
 
 #. translators: singular and plural "serving" sizes
-#: src/Recipe/Recipes.php:1415
-#: src/Recipe/Recipes.php:1431
+#: src/Recipe/Recipes.php:1423
+#: src/Recipe/Recipes.php:1439
 #, php-format
 msgid "%s Serving"
 msgid_plural "%s Servings"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Recipe/Recipes.php:1630
-#: src/Recipe/Recipes.php:1647
+#: src/Recipe/Recipes.php:1638
+#: src/Recipe/Recipes.php:1655
 msgid "or"
 msgstr ""
 
 #. translators: singular and plural "steps"
 #. translators: %d: step number
-#: src/Recipe/Recipes.php:1701
+#: src/Recipe/Recipes.php:1709
 #: src/Recipe/Seo.php:114
 #, php-format
 msgid "Step %d"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1809
+#: src/Recipe/Recipes.php:1817
 msgid "Clear filters"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1838
+#: src/Recipe/Recipes.php:1846
 msgid "Browse"
 msgstr ""
 
 #. translators: %s: number of selected recipe filters.
-#: src/Recipe/Recipes.php:1846
+#: src/Recipe/Recipes.php:1854
 #, php-format
 msgid "%s filter"
 msgid_plural "%s filters"
@@ -2748,45 +2756,45 @@ msgstr[0] ""
 msgstr[1] ""
 
 #. translators: 1: visible browse label, 2: number of selected recipe filters.
-#: src/Recipe/Recipes.php:1854
+#: src/Recipe/Recipes.php:1862
 #, php-format
 msgid "%1$s, browse recipe filters, %2$s selected"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1858
+#: src/Recipe/Recipes.php:1866
 msgid "Browse recipe filters"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1912
+#: src/Recipe/Recipes.php:1920
 msgid "Find a recipe..."
 msgstr ""
 
-#: src/Recipe/Recipes.php:1914
+#: src/Recipe/Recipes.php:1922
 msgid "Search"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1931
+#: src/Recipe/Recipes.php:1939
 msgid "Newest first"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1935
+#: src/Recipe/Recipes.php:1943
 msgid "Oldest first"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1939
+#: src/Recipe/Recipes.php:1947
 msgid "Alphabetical (A-Z)"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1943
+#: src/Recipe/Recipes.php:1951
 msgid "Alphabetical (Z-A)"
 msgstr ""
 
-#: src/Recipe/Recipes.php:1951
+#: src/Recipe/Recipes.php:1959
 msgid "Sort recipes by"
 msgstr ""
 
 #. translators: %s: recipe filter term name.
-#: src/Recipe/Recipes.php:2142
+#: src/Recipe/Recipes.php:2150
 #, php-format
 msgid "Remove %s filter"
 msgstr ""

@@ -33,6 +33,11 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 	.cooked-recipe-info > section.cooked-right > span, .cooked-recipe-info > section.cooked-left > span { margin:0.5rem 1rem 1rem; }
 	.cooked-recipe-info > section.cooked-left > span:last-child, .cooked-recipe-info > span:last-child { margin-right:1rem; }
 	.cooked-recipe-info > section.cooked-right > span:first-child { margin-left:1rem; }
+	.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) { display:block; }
+	.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-left,
+	.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-right { display:block; margin-left:0; text-align:center; }
+	.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-left > span,
+	.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-right > span { margin:0.5rem 1rem 1rem; white-space:normal; }
 
 	.cooked-recipe-search .cooked-fields-wrap { padding:0; display:block; }
 	.cooked-recipe-search .cooked-fields-wrap > .cooked-browse-search { width:100%; max-width:100%; border-right:1px solid rgba(0,0,0,.15); margin:2% 0; }

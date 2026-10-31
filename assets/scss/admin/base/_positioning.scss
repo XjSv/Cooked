@@ -211,12 +211,12 @@
     display: block;
     line-height: 1.5;
     font-size: 12px;
-    color: #888;
+    color: #707070; // #888 was below WCAG AA
     padding: 10px 0 0;
 }
 
 #cooked_recipe_settings .recipe-setting-block em {
-    color: #aaa;
+    color: #707070; // #aaa was below WCAG AA
 }
 
 #cooked_recipe_settings .recipe-setting-block {

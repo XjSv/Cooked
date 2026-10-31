@@ -239,6 +239,7 @@
 @include cooked-dark('.cooked-nutrition-label') {
     --cooked-nut-line: rgba(255, 255, 255, 0.14);
     --cooked-nut-accent: color-mix(in srgb, var(--cooked-main-color, #128666) 45%, #fff);
+    --cooked-nut-accent-text: var(--cooked-nut-accent);
 
     border-color: rgba(255, 255, 255, 0.14);
     background: rgba(255, 255, 255, 0.06);

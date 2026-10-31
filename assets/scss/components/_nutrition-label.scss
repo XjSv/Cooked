@@ -5,6 +5,8 @@
 
 .cooked-nutrition-label {
     --cooked-nut-accent: var(--cooked-main-color, #128666);
+    // The accent as text on its own tint: darker, so the % Daily Value pills meet WCAG AA.
+    --cooked-nut-accent-text: color-mix(in srgb, var(--cooked-nut-accent) 70%, #000);
     --cooked-nut-line: var(--cooked-color-border);
 
     box-sizing: border-box;
@@ -188,7 +190,7 @@
     border-radius: 999px;
     background: var(--cooked-color-accent-soft);
     background: color-mix(in srgb, var(--cooked-nut-accent) 12%, transparent);
-    color: var(--cooked-nut-accent);
+    color: var(--cooked-nut-accent-text);
     font-size: 0.75rem;
     font-weight: 700;
     text-align: center;

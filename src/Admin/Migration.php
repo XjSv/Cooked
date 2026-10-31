@@ -105,25 +105,23 @@ class Migration {
         $total = count( self::pending_classic_recipes() );
 
         if ( $total > 0 ) {
-            $class   = 'notice notice-error';
-            $message = sprintf(
-                /* translators: 1: number of recipes, 2: migration link. */
-                esc_html( _n( 'There is %1$s recipe that is from an older version of Cooked. Please %2$s to migrate this recipe.', 'There are %1$s recipes that are from an older version of Cooked. Please %2$s to migrate these recipes.', $total, 'cooked' ) ),
-                '<strong>' . number_format( $total ) . '</strong>',
-                '<strong><a href="' . esc_url(
-                    add_query_arg(
-                        [
-                            'page' => 'cooked_settings',
-                            'cm'   => '1',
-                        ],
-                        esc_url( admin_url( 'admin.php' ) )
-                    )
-                ) . '#migration">' . __(
-                    'click here',
-                    'cooked'
-                ) . '</a></strong>'
-            );
-            printf( '<div class="%1$s" style="padding:10px 20px"><p style="font-size:1.2em">%2$s</p></div>', esc_attr( $class ), wp_kses_post( $message ) );
+            $url = add_query_arg(
+                [
+                    'page' => 'cooked_settings',
+                    'cm'   => '1',
+                ],
+                admin_url( 'admin.php' )
+            ) . '#migration';
+
+            echo '<div class="notice notice-warning cooked-notice">';
+            echo '<span class="cooked-notice-icon" aria-hidden="true"><i class="cooked-icon cooked-icon-migrate"></i></span>';
+            echo '<div class="cooked-notice-body">';
+            /* translators: %s: number of recipes. */
+            echo '<p class="cooked-notice-title">' . esc_html( sprintf( _n( '%s recipe needs migrating', '%s recipes need migrating', $total, 'cooked' ), number_format_i18n( $total ) ) ) . '</p>';
+            echo '<p class="cooked-notice-text">' . esc_html( _n( 'It was saved by an older version of Cooked. Migrating moves it to the current format without losing any data, and it loads faster.', 'They were saved by an older version of Cooked. Migrating moves them to the current format without losing any data, and they load faster.', $total, 'cooked' ) ) . '</p>';
+            echo '</div>';
+            echo '<a class="button button-primary cooked-notice-action" href="' . esc_url( $url ) . '">' . esc_html( _n( 'Migrate recipe', 'Migrate recipes', $total, 'cooked' ) ) . '</a>';
+            echo '</div>';
         }
     }
 

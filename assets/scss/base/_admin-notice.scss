@@ -1,0 +1,81 @@
+/* Admin notice: Cooked's (and Cooked Pro's) own notices, e.g. recipes to migrate or to review.
+   A WordPress notice with an icon, a title, one line of text and an action button. It reads the
+   colour tokens, so it follows the admin dark mode on Cooked's screens. */
+.notice.cooked-notice {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1rem;
+    border-left-color: var(--cooked-color-accent-strong, #007a55);
+    background: var(--cooked-color-surface, #fff);
+    color: var(--cooked-color-text, #1d2327);
+}
+
+.notice.cooked-notice.notice-warning {
+    border-left-color: #dba617;
+}
+
+.notice.cooked-notice .cooked-notice-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--cooked-color-accent-strong, #007a55) 12%, transparent);
+    color: var(--cooked-color-accent-strong, #007a55);
+    font-size: 1.25rem;
+}
+
+.notice.cooked-notice.notice-warning .cooked-notice-icon {
+    background: rgba(219, 166, 23, 0.16);
+    color: #8a6100;
+}
+
+.notice.cooked-notice .cooked-notice-body {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.notice.cooked-notice .cooked-notice-body p {
+    margin: 0;
+    padding: 0;
+}
+
+.notice.cooked-notice .cooked-notice-title {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.notice.cooked-notice .cooked-notice-text {
+    color: var(--cooked-color-text-muted, #646970);
+}
+
+.notice.cooked-notice .cooked-notice-action {
+    flex: 0 0 auto;
+}
+
+// Cooked's green, on every admin screen and in dark mode.
+.wp-core-ui .notice.cooked-notice .button-primary {
+    border-color: var(--cooked-color-accent-fill, #007a55);
+    background: var(--cooked-color-accent-fill, #007a55);
+    color: #fff;
+}
+
+.wp-core-ui .notice.cooked-notice .button-primary:hover,
+.wp-core-ui .notice.cooked-notice .button-primary:focus {
+    border-color: color-mix(in srgb, var(--cooked-color-accent-fill, #007a55) 85%, #000);
+    background: color-mix(in srgb, var(--cooked-color-accent-fill, #007a55) 85%, #000);
+    color: #fff;
+}
+
+@media screen and (max-width: 782px) {
+    .notice.cooked-notice {
+        flex-wrap: wrap;
+    }
+
+    .notice.cooked-notice .cooked-notice-action {
+        width: 100%;
+    }
+}

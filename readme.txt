@@ -133,6 +133,8 @@ Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
 == Changelog ==
 
 = 1.17.0 =
+* **NEW:** Added uninstall option "Delete Cooked Data on Uninstall" under Advanced Settings. Recipes, settings, and uploads stay unless it is enabled.
+* **FIX:** Favoriting a recipe updates only the favorites list. Upgrade removes session fields previously stored in user meta.
 * **TWEAK:** Replaced Tooltipster with Floating UI tooltip library.
 * **FIX:** Fixed the Nutrition Facts bar stopping short under the serving size.
 * **FIX:** Fixed the [cooked-info] shortcode styles so both columns stay on one line when the content area is narrow.

@@ -52,6 +52,7 @@ class FilterTestCase extends TestCase {
         unset( $GLOBALS['_cooked_test_is_feed'] );
         unset( $GLOBALS['_cooked_test_is_page'] );
         unset( $GLOBALS['_cooked_test_logged_in'] );
+        unset( $GLOBALS['_cooked_test_user_meta'] );
         unset( $GLOBALS['cooked_modified_where'] );
         unset( $GLOBALS['wp_rewrite'] );
         $GLOBALS['_cooked_settings'] = [];

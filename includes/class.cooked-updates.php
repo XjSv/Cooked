@@ -179,6 +179,10 @@ class Cooked_Updates {
                 'name'        => __( 'Remove recipes from user meta', 'cooked' ),
                 'description' => __( 'Removes the legacy "recipes" key from all users\' cooked_user_meta.', 'cooked' ),
             ],
+            'remove_session_keys_from_cooked_user_meta' => [
+                'name'        => __( 'Remove session data from user meta', 'cooked' ),
+                'description' => __( 'Removes fields copied from the user session into cooked_user_meta.', 'cooked' ),
+            ],
         ];
 
         $updates = self::get_version_updates();
@@ -266,6 +270,9 @@ class Cooked_Updates {
             '1.13.0' => [
                 'purge_legacy_related_recipes_cache',
                 'remove_recipes_from_cooked_user_meta',
+            ],
+            '1.17.0' => [
+                'remove_session_keys_from_cooked_user_meta',
             ],
         ]);
     }
@@ -404,6 +411,53 @@ class Cooked_Updates {
         if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( sprintf( 'Cooked: Removed legacy recipes key from %d user(s) cooked_user_meta.', $updated_count ) );
+        }
+    }
+
+    /**
+     * Remove session fields previously written into cooked_user_meta.
+     *
+     * @since 1.17.0
+     */
+    private static function remove_session_keys_from_cooked_user_meta() {
+        $user_ids = get_users( [
+            'meta_key' => 'cooked_user_meta',
+            'fields'   => 'ID',
+        ] );
+
+        if ( empty( $user_ids ) ) {
+            return;
+        }
+
+        $session_keys  = Cooked_Users::session_meta_keys();
+        $updated_count = 0;
+
+        foreach ( $user_ids as $user_id ) {
+            $meta = get_user_meta( $user_id, 'cooked_user_meta', true );
+
+            if ( ! is_array( $meta ) ) {
+                continue;
+            }
+
+            $has_session_key = false;
+            foreach ( $session_keys as $key ) {
+                if ( array_key_exists( $key, $meta ) ) {
+                    $has_session_key = true;
+                    break;
+                }
+            }
+
+            if ( ! $has_session_key ) {
+                continue;
+            }
+
+            Cooked_Users::update_meta( $user_id, $meta );
+            $updated_count++;
+        }
+
+        if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( sprintf( 'Cooked: Removed session fields from %d user(s) cooked_user_meta.', $updated_count ) );
         }
     }
 

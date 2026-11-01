@@ -143,6 +143,7 @@ Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
 * **FIX:** Stop the [cooked-info] shortcode from allowing script tags in later recipe fields, preventing stored XSS in excerpts, notes, and directions.
 * **FIX:** Fixed printing when Disable Public Recipes is enabled.
 * **FIX:** Fixed ingredient and direction lists when upgrading recipes from Cooked 2.
+* **FIX:** Fixed CSV import so it only processes the file from the current upload.
 
 = 1.16.2 =
 * **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).

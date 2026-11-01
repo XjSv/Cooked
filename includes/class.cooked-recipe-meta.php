@@ -159,6 +159,18 @@ class Cooked_Recipe_Meta {
          */
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return $post_id;
 
+        $post_types = apply_filters(
+            'cooked_recipe_metabox_post_types',
+            apply_filters( 'cp_recipe_metabox_post_types', [ 'cp_recipe' ] )
+        );
+        if ( ! in_array( get_post_type( $post_id ), $post_types, true ) ) {
+            return $post_id;
+        }
+
+        if ( ! current_user_can( 'edit_post', $post_id ) ) {
+            return $post_id;
+        }
+
         // Check the user's permissions.
         if ( ! current_user_can( 'edit_cooked_recipes', $post_id ) ) return $post_id;
 

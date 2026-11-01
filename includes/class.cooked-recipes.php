@@ -1567,6 +1567,20 @@ class Cooked_Recipes {
         return [];
     }
 
+    private static function c2_detailed_rows( $value ) {
+        if ( is_array( $value ) ) {
+            return $value;
+        }
+
+        if ( ! is_string( $value ) ) {
+            return [];
+        }
+
+        $rows = unserialize( $value, [ 'allowed_classes' => false ] );
+
+        return is_array( $rows ) ? $rows : [];
+    }
+
     // Sync up the Cooked 2.x Classic recipe meta fields to the new Cooked 3.x meta fields
     public static function sync_c2_recipe_settings( $c2_recipe_settings, $recipe_id ) {
         $recipe_settings = [];
@@ -1584,11 +1598,15 @@ class Cooked_Recipes {
         if ( !empty($c2_recipe_settings['_cp_recipe_ingredients']) && empty($c2_recipe_settings['_cp_recipe_detailed_ingredients']) ):
             $ingredients = explode("\n", $c2_recipe_settings['_cp_recipe_ingredients']);
         elseif ( !empty($c2_recipe_settings['_cp_recipe_detailed_ingredients']) ):
-            $ingredients = unserialize( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] );
+            $ingredients = self::c2_detailed_rows( $c2_recipe_settings['_cp_recipe_detailed_ingredients'] );
         endif;
 
         if ( !empty($ingredients) ):
             foreach( $ingredients as $ing ):
+                if ( ! is_array( $ing ) && ! is_string( $ing ) ):
+                    continue;
+                endif;
+
                 $rand_id = wp_rand( 1000000,9999999 );
                 if ( isset($ing['type']) && $ing['type'] == 'ingredient' ):
                     $recipe_settings['ingredients'][$rand_id]['amount'] = $ing['amount'];
@@ -1618,12 +1636,16 @@ class Cooked_Recipes {
         if ( !empty($c2_recipe_settings['_cp_recipe_directions']) && empty($c2_recipe_settings['_cp_recipe_detailed_directions']) ):
             $directions = explode("\n", $c2_recipe_settings['_cp_recipe_directions']);
         elseif ( !empty($c2_recipe_settings['_cp_recipe_detailed_directions']) ):
-            $directions = unserialize( $c2_recipe_settings['_cp_recipe_detailed_directions'] );
+            $directions = self::c2_detailed_rows( $c2_recipe_settings['_cp_recipe_detailed_directions'] );
         endif;
 
         if ( !empty($directions) ):
 
             foreach( $directions as $dir ):
+                if ( ! is_array( $dir ) && ! is_string( $dir ) ):
+                    continue;
+                endif;
+
                 $rand_id = wp_rand( 1000000,9999999 );
                 if ( isset($dir['type']) && $dir['type'] == 'direction' ):
                     $recipe_settings['directions'][$rand_id]['image'] = $dir['image_id'];

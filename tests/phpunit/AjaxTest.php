@@ -105,11 +105,34 @@ class AjaxTest extends TestCase {
         $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_4_1710000000abc', 4 ] ) );
     }
 
-    public function test_csv_import_file_path_rejects_non_csv_and_outside_uploads() {
-        $basedir = '/cooked-uploads-basedir';
+    public function test_csv_import_file_path_allows_temp_file_with_cooked_prefix() {
+        $temp_dir = sys_get_temp_dir();
+        $path = rtrim( $temp_dir, '/\\' ) . '/cooked-csv-phpunit-' . uniqid() . '.tmp';
+        file_put_contents( $path, 'title' );
 
-        $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ [ 'not-a-string' ], $basedir ] ) );
-        $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ $basedir . '/victim-not-a-csv.txt', $basedir ] ) );
-        $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ sys_get_temp_dir() . '/outside.csv', $basedir ] ) );
+        try {
+            $allowed = self::call_private_method( 'csv_import_file_path', [ $path, $temp_dir ] );
+            $this->assertSame( str_replace( '\\', '/', realpath( $path ) ), $allowed );
+        } finally {
+            if ( file_exists( $path ) ) {
+                unlink( $path );
+            }
+        }
+    }
+
+    public function test_csv_import_file_path_rejects_uploads_and_other_prefixes() {
+        $temp_dir = sys_get_temp_dir();
+        $other = rtrim( $temp_dir, '/\\' ) . '/other-prefix-' . uniqid() . '.tmp';
+        file_put_contents( $other, 'title' );
+
+        try {
+            $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ '/cooked-uploads-basedir/import.csv', $temp_dir ] ) );
+            $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ $other, $temp_dir ] ) );
+            $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ [ 'not-a-string' ], $temp_dir ] ) );
+        } finally {
+            if ( file_exists( $other ) ) {
+                unlink( $other );
+            }
+        }
     }
 }

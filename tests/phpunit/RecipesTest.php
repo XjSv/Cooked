@@ -116,4 +116,56 @@ class RecipesTest extends TestCase {
         $this->assertStringNotContainsString( '<script', $result );
         $this->assertStringContainsString( '&lt;script', $result );
     }
+
+    public function test_sync_c2_recipe_settings_reads_serialized_ingredient_rows() {
+        $settings = Cooked_Recipes::sync_c2_recipe_settings( [
+            '_cp_recipe_detailed_ingredients' => serialize( [
+                [
+                    'type' => 'ingredient',
+                    'name' => 'flour',
+                    'amount' => '1',
+                    'measurement' => 'cup',
+                ],
+            ] ),
+        ], 1 );
+
+        $this->assertContains( 'flour', array_column( $settings['ingredients'], 'name' ) );
+    }
+
+    public function test_sync_c2_recipe_settings_reads_ingredient_row_arrays() {
+        $settings = Cooked_Recipes::sync_c2_recipe_settings( [
+            '_cp_recipe_detailed_ingredients' => [
+                [
+                    'type' => 'ingredient',
+                    'name' => 'flour',
+                    'amount' => '1',
+                    'measurement' => 'cup',
+                ],
+            ],
+        ], 1 );
+
+        $this->assertContains( 'flour', array_column( $settings['ingredients'], 'name' ) );
+    }
+
+    public function test_sync_c2_recipe_settings_ignores_serialized_objects() {
+        $payload = new Cooked_C2_Object_Fixture();
+        $settings = Cooked_Recipes::sync_c2_recipe_settings( [
+            '_cp_recipe_detailed_ingredients' => serialize( $payload ),
+            '_cp_recipe_detailed_directions' => serialize( $payload ),
+        ], 1 );
+
+        $ingredients = isset( $settings['ingredients'] ) ? $settings['ingredients'] : [];
+        $directions = isset( $settings['directions'] ) ? $settings['directions'] : [];
+
+        $this->assertNotContains( 'pwned-name', array_column( $ingredients, 'name' ) );
+        $this->assertNotContains( 'pwned-amount', array_column( $ingredients, 'amount' ) );
+        $this->assertNotContains( 'pwned-direction', array_column( $directions, 'content' ) );
+        $this->assertNotContains( 'pwned-direction', array_column( $directions, 'section_heading_name' ) );
+    }
+}
+
+class Cooked_C2_Object_Fixture {
+    public $name = 'pwned-name';
+    public $amount = 'pwned-amount';
+    public $value = 'pwned-direction';
 }

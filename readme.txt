@@ -141,6 +141,7 @@ Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
 * **FIX:** Fixed the [cooked-info] shortcode so its items center below the mobile breakpoint.
 * **FIX:** Escaped the attachment titles when building the photo gallery HTML.
 * **FIX:** Stop the [cooked-info] shortcode from allowing script tags in later recipe fields, preventing stored XSS in excerpts, notes, and directions.
+* **FIX:** Fixed printing when Disable Public Recipes is enabled.
 
 = 1.16.2 =
 * **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).

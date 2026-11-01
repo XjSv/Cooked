@@ -19,13 +19,17 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class Cooked_Recipes {
 
+    private static $checking_embed = false;
+
+    private static $rendering_print = false;
+
     public function __construct() {
         add_filter( 'cooked_recipe_content_filter', [&$this, 'vendor_checks'], 1, 1 );
         add_filter( 'the_content', [&$this, 'recipe_template'], 10 );
 
         add_filter( 'parse_query', [&$this, 'custom_taxonomy_in_query'], 10 );
 
-        add_action( 'template_redirect', [&$this, 'print_recipe_template'], 10 );
+        add_action( 'template_redirect', [&$this, 'print_recipe_template'], 99 );
         add_action( 'cooked_check_recipe_query', [&$this, 'check_recipe_query'], 10 );
         add_action( 'pre_get_posts', [&$this, 'cooked_pre_get_posts'], 10, 1 );
         add_action( 'restrict_manage_posts', [&$this, 'filter_recipes_by_taxonomy'], 10 );
@@ -374,12 +378,83 @@ class Cooked_Recipes {
         return ob_get_clean();
     }
 
-    public function print_recipe_template() {
+    public static function is_print_request() {
+        if ( self::$rendering_print ) {
+            return true;
+        }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if ( is_singular('cp_recipe') && isset($_GET['print']) ):
-            load_template( COOKED_DIR . 'templates/front/recipe-print.php', false);
-            exit;
-        endif;
+        return is_singular( 'cp_recipe' ) && isset( $_GET['print'] );
+    }
+
+    public function print_recipe_template() {
+        if ( self::$checking_embed ) {
+            return;
+        }
+
+        if ( Cooked_Post_Types::public_recipes_disabled() ) {
+            $this->print_embedded_recipe();
+            return;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
+        if ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) ) {
+            self::render_print_template();
+        }
+    }
+
+    private function print_embedded_recipe() {
+        $recipe_id = absint( get_query_var( 'cooked_print' ) );
+        if ( ! $recipe_id || ! is_singular() ) {
+            return;
+        }
+
+        $page = get_queried_object();
+        if ( ! $page instanceof WP_Post ) {
+            return;
+        }
+
+        // Logged-out visitors do not have the read capability. Published posts stay printable.
+        if ( post_password_required( $page ) || ( ! is_post_publicly_viewable( $page ) && ! current_user_can( 'read_post', $page->ID ) ) ) {
+            return;
+        }
+
+        if ( ! self::content_has_self_recipe_embed_shortcode( $page->post_content, $recipe_id ) ) {
+            return;
+        }
+
+        if ( empty( self::get( $recipe_id, true ) ) ) {
+            return;
+        }
+
+        self::$checking_embed = true;
+        try {
+            $rendered = apply_filters( 'the_content', $page->post_content );
+        } finally {
+            self::$checking_embed = false;
+        }
+
+        if ( ! is_string( $rendered ) || false === strpos( $rendered, 'id="cooked-recipe-embed-' . $recipe_id . '"' ) ) {
+            return;
+        }
+
+        $recipe_post = get_post( $recipe_id );
+        if ( ! $recipe_post instanceof WP_Post || 'cp_recipe' !== $recipe_post->post_type ) {
+            return;
+        }
+
+        global $wp_query;
+        // wp_head() restores the global post from the main query.
+        $wp_query->post = $recipe_post;
+        $GLOBALS['post'] = $recipe_post;
+        setup_postdata( $recipe_post );
+        self::render_print_template();
+    }
+
+    private static function render_print_template() {
+        self::$rendering_print = true;
+        load_template( COOKED_DIR . 'templates/front/recipe-print.php', false );
+        exit;
     }
 
     public static function print_logo() {
@@ -930,8 +1005,7 @@ class Cooked_Recipes {
     public static function measurement_system_switcher() {
         global $_cooked_settings, $post;
         $switcher_enabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'enable_measurement_switcher', $_cooked_settings['advanced'] ) ? true : false );
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        $printing = ( is_singular('cp_recipe') && isset($_GET['print']) );
+        $printing = self::is_print_request();
 
         if ( !$printing && $switcher_enabled ):
             $current = esc_html( get_query_var( 'measurement_system', '' ) );
@@ -957,8 +1031,7 @@ class Cooked_Recipes {
     public static function serving_size_switcher( $servings ) {
         global $_cooked_settings, $post;
         $switcher_disabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_servings_switcher', $_cooked_settings['advanced'] ) ? true : false );
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        $printing = ( is_singular('cp_recipe') && isset($_GET['print']) );
+        $printing = self::is_print_request();
 
         if ( !$printing && !$switcher_disabled ):
             $default = $servings;

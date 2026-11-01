@@ -31,6 +31,7 @@ class Cooked_Post_Types {
 
         add_filter( 'enter_title_here', [&$this, 'change_new_recipe_title'] );
         add_filter( 'query_vars', [&$this, 'add_query_vars_filter'] );
+        add_filter( 'rest_pre_dispatch', [ $this, 'restrict_recipe_rest' ], 10, 3 );
         add_filter( 'manage_cp_recipe_posts_columns', [&$this, 'custom_columns'] );
         add_filter( 'nav_menu_css_class', [&$this, 'cooked_nav_classes'], 10, 2 );
         add_filter( 'redirect_canonical', [&$this, 'disable_canonical_redirect'], 10, 2 );
@@ -180,8 +181,30 @@ class Cooked_Post_Types {
     public static function add_query_vars_filter( $vars ) {
         $vars[] = 'servings';
         $vars[] = 'measurement_system';
+        $vars[] = 'cooked_print';
 
         return $vars;
+    }
+
+    public function restrict_recipe_rest( $result, $server, $request ) {
+        if ( null !== $result || ! self::public_recipes_disabled() ) {
+            return $result;
+        }
+
+        $route = $request->get_route();
+        if ( '/wp/v2/cooked_recipe' !== $route && 0 !== strpos( $route, '/wp/v2/cooked_recipe/' ) ) {
+            return $result;
+        }
+
+        if ( current_user_can( 'edit_cooked_recipes' ) ) {
+            return $result;
+        }
+
+        return new WP_Error(
+            'rest_cannot_view',
+            __( 'Sorry, you are not allowed to view recipes.', 'cooked' ),
+            [ 'status' => rest_authorization_required_code() ]
+        );
     }
 
     public function remove_default_title_tag() {
@@ -441,6 +464,14 @@ class Cooked_Post_Types {
         add_image_size( 'cooked-large', 2000, 2000 );
     }
 
+    public static function public_recipes_disabled() {
+        global $_cooked_settings;
+
+        return isset( $_cooked_settings['advanced'] )
+            && is_array( $_cooked_settings['advanced'] )
+            && in_array( 'disable_public_recipes', $_cooked_settings['advanced'], true );
+    }
+
     public static function get() {
         global $_cooked_settings;
 
@@ -449,8 +480,7 @@ class Cooked_Post_Types {
         $has_archive_slug = sanitize_title_with_dashes( __('Recipe Archive', 'cooked') );
         $exclude_from_search = false;
 
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if ( !isset($_GET['print']) && isset( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'] ) ) {
+        if ( self::public_recipes_disabled() ) {
             $public_recipes = false;
             $has_archive_slug = false;
             $exclude_from_search = true;

@@ -93,4 +93,23 @@ class AjaxTest extends TestCase {
     public function test_user_can_edit_post_of_type_rejects_empty_type() {
         $this->assertFalse( self::call_private_method( 'user_can_edit_post_of_type', [ 5, '' ] ) );
     }
+
+    public function test_csv_import_transient_key_accepts_this_users_key() {
+        $this->assertTrue( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_4_1710000000', 4 ] ) );
+    }
+
+    public function test_csv_import_transient_key_rejects_foreign_and_malformed_keys() {
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'some_other_plugin_cached_path', 4 ] ) );
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_4_', 4 ] ) );
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_9_1710000000', 4 ] ) );
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_4_1710000000abc', 4 ] ) );
+    }
+
+    public function test_csv_import_file_path_rejects_non_csv_and_outside_uploads() {
+        $basedir = '/cooked-uploads-basedir';
+
+        $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ [ 'not-a-string' ], $basedir ] ) );
+        $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ $basedir . '/victim-not-a-csv.txt', $basedir ] ) );
+        $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ sys_get_temp_dir() . '/outside.csv', $basedir ] ) );
+    }
 }

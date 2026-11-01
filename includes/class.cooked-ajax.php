@@ -435,6 +435,42 @@ class Cooked_Ajax {
         ]);
     }
 
+    private static function is_csv_import_transient_key( $key, $user_id ) {
+        $user_id = (int) $user_id;
+        if ( $user_id < 1 || ! is_string( $key ) || '' === $key ) {
+            return false;
+        }
+
+        return 1 === preg_match( '/^cooked_csv_import_' . $user_id . '_\d+$/', $key );
+    }
+
+    private static function csv_import_file_path( $file_path, $basedir ) {
+        if ( ! is_string( $file_path ) || ! is_string( $basedir ) || '' === $basedir ) {
+            return false;
+        }
+
+        $basedir = rtrim( str_replace( '\\', '/', $basedir ), '/' );
+        $file_path = str_replace( '\\', '/', $file_path );
+
+        if ( 0 !== strpos( $file_path, $basedir . '/' ) || ! preg_match( '/\.csv$/i', $file_path ) ) {
+            return false;
+        }
+
+        $real_basedir = realpath( $basedir );
+        $real_file = realpath( $file_path );
+        if ( ! $real_basedir || ! $real_file || ! is_file( $real_file ) ) {
+            return false;
+        }
+
+        $real_basedir = rtrim( str_replace( '\\', '/', $real_basedir ), '/' );
+        $real_file = str_replace( '\\', '/', $real_file );
+        if ( 0 !== strpos( $real_file, $real_basedir . '/' ) || ! preg_match( '/\.csv$/i', $real_file ) ) {
+            return false;
+        }
+
+        return $real_file;
+    }
+
     /**
      * Process CSV file and import recipes
      */
@@ -445,9 +481,15 @@ class Cooked_Ajax {
         }
 
         $transient_key = isset( $_POST['transient_key'] ) ? sanitize_text_field( wp_unslash( $_POST['transient_key'] ) ) : '';
-        $file_path = get_transient($transient_key);
+        if ( ! self::is_csv_import_transient_key( $transient_key, get_current_user_id() ) ) {
+            wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
+        }
 
-        if (!$file_path || !file_exists($file_path)) {
+        $uploads = wp_upload_dir();
+        $basedir = isset( $uploads['basedir'] ) ? $uploads['basedir'] : '';
+        $file_path = self::csv_import_file_path( get_transient( $transient_key ), $basedir );
+
+        if ( ! $file_path ) {
             wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
         }
 

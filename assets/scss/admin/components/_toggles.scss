@@ -1,0 +1,112 @@
+/* Toggle switches: checkboxes with the cooked-switch, -red, -yellow or -gray class */
+input[type="checkbox"].cooked-switch,
+input[type="checkbox"].cooked-switch-red,
+input[type="checkbox"].cooked-switch-yellow,
+input[type="checkbox"].cooked-switch-gray {
+    --cooked-switch-on: var(--cooked-color-accent);
+    position: relative;
+    width: 1.75rem;
+    min-width: 1.75rem;
+    height: 1rem;
+    margin: 0 0.4rem 0 0;
+    border: 1px solid #dfdfdf;
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: none;
+    vertical-align: middle;
+    cursor: pointer;
+    appearance: none;
+    transition: background-color 0.3s, border-color 0.3s;
+}
+
+input[type="checkbox"].cooked-switch-red {
+    --cooked-switch-on: var(--cooked-color-danger);
+}
+
+input[type="checkbox"].cooked-switch-yellow {
+    --cooked-switch-on: var(--cooked-color-warning);
+}
+
+input[type="checkbox"].cooked-switch-gray {
+    --cooked-switch-on: var(--cooked-color-neutral);
+}
+
+input[type="checkbox"].cooked-switch::before,
+input[type="checkbox"].cooked-switch-red::before,
+input[type="checkbox"].cooked-switch-yellow::before,
+input[type="checkbox"].cooked-switch-gray::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: -1px;
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s;
+}
+
+input[type="checkbox"].cooked-switch:checked,
+input[type="checkbox"].cooked-switch-red:checked,
+input[type="checkbox"].cooked-switch-yellow:checked,
+input[type="checkbox"].cooked-switch-gray:checked {
+    border-color: var(--cooked-switch-on);
+    background: var(--cooked-switch-on);
+}
+
+input[type="checkbox"].cooked-switch:checked::before,
+input[type="checkbox"].cooked-switch-red:checked::before,
+input[type="checkbox"].cooked-switch-yellow:checked::before,
+input[type="checkbox"].cooked-switch-gray:checked::before {
+    content: "";
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    transform: translateX(0.75rem);
+}
+
+input[type="checkbox"].cooked-switch:focus,
+input[type="checkbox"].cooked-switch-red:focus,
+input[type="checkbox"].cooked-switch-yellow:focus,
+input[type="checkbox"].cooked-switch-gray:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+input[type="checkbox"].cooked-switch:focus-visible,
+input[type="checkbox"].cooked-switch-red:focus-visible,
+input[type="checkbox"].cooked-switch-yellow:focus-visible,
+input[type="checkbox"].cooked-switch-gray:focus-visible {
+    outline: var(--cooked-focus-ring);
+    outline-offset: 2px;
+}
+
+input[type="checkbox"].cooked-switch:disabled,
+input[type="checkbox"].cooked-switch-red:disabled,
+input[type="checkbox"].cooked-switch-yellow:disabled,
+input[type="checkbox"].cooked-switch-gray:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+input[type="checkbox"].cooked-switch,
+input[type="checkbox"].cooked-switch::before {
+    @media (prefers-reduced-motion: reduce) {
+        transition: none;
+    }
+}
+
+.cooked-tooltip-buttons .cooked-icon-spin {
+    margin-top: 10px;
+    font-size: 15px;
+}
+
+.cooked-tooltip-buttons .cooked-saved-default {
+    height: 28px;
+    line-height: 28px;
+    font-weight: bold;
+    font-size: 15px;
+    color: #888;
+}

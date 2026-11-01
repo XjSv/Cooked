@@ -3,7 +3,7 @@ const { resolve, extname } = require('path');
 
 const pluginRoot = resolve(__dirname, '..');
 const defaultWoffPath = resolve(pluginRoot, 'assets/fonts/CookedIcons.woff');
-const iconsCssPath = resolve(pluginRoot, 'assets/css/icons.css');
+const iconsCssPath = resolve(pluginRoot, 'assets/scss/base/_icons.scss');
 const dataUriPattern = /url\(data:application\/font-woff;charset=utf-8;base64,[^)]+\)/;
 
 const woffPath = process.argv[2]
@@ -39,4 +39,4 @@ writeFileSync(iconsCssPath, updatedCss);
 
 console.log(`Embedded ${woffBuffer.length} bytes from ${woffPath}`);
 console.log(`Updated ${iconsCssPath}`);
-console.log('Run "bun run build" when ready to regenerate icons.min.css');
+console.log('Run "bun run build" when ready to rebuild the stylesheets');

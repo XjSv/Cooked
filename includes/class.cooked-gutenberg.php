@@ -1,34 +1,16 @@
 <?php
 /**
- * Cooked Gutenberg Functions
+ * Deprecated file.
+ *
+ * Cooked_Gutenberg moved to src/Integrations/Gutenberg.php in Cooked 2.0.0 and is loaded automatically.
+ * This file only keeps old require_once calls working. It may be removed as early as Cooked 2.1.
  *
  * @package     Cooked
- * @subpackage  Gutenberg Functions
- * @since       1.5.2
-*/
-
-// Exit if accessed directly
-if ( ! defined( 'ABSPATH' ) ) exit;
-
-/**
- * Cooked_Gutenberg Class
- *
- * This class handles the Cooked Recipe Meta Box creation.
- *
- * @since 1.5.2
+ * @subpackage  Deprecated
+ * @since       2.0.0
+ * @deprecated  2.0.0
  */
-class Cooked_Gutenberg {
 
-    public function __construct() {
-        add_filter( 'use_block_editor_for_post_type', [&$this, 'gutenberg_support'], 10, 2 );
-        add_filter( 'gutenberg_can_edit_post_type', [&$this, 'gutenberg_support'], 10, 2 );
-    }
+defined( 'ABSPATH' ) || exit;
 
-    public function gutenberg_support( $can_edit, $post_type ) {
-        if ( $post_type == 'cp_recipe' )
-            return false;
-
-        return $can_edit;
-    }
-
-}
+_deprecated_file( basename( __FILE__ ), '2.0.0', 'Cooked\Integrations\Gutenberg' );

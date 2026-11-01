@@ -1,0 +1,36 @@
+/* Clearfix */
+.cooked-clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.cooked-noscroll {
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+}
+
+/* Hidden Items */
+.cooked-hidden-schema {
+    display: none;
+}
+
+.cooked-fsm .cooked-fsm-mobile-nav {
+    display: none;
+}
+
+.cooked-button,
+.cooked-fsm .cooked-fsm-top,
+.cooked-browse-search-button,
+.cooked-profile-tabs,
+.cooked-icon-loading,
+.cooked-progress span {
+    color: #fff !important;
+    text-decoration: none !important;
+}
+
+.cooked-recipe-search .cooked-taxonomy-selected .cooked-field-title,
+.cooked-recipe-search .cooked-taxonomy-selected:before {
+    color: #fff;
+}

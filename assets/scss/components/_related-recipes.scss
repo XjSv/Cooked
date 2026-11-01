@@ -1,0 +1,26 @@
+/* Related Recipes Styles */
+.cooked-related-recipes-title {
+    margin: 0 0 20px 0;
+    font-size: 1.5em;
+    font-weight: 600;
+    color: #333;
+}
+
+.cooked-related-recipes-grid {
+    margin: 20px 0;
+}
+
+.cooked-related-recipes-error,
+.cooked-related-recipes-empty {
+    padding: 15px;
+    margin: 20px 0;
+    background: #f9f9f9;
+    border-left: 4px solid #d63638;
+    color: #666;
+    font-style: italic;
+}
+
+.cooked-related-recipes-empty {
+    border-left-color: #0073aa;
+    text-align: center;
+}

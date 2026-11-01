@@ -56,7 +56,7 @@ test.describe('CSV import transient', () => {
     const page = await adminContext.newPage();
     await page.goto('/wp-admin/admin.php?page=cooked_import', { waitUntil: 'load' });
     const nonce = await page.evaluate(() => {
-      const vars = (window as { cooked_migration_js_vars?: { cooked_import_nonce?: string } }).cooked_migration_js_vars;
+      const vars = (window as { cooked_admin_functions_js_vars?: { cooked_import_nonce?: string } }).cooked_admin_functions_js_vars;
       return vars?.cooked_import_nonce || '';
     });
     expect(nonce).not.toBe('');

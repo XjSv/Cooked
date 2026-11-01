@@ -1,0 +1,10 @@
+---
+description: Do not run build/minification steps after editing source files
+alwaysApply: true
+---
+
+# No Build Process
+
+Do not run Gulp, npm build scripts, or any minification/compilation steps after editing CSS, JS, or SASS files. The developer handles builds manually at deployment time.
+
+When editing assets, only modify the source files (`.js`, `.scss`, `.css`). Do not attempt to regenerate `.min.js` or `.min.css` files.

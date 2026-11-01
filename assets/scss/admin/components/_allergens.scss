@@ -1,0 +1,39 @@
+/* Allergen Checkboxes (Sidebar Meta Box) */
+#cooked_allergens .cooked-allergens-checkboxes {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#cooked_allergens .cooked-allergen-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
+#cooked_allergens .cooked-allergen-checkbox input[type="checkbox"] {
+    margin: 0;
+}
+
+#cooked_allergens .cooked-allergen {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#cooked_allergens .cooked-allergen .cooked-icon {
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+#cooked_allergens .cooked-allergen,
+#cooked_allergens .cooked-allergen .cooked-icon {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+#cooked_allergens .cooked-allergen-label {
+    font-size: 13px;
+    color: #333;
+}

@@ -44,6 +44,8 @@ test.describe('Bulk ingredient parse', () => {
   });
 
   test('parses one ingredient for a logged-out visitor when guest submissions are on', async ({ browser }) => {
+    // Guest submissions are a Cooked Pro feature.
+    test.skip(wpCliArgs(['eval', 'echo class_exists("Cooked_Add_Recipe") ? "1" : "0";']) !== '1', 'Needs Cooked Pro active');
     setGuestMode(true);
     const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
     const response = await context.request.post('/wp-admin/admin-ajax.php', {
@@ -86,7 +88,7 @@ test.describe('Bulk ingredient parse', () => {
     const page = await adminContext.newPage();
     await page.goto('/wp-admin/post-new.php?post_type=cp_recipe', { waitUntil: 'load' });
     const nonce = await page.evaluate(() => {
-      const vars = (window as { cooked_migration_js_vars?: { cooked_bulk_add_nonce?: string } }).cooked_migration_js_vars;
+      const vars = (window as { cooked_admin_functions_js_vars?: { cooked_bulk_add_nonce?: string } }).cooked_admin_functions_js_vars;
       return vars?.cooked_bulk_add_nonce || '';
     });
     expect(nonce).not.toBe('');

@@ -1,0 +1,158 @@
+// Upgrade to Pro screen (templates/admin/pro.php), rendered inside the admin frame.
+// The banner, intro and single-column body are shared frame styles (_frame.scss).
+
+.cooked-pro .cooked-admin-intro {
+    max-width: 760px;
+}
+
+// Call to action between the intro and the features: the coupon on the left, the
+// button on the right; stacked on phones.
+.cooked-pro-cta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 32px;
+    padding: 20px 24px;
+    border: 1px solid rgba(0, 192, 134, 0.35); // --cooked-color-accent at 35%
+    border-radius: var(--cooked-radius);
+    background: var(--cooked-color-accent-soft);
+
+    @media screen and (max-width: 600px) {
+        flex-direction: column;
+        align-items: stretch;
+        margin-bottom: 24px;
+        padding: 16px;
+    }
+}
+
+#cooked-admin-app .cooked-pro-cta p.cooked-pro-coupon {
+    display: flex;
+    flex: 1 1 320px;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+    margin: 0;
+    color: var(--cooked-color-text);
+    font-size: 15px;
+    line-height: 1.6;
+
+    @media screen and (max-width: 600px) {
+        flex-basis: auto;
+        justify-content: center;
+        font-size: 14px;
+        text-align: center;
+    }
+}
+
+.cooked-pro-coupon-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--cooked-color-accent);
+    color: #fff;
+
+    @media screen and (max-width: 600px) {
+        display: none;
+    }
+}
+
+.cooked-pro-coupon code {
+    padding: 3px 8px;
+    border: 1px dashed var(--cooked-color-accent-strong);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-accent-strong);
+    font-weight: 600;
+    letter-spacing: 0.04em;
+}
+
+#cooked-admin-app a.cooked-pro-button.components-button.is-primary {
+    flex: 0 0 auto;
+    justify-content: center;
+    height: auto;
+    padding: 12px 32px;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.cooked-pro-coupon .cooked-copy-code {
+    padding: 2px 10px;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-text);
+    font-size: 12px;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+        border-color: var(--cooked-color-accent);
+        color: var(--cooked-color-accent-strong);
+    }
+}
+
+.cooked-pro-features {
+    display: grid;
+    // Four columns keep the 16 features in even rows.
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @media screen and (max-width: 1100px) {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @media screen and (max-width: 600px) {
+        gap: 8px;
+    }
+
+    @media screen and (max-width: 420px) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.cooked-pro-features li {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin: 0;
+    padding: 12px 16px;
+    border: 1px solid var(--cooked-color-border);
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-surface);
+    color: var(--cooked-color-text);
+    font-size: 14px;
+    font-weight: 500;
+
+    @media screen and (max-width: 600px) {
+        gap: 10px;
+        padding: 8px 10px;
+        font-size: 13px;
+    }
+}
+
+.cooked-pro-feature-icon {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--cooked-radius-sm);
+    background: var(--cooked-color-accent-soft);
+    color: var(--cooked-color-accent-strong);
+
+    @media screen and (max-width: 600px) {
+        width: 28px;
+        height: 28px;
+    }
+}

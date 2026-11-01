@@ -1,6 +1,7 @@
 import { type Page } from '@playwright/test';
 import { test, expect } from '../../utils/fixtures';
 import { fillAndPublishAdminRecipe } from '../../utils/form';
+import { gotoSettingsSection, saveSettings } from '../../utils/settings';
 import { deletePost, getCookedSettings, setCookedSettings } from '../../utils/wp-cli';
 
 test.describe.configure({ mode: 'serial' });
@@ -39,18 +40,6 @@ async function ensureAllergensShortcode(page: Page): Promise<void> {
   });
 }
 
-async function gotoAllergenSettings(page: Page): Promise<void> {
-  await page.goto('/wp-admin/admin.php?page=cooked_settings#recipe_settings', {
-    waitUntil: 'networkidle',
-  });
-  await page.locator('#cooked-settings-tab-recipe_settings a').click();
-  await expect(page.locator('#cooked-settings-tab-content-recipe_settings')).toBeVisible();
-}
-
-async function saveCookedSettings(page: Page): Promise<void> {
-  await page.getByRole('button', { name: 'Update Settings' }).first().click();
-  await expect(page.getByText('Cooked settings has been updated!')).toBeVisible();
-}
 
 async function searchBrowseRecipes(page: Page, query: string): Promise<void> {
   await page.goto('/browse-recipes', { waitUntil: 'networkidle' });
@@ -78,15 +67,12 @@ test.beforeAll(() => {
 test.describe('Allergen settings', () => {
   test('shows Recipe List Allergens and persists the checkbox', async ({ adminContext }) => {
     const adminPage = await adminContext.newPage();
-    await gotoAllergenSettings(adminPage);
+    await gotoSettingsSection(adminPage, 'recipe_settings');
 
     await expect(adminPage.getByRole('heading', { name: 'Recipe List Allergens' })).toBeVisible();
 
-    const allergenSetting = adminPage.locator('.recipe-setting-block', {
-      has: adminPage.getByRole('heading', { name: 'Recipe List Allergens' }),
-    });
     const checkbox = adminPage.locator('#checkbox-group-recipe_list_allergens-enabled');
-    const toggle = allergenSetting.locator('.switchery');
+    const toggle = checkbox;
 
     await expect(toggle).toBeVisible();
     await expect(adminPage.locator('label[for="checkbox-group-recipe_list_allergens-enabled"]')).toHaveText(
@@ -97,21 +83,16 @@ test.describe('Allergen settings', () => {
       await toggle.click();
     }
     await expect(checkbox).toBeChecked();
-    await saveCookedSettings(adminPage);
+    await saveSettings(adminPage);
 
-    await gotoAllergenSettings(adminPage);
+    await gotoSettingsSection(adminPage, 'recipe_settings');
     await expect(adminPage.locator('#checkbox-group-recipe_list_allergens-enabled')).toBeChecked();
 
-    await adminPage
-      .locator('.recipe-setting-block', {
-        has: adminPage.getByRole('heading', { name: 'Recipe List Allergens' }),
-      })
-      .locator('.switchery')
-      .click();
+    await adminPage.locator('#checkbox-group-recipe_list_allergens-enabled').click();
     await expect(adminPage.locator('#checkbox-group-recipe_list_allergens-enabled')).not.toBeChecked();
-    await saveCookedSettings(adminPage);
+    await saveSettings(adminPage);
 
-    await gotoAllergenSettings(adminPage);
+    await gotoSettingsSection(adminPage, 'recipe_settings');
     await expect(adminPage.locator('#checkbox-group-recipe_list_allergens-enabled')).not.toBeChecked();
   });
 });
@@ -159,7 +140,7 @@ test.describe('Frontend allergens (anonymous)', () => {
     }
 
     await page.goto('/?post_type=cp_recipe&p=' + recipeId, { waitUntil: 'networkidle' });
-    await expect(page.locator('h1.entry-title')).toHaveText(title);
+    await expect(page.locator('h1.entry-title, h1.wp-block-post-title')).toHaveText(title);
 
     const info = page.locator('.cooked-allergens-info');
     await expect(info).toBeVisible();

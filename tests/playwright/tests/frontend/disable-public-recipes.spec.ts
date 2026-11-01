@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type APIResponse, type Page } from '@playwright/test';
 import { ensureValidAuth } from '../../utils/auth';
 import { ADMIN_USER } from '../../utils/users';
 import { deletePost, getCookedSettings, setCookedSettings, wpCliArgs } from '../../utils/wp-cli';
@@ -101,6 +101,19 @@ function createFixtures(): { recipeId: number; pageId: number; plainPageId: numb
   return JSON.parse(wpCliArgs(['eval', php])) as { recipeId: number; pageId: number; plainPageId: number };
 }
 
+/**
+ * A hidden recipe URL redirects to the home page (sites with a static front page) or serves
+ * the posts page in its place; either way the recipe must not show.
+ */
+async function expectHiddenRecipe(response: APIResponse): Promise<void> {
+  if (response.status() === 301) {
+    expect(new URL(response.headers().location || '').pathname).toBe('/');
+  } else {
+    expect([200, 404]).toContain(response.status());
+  }
+  expect(await response.text()).not.toContain(marker);
+}
+
 async function expectShortcodeRecipe(page: Page): Promise<void> {
   await page.goto(pagePath, { waitUntil: 'domcontentloaded' });
   const embed = page.locator(`#cooked-recipe-embed-${recipeId}`);
@@ -138,7 +151,7 @@ test.describe('Disable Public Recipes', () => {
 
     const response = await page.goto(recipePath, { waitUntil: 'domcontentloaded' });
     expect(response?.status()).toBe(200);
-    await expect(page.locator('h1.entry-title')).toHaveText(recipeTitle);
+    await expect(page.locator('h1.entry-title, h1.wp-block-post-title')).toHaveText(recipeTitle);
     await expect(page.locator('.entry-content .cooked-recipe-ingredients').first()).toContainText(marker);
 
     await expectShortcodeRecipe(page);
@@ -148,8 +161,7 @@ test.describe('Disable Public Recipes', () => {
     setPublicRecipesDisabled(true);
 
     const permalink = await page.request.get(recipePath, { maxRedirects: 0 });
-    expect(permalink.status()).toBe(301);
-    expect(new URL(permalink.headers().location || '').pathname).toBe('/');
+    await expectHiddenRecipe(permalink);
 
     const byId = await page.request.get(`/?post_type=cp_recipe&p=${recipeId}`, { maxRedirects: 0 });
     expect(byId.status()).toBe(404);
@@ -162,15 +174,24 @@ test.describe('Disable Public Recipes', () => {
     setPublicRecipesDisabled(true);
 
     const printed = await page.request.get(`${recipePath}?print=1`, { maxRedirects: 0 });
-    expect(printed.status()).toBe(301);
-    expect(new URL(printed.headers().location || '').pathname).toBe('/');
-    expect(await printed.text()).not.toContain(marker);
+    await expectHiddenRecipe(printed);
 
     const rest = await page.request.get(
       `/wp-json/wp/v2/cooked_recipe?search=${encodeURIComponent(recipeTitle)}`,
     );
     expect(rest.status()).toBe(401);
     expect(await rest.text()).not.toContain(recipeTitle);
+
+    // WordPress matches REST routes case-insensitively.
+    for (const route of [
+      '/wp-json/wp/v2/Cooked_Recipe',
+      `/wp-json/wp/v2/COOKED_RECIPE/${recipeId}`,
+      '/?rest_route=/wp/v2/Cooked_Recipe',
+    ]) {
+      const variant = await page.request.get(route);
+      expect(variant.status(), route).toBe(401);
+      expect(await variant.text(), route).not.toContain(recipeTitle);
+    }
   });
 
   test('lets a recipe editor read recipes over REST when the setting is on', async ({ browser }) => {

@@ -1,0 +1,119 @@
+/* Substitution Fields */
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields {
+    width: 100%;
+    float: left;
+    clear: both;
+    margin-top: 10px;
+    padding-top: 10px;
+    padding-right: 0;
+    padding-left: 0;
+    margin-left: 0;
+    box-sizing: border-box;
+    padding-bottom: 5px;
+    position: relative;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-ingredient-amount {
+    width: 15%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-ingredient-measurement {
+    width: 20%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-ingredient-name {
+    width: 65%;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields .cooked-sub-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #7c7c7c;
+    font-size: 14px;
+    font-weight: 300;
+}
+
+#cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields > div {
+    display: inline-block;
+    float: left;
+    box-sizing: border-box;
+    padding-right: 10px;
+}
+
+// Classic layout (the new one styles these in layout/_recipe-editor-ingredients.scss):
+// each substitute is a full-width line of floated fields, its remove button on the right.
+body:not(.cooked-recipe-editor) #cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields > .cooked-substitution-row {
+    position: relative;
+    float: none;
+    clear: both;
+    width: 100%;
+    margin: 0 0 6px;
+    padding: 0 30px 0 0;
+    overflow: hidden;
+
+    > div {
+        float: left;
+        box-sizing: border-box;
+        padding-right: 10px;
+    }
+}
+
+body:not(.cooked-recipe-editor) #cooked-ingredients-builder .cooked-substitution-row .cooked-delete-substitution {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    padding: 4px;
+    transform: translateY(-50%);
+    border: 0;
+    background: none;
+    color: #888;
+    line-height: 1;
+    cursor: pointer;
+
+    &:hover {
+        color: #de2020;
+    }
+}
+
+body:not(.cooked-recipe-editor) #cooked-ingredients-builder .cooked-ingredient-block > .cooked-substitution-fields > .cooked-add-substitution {
+    float: none;
+    clear: both;
+    padding: 2px 0;
+    border: 0;
+    background: none;
+    color: #0085ba;
+    font-size: 13px;
+    cursor: pointer;
+
+    &::before {
+        content: "+ ";
+    }
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+// Phones: each substitute takes the full width, amount and measurement side by side.
+@media screen and (max-width: 600px) {
+    body:not(.cooked-recipe-editor) #cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded > .cooked-substitution-fields > .cooked-add-substitution {
+        grid-column: 1 / -1;
+    }
+
+    // Outranks the 1.x rule that makes every direct child a block.
+    body:not(.cooked-recipe-editor) #cooked-ingredients-builder .cooked-ingredient-block.cooked-expanded > .cooked-substitution-fields > .cooked-substitution-row {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px 8px;
+
+        > div {
+            float: none;
+            padding-right: 0;
+        }
+
+        > .cooked-ingredient-name {
+            grid-column: 1 / -1;
+        }
+    }
+}

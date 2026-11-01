@@ -1,0 +1,35 @@
+---
+description: i18n function usage - escape translated strings when printing them
+globs: **/*.php
+alwaysApply: false
+---
+# i18n Function Selection
+
+Translations are untrusted input: a translation file can contain markup. Escape
+every translated string that is printed, using the escaping variant that matches
+the output context. PHPCS (`WordPress.Security.EscapeOutput`) enforces this.
+
+```php
+// BAD - prints the translation unescaped
+_e( 'Next Recipe', 'cooked' );
+echo __( 'Next Recipe', 'cooked' );
+
+// GOOD - HTML text
+esc_html_e( 'Next Recipe', 'cooked' );
+echo esc_html__( 'Next Recipe', 'cooked' );
+
+// GOOD - attribute
+<input placeholder="<?php esc_attr_e( 'Search recipes', 'cooked' ); ?>">
+
+// GOOD - placeholder: translate, fill in, then escape the result once
+echo esc_html( sprintf( __( 'Recipe by %s', 'cooked' ), $author_name ) );
+
+// GOOD - translation that contains markup
+echo wp_kses_post( __( 'Read the <a href="https://github.com/XjSv/Cooked/wiki">docs</a>.', 'cooked' ) );
+```
+
+Use plain `__()` only when the string is not printed directly: passed to a
+function that escapes it, stored, or returned to a caller that escapes it at
+output.
+
+The text domain is `cooked` in Cooked and `cooked-pro` in Cooked Pro.

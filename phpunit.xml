@@ -6,7 +6,7 @@
     backupGlobals="false"
     colors="true"
     testdox="true"
-    cacheResultFile="tests/phpunit/.cache/result"
+    cacheResultFile="tests/phpunit/.cache/test-results"
 >
     <testsuites>
         <testsuite name="Cooked Test Suite">

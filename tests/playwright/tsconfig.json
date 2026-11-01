@@ -8,5 +8,5 @@
     "skipLibCheck": true,
     "types": ["node", "@playwright/test"]
   },
-  "include": ["tests/**/*.ts", "utils/**/*.ts", "reporters/**/*.ts", "tests/1_admin_user/3-related-recipes.spec.ts.bak"]
+  "include": ["*.ts", "tests/**/*.ts", "utils/**/*.ts", "reporters/**/*.ts"]
 }

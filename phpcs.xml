@@ -69,10 +69,12 @@
 	<rule ref="WordPress.Files.FileName.InvalidClassFileName">
 		<exclude-pattern>cooked.php</exclude-pattern>
 		<exclude-pattern>/includes/</exclude-pattern>
+		<exclude-pattern>/src/</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.Files.FileName.NotHyphenatedLowercase">
 		<exclude-pattern>/includes/</exclude-pattern>
+		<exclude-pattern>/src/</exclude-pattern>
 	</rule>
 
 	<rule ref="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase">

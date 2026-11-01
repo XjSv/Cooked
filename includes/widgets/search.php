@@ -1,86 +1,16 @@
 <?php
 /**
- * Search Widget
+ * Deprecated file.
+ *
+ * Cooked_Widget_Search moved to src/Frontend/Widgets/Search.php in Cooked 2.0.0 and is loaded automatically.
+ * This file only keeps old require_once calls working. It may be removed as early as Cooked 2.1.
  *
  * @package     Cooked
- * @subpackage  Widgets
- * @since       1.2.0
+ * @subpackage  Deprecated
+ * @since       2.0.0
+ * @deprecated  2.0.0
  */
 
-/**
- * Cooked_Widget_Search Class
- *
- * This class handles the Search Form widget display.
- *
- * @since 1.2.0
- */
+defined( 'ABSPATH' ) || exit;
 
-class Cooked_Widget_Search extends WP_Widget {
-
-    public function __construct() {
-        $widget_ops = [
-            'classname' => 'cooked_widget_search',
-            'description' => 'Display the recipe search form.',
-        ];
-        parent::__construct( 'cooked_widget_search', 'Cooked - Recipe Search', $widget_ops );
-    }
-
-    public function widget( $args, $instance ) {
-
-        echo wp_kses_post( $args['before_widget'] );
-        if ( ! empty( $instance['title'] ) ) {
-            echo wp_kses_post( $args['before_title'] ) . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . wp_kses_post( $args['after_title'] );
-        }
-        $size = isset($instance['size']) && $instance['size'] == 'compact' ? ' compact="true"' : '';
-        $browse = isset($instance['hide_browse']) && $instance['hide_browse'] ? ' hide_browse="true"' : '';
-        $sorting = isset($instance['hide_sorting']) && $instance['hide_sorting'] ? ' hide_sorting="true"' : '';
-        echo do_shortcode( '[cooked-search' . esc_attr( $size . $browse . $sorting ) . ']' );
-        echo wp_kses_post( $args['after_widget'] );
-
-    }
-
-    public function form( $instance ) {
-
-        $title = !empty( $instance['title'] ) ? $instance['title'] : false;
-        $size = !empty( $instance['size'] ) ? $instance['size'] : 'compact';
-        $hide_browse = isset( $instance['hide_browse'] ) && $instance['hide_browse'] ? true : false;
-        $hide_sorting = isset( $instance['hide_sorting'] ) && $instance['hide_sorting'] ? true : false;
-
-        ?>
-
-        <p>
-        <label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_attr_e( 'Title (optional):', 'cooked' ); ?></label>
-        <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
-        </p>
-
-        <p>
-        <label for="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>"><?php esc_attr_e( 'Size:', 'cooked' ); ?></label>
-        <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'size' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'size' ) ); ?>">
-            <option value="compact"<?php echo $size == 'compact' ? ' selected' : ''; ?>><?php esc_html_e( 'Compact', 'cooked' ); ?></option>
-            <option value="wide"<?php echo $size == 'wide' ? ' selected' : ''; ?>><?php esc_html_e( 'Wide', 'cooked' ); ?></option>
-        </select>
-        </p>
-
-        <p>
-        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_browse' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_browse' ) ); ?>"<?php echo ( $hide_browse ? ' checked' : '' ); ?> type="checkbox" value="1">
-        <label for="<?php echo esc_attr( $this->get_field_id( 'hide_browse' ) ); ?>"><?php esc_attr_e( 'Hide "Browse" dropdown', 'cooked' ); ?></label>
-        </p>
-
-        <p>
-        <input id="<?php echo esc_attr( $this->get_field_id( 'hide_sorting' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'hide_sorting' ) ); ?>"<?php echo ( $hide_sorting ? ' checked' : '' ); ?> type="checkbox" value="1">
-        <label for="<?php echo esc_attr( $this->get_field_id( 'hide_sorting' ) ); ?>"><?php esc_attr_e( 'Hide "Sorting" dropdown', 'cooked' ); ?></label>
-        </p>
-
-        <?php
-    }
-
-    public function update( $new_instance, $old_instance ) {
-        $instance = [];
-        $instance['title'] = !empty( $new_instance['title'] ) ? wp_strip_all_tags( $new_instance['title'] ) : '';
-        $instance['size'] = !empty( $new_instance['size'] ) ? wp_strip_all_tags( $new_instance['size'] ) : 'compact';
-        $instance['hide_browse'] = !empty( $new_instance['hide_browse'] ) ? 1 : 0;
-        $instance['hide_sorting'] = !empty( $new_instance['hide_sorting'] ) ? 1 : 0;
-        return $instance;
-    }
-
-}
+_deprecated_file( basename( __FILE__ ), '2.0.0', 'Cooked\Frontend\Widgets\Search' );

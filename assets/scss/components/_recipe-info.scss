@@ -1,0 +1,223 @@
+// The recipe info bar ([cooked-info]). A site lists any items in either section, so the items are
+// grouped by kind, not by section: the sections step aside (display: contents) and `order` puts
+// the byline (author, difficulty; Pro's rating) first, then the action buttons on the right (print,
+// full screen; Pro's favorite and nutrition), the facts (categories; Pro's taxonomies and tags) on a
+// line of their own, the times and servings as large numbers, and the allergens.
+//
+// Only the recipe's own bars: list cards (Cooked Pro's list styles, inside .cooked-recipe-wrap)
+// keep the compact rules in layout/_recipe.scss and layout/_recipe-meta.scss. The :not() also
+// makes these rules win over those.
+
+$bar: '.cooked-recipe-info:not(.cooked-recipe-wrap .cooked-recipe-info)';
+$info-gap-x: 1.5rem;
+$info-gap-y: 0.75rem;
+$stats-gap-x: 2.5rem;
+
+#{$bar} {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    gap: $info-gap-y $info-gap-x;
+    margin: 0 0 1.5rem;
+    padding: 0;
+}
+
+#{$bar} > section.cooked-left,
+#{$bar} > section.cooked-right {
+    display: contents;
+}
+
+// A label over its value: author, difficulty and the like.
+#{$bar} strong {
+    display: block;
+    color: var(--cooked-color-text-muted);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+// The bar is a .cooked-clearfix; its pseudo-elements would be flex items. The two below are used
+// only where they are needed.
+#{$bar}::before,
+#{$bar}::after {
+    content: none;
+}
+
+// Byline.
+#{$bar} .cooked-author { order: 1; }
+#{$bar} .cooked-difficulty-level { order: 3; }
+
+// The space that pushes the action buttons to the right (Cooked Pro adds its buttons to the :has()).
+#{$bar}:has(.cooked-print, .cooked-fsm-button)::before {
+    content: "";
+    order: 5;
+    flex: 1 1 0;
+    min-width: 0;
+}
+
+// Action buttons sit closer together than the other items.
+#{$bar} .cooked-print,
+#{$bar} .cooked-fsm-button {
+    order: 6;
+    margin-inline-start: calc(0.5rem - #{$info-gap-x});
+}
+
+// Facts: on their own line, each as "Label value".
+#{$bar}:has(.cooked-taxonomy)::after {
+    content: "";
+    order: 7;
+    flex-basis: 100%;
+    height: 0;
+    margin-top: -$info-gap-y;
+}
+
+#{$bar} .cooked-taxonomy {
+    order: 8;
+    font-size: 0.9rem;
+}
+
+#{$bar} .cooked-taxonomy strong {
+    display: inline;
+    margin-right: 0.3em;
+    font-size: inherit;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+// Times and servings: large numbers with their icons, between two rules, split by thin lines.
+// Clipped sideways only, so the line before the first number of each row is hidden and the
+// servings menu still opens downwards.
+#{$bar}:has(.cooked-time, .cooked-servings, .cooked-measurement-system) {
+    padding: 1rem 0;
+    border-top: 1px solid var(--cooked-color-border);
+    border-bottom: 1px solid var(--cooked-color-border);
+    column-gap: $stats-gap-x;
+    overflow-x: clip;
+}
+
+#{$bar} .cooked-time,
+#{$bar} .cooked-servings,
+#{$bar} .cooked-measurement-system {
+    display: grid;
+    grid-template-columns: auto minmax(0, auto);
+    justify-content: start;
+    justify-items: start;
+    align-items: center;
+    column-gap: 0.75rem;
+    text-align: left;
+    padding: 0;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1.2;
+
+    &::before {
+        position: absolute;
+        top: 0.25rem;
+        bottom: 0.25rem;
+        left: calc(#{$stats-gap-x} / -2);
+        width: 1px;
+        background: var(--cooked-color-border);
+        content: "";
+    }
+
+    > strong {
+        grid-column: 2;
+        margin-bottom: 0.15rem;
+        line-height: 1.2;
+    }
+}
+
+#{$bar} .cooked-prep-time { order: 21; }
+#{$bar} .cooked-cook-time { order: 22; }
+#{$bar} .cooked-total-time { order: 23; }
+#{$bar} .cooked-servings { order: 24; }
+#{$bar} .cooked-measurement-system { order: 25; }
+
+#{$bar} span.cooked-time-icon,
+#{$bar} span.cooked-servings-icon,
+#{$bar} span.cooked-measurement-system-icon {
+    position: static;
+    display: block;
+    grid-row: span 2;
+    width: auto;
+    height: auto;
+    margin: 0;
+    color: var(--cooked-main-color, #128666);
+    font-size: 1.75rem;
+    line-height: 1;
+    opacity: 1;
+
+    i.cooked-icon {
+        display: block;
+    }
+}
+
+// The servings and units values read as the number, in the link colour with their menu arrow.
+#{$bar} span.cooked-servings > a,
+#{$bar} span.cooked-measurement-system > a,
+#{$bar} span.cooked-servings .ts-wrapper {
+    grid-column: 2;
+    color: var(--cooked-main-color, #128666);
+    font-size: inherit;
+}
+
+// Allergens last.
+#{$bar} .cooked-allergens-info {
+    order: 30;
+}
+
+@media screen and (max-width: 750px) {
+    #{$bar} {
+        column-gap: 1rem;
+    }
+
+    // The action buttons get a row of their own, equal widths, the label under the icon.
+    #{$bar}:has(.cooked-print, .cooked-fsm-button)::before {
+        flex-basis: 100%;
+        height: 0;
+        margin-top: -$info-gap-y;
+    }
+
+    #{$bar} .cooked-print,
+    #{$bar} .cooked-fsm-button {
+        flex: 1 1 0;
+        min-width: 0;
+        margin-inline-start: -0.5rem;
+    }
+
+    #{$bar} span.cooked-print > a,
+    #{$bar} span.cooked-fsm-button {
+        flex-direction: column;
+        gap: 0.25rem;
+        width: 100%;
+        min-height: 3.5rem;
+        padding: 0.4rem 0.25rem;
+        font-size: 0.75rem;
+        white-space: normal;
+        text-align: center;
+    }
+
+    #{$bar} span.cooked-print .cooked-icon,
+    #{$bar} span.cooked-fsm-button .cooked-icon {
+        font-size: 1.3rem;
+    }
+
+    // Two numbers to a row.
+    #{$bar}:has(.cooked-time, .cooked-servings, .cooked-measurement-system) {
+        column-gap: 2rem;
+    }
+
+    #{$bar} .cooked-time,
+    #{$bar} .cooked-servings,
+    #{$bar} .cooked-measurement-system {
+        flex: 1 1 calc(50% - 1rem);
+        font-size: 1.2rem;
+
+        &::before {
+            left: -1rem;
+        }
+    }
+}

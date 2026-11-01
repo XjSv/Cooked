@@ -23,12 +23,10 @@ test.describe('Settings Vue delimiters', () => {
     deletePost(pageId);
   });
 
-  test('keeps a mustache page title literal while Vue is mounted', async ({ adminContext }) => {
+  // Cooked 2.0 no longer mounts Vue on the settings screen; the title must still stay literal.
+  test('keeps a mustache page title literal on the settings screen', async ({ adminContext }) => {
     const page = await adminContext.newPage();
     await page.goto('/wp-admin/admin.php?page=cooked_settings', { waitUntil: 'domcontentloaded' });
-
-    const mounted = await page.locator('#cooked-settings-panel').evaluate((el) => '__vue__' in el);
-    expect(mounted).toBe(true);
 
     const browsePage = page.locator('select[name="cooked_settings[browse_page]"]');
     await expect(browsePage.locator('option', { hasText: marker })).toHaveCount(1);

@@ -1,0 +1,106 @@
+<?php
+/**
+ * Cooked Import admin page, classic layout (Settings > General > Admin Screens). The new layout is in ../frame/
+ *
+ * @package     Cooked
+ * @subpackage  Admin
+ * @since       1.8.2
+ */
+
+?>
+<div id="cooked-settings-prewrap">
+    <div id="cooked-settings-wrap">
+        <form action="options.php" method="post">
+
+        <div class="cooked-settings-header">
+            <i class="cooked-icon cooked-icon-cooked-icon"></i><?php esc_html_e( 'Cooked Import', 'cooked' ); ?>
+        </div>
+        <div id="cooked-settings-panel" class="wrap">
+        <?php
+            global $_cooked_settings;
+
+            $Cooked_Import               = new Cooked_Import();
+            $cooked_settings_tabs_fields = $Cooked_Import->tabs_fields();
+
+            $tab_counter = 1;
+            echo '<ul id="cooked-settings-tabs" class="cooked-clearfix">';
+        foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
+            echo '<li id="cooked-settings-tab-' . esc_attr( $tab_slug ) . '"' . ( 1 === $tab_counter ? ' class="active"' : '' ) . '><a href="#' . esc_attr( $tab_slug ) . '"><i class="cooked-icon cooked-icon-' . esc_attr( $tab['icon'] ) . '"></i>' . esc_attr( $tab['name'] ) . '</a></li>';
+            ++$tab_counter;
+            endforeach;
+            echo '</ul>';
+        ?>
+
+            <?php settings_errors(); ?>
+
+            <div id="cooked_recipe_settings" class="cooked-settings-form-wrapper">
+                    <input type="hidden" name="cooked_import_saved" value="true" />
+
+                    <?php settings_fields( 'cooked_import_group' ); ?>
+
+                    <div class="cooked-settings-tab-content-wrapper">
+                        <?php
+                        $tab_counter = 1;
+
+                        foreach ( $cooked_settings_tabs_fields as $tab_slug => $tab ) :
+                            echo '<div id="cooked-settings-tab-content-' . esc_attr( $tab_slug ) . '" class="cooked-settings-tab-content">';
+
+                                // Add a hidden H2 tag for the messages, if any, to show up below it.
+                            if ( 1 === $tab_counter ) :
+                                echo '<h2 style="display:none;"></h2>';
+                            endif;
+                            foreach ( $tab['fields'] as $name => $field ) :
+                                $notitle                 = false;
+                                $conditional_requirement = '';
+
+                                $class         = isset( $field['class'] ) ? ' ' . $field['class'] : '';
+                                $current_val   = isset( $_cooked_settings[ $name ] ) ? $_cooked_settings[ $name ] : null;
+                                $field_type    = 'field_' . esc_attr( $field['type'] );
+                                $field_options = isset( $field['options'] ) ? $field['options'] : false;
+                                $field_options = ! $field_options ? ( isset( $field['placeholder'] ) ? $field['placeholder'] : $field_options ) : $field_options;
+                                $color         = isset( $field['color'] ) && $field['color'] ? $field['color'] : false;
+
+                                if ( method_exists( $Cooked_Import, $field_type ) ) :
+
+                                    if ( 'misc_button' === $field['type'] || 'nonce' === $field['type'] ) :
+                                        $notitle       = true;
+                                        $field_options = isset( $field['title'] ) ? $field['title'] : false;
+                                        endif;
+
+                                    if ( isset( $field['conditional_requirement'] ) && $field['conditional_requirement'] ) :
+                                        if ( is_array( $field['conditional_requirement'] ) ) :
+                                            $conditional_requirement = ' data-cooked-condition="' . esc_attr( implode( ' ', $field['conditional_requirement'] ) ) . '"';
+                                            else :
+                                                $conditional_requirement = ' data-cooked-condition="' . esc_attr( $field['conditional_requirement'] ) . '"';
+                                            endif;
+                                        endif;
+
+                                    echo '<div' . wp_kses( $conditional_requirement, array() ) . ' class="recipe-setting-block ' . esc_attr( $field['type'] ) . ' cooked-bm-25' . esc_attr( $class ) . '">';
+                                        echo ! $notitle ? '<h3 class="cooked-settings-title" id="' . esc_attr( Cooked_Settings::title_id( $name ) ) . '">' . wp_kses_post( $field['title'] ) . '</h3>' : '';
+                                        echo isset( $field['desc'] ) && $field['desc'] ? '<p>' . wp_kses_post( $field['desc'] ) . '</p>' : '';
+                                        $Cooked_Import->$field_type( $name, $field_options, $color, $field );
+                                    echo '</div>';
+
+                                    endif;
+
+                                endforeach;
+                                ++$tab_counter;
+
+                            echo '</div>';
+                        endforeach;
+                        ?>
+
+                    </div>
+
+            </div>
+
+            <?php
+            if ( COOKED_DEV ) :
+                Cooked_Functions::wpml_xml( $cooked_settings_tabs_fields );
+            endif;
+            ?>
+
+        </div>
+        </form>
+    </div>
+</div>

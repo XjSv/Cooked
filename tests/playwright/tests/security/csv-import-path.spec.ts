@@ -1,5 +1,5 @@
 import { test, expect } from '../../utils/fixtures';
-import { wpCliArgs } from '../../utils/wp-cli';
+import { isDdev, wpCliArgs } from '../../utils/wp-cli';
 
 type StoredCsv = {
   path: string;
@@ -49,7 +49,7 @@ test.describe('CSV import path', () => {
     const page = await adminContext.newPage();
     await page.goto('/wp-admin/admin.php?page=cooked_import', { waitUntil: 'load' });
     const nonce = await page.evaluate(() => {
-      const vars = (window as { cooked_migration_js_vars?: { cooked_import_nonce?: string } }).cooked_migration_js_vars;
+      const vars = (window as { cooked_admin_functions_js_vars?: { cooked_import_nonce?: string } }).cooked_admin_functions_js_vars;
       return vars?.cooked_import_nonce || '';
     });
     expect(nonce).not.toBe('');
@@ -78,7 +78,10 @@ test.describe('CSV import path', () => {
     storedPath = stored.path;
     expect(stored.underTemp).toBe(true);
     expect(stored.prefixed).toBe(true);
-    expect(stored.exists).toBe(true);
+    // Under wp-env the cli container has its own /tmp, so only DDEV can see the file.
+    if (isDdev()) {
+      expect(stored.exists).toBe(true);
+    }
 
     await page.close();
   });

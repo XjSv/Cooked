@@ -34,6 +34,7 @@ $options = [
 	'cooked_pro_license_data',
 	'cooked_pro_version',
 	'cooked_use_php_sessions',
+	'cooked_flush_rewrite_rules',
 ];
 
 foreach ( $options as $option ) {
@@ -95,15 +96,21 @@ $taxonomy_sql  = [
 	"DELETE FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ($placeholders)",
 ];
 foreach ( $taxonomy_sql as $sql ) {
+	// phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- $sql holds only table names and %s placeholders.
 	$wpdb->query( $wpdb->prepare( $sql, ...$taxonomies ) );
 }
 
 delete_metadata( 'user', 0, 'cooked_user_meta', '', true );
+delete_metadata( 'user', 0, 'cooked_admin_dark_mode', '', true );
+delete_metadata( 'user', 0, 'cooked_editor_dark_mode', '', true );
 
 $upload_dir = wp_upload_dir();
-$dir        = ( is_array( $upload_dir ) && ! empty( $upload_dir['basedir'] ) ) ? $upload_dir['basedir'] . '/cooked' : '';
+$dirs       = ( is_array( $upload_dir ) && ! empty( $upload_dir['basedir'] ) ) ? [ $upload_dir['basedir'] . '/cooked', $upload_dir['basedir'] . '/cooked-imports' ] : [];
 
-if ( $dir && is_dir( $dir ) ) {
+foreach ( $dirs as $dir ) {
+	if ( ! is_dir( $dir ) ) {
+		continue;
+	}
 	$it    = new RecursiveDirectoryIterator( $dir, RecursiveDirectoryIterator::SKIP_DOTS );
 	$files = new RecursiveIteratorIterator( $it, RecursiveIteratorIterator::CHILD_FIRST );
 	foreach ( $files as $file ) {

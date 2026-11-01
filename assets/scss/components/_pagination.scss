@@ -1,0 +1,29 @@
+/* Pagination */
+.cooked-pagination-numbered {
+    text-align: center;
+    display: block;
+    margin: 0 0 2rem;
+}
+
+.cooked-pagination-numbered > span,
+.cooked-pagination-numbered > a {
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: inline-block;
+    padding: 0 5px;
+    background: transparent;
+}
+
+.cooked-pagination-numbered > span {
+    color: rgba(0, 0, 0, 0.25);
+}
+
+body .cooked-pagination-numbered > a {
+    text-decoration: none;
+    border: none;
+}
+
+body .cooked-pagination-numbered > a:hover {
+    text-decoration: none;
+    border: none;
+}

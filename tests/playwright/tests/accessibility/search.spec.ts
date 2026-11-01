@@ -13,7 +13,7 @@ test.describe('Browse search accessibility (anonymous user)', () => {
     await page.evaluate((selector) => {
       document.querySelector(selector)?.closest('form')?.dispatchEvent(new Event('submit'));
     }, `${browseSearch} .cooked-browse-search`);
-    await page.waitForURL('**/browse-recipes/search/beef/sort/date_desc');
+    await page.waitForURL(/\/browse-recipes\/search\/beef\/sort\/date_desc\/?$/);
     await page.waitForLoadState('networkidle');
     await page.locator('.cooked-recipe').first().waitFor();
     await expectAccessible(page);

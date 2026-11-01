@@ -1,11 +1,23 @@
-<?php global $post, $recipe_settings;
+<?php
+/**
+ * Recipe print template
+ *
+ * @package     Cooked
+ * @subpackage  Templates
+ * @since       1.0.0
+ */
 
-// Print Screen Enqueues
+global $post, $recipe_settings;
+
+// Print Screen Enqueues.
 add_action( 'wp_enqueue_scripts', 'cooked_print_enqueues', 99, 1 );
+/**
+ * Loads the print view stylesheet.
+ *
+ * @return void
+ */
 function cooked_print_enqueues() {
-	$min = COOKED_DEV ? '' : '.min';
-	wp_enqueue_style( 'cooked-print', COOKED_URL . 'assets/css/print' . $min . '.css', [], COOKED_VERSION, 'screen,print' );
-	wp_enqueue_style( 'cooked-icons', COOKED_URL . 'assets/css/icons' . $min . '.css', [], COOKED_VERSION, 'screen,print' );
+	wp_enqueue_style( 'cooked-print', COOKED_URL . 'assets/css/print.min.css', [], COOKED_VERSION, 'screen,print' );
 	wp_dequeue_style( 'cooked-essentials' );
 	wp_dequeue_style( 'cooked-styling' );
 }
@@ -16,7 +28,8 @@ function cooked_print_enqueues() {
 	<?php wp_head(); ?>
 	<meta name="robots" content="noindex,nofollow">
 </head>
-<body><?php
+<body>
+<?php
 
 $recipe_settings = Cooked_Recipes::get_settings( $post->ID );
 
@@ -35,5 +48,6 @@ do_action( 'cooked_after_print_recipe' );
 
 wp_footer();
 
-?></body>
+?>
+</body>
 </html>

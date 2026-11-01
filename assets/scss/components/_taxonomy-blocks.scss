@@ -1,0 +1,32 @@
+/* Taxonomy Blocks */
+.cooked-recipe-term-grid {
+    margin: 3% -1%;
+    position: relative;
+}
+
+.cooked-term-block {
+    box-sizing: border-box;
+    display: block;
+    background: transparent;
+    position: relative;
+    float: left;
+}
+
+.cooked-term-block .cooked-recipe-card {
+    margin: 0;
+}
+
+.cooked-term-block .cooked-recipe-card .cooked-recipe-card-sep {
+    margin: 0.65rem auto;
+    height: 3px;
+}
+
+.cooked-term-block.cooked-col-33 {
+    width: 31.333%;
+    margin: 1%;
+}
+
+.cooked-term-block.cooked-col-25 {
+    width: 23%;
+    margin: 1%;
+}

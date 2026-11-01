@@ -70,12 +70,19 @@
     color: #fff;
 }
 
+// Small screens: the icon beside the text, the action on its own row below them.
 @media screen and (max-width: 782px) {
     .notice.cooked-notice {
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        column-gap: 0.85rem;
+        row-gap: 0.75rem;
     }
 
     .notice.cooked-notice .cooked-notice-action {
-        width: 100%;
+        grid-column: 1 / -1;
+        justify-self: start;
+        width: max-content;
+        max-width: 100%;
     }
 }

@@ -38,6 +38,7 @@ class PostTypes {
 
         add_filter( 'enter_title_here', [ &$this, 'change_new_recipe_title' ] );
         add_filter( 'query_vars', [ &$this, 'add_query_vars_filter' ] );
+        add_filter( 'rest_pre_dispatch', [ $this, 'restrict_recipe_rest' ], 10, 3 );
         add_filter( 'manage_cp_recipe_posts_columns', [ &$this, 'custom_columns' ] );
         add_filter( 'nav_menu_css_class', [ &$this, 'cooked_nav_classes' ], 10, 2 );
         add_filter( 'redirect_canonical', [ &$this, 'disable_canonical_redirect' ] );
@@ -255,8 +256,50 @@ class PostTypes {
         $vars[] = 'servings';
         $vars[] = 'measurement_system';
         $vars[] = 'cooked_category_filter';
+        $vars[] = 'cooked_print';
 
         return $vars;
+    }
+
+    /**
+     * With public recipes disabled, the REST recipe routes are refused to anyone who can't
+     * edit recipes (the post type stays in REST for the editor).
+     *
+     * @since 1.17.0
+     * @param mixed            $result  Response to replace the requested one, or null.
+     * @param \WP_REST_Server  $server  REST server.
+     * @param \WP_REST_Request $request The request.
+     * @return mixed
+     */
+    public function restrict_recipe_rest( $result, $server, $request ) {
+        if ( null !== $result || ! self::public_recipes_disabled() ) {
+            return $result;
+        }
+
+        $route = $request->get_route();
+        if ( '/wp/v2/cooked_recipe' !== $route && 0 !== strpos( $route, '/wp/v2/cooked_recipe/' ) ) {
+            return $result;
+        }
+
+        if ( current_user_can( 'edit_cooked_recipes' ) ) {
+            return $result;
+        }
+
+        return new \WP_Error(
+            'rest_cannot_view',
+            __( 'Sorry, you are not allowed to view recipes.', 'cooked' ),
+            [ 'status' => rest_authorization_required_code() ]
+        );
+    }
+
+    /**
+     * Whether "Disable Public Recipes" is on.
+     *
+     * @since 1.17.0
+     * @return bool
+     */
+    public static function public_recipes_disabled() {
+        return \Cooked_Recipes::public_recipes_disabled();
     }
 
     /**
@@ -568,12 +611,9 @@ class PostTypes {
         $has_archive_slug    = sanitize_title_with_dashes( __( 'Recipe Archive', 'cooked' ) );
         $exclude_from_search = false;
 
-        if ( \Cooked_Recipes::public_recipes_disabled() ) {
-            // Print links from [cooked-recipe] embeds still need the single recipe to resolve,
-            // so a print request registers it as public; Cooked_Recipes::print_recipe_template()
-            // then requires the recipe's print key. Archives and search stay off either way.
-            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Only makes the print route resolvable; access is checked in print_recipe_template().
-            $public_recipes      = isset( $_GET['print'] );
+        // Embedded recipes print from their page (?cooked_print), so recipes stay non-public.
+        if ( self::public_recipes_disabled() ) {
+            $public_recipes      = false;
             $has_archive_slug    = false;
             $exclude_from_search = true;
         }

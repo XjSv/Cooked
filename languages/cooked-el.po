@@ -1,16 +1,15 @@
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Cooked - Recipe Management 2.0.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/cooked\n"
-"POT-Creation-Date: 2026-10-24T17:54:54+00:00\n"
-"PO-Revision-Date: 2026-10-24 21:00+0300\n"
 "Last-Translator: mgiannopoulos24\n"
 "Language-Team: Greek\n"
-"Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-24T17:54:54+00:00\n"
+"PO-Revision-Date: 2026-10-24 21:00+0300\n"
+"Language: el\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Domain: cooked\n"
 "X-Generator: WP-CLI 2.12.0\n"
@@ -41,19 +40,34 @@ msgid "https://goratech.dev"
 msgstr "https://goratech.dev"
 
 #. translators: referring to the bottom of the Settings page.
-#: src/Admin/Enqueues.php:45 src/Admin/Enqueues.php:251 src/Admin/Menus.php:56 src/Admin/Menus.php:104 src/Frontend/Shortcodes.php:195 templates/admin/classic/welcome.php:36 templates/admin/frame/welcome.php:66 templates/admin/parts/layout-compare.php:16
+#: src/Admin/Enqueues.php:45
+#: src/Admin/Enqueues.php:251
+#: src/Admin/Menus.php:56
+#: src/Admin/Menus.php:104
+#: src/Frontend/Shortcodes.php:195
+#: templates/admin/classic/welcome.php:36
+#: templates/admin/frame/welcome.php:66
+#: templates/admin/parts/layout-compare.php:16
 msgid "Settings"
 msgstr "Ρυθμίσεις"
 
-#: src/Admin/Enqueues.php:52 src/Admin/Enqueues.php:255 src/Admin/Menus.php:57
+#: src/Admin/Enqueues.php:52
+#: src/Admin/Enqueues.php:255
+#: src/Admin/Menus.php:57
 msgid "Import"
 msgstr "Εισαγωγή"
 
-#: src/Admin/Enqueues.php:58 src/Admin/Enqueues.php:259 src/Admin/Menus.php:58
+#: src/Admin/Enqueues.php:58
+#: src/Admin/Enqueues.php:259
+#: src/Admin/Menus.php:58
 msgid "What's New?"
 msgstr "Τι νέο υπάρχει;"
 
-#: src/Admin/Enqueues.php:66 src/Admin/Enqueues.php:265 src/Admin/Menus.php:61 templates/admin/classic/welcome.php:57 templates/admin/frame/welcome.php:41
+#: src/Admin/Enqueues.php:66
+#: src/Admin/Enqueues.php:265
+#: src/Admin/Menus.php:61
+#: templates/admin/classic/welcome.php:57
+#: templates/admin/frame/welcome.php:41
 msgid "Upgrade to Pro"
 msgstr "Αναβάθμιση σε Pro"
 
@@ -65,11 +79,15 @@ msgstr "Προγραμματιστής"
 msgid "Cooked"
 msgstr "Cooked"
 
-#: src/Admin/Enqueues.php:293 templates/admin/classic/welcome.php:50 templates/admin/frame/welcome.php:17
+#: src/Admin/Enqueues.php:293
+#: templates/admin/classic/welcome.php:50
+#: templates/admin/frame/welcome.php:17
 msgid "Documentation"
 msgstr "Τεκμηρίωση"
 
-#: src/Admin/Enqueues.php:294 templates/admin/classic/settings.php:19 templates/admin/frame/settings.php:40
+#: src/Admin/Enqueues.php:294
+#: templates/admin/classic/settings.php:19
+#: templates/admin/frame/settings.php:40
 msgid "Update Settings"
 msgstr "Ενημέρωση ρυθμίσεων"
 
@@ -155,11 +173,17 @@ msgstr "Βρέθηκαν %d ρυθμίσεις. Χρησιμοποιήστε τ�
 msgid "remaining"
 msgstr "απομένουν"
 
-#: src/Admin/Enqueues.php:455 src/Admin/Settings.php:1185 src/functions.php:586 src/functions.php:656 src/functions.php:711
+#: src/Admin/Enqueues.php:455
+#: src/Admin/Settings.php:1186
+#: src/functions.php:586
+#: src/functions.php:656
+#: src/functions.php:711
 msgid "Add Image"
 msgstr "Προσθήκη εικόνας"
 
-#: src/Admin/Enqueues.php:456 src/Admin/Settings.php:1185 src/functions.php:586
+#: src/Admin/Enqueues.php:456
+#: src/Admin/Settings.php:1186
+#: src/functions.php:586
 msgid "Change Image"
 msgstr "Αλλαγή εικόνας"
 
@@ -167,11 +191,15 @@ msgstr "Αλλαγή εικόνας"
 msgid "Use this Image"
 msgstr "Χρήση αυτής της εικόνας"
 
-#: src/Admin/Enqueues.php:458 src/functions.php:596 src/functions.php:683 src/functions.php:721
+#: src/Admin/Enqueues.php:458
+#: src/functions.php:596
+#: src/functions.php:683
+#: src/functions.php:721
 msgid "Add Video"
 msgstr "Προσθήκη βίντεο"
 
-#: src/Admin/Enqueues.php:459 src/functions.php:596
+#: src/Admin/Enqueues.php:459
+#: src/functions.php:596
 msgid "Change Video"
 msgstr "Αλλαγή βίντεο"
 
@@ -179,7 +207,8 @@ msgstr "Αλλαγή βίντεο"
 msgid "Use this Video"
 msgstr "Χρήση αυτού του βίντεο"
 
-#: src/Admin/Enqueues.php:461 templates/admin/classic/recipe-gallery.php:82
+#: src/Admin/Enqueues.php:461
+#: templates/admin/classic/recipe-gallery.php:82
 msgid "Add to Gallery"
 msgstr "Προσθήκη στη συλλογή"
 
@@ -191,11 +220,19 @@ msgstr "Επεξεργασία στοιχείου συλλογής"
 msgid "Update Gallery Item"
 msgstr "Ενημέρωση στοιχείου συλλογής"
 
-#: src/Admin/Enqueues.php:464 templates/admin/classic/recipe-gallery.php:75 templates/admin/frame/recipe-gallery.php:90
+#: src/Admin/Enqueues.php:464
+#: templates/admin/classic/recipe-gallery.php:75
+#: templates/admin/frame/recipe-gallery.php:90
 msgid "Change image"
 msgstr "Αλλαγή εικόνας"
 
-#: src/Admin/Enqueues.php:465 src/Admin/Settings.php:1201 src/functions.php:589 src/functions.php:659 src/functions.php:714 templates/admin/classic/recipe-gallery.php:75 templates/admin/frame/recipe-gallery.php:90
+#: src/Admin/Enqueues.php:465
+#: src/Admin/Settings.php:1202
+#: src/functions.php:589
+#: src/functions.php:659
+#: src/functions.php:714
+#: templates/admin/classic/recipe-gallery.php:75
+#: templates/admin/frame/recipe-gallery.php:90
 msgid "Remove image"
 msgstr "Αφαίρεση εικόνας"
 
@@ -273,7 +310,10 @@ msgstr "Η επεξεργασία του αρχείου CSV απέτυχε."
 msgid "Failed to upload CSV file."
 msgstr "Η μεταφόρτωση του αρχείου CSV απέτυχε."
 
-#: src/Admin/Enqueues.php:485 src/System/Ajax.php:555 src/System/Ajax.php:560
+#: src/Admin/Enqueues.php:485
+#: src/System/Ajax.php:556
+#: src/System/Ajax.php:561
+#: src/System/Ajax.php:603
 msgid "File upload failed."
 msgstr "Η μεταφόρτωση του αρχείου απέτυχε."
 
@@ -329,7 +369,12 @@ msgstr ""
 "Ανακατέψτε τα στεγνά υλικά.\n"
 "Προσθέστε τα υγρά υλικά και ανακατέψτε."
 
-#: src/Admin/Enqueues.php:503 src/functions.php:376 src/functions.php:507 src/functions.php:613 src/functions.php:731 templates/admin/classic/recipe-shortcodes.php:512
+#: src/Admin/Enqueues.php:503
+#: src/functions.php:376
+#: src/functions.php:507
+#: src/functions.php:613
+#: src/functions.php:731
+#: templates/admin/classic/recipe-shortcodes.php:512
 msgid "Section heading"
 msgstr "Επικεφαλίδα ενότητας"
 
@@ -345,15 +390,27 @@ msgstr "Προσθήκη υλικών"
 msgid "Add Directions"
 msgstr "Προσθήκη οδηγιών"
 
-#: src/Admin/Enqueues.php:507 src/functions.php:312 src/functions.php:340 src/functions.php:421 src/functions.php:474
+#: src/Admin/Enqueues.php:507
+#: src/functions.php:312
+#: src/functions.php:340
+#: src/functions.php:421
+#: src/functions.php:474
 msgid "Amount"
 msgstr "Ποσότητα"
 
-#: src/Admin/Enqueues.php:508 src/functions.php:313 src/functions.php:346 src/functions.php:427 src/functions.php:480
+#: src/Admin/Enqueues.php:508
+#: src/functions.php:313
+#: src/functions.php:346
+#: src/functions.php:427
+#: src/functions.php:480
 msgid "Measurement"
 msgstr "Μονάδα μέτρησης"
 
-#: src/Admin/Enqueues.php:509 src/functions.php:314 src/functions.php:359 src/functions.php:440 src/functions.php:493
+#: src/Admin/Enqueues.php:509
+#: src/functions.php:314
+#: src/functions.php:359
+#: src/functions.php:440
+#: src/functions.php:493
 msgid "Item"
 msgstr "Υλικό"
 
@@ -361,15 +418,22 @@ msgstr "Υλικό"
 msgid "Heading text"
 msgstr "Κείμενο επικεφαλίδας"
 
-#: src/Admin/Menus.php:47 src/Admin/Menus.php:78 src/Recipe/PostTypes.php:592 src/Recipe/PostTypes.php:604 src/User/Users.php:193
+#: src/Admin/Menus.php:47
+#: src/Admin/Menus.php:78
+#: src/Recipe/PostTypes.php:632
+#: src/Recipe/PostTypes.php:644
+#: src/User/Users.php:233
 msgid "Recipes"
 msgstr "Συνταγές"
 
-#: src/Admin/Menus.php:48 src/Admin/Menus.php:93 src/Recipe/PostTypes.php:594
+#: src/Admin/Menus.php:48
+#: src/Admin/Menus.php:93
+#: src/Recipe/PostTypes.php:634
 msgid "Add New"
 msgstr "Προσθήκη νέας"
 
-#: src/Admin/Menus.php:85 src/Recipe/PostTypes.php:599
+#: src/Admin/Menus.php:85
+#: src/Recipe/PostTypes.php:639
 msgid "All Recipes"
 msgstr "Όλες οι συνταγές"
 
@@ -409,19 +473,28 @@ msgstr "Αν δεν υπάρχει περίληψη συνταγής, θα χρ�
 msgid "Version number will be applied to each recipe."
 msgstr "Σε κάθε συνταγή θα οριστεί αριθμός έκδοσης."
 
-#: src/Admin/Migration.php:76 src/Import/Import.php:88 src/Import/Import.php:144
+#: src/Admin/Migration.php:76
+#: src/Import/Import.php:88
+#: src/Import/Import.php:144
 msgid "Wow, you have a lot of recipes!"
 msgstr "Ουάου, έχετε πολλές συνταγές!"
 
-#: src/Admin/Migration.php:76 src/Import/Import.php:88 src/Import/Import.php:144
+#: src/Admin/Migration.php:76
+#: src/Import/Import.php:88
+#: src/Import/Import.php:144
 msgid "It is definitely recommended that you get yourself a cup of coffee or tea after clicking this button."
 msgstr "Σας συνιστούμε ανεπιφύλακτα να φτιάξετε έναν καφέ ή ένα τσάι αφού πατήσετε αυτό το κουμπί."
 
-#: src/Admin/Migration.php:78 src/Import/Import.php:90 src/Import/Import.php:146 src/Import/Import.php:199
+#: src/Admin/Migration.php:78
+#: src/Import/Import.php:90
+#: src/Import/Import.php:146
+#: src/Import/Import.php:199
 msgid "Note:"
 msgstr "Σημείωση:"
 
-#: src/Admin/Migration.php:78 src/Import/Import.php:90 src/Import/Import.php:146
+#: src/Admin/Migration.php:78
+#: src/Import/Import.php:90
+#: src/Import/Import.php:146
 msgid "The more recipes you have, the longer this will take."
 msgstr "Όσο περισσότερες συνταγές έχετε, τόσο περισσότερο θα διαρκέσει."
 
@@ -463,7 +536,8 @@ msgstr "Ρύθμιση του Cooked"
 msgid "To display your recipes properly, please set up your %s."
 msgstr "Για να εμφανίζονται σωστά οι συνταγές σας, ορίστε τη %s."
 
-#: src/Admin/Settings.php:330 src/Admin/Settings.php:492
+#: src/Admin/Settings.php:330
+#: src/Admin/Settings.php:492
 msgid "Browse/Search Recipes Page"
 msgstr "Σελίδα περιήγησης/αναζήτησης συνταγών"
 
@@ -483,7 +557,8 @@ msgstr "Χωρίς προεπιλογή"
 msgid "No categories"
 msgstr "Καμία κατηγορία"
 
-#: src/Admin/Settings.php:466 src/Recipe/PostTypes.php:568
+#: src/Admin/Settings.php:466
+#: src/Recipe/PostTypes.php:611
 msgid "Recipe Archive"
 msgstr "Αρχείο συνταγών"
 
@@ -525,7 +600,10 @@ msgstr "Ταξινομίες συνταγών"
 msgid "Choose which taxonomies you want to enable for your recipes."
 msgstr "Επιλέξτε ποιες ταξινομίες θέλετε να ενεργοποιήσετε για τις συνταγές σας."
 
-#: src/Admin/Settings.php:515 src/Recipe/Recipes.php:1816 src/Recipe/Taxonomies.php:52 src/Recipe/Taxonomies.php:62
+#: src/Admin/Settings.php:515
+#: src/Recipe/Recipes.php:1861
+#: src/Recipe/Taxonomies.php:52
+#: src/Recipe/Taxonomies.php:62
 msgid "Categories"
 msgstr "Κατηγορίες"
 
@@ -537,39 +615,81 @@ msgstr "Γενικές επιλογές συνταγών"
 msgid "You can quickly hide or show different recipe elements (site-wide) with these checkboxes."
 msgstr "Με αυτά τα κουτάκια μπορείτε να αποκρύψετε ή να εμφανίσετε γρήγορα στοιχεία των συνταγών σε όλο τον ιστότοπο."
 
-#: src/Admin/Settings.php:539 src/Frontend/Shortcodes.php:869 src/Frontend/Shortcodes.php:1059 templates/admin/classic/recipe-shortcodes.php:66 templates/admin/frame/recipe-shortcodes.php:22
+#: src/Admin/Settings.php:539
+#: src/Frontend/Shortcodes.php:869
+#: src/Frontend/Shortcodes.php:1059
+#: templates/admin/classic/recipe-shortcodes.php:66
+#: templates/admin/frame/recipe-shortcodes.php:22
 msgid "Author"
 msgstr "Συντάκτης"
 
-#: src/Admin/Settings.php:540 src/Frontend/Shortcodes.php:1202 src/Frontend/Shortcodes.php:1206 src/Recipe/Taxonomies.php:53 templates/admin/classic/recipe-shortcodes.php:72 templates/admin/frame/recipe-shortcodes.php:28
+#: src/Admin/Settings.php:540
+#: src/Frontend/Shortcodes.php:1218
+#: src/Frontend/Shortcodes.php:1222
+#: src/Recipe/Taxonomies.php:53
+#: templates/admin/classic/recipe-shortcodes.php:72
+#: templates/admin/frame/recipe-shortcodes.php:28
 msgid "Category"
 msgstr "Κατηγορία"
 
-#: src/Admin/Settings.php:541 templates/admin/classic/recipe-layout.php:116 templates/admin/frame/recipe-layout.php:132
+#: src/Admin/Settings.php:541
+#: templates/admin/classic/recipe-layout.php:116
+#: templates/admin/frame/recipe-layout.php:132
 msgid "Difficulty Level"
 msgstr "Επίπεδο δυσκολίας"
 
-#: src/Admin/Settings.php:542 src/System/Functions.php:360 templates/admin/classic/recipe-shortcodes.php:289 templates/admin/frame/recipe-shortcodes.php:115
+#: src/Admin/Settings.php:542
+#: src/System/Functions.php:360
+#: templates/admin/classic/recipe-shortcodes.php:289
+#: templates/admin/frame/recipe-shortcodes.php:115
 msgid "Excerpt"
 msgstr "Περίληψη"
 
-#: src/Admin/Settings.php:543 src/Frontend/Shortcodes.php:1276 src/Import/Import.php:190 src/Recipe/Recipes.php:1103 src/System/Functions.php:364 templates/admin/classic/recipe-shortcodes.php:313 templates/admin/frame/recipe-shortcodes.php:141
+#: src/Admin/Settings.php:543
+#: src/Frontend/Shortcodes.php:1292
+#: src/Import/Import.php:190
+#: src/Recipe/Recipes.php:1150
+#: src/System/Functions.php:364
+#: templates/admin/classic/recipe-shortcodes.php:313
+#: templates/admin/frame/recipe-shortcodes.php:141
 msgid "Notes"
 msgstr "Σημειώσεις"
 
-#: src/Admin/Settings.php:544 src/Frontend/Shortcodes.php:872 src/Frontend/Shortcodes.php:1138 templates/admin/classic/recipe-layout.php:127 templates/admin/classic/recipe-shortcodes.php:67 templates/admin/frame/recipe-layout.php:37 templates/admin/frame/recipe-shortcodes.php:23
+#: src/Admin/Settings.php:544
+#: src/Frontend/Shortcodes.php:872
+#: src/Frontend/Shortcodes.php:1154
+#: templates/admin/classic/recipe-layout.php:127
+#: templates/admin/classic/recipe-shortcodes.php:67
+#: templates/admin/frame/recipe-layout.php:37
+#: templates/admin/frame/recipe-shortcodes.php:23
 msgid "Prep Time"
 msgstr "Χρόνος προετοιμασίας"
 
-#: src/Admin/Settings.php:545 src/Frontend/Shortcodes.php:873 src/Frontend/Shortcodes.php:1153 templates/admin/classic/recipe-layout.php:132 templates/admin/classic/recipe-shortcodes.php:68 templates/admin/frame/recipe-layout.php:41 templates/admin/frame/recipe-shortcodes.php:24
+#: src/Admin/Settings.php:545
+#: src/Frontend/Shortcodes.php:873
+#: src/Frontend/Shortcodes.php:1169
+#: templates/admin/classic/recipe-layout.php:132
+#: templates/admin/classic/recipe-shortcodes.php:68
+#: templates/admin/frame/recipe-layout.php:41
+#: templates/admin/frame/recipe-shortcodes.php:24
 msgid "Cook Time"
 msgstr "Χρόνος μαγειρέματος"
 
-#: src/Admin/Settings.php:546 src/Frontend/Shortcodes.php:874 src/Frontend/Shortcodes.php:1170 src/Frontend/Shortcodes.php:1177 templates/admin/classic/recipe-layout.php:137 templates/admin/classic/recipe-shortcodes.php:69 templates/admin/frame/recipe-layout.php:45 templates/admin/frame/recipe-shortcodes.php:25
+#: src/Admin/Settings.php:546
+#: src/Frontend/Shortcodes.php:874
+#: src/Frontend/Shortcodes.php:1186
+#: src/Frontend/Shortcodes.php:1193
+#: templates/admin/classic/recipe-layout.php:137
+#: templates/admin/classic/recipe-shortcodes.php:69
+#: templates/admin/frame/recipe-layout.php:45
+#: templates/admin/frame/recipe-shortcodes.php:25
 msgid "Total Time"
 msgstr "Συνολικός χρόνος"
 
-#: src/Admin/Settings.php:547 src/Measurement/Measurements.php:309 src/Recipe/Recipes.php:1430 src/Recipe/Recipes.php:1432
+#: src/Admin/Settings.php:547
+#: src/Measurement/Measurements.php:309
+#: src/Recipe/Recipes.php:1475
+#: src/Recipe/Recipes.php:1477
 msgid "Servings"
 msgstr "Μερίδες"
 
@@ -790,145 +910,154 @@ msgstr "Απενεργοποίηση σελίδας αρχείου συνταγ�
 msgid "Prevents the recipe archive from being displayed at %s."
 msgstr "Αποτρέπει την εμφάνιση του αρχείου συνταγών στη διεύθυνση %s."
 
-#: src/Admin/Settings.php:691
+#: src/Admin/Settings.php:692
 msgid "Design"
 msgstr "Σχεδίαση"
 
-#: src/Admin/Settings.php:695
+#: src/Admin/Settings.php:696
 msgid "Dark Mode"
 msgstr "Σκοτεινή λειτουργία"
 
-#: src/Admin/Settings.php:698
+#: src/Admin/Settings.php:699
 msgid "For your recipes on the site. Use <strong>Auto</strong> if your theme has a visitor dark mode toggle. Cooked will then match that choice. Otherwise leave this Off."
 msgstr "Για τις συνταγές στον ιστότοπο. Επιλέξτε <strong>Αυτόματα</strong> αν το θέμα σας έχει διακόπτη σκοτεινής λειτουργίας για τους επισκέπτες· το Cooked θα ακολουθεί αυτή την επιλογή. Διαφορετικά αφήστε το Ανενεργό."
 
-#: src/Admin/Settings.php:705 src/Admin/Settings.php:719 src/Admin/Settings.php:731
+#: src/Admin/Settings.php:706
+#: src/Admin/Settings.php:720
+#: src/Admin/Settings.php:732
 msgid "Off"
 msgstr "Ανενεργό"
 
-#: src/Admin/Settings.php:706 src/Admin/Settings.php:720 src/Admin/Settings.php:732
+#: src/Admin/Settings.php:707
+#: src/Admin/Settings.php:721
+#: src/Admin/Settings.php:733
 msgid "On"
 msgstr "Ενεργό"
 
-#: src/Admin/Settings.php:707
+#: src/Admin/Settings.php:708
 msgid "Auto (match theme dark mode)"
 msgstr "Αυτόματα (όπως η σκοτεινή λειτουργία του θέματος)"
 
-#: src/Admin/Settings.php:713
+#: src/Admin/Settings.php:714
 msgid "Admin Dark Mode"
 msgstr "Σκοτεινή λειτουργία διαχείρισης"
 
-#: src/Admin/Settings.php:714
+#: src/Admin/Settings.php:715
 msgid "Your own preference for the Settings, Import, What's New and Upgrade to Pro screens. <strong>Auto</strong> follows your computer's light or dark setting."
 msgstr "Η δική σας προτίμηση για τις οθόνες Ρυθμίσεις, Εισαγωγή, Τι νέο υπάρχει και Αναβάθμιση σε Pro. Το <strong>Αυτόματα</strong> ακολουθεί τη φωτεινή ή σκοτεινή ρύθμιση του υπολογιστή σας."
 
-#: src/Admin/Settings.php:721 src/Admin/Settings.php:733
+#: src/Admin/Settings.php:722
+#: src/Admin/Settings.php:734
 msgid "Auto (match your system)"
 msgstr "Αυτόματα (όπως το σύστημά σας)"
 
-#: src/Admin/Settings.php:725
+#: src/Admin/Settings.php:726
 msgid "Recipe Editor Dark Mode"
 msgstr "Σκοτεινή λειτουργία επεξεργαστή συνταγών"
 
-#: src/Admin/Settings.php:726
+#: src/Admin/Settings.php:727
 msgid "Your own preference for the recipe editor. <strong>Auto</strong> follows your computer's light or dark setting."
 msgstr "Η δική σας προτίμηση για τον επεξεργαστή συνταγών. Το <strong>Αυτόματα</strong> ακολουθεί τη φωτεινή ή σκοτεινή ρύθμιση του υπολογιστή σας."
 
-#: src/Admin/Settings.php:737
+#: src/Admin/Settings.php:738
 msgid "Author Images"
 msgstr "Εικόνες συντακτών"
 
-#: src/Admin/Settings.php:738
+#: src/Admin/Settings.php:739
 msgid "If you do not want to display the author images (avatars), you can disable them here."
 msgstr "Αν δεν θέλετε να εμφανίζονται οι εικόνες των συντακτών (avatar), μπορείτε να τις απενεργοποιήσετε εδώ."
 
-#: src/Admin/Settings.php:745
+#: src/Admin/Settings.php:746
 msgid "Hide Author Images"
 msgstr "Απόκρυψη εικόνων συντακτών"
 
-#: src/Admin/Settings.php:750
+#: src/Admin/Settings.php:751
 msgid "Default Recipe Image"
 msgstr "Προεπιλεγμένη εικόνα συνταγής"
 
-#: src/Admin/Settings.php:751
+#: src/Admin/Settings.php:752
 msgid "Used as the featured image for recipes that do not have one set."
 msgstr "Χρησιμοποιείται ως επιλεγμένη εικόνα για συνταγές που δεν έχουν ορίσει δική τους."
 
-#: src/Admin/Settings.php:756
+#: src/Admin/Settings.php:757
 msgid "Main Color"
 msgstr "Κύριο χρώμα"
 
-#: src/Admin/Settings.php:757
+#: src/Admin/Settings.php:758
 msgid "Used on buttons, cooking timer, etc."
 msgstr "Χρησιμοποιείται στα κουμπιά, στο χρονόμετρο μαγειρέματος κ.λπ."
 
-#: src/Admin/Settings.php:763
+#: src/Admin/Settings.php:764
 msgid "Main Color (on hover)"
 msgstr "Κύριο χρώμα (κατά την κατάδειξη)"
 
-#: src/Admin/Settings.php:764
+#: src/Admin/Settings.php:765
 msgid "Used when hovering over buttons."
 msgstr "Χρησιμοποιείται όταν ο δείκτης περνά πάνω από τα κουμπιά."
 
-#: src/Admin/Settings.php:772
+#: src/Admin/Settings.php:773
 msgid "Permalinks"
 msgstr "Μόνιμοι σύνδεσμοι"
 
-#: src/Admin/Settings.php:776
+#: src/Admin/Settings.php:777
 msgid "Recipe Permalink"
 msgstr "Μόνιμος σύνδεσμος συνταγής"
 
-#: src/Admin/Settings.php:779
+#: src/Admin/Settings.php:780
 msgid "recipe-name"
 msgstr "recipe-name"
 
-#: src/Admin/Settings.php:783
+#: src/Admin/Settings.php:784
 msgid "Recipe Author Permalink"
 msgstr "Μόνιμος σύνδεσμος συντάκτη συνταγής"
 
-#: src/Admin/Settings.php:786
+#: src/Admin/Settings.php:787
 msgid "author-name"
 msgstr "author-name"
 
-#: src/Admin/Settings.php:790
+#: src/Admin/Settings.php:791
 msgid "Recipe Category Permalink"
 msgstr "Μόνιμος σύνδεσμος κατηγορίας συνταγής"
 
-#: src/Admin/Settings.php:793
+#: src/Admin/Settings.php:794
 msgid "recipe-category-name"
 msgstr "recipe-category-name"
 
 #. translators: posts_per_page default
-#: src/Admin/Settings.php:812
+#: src/Admin/Settings.php:813
 #, php-format
 msgid "WordPress Default %s"
 msgstr "Προεπιλογή WordPress %s"
 
-#: src/Admin/Settings.php:817
+#: src/Admin/Settings.php:818
 msgid "Show All (no pagination)"
 msgstr "Εμφάνιση όλων (χωρίς σελιδοποίηση)"
 
-#: src/Admin/Settings.php:1014
+#: src/Admin/Settings.php:1015
 msgid "Compare layouts"
 msgstr "Σύγκριση διατάξεων"
 
-#: src/Admin/Settings.php:1017
+#: src/Admin/Settings.php:1018
 msgid "Classic and new layouts"
 msgstr "Κλασική και νέα διάταξη"
 
-#: src/Admin/Settings.php:1018 src/Recipe/RecipeMeta.php:464 templates/admin/parts/gallery-preview-dialog.php:15
+#: src/Admin/Settings.php:1019
+#: src/Recipe/RecipeMeta.php:464
+#: templates/admin/parts/gallery-preview-dialog.php:15
 msgid "Close"
 msgstr "Κλείσιμο"
 
-#: src/Admin/Settings.php:1021
+#: src/Admin/Settings.php:1022
 msgid "Drag the slider to see the same screen in the classic layout (left) and the new one (right)."
 msgstr "Σύρετε τον ολισθητή για να δείτε την ίδια οθόνη στην κλασική διάταξη (αριστερά) και στη νέα (δεξιά)."
 
-#: src/Admin/Settings.php:1061
+#: src/Admin/Settings.php:1062
 msgid "Begin Migration"
 msgstr "Έναρξη μεταφοράς"
 
-#: src/Admin/Settings.php:1066 src/Import/Import.php:249 src/Import/Import.php:308
+#: src/Admin/Settings.php:1067
+#: src/Import/Import.php:249
+#: src/Import/Import.php:308
 msgid "reload"
 msgstr "επαναφόρτωση"
 
@@ -964,23 +1093,25 @@ msgstr "Αφαίρεση συνταγών από τα μεταδεδομένα �
 msgid "Removes the legacy \"recipes\" key from all users' cooked_user_meta."
 msgstr "Αφαιρεί το παλαιό κλειδί «recipes» από το cooked_user_meta όλων των χρηστών."
 
-#: src/Admin/Updates.php:234
+#: src/Admin/Updates.php:238
 msgid "Tool name is required."
 msgstr "Το όνομα του εργαλείου είναι υποχρεωτικό."
 
 #. translators: %s: site health tool name
-#: src/Admin/Updates.php:246
+#: src/Admin/Updates.php:250
 #, php-format
 msgid "Unknown tool: %s."
 msgstr "Άγνωστο εργαλείο: %s."
 
 #. translators: %s: PHP method name
-#: src/Admin/Updates.php:251
+#: src/Admin/Updates.php:255
 #, php-format
 msgid "Tool method %s does not exist."
 msgstr "Η μέθοδος εργαλείου %s δεν υπάρχει."
 
-#: src/Frontend/Enqueues.php:70 templates/admin/classic/recipe-shortcodes.php:344 templates/admin/frame/recipe-shortcodes.php:176
+#: src/Frontend/Enqueues.php:70
+#: templates/admin/classic/recipe-shortcodes.php:344
+#: templates/admin/frame/recipe-shortcodes.php:176
 msgid "Timer"
 msgstr "Χρονόμετρο"
 
@@ -1014,7 +1145,8 @@ msgstr "Βρέθηκε 1 συνταγή."
 msgid "%s recipes found."
 msgstr "Βρέθηκαν %s συνταγές."
 
-#: src/Frontend/Enqueues.php:79 src/Recipe/PostTypes.php:601
+#: src/Frontend/Enqueues.php:79
+#: src/Recipe/PostTypes.php:641
 msgid "No recipes found."
 msgstr "Δεν βρέθηκαν συνταγές."
 
@@ -1090,57 +1222,62 @@ msgstr "Επόμενη διαφάνεια"
 msgid "Go to slide %d"
 msgstr "Μετάβαση στη διαφάνεια %d"
 
-#: src/Frontend/Shortcodes.php:870 src/Frontend/Shortcodes.php:1076 templates/admin/classic/recipe-shortcodes.php:70 templates/admin/frame/recipe-shortcodes.php:26
+#: src/Frontend/Shortcodes.php:870
+#: src/Frontend/Shortcodes.php:1076
+#: templates/admin/classic/recipe-shortcodes.php:70
+#: templates/admin/frame/recipe-shortcodes.php:26
 msgid "Difficulty"
 msgstr "Δυσκολία"
 
-#: src/Frontend/Shortcodes.php:871 src/Recipe/Recipes.php:1419
+#: src/Frontend/Shortcodes.php:871
+#: src/Recipe/Recipes.php:1464
 msgid "Yields"
 msgstr "Αποδίδει"
 
-#: src/Frontend/Shortcodes.php:1112 src/System/Functions.php:355
+#: src/Frontend/Shortcodes.php:1128
+#: src/System/Functions.php:355
 msgid "Print"
 msgstr "Εκτύπωση"
 
 #. translators: 1: amount and unit, e.g. 10g, 2: nutrient name
-#: src/Frontend/Shortcodes.php:1539
+#: src/Frontend/Shortcodes.php:1555
 #, php-format
 msgid "Includes %1$s %2$s"
 msgstr "Περιλαμβάνει %1$s %2$s"
 
-#: src/Frontend/Shortcodes.php:1591
+#: src/Frontend/Shortcodes.php:1607
 msgid "Invalid recipe ID specified. Please provide a valid numeric recipe ID."
 msgstr "Ορίστηκε μη έγκυρο αναγνωριστικό συνταγής. Δώστε ένα έγκυρο αριθμητικό αναγνωριστικό."
 
-#: src/Frontend/Shortcodes.php:1599
+#: src/Frontend/Shortcodes.php:1615
 msgid "No recipe found. Please specify a recipe ID using the id attribute, or use this shortcode on a recipe page."
 msgstr "Δεν βρέθηκε συνταγή. Ορίστε το αναγνωριστικό της με το χαρακτηριστικό id ή χρησιμοποιήστε αυτό το shortcode σε σελίδα συνταγής."
 
-#: src/Frontend/Shortcodes.php:1606
+#: src/Frontend/Shortcodes.php:1622
 msgid "Recipe not found."
 msgstr "Η συνταγή δεν βρέθηκε."
 
 #. translators: %d: post ID
-#: src/Frontend/Shortcodes.php:1611
+#: src/Frontend/Shortcodes.php:1627
 #, php-format
 msgid "The specified ID (%d) is not a recipe."
 msgstr "Το αναγνωριστικό (%d) δεν αντιστοιχεί σε συνταγή."
 
 #. translators: %d: post ID
-#: src/Frontend/Shortcodes.php:1614
+#: src/Frontend/Shortcodes.php:1630
 #, php-format
 msgid "No post found with ID %d."
 msgstr "Δεν βρέθηκε άρθρο με αναγνωριστικό %d."
 
-#: src/Frontend/Shortcodes.php:1623
+#: src/Frontend/Shortcodes.php:1639
 msgid "No related recipes found."
 msgstr "Δεν βρέθηκαν σχετικές συνταγές."
 
-#: src/Frontend/Shortcodes.php:1626
+#: src/Frontend/Shortcodes.php:1642
 msgid "This may be because there are no other recipes in the current language with matching attributes."
 msgstr "Ίσως επειδή δεν υπάρχουν άλλες συνταγές στην τρέχουσα γλώσσα με κοινά χαρακτηριστικά."
 
-#: src/Frontend/Shortcodes.php:1628
+#: src/Frontend/Shortcodes.php:1644
 msgid "Try adjusting the matching criteria or ensure you have other published recipes with shared categories, tags, or ingredients."
 msgstr "Προσαρμόστε τα κριτήρια αντιστοίχισης ή βεβαιωθείτε ότι έχετε άλλες δημοσιευμένες συνταγές με κοινές κατηγορίες, ετικέτες ή υλικά."
 
@@ -1148,15 +1285,19 @@ msgstr "Προσαρμόστε τα κριτήρια αντιστοίχισης 
 msgid "Edit Recipe(s)..."
 msgstr "Επεξεργασία συνταγών..."
 
-#: src/Frontend/Widgets.php:65 src/Frontend/Widgets.php:67
+#: src/Frontend/Widgets.php:65
+#: src/Frontend/Widgets.php:67
 msgid "Choose recipe(s)..."
 msgstr "Επιλέξτε συνταγές..."
 
-#: src/Frontend/Widgets/Nutrition.php:62 src/Frontend/Widgets/Search.php:68
+#: src/Frontend/Widgets/Nutrition.php:62
+#: src/Frontend/Widgets/Search.php:68
 msgid "Title (optional):"
 msgstr "Τίτλος (προαιρετικός):"
 
-#: src/Frontend/Widgets/RecipeCard.php:109 src/Frontend/Widgets/RecipeCategories.php:71 src/Frontend/Widgets/RecipeList.php:76
+#: src/Frontend/Widgets/RecipeCard.php:109
+#: src/Frontend/Widgets/RecipeCategories.php:71
+#: src/Frontend/Widgets/RecipeList.php:76
 msgid "Widget Title (optional):"
 msgstr "Τίτλος μικροεφαρμογής (προαιρετικός):"
 
@@ -1184,11 +1325,13 @@ msgstr "Μοντέρνο"
 msgid "Modern Centered"
 msgstr "Μοντέρνο στο κέντρο"
 
-#: src/Frontend/Widgets/RecipeCard.php:133 src/Frontend/Widgets/RecipeList.php:115
+#: src/Frontend/Widgets/RecipeCard.php:133
+#: src/Frontend/Widgets/RecipeList.php:115
 msgid "Width:"
 msgstr "Πλάτος:"
 
-#: src/Frontend/Widgets/RecipeCard.php:139 src/Frontend/Widgets/RecipeList.php:121
+#: src/Frontend/Widgets/RecipeCard.php:139
+#: src/Frontend/Widgets/RecipeList.php:121
 msgid "Hide Image"
 msgstr "Απόκρυψη εικόνας"
 
@@ -1196,7 +1339,8 @@ msgstr "Απόκρυψη εικόνας"
 msgid "Hide Title"
 msgstr "Απόκρυψη τίτλου"
 
-#: src/Frontend/Widgets/RecipeCard.php:149 src/Frontend/Widgets/RecipeList.php:126
+#: src/Frontend/Widgets/RecipeCard.php:149
+#: src/Frontend/Widgets/RecipeList.php:126
 msgid "Hide Author"
 msgstr "Απόκρυψη συντάκτη"
 
@@ -1204,11 +1348,13 @@ msgstr "Απόκρυψη συντάκτη"
 msgid "Hide Excerpt"
 msgstr "Απόκρυψη περίληψης"
 
-#: src/Frontend/Widgets/RecipeCategories.php:76 src/Recipe/Taxonomies.php:56
+#: src/Frontend/Widgets/RecipeCategories.php:76
+#: src/Recipe/Taxonomies.php:56
 msgid "Parent Category"
 msgstr "Γονική κατηγορία"
 
-#: src/Frontend/Widgets/RecipeCategories.php:81 src/Recipe/Taxonomies.php:55
+#: src/Frontend/Widgets/RecipeCategories.php:81
+#: src/Recipe/Taxonomies.php:55
 msgid "All Categories"
 msgstr "Όλες οι κατηγορίες"
 
@@ -1296,11 +1442,22 @@ msgstr "Απόκρυψη της εικόνας της συνταγής."
 msgid "Hide the recipe title."
 msgstr "Απόκρυψη του τίτλου της συνταγής."
 
-#: src/functions.php:103 templates/admin/classic/recipe-shortcodes.php:59 templates/admin/classic/recipe-shortcodes.php:110 templates/admin/classic/recipe-shortcodes.php:141 templates/admin/classic/recipe-shortcodes.php:166 templates/admin/classic/recipe-shortcodes.php:190 templates/admin/classic/recipe-shortcodes.php:250 templates/admin/classic/recipe-shortcodes.php:298 templates/admin/classic/recipe-shortcodes.php:328 templates/admin/classic/recipe-shortcodes.php:375 templates/admin/classic/recipe-shortcodes.php:508
+#: src/functions.php:103
+#: templates/admin/classic/recipe-shortcodes.php:59
+#: templates/admin/classic/recipe-shortcodes.php:110
+#: templates/admin/classic/recipe-shortcodes.php:141
+#: templates/admin/classic/recipe-shortcodes.php:166
+#: templates/admin/classic/recipe-shortcodes.php:190
+#: templates/admin/classic/recipe-shortcodes.php:250
+#: templates/admin/classic/recipe-shortcodes.php:298
+#: templates/admin/classic/recipe-shortcodes.php:328
+#: templates/admin/classic/recipe-shortcodes.php:375
+#: templates/admin/classic/recipe-shortcodes.php:508
 msgid "Available Variables"
 msgstr "Διαθέσιμες μεταβλητές"
 
-#: src/functions.php:105 templates/admin/classic/recipe-shortcodes.php:510
+#: src/functions.php:105
+#: templates/admin/classic/recipe-shortcodes.php:510
 msgid "Recipe ID"
 msgstr "Αναγνωριστικό συνταγής"
 
@@ -1312,11 +1469,20 @@ msgstr "Πλάτος κάρτας"
 msgid "modern, modern-centered"
 msgstr "modern, modern-centered"
 
-#: src/functions.php:108 src/functions.php:109 src/functions.php:110 src/functions.php:111 templates/admin/classic/recipe-shortcodes.php:515 templates/admin/classic/recipe-shortcodes.php:516 templates/admin/classic/recipe-shortcodes.php:517 templates/admin/classic/recipe-shortcodes.php:518
+#: src/functions.php:108
+#: src/functions.php:109
+#: src/functions.php:110
+#: src/functions.php:111
+#: templates/admin/classic/recipe-shortcodes.php:515
+#: templates/admin/classic/recipe-shortcodes.php:516
+#: templates/admin/classic/recipe-shortcodes.php:517
+#: templates/admin/classic/recipe-shortcodes.php:518
 msgid "true/false"
 msgstr "true/false"
 
-#: src/functions.php:113 templates/admin/classic/recipe-shortcodes.php:520 templates/admin/frame/recipe-shortcodes.php:291
+#: src/functions.php:113
+#: templates/admin/classic/recipe-shortcodes.php:520
+#: templates/admin/frame/recipe-shortcodes.php:291
 msgid "Example"
 msgstr "Παράδειγμα"
 
@@ -1357,19 +1523,39 @@ msgstr "Προσθήκη υποκατάστατου"
 msgid "Layout"
 msgstr "Διάταξη"
 
-#: src/functions.php:220 src/Import/CsvImport.php:398 src/Recipe/RecipeMeta.php:362 src/Recipe/Recipes.php:1096 src/Recipe/Recipes.php:1129 src/System/Ajax.php:322 src/System/Functions.php:362 templates/admin/classic/recipe-shortcodes.php:95 templates/admin/frame/recipe-shortcodes.php:121
+#: src/functions.php:220
+#: src/Import/CsvImport.php:398
+#: src/Recipe/RecipeMeta.php:362
+#: src/Recipe/Recipes.php:1143
+#: src/Recipe/Recipes.php:1176
+#: src/System/Ajax.php:323
+#: src/System/Functions.php:362
+#: templates/admin/classic/recipe-shortcodes.php:95
+#: templates/admin/frame/recipe-shortcodes.php:121
 msgid "Ingredients"
 msgstr "Υλικά"
 
-#: src/functions.php:226 src/Import/CsvImport.php:398 src/Recipe/RecipeMeta.php:362 src/Recipe/Recipes.php:1100 src/Recipe/Recipes.php:1130 src/System/Ajax.php:322 src/System/Functions.php:363 templates/admin/classic/recipe-shortcodes.php:126 templates/admin/frame/recipe-shortcodes.php:131
+#: src/functions.php:226
+#: src/Import/CsvImport.php:398
+#: src/Recipe/RecipeMeta.php:362
+#: src/Recipe/Recipes.php:1147
+#: src/Recipe/Recipes.php:1177
+#: src/System/Ajax.php:323
+#: src/System/Functions.php:363
+#: templates/admin/classic/recipe-shortcodes.php:126
+#: templates/admin/frame/recipe-shortcodes.php:131
 msgid "Directions"
 msgstr "Οδηγίες"
 
-#: src/functions.php:232 src/System/Functions.php:365
+#: src/functions.php:232
+#: src/System/Functions.php:365
 msgid "Nutrition"
 msgstr "Διατροφή"
 
-#: src/functions.php:238 templates/admin/classic/recipe-shortcodes.php:207 templates/admin/frame/recipe-gallery.php:56 templates/admin/frame/recipe-shortcodes.php:161
+#: src/functions.php:238
+#: templates/admin/classic/recipe-shortcodes.php:207
+#: templates/admin/frame/recipe-gallery.php:56
+#: templates/admin/frame/recipe-shortcodes.php:161
 msgid "Gallery"
 msgstr "Συλλογή"
 
@@ -1385,27 +1571,53 @@ msgstr "Κύλιση καρτελών αριστερά"
 msgid "Scroll tabs right"
 msgstr "Κύλιση καρτελών δεξιά"
 
-#: src/functions.php:359 src/functions.php:440 src/functions.php:493
+#: src/functions.php:359
+#: src/functions.php:440
+#: src/functions.php:493
 msgid "ex. Eggs, Milk, etc."
 msgstr "π.χ. αυγά, γάλα κ.λπ."
 
-#: src/functions.php:364 src/functions.php:445 src/functions.php:498
+#: src/functions.php:364
+#: src/functions.php:445
+#: src/functions.php:498
 msgid "Substitution"
 msgstr "Υποκατάστατο"
 
-#: src/functions.php:365 src/functions.php:401 src/functions.php:446 src/functions.php:499 src/functions.php:532 src/functions.php:605 src/functions.php:638 src/functions.php:688 src/functions.php:726 src/functions.php:756
+#: src/functions.php:365
+#: src/functions.php:401
+#: src/functions.php:446
+#: src/functions.php:499
+#: src/functions.php:532
+#: src/functions.php:605
+#: src/functions.php:638
+#: src/functions.php:688
+#: src/functions.php:726
+#: src/functions.php:756
 msgid "Remove"
 msgstr "Αφαίρεση"
 
-#: src/functions.php:376 src/functions.php:507 src/functions.php:613 src/functions.php:731
+#: src/functions.php:376
+#: src/functions.php:507
+#: src/functions.php:613
+#: src/functions.php:731
 msgid "Section Heading"
 msgstr "Επικεφαλίδα ενότητας"
 
-#: src/functions.php:380 src/functions.php:511 src/functions.php:617 src/functions.php:735
+#: src/functions.php:380
+#: src/functions.php:511
+#: src/functions.php:617
+#: src/functions.php:735
 msgid "Heading Element:"
 msgstr "Στοιχείο επικεφαλίδας:"
 
-#: src/functions.php:381 src/functions.php:399 src/functions.php:512 src/functions.php:530 src/functions.php:618 src/functions.php:636 src/functions.php:736 src/functions.php:754
+#: src/functions.php:381
+#: src/functions.php:399
+#: src/functions.php:512
+#: src/functions.php:530
+#: src/functions.php:618
+#: src/functions.php:636
+#: src/functions.php:736
+#: src/functions.php:754
 msgid "Heading element"
 msgstr "Στοιχείο επικεφαλίδας"
 
@@ -1413,19 +1625,25 @@ msgstr "Στοιχείο επικεφαλίδας"
 msgid "Add Ingredient"
 msgstr "Προσθήκη υλικού"
 
-#: src/functions.php:461 src/functions.php:700
+#: src/functions.php:461
+#: src/functions.php:700
 msgid "Add Section Heading"
 msgstr "Προσθήκη επικεφαλίδας ενότητας"
 
-#: src/functions.php:463 src/functions.php:702
+#: src/functions.php:463
+#: src/functions.php:702
 msgid "Bulk Add"
 msgstr "Μαζική προσθήκη"
 
-#: src/functions.php:592 src/functions.php:678 src/functions.php:717
+#: src/functions.php:592
+#: src/functions.php:678
+#: src/functions.php:717
 msgid "Step"
 msgstr "Βήμα"
 
-#: src/functions.php:603 src/functions.php:686 src/functions.php:724
+#: src/functions.php:603
+#: src/functions.php:686
+#: src/functions.php:724
 msgid "Remove video"
 msgstr "Αφαίρεση βίντεο"
 
@@ -1457,7 +1675,8 @@ msgstr "Γραμμή %1$d: Άγνωστο σφάλμα"
 
 #. translators: 1: CSV row number, 2: error message
 #. translators: 1: row number, 2: error message
-#: src/Import/CsvImport.php:133 src/Import/CsvImport.php:198
+#: src/Import/CsvImport.php:133
+#: src/Import/CsvImport.php:198
 #, php-format
 msgid "Row %1$d: %2$s"
 msgstr "Γραμμή %1$d: %2$s"
@@ -1473,30 +1692,36 @@ msgid "Error importing WP Delicious recipe."
 msgstr "Σφάλμα κατά την εισαγωγή συνταγής WP Delicious."
 
 #. translators: for displaying singular or plural versions depending on the number of recipes.
-#: src/Import/Import.php:73 src/Import/Import.php:128
+#: src/Import/Import.php:73
+#: src/Import/Import.php:128
 #, php-format
 msgid "There is %1$s recipe that should be imported from %2$s."
 msgid_plural "There are %1$s recipes that should be imported from %2$s."
 msgstr[0] "Υπάρχει %1$s συνταγή προς εισαγωγή από %2$s."
 msgstr[1] "Υπάρχουν %1$s συνταγές προς εισαγωγή από %2$s."
 
-#: src/Import/Import.php:75 src/Import/Import.php:130
+#: src/Import/Import.php:75
+#: src/Import/Import.php:130
 msgid "Before you begin, please make sure you <b>backup your database</b> in case something goes wrong."
 msgstr "Πριν ξεκινήσετε, <b>κρατήστε αντίγραφο ασφαλείας της βάσης δεδομένων</b> σε περίπτωση που κάτι πάει στραβά."
 
-#: src/Import/Import.php:77 src/Import/Import.php:132
+#: src/Import/Import.php:77
+#: src/Import/Import.php:132
 msgid "Click the button below to import these recipes. Here is what will happen to your recipes:"
 msgstr "Πατήστε το παρακάτω κουμπί για να εισαγάγετε αυτές τις συνταγές. Δείτε τι θα συμβεί στις συνταγές σας:"
 
-#: src/Import/Import.php:79 src/Import/Import.php:134
+#: src/Import/Import.php:79
+#: src/Import/Import.php:134
 msgid "Recipes will be imported with the <b>'Draft'</b> status."
 msgstr "Οι συνταγές θα εισαχθούν με κατάσταση <b>«Πρόχειρο»</b>."
 
-#: src/Import/Import.php:80 src/Import/Import.php:135
+#: src/Import/Import.php:80
+#: src/Import/Import.php:135
 msgid "Comments and ratings data will also be imported (ratings are available in Cooked Pro)."
 msgstr "Θα εισαχθούν επίσης τα σχόλια και οι αξιολογήσεις (οι αξιολογήσεις είναι διαθέσιμες στο Cooked Pro)."
 
-#: src/Import/Import.php:81 src/Import/Import.php:137
+#: src/Import/Import.php:81
+#: src/Import/Import.php:137
 msgid "After the import is complete, you can bulk edit the recipes and change their status to <b>'Published'</b>."
 msgstr "Μόλις ολοκληρωθεί η εισαγωγή, μπορείτε να επεξεργαστείτε μαζικά τις συνταγές και να αλλάξετε την κατάστασή τους σε <b>«Δημοσιευμένο»</b>."
 
@@ -1504,15 +1729,18 @@ msgstr "Μόλις ολοκληρωθεί η εισαγωγή, μπορείτε 
 msgid "The existing WP Delicious recipes and data will not be modified or deleted."
 msgstr "Οι υπάρχουσες συνταγές και τα δεδομένα του WP Delicious δεν θα τροποποιηθούν ούτε θα διαγραφούν."
 
-#: src/Import/Import.php:83 src/Import/Import.php:139
+#: src/Import/Import.php:83
+#: src/Import/Import.php:139
 msgid "Certain data that is not suppoted by Cooked will not be imported (such as Cooking Temp, Estimated Cost, Recipe Keywords, etc)."
 msgstr "Ορισμένα δεδομένα που δεν υποστηρίζει το Cooked δεν θα εισαχθούν (όπως θερμοκρασία μαγειρέματος, εκτιμώμενο κόστος, λέξεις-κλειδιά συνταγής κ.λπ.)."
 
-#: src/Import/Import.php:84 src/Import/Import.php:140
+#: src/Import/Import.php:84
+#: src/Import/Import.php:140
 msgid "You can run the import multiple times, but keep in mind that duplicate recipes will be created."
 msgstr "Μπορείτε να εκτελέσετε την εισαγωγή πολλές φορές, αλλά έχετε υπόψη ότι θα δημιουργηθούν διπλές συνταγές."
 
-#: src/Import/Import.php:95 src/Import/Import.php:110
+#: src/Import/Import.php:95
+#: src/Import/Import.php:110
 msgid "WP Delicious - Import"
 msgstr "WP Delicious - Εισαγωγή"
 
@@ -1528,7 +1756,8 @@ msgstr "Το επίπεδο δυσκολίας θα οριστεί σε <b>Αρ�
 msgid "The existing WP Recipe Maker and data will not be modified or deleted."
 msgstr "Το υπάρχον WP Recipe Maker και τα δεδομένα του δεν θα τροποποιηθούν ούτε θα διαγραφούν."
 
-#: src/Import/Import.php:151 src/Import/Import.php:166
+#: src/Import/Import.php:151
+#: src/Import/Import.php:166
 msgid "WP Recipe Maker - Import"
 msgstr "WP Recipe Maker - Εισαγωγή"
 
@@ -1690,7 +1919,8 @@ msgstr "Ο διακόπτης σκοτεινής λειτουργίας του P
 msgid "Recipe Category"
 msgstr "Κατηγορία συνταγής"
 
-#: src/Integrations/RankMathSeo.php:54 src/Integrations/YoastSeo.php:50
+#: src/Integrations/RankMathSeo.php:54
+#: src/Integrations/YoastSeo.php:50
 msgid "Current recipe category being viewed."
 msgstr "Η κατηγορία συνταγών που προβάλλεται αυτή τη στιγμή."
 
@@ -1730,7 +1960,9 @@ msgstr "κιλό"
 msgid "kilograms"
 msgstr "κιλά"
 
-#: src/Measurement/Measurements.php:125 src/Measurement/Measurements.php:126 src/Measurement/Measurements.php:301
+#: src/Measurement/Measurements.php:125
+#: src/Measurement/Measurements.php:126
+#: src/Measurement/Measurements.php:301
 msgid "mg"
 msgstr "mg"
 
@@ -1742,7 +1974,8 @@ msgstr "χιλιοστόγραμμο"
 msgid "milligrams"
 msgstr "χιλιοστόγραμμα"
 
-#: src/Measurement/Measurements.php:133 src/Measurement/Measurements.php:134
+#: src/Measurement/Measurements.php:133
+#: src/Measurement/Measurements.php:134
 msgid "oz"
 msgstr "ουγκ."
 
@@ -1754,7 +1987,8 @@ msgstr "ουγκιά"
 msgid "ounces"
 msgstr "ουγκιές"
 
-#: src/Measurement/Measurements.php:141 src/Measurement/Measurements.php:142
+#: src/Measurement/Measurements.php:141
+#: src/Measurement/Measurements.php:142
 msgid "fl oz"
 msgstr "fl oz"
 
@@ -1766,15 +2000,18 @@ msgstr "ουγκιά υγρού"
 msgid "fluid ounces"
 msgstr "ουγκιές υγρού"
 
-#: src/Measurement/Measurements.php:149 src/Measurement/Measurements.php:151
+#: src/Measurement/Measurements.php:149
+#: src/Measurement/Measurements.php:151
 msgid "cup"
 msgstr "φλιτζάνι"
 
-#: src/Measurement/Measurements.php:150 src/Measurement/Measurements.php:152
+#: src/Measurement/Measurements.php:150
+#: src/Measurement/Measurements.php:152
 msgid "cups"
 msgstr "φλιτζάνια"
 
-#: src/Measurement/Measurements.php:157 src/Measurement/Measurements.php:158
+#: src/Measurement/Measurements.php:157
+#: src/Measurement/Measurements.php:158
 msgid "tsp"
 msgstr "κ.γ."
 
@@ -1786,7 +2023,8 @@ msgstr "κουταλάκι του γλυκού"
 msgid "teaspoons"
 msgstr "κουταλάκια του γλυκού"
 
-#: src/Measurement/Measurements.php:165 src/Measurement/Measurements.php:166
+#: src/Measurement/Measurements.php:165
+#: src/Measurement/Measurements.php:166
 msgid "tbsp"
 msgstr "κ.σ."
 
@@ -1798,7 +2036,8 @@ msgstr "κουταλιά της σούπας"
 msgid "tablespoons"
 msgstr "κουταλιές της σούπας"
 
-#: src/Measurement/Measurements.php:173 src/Measurement/Measurements.php:174
+#: src/Measurement/Measurements.php:173
+#: src/Measurement/Measurements.php:174
 msgid "dl"
 msgstr "dl"
 
@@ -1810,7 +2049,8 @@ msgstr "δεκατόλιτρο"
 msgid "deciliters"
 msgstr "δεκατόλιτρα"
 
-#: src/Measurement/Measurements.php:181 src/Measurement/Measurements.php:182
+#: src/Measurement/Measurements.php:181
+#: src/Measurement/Measurements.php:182
 msgid "ml"
 msgstr "ml"
 
@@ -1822,7 +2062,8 @@ msgstr "χιλιοστόλιτρο"
 msgid "milliliters"
 msgstr "χιλιοστόλιτρα"
 
-#: src/Measurement/Measurements.php:189 src/Measurement/Measurements.php:190
+#: src/Measurement/Measurements.php:189
+#: src/Measurement/Measurements.php:190
 msgid "l"
 msgstr "λ."
 
@@ -1834,11 +2075,13 @@ msgstr "λίτρο"
 msgid "liters"
 msgstr "λίτρα"
 
-#: src/Measurement/Measurements.php:197 src/Measurement/Measurements.php:199
+#: src/Measurement/Measurements.php:197
+#: src/Measurement/Measurements.php:199
 msgid "stick"
 msgstr "ράβδος"
 
-#: src/Measurement/Measurements.php:198 src/Measurement/Measurements.php:200
+#: src/Measurement/Measurements.php:198
+#: src/Measurement/Measurements.php:200
 msgid "sticks"
 msgstr "ράβδοι"
 
@@ -1858,19 +2101,23 @@ msgstr "λίμπρα"
 msgid "pounds"
 msgstr "λίμπρες"
 
-#: src/Measurement/Measurements.php:212 src/Measurement/Measurements.php:214
+#: src/Measurement/Measurements.php:212
+#: src/Measurement/Measurements.php:214
 msgid "dash"
 msgstr "λίγο"
 
-#: src/Measurement/Measurements.php:213 src/Measurement/Measurements.php:215
+#: src/Measurement/Measurements.php:213
+#: src/Measurement/Measurements.php:215
 msgid "dashes"
 msgstr "λίγο"
 
-#: src/Measurement/Measurements.php:219 src/Measurement/Measurements.php:221
+#: src/Measurement/Measurements.php:219
+#: src/Measurement/Measurements.php:221
 msgid "drop"
 msgstr "σταγόνα"
 
-#: src/Measurement/Measurements.php:220 src/Measurement/Measurements.php:222
+#: src/Measurement/Measurements.php:220
+#: src/Measurement/Measurements.php:222
 msgid "drops"
 msgstr "σταγόνες"
 
@@ -1890,15 +2137,18 @@ msgstr "γαλόνι"
 msgid "gallons"
 msgstr "γαλόνια"
 
-#: src/Measurement/Measurements.php:234 src/Measurement/Measurements.php:236
+#: src/Measurement/Measurements.php:234
+#: src/Measurement/Measurements.php:236
 msgid "pinch"
 msgstr "πρέζα"
 
-#: src/Measurement/Measurements.php:235 src/Measurement/Measurements.php:237
+#: src/Measurement/Measurements.php:235
+#: src/Measurement/Measurements.php:237
 msgid "pinches"
 msgstr "πρέζες"
 
-#: src/Measurement/Measurements.php:241 src/Measurement/Measurements.php:242
+#: src/Measurement/Measurements.php:241
+#: src/Measurement/Measurements.php:242
 msgid "pt"
 msgstr "pt"
 
@@ -1926,35 +2176,43 @@ msgstr "κουάρτ"
 msgid "quarts"
 msgstr "κουάρτ"
 
-#: src/Measurement/Measurements.php:257 src/Measurement/Measurements.php:258
+#: src/Measurement/Measurements.php:257
+#: src/Measurement/Measurements.php:258
 msgid "drizzle"
 msgstr "λίγο για περιχύσιμο"
 
-#: src/Measurement/Measurements.php:259 src/Measurement/Measurements.php:260
+#: src/Measurement/Measurements.php:259
+#: src/Measurement/Measurements.php:260
 msgid "Drizzle"
 msgstr "Λίγο για περιχύσιμο"
 
-#: src/Measurement/Measurements.php:264 src/Measurement/Measurements.php:266
+#: src/Measurement/Measurements.php:264
+#: src/Measurement/Measurements.php:266
 msgid "clove"
 msgstr "σκελίδα"
 
-#: src/Measurement/Measurements.php:265 src/Measurement/Measurements.php:267
+#: src/Measurement/Measurements.php:265
+#: src/Measurement/Measurements.php:267
 msgid "cloves"
 msgstr "σκελίδες"
 
-#: src/Measurement/Measurements.php:271 src/Measurement/Measurements.php:273
+#: src/Measurement/Measurements.php:271
+#: src/Measurement/Measurements.php:273
 msgid "jar"
 msgstr "βάζο"
 
-#: src/Measurement/Measurements.php:272 src/Measurement/Measurements.php:274
+#: src/Measurement/Measurements.php:272
+#: src/Measurement/Measurements.php:274
 msgid "jars"
 msgstr "βάζα"
 
-#: src/Measurement/Measurements.php:278 src/Measurement/Measurements.php:280
+#: src/Measurement/Measurements.php:278
+#: src/Measurement/Measurements.php:280
 msgid "can"
 msgstr "κονσέρβα"
 
-#: src/Measurement/Measurements.php:279 src/Measurement/Measurements.php:281
+#: src/Measurement/Measurements.php:279
+#: src/Measurement/Measurements.php:281
 msgid "cans"
 msgstr "κονσέρβες"
 
@@ -2135,25 +2393,31 @@ msgid "Chloride"
 msgstr "Χλωρίδιο"
 
 #. translators: singular and plural number of minutes (shorthand)
-#: src/Measurement/Measurements.php:926 src/Measurement/Measurements.php:937 src/Measurement/Measurements.php:955
+#: src/Measurement/Measurements.php:926
+#: src/Measurement/Measurements.php:937
+#: src/Measurement/Measurements.php:955
 #, php-format
 msgid "%d min"
 msgstr "%d λεπ."
 
 #. translators: singular and plural number of minutes (shorthand)
-#: src/Measurement/Measurements.php:926 src/Measurement/Measurements.php:937 src/Measurement/Measurements.php:955
+#: src/Measurement/Measurements.php:926
+#: src/Measurement/Measurements.php:937
+#: src/Measurement/Measurements.php:955
 #, php-format
 msgid "%d mins"
 msgstr "%d λεπ."
 
 #. translators: singular and plural number of hours (shorthand)
-#: src/Measurement/Measurements.php:935 src/Measurement/Measurements.php:953
+#: src/Measurement/Measurements.php:935
+#: src/Measurement/Measurements.php:953
 #, php-format
 msgid "%d hr"
 msgstr "%d ώρα"
 
 #. translators: singular and plural number of hours (shorthand)
-#: src/Measurement/Measurements.php:935 src/Measurement/Measurements.php:953
+#: src/Measurement/Measurements.php:935
+#: src/Measurement/Measurements.php:953
 #, php-format
 msgid "%d hrs"
 msgstr "%d ώρες"
@@ -2182,7 +2446,10 @@ msgstr "Εμφάνιση εικονιδίων αλλεργιογόνων στι�
 msgid "Show Allergens on Recipe Cards"
 msgstr "Εμφάνιση αλλεργιογόνων στις κάρτες συνταγών"
 
-#: src/Recipe/Allergens.php:126 src/Recipe/Allergens.php:343 src/Recipe/Allergens.php:367 src/Recipe/Allergens.php:387
+#: src/Recipe/Allergens.php:126
+#: src/Recipe/Allergens.php:343
+#: src/Recipe/Allergens.php:367
+#: src/Recipe/Allergens.php:387
 msgid "Allergens"
 msgstr "Αλλεργιογόνα"
 
@@ -2248,57 +2515,60 @@ msgstr "Σιτάρι"
 msgid "Contains %s"
 msgstr "Περιέχει %s"
 
-#: src/Recipe/PostTypes.php:130
+#: src/Recipe/PostTypes.php:131
 msgid "Photo"
 msgstr "Φωτογραφία"
 
-#: src/Recipe/PostTypes.php:590
+#: src/Recipe/PostTypes.php:630
 msgctxt "post type general name"
 msgid "Recipes"
 msgstr "Συνταγές"
 
-#: src/Recipe/PostTypes.php:591
+#: src/Recipe/PostTypes.php:631
 msgctxt "post type singular name"
 msgid "Recipe"
 msgstr "Συνταγή"
 
-#: src/Recipe/PostTypes.php:593
+#: src/Recipe/PostTypes.php:633
 msgid "Recipe"
 msgstr "Συνταγή"
 
-#: src/Recipe/PostTypes.php:595
+#: src/Recipe/PostTypes.php:635
 msgid "Add New Recipe"
 msgstr "Προσθήκη νέας συνταγής"
 
-#: src/Recipe/PostTypes.php:596
+#: src/Recipe/PostTypes.php:636
 msgid "New Recipe"
 msgstr "Νέα συνταγή"
 
-#: src/Recipe/PostTypes.php:597
+#: src/Recipe/PostTypes.php:637
 msgid "Edit Recipe"
 msgstr "Επεξεργασία συνταγής"
 
-#: src/Recipe/PostTypes.php:598
+#: src/Recipe/PostTypes.php:638
 msgid "View Recipe"
 msgstr "Προβολή συνταγής"
 
-#: src/Recipe/PostTypes.php:600
+#: src/Recipe/PostTypes.php:640
 msgid "Search Recipes"
 msgstr "Αναζήτηση συνταγών"
 
-#: src/Recipe/PostTypes.php:602
+#: src/Recipe/PostTypes.php:642
 msgid "No recipes found in trash."
 msgstr "Δεν βρέθηκαν συνταγές στα απορρίμματα."
 
-#: src/Recipe/PostTypes.php:636
+#: src/Recipe/PostTypes.php:676
 msgid "Recipe title ..."
 msgstr "Τίτλος συνταγής ..."
 
-#: src/Recipe/PostTypes.php:668
+#: src/Recipe/PostTypes.php:708
 msgid "Cooked Browse Recipes Page"
 msgstr "Σελίδα περιήγησης συνταγών του Cooked"
 
-#: src/Recipe/RecipeMeta.php:255 templates/admin/classic/settings.php:23 templates/admin/classic/welcome.php:52 templates/admin/frame/welcome.php:29
+#: src/Recipe/RecipeMeta.php:255
+#: templates/admin/classic/settings.php:23
+#: templates/admin/classic/welcome.php:52
+#: templates/admin/frame/welcome.php:29
 msgid "Cooked Settings"
 msgstr "Ρυθμίσεις του Cooked"
 
@@ -2312,7 +2582,8 @@ msgstr "Αυτή η συνταγή είναι ρυθμισμένη να περι
 msgid "Enter one item per line. Use the checkboxes below to mark section headings."
 msgstr "Γράψτε ένα στοιχείο ανά γραμμή. Με τα παρακάτω κουτάκια σημειώνετε τις επικεφαλίδες ενοτήτων."
 
-#: src/Recipe/RecipeMeta.php:470 templates/admin/frame/recipe-nutrition.php:126
+#: src/Recipe/RecipeMeta.php:470
+#: templates/admin/frame/recipe-nutrition.php:126
 msgid "Preview"
 msgstr "Προεπισκόπηση"
 
@@ -2326,71 +2597,72 @@ msgstr "Ακύρωση"
 
 #. translators: stating the recipe author with a "By" in front of it. (ex: "By John Smith")
 #. translators: referring to the author (ex: By John Smith)
-#: src/Recipe/Recipes.php:379 src/Recipe/Recipes.php:447 templates/front/recipe-single.php:61
+#: src/Recipe/Recipes.php:377
+#: src/Recipe/Recipes.php:445
+#: templates/front/recipe-single.php:61
 #, php-format
 msgid "By %s"
 msgstr "Από %s"
 
-#: src/Recipe/Recipes.php:552
-msgid "Sorry, you are not allowed to view this recipe."
-msgstr "Δεν έχετε δικαίωμα να δείτε αυτή τη συνταγή."
-
 #. translators: For showing "All" of a taxonomy (ex: "All Burgers")
-#: src/Recipe/Recipes.php:637
+#: src/Recipe/Recipes.php:684
 #, php-format
 msgid "All %s"
 msgstr "Όλα: %s"
 
-#: src/Recipe/Recipes.php:1193
+#: src/Recipe/Recipes.php:1240
 msgid "Beginner"
 msgstr "Αρχάριος"
 
-#: src/Recipe/Recipes.php:1194
+#: src/Recipe/Recipes.php:1241
 msgid "Intermediate"
 msgstr "Μέτριος"
 
-#: src/Recipe/Recipes.php:1195
+#: src/Recipe/Recipes.php:1242
 msgid "Advanced"
 msgstr "Προχωρημένος"
 
-#: src/Recipe/Recipes.php:1240
+#: src/Recipe/Recipes.php:1287
 msgid "Cooked Gallery"
 msgstr "Συλλογή Cooked"
 
-#: src/Recipe/Recipes.php:1244
+#: src/Recipe/Recipes.php:1291
 msgid "Envira Gallery"
 msgstr "Envira Gallery"
 
-#: src/Recipe/Recipes.php:1248
+#: src/Recipe/Recipes.php:1295
 msgid "Soliloquy Slider"
 msgstr "Soliloquy Slider"
 
-#: src/Recipe/Recipes.php:1252
+#: src/Recipe/Recipes.php:1299
 msgid "Slider Revolution"
 msgstr "Slider Revolution"
 
-#: src/Recipe/Recipes.php:1327 src/Recipe/Recipes.php:1337
+#: src/Recipe/Recipes.php:1373
+#: src/Recipe/Recipes.php:1383
 msgid "Default"
 msgstr "Προεπιλογή"
 
-#: src/Recipe/Recipes.php:1328 src/Recipe/Recipes.php:1338
+#: src/Recipe/Recipes.php:1374
+#: src/Recipe/Recipes.php:1384
 msgid "Metric"
 msgstr "Μετρικό"
 
-#: src/Recipe/Recipes.php:1329 src/Recipe/Recipes.php:1339
+#: src/Recipe/Recipes.php:1375
+#: src/Recipe/Recipes.php:1385
 msgid "Imperial"
 msgstr "Αγγλοσαξονικό"
 
-#: src/Recipe/Recipes.php:1333
+#: src/Recipe/Recipes.php:1379
 msgid "Units"
 msgstr "Μονάδες"
 
-#: src/Recipe/Recipes.php:1335
+#: src/Recipe/Recipes.php:1381
 msgid "Measurement System"
 msgstr "Σύστημα μέτρησης"
 
 #. translators: %s: number of servings, a quarter of the default
-#: src/Recipe/Recipes.php:1370
+#: src/Recipe/Recipes.php:1415
 #, php-format
 msgid "Quarter (%s Serving)"
 msgid_plural "Quarter (%s Servings)"
@@ -2398,7 +2670,7 @@ msgstr[0] "Ένα τέταρτο (%s μερίδα)"
 msgstr[1] "Ένα τέταρτο (%s μερίδες)"
 
 #. translators: %s: number of servings, half of the default
-#: src/Recipe/Recipes.php:1373
+#: src/Recipe/Recipes.php:1418
 #, php-format
 msgid "Half (%s Serving)"
 msgid_plural "Half (%s Servings)"
@@ -2406,7 +2678,7 @@ msgstr[0] "Μισή (%s μερίδα)"
 msgstr[1] "Μισή (%s μερίδες)"
 
 #. translators: %s: default number of servings
-#: src/Recipe/Recipes.php:1376
+#: src/Recipe/Recipes.php:1421
 #, php-format
 msgid "Default (%s Serving)"
 msgid_plural "Default (%s Servings)"
@@ -2414,46 +2686,49 @@ msgstr[0] "Προεπιλογή (%s μερίδα)"
 msgstr[1] "Προεπιλογή (%s μερίδες)"
 
 #. translators: %s: number of servings, double the default
-#: src/Recipe/Recipes.php:1379
+#: src/Recipe/Recipes.php:1424
 #, php-format
 msgid "Double (%s Servings)"
 msgstr "Διπλή (%s μερίδες)"
 
 #. translators: %s: number of servings, triple the default
-#: src/Recipe/Recipes.php:1382
+#: src/Recipe/Recipes.php:1427
 #, php-format
 msgid "Triple (%s Servings)"
 msgstr "Τριπλή (%s μερίδες)"
 
 #. translators: singular and plural "serving" sizes
-#: src/Recipe/Recipes.php:1423 src/Recipe/Recipes.php:1439
+#: src/Recipe/Recipes.php:1468
+#: src/Recipe/Recipes.php:1484
 #, php-format
 msgid "%s Serving"
 msgid_plural "%s Servings"
 msgstr[0] "%s μερίδα"
 msgstr[1] "%s μερίδες"
 
-#: src/Recipe/Recipes.php:1638 src/Recipe/Recipes.php:1655
+#: src/Recipe/Recipes.php:1683
+#: src/Recipe/Recipes.php:1700
 msgid "or"
 msgstr "ή"
 
 #. translators: singular and plural "steps"
 #. translators: %d: step number
-#: src/Recipe/Recipes.php:1709 src/Recipe/Seo.php:114
+#: src/Recipe/Recipes.php:1754
+#: src/Recipe/Seo.php:114
 #, php-format
 msgid "Step %d"
 msgstr "Βήμα %d"
 
-#: src/Recipe/Recipes.php:1817
+#: src/Recipe/Recipes.php:1862
 msgid "Clear filters"
 msgstr "Καθαρισμός φίλτρων"
 
-#: src/Recipe/Recipes.php:1846
+#: src/Recipe/Recipes.php:1891
 msgid "Browse"
 msgstr "Περιήγηση"
 
 #. translators: %s: number of selected recipe filters.
-#: src/Recipe/Recipes.php:1854
+#: src/Recipe/Recipes.php:1899
 #, php-format
 msgid "%s filter"
 msgid_plural "%s filters"
@@ -2461,50 +2736,51 @@ msgstr[0] "%s φίλτρο"
 msgstr[1] "%s φίλτρα"
 
 #. translators: 1: visible browse label, 2: number of selected recipe filters.
-#: src/Recipe/Recipes.php:1862
+#: src/Recipe/Recipes.php:1907
 #, php-format
 msgid "%1$s, browse recipe filters, %2$s selected"
 msgstr "%1$s, φίλτρα περιήγησης συνταγών, επιλεγμένα: %2$s"
 
-#: src/Recipe/Recipes.php:1866
+#: src/Recipe/Recipes.php:1911
 msgid "Browse recipe filters"
 msgstr "Φίλτρα περιήγησης συνταγών"
 
-#: src/Recipe/Recipes.php:1920
+#: src/Recipe/Recipes.php:1965
 msgid "Find a recipe..."
 msgstr "Βρείτε μια συνταγή..."
 
-#: src/Recipe/Recipes.php:1922
+#: src/Recipe/Recipes.php:1967
 msgid "Search"
 msgstr "Αναζήτηση"
 
-#: src/Recipe/Recipes.php:1939
+#: src/Recipe/Recipes.php:1984
 msgid "Newest first"
 msgstr "Νεότερες πρώτα"
 
-#: src/Recipe/Recipes.php:1943
+#: src/Recipe/Recipes.php:1988
 msgid "Oldest first"
 msgstr "Παλαιότερες πρώτα"
 
-#: src/Recipe/Recipes.php:1947
+#: src/Recipe/Recipes.php:1992
 msgid "Alphabetical (A-Z)"
 msgstr "Αλφαβητικά (Α-Ω)"
 
-#: src/Recipe/Recipes.php:1951
+#: src/Recipe/Recipes.php:1996
 msgid "Alphabetical (Z-A)"
 msgstr "Αλφαβητικά (Ω-Α)"
 
-#: src/Recipe/Recipes.php:1959
+#: src/Recipe/Recipes.php:2004
 msgid "Sort recipes by"
 msgstr "Ταξινόμηση συνταγών κατά"
 
 #. translators: %s: recipe filter term name.
-#: src/Recipe/Recipes.php:2150
+#: src/Recipe/Recipes.php:2195
 #, php-format
 msgid "Remove %s filter"
 msgstr "Αφαίρεση φίλτρου %s"
 
-#: src/Recipe/RelatedRecipes.php:37 templates/admin/classic/recipe-shortcodes.php:418
+#: src/Recipe/RelatedRecipes.php:37
+#: templates/admin/classic/recipe-shortcodes.php:418
 msgid "Related Recipes"
 msgstr "Σχετικές συνταγές"
 
@@ -2544,57 +2820,60 @@ msgid_plural "%s Recipes"
 msgstr[0] "%s συνταγή"
 msgstr[1] "%s συνταγές"
 
-#: src/System/Ajax.php:87 src/System/Ajax.php:721
+#: src/System/Ajax.php:88
+#: src/System/Ajax.php:822
 msgid "Security check failed."
 msgstr "Ο έλεγχος ασφαλείας απέτυχε."
 
-#: src/System/Ajax.php:105
+#: src/System/Ajax.php:106
 msgid "Recipe video"
 msgstr "Βίντεο συνταγής"
 
-#: src/System/Ajax.php:107
+#: src/System/Ajax.php:108
 msgid "Add images or a video to see the gallery."
 msgstr "Προσθέστε εικόνες ή ένα βίντεο για να δείτε τη συλλογή."
 
-#: src/System/Ajax.php:455 src/System/Ajax.php:513
+#: src/System/Ajax.php:456
+#: src/System/Ajax.php:514
 msgid "No default content provided."
 msgstr "Δεν δόθηκε προεπιλεγμένο περιεχόμενο."
 
-#: src/System/Ajax.php:551 src/System/Ajax.php:665
+#: src/System/Ajax.php:552
+#: src/System/Ajax.php:735
 msgid "You do not have permission to import recipes."
 msgstr "Δεν έχετε δικαίωμα να εισαγάγετε συνταγές."
 
-#: src/System/Ajax.php:567
+#: src/System/Ajax.php:568
 msgid "Invalid file type. Please upload a CSV file."
 msgstr "Μη έγκυρος τύπος αρχείου. Ανεβάστε ένα αρχείο CSV."
 
-#: src/System/Ajax.php:677
+#: src/System/Ajax.php:745
 msgid "CSV file not found. Please upload again."
 msgstr "Το αρχείο CSV δεν βρέθηκε. Ανεβάστε το ξανά."
 
 #. translators: %d: number of recipes imported
-#: src/System/Ajax.php:695
+#: src/System/Ajax.php:762
 #, php-format
 msgid "Successfully imported %d recipe(s)."
 msgstr "Εισήχθησαν με επιτυχία %d συνταγές."
 
-#: src/System/Ajax.php:706
+#: src/System/Ajax.php:773
 msgid "No recipes were imported."
 msgstr "Δεν εισήχθη καμία συνταγή."
 
-#: src/System/Ajax.php:734
+#: src/System/Ajax.php:833
 msgid "No ingredients provided."
 msgstr "Δεν δόθηκαν υλικά."
 
-#: src/System/Cli.php:43
+#: src/System/Cli.php:44
 msgid "Please provide a tool name. Use `wp cooked tools list` to see available tools."
 msgstr "Δώστε ένα όνομα εργαλείου. Χρησιμοποιήστε το `wp cooked tools list` για να δείτε τα διαθέσιμα εργαλεία."
 
-#: src/System/Cli.php:53
+#: src/System/Cli.php:54
 msgid "Tool completed successfully."
 msgstr "Το εργαλείο ολοκληρώθηκε με επιτυχία."
 
-#: src/System/Cli.php:69
+#: src/System/Cli.php:70
 msgid "No tools available."
 msgstr "Δεν υπάρχουν διαθέσιμα εργαλεία."
 
@@ -2603,7 +2882,11 @@ msgid "WPML config XML"
 msgstr "XML ρυθμίσεων WPML"
 
 #. translators: %s: shortcode name, e.g. "Ingredients"
-#: src/System/Functions.php:110 templates/admin/frame/pro.php:59 templates/admin/frame/recipe-layout.php:72 templates/admin/frame/recipe-shortcodes.php:242 templates/admin/frame/recipe-shortcodes.php:294
+#: src/System/Functions.php:110
+#: templates/admin/frame/pro.php:59
+#: templates/admin/frame/recipe-layout.php:72
+#: templates/admin/frame/recipe-shortcodes.php:242
+#: templates/admin/frame/recipe-shortcodes.php:294
 msgid "Copy"
 msgstr "Αντιγραφή"
 
@@ -2631,7 +2914,9 @@ msgstr "Τίτλος"
 msgid "Information"
 msgstr "Πληροφορίες"
 
-#: src/System/Functions.php:361 templates/admin/frame/recipe-gallery.php:38 templates/admin/parts/gallery-style.php:42
+#: src/System/Functions.php:361
+#: templates/admin/frame/recipe-gallery.php:38
+#: templates/admin/parts/gallery-style.php:42
 msgid "Images"
 msgstr "Εικόνες"
 
@@ -2644,89 +2929,109 @@ msgid "Cooked Import"
 msgstr "Εισαγωγή Cooked"
 
 #. translators: referring to "Cooked Pro"
-#: templates/admin/classic/pro.php:21 templates/admin/frame/pro.php:39
+#: templates/admin/classic/pro.php:21
+#: templates/admin/frame/pro.php:39
 #, php-format
 msgid "Ready for %s?"
 msgstr "Έτοιμοι για το %s;"
 
 #. translators: referring to "Cooked Pro"
-#: templates/admin/classic/pro.php:26 templates/admin/frame/pro.php:45
+#: templates/admin/classic/pro.php:26
+#: templates/admin/frame/pro.php:45
 #, php-format
 msgid "The %s upgrade adds loads of new features like ratings, favorites, user profiles, automatic nutrition information and more. Check out the list below for all of the details."
 msgstr "Η αναβάθμιση σε %s προσθέτει πολλές νέες λειτουργίες, όπως αξιολογήσεις, αγαπημένα, προφίλ χρηστών, αυτόματες διατροφικές πληροφορίες και πολλά ακόμη. Δείτε τη λίστα παρακάτω για όλες τις λεπτομέρειες."
 
-#: templates/admin/classic/pro.php:35 templates/admin/frame/pro.php:12
+#: templates/admin/classic/pro.php:35
+#: templates/admin/frame/pro.php:12
 msgid "Premium Support"
 msgstr "Premium υποστήριξη"
 
-#: templates/admin/classic/pro.php:36 templates/admin/frame/pro.php:13
+#: templates/admin/classic/pro.php:36
+#: templates/admin/frame/pro.php:13
 msgid "User Profiles"
 msgstr "Προφίλ χρηστών"
 
-#: templates/admin/classic/pro.php:37 templates/admin/frame/pro.php:14
+#: templates/admin/classic/pro.php:37
+#: templates/admin/frame/pro.php:14
 msgid "User Ratings"
 msgstr "Αξιολογήσεις χρηστών"
 
-#: templates/admin/classic/pro.php:38 templates/admin/frame/pro.php:15
+#: templates/admin/classic/pro.php:38
+#: templates/admin/frame/pro.php:15
 msgid "User Favorites"
 msgstr "Αγαπημένα χρηστών"
 
-#: templates/admin/classic/pro.php:39 templates/admin/frame/pro.php:16
+#: templates/admin/classic/pro.php:39
+#: templates/admin/frame/pro.php:16
 msgid "Ingredient Links"
 msgstr "Σύνδεσμοι υλικών"
 
-#: templates/admin/classic/pro.php:42 templates/admin/frame/pro.php:17
+#: templates/admin/classic/pro.php:42
+#: templates/admin/frame/pro.php:17
 msgid "Social Sharing"
 msgstr "Κοινοποίηση στα κοινωνικά δίκτυα"
 
-#: templates/admin/classic/pro.php:43 templates/admin/frame/pro.php:18
+#: templates/admin/classic/pro.php:43
+#: templates/admin/frame/pro.php:18
 msgid "Recipe Submissions"
 msgstr "Υποβολές συνταγών"
 
-#: templates/admin/classic/pro.php:44 templates/admin/frame/pro.php:19
+#: templates/admin/classic/pro.php:44
+#: templates/admin/frame/pro.php:19
 msgid "Modern Grid Layout"
 msgstr "Μοντέρνα διάταξη πλέγματος"
 
-#: templates/admin/classic/pro.php:45 templates/admin/frame/pro.php:20
+#: templates/admin/classic/pro.php:45
+#: templates/admin/frame/pro.php:20
 msgid "Full-Width Layout"
 msgstr "Διάταξη πλήρους πλάτους"
 
-#: templates/admin/classic/pro.php:46 templates/admin/frame/pro.php:21
+#: templates/admin/classic/pro.php:46
+#: templates/admin/frame/pro.php:21
 msgid "Pagination Options"
 msgstr "Επιλογές σελιδοποίησης"
 
-#: templates/admin/classic/pro.php:47 templates/admin/frame/pro.php:22
+#: templates/admin/classic/pro.php:47
+#: templates/admin/frame/pro.php:22
 msgid "Auto Nutrition Facts"
 msgstr "Αυτόματα διατροφικά στοιχεία"
 
-#: templates/admin/classic/pro.php:50 templates/admin/frame/pro.php:23
+#: templates/admin/classic/pro.php:50
+#: templates/admin/frame/pro.php:23
 msgid "Compact List Layout"
 msgstr "Συμπαγής διάταξη λίστας"
 
-#: templates/admin/classic/pro.php:51 templates/admin/frame/pro.php:24
+#: templates/admin/classic/pro.php:51
+#: templates/admin/frame/pro.php:24
 msgid "Fitness Layout"
 msgstr "Διάταξη Fitness"
 
-#: templates/admin/classic/pro.php:52 templates/admin/frame/pro.php:25
+#: templates/admin/classic/pro.php:52
+#: templates/admin/frame/pro.php:25
 msgid "Cuisines"
 msgstr "Κουζίνες"
 
-#: templates/admin/classic/pro.php:53 templates/admin/frame/pro.php:26
+#: templates/admin/classic/pro.php:53
+#: templates/admin/frame/pro.php:26
 msgid "Cooking Methods"
 msgstr "Μέθοδοι μαγειρέματος"
 
-#: templates/admin/classic/pro.php:54 templates/admin/frame/pro.php:27
+#: templates/admin/classic/pro.php:54
+#: templates/admin/frame/pro.php:27
 msgid "Tags"
 msgstr "Ετικέτες"
 
 #. translators: referring to "Cooked Pro"
-#: templates/admin/classic/pro.php:61 templates/admin/frame/pro.php:64
+#: templates/admin/classic/pro.php:61
+#: templates/admin/frame/pro.php:64
 #, php-format
 msgid "Get %s"
 msgstr "Αποκτήστε το %s"
 
 #. translators: referring to the "COOKED10" coupon code to get "10%" off Cooked Pro
-#: templates/admin/classic/pro.php:67 templates/admin/frame/pro.php:56
+#: templates/admin/classic/pro.php:67
+#: templates/admin/frame/pro.php:56
 #, php-format
 msgid "Use coupon code %1$s for %2$s off!"
 msgstr "Χρησιμοποιήστε τον κωδικό κουπονιού %1$s για έκπτωση %2$s!"
@@ -2735,7 +3040,8 @@ msgstr "Χρησιμοποιήστε τον κωδικό κουπονιού %1$s
 msgid "Recipe Gallery Type"
 msgstr "Τύπος συλλογής συνταγής"
 
-#: templates/admin/classic/recipe-gallery.php:34 templates/admin/frame/recipe-gallery.php:74
+#: templates/admin/classic/recipe-gallery.php:34
+#: templates/admin/frame/recipe-gallery.php:74
 msgid "Choose one..."
 msgstr "Επιλέξτε..."
 
@@ -2763,18 +3069,21 @@ msgstr "Στυλ συλλογής"
 msgid "Preview Gallery"
 msgstr "Προεπισκόπηση συλλογής"
 
-#: templates/admin/classic/recipe-layout.php:21 templates/admin/frame/recipe-layout.php:56
+#: templates/admin/classic/recipe-layout.php:21
+#: templates/admin/frame/recipe-layout.php:56
 msgid "Recipe Review Required"
 msgstr "Απαιτείται έλεγχος συνταγής"
 
 #. translators: for displaying singular or plural versions depending on the number of recipes.
 #. translators: %s: Cooked.
-#: templates/admin/classic/recipe-layout.php:25 templates/admin/frame/recipe-layout.php:59
+#: templates/admin/classic/recipe-layout.php:25
+#: templates/admin/frame/recipe-layout.php:59
 #, php-format
 msgid "It looks like this recipe is from a different version of %s. Please review and click \"Update\" to save it."
 msgstr "Φαίνεται ότι αυτή η συνταγή είναι από άλλη έκδοση του %s. Ελέγξτε την και πατήστε «Ενημέρωση» για να την αποθηκεύσετε."
 
-#: templates/admin/classic/recipe-layout.php:34 templates/admin/frame/recipe-layout.php:67
+#: templates/admin/classic/recipe-layout.php:34
+#: templates/admin/frame/recipe-layout.php:67
 msgid "Recipe Shortcode"
 msgstr "Shortcode συνταγής"
 
@@ -2782,59 +3091,81 @@ msgstr "Shortcode συνταγής"
 msgid "You can use the following shortcode to display your recipe anywhere:"
 msgstr "Μπορείτε να χρησιμοποιήσετε το παρακάτω shortcode για να εμφανίσετε τη συνταγή σας οπουδήποτε:"
 
-#: templates/admin/classic/recipe-layout.php:49 templates/admin/frame/recipe-layout.php:82 templates/admin/frame/recipe-layout.php:83
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/frame/recipe-layout.php:82
+#: templates/admin/frame/recipe-layout.php:83
 msgid "Recipe Template"
 msgstr "Πρότυπο συνταγής"
 
-#: templates/admin/classic/recipe-layout.php:49 templates/admin/classic/recipe-layout.php:53 templates/admin/frame/recipe-layout.php:90 templates/admin/frame/recipe-layout.php:99
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/classic/recipe-layout.php:53
+#: templates/admin/frame/recipe-layout.php:90
+#: templates/admin/frame/recipe-layout.php:99
 msgid "Save as Default"
 msgstr "Αποθήκευση ως προεπιλογή"
 
-#: templates/admin/classic/recipe-layout.php:49 templates/admin/frame/recipe-layout.php:89
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/frame/recipe-layout.php:89
 msgid "Reset"
 msgstr "Επαναφορά"
 
-#: templates/admin/classic/recipe-layout.php:49 templates/admin/frame/recipe-layout.php:83
+#: templates/admin/classic/recipe-layout.php:49
+#: templates/admin/frame/recipe-layout.php:83
 msgid "Using the built-in recipe shortcodes found on the \"Shortcodes\" tab, you can create the layout of your recipe below. Use the \"Save as Default\" button to save your template."
 msgstr "Με τα ενσωματωμένα shortcodes συνταγών της καρτέλας «Shortcodes» μπορείτε να φτιάξετε παρακάτω τη διάταξη της συνταγής σας. Με το κουμπί «Αποθήκευση ως προεπιλογή» αποθηκεύετε το πρότυπό σας."
 
-#: templates/admin/classic/recipe-layout.php:51 templates/admin/frame/recipe-layout.php:97
+#: templates/admin/classic/recipe-layout.php:51
+#: templates/admin/frame/recipe-layout.php:97
 msgid "Default Recipe Template"
 msgstr "Προεπιλεγμένο πρότυπο συνταγής"
 
-#: templates/admin/classic/recipe-layout.php:52 templates/admin/frame/recipe-layout.php:98
+#: templates/admin/classic/recipe-layout.php:52
+#: templates/admin/frame/recipe-layout.php:98
 msgid "Choose from the options below to use this layout as the default for new recipes or for all recipes."
 msgstr "Επιλέξτε παρακάτω αν αυτή η διάταξη θα είναι η προεπιλογή για τις νέες συνταγές ή για όλες τις συνταγές."
 
-#: templates/admin/classic/recipe-layout.php:53 templates/admin/frame/recipe-layout.php:99
+#: templates/admin/classic/recipe-layout.php:53
+#: templates/admin/frame/recipe-layout.php:99
 msgid "Apply to All"
 msgstr "Εφαρμογή σε όλες"
 
-#: templates/admin/classic/recipe-layout.php:78 templates/admin/frame/recipe-layout.php:157 templates/admin/frame/recipe-layout.php:158
+#: templates/admin/classic/recipe-layout.php:78
+#: templates/admin/frame/recipe-layout.php:157
+#: templates/admin/frame/recipe-layout.php:158
 msgid "Recipe Excerpt"
 msgstr "Περίληψη συνταγής"
 
-#: templates/admin/classic/recipe-layout.php:78 templates/admin/frame/recipe-layout.php:158
+#: templates/admin/classic/recipe-layout.php:78
+#: templates/admin/frame/recipe-layout.php:158
 msgid "The excerpt is used on recipe listing templates, where the full recipe should not be displayed."
 msgstr "Η περίληψη χρησιμοποιείται στα πρότυπα λιστών συνταγών, όπου δεν πρέπει να εμφανίζεται ολόκληρη η συνταγή."
 
-#: templates/admin/classic/recipe-layout.php:105 templates/admin/frame/recipe-layout.php:186 templates/admin/frame/recipe-layout.php:187
+#: templates/admin/classic/recipe-layout.php:105
+#: templates/admin/frame/recipe-layout.php:186
+#: templates/admin/frame/recipe-layout.php:187
 msgid "SEO Description"
 msgstr "Περιγραφή SEO"
 
-#: templates/admin/classic/recipe-layout.php:105 templates/admin/frame/recipe-layout.php:187
+#: templates/admin/classic/recipe-layout.php:105
+#: templates/admin/frame/recipe-layout.php:187
 msgid "This description is used for SEO purposes and is optional. By default, Cooked will use the Recipe Excerpt above if available or the Recipe Title if not."
 msgstr "Αυτή η περιγραφή χρησιμοποιείται για το SEO και είναι προαιρετική. Από προεπιλογή, το Cooked χρησιμοποιεί την περίληψη συνταγής παραπάνω, αν υπάρχει, αλλιώς τον τίτλο της συνταγής."
 
-#: templates/admin/classic/recipe-layout.php:129 templates/admin/classic/recipe-layout.php:134 templates/admin/classic/recipe-layout.php:139 templates/admin/frame/recipe-layout.php:147
+#: templates/admin/classic/recipe-layout.php:129
+#: templates/admin/classic/recipe-layout.php:134
+#: templates/admin/classic/recipe-layout.php:139
+#: templates/admin/frame/recipe-layout.php:147
 msgid "minutes"
 msgstr "λεπτά"
 
-#: templates/admin/classic/recipe-layout.php:145 templates/admin/frame/recipe-layout.php:197 templates/admin/frame/recipe-layout.php:198
+#: templates/admin/classic/recipe-layout.php:145
+#: templates/admin/frame/recipe-layout.php:197
+#: templates/admin/frame/recipe-layout.php:198
 msgid "Recipe Notes"
 msgstr "Σημειώσεις συνταγής"
 
-#: templates/admin/classic/recipe-layout.php:145 templates/admin/frame/recipe-layout.php:198
+#: templates/admin/classic/recipe-layout.php:145
+#: templates/admin/frame/recipe-layout.php:198
 msgid "The notes are displayed in the recipe."
 msgstr "Οι σημειώσεις εμφανίζονται στη συνταγή."
 
@@ -2852,7 +3183,8 @@ msgstr "Εμφανίζει τον συντάκτη της συνταγής, το
 
 #. translators: "include and exclude" section title
 #. translators: "left and right" section title
-#: templates/admin/classic/recipe-shortcodes.php:34 templates/admin/classic/recipe-shortcodes.php:46
+#: templates/admin/classic/recipe-shortcodes.php:34
+#: templates/admin/classic/recipe-shortcodes.php:46
 #, php-format
 msgid "\"%1$s\" and \"%2$s\""
 msgstr "«%1$s» και «%2$s»"
@@ -2865,15 +3197,18 @@ msgstr "Σας επιτρέπει να συμπεριλάβετε ή να εξα
 msgid "Used like \"include\", but will position the content to the left or right."
 msgstr "Χρησιμοποιείται όπως το «include», αλλά τοποθετεί το περιεχόμενο αριστερά ή δεξιά."
 
-#: templates/admin/classic/recipe-shortcodes.php:71 templates/admin/frame/recipe-shortcodes.php:27
+#: templates/admin/classic/recipe-shortcodes.php:71
+#: templates/admin/frame/recipe-shortcodes.php:27
 msgid "Servings Switcher"
 msgstr "Αλλαγή μερίδων"
 
-#: templates/admin/classic/recipe-shortcodes.php:73 templates/admin/frame/recipe-shortcodes.php:29
+#: templates/admin/classic/recipe-shortcodes.php:73
+#: templates/admin/frame/recipe-shortcodes.php:29
 msgid "Print Mode"
 msgstr "Λειτουργία εκτύπωσης"
 
-#: templates/admin/classic/recipe-shortcodes.php:74 templates/admin/frame/recipe-shortcodes.php:30
+#: templates/admin/classic/recipe-shortcodes.php:74
+#: templates/admin/frame/recipe-shortcodes.php:30
 msgid "Full-Screen Mode"
 msgstr "Λειτουργία πλήρους οθόνης"
 
@@ -2917,7 +3252,9 @@ msgstr "Επιλεγμένη εικόνα"
 msgid "This will display the featured image, if one is set."
 msgstr "Εμφανίζει την επιλεγμένη εικόνα, αν έχει οριστεί."
 
-#: templates/admin/classic/recipe-shortcodes.php:168 templates/admin/classic/recipe-shortcodes.php:192 templates/admin/classic/recipe-shortcodes.php:300
+#: templates/admin/classic/recipe-shortcodes.php:168
+#: templates/admin/classic/recipe-shortcodes.php:192
+#: templates/admin/classic/recipe-shortcodes.php:300
 msgid "None"
 msgstr "Κανένα"
 
@@ -3108,30 +3445,38 @@ msgid "Grid columns"
 msgstr "Στήλες πλέγματος"
 
 #. translators: referring to "Cooked"
-#: templates/admin/classic/welcome.php:26 templates/admin/frame/welcome.php:56
+#: templates/admin/classic/welcome.php:26
+#: templates/admin/frame/welcome.php:56
 #, php-format
 msgid "Thank you for using %s!"
 msgstr "Σας ευχαριστούμε που χρησιμοποιείτε το %s!"
 
 #. translators: 1: plugin name, 2: Settings link, 3: documentation link, 4: Discord link
-#: templates/admin/classic/welcome.php:34 templates/admin/frame/welcome.php:64
+#: templates/admin/classic/welcome.php:34
+#: templates/admin/frame/welcome.php:64
 #, php-format
 msgid "If this is your first time using %1$s, head over to the %2$s page for some initial configuration. You can also check out the %3$s if you get stuck or contact us on %4$s. If you just recently updated, you can find out what's new below."
 msgstr "Αν χρησιμοποιείτε το %1$s για πρώτη φορά, μεταβείτε στη σελίδα %2$s για τις αρχικές ρυθμίσεις. Μπορείτε επίσης να δείτε την %3$s αν κολλήσετε ή να επικοινωνήσετε μαζί μας στο %4$s. Αν μόλις κάνατε ενημέρωση, θα βρείτε τα νέα παρακάτω."
 
-#: templates/admin/classic/welcome.php:37 templates/admin/frame/welcome.php:67
+#: templates/admin/classic/welcome.php:37
+#: templates/admin/frame/welcome.php:67
 msgid "documentation"
 msgstr "τεκμηρίωση"
 
-#: templates/admin/classic/welcome.php:38 templates/admin/classic/welcome.php:51 templates/admin/frame/welcome.php:23 templates/admin/frame/welcome.php:68
+#: templates/admin/classic/welcome.php:38
+#: templates/admin/classic/welcome.php:51
+#: templates/admin/frame/welcome.php:23
+#: templates/admin/frame/welcome.php:68
 msgid "Discord"
 msgstr "Discord"
 
-#: templates/admin/classic/welcome.php:48 templates/admin/frame/welcome.php:77
+#: templates/admin/classic/welcome.php:48
+#: templates/admin/frame/welcome.php:77
 msgid "Quick Links"
 msgstr "Γρήγοροι σύνδεσμοι"
 
-#: templates/admin/classic/welcome.php:53 templates/admin/frame/welcome.php:34
+#: templates/admin/classic/welcome.php:53
+#: templates/admin/frame/welcome.php:34
 msgid "Create a Recipe"
 msgstr "Δημιουργία συνταγής"
 
@@ -3139,15 +3484,18 @@ msgstr "Δημιουργία συνταγής"
 msgid "Style"
 msgstr "Στυλ"
 
-#: templates/admin/frame/recipe-gallery.php:28 templates/admin/parts/gallery-style.php:16
+#: templates/admin/frame/recipe-gallery.php:28
+#: templates/admin/parts/gallery-style.php:16
 msgid "Dots"
 msgstr "Τελείες"
 
-#: templates/admin/frame/recipe-gallery.php:28 templates/admin/parts/gallery-style.php:16
+#: templates/admin/frame/recipe-gallery.php:28
+#: templates/admin/parts/gallery-style.php:16
 msgid "Dots under the image"
 msgstr "Τελείες κάτω από την εικόνα"
 
-#: templates/admin/frame/recipe-gallery.php:29 templates/admin/parts/gallery-style.php:17
+#: templates/admin/frame/recipe-gallery.php:29
+#: templates/admin/parts/gallery-style.php:17
 msgid "Thumbnails"
 msgstr "Μικρογραφίες"
 
@@ -3155,15 +3503,18 @@ msgstr "Μικρογραφίες"
 msgid "A strip of small images under the image"
 msgstr "Μια σειρά από μικρές εικόνες κάτω από την εικόνα"
 
-#: templates/admin/frame/recipe-gallery.php:30 templates/admin/parts/gallery-style.php:18
+#: templates/admin/frame/recipe-gallery.php:30
+#: templates/admin/parts/gallery-style.php:18
 msgid "Arrows only"
 msgstr "Μόνο βέλη"
 
-#: templates/admin/frame/recipe-gallery.php:30 templates/admin/parts/gallery-style.php:18
+#: templates/admin/frame/recipe-gallery.php:30
+#: templates/admin/parts/gallery-style.php:18
 msgid "No dots or thumbnails"
 msgstr "Χωρίς τελείες ή μικρογραφίες"
 
-#: templates/admin/frame/recipe-gallery.php:34 templates/admin/parts/gallery-style.php:34
+#: templates/admin/frame/recipe-gallery.php:34
+#: templates/admin/parts/gallery-style.php:34
 msgid "Shape"
 msgstr "Σχήμα"
 
@@ -3217,7 +3568,9 @@ msgstr "Εμφάνιση"
 msgid "How the gallery looks on the recipe page."
 msgstr "Πώς φαίνεται η συλλογή στη σελίδα της συνταγής."
 
-#: templates/admin/frame/recipe-gallery.php:122 templates/admin/parts/gallery-preview-dialog.php:14 templates/admin/parts/gallery-preview-dialog.php:18
+#: templates/admin/frame/recipe-gallery.php:122
+#: templates/admin/parts/gallery-preview-dialog.php:14
+#: templates/admin/parts/gallery-preview-dialog.php:18
 msgid "Gallery preview"
 msgstr "Προεπισκόπηση συλλογής"
 
@@ -3371,7 +3724,8 @@ msgstr "αναγνωριστικά συνταγών, χωρισμένα με κ�
 msgid "The heading above the grid."
 msgstr "Η επικεφαλίδα πάνω από το πλέγμα."
 
-#: templates/admin/frame/recipe-shortcodes.php:78 templates/admin/frame/recipe-shortcodes.php:183
+#: templates/admin/frame/recipe-shortcodes.php:78
+#: templates/admin/frame/recipe-shortcodes.php:183
 msgid "any text"
 msgstr "οποιοδήποτε κείμενο"
 
@@ -3379,7 +3733,11 @@ msgstr "οποιοδήποτε κείμενο"
 msgid "How many recipes to show. Defaults to 4."
 msgstr "Πόσες συνταγές θα εμφανίζονται. Προεπιλογή: 4."
 
-#: templates/admin/frame/recipe-shortcodes.php:79 templates/admin/frame/recipe-shortcodes.php:80 templates/admin/frame/recipe-shortcodes.php:180 templates/admin/frame/recipe-shortcodes.php:181 templates/admin/frame/recipe-shortcodes.php:182
+#: templates/admin/frame/recipe-shortcodes.php:79
+#: templates/admin/frame/recipe-shortcodes.php:80
+#: templates/admin/frame/recipe-shortcodes.php:180
+#: templates/admin/frame/recipe-shortcodes.php:181
+#: templates/admin/frame/recipe-shortcodes.php:182
 msgid "a number"
 msgstr "ένας αριθμός"
 
@@ -3655,11 +4013,13 @@ msgstr "Νέα"
 msgid "Divider position: classic layout on the left, new layout on the right"
 msgstr "Θέση διαχωριστικού: κλασική διάταξη αριστερά, νέα διάταξη δεξιά"
 
-#: templates/admin/parts/nutrition-label.php:16 templates/front/nutrition-label.php:34
+#: templates/admin/parts/nutrition-label.php:16
+#: templates/front/nutrition-label.php:34
 msgid "Nutrition Facts"
 msgstr "Διατροφική αξία"
 
-#: templates/admin/parts/nutrition-label.php:36 templates/front/nutrition-label.php:69
+#: templates/admin/parts/nutrition-label.php:36
+#: templates/front/nutrition-label.php:69
 msgid "Amount per serving"
 msgstr "Ποσότητα ανά μερίδα"
 
@@ -3671,7 +4031,8 @@ msgstr "% Ημερήσιας Τιμής *"
 msgid "Includes"
 msgstr "Περιλαμβάνει"
 
-#: templates/admin/parts/nutrition-label.php:103 templates/front/nutrition-label.php:99
+#: templates/admin/parts/nutrition-label.php:103
+#: templates/front/nutrition-label.php:99
 msgid "The % Daily Value (DV) tells you how much a nutrient in a serving of food contributes to a daily diet. 2,000 calories a day is used for general nutrition advice."
 msgstr "Το % της Ημερήσιας Τιμής (ΗΤ) δείχνει πόσο συμβάλλει ένα θρεπτικό συστατικό μιας μερίδας στην ημερήσια διατροφή. Για γενικές διατροφικές συμβουλές χρησιμοποιούνται 2.000 θερμίδες την ημέρα."
 
@@ -3683,7 +4044,8 @@ msgstr "ανά μερίδα"
 msgid "Nutrients per serving"
 msgstr "Θρεπτικά συστατικά ανά μερίδα"
 
-#: templates/front/nutrition-label.php:72 templates/front/nutrition-label.php:74
+#: templates/front/nutrition-label.php:72
+#: templates/front/nutrition-label.php:74
 msgid "Daily Value"
 msgstr "Ημερήσια Τιμή"
 
@@ -3721,6 +4083,30 @@ msgid_plural "Migrate recipes"
 msgstr[0] "Μετάπτωση συνταγής"
 msgstr[1] "Μετάπτωση συνταγών"
 
-#: src/Frontend/Shortcodes.php:1123
+#: src/Frontend/Shortcodes.php:1139
 msgid "Full screen"
 msgstr "Πλήρης οθόνη"
+
+#: src/Admin/Settings.php:685
+msgid "Delete Cooked Data on Uninstall"
+msgstr ""
+
+#: src/Admin/Settings.php:685
+msgid "Removes recipes, settings, user profiles, and uploaded files when Cooked is deleted."
+msgstr ""
+
+#: src/Admin/Updates.php:204
+msgid "Remove session data from user meta"
+msgstr ""
+
+#: src/Admin/Updates.php:205
+msgid "Removes fields copied from the user session into cooked_user_meta."
+msgstr ""
+
+#: src/Recipe/PostTypes.php:290
+msgid "Sorry, you are not allowed to view recipes."
+msgstr ""
+
+#: src/System/Ajax.php:829
+msgid "Please paste fewer lines at a time."
+msgstr ""

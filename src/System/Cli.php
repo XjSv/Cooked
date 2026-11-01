@@ -33,6 +33,7 @@ class Cli {
      * ## EXAMPLES
      *
      *     wp cooked tools run remove_recipes_from_cooked_user_meta
+     *     wp cooked tools run remove_session_keys_from_cooked_user_meta
      *     wp cooked tools run update_rewrite_rules
      *
      * @param string[] $args Positional args. 0 = tool name.

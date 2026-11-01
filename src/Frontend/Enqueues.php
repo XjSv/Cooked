@@ -126,8 +126,7 @@ class Enqueues {
      * @return void
      */
     public function css_colors() {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if ( isset( $_GET['print'] ) ) {
+        if ( \Cooked_Recipes::is_print_request() ) {
             return;
         }
 

@@ -32,8 +32,8 @@ export function wpCliArgs(args: string[]): string {
     }).trim();
   }
 
-  const quoted = args.map((arg) => JSON.stringify(arg)).join(' ');
-  return execSync(`bunx wp-env run cli wp ${quoted}`, {
+  // No shell, so PHP passed to `wp eval` keeps its $variables.
+  return execFileSync('bunx', ['wp-env', 'run', 'cli', 'wp', ...args], {
     encoding: 'utf8',
     stdio: 'pipe',
     cwd: PLUGIN_ROOT,

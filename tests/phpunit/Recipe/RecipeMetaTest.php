@@ -259,4 +259,26 @@ class RecipeMetaTest extends TestCase {
         $this->assertArrayNotHasKey( 902, $GLOBALS['_cooked_test_post_meta'] );
         unset( $GLOBALS['_cooked_test_current_user_can'], $_POST['cooked_recipe_custom_box_nonce'], $_POST['_recipe_settings'] );
     }
+
+    public function test_meta_cleanup_strips_double_encoded_img_from_excerpt() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'excerpt' => '&amp;lt;img src=&amp;quot;https://evil.example/px.gif&amp;quot;&amp;gt;',
+        ] );
+
+        $this->assertStringNotContainsString( '<img', $result['excerpt'] );
+        $this->assertStringNotContainsString( '&lt;img', $result['excerpt'] );
+    }
+
+    public function test_meta_cleanup_strips_double_encoded_img_from_direction() {
+        $result = Cooked_Recipe_Meta::meta_cleanup( [
+            'directions' => [
+                [
+                    'content' => '&amp;lt;img src=&amp;quot;https://evil.example/px.gif&amp;quot;&amp;gt;',
+                ],
+            ],
+        ] );
+
+        $this->assertStringNotContainsString( '<img', $result['directions'][0]['content'] );
+        $this->assertStringNotContainsString( '&lt;img', $result['directions'][0]['content'] );
+    }
 }

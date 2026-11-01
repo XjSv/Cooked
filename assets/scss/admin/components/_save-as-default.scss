@@ -33,8 +33,8 @@
     display: none;
 }
 
-/* Once Floating UI places it (data-placement set), the panel floats by the button like a tooltip. */
-.cooked-save-default-panel[data-placement] {
+/* Floating UI adds .cooked-tooltip-shell before the first open. Fixed positioning lives there so the panel is out of flow before data-placement is set; that attribute only styles the arrow. */
+.cooked-save-default-panel.cooked-tooltip-shell {
     position: fixed;
     top: 0;
     left: 0;
@@ -43,10 +43,6 @@
     max-width: 275px;
     min-width: min-content;
     margin: 0;
-}
-
-/* With Floating UI, cooked-functions.js wraps the contents in a .cooked-tooltip-bubble that grows open. */
-.cooked-save-default-panel.cooked-tooltip-shell {
     background: none;
     border: 0;
     border-radius: 0;

@@ -25,6 +25,12 @@ parameters:
 			path: src/Admin/Updates.php
 
 		-
+			message: '#^Static method Cooked\\Admin\\Updates\:\:remove_session_keys_from_cooked_user_meta\(\) is unused\.$#'
+			identifier: method.unused
+			count: 1
+			path: src/Admin/Updates.php
+
+		-
 			message: '#^Unable to resolve the template type T in call to function rest_sanitize_boolean$#'
 			identifier: argument.templateType
 			count: 1

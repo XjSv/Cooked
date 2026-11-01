@@ -69,6 +69,7 @@ class Ajax {
 
         // Bulk Add - Parse Ingredients.
         add_action( 'wp_ajax_cooked_parse_bulk_ingredients', [ &$this, 'parse_bulk_ingredients' ] );
+        add_action( 'wp_ajax_nopriv_cooked_parse_bulk_ingredients', [ &$this, 'parse_bulk_ingredients' ] );
 
         // Gallery tab - Preview.
         add_action( 'wp_ajax_cooked_gallery_preview', [ &$this, 'gallery_preview' ] );
@@ -589,9 +590,22 @@ class Ajax {
         }
         self::protect_csv_import_dir();
 
+        // Move the upload out of the uploads folder, into a cooked-csv-* file in the temp folder.
+        $temp_file = wp_tempnam( 'cooked-csv-' );
+        $copied    = is_string( $temp_file ) && '' !== $temp_file && copy( $upload['file'], $temp_file );
+        wp_delete_file( $upload['file'] );
+
+        $stored_path = $copied ? self::csv_import_file_path( $temp_file, get_temp_dir() ) : false;
+        if ( ! $stored_path ) {
+            if ( is_string( $temp_file ) && '' !== $temp_file ) {
+                wp_delete_file( $temp_file );
+            }
+            wp_send_json_error( [ 'message' => __( 'File upload failed.', 'cooked' ) ] );
+        }
+
         // Store file path in transient for processing.
         $transient_key = 'cooked_csv_import_' . get_current_user_id() . '_' . time();
-        set_transient( $transient_key, $upload['file'], HOUR_IN_SECONDS );
+        set_transient( $transient_key, $stored_path, HOUR_IN_SECONDS );
 
         wp_send_json_success( [ 'transient_key' => $transient_key ] );
     }
@@ -647,11 +661,67 @@ class Ajax {
      * @return void
      */
     private static function delete_stale_csv_imports() {
-        foreach ( (array) glob( self::csv_import_dir() . '/*.csv' ) as $file ) {
-            if ( $file && filemtime( $file ) < time() - HOUR_IN_SECONDS ) {
+        $files = (array) glob( self::csv_import_dir() . '/*.csv' );
+
+        $temp_dir = get_temp_dir();
+        if ( is_string( $temp_dir ) && '' !== $temp_dir && is_dir( $temp_dir ) ) {
+            $files = array_merge( $files, (array) glob( trailingslashit( $temp_dir ) . 'cooked-csv-*' ) );
+        }
+
+        foreach ( $files as $file ) {
+            if ( ! $file || ! is_file( $file ) ) {
+                continue;
+            }
+            $mtime = filemtime( $file );
+            if ( false !== $mtime && $mtime < time() - HOUR_IN_SECONDS ) {
                 wp_delete_file( $file );
             }
         }
+    }
+
+    /**
+     * Whether a transient key names one of this user's CSV uploads.
+     *
+     * @since 2.0.0
+     * @param mixed $key     The transient key.
+     * @param int   $user_id The current user.
+     * @return bool
+     */
+    private static function is_csv_import_transient_key( $key, $user_id ) {
+        $user_id = (int) $user_id;
+        if ( $user_id < 1 || ! is_string( $key ) || '' === $key ) {
+            return false;
+        }
+
+        return 1 === preg_match( '/^cooked_csv_import_' . $user_id . '_\d+$/', $key );
+    }
+
+    /**
+     * The real path of a cooked-csv-* file directly inside the temp folder, or false.
+     *
+     * @since 2.0.0
+     * @param mixed $file_path The stored path.
+     * @param mixed $temp_dir  The temp folder.
+     * @return string|false
+     */
+    private static function csv_import_file_path( $file_path, $temp_dir ) {
+        if ( ! is_string( $file_path ) || ! is_string( $temp_dir ) || '' === $temp_dir ) {
+            return false;
+        }
+
+        $real_dir  = realpath( $temp_dir );
+        $real_file = realpath( $file_path );
+        if ( ! $real_dir || ! $real_file || ! is_file( $real_file ) ) {
+            return false;
+        }
+
+        $real_dir  = rtrim( str_replace( '\\', '/', $real_dir ), '/' );
+        $real_file = str_replace( '\\', '/', $real_file );
+        if ( dirname( $real_file ) !== $real_dir || 0 !== strpos( basename( $real_file ), 'cooked-csv-' ) ) {
+            return false;
+        }
+
+        return $real_file;
     }
 
     /**
@@ -667,16 +737,13 @@ class Ajax {
 
         $transient_key = isset( $_POST['transient_key'] ) ? sanitize_text_field( wp_unslash( $_POST['transient_key'] ) ) : '';
 
-        // Only this user's own upload, and only a .csv inside the private import folder: the
+        // Only this user's own upload, and only a cooked-csv-* file in the temp folder: the
         // file is parsed and then deleted.
-        $file_path  = preg_match( '/^cooked_csv_import_' . get_current_user_id() . '_\d+$/', $transient_key ) ? get_transient( $transient_key ) : false;
-        $real_path  = $file_path ? realpath( $file_path ) : false;
-        $import_dir = realpath( self::csv_import_dir() );
+        $file_path = self::is_csv_import_transient_key( $transient_key, get_current_user_id() ) ? self::csv_import_file_path( get_transient( $transient_key ), get_temp_dir() ) : false;
 
-        if ( ! $real_path || ! $import_dir || 0 !== strpos( $real_path, $import_dir . DIRECTORY_SEPARATOR ) || 'csv' !== strtolower( pathinfo( $real_path, PATHINFO_EXTENSION ) ) ) {
+        if ( ! $file_path ) {
             wp_send_json_error( [ 'message' => __( 'CSV file not found. Please upload again.', 'cooked' ) ] );
         }
-        $file_path = $real_path;
 
         // Process the CSV file.
         $results = \Cooked_CSV_Import::import_from_file( $file_path );
@@ -711,24 +778,56 @@ class Ajax {
     }
 
     /**
+     * Whether the visitor may parse Bulk Add lines: any logged-in user (Cooked Pro's
+     * front-end form), or a guest while Pro's guest submissions are on.
+     *
+     * @return bool
+     */
+    private static function current_user_can_parse_bulk_ingredients() {
+        if ( is_user_logged_in() ) {
+            return true;
+        }
+
+        return class_exists( 'Cooked_Add_Recipe' ) && \Cooked_Add_Recipe::guest_mode_active();
+    }
+
+    /**
+     * Caps Bulk Add input to bound the regex work: false for more than 300 lines, and each
+     * line cut to 500 characters.
+     *
+     * @param mixed $lines The posted lines.
+     * @return array<int|string, string>|false
+     */
+    private static function limit_bulk_ingredient_lines( $lines ) {
+        if ( ! is_array( $lines ) || count( $lines ) > 300 ) {
+            return false;
+        }
+
+        $limited = [];
+        foreach ( $lines as $index => $line ) {
+            $limited[ $index ] = is_string( $line ) ? mb_substr( $line, 0, 500 ) : '';
+        }
+
+        return $limited;
+    }
+
+    /**
      * Parses Bulk Add lines into ingredients (amount, unit, name).
      *
      * @return void
      */
     public function parse_bulk_ingredients() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
-        if ( ! wp_verify_nonce( $nonce, 'cooked_bulk_add' ) || ! current_user_can( 'edit_cooked_recipes' ) ) {
+        if ( ! wp_verify_nonce( $nonce, 'cooked_bulk_add' ) || ! self::current_user_can_parse_bulk_ingredients() ) {
             wp_send_json_error( [ 'message' => __( 'Security check failed.', 'cooked' ) ] );
         }
 
         $lines = isset( $_POST['lines'] ) ? wp_unslash( (array) $_POST['lines'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each line is sanitize_text_field'd below.
-        // Bound the regex work: far more than any recipe needs.
-        $lines = array_map(
-            function ( $line ) {
-                return is_string( $line ) ? mb_substr( $line, 0, 500 ) : '';
-            },
-            array_slice( $lines, 0, 500 )
-        );
+        $lines = self::limit_bulk_ingredient_lines( $lines );
+
+        if ( false === $lines ) {
+            wp_send_json_error( [ 'message' => __( 'Please paste fewer lines at a time.', 'cooked' ) ] );
+        }
 
         if ( empty( $lines ) ) {
             wp_send_json_error( [ 'message' => __( 'No ingredients provided.', 'cooked' ) ] );

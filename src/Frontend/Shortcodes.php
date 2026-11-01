@@ -1100,16 +1100,32 @@ class Shortcodes {
      * @return void
      */
     public static function cooked_info_print() {
-        global $recipe_settings, $_cooked_settings;
+        global $recipe_settings;
 
-        $recipe_post_url        = get_permalink( $recipe_settings['id'] );
-        $query_args['print']    = 1;
-        $servings               = (float) esc_html( get_query_var( 'servings', false ) );
-        $query_args['servings'] = ! empty( $servings ) ? $servings : false;
-        if ( \Cooked_Recipes::public_recipes_disabled() ) {
-            $query_args['print_key'] = \Cooked_Recipes::print_key( $recipe_settings['id'] );
+        $recipe_id = isset( $recipe_settings['id'] ) ? absint( $recipe_settings['id'] ) : 0;
+        if ( ! $recipe_id ) {
+            return;
         }
-        echo '<span class="cooked-print"><a target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $recipe_post_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print" aria-hidden="true"></i><span class="cooked-action-label">' . esc_html__( 'Print', 'cooked' ) . '</span></a></span>';
+
+        $servings   = (float) esc_html( get_query_var( 'servings', false ) );
+        $query_args = [
+            'servings' => ! empty( $servings ) ? $servings : false,
+        ];
+
+        // With public recipes disabled, the recipe prints from the page that embeds it.
+        if ( \Cooked_Recipes::public_recipes_disabled() ) {
+            $page_id  = get_queried_object_id();
+            $base_url = $page_id ? get_permalink( $page_id ) : '';
+            if ( ! $base_url ) {
+                return;
+            }
+            $query_args['cooked_print'] = $recipe_id;
+        } else {
+            $base_url            = get_permalink( $recipe_id );
+            $query_args['print'] = 1;
+        }
+
+        echo '<span class="cooked-print"><a target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $base_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print" aria-hidden="true"></i><span class="cooked-action-label">' . esc_html__( 'Print', 'cooked' ) . '</span></a></span>';
     }
 
     /**

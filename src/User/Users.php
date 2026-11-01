@@ -132,6 +132,46 @@ class Users {
     }
 
     /**
+     * Keys added to the in-memory user session. They are not stored profile data.
+     *
+     * @since 1.17.0
+     * @return string[]
+     */
+    public static function session_meta_keys() {
+        return [
+            'id',
+            'user_nicename',
+            'name',
+            'profile_photo',
+            'profile_photo_src',
+            'raw',
+            'recipes',
+        ];
+    }
+
+    /**
+     * Saves cooked_user_meta without session-only keys.
+     *
+     * @since 1.17.0
+     * @param int   $user_id User ID.
+     * @param mixed $meta    Meta array to store.
+     * @return array<string, mixed> Stored meta.
+     */
+    public static function update_meta( $user_id, $meta ) {
+        if ( ! is_array( $meta ) ) {
+            $meta = [];
+        }
+
+        foreach ( self::session_meta_keys() as $key ) {
+            unset( $meta[ $key ] );
+        }
+
+        update_user_meta( $user_id, 'cooked_user_meta', $meta );
+
+        return $meta;
+    }
+
+    /**
      * Formats an author name per the Author Name Format setting.
      *
      * @param string       $name   Full name.

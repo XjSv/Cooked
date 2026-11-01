@@ -512,9 +512,41 @@ function get_site_url() { return 'http://example.com/'; }
 function home_url( $path = '' ) { return 'http://example.com/' . ltrim( $path, '/' ); }
 function get_user_by( $field, $value ) { return (object) [ 'ID' => 1, 'user_login' => 'admin', 'user_nicename' => 'admin', 'display_name' => 'Admin User', 'user_email' => 'admin@example.com' ]; }
 function get_userdata( $user_id ) { return (object) [ 'ID' => $user_id, 'user_login' => 'admin', 'user_nicename' => 'admin', 'display_name' => 'Admin User', 'user_email' => 'admin@example.com', 'roles' => [ 'administrator' ] ]; }
-function get_user_meta( $user_id, $key = '', $single = false ) { return $key === 'cooked_user_meta' ? [] : ''; }
-function update_user_meta( $user_id, $meta_key, $meta_value, $prev_value = '' ) { return true; }
+function get_users( $args = [] ) { return isset( $GLOBALS['_cooked_test_users'] ) ? $GLOBALS['_cooked_test_users'] : []; }
+function get_user_meta( $user_id, $key = '', $single = false ) {
+    if ( '' !== $key && isset( $GLOBALS['_cooked_test_user_meta'][ $user_id ] ) && array_key_exists( $key, $GLOBALS['_cooked_test_user_meta'][ $user_id ] ) ) {
+        return $GLOBALS['_cooked_test_user_meta'][ $user_id ][ $key ];
+    }
+    return $key === 'cooked_user_meta' ? [] : '';
+}
+function update_user_meta( $user_id, $meta_key, $meta_value, $prev_value = '' ) {
+    $GLOBALS['_cooked_test_user_meta'][ $user_id ][ $meta_key ] = $meta_value;
+    return true;
+}
 function get_posts( $args = [] ) { return isset( $GLOBALS['_cooked_test_get_posts'] ) ? $GLOBALS['_cooked_test_get_posts'] : []; }
+function wp_delete_post( $postid = 0, $force_delete = false ) {
+    $GLOBALS['_cooked_test_deleted_posts'][] = (int) $postid;
+    return true;
+}
+function delete_metadata( $meta_type, $object_id, $meta_key, $meta_value = '', $delete_all = false ) {
+    $GLOBALS['_cooked_test_deleted_metadata'][] = [
+        'meta_type'  => $meta_type,
+        'object_id'  => $object_id,
+        'meta_key'   => $meta_key,
+        'delete_all' => $delete_all,
+    ];
+    return true;
+}
+function wp_upload_dir( $time = null ) {
+    if ( isset( $GLOBALS['_cooked_test_upload_dir'] ) ) {
+        return $GLOBALS['_cooked_test_upload_dir'];
+    }
+    return [
+        'basedir' => sys_get_temp_dir(),
+        'baseurl' => 'http://example.com/uploads',
+        'error'   => false,
+    ];
+}
 function update_post_meta( $post_id, $meta_key, $meta_value, $prev_value = '' ) {
     $GLOBALS['_cooked_test_post_meta'][ $post_id ][ $meta_key ] = $meta_value;
     return true;
@@ -661,6 +693,17 @@ $GLOBALS['_cooked_test_last_query'] = [];
 class Cooked_Test_wpdb {
     public $posts = 'wp_posts';
     public $prefix = 'wp_';
+    public $options = 'wp_options';
+    public $terms = 'wp_terms';
+    public $term_taxonomy = 'wp_term_taxonomy';
+    public $term_relationships = 'wp_term_relationships';
+    public $termmeta = 'wp_termmeta';
+    public $queries = [];
+
+    public function query( $query ) {
+        $this->queries[] = $query;
+        return true;
+    }
 
     public function prepare( $query, ...$args ) {
         foreach ( $args as $arg ) {

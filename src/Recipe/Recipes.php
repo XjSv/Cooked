@@ -32,9 +32,7 @@ class Recipes {
 
         add_action( 'parse_query', [ &$this, 'custom_taxonomy_in_query' ], 10 );
 
-        add_action( 'template_redirect', [ &$this, 'print_recipe_template' ], 10 );
-        add_filter( 'rest_cp_recipe_query', [ &$this, 'rest_hide_private_recipes' ], 10, 1 );
-        add_filter( 'rest_prepare_cp_recipe', [ &$this, 'rest_hide_private_recipe' ], 10, 1 );
+        add_action( 'template_redirect', [ &$this, 'print_recipe_template' ], 99 );
         add_action( 'cooked_check_recipe_query', [ &$this, 'check_recipe_query' ], 10 );
         add_action( 'pre_get_posts', [ &$this, 'cooked_pre_get_posts' ], 10, 1 );
         add_action( 'restrict_manage_posts', [ &$this, 'filter_recipes_by_taxonomy' ], 10 );
@@ -470,35 +468,126 @@ endif;
     }
 
     /**
-     * Shows the print view for ?print requests.
+     * Set while the print view is rendering, so is_print_request() covers embed prints too.
+     *
+     * @var bool
+     */
+    private static $rendering_print = false;
+
+    /**
+     * Set while an embedding page is rendered to check it really shows the recipe.
+     *
+     * @var bool
+     */
+    private static $checking_embed = false;
+
+    /**
+     * Whether this request renders the recipe print view.
+     *
+     * @since 1.17.0
+     * @return bool
+     */
+    public static function is_print_request() {
+        if ( self::$rendering_print ) {
+            return true;
+        }
+
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
+        return is_singular( 'cp_recipe' ) && isset( $_GET['print'] );
+    }
+
+    /**
+     * Shows the print view for ?print requests. With public recipes disabled, recipes print
+     * only from a page that embeds them with [cooked-recipe] (?cooked_print=<recipe ID>).
      *
      * @return void
      */
     public function print_recipe_template() {
+        if ( self::$checking_embed ) {
+            return;
+        }
+
+        if ( self::public_recipes_disabled() ) {
+            $this->print_embedded_recipe();
+            return;
+        }
+
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) ) :
+        if ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) ) {
             // A password-protected recipe keeps its normal page, which asks for the password.
             if ( post_password_required( get_queried_object_id() ) ) {
                 return;
             }
 
-            // With public recipes disabled, only print links from a [cooked-recipe] embed (which
-            // carry the recipe's print key) or editors may open the print view.
-            if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
-                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Checked against the recipe's HMAC below.
-                $key = isset( $_GET['print_key'] ) ? sanitize_key( wp_unslash( $_GET['print_key'] ) ) : '';
-                if ( ! hash_equals( self::print_key( get_queried_object_id() ), $key ) ) {
-                    global $wp_query;
-                    $wp_query->set_404();
-                    status_header( 404 );
-                    nocache_headers();
-                    return;
-                }
-            }
+            self::render_print_template();
+        }
+    }
 
-            load_template( COOKED_DIR . 'templates/front/recipe-print.php', false );
-            exit;
-        endif;
+    /**
+     * Prints a recipe from the page that embeds it (?cooked_print=<recipe ID>), once the
+     * page is viewable and really shows that recipe.
+     *
+     * @since 1.17.0
+     * @return void
+     */
+    private function print_embedded_recipe() {
+        $recipe_id = absint( get_query_var( 'cooked_print' ) );
+        if ( ! $recipe_id || ! is_singular() ) {
+            return;
+        }
+
+        $page = get_queried_object();
+        if ( ! $page instanceof \WP_Post ) {
+            return;
+        }
+
+        // Logged-out visitors do not have the read capability. Published posts stay printable.
+        if ( post_password_required( $page ) || ( ! is_post_publicly_viewable( $page ) && ! current_user_can( 'read_post', $page->ID ) ) ) {
+            return;
+        }
+
+        if ( ! self::content_has_self_recipe_embed_shortcode( $page->post_content, $recipe_id ) ) {
+            return;
+        }
+
+        if ( post_password_required( $recipe_id ) || empty( self::get( $recipe_id, true ) ) ) {
+            return;
+        }
+
+        self::$checking_embed = true;
+        try {
+            $rendered = apply_filters( 'the_content', $page->post_content );
+        } finally {
+            self::$checking_embed = false;
+        }
+
+        if ( ! is_string( $rendered ) || false === strpos( $rendered, 'id="cooked-recipe-embed-' . $recipe_id . '"' ) ) {
+            return;
+        }
+
+        $recipe_post = get_post( $recipe_id );
+        if ( ! $recipe_post instanceof \WP_Post || 'cp_recipe' !== $recipe_post->post_type ) {
+            return;
+        }
+
+        global $wp_query;
+        // wp_head() restores the global post from the main query.
+        $wp_query->post  = $recipe_post;
+        $GLOBALS['post'] = $recipe_post; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- The print template renders this recipe.
+        setup_postdata( $recipe_post );
+        self::render_print_template();
+    }
+
+    /**
+     * Loads the print template and ends the request.
+     *
+     * @since 1.17.0
+     * @return void
+     */
+    private static function render_print_template() {
+        self::$rendering_print = true;
+        load_template( COOKED_DIR . 'templates/front/recipe-print.php', false );
+        exit;
     }
 
     /**
@@ -509,49 +598,7 @@ endif;
      */
     public static function public_recipes_disabled() {
         global $_cooked_settings;
-        return isset( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', (array) $_cooked_settings['advanced'], true );
-    }
-
-    /**
-     * Per-recipe key that lets a [cooked-recipe] embed's print link open the print view
-     * while public recipes are disabled.
-     *
-     * @since 2.0.0
-     * @param int $recipe_id Recipe post ID.
-     * @return string
-     */
-    public static function print_key( $recipe_id ) {
-        return substr( wp_hash( 'cooked_print_' . (int) $recipe_id ), 0, 20 );
-    }
-
-    /**
-     * With public recipes disabled, the REST recipe collection is empty for anyone who
-     * can't edit recipes (the post type stays in REST for the editor).
-     *
-     * @since 2.0.0
-     * @param array<string, mixed> $args WP_Query arguments for the REST collection.
-     * @return array<string, mixed>
-     */
-    public function rest_hide_private_recipes( $args ) {
-        if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
-            $args['post__in'] = [ 0 ];
-        }
-        return $args;
-    }
-
-    /**
-     * With public recipes disabled, single REST recipes are refused to anyone who can't
-     * edit recipes.
-     *
-     * @since 2.0.0
-     * @param \WP_REST_Response $response The prepared recipe.
-     * @return \WP_REST_Response|\WP_Error
-     */
-    public function rest_hide_private_recipe( $response ) {
-        if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
-            return new \WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to view this recipe.', 'cooked' ), [ 'status' => rest_authorization_required_code() ] );
-        }
-        return $response;
+        return isset( $_cooked_settings['advanced'] ) && is_array( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'], true );
     }
 
     /**
@@ -1318,8 +1365,7 @@ endif;
     public static function measurement_system_switcher() {
         global $_cooked_settings, $post;
         $switcher_enabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'enable_measurement_switcher', $_cooked_settings['advanced'], true ) ? true : false );
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        $printing = ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) );
+        $printing         = self::is_print_request();
 
         if ( ! $printing && $switcher_enabled ) :
             $current       = esc_html( get_query_var( 'measurement_system', '' ) );
@@ -1351,8 +1397,7 @@ endif;
     public static function serving_size_switcher( $servings ) {
         global $_cooked_settings, $post;
         $switcher_disabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'disable_servings_switcher', $_cooked_settings['advanced'], true ) ? true : false );
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        $printing = ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) );
+        $printing          = self::is_print_request();
 
         if ( ! $printing && ! $switcher_disabled ) :
             $default  = (float) $servings;
@@ -2281,6 +2326,10 @@ endif;
 
         if ( ! empty( $ingredients ) && is_array( $ingredients ) ) :
             foreach ( $ingredients as $ing ) :
+                if ( ! is_array( $ing ) && ! is_string( $ing ) ) :
+                    continue;
+                endif;
+
                 $rand_id = wp_rand( 1000000, 9999999 );
                 if ( isset( $ing['type'] ) && 'ingredient' === $ing['type'] ) :
                     $recipe_settings['ingredients'][ $rand_id ]['amount']          = $ing['amount'];
@@ -2291,6 +2340,8 @@ endif;
                     $recipe_settings['ingredients'][ $rand_id ]['sub_name']        = '';
                 elseif ( isset( $ing['type'] ) && 'section' === $ing['type'] ) :
                     $recipe_settings['ingredients'][ $rand_id ]['section_heading_name'] = $ing['value'];
+                elseif ( is_array( $ing ) ) :
+                    continue;
                 elseif ( '--' === substr( $ing, 0, 2 ) ) :
                         $recipe_settings['ingredients'][ $rand_id ]['section_heading_name'] = substr( $ing, 2 );
                     else :
@@ -2314,12 +2365,18 @@ endif;
         if ( ! empty( $directions ) && is_array( $directions ) ) :
 
             foreach ( $directions as $dir ) :
+                if ( ! is_array( $dir ) && ! is_string( $dir ) ) :
+                    continue;
+                endif;
+
                 $rand_id = wp_rand( 1000000, 9999999 );
                 if ( isset( $dir['type'] ) && 'direction' === $dir['type'] ) :
                     $recipe_settings['directions'][ $rand_id ]['image']   = $dir['image_id'];
                     $recipe_settings['directions'][ $rand_id ]['content'] = $dir['value'];
                 elseif ( isset( $dir['type'] ) && 'section' === $dir['type'] ) :
                     $recipe_settings['directions'][ $rand_id ]['section_heading_name'] = $dir['value'];
+                elseif ( is_array( $dir ) ) :
+                    continue;
                 elseif ( '--' === substr( $dir, 0, 2 ) ) :
                         $recipe_settings['directions'][ $rand_id ]['section_heading_name'] = substr( $dir, 2 );
                     else :

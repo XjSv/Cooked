@@ -445,6 +445,30 @@ class PluginApiFiltersTest extends FilterTestCase {
         $this->assertSame( 8, $last['ID'] );
     }
 
+    public function test_save_recipe_meta_box_skips_non_recipe_posts() {
+        $GLOBALS['_cooked_test_posts'][9] = (object) [
+            'ID'           => 9,
+            'post_type'    => 'post',
+            'post_title'   => 'Blog',
+            'post_content' => 'ORIGINAL',
+            'post_excerpt' => '',
+            'post_status'  => 'draft',
+            'post_author'  => 2,
+        ];
+        $_POST['cooked_recipe_custom_box_nonce'] = 'test_nonce';
+        $_POST['_recipe_settings']               = [
+            'excerpt' => 'PWNED',
+            'content' => 'injected',
+        ];
+
+        $meta = new Cooked_Recipe_Meta();
+        $meta->save_recipe_meta_box( 9 );
+
+        $this->assertArrayNotHasKey( 9, $GLOBALS['_cooked_test_post_meta'] );
+        $updated_ids = array_column( $GLOBALS['_cooked_test_updated_posts'], 'ID' );
+        $this->assertNotContains( 9, $updated_ids );
+    }
+
     public function test_cooked_seo_recipe_content_and_should_update_on_csv_import() {
         $this->with_filter(
             'cooked_seo_recipe_content',

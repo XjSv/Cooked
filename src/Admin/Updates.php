@@ -184,21 +184,25 @@ class Updates {
      */
     public static function get_runnable_tools() {
         $labels = [
-            'update_rewrite_rules'                 => [
+            'update_rewrite_rules'                      => [
                 'name'        => __( 'Flush rewrite rules', 'cooked' ),
                 'description' => __( 'Refreshes permalink rules for recipe and profile URLs.', 'cooked' ),
             ],
-            'fix_recipe_line_endings'              => [
+            'fix_recipe_line_endings'                   => [
                 'name'        => __( 'Fix recipe line endings', 'cooked' ),
                 'description' => __( 'Normalizes line endings in recipe content for exporter/importer compatibility.', 'cooked' ),
             ],
-            'purge_legacy_related_recipes_cache'   => [
+            'purge_legacy_related_recipes_cache'        => [
                 'name'        => __( 'Purge legacy related recipes cache', 'cooked' ),
                 'description' => __( 'Removes old transients and options from the previous related-recipes cache.', 'cooked' ),
             ],
-            'remove_recipes_from_cooked_user_meta' => [
+            'remove_recipes_from_cooked_user_meta'      => [
                 'name'        => __( 'Remove recipes from user meta', 'cooked' ),
                 'description' => __( 'Removes the legacy "recipes" key from all users\' cooked_user_meta.', 'cooked' ),
+            ],
+            'remove_session_keys_from_cooked_user_meta' => [
+                'name'        => __( 'Remove session data from user meta', 'cooked' ),
+                'description' => __( 'Removes fields copied from the user session into cooked_user_meta.', 'cooked' ),
             ],
         ];
 
@@ -290,6 +294,9 @@ class Updates {
 				'1.13.0' => [
 					'purge_legacy_related_recipes_cache',
 					'remove_recipes_from_cooked_user_meta',
+				],
+				'1.17.0' => [
+					'remove_session_keys_from_cooked_user_meta',
 				],
 			]
         );
@@ -436,6 +443,44 @@ class Updates {
         if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
             // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
             error_log( sprintf( 'Cooked: Removed legacy recipes key from %d user(s) cooked_user_meta.', $updated_count ) );
+        }
+    }
+
+    /**
+     * Remove session fields previously written into cooked_user_meta.
+     *
+     * @since 1.17.0
+     * @return void
+     */
+    private static function remove_session_keys_from_cooked_user_meta() {
+        $user_ids = get_users(
+            [
+				'meta_key' => 'cooked_user_meta', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- One-off upgrade routine.
+				'fields'   => 'ID',
+			]
+        );
+
+        if ( empty( $user_ids ) ) {
+            return;
+        }
+
+        $session_keys  = \Cooked_Users::session_meta_keys();
+        $updated_count = 0;
+
+        foreach ( $user_ids as $user_id ) {
+            $meta = get_user_meta( $user_id, 'cooked_user_meta', true );
+
+            if ( ! is_array( $meta ) || ! array_intersect( $session_keys, array_keys( $meta ) ) ) {
+                continue;
+            }
+
+            \Cooked_Users::update_meta( $user_id, $meta );
+            ++$updated_count;
+        }
+
+        if ( $updated_count > 0 && defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+            error_log( sprintf( 'Cooked: Removed session fields from %d user(s) cooked_user_meta.', $updated_count ) );
         }
     }
 

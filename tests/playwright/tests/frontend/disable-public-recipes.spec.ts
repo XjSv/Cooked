@@ -181,6 +181,17 @@ test.describe('Disable Public Recipes', () => {
     );
     expect(rest.status()).toBe(401);
     expect(await rest.text()).not.toContain(recipeTitle);
+
+    // WordPress matches REST routes case-insensitively.
+    for (const route of [
+      '/wp-json/wp/v2/Cooked_Recipe',
+      `/wp-json/wp/v2/COOKED_RECIPE/${recipeId}`,
+      '/?rest_route=/wp/v2/Cooked_Recipe',
+    ]) {
+      const variant = await page.request.get(route);
+      expect(variant.status(), route).toBe(401);
+      expect(await variant.text(), route).not.toContain(recipeTitle);
+    }
   });
 
   test('lets a recipe editor read recipes over REST when the setting is on', async ({ browser }) => {

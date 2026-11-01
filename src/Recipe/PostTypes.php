@@ -276,7 +276,9 @@ class PostTypes {
             return $result;
         }
 
-        $route = $request->get_route();
+        // WordPress matches REST routes case-insensitively, so /wp/v2/Cooked_Recipe reaches the
+        // same controller.
+        $route = strtolower( (string) $request->get_route() );
         if ( '/wp/v2/cooked_recipe' !== $route && 0 !== strpos( $route, '/wp/v2/cooked_recipe/' ) ) {
             return $result;
         }

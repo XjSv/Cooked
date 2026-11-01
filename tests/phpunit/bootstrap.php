@@ -566,6 +566,7 @@ function check_ajax_referer( $action = -1, $query_arg = false, $die = true ) { r
 function wp_die( $message = '', $title = '', $args = [] ) {
     $GLOBALS['_cooked_test_wp_die'][] = [ $message, $title, $args ];
 }
+function rest_authorization_required_code() { return 401; }
 function current_user_can( $capability, ...$args ) {
     if ( isset( $GLOBALS['_cooked_test_current_user_can'] ) && is_callable( $GLOBALS['_cooked_test_current_user_can'] ) ) {
         return (bool) call_user_func_array( $GLOBALS['_cooked_test_current_user_can'], array_merge( [ $capability ], $args ) );

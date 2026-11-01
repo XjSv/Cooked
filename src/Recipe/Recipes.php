@@ -33,6 +33,8 @@ class Recipes {
         add_action( 'parse_query', [ &$this, 'custom_taxonomy_in_query' ], 10 );
 
         add_action( 'template_redirect', [ &$this, 'print_recipe_template' ], 99 );
+        add_filter( 'rest_cp_recipe_query', [ &$this, 'rest_hide_private_recipes' ], 10, 1 );
+        add_filter( 'rest_prepare_cp_recipe', [ &$this, 'rest_hide_private_recipe' ], 10, 1 );
         add_action( 'cooked_check_recipe_query', [ &$this, 'check_recipe_query' ], 10 );
         add_action( 'pre_get_posts', [ &$this, 'cooked_pre_get_posts' ], 10, 1 );
         add_action( 'restrict_manage_posts', [ &$this, 'filter_recipes_by_taxonomy' ], 10 );
@@ -599,6 +601,37 @@ endif;
     public static function public_recipes_disabled() {
         global $_cooked_settings;
         return isset( $_cooked_settings['advanced'] ) && is_array( $_cooked_settings['advanced'] ) && in_array( 'disable_public_recipes', $_cooked_settings['advanced'], true );
+    }
+
+    /**
+     * With public recipes disabled, the REST recipe collection is empty for anyone who
+     * can't edit recipes. Backs up Cooked_Post_Types::restrict_recipe_rest() whatever the
+     * request's route looks like.
+     *
+     * @since 2.0.0
+     * @param array<string, mixed> $args WP_Query arguments for the REST collection.
+     * @return array<string, mixed>
+     */
+    public function rest_hide_private_recipes( $args ) {
+        if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
+            $args['post__in'] = [ 0 ];
+        }
+        return $args;
+    }
+
+    /**
+     * With public recipes disabled, single REST recipes are refused to anyone who can't
+     * edit recipes.
+     *
+     * @since 2.0.0
+     * @param \WP_REST_Response $response The prepared recipe.
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function rest_hide_private_recipe( $response ) {
+        if ( self::public_recipes_disabled() && ! current_user_can( 'edit_cooked_recipes' ) ) {
+            return new \WP_Error( 'rest_forbidden', __( 'Sorry, you are not allowed to view this recipe.', 'cooked' ), [ 'status' => rest_authorization_required_code() ] );
+        }
+        return $response;
     }
 
     /**

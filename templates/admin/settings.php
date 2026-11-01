@@ -131,6 +131,7 @@
         <script type="text/javascript">
             var vm = new Vue({
                 el: '#cooked-settings-panel',
+                delimiters: ['[[', ']]'],
                 data: {
                     <?php echo wp_kses( implode( ',', $conditional_requirements_js ), array() ); ?>
                 }

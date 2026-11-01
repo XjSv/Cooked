@@ -10,6 +10,15 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
+flush_rewrite_rules();
+
+$cooked_settings = get_option( 'cooked_settings' );
+$advanced        = ( is_array( $cooked_settings ) && isset( $cooked_settings['advanced'] ) && is_array( $cooked_settings['advanced'] ) ) ? $cooked_settings['advanced'] : [];
+
+if ( ! in_array( 'delete_cooked_data_on_uninstall', $advanced, true ) ) {
+	return;
+}
+
 // Delete all plugin options.
 $options = [
 	'cooked_settings',
@@ -21,6 +30,10 @@ $options = [
 	'cooked_wp_recipe_maker_imported',
 	'cooked_related_version',
 	'cooked_related_calculation_last',
+	'cooked_pro_license_status',
+	'cooked_pro_license_data',
+	'cooked_pro_version',
+	'cooked_use_php_sessions',
 ];
 
 foreach ( $options as $option ) {
@@ -57,4 +70,48 @@ if ( class_exists( 'WP_Roles' ) ) {
 	remove_role( 'cooked_recipe_editor' );
 }
 
-flush_rewrite_rules();
+$recipe_ids = get_posts(
+	[
+		'post_type'      => 'cp_recipe',
+		'post_status'    => 'any',
+		'posts_per_page' => -1,
+		'fields'         => 'ids',
+		'nopaging'       => true,
+	]
+);
+if ( is_array( $recipe_ids ) ) {
+	foreach ( $recipe_ids as $recipe_id ) {
+		wp_delete_post( (int) $recipe_id, true );
+	}
+}
+
+// Taxonomies are not registered while the plugin is uninstalled.
+$taxonomies    = [ 'cp_recipe_category', 'cp_recipe_cuisine', 'cp_recipe_cooking_method', 'cp_recipe_diet', 'cp_recipe_tags' ];
+$placeholders  = implode( ', ', array_fill( 0, count( $taxonomies ), '%s' ) );
+$taxonomy_sql  = [
+	"DELETE tr FROM {$wpdb->term_relationships} tr INNER JOIN {$wpdb->term_taxonomy} tt ON tr.term_taxonomy_id = tt.term_taxonomy_id WHERE tt.taxonomy IN ($placeholders)",
+	"DELETE tm FROM {$wpdb->termmeta} tm INNER JOIN {$wpdb->term_taxonomy} tt ON tm.term_id = tt.term_id WHERE tt.taxonomy IN ($placeholders)",
+	"DELETE t FROM {$wpdb->terms} t INNER JOIN {$wpdb->term_taxonomy} tt ON t.term_id = tt.term_id WHERE tt.taxonomy IN ($placeholders)",
+	"DELETE FROM {$wpdb->term_taxonomy} WHERE taxonomy IN ($placeholders)",
+];
+foreach ( $taxonomy_sql as $sql ) {
+	$wpdb->query( $wpdb->prepare( $sql, ...$taxonomies ) );
+}
+
+delete_metadata( 'user', 0, 'cooked_user_meta', '', true );
+
+$upload_dir = wp_upload_dir();
+$dir        = ( is_array( $upload_dir ) && ! empty( $upload_dir['basedir'] ) ) ? $upload_dir['basedir'] . '/cooked' : '';
+
+if ( $dir && is_dir( $dir ) ) {
+	$it    = new RecursiveDirectoryIterator( $dir, RecursiveDirectoryIterator::SKIP_DOTS );
+	$files = new RecursiveIteratorIterator( $it, RecursiveIteratorIterator::CHILD_FIRST );
+	foreach ( $files as $file ) {
+		if ( $file->isDir() ) {
+			rmdir( $file->getRealPath() ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+		} else {
+			wp_delete_file( $file->getRealPath() );
+		}
+	}
+	rmdir( $dir ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_rmdir
+}

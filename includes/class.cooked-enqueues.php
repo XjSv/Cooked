@@ -78,8 +78,7 @@ class Cooked_Enqueues {
     }
 
     public function css_colors() {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if (!isset($_GET['print'])) {
+        if ( ! Cooked_Recipes::is_print_request() ) {
             $file = COOKED_DIR . 'assets/css/colors.php';
             $css = self::get_dynamic_css($file);
             wp_add_inline_style('cooked-styling', $css);
@@ -87,8 +86,7 @@ class Cooked_Enqueues {
     }
 
     public function css_responsive() {
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
-        if (!isset($_GET['print'])) {
+        if ( ! Cooked_Recipes::is_print_request() ) {
             $file = COOKED_DIR . 'assets/css/responsive.php';
             $css = self::get_dynamic_css($file);
             wp_add_inline_style('cooked-styling', $css);

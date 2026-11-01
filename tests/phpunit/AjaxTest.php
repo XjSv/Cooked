@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 class AjaxTest extends TestCase {
 
     protected function tearDown(): void {
-        unset( $GLOBALS['_cooked_test_posts'], $GLOBALS['_cooked_test_current_user_can'] );
+        unset( $GLOBALS['_cooked_test_posts'], $GLOBALS['_cooked_test_current_user_can'], $GLOBALS['_cooked_test_logged_in'] );
         parent::tearDown();
     }
 
@@ -92,5 +92,62 @@ class AjaxTest extends TestCase {
 
     public function test_user_can_edit_post_of_type_rejects_empty_type() {
         $this->assertFalse( self::call_private_method( 'user_can_edit_post_of_type', [ 5, '' ] ) );
+    }
+
+    public function test_csv_import_transient_key_accepts_this_users_key() {
+        $this->assertTrue( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_4_1710000000', 4 ] ) );
+    }
+
+    public function test_csv_import_transient_key_rejects_foreign_and_malformed_keys() {
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'some_other_plugin_cached_path', 4 ] ) );
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_4_', 4 ] ) );
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_9_1710000000', 4 ] ) );
+        $this->assertFalse( self::call_private_method( 'is_csv_import_transient_key', [ 'cooked_csv_import_4_1710000000abc', 4 ] ) );
+    }
+
+    public function test_csv_import_file_path_allows_temp_file_with_cooked_prefix() {
+        $temp_dir = sys_get_temp_dir();
+        $path = rtrim( $temp_dir, '/\\' ) . '/cooked-csv-phpunit-' . uniqid() . '.tmp';
+        file_put_contents( $path, 'title' );
+
+        try {
+            $allowed = self::call_private_method( 'csv_import_file_path', [ $path, $temp_dir ] );
+            $this->assertSame( str_replace( '\\', '/', realpath( $path ) ), $allowed );
+        } finally {
+            if ( file_exists( $path ) ) {
+                unlink( $path );
+            }
+        }
+    }
+
+    public function test_csv_import_file_path_rejects_uploads_and_other_prefixes() {
+        $temp_dir = sys_get_temp_dir();
+        $other = rtrim( $temp_dir, '/\\' ) . '/other-prefix-' . uniqid() . '.tmp';
+        file_put_contents( $other, 'title' );
+
+        try {
+            $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ '/cooked-uploads-basedir/import.csv', $temp_dir ] ) );
+            $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ $other, $temp_dir ] ) );
+            $this->assertFalse( self::call_private_method( 'csv_import_file_path', [ [ 'not-a-string' ], $temp_dir ] ) );
+        } finally {
+            if ( file_exists( $other ) ) {
+                unlink( $other );
+            }
+        }
+    }
+
+    public function test_bulk_ingredient_parse_allows_logged_in_users_and_not_anonymous_without_guest_mode() {
+        $this->assertFalse( self::call_private_method( 'current_user_can_parse_bulk_ingredients' ) );
+
+        $GLOBALS['_cooked_test_logged_in'] = true;
+        $this->assertTrue( self::call_private_method( 'current_user_can_parse_bulk_ingredients' ) );
+    }
+
+    public function test_bulk_ingredient_lines_cap_count_and_length() {
+        $long = str_repeat( 'a', 600 );
+        $limited = self::call_private_method( 'limit_bulk_ingredient_lines', [ [ $long ] ] );
+
+        $this->assertSame( 500, strlen( $limited[0] ) );
+        $this->assertFalse( self::call_private_method( 'limit_bulk_ingredient_lines', [ array_fill( 0, 301, '1 cup flour' ) ] ) );
     }
 }

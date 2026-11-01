@@ -625,11 +625,10 @@ class Cooked_Shortcodes {
 
         if ( $cooked_info_html ):
             add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
-            add_filter('wp_kses_allowed_html', [$this, 'cooked_kses_cooked_donut']);
             $cooked_info_html = '<div class="cooked-recipe-info cooked-clearfix">' . wp_kses_post( $cooked_info_html ) . '</div>';
+            remove_filter('wp_kses_allowed_html', [$this, 'cooked_kses_servings_switcher']);
             $cooked_info_html = apply_filters( 'cooked_info_shortcode_output', $cooked_info_html, $recipe_settings );
             return $cooked_info_html;
-            //return '<div class="cooked-recipe-info cooked-clearfix">' . $cooked_info_html . '</div>'; // @TODO: Fix this
         endif;
     }
 
@@ -642,13 +641,6 @@ class Cooked_Shortcodes {
         $tags['option'] = [
             'value' => true,
             'selected' => true
-        ];
-        return $tags;
-    }
-
-    function cooked_kses_cooked_donut($tags) {
-        $tags['script'] = [
-            'type' => true
         ];
         return $tags;
     }
@@ -713,13 +705,31 @@ class Cooked_Shortcodes {
     }
 
     public static function cooked_info_print() {
-        global $recipe_settings, $_cooked_settings;
+        global $recipe_settings;
 
-        $recipe_post_url = get_permalink( $recipe_settings['id'] );
-        $query_args['print'] = 1;
-        $servings = (float)esc_html( get_query_var( 'servings', false ) );
-        $query_args['servings'] = !empty($servings) ? $servings : false;
-        echo '<span class="cooked-print"><a aria-label="' . esc_attr__('Print', 'cooked') . '" target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $recipe_post_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
+        $recipe_id = isset( $recipe_settings['id'] ) ? absint( $recipe_settings['id'] ) : 0;
+        if ( ! $recipe_id ) {
+            return;
+        }
+
+        $servings = (float) esc_html( get_query_var( 'servings', false ) );
+        $query_args = [
+            'servings' => ! empty( $servings ) ? $servings : false,
+        ];
+
+        if ( Cooked_Post_Types::public_recipes_disabled() ) {
+            $page_id = get_queried_object_id();
+            $base_url = $page_id ? get_permalink( $page_id ) : '';
+            if ( ! $base_url ) {
+                return;
+            }
+            $query_args['cooked_print'] = $recipe_id;
+        } else {
+            $base_url = get_permalink( $recipe_id );
+            $query_args['print'] = 1;
+        }
+
+        echo '<span class="cooked-print"><a aria-label="' . esc_attr__('Print', 'cooked') . '" target="_blank" rel="nofollow" href="' . esc_url( add_query_arg( $query_args, $base_url ) ) . '" class="cooked-print-icon"><i class="cooked-icon cooked-icon-print"></i></a></span>';
     }
 
     public static function cooked_info_fullscreen() {

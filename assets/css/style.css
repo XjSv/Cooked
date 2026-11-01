@@ -673,6 +673,37 @@ body .cooked-timer a:hover {
     width: auto;
 }
 
+/* Two-column info rows stay on one line beside a narrow content column. */
+.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    column-gap: 0.75rem;
+    container: cooked-info / inline-size;
+}
+.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-left,
+.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-right {
+    float: none;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    width: auto;
+    max-width: 100%;
+    column-gap: 1rem;
+    column-gap: clamp(0.75rem, 2.5cqi, 2rem);
+}
+.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-left > span,
+.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-right > span {
+    margin-left: 0;
+    margin-right: 0;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+.cooked-recipe-info:has(> .cooked-left):has(> .cooked-right) > section.cooked-right {
+    margin-left: auto;
+}
+
 /* Difficulty Levels */
 .cooked-difficulty-level-1,
 .cooked-difficulty-level-2,
@@ -798,6 +829,11 @@ body .cooked-nutrition-label dt.cooked-nut-servings {
 body .cooked-nutrition-label dt.cooked-serving-size {
     border-top: none;
     padding-top: 0;
+}
+body .cooked-nutrition-label div.cooked-serving-size {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
 }
 body .cooked-nutrition-label dt.cooked-serving-size strong,
 body .cooked-nutrition-label div.cooked-serving-size strong,

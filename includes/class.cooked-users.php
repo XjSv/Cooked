@@ -107,6 +107,44 @@ class Cooked_Users {
         }
     }
 
+    /**
+     * Keys added to the in-memory user session. They are not stored profile data.
+     *
+     * @return string[]
+     */
+    public static function session_meta_keys() {
+        return [
+            'id',
+            'user_nicename',
+            'name',
+            'profile_photo',
+            'profile_photo_src',
+            'raw',
+            'recipes',
+        ];
+    }
+
+    /**
+     * Save cooked_user_meta without session-only keys.
+     *
+     * @param int   $user_id User ID.
+     * @param mixed $meta    Meta array to store.
+     * @return array Stored meta.
+     */
+    public static function update_meta( $user_id, $meta ) {
+        if ( ! is_array( $meta ) ) {
+            $meta = [];
+        }
+
+        foreach ( self::session_meta_keys() as $key ) {
+            unset( $meta[ $key ] );
+        }
+
+        update_user_meta( $user_id, 'cooked_user_meta', $meta );
+
+        return $meta;
+    }
+
     public static function format_author_name( $name, $format = false ) {
         if ( !$name ) return false;
 

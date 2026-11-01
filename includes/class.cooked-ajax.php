@@ -395,7 +395,33 @@ class Cooked_Ajax {
     /**
      * Handle CSV file upload
      */
+    private static function delete_expired_csv_temp_files() {
+        $dir = get_temp_dir();
+        if ( ! is_string( $dir ) || '' === $dir || ! is_dir( $dir ) ) {
+            return;
+        }
+
+        $files = glob( trailingslashit( $dir ) . 'cooked-csv-*' );
+        if ( ! is_array( $files ) ) {
+            return;
+        }
+
+        $cutoff = time() - HOUR_IN_SECONDS;
+        foreach ( $files as $file ) {
+            if ( ! is_file( $file ) || 0 !== strpos( basename( $file ), 'cooked-csv-' ) ) {
+                continue;
+            }
+
+            $mtime = filemtime( $file );
+            if ( false !== $mtime && $mtime < $cutoff ) {
+                wp_delete_file( $file );
+            }
+        }
+    }
+
     public function upload_csv() {
+        self::delete_expired_csv_temp_files();
+
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
         if ( ! wp_verify_nonce( $nonce, 'cooked_admin_import' ) || ! current_user_can( 'edit_cooked_settings' ) ) {
             wp_send_json_error(['message' => __('You do not have permission to import recipes.', 'cooked')]);
@@ -425,14 +451,66 @@ class Cooked_Ajax {
             wp_send_json_error(['message' => $upload['error']]);
         }
 
-        // Store file path in transient for processing
+        $temp_file = wp_tempnam( 'cooked-csv-' );
+        $copied = is_string( $temp_file ) && '' !== $temp_file && copy( $upload['file'], $temp_file );
+        wp_delete_file( $upload['file'] );
+
+        if ( ! $copied ) {
+            if ( is_string( $temp_file ) && '' !== $temp_file ) {
+                wp_delete_file( $temp_file );
+            }
+            wp_send_json_error(['message' => __('File upload failed.', 'cooked')]);
+        }
+
+        $stored_path = self::csv_import_file_path( $temp_file, get_temp_dir() );
+        if ( ! $stored_path ) {
+            wp_delete_file( $temp_file );
+            wp_send_json_error(['message' => __('File upload failed.', 'cooked')]);
+        }
+        $temp_file = $stored_path;
+
         $transient_key = 'cooked_csv_import_' . get_current_user_id() . '_' . time();
-        set_transient($transient_key, $upload['file'], 3600); // 1 hour
+        set_transient($transient_key, $temp_file, 3600); // 1 hour
 
         wp_send_json_success([
             'transient_key' => $transient_key,
-            'file_path' => $upload['file']
         ]);
+    }
+
+    private static function is_csv_import_transient_key( $key, $user_id ) {
+        $user_id = (int) $user_id;
+        if ( $user_id < 1 || ! is_string( $key ) || '' === $key ) {
+            return false;
+        }
+
+        return 1 === preg_match( '/^cooked_csv_import_' . $user_id . '_\d+$/', $key );
+    }
+
+    private static function csv_import_file_path( $file_path, $temp_dir ) {
+        if ( ! is_string( $file_path ) || ! is_string( $temp_dir ) || '' === $temp_dir ) {
+            return false;
+        }
+
+        $temp_dir = rtrim( str_replace( '\\', '/', $temp_dir ), '/' );
+        $file_path = str_replace( '\\', '/', $file_path );
+
+        if ( 0 !== strpos( basename( $file_path ), 'cooked-csv-' ) || 0 !== strpos( $file_path, $temp_dir . '/' ) ) {
+            return false;
+        }
+
+        $real_dir = realpath( $temp_dir );
+        $real_file = realpath( $file_path );
+        if ( ! $real_dir || ! $real_file || ! is_file( $real_file ) ) {
+            return false;
+        }
+
+        $real_dir = rtrim( str_replace( '\\', '/', $real_dir ), '/' );
+        $real_file = str_replace( '\\', '/', $real_file );
+        if ( 0 !== strpos( $real_file, $real_dir . '/' ) || 0 !== strpos( basename( $real_file ), 'cooked-csv-' ) ) {
+            return false;
+        }
+
+        return $real_file;
     }
 
     /**
@@ -445,9 +523,13 @@ class Cooked_Ajax {
         }
 
         $transient_key = isset( $_POST['transient_key'] ) ? sanitize_text_field( wp_unslash( $_POST['transient_key'] ) ) : '';
-        $file_path = get_transient($transient_key);
+        if ( ! self::is_csv_import_transient_key( $transient_key, get_current_user_id() ) ) {
+            wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
+        }
 
-        if (!$file_path || !file_exists($file_path)) {
+        $file_path = self::csv_import_file_path( get_transient( $transient_key ), get_temp_dir() );
+
+        if ( ! $file_path ) {
             wp_send_json_error(['message' => __('CSV file not found. Please upload again.', 'cooked')]);
         }
 
@@ -480,13 +562,47 @@ class Cooked_Ajax {
         }
     }
 
+    private static function current_user_can_parse_bulk_ingredients() {
+        if ( is_user_logged_in() ) {
+            return true;
+        }
+
+        return class_exists( 'Cooked_Add_Recipe' ) && Cooked_Add_Recipe::guest_mode_active();
+    }
+
+    private static function limit_bulk_ingredient_lines( $lines ) {
+        if ( ! is_array( $lines ) || count( $lines ) > 300 ) {
+            return false;
+        }
+
+        $limited = [];
+        foreach ( $lines as $index => $line ) {
+            $line = is_string( $line ) ? $line : '';
+            if ( strlen( $line ) > 500 ) {
+                $line = function_exists( 'mb_substr' ) ? mb_substr( $line, 0, 500 ) : substr( $line, 0, 500 );
+            }
+            $limited[ $index ] = $line;
+        }
+
+        return $limited;
+    }
+
     public function parse_bulk_ingredients() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
         if ( ! wp_verify_nonce( $nonce, 'cooked_bulk_add' ) ) {
             wp_send_json_error( [ 'message' => __( 'Security check failed.', 'cooked' ) ] );
         }
 
+        if ( ! self::current_user_can_parse_bulk_ingredients() ) {
+            wp_send_json_error( [ 'message' => __( 'Security check failed.', 'cooked' ) ] );
+        }
+
         $lines = isset( $_POST['lines'] ) ? wp_unslash( (array) $_POST['lines'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each line is sanitize_text_field'd below.
+        $lines = self::limit_bulk_ingredient_lines( $lines );
+
+        if ( false === $lines ) {
+            wp_send_json_error( [ 'message' => __( 'Please paste fewer lines at a time.', 'cooked' ) ] );
+        }
 
         if ( empty( $lines ) ) {
             wp_send_json_error( [ 'message' => __( 'No ingredients provided.', 'cooked' ) ] );

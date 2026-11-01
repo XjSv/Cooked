@@ -562,13 +562,47 @@ class Cooked_Ajax {
         }
     }
 
+    private static function current_user_can_parse_bulk_ingredients() {
+        if ( is_user_logged_in() ) {
+            return true;
+        }
+
+        return class_exists( 'Cooked_Add_Recipe' ) && Cooked_Add_Recipe::guest_mode_active();
+    }
+
+    private static function limit_bulk_ingredient_lines( $lines ) {
+        if ( ! is_array( $lines ) || count( $lines ) > 300 ) {
+            return false;
+        }
+
+        $limited = [];
+        foreach ( $lines as $index => $line ) {
+            $line = is_string( $line ) ? $line : '';
+            if ( strlen( $line ) > 500 ) {
+                $line = function_exists( 'mb_substr' ) ? mb_substr( $line, 0, 500 ) : substr( $line, 0, 500 );
+            }
+            $limited[ $index ] = $line;
+        }
+
+        return $limited;
+    }
+
     public function parse_bulk_ingredients() {
         $nonce = isset( $_POST['nonce'] ) ? wp_unslash( $_POST['nonce'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Verify nonce after unslash; do not sanitize_text_field a nonce.
         if ( ! wp_verify_nonce( $nonce, 'cooked_bulk_add' ) ) {
             wp_send_json_error( [ 'message' => __( 'Security check failed.', 'cooked' ) ] );
         }
 
+        if ( ! self::current_user_can_parse_bulk_ingredients() ) {
+            wp_send_json_error( [ 'message' => __( 'Security check failed.', 'cooked' ) ] );
+        }
+
         $lines = isset( $_POST['lines'] ) ? wp_unslash( (array) $_POST['lines'] ) : []; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Each line is sanitize_text_field'd below.
+        $lines = self::limit_bulk_ingredient_lines( $lines );
+
+        if ( false === $lines ) {
+            wp_send_json_error( [ 'message' => __( 'Please paste fewer lines at a time.', 'cooked' ) ] );
+        }
 
         if ( empty( $lines ) ) {
             wp_send_json_error( [ 'message' => __( 'No ingredients provided.', 'cooked' ) ] );

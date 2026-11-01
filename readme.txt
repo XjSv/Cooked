@@ -145,6 +145,7 @@ Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
 * **FIX:** Fixed ingredient and direction lists when upgrading recipes from Cooked 2.
 * **FIX:** Fixed CSV import so it only processes the file from the current upload.
 * **FIX:** Fixed CSV import so the uploaded file stays private.
+* **FIX:** Fixed bulk ingredient parsing so large pastes stay limited.
 
 = 1.16.2 =
 * **FIX:** Escape the [cooked-timer] description in the data-desc attribute to prevent stored XSS (CVE-2026-77829).

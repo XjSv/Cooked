@@ -5,7 +5,7 @@ use PHPUnit\Framework\TestCase;
 class AjaxTest extends TestCase {
 
     protected function tearDown(): void {
-        unset( $GLOBALS['_cooked_test_posts'], $GLOBALS['_cooked_test_current_user_can'] );
+        unset( $GLOBALS['_cooked_test_posts'], $GLOBALS['_cooked_test_current_user_can'], $GLOBALS['_cooked_test_logged_in'] );
         parent::tearDown();
     }
 
@@ -134,5 +134,20 @@ class AjaxTest extends TestCase {
                 unlink( $other );
             }
         }
+    }
+
+    public function test_bulk_ingredient_parse_allows_logged_in_users_and_not_anonymous_without_guest_mode() {
+        $this->assertFalse( self::call_private_method( 'current_user_can_parse_bulk_ingredients' ) );
+
+        $GLOBALS['_cooked_test_logged_in'] = true;
+        $this->assertTrue( self::call_private_method( 'current_user_can_parse_bulk_ingredients' ) );
+    }
+
+    public function test_bulk_ingredient_lines_cap_count_and_length() {
+        $long = str_repeat( 'a', 600 );
+        $limited = self::call_private_method( 'limit_bulk_ingredient_lines', [ [ $long ] ] );
+
+        $this->assertSame( 500, strlen( $limited[0] ) );
+        $this->assertFalse( self::call_private_method( 'limit_bulk_ingredient_lines', [ array_fill( 0, 301, '1 cup flour' ) ] ) );
     }
 }

@@ -117,6 +117,20 @@ class RecipesTest extends TestCase {
         $this->assertStringContainsString( '&lt;script', $result );
     }
 
+    public function test_format_content_does_not_decode_img_entities() {
+        $stored = '&lt;img src="https://evil.example/px.gif"&gt;';
+        $result = Cooked_Recipes::format_content( $stored );
+
+        $this->assertStringNotContainsString( '<img', $result );
+        $this->assertStringContainsString( '&lt;img', $result );
+    }
+
+    public function test_format_content_keeps_allowed_html() {
+        $result = Cooked_Recipes::format_content( '<b>Yum</b>' );
+
+        $this->assertStringContainsString( '<b>Yum</b>', $result );
+    }
+
     public function test_sync_c2_recipe_settings_reads_serialized_ingredient_rows() {
         $settings = Cooked_Recipes::sync_c2_recipe_settings( [
             '_cp_recipe_detailed_ingredients' => serialize( [

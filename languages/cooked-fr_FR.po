@@ -4094,24 +4094,24 @@ msgstr "Plein écran"
 
 #: src/Admin/Settings.php:685
 msgid "Delete Cooked Data on Uninstall"
-msgstr ""
+msgstr "Supprimer les données de Cooked à la désinstallation"
 
 #: src/Admin/Settings.php:685
 msgid "Removes recipes, settings, user profiles, and uploaded files when Cooked is deleted."
-msgstr ""
+msgstr "Supprime les recettes, les réglages, les profils utilisateurs et les fichiers téléversés lorsque Cooked est supprimé."
 
 #: src/Admin/Updates.php:204
 msgid "Remove session data from user meta"
-msgstr ""
+msgstr "Supprimer les données de session des métadonnées utilisateur"
 
 #: src/Admin/Updates.php:205
 msgid "Removes fields copied from the user session into cooked_user_meta."
-msgstr ""
+msgstr "Supprime les champs copiés depuis la session utilisateur dans cooked_user_meta."
 
 #: src/Recipe/PostTypes.php:290
 msgid "Sorry, you are not allowed to view recipes."
-msgstr ""
+msgstr "Désolé, vous n’avez pas l’autorisation de voir les recettes."
 
 #: src/System/Ajax.php:829
 msgid "Please paste fewer lines at a time."
-msgstr ""
+msgstr "Veuillez coller moins de lignes à la fois."

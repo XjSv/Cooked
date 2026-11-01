@@ -4089,24 +4089,24 @@ msgstr "Πλήρης οθόνη"
 
 #: src/Admin/Settings.php:685
 msgid "Delete Cooked Data on Uninstall"
-msgstr ""
+msgstr "Διαγραφή δεδομένων του Cooked κατά την απεγκατάσταση"
 
 #: src/Admin/Settings.php:685
 msgid "Removes recipes, settings, user profiles, and uploaded files when Cooked is deleted."
-msgstr ""
+msgstr "Αφαιρεί τις συνταγές, τις ρυθμίσεις, τα προφίλ χρηστών και τα αρχεία που μεταφορτώθηκαν όταν διαγράφεται το Cooked."
 
 #: src/Admin/Updates.php:204
 msgid "Remove session data from user meta"
-msgstr ""
+msgstr "Αφαίρεση δεδομένων συνεδρίας από τα μεταδεδομένα χρηστών"
 
 #: src/Admin/Updates.php:205
 msgid "Removes fields copied from the user session into cooked_user_meta."
-msgstr ""
+msgstr "Αφαιρεί τα πεδία που αντιγράφηκαν από τη συνεδρία του χρήστη στο cooked_user_meta."
 
 #: src/Recipe/PostTypes.php:290
 msgid "Sorry, you are not allowed to view recipes."
-msgstr ""
+msgstr "Λυπούμαστε, δεν σας επιτρέπεται να βλέπετε συνταγές."
 
 #: src/System/Ajax.php:829
 msgid "Please paste fewer lines at a time."
-msgstr ""
+msgstr "Επικολλήστε λιγότερες γραμμές κάθε φορά."

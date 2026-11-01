@@ -205,6 +205,9 @@
 }
 
 .cooked-changelog-full h4.cooked-changelog-version {
+    // The modal reuses the card's flex column (align-items: flex-start), which would shrink
+    // the sticky heading to its text and let entries scroll past beside it.
+    align-self: stretch;
     position: sticky;
     top: 0;
     z-index: 1;

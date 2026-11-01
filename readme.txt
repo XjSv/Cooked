@@ -129,12 +129,47 @@ Please report security bugs found in the source code of the Cooked plugin throug
 == Upgrade Notice ==
 
 = 2.0.0 =
-Cooked 2.0 requires PHP 7.4 or newer. Cooked's PHP files moved from includes/ to src/. Custom code should use the Cooked_* class names, which keep working, rather than loading Cooked files directly.
+Cooked 2.0 is a major update with redesigned admin screens and recipe editor (the 1.x layout stays available under Settings > General > Admin Screens). It still requires PHP 7.4 or newer. Update Cooked Pro to 2.0 as well: older Pro versions are paused until they are updated. Custom code should use the Cooked_* class names, which keep working, rather than loading Cooked's PHP files directly.
 
 = 1.17.0 =
 Version 1.17.0 replaces the Tooltipster tooltip library with Floating UI.
 
 == Changelog ==
+
+= 2.0.0 =
+* **NEW:** Redesigned admin screens. Settings, Import, What's New and Upgrade to Pro share one frame with page tabs, a section menu, a sticky header and layouts that work down to phone width. The 1.x screens are still available under Settings > General > Admin Screens > Use the Classic Layout, which also has a Compare layouts preview.
+* **NEW:** Settings search. Find any setting by its title, description or option labels as you type, and jump straight to it.
+* **NEW:** Redesigned recipe editor. The Layout, Ingredients, Directions, Nutrition, Gallery and Shortcodes tabs and the Allergens box are rebuilt, with a live Nutrition Facts preview, a live gallery preview and copy buttons for every shortcode.
+* **NEW:** Admin Dark Mode and Recipe Editor Dark Mode (Off, On or Auto), saved per user under Settings > Design.
+* **NEW:** Ingredients can have any number of substitutions. Recipes saved before 2.0 keep their substitute, and CSV imports add one substitute per extra `||`.
+* **NEW:** Gallery options for style (dots, thumbnails or arrows only), shape, fit, loop and autoplay. Full-screen viewing uses PhotoSwipe, and YouTube videos load from youtube-nocookie.com.
+* **NEW:** The browse page updates its results as you type, and the category filter is a multi-select that shows the chosen categories as removable chips.
+* **NEW:** The sample CSV files open in a preview with Download and Import Now buttons.
+* **NEW:** What's New shows color-coded changelog entries and the full changelog in a modal.
+* **NEW:** Greek translation. The French translation is complete.
+* **TWEAK:** The Nutrition Facts label is rebuilt as an accessible table, with dark mode and a black-and-white print version.
+* **TWEAK:** Redesigned recipe info bar: the byline comes first, Print and Full screen are labelled buttons, times and servings are shown as large numbers and allergens as chips. Bars inside recipe cards keep their compact layout.
+* **TWEAK:** The recipe image is 3:2 with rounded corners, step images are capped in size, notes are shown as a callout and timers as underlined text with a clock.
+* **TWEAK:** Main colors are darkened only as far as needed to meet WCAG AA contrast. Colors that already pass are used as chosen.
+* **TWEAK:** Cooked's PHP classes moved from includes/ to a namespaced src/ folder. The old class names (such as Cooked_Recipes), hooks, options, shortcodes and template overrides keep working, and the old includes/ files stay as deprecated placeholders.
+* **TWEAK:** Tested on PHP 7.4 through 8.5.
+* **TWEAK:** Replaced Selectize with Tom Select, Fotorama with the Cooked gallery and PhotoSwipe, and Switchery with CSS toggle switches. Vue and the unused Slick carousel are removed.
+* **TWEAK:** The Responsive Breakpoint settings are removed. Cooked now uses fixed breakpoints of 1000, 750 and 520 px (the previous defaults).
+* **TWEAK:** A Cooked Pro version older than 2.0 is paused, with a notice asking to update it, instead of breaking the site.
+* **FIX:** WP Recipe Maker and WP Delicious imports keep ingredient units and titled ingredient and instruction sections, and imported recipes keep the original comment setting.
+* **FIX:** `[cooked-categories hide_empty="false"]` shows empty categories again.
+* **FIX:** The Recipe List widget hides its inactive rows again.
+* **FIX:** With no browse page set, the Yoast SEO and Rank Math integrations no longer change the canonical URL of unrelated pages.
+* **FIX:** Fractional servings use the right plural, and amounts like 2.0 no longer cause a division by zero.
+* **FIX:** Recipes whose author no longer exists no longer show a PHP notice. The byline is left out.
+* **FIX:** Fixed several PHP 8 warnings and fatal errors.
+* **FIX:** Disable Public Recipes now keeps recipes out of the print view and the REST API for visitors who can't edit recipes. An embedded recipe still prints from the page that shows it.
+* **FIX:** Legacy and imported recipe data is unserialized without allowing PHP objects.
+* **FIX:** CSV imports stay private: the file is kept out of the public uploads folder, its server path is never returned, and only the current user's own upload can be processed.
+* **FIX:** Password-protected recipes keep their content and excerpt hidden in lists, cards and shortcodes.
+* **FIX:** The Recipe Editor role no longer gets the unfiltered_html capability. Sites that need it can add it back with the `cooked_recipe_editor_caps` filter.
+* **FIX:** Recipe settings are saved only for recipe posts the user can edit and only for known fields (add-ons can register theirs with the `cooked_recipe_settings_keys` filter), and double-encoded HTML is stripped for users outside the HTML editor roles.
+* **FIX:** Settings are sanitized by field type, inline script data is escaped JSON, and loading the default template checks a nonce.
 
 = 1.17.0 =
 * **NEW:** Added uninstall option "Delete Cooked Data on Uninstall" under Advanced Settings. Recipes, settings, and uploads stay unless it is enabled.

@@ -207,7 +207,7 @@ function shortcode_unautop( $content ) {
     return $content;
 }
 function shortcode_exists( $tag ) {
-    return false;
+    return isset( $GLOBALS['_cooked_test_shortcodes'][ $tag ] ) && $GLOBALS['_cooked_test_shortcodes'][ $tag ];
 }
 function add_shortcode( $tag, $callback ) {
     return true;
@@ -641,6 +641,7 @@ $GLOBALS['_cooked_settings'] = [];
 $GLOBALS['_cooked_test_filters'] = [];
 $GLOBALS['_cooked_test_actions'] = [];
 $GLOBALS['_cooked_test_options'] = [];
+$GLOBALS['_cooked_test_shortcodes'] = [];
 $GLOBALS['_cooked_test_post_meta'] = [];
 $GLOBALS['_cooked_test_posts'] = [];
 $GLOBALS['_cooked_test_titles'] = [];

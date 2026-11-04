@@ -22,6 +22,7 @@ class FilterTestCase extends TestCase {
 
     protected function reset_filter_test_state() {
         $GLOBALS['_cooked_test_filters'] = [];
+        $GLOBALS['_cooked_test_shortcodes'] = [];
         $GLOBALS['_cooked_test_actions'] = [];
         $GLOBALS['_cooked_test_post_meta'] = [];
         $GLOBALS['_cooked_test_posts'] = [];

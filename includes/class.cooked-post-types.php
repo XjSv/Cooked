@@ -151,9 +151,10 @@ class Cooked_Post_Types {
             }
 
             $description = '';
-            if (!empty($recipe_settings['seo_description'])):
+            $password_required = post_password_required( $post );
+            if ( ! $password_required && !empty($recipe_settings['seo_description'])):
                 $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', wp_specialchars_decode( $recipe_settings['seo_description'], ENT_QUOTES ) ) );
-            elseif (!empty($recipe_settings['excerpt'])):
+            elseif ( ! $password_required && !empty($recipe_settings['excerpt'])):
                 $description = wp_strip_all_tags( preg_replace("~(?:\[/?)[^/\]]+/?\]~s", '', $recipe_settings['excerpt']) );
             elseif (!empty($recipe_settings['title'])):
                 $description = $recipe_settings['title'];

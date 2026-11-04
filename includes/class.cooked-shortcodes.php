@@ -466,15 +466,32 @@ class Cooked_Shortcodes {
                 break;
 
                 case 'envira':
-                    return ( $recipe_settings['gallery']['envira'] ? '<div class="cooked-recipe-gallery-envira">' . do_shortcode('[envira-gallery id="' . intval( $recipe_settings['gallery']['envira'] ) . '"]') . '</div>' : '' );
+                    if ( empty( $recipe_settings['gallery']['envira'] ) || ! shortcode_exists( 'envira-gallery' ) ):
+                        return '';
+                    endif;
+                    return '<div class="cooked-recipe-gallery-envira">' . do_shortcode( '[envira-gallery id="' . intval( $recipe_settings['gallery']['envira'] ) . '"]' ) . '</div>';
                 break;
 
                 case 'soliloquy':
-                    return ( $recipe_settings['gallery']['soliloquy'] ? '<div class="cooked-recipe-gallery-soliloquy">' . do_shortcode('[soliloquy id="' . intval( $recipe_settings['gallery']['soliloquy'] ) . '"]') . '</div>' : '' );
+                    if ( empty( $recipe_settings['gallery']['soliloquy'] ) || ! shortcode_exists( 'soliloquy' ) ):
+                        return '';
+                    endif;
+                    return '<div class="cooked-recipe-gallery-soliloquy">' . do_shortcode( '[soliloquy id="' . intval( $recipe_settings['gallery']['soliloquy'] ) . '"]' ) . '</div>';
                 break;
 
                 case 'revslider':
-                    return ( $recipe_settings['gallery']['revslider'] ? '<div class="cooked-recipe-gallery-revslider">' . do_shortcode('[rev_slider alias="' . intval( $recipe_settings['gallery']['revslider'] ) . '"]') . '</div>' : '' );
+                    if ( empty( $recipe_settings['gallery']['revslider'] ) ):
+                        return '';
+                    endif;
+                    $revslider_alias = esc_attr( $recipe_settings['gallery']['revslider'] );
+                    if ( shortcode_exists( 'sr7' ) ):
+                        $revslider_shortcode = '[sr7 alias="' . $revslider_alias . '"]';
+                    elseif ( shortcode_exists( 'rev_slider' ) ):
+                        $revslider_shortcode = '[rev_slider alias="' . $revslider_alias . '"]';
+                    else:
+                        return '';
+                    endif;
+                    return '<div class="cooked-recipe-gallery-revslider">' . do_shortcode( $revslider_shortcode ) . '</div>';
                 break;
 
             endswitch;

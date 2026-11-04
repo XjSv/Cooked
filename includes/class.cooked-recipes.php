@@ -399,6 +399,10 @@ class Cooked_Recipes {
 
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Display-only print view flag.
         if ( is_singular( 'cp_recipe' ) && isset( $_GET['print'] ) ) {
+            if ( self::print_post_blocked( get_queried_object() ) ) {
+                return;
+            }
+
             self::render_print_template();
         }
     }
@@ -414,8 +418,7 @@ class Cooked_Recipes {
             return;
         }
 
-        // Logged-out visitors do not have the read capability. Published posts stay printable.
-        if ( post_password_required( $page ) || ( ! is_post_publicly_viewable( $page ) && ! current_user_can( 'read_post', $page->ID ) ) ) {
+        if ( self::print_post_blocked( $page ) ) {
             return;
         }
 
@@ -443,12 +446,41 @@ class Cooked_Recipes {
             return;
         }
 
+        if ( self::print_post_blocked( $recipe_post ) ) {
+            return;
+        }
+
         global $wp_query;
         // wp_head() restores the global post from the main query.
         $wp_query->post = $recipe_post;
         $GLOBALS['post'] = $recipe_post;
         setup_postdata( $recipe_post );
         self::render_print_template();
+    }
+
+    // Logged-out visitors do not have the read capability. Published posts stay printable.
+    private static function print_post_blocked( $post ) {
+        if ( ! $post instanceof WP_Post ) {
+            return true;
+        }
+
+        if ( post_password_required( $post ) ) {
+            return true;
+        }
+
+        if ( is_post_publicly_viewable( $post ) || current_user_can( 'read_post', $post->ID ) ) {
+            return false;
+        }
+
+        // Disable Public Recipes makes this post type non-public. A published recipe can still be printed from an embed.
+        if ( 'cp_recipe' === $post->post_type ) {
+            $status = get_post_status_object( $post->post_status );
+            if ( $status && $status->public ) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private static function render_print_template() {
@@ -938,11 +970,11 @@ class Cooked_Recipes {
             ],
             'envira' => [
                 'title' => __('Envira Gallery', 'cooked'),
-                'required_class' => 'Envira_Gallery'
+                'required_class' => [ 'Envira_Gallery', 'Envira_Gallery_Lite' ]
             ],
             'soliloquy' => [
                 'title' => __('Soliloquy Slider', 'cooked'),
-                'required_class' => 'Soliloquy'
+                'required_class' => [ 'Soliloquy', 'Soliloquy_Lite' ]
             ],
             'revslider' => [
                 'title' => __('Slider Revolution', 'cooked'),
@@ -953,17 +985,40 @@ class Cooked_Recipes {
         foreach ( $gallery_types as $slug => $gtype ):
 
             $results = [];
+            $required_raw = isset( $gtype['required_class'] ) ? $gtype['required_class'] : '';
+            $required_classes = array_filter( (array) $required_raw );
+            $class_found = false;
 
-            if ( $gtype['required_class'] && class_exists($gtype['required_class']) ):
+            foreach ( $required_classes as $required_class ):
+                if ( is_string( $required_class ) && class_exists( $required_class ) ):
+                    $class_found = true;
+                    break;
+                endif;
+            endforeach;
+
+            if ( $class_found ):
+
+                $can_list = true;
 
                 if ( $slug == 'revslider' ):
 
-                    $slider = new RevSlider();
-                    $arrSliders = $slider->getArrSliders();
-                    if (!empty($arrSliders)):
-                        foreach($arrSliders as $slider):
-                            $results[ $slider->getAlias() ] = $slider->getTitle();
-                        endforeach;
+                    if ( class_exists( 'RevSlider' ) && method_exists( 'RevSlider', 'getArrSliders' ) ):
+                        $slider = new RevSlider();
+                        $arrSliders = $slider->getArrSliders();
+                        if ( ! empty( $arrSliders ) ):
+                            foreach ( $arrSliders as $slider_item ):
+                                if ( ! is_object( $slider_item ) || ! method_exists( $slider_item, 'getAlias' ) || ! method_exists( $slider_item, 'getTitle' ) ):
+                                    continue;
+                                endif;
+                                $alias = $slider_item->getAlias();
+                                if ( $alias === '' || $alias === null ):
+                                    continue;
+                                endif;
+                                $results[ $alias ] = $slider_item->getTitle();
+                            endforeach;
+                        endif;
+                    else:
+                        $can_list = false;
                     endif;
 
                 else:
@@ -983,10 +1038,10 @@ class Cooked_Recipes {
 
                 endif;
 
-                if ( !empty($results) ):
-                    $gallery_types[$slug]['posts'] = $results;
-                else:
+                if ( ! $can_list ):
                     unset( $gallery_types[$slug] );
+                elseif ( ! empty( $results ) ):
+                    $gallery_types[$slug]['posts'] = $results;
                 endif;
 
             else:

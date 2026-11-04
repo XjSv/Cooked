@@ -404,4 +404,50 @@ class ShortcodesFiltersTest extends FilterTestCase {
         $this->assertStringContainsString( 'cooked-total-time', $html );
         $this->assertStringContainsString( '20 mins', $html );
     }
+
+    public function test_revslider_alias_is_not_cast_to_int() {
+        $GLOBALS['_cooked_test_shortcodes']['rev_slider'] = true;
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'      => 'revslider',
+            'revslider' => 'test-slider',
+        ];
+
+        $output = $this->shortcodes->cooked_gallery_shortcode( [] );
+
+        $this->assertStringContainsString( '[rev_slider alias="test-slider"]', $output );
+        $this->assertStringNotContainsString( 'alias="0"', $output );
+    }
+
+    public function test_revslider_uses_sr7_shortcode_when_registered() {
+        $GLOBALS['_cooked_test_shortcodes']['sr7'] = true;
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'      => 'revslider',
+            'revslider' => 'test-slider',
+        ];
+
+        $output = $this->shortcodes->cooked_gallery_shortcode( [] );
+
+        $this->assertStringContainsString( '[sr7 alias="test-slider"]', $output );
+        $this->assertStringNotContainsString( '[rev_slider', $output );
+    }
+
+    public function test_third_party_gallery_renders_empty_without_shortcode() {
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'   => 'envira',
+            'envira' => 12,
+        ];
+        $this->assertSame( '', $this->shortcodes->cooked_gallery_shortcode( [] ) );
+
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'      => 'soliloquy',
+            'soliloquy' => 13,
+        ];
+        $this->assertSame( '', $this->shortcodes->cooked_gallery_shortcode( [] ) );
+
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'      => 'revslider',
+            'revslider' => 'test-slider',
+        ];
+        $this->assertSame( '', $this->shortcodes->cooked_gallery_shortcode( [] ) );
+    }
 }

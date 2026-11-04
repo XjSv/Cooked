@@ -4,7 +4,7 @@ Donate link: https://github.com/sponsors/XjSv
 Tags: recipe, food blog, cooking, nutrition, recipe schema
 Requires at least: 6.8
 Tested up to: 7.2
-Stable tag: 1.17.0
+Stable tag: 1.17.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -44,6 +44,7 @@ Most recipe plugins require that you purchase a PRO version for features like nu
 * Powerful recipe search with categories and sorting.
 * Related recipes.
 * Photo galleries.
+* Works with Envira Gallery, Soliloquy Slider, and Slider Revolution.
 * Prep & cook times, difficulty levels and recipe notes.
 * Author pages listing each author's recipes.
 * Import from WP Recipe Maker, Delicious Recipes or CSV.
@@ -128,23 +129,24 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.17.0 Replaces Tooltipster with Floating UI tooltip library.
+Version 1.17.1
 
 == Changelog ==
+= 1.17.1 =
+* **FIX:** Restored Envira Gallery, Soliloquy Slider, and Slider Revolution in the recipe gallery. Lite versions are detected, Slider Revolution aliases stay as text, and the option stays available before a gallery or slider exists.
+* **FIX:** Kept password-protected recipes off the print view until the password is entered, including recipes embedded on a public page. Description meta uses the title instead of the excerpt while a password is required.
 
 = 1.17.0 =
 * **NEW:** Added uninstall option "Delete Cooked Data on Uninstall" under Advanced Settings. Recipes, settings, and uploads stay unless it is enabled.
-* **FIX:** Favoriting a recipe updates only the favorites list. Upgrade removes session fields previously stored in user meta.
 * **TWEAK:** Replaced Tooltipster with Floating UI tooltip library.
-* **FIX:** Fixed the Nutrition Facts bar stopping short under the serving size.
-* **FIX:** Fixed the [cooked-info] shortcode styles so both columns stay on one line when the content area is narrow.
-* **FIX:** Fixed the [cooked-info] shortcode so its items center below the mobile breakpoint.
-* **FIX:** Escaped the attachment titles when building the photo gallery HTML.
+* **FIX:** Favoriting a recipe updates only the favorites list. Upgrade removes session fields previously stored in user meta.
+* **FIX:** Fixed the [cooked-info] shortcode so both columns stay on one line when the content area is narrow, and its items center below the mobile breakpoint.
 * **FIX:** Stop the [cooked-info] shortcode from allowing script tags in later recipe fields, preventing stored XSS in excerpts, notes, and directions.
+* **FIX:** Fixed the Nutrition Facts bar stopping short under the serving size.
+* **FIX:** Escaped the attachment titles when building the photo gallery HTML.
 * **FIX:** Fixed printing when Disable Public Recipes is enabled.
 * **FIX:** Fixed ingredient and direction lists when upgrading recipes from Cooked 2.
-* **FIX:** Fixed CSV import so it only processes the file from the current upload.
-* **FIX:** Fixed CSV import so the uploaded file stays private.
+* **FIX:** Fixed CSV import so it only processes the file from the current upload, and the uploaded file stays private.
 * **FIX:** Fixed bulk ingredient parsing so large pastes stay limited.
 * **FIX:** Fixed the settings and import screens so page titles stay as written.
 * **FIX:** Fixed recipe saving so it only updates recipe posts.

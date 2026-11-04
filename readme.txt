@@ -133,8 +133,9 @@ Version 1.17.1
 
 == Changelog ==
 = 1.17.1 =
-* **FIX:** Restored Envira Gallery, Soliloquy Slider, and Slider Revolution in the recipe gallery. Lite versions are detected, Slider Revolution aliases stay as text, and the option stays available before a gallery or slider exists.
-* **FIX:** Kept password-protected recipes off the print view until the password is entered, including recipes embedded on a public page. Description meta uses the title instead of the excerpt while a password is required.
+* **FIX:** Fixed bug where Envira Gallery, Soliloquy Slider, and Slider Revolution were missing from the recipe gallery. Lite versions are detected, Slider Revolution aliases stay as text, and the option stays available before a gallery or slider exists.
+* **FIX:** Fixed bug where password-protected recipes could be printed before the password was entered, including recipes embedded on a public page. Description meta uses the title instead of the excerpt while a password is required.
+* **FIX:** Fixed bug where [cooked-related-recipes] inside an embedded recipe did not use that recipe when no id was set.
 
 = 1.17.0 =
 * **NEW:** Added uninstall option "Delete Cooked Data on Uninstall" under Advanced Settings. Recipes, settings, and uploads stay unless it is enabled.

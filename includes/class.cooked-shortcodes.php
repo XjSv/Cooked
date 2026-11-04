@@ -81,6 +81,7 @@ class Cooked_Shortcodes {
             'cooked-recipe',
             'cooked-recipe-list',
             'cooked-recipe-card',
+            'cooked-related-recipes',
         ];
 
         // Only process for Cooked shortcodes
@@ -1190,12 +1191,12 @@ class Cooked_Shortcodes {
     public function cooked_related_recipes_shortcode($atts, $content = null) {
         if ( is_admin() ) return false;
 
-        global $post, $_cooked_settings;
+        global $post, $recipe_settings, $_cooked_settings;
 
         // Shortcode Attributes
         $atts = shortcode_atts( Cooked_Related_Recipes::get_default_atts(), $atts );
 
-        // Get recipe ID - validate if provided, otherwise try current post
+        // Get recipe ID - explicit id, otherwise the recipe currently being rendered.
         $recipe_id = false;
 
         if (!empty($atts['id'])) {
@@ -1206,11 +1207,10 @@ class Cooked_Shortcodes {
                 // Invalid ID provided (e.g., "asdas", "", "0", "-5")
                 return '<p class="cooked-related-recipes-error">' . __('Invalid recipe ID specified. Please provide a valid numeric recipe ID.', 'cooked') . '</p>';
             }
-        } else {
-            // No ID provided, try to get from current post
-            if (isset($post->ID) && get_post_type($post->ID) === 'cp_recipe') {
-                $recipe_id = $post->ID;
-            }
+        } elseif ( isset( $recipe_settings['id'] ) && $recipe_settings['id'] ) {
+            $recipe_id = absint( $recipe_settings['id'] );
+        } elseif ( isset( $post->ID ) && get_post_type( $post->ID ) === 'cp_recipe' ) {
+            $recipe_id = (int) $post->ID;
         }
 
         if (!$recipe_id) {

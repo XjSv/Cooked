@@ -376,6 +376,48 @@ class ShortcodesFiltersTest extends FilterTestCase {
         $this->assertSame( [ 99 ], $seen_ids );
     }
 
+    public function test_related_recipes_uses_recipe_settings_when_embedded() {
+        $this->seed_related_recipe( 1 );
+        $this->seed_related_recipe( 8 );
+        $this->seed_related_recipe( 3587 );
+
+        $GLOBALS['post'] = (object) [
+            'ID'        => 1,
+            'post_type' => 'cp_recipe',
+        ];
+        $GLOBALS['recipe_settings']['id'] = 3587;
+
+        $seen_id = null;
+        $this->with_filter(
+            'cooked_related_recipes_result',
+            function ( $result, $source_recipe ) use ( &$seen_id ) {
+                $seen_id = (int) $source_recipe['id'];
+                return $result;
+            },
+            function () {
+                return $this->shortcodes->cooked_related_recipes_shortcode(
+                    [ 'include_ids' => '8' ]
+                );
+            },
+            3
+        );
+
+        $this->assertSame( 3587, $seen_id );
+    }
+
+    public function test_related_recipes_errors_without_recipe_context() {
+        $GLOBALS['post'] = (object) [
+            'ID'        => 50,
+            'post_type' => 'page',
+        ];
+        $GLOBALS['_cooked_test_posts'][50] = $GLOBALS['post'];
+        $GLOBALS['recipe_settings'] = [];
+
+        $output = $this->shortcodes->cooked_related_recipes_shortcode( [] );
+
+        $this->assertStringContainsString( 'cooked-related-recipes-error', $output );
+    }
+
     public function test_cooked_info_cook_time_accepts_string_minutes() {
         $GLOBALS['_cooked_settings']['recipe_info_display_options'] = [ 'timing_cook' ];
 

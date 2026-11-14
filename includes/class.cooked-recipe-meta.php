@@ -1278,7 +1278,11 @@ function cooked_render_recipe_fields( $post_id ) {
                                     echo '<option value="' . esc_attr( $gid ) . '"' . ( isset($recipe_settings['gallery'][$slug]) && $recipe_settings['gallery'][$slug] == $gid ? ' selected' : '' ) . '>' . esc_attr( $g ) . '</option>';
                                 endforeach; ?>
                             </select>
-                        <?php else: ?>
+                        <?php else:
+                            $stored_gallery_id = isset( $recipe_settings['gallery'][ $slug ] ) ? $recipe_settings['gallery'][ $slug ] : '';
+                            if ( is_scalar( $stored_gallery_id ) && $stored_gallery_id !== '' ): ?>
+                                <input type="hidden" name="_recipe_settings[gallery][<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $stored_gallery_id ); ?>" />
+                            <?php endif; ?>
                             <p><?php
                                 echo esc_html( sprintf(
                                     /* translators: %s: gallery or slider plugin name */

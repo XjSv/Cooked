@@ -328,6 +328,13 @@ class Cooked_Shortcodes {
             return $output;
         }
 
+        $password_form = self::published_recipe_password_form( $recipe_id );
+        if ( $password_form ) {
+            $output = '<div id="cooked-recipe-embed-' . intval( $recipe_id ) . '" class="cooked-recipe-embed">' . $password_form . '</div>';
+
+            return apply_filters( 'cooked_recipe_shortcode_output', $output, $recipe_id );
+        }
+
         $recipe_settings = Cooked_Recipes::get( $recipe_id, true );
         if ( ! $recipe_settings || empty( $recipe_settings ) ) {
             $output = wpautop( '<strong>[cooked-recipe id="' . intval( $recipe_id ) . '"]</strong><br><em>' . __( '(recipe not found or in draft status)', 'cooked' ) . '</em>' );
@@ -369,6 +376,24 @@ class Cooked_Shortcodes {
         $message = apply_filters( 'cooked_recipe_embed_blocked_message', $message, $recipe_id, self::$recipe_embed_stack );
 
         return wpautop( $message );
+    }
+
+    private static function published_recipe_password_form( $recipe_id ) {
+        $recipe_id = absint( $recipe_id );
+        if ( ! $recipe_id ) {
+            return '';
+        }
+
+        $recipe = get_post( $recipe_id );
+        if ( ! $recipe instanceof WP_Post || 'cp_recipe' !== $recipe->post_type || 'publish' !== $recipe->post_status ) {
+            return '';
+        }
+
+        if ( ! post_password_required( $recipe ) ) {
+            return '';
+        }
+
+        return get_the_password_form( $recipe );
     }
 
     public function cooked_gallery_shortcode($atts, $content = null) {
@@ -979,7 +1004,12 @@ class Cooked_Shortcodes {
         ], $atts);
 
         if ( isset( $atts['id'] ) && $atts['id'] ):
-            $recipe_settings = Cooked_Recipes::get( intval( $atts['id'] ), true );
+            $nutrition_id = intval( $atts['id'] );
+            $password_form = self::published_recipe_password_form( $nutrition_id );
+            if ( $password_form ) {
+                return $password_form;
+            }
+            $recipe_settings = Cooked_Recipes::get( $nutrition_id, true );
         else:
             $recipe_settings = !empty($recipe_settings) ? $recipe_settings : false;
         endif;

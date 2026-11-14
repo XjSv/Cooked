@@ -1,4 +1,6 @@
 import { test, expect, type Page } from '@playwright/test';
+import { ensureValidAuth } from '../../utils/auth';
+import { CONTRIB_USER } from '../../utils/users';
 import { deletePost, getCookedSettings, setCookedSettings, wpCliArgs } from '../../utils/wp-cli';
 
 test.describe.configure({ mode: 'serial' });
@@ -13,7 +15,9 @@ const excerptMarker = `E2E-PRINT-EXCERPT-${stamp}`;
 const seoMarker = `E2E-PRINT-SEO-${stamp}`;
 const ingredientMarker = `E2E-PRINT-INGREDIENT-${stamp}`;
 const notesMarker = `E2E-PRINT-NOTES-${stamp}`;
+const nutritionMarker = `424242${String(stamp).slice(-4)}`;
 const publicExcerptMarker = `E2E-PRINT-PUBLIC-EXCERPT-${stamp}`;
+const draftTitle = `E2E Print Password Draft ${stamp}`;
 const protectedSlug = `e2e-print-password-${stamp}`;
 const publicSlug = `e2e-print-public-${stamp}`;
 const pageSlug = `e2e-print-password-page-${stamp}`;
@@ -23,6 +27,7 @@ let testSettings: Record<string, unknown> = {};
 let protectedId = 0;
 let publicId = 0;
 let pageId = 0;
+let draftId = 0;
 let protectedPath = '';
 let publicPath = '';
 let pagePath = '';
@@ -51,7 +56,7 @@ function permalinkPath(id: number): string {
   return new URL(url).pathname;
 }
 
-function createFixtures(): { protectedId: number; publicId: number; pageId: number } {
+function createFixtures(): { protectedId: number; publicId: number; pageId: number; draftId: number } {
   const php = `
     $protected_id = wp_insert_post(array(
       'post_type' => 'cp_recipe',
@@ -72,7 +77,10 @@ function createFixtures(): { protectedId: number; publicId: number; pageId: numb
       'prep_time' => 5,
       'cook_time' => 10,
       'total_time' => 15,
-      'nutrition' => array('servings' => 2),
+      'nutrition' => array(
+        'servings' => 2,
+        'calories' => ${JSON.stringify(nutritionMarker)},
+      ),
       'ingredients' => array(
         array(
           'amount' => '1',
@@ -113,16 +121,32 @@ function createFixtures(): { protectedId: number; publicId: number; pageId: numb
     if (is_wp_error($page_id)) {
       WP_CLI::error($page_id->get_error_message());
     }
+    $contributor = get_user_by('login', ${JSON.stringify(CONTRIB_USER.user)});
+    if ( ! $contributor ) {
+      WP_CLI::error('Contributor user is missing.');
+    }
+    $draft_id = wp_insert_post(array(
+      'post_type' => 'post',
+      'post_status' => 'draft',
+      'post_author' => (int) $contributor->ID,
+      'post_title' => ${JSON.stringify(draftTitle)},
+      'post_content' => '[cooked-recipe id="' . intval($protected_id) . '"][cooked-nutrition id="' . intval($protected_id) . '"]',
+    ), true);
+    if (is_wp_error($draft_id)) {
+      WP_CLI::error($draft_id->get_error_message());
+    }
     echo wp_json_encode(array(
       'protectedId' => (int) $protected_id,
       'publicId' => (int) $public_id,
       'pageId' => (int) $page_id,
+      'draftId' => (int) $draft_id,
     ));
   `;
   return JSON.parse(wpCliArgs(['eval', php])) as {
     protectedId: number;
     publicId: number;
     pageId: number;
+    draftId: number;
   };
 }
 
@@ -149,6 +173,7 @@ test.beforeAll(() => {
   protectedId = created.protectedId;
   publicId = created.publicId;
   pageId = created.pageId;
+  draftId = created.draftId;
   protectedPath = permalinkPath(protectedId);
   publicPath = permalinkPath(publicId);
   pagePath = permalinkPath(pageId);
@@ -158,6 +183,7 @@ test.afterAll(() => {
   deletePost(protectedId);
   deletePost(publicId);
   deletePost(pageId);
+  deletePost(draftId);
   if (Object.keys(originalSettings).length) {
     setCookedSettings(originalSettings);
     wpCliArgs(['rewrite', 'flush', '--hard']);
@@ -185,6 +211,44 @@ test.describe('Password-protected print view', () => {
     expect(descriptionText).not.toContain(seoMarker);
     await expect(page.locator('meta[property="og:title"]').first()).toHaveAttribute('content', protectedTitle);
     await expect(page.locator('meta[property="og:url"]').first()).toHaveAttribute('content', new RegExp(protectedSlug));
+  });
+
+  test('shows a password form instead of an embedded protected recipe', async ({ page }) => {
+    await page.goto(pagePath, { waitUntil: 'domcontentloaded' });
+
+    const protectedEmbed = page.locator(`#cooked-recipe-embed-${protectedId}`);
+    await expect(protectedEmbed.locator('form.post-password-form')).toBeVisible();
+    await expect(protectedEmbed).not.toContainText(ingredientMarker);
+
+    const publicEmbed = page.locator(`#cooked-recipe-embed-${publicId}`);
+    await expect(publicEmbed).toContainText(publicExcerptMarker);
+    await expect(publicEmbed.locator('form.post-password-form')).toHaveCount(0);
+  });
+
+  test('hides a protected recipe on a contributor preview until the password is entered', async ({ browser }) => {
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    const previewPath = `/?p=${draftId}&preview=true`;
+
+    try {
+      await ensureValidAuth(page, CONTRIB_USER.user, CONTRIB_USER.password);
+      await page.goto(previewPath, { waitUntil: 'domcontentloaded' });
+      await expect(page.locator('form.post-password-form').first()).toBeVisible();
+
+      const lockedText = await page.locator('body').innerText();
+      expect(lockedText).not.toContain(ingredientMarker);
+      expect(lockedText).not.toContain(nutritionMarker);
+
+      await page.locator('form.post-password-form input[name="post_password"]').first().fill(recipePassword);
+      await page.locator('form.post-password-form input[type="submit"]').first().click();
+      await page.waitForLoadState('domcontentloaded');
+      await page.goto(previewPath, { waitUntil: 'domcontentloaded' });
+
+      await expect(page.locator(`#cooked-recipe-embed-${protectedId}`)).toContainText(ingredientMarker);
+      await expect(page.locator('.cooked-nutrition-label')).toContainText(nutritionMarker);
+    } finally {
+      await context.close();
+    }
   });
 
   test('prints after the password is entered', async ({ page }) => {

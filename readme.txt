@@ -136,6 +136,7 @@ Version 1.17.1 fixes Envira Gallery, Soliloquy Slider, and Slider Revolution in 
 = 1.17.1 =
 * **FIX:** Fixed bug where Envira Gallery, Soliloquy Slider, and Slider Revolution were missing from the recipe gallery. Lite versions are detected, Slider Revolution aliases stay as text, and the option stays available before a gallery or slider exists.
 * **FIX:** Fixed bug where password-protected recipes could be printed before the password was entered, including recipes embedded on a public page. Description meta uses the title instead of the excerpt while a password is required.
+* **FIX:** Fixed bug where [cooked-recipe] and [cooked-nutrition] showed a password-protected recipe before the password was entered.
 * **FIX:** Fixed bug where [cooked-related-recipes] inside an embedded recipe did not use that recipe when no id was set.
 
 = 1.17.0 =

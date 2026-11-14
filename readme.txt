@@ -129,9 +129,10 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.17.1
+Version 1.17.1 fixes Envira Gallery, Soliloquy Slider, and Slider Revolution in the recipe gallery, printing of password-protected recipes, and related recipes inside an embedded recipe.
 
 == Changelog ==
+
 = 1.17.1 =
 * **FIX:** Fixed bug where Envira Gallery, Soliloquy Slider, and Slider Revolution were missing from the recipe gallery. Lite versions are detected, Slider Revolution aliases stay as text, and the option stays available before a gallery or slider exists.
 * **FIX:** Fixed bug where password-protected recipes could be printed before the password was entered, including recipes embedded on a public page. Description meta uses the title instead of the excerpt while a password is required.

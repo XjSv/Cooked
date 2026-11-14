@@ -81,6 +81,7 @@ class Cooked_Shortcodes {
             'cooked-recipe',
             'cooked-recipe-list',
             'cooked-recipe-card',
+            'cooked-related-recipes',
         ];
 
         // Only process for Cooked shortcodes
@@ -327,6 +328,13 @@ class Cooked_Shortcodes {
             return $output;
         }
 
+        $password_form = self::published_recipe_password_form( $recipe_id );
+        if ( $password_form ) {
+            $output = '<div id="cooked-recipe-embed-' . intval( $recipe_id ) . '" class="cooked-recipe-embed">' . $password_form . '</div>';
+
+            return apply_filters( 'cooked_recipe_shortcode_output', $output, $recipe_id );
+        }
+
         $recipe_settings = Cooked_Recipes::get( $recipe_id, true );
         if ( ! $recipe_settings || empty( $recipe_settings ) ) {
             $output = wpautop( '<strong>[cooked-recipe id="' . intval( $recipe_id ) . '"]</strong><br><em>' . __( '(recipe not found or in draft status)', 'cooked' ) . '</em>' );
@@ -368,6 +376,24 @@ class Cooked_Shortcodes {
         $message = apply_filters( 'cooked_recipe_embed_blocked_message', $message, $recipe_id, self::$recipe_embed_stack );
 
         return wpautop( $message );
+    }
+
+    private static function published_recipe_password_form( $recipe_id ) {
+        $recipe_id = absint( $recipe_id );
+        if ( ! $recipe_id ) {
+            return '';
+        }
+
+        $recipe = get_post( $recipe_id );
+        if ( ! $recipe instanceof WP_Post || 'cp_recipe' !== $recipe->post_type || 'publish' !== $recipe->post_status ) {
+            return '';
+        }
+
+        if ( ! post_password_required( $recipe ) ) {
+            return '';
+        }
+
+        return get_the_password_form( $recipe );
     }
 
     public function cooked_gallery_shortcode($atts, $content = null) {
@@ -466,15 +492,32 @@ class Cooked_Shortcodes {
                 break;
 
                 case 'envira':
-                    return ( $recipe_settings['gallery']['envira'] ? '<div class="cooked-recipe-gallery-envira">' . do_shortcode('[envira-gallery id="' . intval( $recipe_settings['gallery']['envira'] ) . '"]') . '</div>' : '' );
+                    if ( empty( $recipe_settings['gallery']['envira'] ) || ! shortcode_exists( 'envira-gallery' ) ):
+                        return '';
+                    endif;
+                    return '<div class="cooked-recipe-gallery-envira">' . do_shortcode( '[envira-gallery id="' . intval( $recipe_settings['gallery']['envira'] ) . '"]' ) . '</div>';
                 break;
 
                 case 'soliloquy':
-                    return ( $recipe_settings['gallery']['soliloquy'] ? '<div class="cooked-recipe-gallery-soliloquy">' . do_shortcode('[soliloquy id="' . intval( $recipe_settings['gallery']['soliloquy'] ) . '"]') . '</div>' : '' );
+                    if ( empty( $recipe_settings['gallery']['soliloquy'] ) || ! shortcode_exists( 'soliloquy' ) ):
+                        return '';
+                    endif;
+                    return '<div class="cooked-recipe-gallery-soliloquy">' . do_shortcode( '[soliloquy id="' . intval( $recipe_settings['gallery']['soliloquy'] ) . '"]' ) . '</div>';
                 break;
 
                 case 'revslider':
-                    return ( $recipe_settings['gallery']['revslider'] ? '<div class="cooked-recipe-gallery-revslider">' . do_shortcode('[rev_slider alias="' . intval( $recipe_settings['gallery']['revslider'] ) . '"]') . '</div>' : '' );
+                    if ( empty( $recipe_settings['gallery']['revslider'] ) ):
+                        return '';
+                    endif;
+                    $revslider_alias = esc_attr( $recipe_settings['gallery']['revslider'] );
+                    if ( shortcode_exists( 'sr7' ) ):
+                        $revslider_shortcode = '[sr7 alias="' . $revslider_alias . '"]';
+                    elseif ( shortcode_exists( 'rev_slider' ) ):
+                        $revslider_shortcode = '[rev_slider alias="' . $revslider_alias . '"]';
+                    else:
+                        return '';
+                    endif;
+                    return '<div class="cooked-recipe-gallery-revslider">' . do_shortcode( $revslider_shortcode ) . '</div>';
                 break;
 
             endswitch;
@@ -961,7 +1004,12 @@ class Cooked_Shortcodes {
         ], $atts);
 
         if ( isset( $atts['id'] ) && $atts['id'] ):
-            $recipe_settings = Cooked_Recipes::get( intval( $atts['id'] ), true );
+            $nutrition_id = intval( $atts['id'] );
+            $password_form = self::published_recipe_password_form( $nutrition_id );
+            if ( $password_form ) {
+                return $password_form;
+            }
+            $recipe_settings = Cooked_Recipes::get( $nutrition_id, true );
         else:
             $recipe_settings = !empty($recipe_settings) ? $recipe_settings : false;
         endif;
@@ -1173,12 +1221,12 @@ class Cooked_Shortcodes {
     public function cooked_related_recipes_shortcode($atts, $content = null) {
         if ( is_admin() ) return false;
 
-        global $post, $_cooked_settings;
+        global $post, $recipe_settings, $_cooked_settings;
 
         // Shortcode Attributes
         $atts = shortcode_atts( Cooked_Related_Recipes::get_default_atts(), $atts );
 
-        // Get recipe ID - validate if provided, otherwise try current post
+        // Get recipe ID - explicit id, otherwise the recipe currently being rendered.
         $recipe_id = false;
 
         if (!empty($atts['id'])) {
@@ -1189,11 +1237,10 @@ class Cooked_Shortcodes {
                 // Invalid ID provided (e.g., "asdas", "", "0", "-5")
                 return '<p class="cooked-related-recipes-error">' . __('Invalid recipe ID specified. Please provide a valid numeric recipe ID.', 'cooked') . '</p>';
             }
-        } else {
-            // No ID provided, try to get from current post
-            if (isset($post->ID) && get_post_type($post->ID) === 'cp_recipe') {
-                $recipe_id = $post->ID;
-            }
+        } elseif ( isset( $recipe_settings['id'] ) && $recipe_settings['id'] ) {
+            $recipe_id = absint( $recipe_settings['id'] );
+        } elseif ( isset( $post->ID ) && get_post_type( $post->ID ) === 'cp_recipe' ) {
+            $recipe_id = (int) $post->ID;
         }
 
         if (!$recipe_id) {

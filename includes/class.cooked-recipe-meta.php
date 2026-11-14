@@ -1266,18 +1266,33 @@ function cooked_render_recipe_fields( $post_id ) {
             </div>
 
             <?php foreach( $cooked_gallery_types as $slug => $gtype ):
-                if ( isset($gtype['posts']) && !empty($gtype['posts']) ): ?>
+                if ( $slug === 'cooked' ):
+                    continue;
+                endif; ?>
                     <div class="recipe-setting-block cooked-conditional-hidden" data-condition="cooked_gallery_type" data-value="<?php echo esc_attr( $slug ); ?>">
                         <h3 class="cooked-settings-title"><?php echo esc_html( $gtype['title'] ); ?></h3>
-                        <select id="cooked_gallery_type" name="_recipe_settings[gallery][<?php echo esc_attr( $slug ); ?>]">
-                            <option value=""><?php esc_html_e('Choose one...','cooked'); ?></option>
-                            <?php foreach( $gtype['posts'] as $gid => $g ):
-                                echo '<option value="' . esc_attr( $gid ) . '"' . ( isset($recipe_settings['gallery'][$slug]) && $recipe_settings['gallery'][$slug] == $gid ? ' selected' : '' ) . '>' . esc_attr( $g ) . '</option>';
-                            endforeach; ?>
-                        </select>
+                        <?php if ( ! empty( $gtype['posts'] ) ): ?>
+                            <select id="cooked_gallery_type" name="_recipe_settings[gallery][<?php echo esc_attr( $slug ); ?>]">
+                                <option value=""><?php esc_html_e('Choose one...','cooked'); ?></option>
+                                <?php foreach( $gtype['posts'] as $gid => $g ):
+                                    echo '<option value="' . esc_attr( $gid ) . '"' . ( isset($recipe_settings['gallery'][$slug]) && $recipe_settings['gallery'][$slug] == $gid ? ' selected' : '' ) . '>' . esc_attr( $g ) . '</option>';
+                                endforeach; ?>
+                            </select>
+                        <?php else:
+                            $stored_gallery_id = isset( $recipe_settings['gallery'][ $slug ] ) ? $recipe_settings['gallery'][ $slug ] : '';
+                            if ( is_scalar( $stored_gallery_id ) && $stored_gallery_id !== '' ): ?>
+                                <input type="hidden" name="_recipe_settings[gallery][<?php echo esc_attr( $slug ); ?>]" value="<?php echo esc_attr( $stored_gallery_id ); ?>" />
+                            <?php endif; ?>
+                            <p><?php
+                                echo esc_html( sprintf(
+                                    /* translators: %s: gallery or slider plugin name */
+                                    __( 'Nothing to choose yet. Create one in %s, then return here and select it.', 'cooked' ),
+                                    $gtype['title']
+                                ) );
+                            ?></p>
+                        <?php endif; ?>
                     </div>
-                <?php endif;
-            endforeach; ?>
+            <?php endforeach; ?>
 
             <div class="recipe-setting-block cooked-conditional-hidden" data-condition="cooked_gallery_type" data-value="cooked">
 

@@ -134,6 +134,51 @@ class RecipesFiltersTest extends FilterTestCase {
         $this->assertSame( 'filtered_gallery', $GLOBALS['_cooked_test_last_query']['meta_key'] );
     }
 
+    public function test_cooked_gallery_types_accepts_a_class_list() {
+        $GLOBALS['_cooked_test_query_posts'] = [
+            (object) [
+                'ID'         => 51,
+                'post_title' => 'Lite Gallery Post',
+            ],
+        ];
+        $GLOBALS['_cooked_test_titles'][51] = 'Lite Gallery Post';
+
+        $types = $this->with_filter(
+            'cooked_gallery_types',
+            function ( $value ) {
+                $value['lite_gallery'] = [
+                    'title'          => 'Lite Gallery',
+                    'required_class' => [ 'Cooked_Test_Missing_Gallery', 'Cooked_Test_Lite_Gallery' ],
+                ];
+                $value['missing_gallery'] = [
+                    'title'          => 'Missing Gallery',
+                    'required_class' => 'Cooked_Test_Missing_Gallery',
+                ];
+                return $value;
+            },
+            function () {
+                return Cooked_Recipes::gallery_types();
+            }
+        );
+
+        $this->assertArrayHasKey( 'lite_gallery', $types );
+        $this->assertSame( 'Lite Gallery Post', $types['lite_gallery']['posts'][51] );
+        $this->assertArrayNotHasKey( 'missing_gallery', $types );
+    }
+
+    public function test_gallery_types_keeps_a_detected_plugin_with_no_items() {
+        $types = Cooked_Recipes::gallery_types();
+
+        $this->assertArrayHasKey( 'envira', $types );
+        $this->assertArrayNotHasKey( 'posts', $types['envira'] );
+    }
+
+    public function test_gallery_types_skips_revslider_without_legacy_api() {
+        $types = Cooked_Recipes::gallery_types();
+
+        $this->assertArrayNotHasKey( 'revslider', $types );
+    }
+
     public function test_gallery_types_restores_global_post_after_inner_query() {
         $main_post = (object) [
             'ID'         => 10,
@@ -581,6 +626,10 @@ class RecipesFiltersTest extends FilterTestCase {
 }
 
 class Envira_Gallery {}
+
+class Cooked_Test_Lite_Gallery {}
+
+class RevSlider {}
 
 class Cooked_Filter_Custom_Gallery {}
 

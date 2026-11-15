@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc8e74fc980bf1096dcf1d2f20046124",
+    "content-hash": "3b2e8dc4b2c9ee65e97a15fa4e1df9c3",
     "packages": [
         {
             "name": "nxp/math-executor",
@@ -1024,11 +1024,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.3.4",
+            "version": "2.3.5",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/f20ce6f3c82556cfcfc086b152445a12d1d64fff",
-                "reference": "f20ce6f3c82556cfcfc086b152445a12d1d64fff",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/645a1bd6bead15fc1b8474137467961d0fa30a79",
+                "reference": "645a1bd6bead15fc1b8474137467961d0fa30a79",
                 "shasum": ""
             },
             "require": {
@@ -1084,7 +1084,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-10-28T22:38:53+00:00"
+            "time": "2026-11-03T12:14:22+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1407,16 +1407,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.6.38",
+            "version": "9.6.39",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "8b5f757e8e92071bfdbfa93943f94f84c4e31007"
+                "reference": "133394556c813b61aa3481a87bef8419d8ec95c0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/8b5f757e8e92071bfdbfa93943f94f84c4e31007",
-                "reference": "8b5f757e8e92071bfdbfa93943f94f84c4e31007",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/133394556c813b61aa3481a87bef8419d8ec95c0",
+                "reference": "133394556c813b61aa3481a87bef8419d8ec95c0",
                 "shasum": ""
             },
             "require": {
@@ -1490,7 +1490,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.38"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.39"
             },
             "funding": [
                 {
@@ -1498,7 +1498,7 @@
                     "type": "other"
                 }
             ],
-            "time": "2026-10-05T05:44:26+00:00"
+            "time": "2026-11-13T11:05:34+00:00"
         },
         {
             "name": "sebastian/cli-parser",

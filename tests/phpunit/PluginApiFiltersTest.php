@@ -605,4 +605,49 @@ class PluginApiFiltersTest extends FilterTestCase {
         $ids = array_column( $tools, 'id' );
         $this->assertContains( 'sentinel_tool', $ids );
     }
+
+    public function test_empty_third_party_gallery_keeps_the_stored_id_in_the_editor() {
+        $GLOBALS['_cooked_test_post_meta'][1]['_recipe_settings'] = [
+            'cooked_version' => COOKED_VERSION,
+            'gallery'        => [
+                'type'          => 'empty_gallery',
+                'empty_gallery' => 77,
+                'empty_slider'  => 'home-slider',
+            ],
+        ];
+
+        $html = $this->with_filter(
+            'cooked_gallery_types',
+            function ( $types ) {
+                $types['empty_gallery'] = [
+                    'title'          => 'Empty Gallery',
+                    'required_class' => 'Cooked_Test_Empty_Gallery_Plugin',
+                ];
+                $types['empty_slider'] = [
+                    'title'          => 'Empty Slider',
+                    'required_class' => 'Cooked_Test_Empty_Gallery_Plugin',
+                ];
+                return $types;
+            },
+            function () {
+                return $this->capture_output(
+                    function () {
+                        cooked_render_recipe_fields( 1 );
+                    }
+                );
+            }
+        );
+
+        $this->assertStringContainsString( 'Nothing to choose yet. Create one in Empty Gallery', $html );
+        $this->assertStringContainsString( 'name="_recipe_settings[gallery][empty_gallery]"', $html );
+        $this->assertStringContainsString( 'value="77"', $html );
+        $this->assertStringContainsString( 'name="_recipe_settings[gallery][empty_slider]"', $html );
+        $this->assertStringContainsString( 'value="home-slider"', $html );
+        $this->assertDoesNotMatchRegularExpression(
+            '/<select[^>]*name="_recipe_settings\[gallery\]\[(empty_gallery|empty_slider)\]"/',
+            $html
+        );
+    }
 }
+
+class Cooked_Test_Empty_Gallery_Plugin {}

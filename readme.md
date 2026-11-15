@@ -2,11 +2,11 @@
 
 # Cooked - A Modern and Customizable Recipe Plugin for WordPress
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more.
+Free WordPress recipe plugin: recipe schema, nutrition labels, timers, metric/imperial switching, allergens, step videos, recipe imports and more.
 
 ## Description
 
-Cooked is the absolute best way to create & display recipes with WordPress. SEO optimized (rich snippets), galleries, cooking timers, printable recipes and much more. Check out the full list below.
+Cooked makes it easy to create, display and share beautiful recipes in WordPress. You get Google-ready recipe schema, nutrition facts, interactive timers, printable recipes, metric/imperial switching and more, all free. Check out the full list below.
 
 #### Quality design & usability
 
@@ -14,7 +14,7 @@ Using the drag & drop recipe builder, you can create your recipes quickly and wi
 
 #### Google-friendly
 
-Cooked automatically includes semantic structure and schema.org microdata into each and every recipe you publish. This allows Google to display your recipes across a variety of device sizes and platforms.
+Cooked automatically adds Google-ready Recipe structured data (JSON-LD, schema.org) to every recipe you publish, including ingredients, step-by-step instructions, times and nutrition, so your recipes can show up as rich results in search.
 
 #### Many premium features already included
 
@@ -22,24 +22,46 @@ Most recipe plugins require that you purchase a PRO version for features like nu
 
 ## Features
 
-* Drag & drop ingredients and directions.
-* SEO Optimized - Google Structured Data and Schema.org support.
-* Beautiful grid-based masonry recipe lists.
-* Prep & Cooking Times
-* Photo Galleries
-* Nutrition Facts
-* Difficulty Levels
-* Recipe Notes
-* Powerful recipe search with a text search, categories & sorting options.
-* Author template to list recipes by a single author.
-* Cooking times with clickable, interactive timers.
-* Very developer-friendly with loads of hooks & filters.
-* Servings switcher to adjust ingredient amounts.
-* Ingredient Substitutions - Add alternative ingredients for dietary restrictions or preferences.
-* CSV Import - Bulk import recipes from CSV files with support for ingredients, directions, substitutions, and more.
-* And more to come...
+* Drag & drop recipe builder with section headings and Bulk Add for ingredients and directions.
+* Google Recipe schema (JSON-LD) on every recipe.
+* Responsive recipe grid that adapts to any screen size.
+* Servings switcher and metric/imperial unit conversion.
+* Allergen labels for the 14 major allergens (FDA + EU), with icons.
+* Ingredient substitutions for dietary needs and preferences.
+* Step images and step video clips.
+* Interactive cooking timers.
+* FDA-style Nutrition Facts label.
+* Printable recipes with print options and your site logo.
+* Full-Screen cook mode that keeps the screen awake.
+* Dark Mode (Off, On or Auto).
+* Powerful recipe search with categories and sorting.
+* Related recipes.
+* Photo galleries.
+* Works with Envira Gallery, Soliloquy Slider, and Slider Revolution.
+* Prep & cook times, difficulty levels and recipe notes.
+* Author pages listing each author's recipes.
+* Import from WP Recipe Maker, Delicious Recipes or CSV.
+* WPML and Polylang support.
+* Works with Elementor and Divi.
+* Built for developers: 167 actions and filters, REST API and WP-CLI.
 
-Of course, if you want even more, you can always check out the [PRO](https://cooked.pro) version of Cooked. It adds features like ratings & favorites, recipe submissions, and so much more.
+= Cooked Pro =
+
+Want even more? [Cooked Pro](https://cooked.pro/get-cooked/) adds:
+
+* Star or thumbs ratings (guests too).
+* Favorites and user profiles.
+* Front-end recipe submissions with approval and email alerts.
+* Sharing to Facebook, X / Twitter, Pinterest, Threads, Bluesky, Viber, BigOven and Email.
+* Cuisines, Cooking Methods, Diets and Tags.
+* Automatic nutrition via Edamam.
+* Modern Grid, Fitness, Full-Width and Compact layouts, with Load More or infinite scroll.
+* Ingredient links (great for affiliate links).
+* Next & previous recipe navigation.
+
+= Developers love it =
+
+Cooked has a whole bunch of actions and filters to customize Cooked as much as you need to. Be sure to check out the [Developer Documentation](https://docs.cooked.pro/).
 
 ## Installation/Update - WordPress.org (Recommended)
 

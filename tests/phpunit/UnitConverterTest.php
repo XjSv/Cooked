@@ -61,8 +61,8 @@ class UnitConverterTest extends TestCase {
 
 	public function test_get_target_unit() {
 		$this->assertSame( 'ml', Cooked_Unit_Converter::get_target_unit( 'cup' ) );
-		$this->assertSame( 'ml', Cooked_Unit_Converter::get_target_unit( 'tsp' ) );
-		$this->assertSame( 'ml', Cooked_Unit_Converter::get_target_unit( 'tbsp' ) );
+		$this->assertNull( Cooked_Unit_Converter::get_target_unit( 'tsp' ) );
+		$this->assertNull( Cooked_Unit_Converter::get_target_unit( 'tbsp' ) );
 		$this->assertSame( 'ml', Cooked_Unit_Converter::get_target_unit( 'floz' ) );
 		$this->assertSame( 'l', Cooked_Unit_Converter::get_target_unit( 'gal' ) );
 		$this->assertSame( 'ml', Cooked_Unit_Converter::get_target_unit( 'pt' ) );
@@ -95,6 +95,7 @@ class UnitConverterTest extends TestCase {
 	}
 
 	public function test_cross_type_conversion_returns_null() {
+		// Density conversion lives in convert_for_ingredient(), not convert().
 		$this->assertNull( Cooked_Unit_Converter::convert( 1, 'cup', 'g' ) );
 		$this->assertNull( Cooked_Unit_Converter::convert( 1, 'oz', 'ml' ) );
 		$this->assertNull( Cooked_Unit_Converter::convert( 1, 'cup', 'oz' ) );
@@ -120,5 +121,59 @@ class UnitConverterTest extends TestCase {
 		$this->assertNotNull( $result );
 		$this->assertSame( 'g', $result['unit'] );
 		$this->assertEqualsWithDelta( 283.4952, $result['amount'], 0.0001 );
+	}
+
+	/**
+	 * @dataProvider data_resolve_target_unit
+	 */
+	public function test_resolve_target_unit( $from, $amount, $name, $system, $expected ) {
+		$this->assertSame(
+			$expected,
+			Cooked_Unit_Converter::resolve_target_unit( $from, $amount, $name, $system )
+		);
+	}
+
+	public function data_resolve_target_unit() {
+		return [
+			'tsp stays'              => [ 'tsp', 0.5, 'salt', 'metric', null ],
+			'tbsp stays'             => [ 'tbsp', 2, 'olive oil', 'metric', null ],
+			'cup without a name'     => [ 'cup', 1, null, 'metric', 'ml' ],
+			'large cups step up'     => [ 'cup', 8, null, 'metric', 'l' ],
+			'one pound stays grams'  => [ 'lb', 1, null, 'metric', 'g' ],
+			'four pounds step up'    => [ 'lb', 4, null, 'metric', 'kg' ],
+			'five ml is a teaspoon'  => [ 'ml', 5, null, 'imperial', 'tsp' ],
+			'fifteen ml is a tablespoon' => [ 'ml', 15, null, 'imperial', 'tbsp' ],
+			'thirty ml is tablespoons' => [ 'ml', 30, null, 'imperial', 'tbsp' ],
+			'sixty ml is fluid ounces' => [ 'ml', 60, null, 'imperial', 'floz' ],
+			'two hundred forty ml is a cup' => [ 'ml', 240, null, 'imperial', 'cup' ],
+			'plain grams are ounces' => [ 'g', 100, null, 'imperial', 'oz' ],
+			'unknown unit'           => [ 'nonexistent', 1, null, 'metric', null ],
+		];
+	}
+
+	/**
+	 * @dataProvider data_round_converted_amount
+	 */
+	public function test_round_converted_amount( $amount, $unit, $expected ) {
+		$this->assertEqualsWithDelta(
+			$expected,
+			Cooked_Unit_Converter::round_converted_amount( $amount, $unit ),
+			0.0001
+		);
+	}
+
+	public function data_round_converted_amount() {
+		return [
+			'under ten ml'           => [ 9.9, 'ml', 10 ],
+			'twelve ml'              => [ 12, 'ml', 10 ],
+			'thirteen ml'            => [ 13, 'ml', 15 ],
+			'one cup in ml'          => [ 236.588, 'ml', 235 ],
+			'eight cups in litres'   => [ 1.89271, 'l', 1.9 ],
+			'four ounces in grams'   => [ 113.398, 'g', 115 ],
+			'four pounds in kilograms' => [ 1.81437, 'kg', 1.8 ],
+			'cup fraction stays'     => [ 1.25, 'cup', 1.25 ],
+			'seven ounces'           => [ 7.05, 'oz', 7 ],
+			'three and a half ounces' => [ 3.527, 'oz', 3.5 ],
+		];
 	}
 }

@@ -447,6 +447,17 @@ class Cooked_Settings {
                         'default' => apply_filters('cooked_recipe_wp_editor_roles_defaults', ['administrator', 'editor', 'cooked_recipe_editor']),
                         'options' => $role_options
                     ],
+                    'unit_conversion' => [
+                        'title' => __('Unit Conversion', 'cooked'),
+                        'desc' => __('Used when the measurement system switcher is turned on.', 'cooked'),
+                        'type' => 'checkboxes',
+                        'default' => [ 'keep_spoons', 'round_converted', 'density_cups' ],
+                        'options' => [
+                            'keep_spoons' => __('Keep teaspoons and tablespoons unchanged when switching systems.', 'cooked'),
+                            'round_converted' => __('Round converted amounts to kitchen-friendly numbers.', 'cooked'),
+                            'density_cups' => __('Convert cups of dry ingredients to grams using the ingredient table.', 'cooked'),
+                        ],
+                    ],
                     'advanced' => [
                         'title' => __('Advanced Settings', 'cooked'),
                         'desc' => '',
@@ -462,7 +473,7 @@ class Cooked_Settings {
                                 /* translators: an option to disable "meta" tags. */
                                 'disable_meta_tags' => '<strong>' . sprintf(__('Disable %s Tags', 'cooked'), 'Cooked <code>&lt;meta&gt;</code>') . '</strong> &mdash; ' . __('Prevents duplicates when tags already exist.', 'cooked'),
                                 'disable_servings_switcher' => '<strong>' . __('Disable "Servings Switcher"', 'cooked') . '</strong> &mdash; ' . __('Removes the servings dropdown on recipes.', 'cooked'),
-                                'enable_measurement_switcher' => '<strong>' . __('Enable "Measurement System Switcher"', 'cooked') . '</strong> &mdash; ' . __('Shows the Metric/Imperial toggle on recipes.', 'cooked'),
+                                'enable_measurement_switcher' => '<strong>' . __('Enable "Measurement System Switcher"', 'cooked') . '</strong> &mdash; ' . __('Shows the Metric/US Customary toggle on recipes.', 'cooked'),
                                 'disable_schema_output' => '<strong>' . __('Disable Recipe Schema Output', 'cooked') . '</strong> &mdash; ' . __('You should only do this if you\'re using something else to output schema information.', 'cooked'),
                                 'disable_cp_recipe_archive' => '<strong>' . __( 'Disable Recipe Archive Page', 'cooked' ) . '</strong> &mdash; ' . sprintf(
                                     /* translators: %s: recipe archive URL, e.g. https://example.com/recipe-archive/ */

@@ -176,6 +176,95 @@ class RecipesTest extends TestCase {
         $this->assertNotContains( 'pwned-direction', array_column( $directions, 'content' ) );
         $this->assertNotContains( 'pwned-direction', array_column( $directions, 'section_heading_name' ) );
     }
+
+    public function test_recipe_measurement_system_counts_imperial_units() {
+        $system = Cooked_Recipes::recipe_measurement_system( [
+            'ingredients' => [
+                [ 'measurement' => 'cup' ],
+                [ 'measurement' => 'tbsp' ],
+            ],
+        ] );
+
+        $this->assertSame( 'imperial', $system );
+    }
+
+    public function test_recipe_measurement_system_counts_metric_units() {
+        $system = Cooked_Recipes::recipe_measurement_system( [
+            'ingredients' => [
+                [ 'measurement' => 'g' ],
+                [ 'measurement' => 'ml' ],
+            ],
+        ] );
+
+        $this->assertSame( 'metric', $system );
+    }
+
+    public function test_recipe_measurement_system_uses_the_majority_including_substitutions() {
+        $system = Cooked_Recipes::recipe_measurement_system( [
+            'ingredients' => [
+                [ 'measurement' => 'cup' ],
+                [ 'measurement' => 'cup', 'sub_measurement' => 'g' ],
+                [ 'measurement' => 'tsp' ],
+                [ 'measurement' => 'pinch' ],
+            ],
+        ] );
+
+        $this->assertSame( 'imperial', $system );
+    }
+
+    public function test_recipe_measurement_system_falls_back_to_metric_without_system_units() {
+        $system = Cooked_Recipes::recipe_measurement_system( [
+            'ingredients' => [
+                [ 'measurement' => 'pinch' ],
+                [ 'measurement' => 'stick' ],
+            ],
+        ] );
+
+        $this->assertSame( 'metric', $system );
+    }
+
+    public function test_measurement_system_switcher_labels_the_authored_system() {
+        $GLOBALS['_cooked_settings'] = [
+            'advanced' => [ 'enable_measurement_switcher' ],
+        ];
+        $GLOBALS['recipe_settings'] = [
+            'ingredients' => [
+                [ 'measurement' => 'cup' ],
+                [ 'measurement' => 'tbsp' ],
+            ],
+        ];
+        unset( $GLOBALS['_cooked_test_query_vars']['measurement_system'] );
+
+        ob_start();
+        Cooked_Recipes::measurement_system_switcher();
+        $html = ob_get_clean();
+
+        $this->assertStringContainsString( 'Metric', $html );
+        $this->assertStringContainsString( 'Imperial', $html );
+        $this->assertStringNotContainsString( 'Default', $html );
+        $this->assertStringContainsString( '<option value="" selected="selected">Imperial</option>', $html );
+        $this->assertStringContainsString( '<option value="metric">Metric</option>', $html );
+    }
+
+    public function test_measurement_system_switcher_keeps_an_explicit_choice_selected() {
+        $GLOBALS['_cooked_settings'] = [
+            'advanced' => [ 'enable_measurement_switcher' ],
+        ];
+        $GLOBALS['recipe_settings'] = [
+            'ingredients' => [
+                [ 'measurement' => 'cup' ],
+            ],
+        ];
+        $GLOBALS['_cooked_test_query_vars']['measurement_system'] = 'metric';
+
+        ob_start();
+        Cooked_Recipes::measurement_system_switcher();
+        $html = ob_get_clean();
+
+        $this->assertStringContainsString( '<option value="metric" selected="selected">Metric</option>', $html );
+        $this->assertStringContainsString( '<option value="">Imperial</option>', $html );
+        unset( $GLOBALS['_cooked_test_query_vars']['measurement_system'] );
+    }
 }
 
 class Cooked_C2_Object_Fixture {

@@ -1057,27 +1057,73 @@ class Cooked_Recipes {
         return $gallery_types;
     }
 
+    public static function recipe_measurement_system( $recipe = null ) {
+        if ( ! is_array( $recipe ) ) {
+            global $recipe_settings;
+            $recipe = is_array( $recipe_settings ) ? $recipe_settings : [];
+        }
+
+        $counts = [
+            'metric' => 0,
+            'imperial' => 0,
+        ];
+        $measurements = Cooked_Measurements::get();
+        $ingredients = ( isset( $recipe['ingredients'] ) && is_array( $recipe['ingredients'] ) ) ? $recipe['ingredients'] : [];
+
+        foreach ( $ingredients as $ingredient ) {
+            if ( ! is_array( $ingredient ) ) {
+                continue;
+            }
+            foreach ( [ 'measurement', 'sub_measurement' ] as $field ) {
+                if ( empty( $ingredient[ $field ] ) || ! isset( $measurements[ $ingredient[ $field ] ]['system'] ) ) {
+                    continue;
+                }
+                $system = $measurements[ $ingredient[ $field ] ]['system'];
+                if ( isset( $counts[ $system ] ) ) {
+                    $counts[ $system ]++;
+                }
+            }
+        }
+
+        if ( $counts['imperial'] > $counts['metric'] ) {
+            $system = 'imperial';
+        } else {
+            $system = 'metric';
+        }
+
+        $system = apply_filters( 'cooked_recipe_measurement_system', $system, $recipe );
+        if ( $system !== 'metric' && $system !== 'imperial' ) {
+            $system = 'metric';
+        }
+
+        return $system;
+    }
+
     public static function measurement_system_switcher() {
-        global $_cooked_settings, $post;
+        global $_cooked_settings, $recipe_settings;
         $switcher_enabled = ( isset( $_cooked_settings['advanced'] ) && in_array( 'enable_measurement_switcher', $_cooked_settings['advanced'] ) ? true : false );
         $printing = self::is_print_request();
 
         if ( !$printing && $switcher_enabled ):
-            $current = esc_html( get_query_var( 'measurement_system', '' ) );
+            $recipe = is_array( $recipe_settings ) ? $recipe_settings : [];
+            $authored = self::recipe_measurement_system( $recipe );
+            $requested = get_query_var( 'measurement_system', '' );
+            $requested = ( $requested === 'metric' || $requested === 'imperial' ) ? $requested : '';
+            $active = $requested !== '' ? $requested : $authored;
             $labels = [
-                '' => __( 'Default', 'cooked' ),
                 'metric' => __( 'Metric', 'cooked' ),
                 'imperial' => __( 'Imperial', 'cooked' ),
             ];
-            $current_label = isset( $labels[ $current ] ) ? $labels[ $current ] : $labels[''];
+            $current_label = $labels[ $active ];
             echo '<span class="cooked-measurement-system"><span class="cooked-measurement-system-icon"><i class="cooked-icon cooked-icon-gear"></i></span>';
                 echo '<strong class="cooked-meta-title">' . esc_html__( 'Units', 'cooked' ) . '</strong>';
                 echo '<a aria-label="' . esc_attr( $current_label ) . '" href="#">' . esc_html( $current_label ) . '</a>';
                 echo '<label for="cooked-measurement-system-changer" class="screen-reader-text">' . esc_html__( 'Measurement System', 'cooked' ) . '</label>';
                 echo '<select id="cooked-measurement-system-changer" name="measurement_system" class="cooked-measurement-system-changer">';
-                    echo '<option value=""' . selected( $current, '', false ) . '>' . esc_html__( 'Default', 'cooked' ) . '</option>';
-                    echo '<option value="metric"' . selected( $current, 'metric', false ) . '>' . esc_html__( 'Metric', 'cooked' ) . '</option>';
-                    echo '<option value="imperial"' . selected( $current, 'imperial', false ) . '>' . esc_html__( 'Imperial', 'cooked' ) . '</option>';
+                    foreach ( $labels as $system => $label ):
+                        $value = ( $system === $authored ) ? '' : $system;
+                        echo '<option value="' . esc_attr( $value ) . '"' . ( $active === $system ? ' selected="selected"' : '' ) . '>' . esc_html( $label ) . '</option>';
+                    endforeach;
                 echo '</select>';
             echo '</span>';
         endif;

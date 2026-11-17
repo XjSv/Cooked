@@ -240,9 +240,9 @@ class RecipesTest extends TestCase {
         $html = ob_get_clean();
 
         $this->assertStringContainsString( 'Metric', $html );
-        $this->assertStringContainsString( 'Imperial', $html );
+        $this->assertStringContainsString( 'US Customary', $html );
         $this->assertStringNotContainsString( 'Default', $html );
-        $this->assertStringContainsString( '<option value="" selected="selected">Imperial</option>', $html );
+        $this->assertStringContainsString( '<option value="" selected="selected">US Customary</option>', $html );
         $this->assertStringContainsString( '<option value="metric">Metric</option>', $html );
     }
 
@@ -262,8 +262,115 @@ class RecipesTest extends TestCase {
         $html = ob_get_clean();
 
         $this->assertStringContainsString( '<option value="metric" selected="selected">Metric</option>', $html );
-        $this->assertStringContainsString( '<option value="">Imperial</option>', $html );
+        $this->assertStringContainsString( '<option value="">US Customary</option>', $html );
         unset( $GLOBALS['_cooked_test_query_vars']['measurement_system'] );
+    }
+
+    public function test_measurement_switch_rounds_ounces_and_keeps_spoons() {
+        $GLOBALS['recipe_settings'] = [
+            'nutrition' => [ 'servings' => 4 ],
+        ];
+        $GLOBALS['_cooked_test_query_vars']['measurement_system'] = 'metric';
+
+        ob_start();
+        Cooked_Recipes::single_ingredient( [
+            'name'            => 'mushrooms',
+            'amount'          => '4',
+            'measurement'     => 'oz',
+            'sub_name'        => 'mushrooms',
+            'sub_amount'      => '4',
+            'sub_measurement' => 'oz',
+        ] );
+        $ounces = ob_get_clean();
+
+        ob_start();
+        Cooked_Recipes::single_ingredient( [
+            'name'        => 'olive oil',
+            'amount'      => '2',
+            'measurement' => 'tbsp',
+        ] );
+        $spoons = ob_get_clean();
+
+        ob_start();
+        Cooked_Recipes::single_ingredient( [
+            'name'        => 'salt',
+            'amount'      => '1/2',
+            'measurement' => 'tsp',
+        ] );
+        $half = ob_get_clean();
+
+        unset( $GLOBALS['_cooked_test_query_vars']['measurement_system'] );
+
+        $this->assertSame( 2, substr_count( $ounces, '>115<' ) );
+        $this->assertStringContainsString( '>g<', $ounces );
+        $this->assertStringNotContainsString( '113.40', $ounces );
+        $this->assertStringContainsString( '>2<', $spoons );
+        $this->assertStringContainsString( '>tbsp<', $spoons );
+        $this->assertStringNotContainsString( 'ml', $spoons );
+        $this->assertStringContainsString( '&#189;', $half );
+        $this->assertStringContainsString( '>tsp<', $half );
+        $this->assertStringNotContainsString( 'ml', $half );
+    }
+
+    public function test_unit_conversion_setting_can_turn_spoon_keeping_off() {
+        $html = $this->render_switched_ingredient(
+            [
+                'name'        => 'olive oil',
+                'amount'      => '1',
+                'measurement' => 'tbsp',
+            ],
+            [ 'round_converted', 'density_cups' ]
+        );
+
+        $this->assertStringContainsString( '>15<', $html );
+        $this->assertStringContainsString( '>ml<', $html );
+        $this->assertStringNotContainsString( 'tbsp', $html );
+    }
+
+    public function test_unit_conversion_setting_can_turn_rounding_off() {
+        $html = $this->render_switched_ingredient(
+            [
+                'name'        => 'mushrooms',
+                'amount'      => '4',
+                'measurement' => 'oz',
+            ],
+            [ 'keep_spoons', 'density_cups' ]
+        );
+
+        $this->assertStringContainsString( '>113.40<', $html );
+        $this->assertStringContainsString( '>g<', $html );
+    }
+
+    public function test_unit_conversion_setting_can_turn_density_off() {
+        $html = $this->render_switched_ingredient(
+            [
+                'name'        => 'all-purpose flour',
+                'amount'      => '1',
+                'measurement' => 'cup',
+            ],
+            [ 'keep_spoons', 'round_converted' ]
+        );
+
+        $this->assertStringContainsString( '>235<', $html );
+        $this->assertStringContainsString( '>ml<', $html );
+        $this->assertStringNotContainsString( '>125<', $html );
+    }
+
+    private function render_switched_ingredient( $ingredient, $flags ) {
+        $GLOBALS['recipe_settings'] = [
+            'nutrition' => [ 'servings' => 4 ],
+        ];
+        $GLOBALS['_cooked_settings']['unit_conversion'] = $flags;
+        $GLOBALS['_cooked_test_query_vars']['measurement_system'] = 'metric';
+
+        ob_start();
+        Cooked_Recipes::single_ingredient( $ingredient );
+        $html = ob_get_clean();
+
+        unset( $GLOBALS['_cooked_test_query_vars']['measurement_system'] );
+        unset( $GLOBALS['_cooked_settings']['unit_conversion'] );
+
+        return $html;
     }
 }
 

@@ -1112,7 +1112,7 @@ class Cooked_Recipes {
             $active = $requested !== '' ? $requested : $authored;
             $labels = [
                 'metric' => __( 'Metric', 'cooked' ),
-                'imperial' => __( 'Imperial', 'cooked' ),
+                'imperial' => __( 'US Customary', 'cooked' ),
             ];
             $current_label = $labels[ $active ];
             echo '<span class="cooked-measurement-system"><span class="cooked-measurement-system-icon"><i class="cooked-icon cooked-icon-gear"></i></span>';
@@ -1250,20 +1250,11 @@ class Cooked_Recipes {
             $measurement_key = ( isset($ing['measurement']) && $ing['measurement'] ? esc_html( $ing['measurement'] ) : false );
 
             $measurement_system = get_query_var( 'measurement_system', '' );
-            if ( $measurement_system && $measurement_key && $float_amount && isset( $measurements[ $measurement_key ]['system'] ) ) {
-                $source_system = $measurements[ $measurement_key ]['system'];
-                if ( $source_system && $source_system !== $measurement_system ) {
-                    $target = Cooked_Unit_Converter::get_target_unit( $measurement_key );
-                    $result = $target ? Cooked_Unit_Converter::convert( $float_amount, $measurement_key, $target ) : null;
-                    if ( $result ) {
-                        $float_amount = $result['amount'];
-                        $measurement_key = $result['unit'];
-                        if ( $float_amount > 10 ) {
-                            $format = 'decimal';
-                        }
-                        $amount = $Cooked_Measurements->format_amount( $float_amount, $format );
-                    }
-                }
+            $converted = self::maybe_convert_ingredient_amount( $float_amount, $measurement_key, isset( $ing['name'] ) ? $ing['name'] : '', $measurement_system, $measurements );
+            if ( $converted ) {
+                $float_amount = $converted['amount'];
+                $measurement_key = $converted['unit'];
+                $amount = $converted['formatted'];
             }
 
             $measurement = ( $measurement_key && $float_amount && isset( $measurements[ $measurement_key ] ) ? $Cooked_Measurements->singular_plural( $measurements[ $measurement_key ]['singular_abbr'], $measurements[ $measurement_key ]['plural_abbr'], $float_amount ) : false );
@@ -1297,20 +1288,11 @@ class Cooked_Recipes {
 
                 $sub_measurement_key = ( isset($ing['sub_measurement']) && $ing['sub_measurement'] ? esc_html( $ing['sub_measurement'] ) : false );
 
-                if ( $measurement_system && $sub_measurement_key && $sub_float_amount && isset( $measurements[ $sub_measurement_key ]['system'] ) ) {
-                    $sub_source_system = $measurements[ $sub_measurement_key ]['system'];
-                    if ( $sub_source_system && $sub_source_system !== $measurement_system ) {
-                        $sub_target = Cooked_Unit_Converter::get_target_unit( $sub_measurement_key );
-                        $sub_result = $sub_target ? Cooked_Unit_Converter::convert( $sub_float_amount, $sub_measurement_key, $sub_target ) : null;
-                        if ( $sub_result ) {
-                            $sub_float_amount = $sub_result['amount'];
-                            $sub_measurement_key = $sub_result['unit'];
-                            if ( $sub_float_amount > 10 ) {
-                                $sub_format = 'decimal';
-                            }
-                            $sub_amount = $Cooked_Measurements->format_amount( $sub_float_amount, $sub_format );
-                        }
-                    }
+                $sub_converted = self::maybe_convert_ingredient_amount( $sub_float_amount, $sub_measurement_key, isset( $ing['sub_name'] ) ? $ing['sub_name'] : '', $measurement_system, $measurements );
+                if ( $sub_converted ) {
+                    $sub_float_amount = $sub_converted['amount'];
+                    $sub_measurement_key = $sub_converted['unit'];
+                    $sub_amount = $sub_converted['formatted'];
                 }
 
                 $sub_measurement = ( $sub_measurement_key && $sub_float_amount && isset($measurements[$sub_measurement_key]) ? $Cooked_Measurements->singular_plural( $measurements[ $sub_measurement_key ]['singular_abbr'], $measurements[ $sub_measurement_key ]['plural_abbr'], $sub_float_amount ) : false );
@@ -1344,6 +1326,65 @@ class Cooked_Recipes {
 
         $ing_html = ob_get_clean();
         echo wp_kses_post( apply_filters( 'cooked_single_ingredient_html', $ing_html, $ing, $checkboxes, $plain_text ) );
+    }
+
+    /**
+     * Convert one ingredient amount after the servings multiplier.
+     *
+     * Returns null when the author-typed amount should stay as already formatted.
+     * A missing unit_conversion setting leaves spoon-keeping, rounding, and density on.
+     *
+     * @param float        $float_amount       Amount after the servings multiplier.
+     * @param string|false $measurement_key    Unit key.
+     * @param string       $ingredient_name    Ingredient name.
+     * @param string       $measurement_system Requested system.
+     * @param array        $measurements       Measurement definitions.
+     * @return array|null
+     */
+    private static function maybe_convert_ingredient_amount( $float_amount, $measurement_key, $ingredient_name, $measurement_system, $measurements ) {
+        if ( ! $measurement_system || ! $measurement_key || ! $float_amount || ! isset( $measurements[ $measurement_key ]['system'] ) ) {
+            return null;
+        }
+
+        $source_system = $measurements[ $measurement_key ]['system'];
+        if ( ! $source_system || $source_system === $measurement_system ) {
+            return null;
+        }
+
+        $options = self::unit_conversion_options();
+        $result = Cooked_Unit_Converter::convert_for_ingredient( $float_amount, $measurement_key, $ingredient_name, $measurement_system, $options );
+        if ( ! $result || empty( $result['unit'] ) || ! isset( $measurements[ $result['unit'] ] ) ) {
+            return null;
+        }
+
+        return [
+            'amount'    => $result['amount'],
+            'unit'      => $result['unit'],
+            'formatted' => Cooked_Unit_Converter::format_converted_amount( $result['amount'], $result['unit'], ! empty( $options['round_converted'] ) ),
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private static function unit_conversion_options() {
+        global $_cooked_settings;
+
+        if ( ! isset( $_cooked_settings['unit_conversion'] ) || ! is_array( $_cooked_settings['unit_conversion'] ) ) {
+            return [
+                'keep_spoons'     => true,
+                'round_converted' => true,
+                'density_cups'    => true,
+            ];
+        }
+
+        $enabled = $_cooked_settings['unit_conversion'];
+
+        return [
+            'keep_spoons'     => in_array( 'keep_spoons', $enabled, true ),
+            'round_converted' => in_array( 'round_converted', $enabled, true ),
+            'density_cups'    => in_array( 'density_cups', $enabled, true ),
+        ];
     }
 
     public static function single_direction($dir, $number = false, $plain_text = false, $step = false, $atts = false) {

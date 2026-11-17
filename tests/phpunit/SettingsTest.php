@@ -59,6 +59,21 @@ class SettingsTest extends TestCase {
         $this->assertSame('full', $fields['author_name_format']['default']);
     }
 
+    public function test_unit_conversion_defaults_on() {
+        $tabs = Cooked_Settings::tabs_fields();
+        $field = $tabs['recipe_settings']['fields']['unit_conversion'];
+
+        $this->assertSame('checkboxes', $field['type']);
+        $this->assertSame(
+            [ 'keep_spoons', 'round_converted', 'density_cups' ],
+            $field['default']
+        );
+        $this->assertArrayHasKey('keep_spoons', $field['options']);
+        $this->assertArrayHasKey('round_converted', $field['options']);
+        $this->assertArrayHasKey('density_cups', $field['options']);
+        $this->assertArrayHasKey('enable_measurement_switcher', $tabs['recipe_settings']['fields']['advanced']['options']);
+    }
+
     public function test_get_returns_array() {
         $settings = Cooked_Settings::get();
         $this->assertIsArray($settings);

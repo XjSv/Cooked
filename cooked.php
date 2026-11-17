@@ -5,7 +5,7 @@
  * Description: 	    A recipe plugin for WordPress.
  * Author:              Gora Tech
  * Author URI: 	        https://goratech.dev
- * Version: 		    1.17.1
+ * Version: 		    1.18.0
  * Text Domain: 	    cooked
  * Domain Path: 	    /languages
  * License:     	    GPLv2 or later
@@ -40,7 +40,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 define( 'COOKED_DEV', false );
-define( 'COOKED_VERSION', '1.17.1' );
+define( 'COOKED_VERSION', '1.18.0' );
 
 if ( ! class_exists( 'Cooked_Plugin' ) ) :
 
@@ -489,6 +489,7 @@ final class Cooked_Plugin {
         require_once COOKED_DIR . 'includes/class.cooked-recipe-meta.php';
         require_once COOKED_DIR . 'includes/class.cooked-shortcodes.php';
         require_once COOKED_DIR . 'includes/class.cooked-measurements.php';
+        require_once COOKED_DIR . 'includes/class.cooked-ingredient-density.php';
         require_once COOKED_DIR . 'includes/class.cooked-unit-converter.php';
         require_once COOKED_DIR . 'includes/class.cooked-admin-enqueues.php';
         require_once COOKED_DIR . 'includes/class.cooked-enqueues.php';

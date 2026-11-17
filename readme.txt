@@ -129,9 +129,12 @@ Please report security bugs found in the source code of the Cooked plugin throug
 
 == Upgrade Notice ==
 
-Version 1.17.1 fixes Envira Gallery, Soliloquy Slider, and Slider Revolution in the recipe gallery, printing of password-protected recipes, and related recipes inside an embedded recipe.
+Version 1.18.0
 
 == Changelog ==
+
+= 1.18.0 =
+* **TWEAK:** The measurement system switcher shows Metric or Imperial for the units a recipe is written in.
 
 = 1.17.1 =
 * **FIX:** Fixed bug where Envira Gallery, Soliloquy Slider, and Slider Revolution were missing from the recipe gallery. Lite versions are detected, Slider Revolution aliases stay as text, and the option stays available before a gallery or slider exists.

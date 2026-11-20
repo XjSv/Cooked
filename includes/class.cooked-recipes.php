@@ -1115,7 +1115,7 @@ class Cooked_Recipes {
                 'imperial' => __( 'US Customary', 'cooked' ),
             ];
             $current_label = $labels[ $active ];
-            echo '<span class="cooked-measurement-system"><span class="cooked-measurement-system-icon"><i class="cooked-icon cooked-icon-gear"></i></span>';
+            echo '<span class="cooked-measurement-system"><span class="cooked-measurement-system-icon"><i class="cooked-icon cooked-icon-measuring-cup"></i></span>';
                 echo '<strong class="cooked-meta-title">' . esc_html__( 'Units', 'cooked' ) . '</strong>';
                 echo '<a aria-label="' . esc_attr( $current_label ) . '" href="#">' . esc_html( $current_label ) . '</a>';
                 echo '<label for="cooked-measurement-system-changer" class="screen-reader-text">' . esc_html__( 'Measurement System', 'cooked' ) . '</label>';

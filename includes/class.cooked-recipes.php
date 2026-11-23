@@ -582,6 +582,48 @@ class Cooked_Recipes {
         endforeach;
     }
 
+    /**
+     * Term IDs for a browse filter value. Unknown terms are dropped.
+     *
+     * @param string     $taxonomy Taxonomy name.
+     * @param string|int $raw      Comma-separated term IDs or slugs.
+     * @return int[]
+     */
+    public static function existing_term_ids( $taxonomy, $raw ) {
+        if ( ! taxonomy_exists( $taxonomy ) ) {
+            return [];
+        }
+
+        $ids = [];
+        foreach ( array_map( 'trim', explode( ',', (string) $raw ) ) as $piece ) {
+            if ( $piece === '' ) {
+                continue;
+            }
+
+            if ( ctype_digit( $piece ) ) {
+                $term_id = absint( $piece );
+                if ( $term_id && term_exists( $term_id, $taxonomy ) ) {
+                    $ids[] = $term_id;
+                    continue;
+                }
+            }
+
+            $slug = sanitize_title( $piece );
+            if ( $slug === '' ) {
+                continue;
+            }
+
+            $found = term_exists( $slug, $taxonomy );
+            if ( ! $found ) {
+                continue;
+            }
+
+            $ids[] = (int) ( is_array( $found ) ? $found['term_id'] : $found );
+        }
+
+        return $ids;
+    }
+
     public static function list_view( $list_atts = false ) {
         global $wp_query, $recipe_query, $atts, $_cooked_settings, $recipes, $recipe_args, $current_recipe_page;
 
@@ -608,13 +650,15 @@ class Cooked_Recipes {
         if ( isset($_cooked_settings['recipe_taxonomies']) && !empty($_cooked_settings['recipe_taxonomies']) ):
             foreach ( $_cooked_settings['recipe_taxonomies'] as $taxonomy ):
                 if ( isset($recipe_query[$taxonomy]) && $recipe_query[$taxonomy] ):
-                    $field_type = is_numeric($recipe_query[$taxonomy]) ? 'id' : 'slug';
-                    $tax_query['relation'] = 'AND';
-                    $tax_query[] = [
-                        'taxonomy' => $taxonomy,
-                        'field' => $field_type,
-                        'terms' => array_map('trim', explode(',', esc_html($recipe_query[$taxonomy])))
-                    ];
+                    $term_ids = self::existing_term_ids( $taxonomy, $recipe_query[$taxonomy] );
+                    if ( $term_ids ):
+                        $tax_query['relation'] = 'AND';
+                        $tax_query[] = [
+                            'taxonomy' => $taxonomy,
+                            'field' => 'term_id',
+                            'terms' => $term_ids,
+                        ];
+                    endif;
                 endif;
             endforeach;
 

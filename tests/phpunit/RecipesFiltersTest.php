@@ -5,6 +5,7 @@ class RecipesFiltersTest extends FilterTestCase {
     protected function setUp(): void {
         parent::setUp();
         $GLOBALS['wp_query'] = (object) [ 'query' => [] ];
+        unset( $GLOBALS['shortcode_tags'] );
         $GLOBALS['recipe_settings'] = [
             'id'        => 1,
             'title'     => 'Test Recipe',
@@ -622,6 +623,156 @@ class RecipesFiltersTest extends FilterTestCase {
 
         $this->assertStringContainsString( 'Filtered Desserts', $html );
         $this->assertStringNotContainsString( '>Desserts<', $html );
+    }
+
+    public function test_browse_query_drops_shortcode_injection_term() {
+        $GLOBALS['_cooked_settings']['recipe_taxonomies'] = [ 'cp_recipe_category' ];
+        $GLOBALS['wp_query'] = (object) [
+            'query' => [
+                'cp_recipe_category' => 'x][caption id="1"]text[/caption]',
+            ],
+        ];
+        $GLOBALS['shortcode_tags']['cooked-categories'] = function () {
+            throw new \RuntimeException( 'Shortcode callback should not run for an unknown term.' );
+        };
+
+        $html = Cooked_Recipes::list_view(
+            $this->list_view_atts(
+                [
+                    'search'     => false,
+                    'pagination' => false,
+                ]
+            )
+        );
+
+        $this->assertArrayNotHasKey( 'tax_query', $GLOBALS['_cooked_test_last_query'] );
+        $this->assertStringNotContainsString( '[caption', $html );
+        $this->assertStringNotContainsString( 'child_of', $html );
+    }
+
+    public function test_browse_query_keeps_existing_slug_and_id_as_term_id() {
+        $GLOBALS['_cooked_settings']['recipe_taxonomies'] = [ 'cp_recipe_category' ];
+        $GLOBALS['_cooked_test_terms'][] = (object) [
+            'term_id'  => 5,
+            'name'     => 'Desserts',
+            'slug'     => 'desserts',
+            'taxonomy' => 'cp_recipe_category',
+        ];
+        $GLOBALS['_cooked_test_terms'][] = (object) [
+            'term_id'  => 7,
+            'name'     => 'Soups',
+            'slug'     => 'soups',
+            'taxonomy' => 'cp_recipe_category',
+        ];
+        $GLOBALS['_cooked_test_terms'][] = (object) [
+            'term_id'  => 4,
+            'name'     => 'Year',
+            'slug'     => '2024',
+            'taxonomy' => 'cp_recipe_category',
+        ];
+
+        $GLOBALS['wp_query'] = (object) [
+            'query' => [ 'cp_recipe_category' => 'desserts' ],
+        ];
+        Cooked_Recipes::list_view(
+            $this->list_view_atts(
+                [
+                    'search'     => false,
+                    'pagination' => false,
+                ]
+            )
+        );
+        $this->assertSame( 'term_id', $GLOBALS['_cooked_test_last_query']['tax_query'][0]['field'] );
+        $this->assertSame( [ 5 ], $GLOBALS['_cooked_test_last_query']['tax_query'][0]['terms'] );
+
+        $GLOBALS['wp_query'] = (object) [
+            'query' => [ 'cp_recipe_category' => '7' ],
+        ];
+        Cooked_Recipes::list_view(
+            $this->list_view_atts(
+                [
+                    'search'     => false,
+                    'pagination' => false,
+                ]
+            )
+        );
+        $this->assertSame( 'term_id', $GLOBALS['_cooked_test_last_query']['tax_query'][0]['field'] );
+        $this->assertSame( [ 7 ], $GLOBALS['_cooked_test_last_query']['tax_query'][0]['terms'] );
+
+        $GLOBALS['wp_query'] = (object) [
+            'query' => [ 'cp_recipe_category' => '2024' ],
+        ];
+        Cooked_Recipes::list_view(
+            $this->list_view_atts(
+                [
+                    'search'     => false,
+                    'pagination' => false,
+                ]
+            )
+        );
+        $this->assertSame( [ 4 ], $GLOBALS['_cooked_test_last_query']['tax_query'][0]['terms'] );
+    }
+
+    public function test_browse_query_keeps_only_existing_terms_from_a_list() {
+        $GLOBALS['_cooked_settings']['recipe_taxonomies'] = [ 'cp_recipe_category' ];
+        $GLOBALS['_cooked_test_terms'][] = (object) [
+            'term_id'  => 5,
+            'name'     => 'Desserts',
+            'slug'     => 'desserts',
+            'taxonomy' => 'cp_recipe_category',
+        ];
+        $GLOBALS['_cooked_test_terms'][] = (object) [
+            'term_id'  => 8,
+            'name'     => 'Soups',
+            'slug'     => 'soups',
+            'taxonomy' => 'cp_recipe_category',
+        ];
+        $GLOBALS['wp_query'] = (object) [
+            'query' => [ 'cp_recipe_category' => 'desserts,missing,soups' ],
+        ];
+
+        Cooked_Recipes::list_view(
+            $this->list_view_atts(
+                [
+                    'search'     => false,
+                    'pagination' => false,
+                ]
+            )
+        );
+
+        $this->assertSame( 'term_id', $GLOBALS['_cooked_test_last_query']['tax_query'][0]['field'] );
+        $this->assertSame( [ 5, 8 ], $GLOBALS['_cooked_test_last_query']['tax_query'][0]['terms'] );
+    }
+
+    public function test_browse_child_terms_call_shortcode_callback_with_term_id() {
+        $GLOBALS['_cooked_settings']['recipe_taxonomies'] = [ 'cp_recipe_category' ];
+        $GLOBALS['_cooked_test_terms'][] = (object) [
+            'term_id'  => 5,
+            'name'     => 'Desserts',
+            'slug'     => 'desserts',
+            'taxonomy' => 'cp_recipe_category',
+        ];
+        $received = null;
+        $GLOBALS['shortcode_tags']['cooked-categories'] = function ( $atts ) use ( &$received ) {
+            $received = $atts['child_of'];
+            return 'CHILD_TERMS';
+        };
+        $GLOBALS['wp_query'] = (object) [
+            'query' => [ 'cp_recipe_category' => 'desserts' ],
+        ];
+
+        $html = Cooked_Recipes::list_view(
+            $this->list_view_atts(
+                [
+                    'search'     => false,
+                    'pagination' => false,
+                ]
+            )
+        );
+
+        $this->assertSame( 5, $received );
+        $this->assertStringContainsString( 'CHILD_TERMS', $html );
+        $this->assertStringNotContainsString( 'child_of=', $html );
     }
 }
 

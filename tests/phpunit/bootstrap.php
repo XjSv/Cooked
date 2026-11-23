@@ -314,6 +314,35 @@ function delete_transient( $transient ) { return true; }
 /**
  * Taxonomy stubs
  */
+function term_exists( $term, $taxonomy = '', $parent = null ) {
+    foreach ( isset( $GLOBALS['_cooked_test_terms'] ) ? $GLOBALS['_cooked_test_terms'] : [] as $stored ) {
+        if ( $taxonomy && isset( $stored->taxonomy ) && $stored->taxonomy !== $taxonomy ) {
+            continue;
+        }
+
+        $matches = false;
+        if ( is_int( $term ) ) {
+            $matches = isset( $stored->term_id ) && (int) $stored->term_id === $term;
+        } elseif ( isset( $stored->slug ) && (string) $stored->slug === (string) $term ) {
+            $matches = true;
+        }
+
+        if ( ! $matches ) {
+            continue;
+        }
+
+        if ( $taxonomy ) {
+            return [
+                'term_id'          => (string) $stored->term_id,
+                'term_taxonomy_id' => (string) $stored->term_id,
+            ];
+        }
+
+        return (string) $stored->term_id;
+    }
+
+    return null;
+}
 function get_term_by( $field, $value, $taxonomy = '', $output = OBJECT, $filter = 'raw' ) {
     foreach ( isset( $GLOBALS['_cooked_test_terms'] ) ? $GLOBALS['_cooked_test_terms'] : [] as $term ) {
         if ( $taxonomy && $term->taxonomy !== $taxonomy ) {

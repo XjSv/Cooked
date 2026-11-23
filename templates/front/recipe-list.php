@@ -1,6 +1,6 @@
 <?php
 
-global $recipes,$recipe,$_cooked_settings,$recipe_args,$current_recipe_page,$atts,$list_id_counter;
+global $recipes,$recipe,$_cooked_settings,$recipe_args,$current_recipe_page,$atts,$list_id_counter,$shortcode_tags;
 
 $atts['layout'] = ( !isset($atts['layout']) || isset($atts['layout']) && !$atts['layout'] ? ( isset( $_cooked_settings['recipe_list_style'] ) ? $_cooked_settings['recipe_list_style'] : [ 'grid' => 'Cooked_Recipes' ] ) : $atts['layout'] );
 
@@ -50,26 +50,25 @@ else:
 
 	endif;
 
-    if ( isset( $recipe_args['tax_query'][0]['terms'][0] ) ):
-        switch ( $recipe_args['tax_query'][0]['taxonomy'] ):
-            case 'cp_recipe_category':
-                $shortcode = 'categories';
-            	break;
-            case 'cp_recipe_cooking_method':
-                $shortcode = 'cooking-methods';
-            	break;
-            case 'cp_recipe_cuisine':
-                $shortcode = 'cuisines';
-            	break;
-            case 'cp_recipe_tags':
-                $shortcode = 'tags';
-            	break;
-            case 'cp_recipe_diet':
-                $shortcode = 'diets';
-            	break;
-        endswitch;
-        $tax_slug = $recipe_args['tax_query'][0]['terms'][0];
-        $child_taxonomies = do_shortcode( '[cooked-' . esc_attr( $shortcode ) . ' child_of="' . esc_attr( $tax_slug ) . '"]' );
+    if ( isset( $recipe_args['tax_query'][0]['terms'][0], $recipe_args['tax_query'][0]['taxonomy'] ) ):
+        $taxonomy_shortcodes = [
+            'cp_recipe_category'       => 'cooked-categories',
+            'cp_recipe_cooking_method' => 'cooked-cooking-methods',
+            'cp_recipe_cuisine'        => 'cooked-cuisines',
+            'cp_recipe_tags'           => 'cooked-tags',
+            'cp_recipe_diet'           => 'cooked-diets',
+        ];
+        $taxonomy = $recipe_args['tax_query'][0]['taxonomy'];
+        if ( isset( $taxonomy_shortcodes[ $taxonomy ] ) ):
+            $term_ids = Cooked_Recipes::existing_term_ids( $taxonomy, $recipe_args['tax_query'][0]['terms'][0] );
+            $shortcode_tag = $taxonomy_shortcodes[ $taxonomy ];
+            if ( $term_ids && isset( $shortcode_tags[ $shortcode_tag ] ) ):
+                $child_taxonomies = call_user_func(
+                    $shortcode_tags[ $shortcode_tag ],
+                    [ 'child_of' => $term_ids[0] ]
+                );
+            endif;
+        endif;
     endif;
 
 	if ( $child_taxonomies ):

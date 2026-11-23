@@ -32,12 +32,24 @@ class Cooked_Widget_Recipe_Categories extends WP_Widget {
             echo wp_kses_post( $args['before_title'] ) . esc_html( apply_filters( 'widget_title', $instance['title'] ) ) . wp_kses_post( $args['after_title'] );
         }
 
-        $width = isset($instance['width']) && $instance['width'] ? ' width="' . esc_attr( $instance['width'] ) . '"' : '';
-        $child_of = isset($instance['child_of']) && $instance['child_of'] ? ' child_of="' . esc_attr( $instance['child_of'] ) . '"' : '';
-        $hide_empty = isset($instance['hide_empty']) && $instance['hide_empty'] ? ' hide_empty="' . esc_attr( $instance['hide_empty'] ) . '"' : '';
-        $show_description = isset($instance['show_description']) && $instance['show_description'] ? ' show_description="' . esc_attr( $instance['show_description'] ) . '"' : '';
+        $atts = [ 'style' => 'list' ];
+        if ( isset( $instance['width'] ) && $instance['width'] ) {
+            $atts['width'] = $instance['width'];
+        }
+        if ( isset( $instance['child_of'] ) && $instance['child_of'] ) {
+            $atts['child_of'] = $instance['child_of'];
+        }
+        if ( isset( $instance['hide_empty'] ) && $instance['hide_empty'] ) {
+            $atts['hide_empty'] = $instance['hide_empty'];
+        }
+        if ( isset( $instance['show_description'] ) && $instance['show_description'] ) {
+            $atts['show_description'] = $instance['show_description'];
+        }
 
-        echo do_shortcode( '[cooked-categories' . esc_attr( $width . $child_of . $hide_empty . $show_description ) . ' style="list"]' );
+        global $shortcode_tags;
+        if ( isset( $shortcode_tags['cooked-categories'] ) ) {
+            echo call_user_func( $shortcode_tags['cooked-categories'], $atts );
+        }
         echo wp_kses_post( $args['after_widget'] );
 
     }

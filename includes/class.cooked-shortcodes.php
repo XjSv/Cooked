@@ -396,6 +396,44 @@ class Cooked_Shortcodes {
         return get_the_password_form( $recipe );
     }
 
+    private static function sanitize_gallery_shortcode_option( $name, $value ) {
+        if ( ! is_scalar( $value ) ) {
+            return null;
+        }
+
+        $value = trim( (string) $value );
+        if ( '' === $value ) {
+            return null;
+        }
+
+        $keywords = [
+            'fit'             => [ 'cover', 'contain', 'scaledown', 'none' ],
+            'nav'             => [ 'dots', 'thumbs', 'false' ],
+            'allowfullscreen' => [ 'true', 'false', 'native' ],
+            'loop'            => [ 'true', 'false' ],
+            'swipe'           => [ 'true', 'false' ],
+        ];
+
+        if ( isset( $keywords[ $name ] ) ) {
+            $lower = strtolower( $value );
+            return in_array( $lower, $keywords[ $name ], true ) ? $lower : null;
+        }
+
+        if ( in_array( $name, [ 'thumbmargin', 'thumbborderwidth', 'thumbheight', 'thumbwidth' ], true ) ) {
+            return preg_match( '/^\d+$/', $value ) ? $value : null;
+        }
+
+        if ( 'width' === $name ) {
+            return preg_match( '/^\d+(?:\.\d+)?(?:px|%)?$/', $value ) ? $value : null;
+        }
+
+        if ( 'ratio' === $name ) {
+            return preg_match( '/^\d+(?:\.\d+)?\/\d+(?:\.\d+)?$/', $value ) ? $value : null;
+        }
+
+        return null;
+    }
+
     public function cooked_gallery_shortcode($atts, $content = null) {
         global $recipe_settings;
 
@@ -429,7 +467,10 @@ class Cooked_Shortcodes {
             foreach ( $gallery_options as $opt_name => $opt_value ) {
                 $name_sans_data = str_replace( 'data-', '', $opt_name );
                 if ( isset($atts[$name_sans_data]) && $atts[$name_sans_data] ) {
-                    $gallery_options[$opt_name] = $atts[$name_sans_data];
+                    $sanitized = self::sanitize_gallery_shortcode_option( $name_sans_data, $atts[$name_sans_data] );
+                    if ( null !== $sanitized ) {
+                        $gallery_options[$opt_name] = $sanitized;
+                    }
                 }
             }
         } else {
@@ -451,7 +492,10 @@ class Cooked_Shortcodes {
                         $gallery_options_array = [];
 
                         foreach ( $gallery_options as $data_key => $data_val ):
-                            $gallery_options_array[] = $data_key . '="' . $data_val . '"';
+                            if ( ! is_string( $data_key ) || ! preg_match( '/^data-[a-z0-9-]+$/i', $data_key ) || ! is_scalar( $data_val ) ) {
+                                continue;
+                            }
+                            $gallery_options_array[] = esc_attr( $data_key ) . '="' . esc_attr( (string) $data_val ) . '"';
                         endforeach;
 
                         $gallery_html = '<div class="cooked-recipe-gallery"' . ( !empty($gallery_options_array) ? ' ' . implode( ' ', $gallery_options_array ) : '' ) . '>';

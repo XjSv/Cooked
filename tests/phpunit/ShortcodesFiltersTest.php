@@ -105,6 +105,66 @@ class ShortcodesFiltersTest extends FilterTestCase {
         $this->assertStringContainsString( 'data-fit="contain"', $html );
     }
 
+    public function test_gallery_shortcode_drops_attribute_breakout() {
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'      => 'cooked',
+            'video_url' => 'https://www.youtube.com/watch?v=abc123',
+        ];
+
+        $html = $this->shortcodes->cooked_gallery_shortcode( [
+            'fit' => 'cover" data-data="&#91;{&quot;html&quot;:&quot;&lt;img src=x onerror=alert(document.domain)&gt;&quot;}&#93;" data-ck="g1',
+        ] );
+
+        $this->assertStringContainsString( 'data-fit="cover"', $html );
+        $this->assertStringNotContainsString( 'data-data', $html );
+        $this->assertStringNotContainsString( 'onerror', $html );
+    }
+
+    public function test_gallery_shortcode_keeps_documented_overrides() {
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'      => 'cooked',
+            'video_url' => 'https://www.youtube.com/watch?v=abc123',
+        ];
+
+        $html = $this->shortcodes->cooked_gallery_shortcode( [
+            'nav'             => 'thumbs',
+            'width'           => '350px',
+            'ratio'           => '500/500',
+            'allowfullscreen' => 'false',
+        ] );
+
+        $this->assertStringContainsString( 'data-nav="thumbs"', $html );
+        $this->assertStringContainsString( 'data-width="350px"', $html );
+        $this->assertStringContainsString( 'data-ratio="500/500"', $html );
+        $this->assertStringContainsString( 'data-allowfullscreen="false"', $html );
+
+        $percent = $this->shortcodes->cooked_gallery_shortcode( [
+            'width' => '80%',
+        ] );
+        $this->assertStringContainsString( 'data-width="80%"', $percent );
+    }
+
+    public function test_gallery_option_quotes_are_escaped() {
+        $GLOBALS['recipe_settings']['gallery'] = [
+            'type'      => 'cooked',
+            'video_url' => 'https://www.youtube.com/watch?v=abc123',
+        ];
+
+        $html = $this->with_filter(
+            'cooked_recipe_gallery_options',
+            function ( $options ) {
+                $options['data-fit'] = 'cover" onclick="alert(1)';
+                return $options;
+            },
+            function () {
+                return $this->shortcodes->cooked_gallery_shortcode( [] );
+            }
+        );
+
+        $this->assertStringContainsString( 'data-fit="cover&quot; onclick=&quot;alert(1)"', $html );
+        $this->assertStringNotContainsString( 'onclick="', $html );
+    }
+
     public function test_cooked_gallery_video_last_option_moves_video() {
         $GLOBALS['recipe_settings']['gallery'] = [
             'type'      => 'cooked',

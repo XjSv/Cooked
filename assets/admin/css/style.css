@@ -51,9 +51,12 @@ body.mce-fullscreen div.mce-tinymce.mce-fullscreen {
 #cooked-settings-wrap {
   position: relative;
   border-radius: 10px;
-  margin: 40px 40px 40px 20px;
-  max-width: 1200px;
-  min-width: 1000px;
+  flex: 1 1 auto;
+  margin: 40px 20px;
+  width: auto;
+  max-width: 1280px;
+  min-width: 0;
+  box-sizing: border-box;
   background: #fff;
   box-shadow:
     0 4px 4px rgba(0,0,0,0.05),
@@ -622,8 +625,8 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked_recipe_settings .recipe-setting-block input[type="text"].cooked-permalink-field { position:relative; top:0; display:inline-block; width:150px; margin:0 10px; }
 
 #cooked-settings-panel { position:relative; margin:0; padding:0; }
-#cooked-settings-tabs  { display:flex; width:auto; padding:0 20px 0 0; margin:0; list-style:none; }
-#cooked-settings-tabs li { font-size:13px; line-height:1; font-weight:400; display:block; padding:0; margin:0; color:#fff; }
+#cooked-settings-tabs  { display:flex; width:100%; box-sizing:border-box; padding:0 20px 0 0; margin:0; list-style:none; overflow-x:auto; }
+#cooked-settings-tabs li { font-size:13px; line-height:1; font-weight:400; display:block; flex:0 0 auto; padding:0; margin:0; color:#fff; }
 #cooked-settings-tabs li .cooked-icon { font-size:14px; }
 #cooked-settings-tabs li .cooked-icon.cooked-icon-recipe-icon { font-size:20px; top:2px; position:relative; }
 #cooked-settings-tabs li:hover { cursor:pointer; }
@@ -632,6 +635,19 @@ body .button.button-cooked-reset:hover { color:#555; }
 #cooked-settings-tabs a { line-height:41px; font-size:0.9rem; letter-spacing:0.03rem; padding:2px 15px 4px; display:block; outline:none; box-shadow:none; border:none; white-space:nowrap; }
 #cooked-settings-panel.stuck { padding-top:41px; }
 #cooked-settings-panel.stuck #cooked-settings-tabs { position: fixed; width:calc(100% - 180px); top:32px; left:0; z-index: 100000; margin-left:160px; }
+
+@media screen and (max-width: 960px) {
+  #cooked-settings-panel.stuck #cooked-settings-tabs { margin-left:36px; width:calc(100% - 36px); }
+}
+
+@media screen and (max-width: 782px) {
+  #cooked-settings-wrap { margin:16px 20px; }
+  .cooked-settings-header { height:auto; line-height:1.2; font-size:22px; padding:20px 170px 20px 16px; }
+  #cooked-settings-wrap .cooked-settings-update-button { top:16px; right:12px; }
+  #cooked-settings-wrap.is-stuck .cooked-settings-update-button { top:54px; }
+  #cooked-settings-panel .cooked-settings-tab-content { padding:16px; }
+  #cooked-settings-panel.stuck #cooked-settings-tabs { top:46px; margin-left:0; width:100%; }
+}
 #cooked-settings-panel .cooked-settings-tab-content-wrapper .cooked-settings-tab-content { display:none; }
 #cooked-settings-panel .cooked-settings-tab-content-wrapper .cooked-settings-tab-content:first-child { display:block; }
 #cooked-settings-panel .cooked-settings-tab-content { padding:25px 35px; margin-right:0; }

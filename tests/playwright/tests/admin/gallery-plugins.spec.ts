@@ -131,7 +131,16 @@ test.describe('Third-party recipe galleries', () => {
     });
     expect(invalid, JSON.stringify(invalid)).toEqual({ valid: true, bad: [] });
 
-    await adminPage.locator('#publish').click();
+    // The title blur starts an autosave that marks Publish disabled for 5 seconds.
+    // A click while that class is present is cancelled and the page never leaves.
+    const publish = adminPage.locator('#publish');
+    try {
+      await expect(publish).toHaveClass(/\bdisabled\b/, { timeout: 2000 });
+    } catch {
+      // The autosave already re-enabled the button, or it never started.
+    }
+    await expect(publish).not.toHaveClass(/\bdisabled\b/);
+    await publish.click();
     await adminPage.waitForURL(/[?&]message=/, { timeout: 15000 });
     await expect(adminPage.locator('.notice.notice-success')).toBeVisible();
 

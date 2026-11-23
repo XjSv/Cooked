@@ -134,10 +134,13 @@ Version 1.18.0
 == Changelog ==
 
 = 1.18.0 =
+* **TWEAK:** Changed the measurement system switcher icon to a measuring cup.
 * **TWEAK:** The measurement system switcher shows Metric or US Customary for the units a recipe is written in.
 * **TWEAK:** Switching measurement systems leaves teaspoons and tablespoons as written. Other converted amounts use kitchen numbers, such as 235 ml instead of 236.59 ml and 115 g instead of 113.40 g, and large amounts step up to litres or kilograms. Cups and fluid ounces of recognized dry ingredients convert to grams. Ingredient names the table does not recognize, including non-English names, stay on the volume conversion. Sites that already show converted amounts will see different numbers.
 * **NEW:** Unit Conversion settings to keep spoons unchanged, round converted amounts, and weigh dry cups. All three are on until changed.
 * **NEW:** Filters for unit conversion: cooked_unit_conversion_target, cooked_converted_ingredient_amount, cooked_ingredient_density_table, and cooked_unit_conversion_rounding.
+* **FIX:** Gallery shortcode options are limited to their expected values and escaped in the markup, so a quote in an attribute cannot add a script when the recipe is viewed.
+* **FIX:** The browse page only uses recipe categories and other recipe taxonomies that already exist, and child terms are rendered from that term, so a visitor cannot add another shortcode to the page.
 
 = 1.17.1 =
 * **FIX:** Fixed bug where Envira Gallery, Soliloquy Slider, and Slider Revolution were missing from the recipe gallery. Lite versions are detected, Slider Revolution aliases stay as text, and the option stays available before a gallery or slider exists.

@@ -607,11 +607,21 @@ class Cooked_Settings {
     }
 
     public static function pages_array( $choose_text, $none_text = false ) {
+        // Cooked_Settings::get() rebuilds the settings fields on every call, which
+        // calls this method many times per request. Query the page list only once
+        // per request, and skip meta/term cache priming since only IDs and titles are used.
+        static $pages = null;
+
         $page_array = [];
-        $pages = get_posts([
-            'post_type' => 'page',
-            'posts_per_page' => -1
-        ]);
+        if ( null === $pages ) {
+            $pages = get_posts([
+                'post_type'              => 'page',
+                'posts_per_page'         => -1,
+                'no_found_rows'          => true,
+                'update_post_meta_cache' => false,
+                'update_post_term_cache' => false,
+            ]);
+        }
 
         if( !empty($pages) ) {
             $page_array[0] = $choose_text;

@@ -72,13 +72,13 @@ class Cooked_Updates {
         self::$previous_pro_version = get_option( 'cooked_pro_settings_version', '1.0.0' );
 
         if ( !self::$cooked_settings_saved ) {
-            global $_cooked_settings;
+            $stored_settings = get_option( 'cooked_settings', false );
 
-            if ( empty($_cooked_settings) ) {
-                $_cooked_settings = Cooked_Settings::get();
+            if ( ! is_array( $stored_settings ) ) {
+                update_option( 'cooked_settings', Cooked_Settings::build_settings() );
             }
 
-            update_option( 'cooked_settings', $_cooked_settings );
+            update_option( 'cooked_settings_saved', true );
             self::$cooked_settings_saved = true;
         }
 

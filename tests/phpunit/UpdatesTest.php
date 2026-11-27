@@ -164,6 +164,36 @@ class UpdatesTest extends FilterTestCase {
         $this->assertFalse( get_option( 'rewrite_rules' ) );
     }
 
+    public function test_missing_saved_flag_does_not_rewrite_existing_settings() {
+        $stored = [ 'browse_page' => 42 ];
+        $GLOBALS['_cooked_test_options']['cooked_settings'] = $stored;
+        $GLOBALS['_cooked_test_options']['cooked_settings_saved'] = false;
+        $GLOBALS['_cooked_test_options']['cooked_settings_version'] = COOKED_VERSION;
+
+        Cooked_Updates::init();
+
+        $this->assertSame( $stored, get_option( 'cooked_settings' ) );
+        $this->assertTrue( get_option( 'cooked_settings_saved' ) );
+    }
+
+    public function test_missing_settings_are_backfilled_without_filter_values() {
+        $GLOBALS['_cooked_test_options']['cooked_settings_saved'] = false;
+        $GLOBALS['_cooked_test_options']['cooked_settings_version'] = COOKED_VERSION;
+
+        add_filter( 'cooked_get_settings', function ( $settings ) {
+            $settings['injected'] = 'nope';
+            return $settings;
+        } );
+
+        Cooked_Updates::init();
+
+        $stored = get_option( 'cooked_settings' );
+        $this->assertIsArray( $stored );
+        $this->assertArrayHasKey( 'browse_page', $stored );
+        $this->assertArrayNotHasKey( 'injected', $stored );
+        $this->assertTrue( get_option( 'cooked_settings_saved' ) );
+    }
+
     public function test_core_registers_activation_and_deactivation_hooks() {
         require_once COOKED_DIR . 'includes/class.cooked-post-types.php';
 

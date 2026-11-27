@@ -110,13 +110,32 @@ function get_option( $option, $default = false ) {
         : $default;
 }
 
+function get_current_blog_id() {
+    return isset( $GLOBALS['_cooked_test_blog_id'] ) ? (int) $GLOBALS['_cooked_test_blog_id'] : 1;
+}
+
 function update_option( $option, $value, $autoload = null ) {
+    $old = isset( $GLOBALS['_cooked_test_options'][ $option ] )
+        ? $GLOBALS['_cooked_test_options'][ $option ]
+        : false;
     $GLOBALS['_cooked_test_options'][ $option ] = $value;
+    do_action( "update_option_{$option}", $old, $value, $option );
+    return true;
+}
+
+function add_option( $option, $value = '', $deprecated = '', $autoload = 'yes' ) {
+    if ( array_key_exists( $option, $GLOBALS['_cooked_test_options'] ) ) {
+        return false;
+    }
+
+    $GLOBALS['_cooked_test_options'][ $option ] = $value;
+    do_action( "add_option_{$option}", $option, $value );
     return true;
 }
 
 function delete_option( $option ) {
     unset( $GLOBALS['_cooked_test_options'][ $option ] );
+    do_action( "delete_option_{$option}", $option );
     return true;
 }
 

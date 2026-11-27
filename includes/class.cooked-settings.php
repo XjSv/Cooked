@@ -19,17 +19,63 @@ if ( !defined( 'ABSPATH' ) ) exit;
  */
 class Cooked_Settings {
 
+    /**
+     * Merged settings per blog, without the cooked_get_settings filter.
+     *
+     * @var array
+     */
+    private static $cache = [];
+
+    /**
+     * Whether get() may reuse a built settings array.
+     *
+     * Opened at the end of init so fields registered during init are included.
+     *
+     * @var bool
+     */
+    private static $ready = false;
+
+    /**
+     * Page rows per blog for the settings screen. Labels are applied per call.
+     *
+     * @var array
+     */
+    private static $pages = [];
+
     public function __construct() {
         add_filter( 'admin_init', [&$this, 'init'] );
         add_filter( 'init', [&$this, 'init'] );
+        add_action( 'init', static function () {
+            self::$ready = true;
+            self::$cache = [];
+        }, 999 );
+        add_action( 'add_option_cooked_settings', [ __CLASS__, 'flush_cache' ] );
+        add_action( 'update_option_cooked_settings', [ __CLASS__, 'flush_cache' ] );
+        add_action( 'delete_option_cooked_settings', [ __CLASS__, 'flush_cache' ] );
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
         add_action( 'admin_notices', [ &$this, 'browse_page_missing_notice' ] );
     }
 
+    /**
+     * Drop the per-request settings cache.
+     *
+     * Does not rebuild. The next get() reads the option again.
+     *
+     * @return void
+     */
+    public static function flush_cache() {
+        self::$cache = [];
+        self::$pages = [];
+    }
+
     public function browse_page_saved( $post_id ) {
         // Just a revision, don't do anything
         if ( wp_is_post_revision( $post_id ) ) return;
+
+        if ( 'page' !== get_post_type( $post_id ) ) {
+            return;
+        }
 
         $_cooked_settings = Cooked_Settings::get();
         $main_browse_page_id = isset($_cooked_settings['browse_page']) ? $_cooked_settings['browse_page'] : false;
@@ -152,7 +198,32 @@ class Cooked_Settings {
     }
 
     public static function get() {
+        if ( ! self::$ready ) {
+            return apply_filters( 'cooked_get_settings', self::build_settings() );
+        }
+
+        $blog_id = get_current_blog_id();
+
+        if ( ! isset( self::$cache[ $blog_id ] ) ) {
+            self::$cache[ $blog_id ] = self::build_settings();
+        }
+
+        return apply_filters( 'cooked_get_settings', self::$cache[ $blog_id ] );
+    }
+
+    /**
+     * Merge saved settings with field defaults.
+     *
+     * Does not apply the cooked_get_settings filter.
+     *
+     * @return array
+     */
+    public static function build_settings() {
         $_cooked_settings = get_option( 'cooked_settings', [] );
+
+        if ( ! is_array( $_cooked_settings ) ) {
+            $_cooked_settings = [];
+        }
 
         // Get defaults for fields that are not set yet.
         $cooked_tabs_fields = self::tabs_fields();
@@ -177,7 +248,7 @@ class Cooked_Settings {
             $_cooked_settings['dark_mode'] = self::normalize_dark_mode( $_cooked_settings['dark_mode'] );
         }
 
-        return apply_filters( 'cooked_get_settings', $_cooked_settings );
+        return $_cooked_settings;
     }
 
     /**
@@ -233,11 +304,14 @@ class Cooked_Settings {
     /**
      * Prefix a comma-separated CSS selector list with the dark mode scope.
      *
-     * @param string $selectors Comma-separated CSS selectors.
+     * @param string            $selectors Comma-separated CSS selectors.
+     * @param string|false|null $scope     Dark mode scope. Null reads the current setting.
      * @return string|false Prefixed selectors, or false when dark mode is off.
      */
-    public static function prefix_dark_mode_css( $selectors ) {
-        $scope = self::get_dark_mode_scope();
+    public static function prefix_dark_mode_css( $selectors, $scope = null ) {
+        if ( null === $scope ) {
+            $scope = self::get_dark_mode_scope();
+        }
 
         if ( false === $scope ) {
             return false;
@@ -607,14 +681,10 @@ class Cooked_Settings {
     }
 
     public static function pages_array( $choose_text, $none_text = false ) {
-        // Cooked_Settings::get() rebuilds the settings fields on every call, which
-        // calls this method many times per request. Query the page list only once
-        // per request, and skip meta/term cache priming since only IDs and titles are used.
-        static $pages = null;
+        $blog_id = get_current_blog_id();
 
-        $page_array = [];
-        if ( null === $pages ) {
-            $pages = get_posts([
+        if ( ! isset( self::$pages[ $blog_id ] ) ) {
+            self::$pages[ $blog_id ] = get_posts([
                 'post_type'              => 'page',
                 'posts_per_page'         => -1,
                 'no_found_rows'          => true,
@@ -622,6 +692,9 @@ class Cooked_Settings {
                 'update_post_term_cache' => false,
             ]);
         }
+
+        $pages = self::$pages[ $blog_id ];
+        $page_array = [];
 
         if( !empty($pages) ) {
             $page_array[0] = $choose_text;

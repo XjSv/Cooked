@@ -24,8 +24,8 @@ $_cooked_dark_css_scope = Cooked_Settings::get_dark_mode_scope();
 
 if ( false !== $_cooked_dark_css_scope ):
 
-$dm = function ( $selectors ) {
-    return Cooked_Settings::prefix_dark_mode_css( $selectors );
+$dm = function ( $selectors ) use ( $_cooked_dark_css_scope ) {
+    return Cooked_Settings::prefix_dark_mode_css( $selectors, $_cooked_dark_css_scope );
 };
 
 ?>/* Dark Mode */
@@ -42,9 +42,11 @@ $dm = function ( $selectors ) {
 <?php echo wp_kses( $dm( '.cooked-recipe-search .cooked-field-wrap-select:before, .cooked-recipe-search .cooked-sortby-wrap:before' ), []  ); ?> { color:#fff; }
 <?php echo wp_kses( $dm( '.cooked-recipe-grid .cooked-recipe-inside' ), []  ); ?> { background:rgba(0,0,0,0.25); box-shadow:none !important }
 <?php echo wp_kses( $dm( '.cooked-pagination-numbered' ), []  ); ?> > span { color:rgba(255,255,255,0.5); }
-<?php echo wp_kses( $dm( '.cooked-recipe-info span.cooked-print' ), []  ); ?> > a,
+<?php echo wp_kses( $dm( 'span.cooked-print' ), []  ); ?> > a,
+<?php echo wp_kses( $dm( 'span.cooked-print' ), []  ); ?> > button,
 <?php echo wp_kses( $dm( '.cooked-recipe-info span.cooked-fsm-button' ), []  ); ?> { color:rgba(255,255,255,0.5); }
-<?php echo wp_kses( $dm( '.cooked-recipe-info span.cooked-print' ), []  ); ?> > a:hover,
+<?php echo wp_kses( $dm( 'span.cooked-print' ), []  ); ?> > a:hover,
+<?php echo wp_kses( $dm( 'span.cooked-print' ), []  ); ?> > button:hover,
 <?php echo wp_kses( $dm( '.cooked-recipe-info span.cooked-fsm-button:hover' ), []  ); ?> { color:#fff; }
 <?php echo wp_kses( $dm( '.cooked-recipe-info span.cooked-time-icon, .cooked-recipe-info span.cooked-servings-icon' ), []  ); ?> { color:#fff; opacity:0.5; }
 <?php echo wp_kses( $dm( '.single-cp_recipe .cooked-recipe-ingredients' ), []  ); ?> { border-color:rgba(255,255,255,0.25); }

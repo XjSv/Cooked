@@ -170,7 +170,7 @@ class UpdatesTest extends FilterTestCase {
         $GLOBALS['_cooked_test_options']['cooked_settings_saved'] = false;
         $GLOBALS['_cooked_test_options']['cooked_settings_version'] = COOKED_VERSION;
 
-        Cooked_Updates::init();
+        Cooked_Updates::maybe_backfill_settings();
 
         $this->assertSame( $stored, get_option( 'cooked_settings' ) );
         $this->assertTrue( get_option( 'cooked_settings_saved' ) );
@@ -185,7 +185,7 @@ class UpdatesTest extends FilterTestCase {
             return $settings;
         } );
 
-        Cooked_Updates::init();
+        Cooked_Updates::maybe_backfill_settings();
 
         $stored = get_option( 'cooked_settings' );
         $this->assertIsArray( $stored );

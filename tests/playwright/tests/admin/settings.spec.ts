@@ -97,6 +97,9 @@ test.describe('Cooked settings page', () => {
 
     await input.fill(next);
     await saveSettings(adminPage);
+    await expect(adminPage).toHaveURL(/page=cooked_settings.*#design/);
+    await expect(adminPage.locator('#cooked-settings-tab-content-design')).toBeVisible();
+    await expect(adminPage.locator('#cooked-settings-tab-recipe_settings')).not.toHaveClass(/active/);
 
     await gotoSettings(adminPage, 'design');
     await expect(adminPage.locator('input[name="cooked_settings[responsive_breakpoint_1]"]')).toHaveValue(next);

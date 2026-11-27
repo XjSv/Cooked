@@ -93,11 +93,14 @@ class Cooked_Taxonomies {
 		if ( !$term_id ) return false;
 
 		$term = get_term( $term_id );
-		if ( !empty($term) ):
+		if ( !empty($term) && !is_wp_error( $term ) ):
 
-			$args = [
+			$query = new WP_Query( [
 				'post_type' => 'cp_recipe',
-				'posts_per_page' => -1,
+				'posts_per_page' => 1,
+				'fields' => 'ids',
+				'orderby' => 'date',
+				'order' => 'DESC',
 				'tax_query' => [
 					[
 						'taxonomy' => $term->taxonomy,
@@ -105,19 +108,18 @@ class Cooked_Taxonomies {
 						'terms' => [$term_id]
 					]
 				]
-			];
+			] );
 
-			$recipes = Cooked_Recipes::get( $args );
-			$recent_recipe = $recipes[0];
-			$total_recipes = count( $recipes ) - 1; // Total items in array minus the single ['raw'] item.
-			$thumbnail = get_the_post_thumbnail_url( $recent_recipe['id'], [ 450, 450 ] );
-			$term_link = ( !empty($term) ? get_term_link( $term ) : false );
+			$total_recipes = (int) apply_filters( 'cooked_taxonomy_card_count', (int) $query->found_posts, $term );
+			$recent_id = !empty( $query->posts ) ? (int) $query->posts[0] : 0;
+			$thumbnail = $recent_id ? get_the_post_thumbnail_url( $recent_id, [ 450, 450 ] ) : '';
+			$term_link = get_term_link( $term );
 			$style_class = ( $style ? ' cooked-recipe-card-' . esc_attr($style) : '' );
 			$width = ( !$width ? '100%' : $width );
 			$pixel_width = stristr( $width, 'px', true );
 			$percent_width = stristr( $width, '%', true );
 			$width = ( $pixel_width ? $pixel_width . 'px' : ( $percent_width ? $percent_width . '%' : ( is_numeric( $width ) ? $width . 'px' : '100%' ) ) );
-			$term_name = apply_filters( 'cooked_term_name', $term->name, $term->ID, $term->taxonomy );
+			$term_name = apply_filters( 'cooked_term_name', $term->name, $term->term_id, $term->taxonomy );
 
 			ob_start();
 

@@ -41,11 +41,6 @@ class Cooked_Updates {
     private static $previous_pro_version;
 
     /**
-     * Cooked Settings Saved
-     */
-    private static $cooked_settings_saved;
-
-    /**
      * Whether rewrite rules were already flushed this request.
      *
      * @var bool
@@ -56,8 +51,8 @@ class Cooked_Updates {
      * Initialize the updates system
      */
     public function __construct() {
-        // Add action to check version and update settings at the end of page load.
         add_action( 'shutdown', [__CLASS__, 'init'] );
+        add_action( 'admin_init', [ __CLASS__, 'maybe_backfill_settings' ] );
         add_action( 'init', [ __CLASS__, 'maybe_heal_rewrite_rules' ], 99 );
     }
 
@@ -65,22 +60,10 @@ class Cooked_Updates {
      * Initialize the updates
      */
     public static function init() {
-        self::$cooked_settings_saved = get_option( 'cooked_settings_saved', false );
         self::$current_version = COOKED_VERSION;
         self::$previous_version = get_option( 'cooked_settings_version', '1.0.0' );
         self::$current_pro_version = defined('COOKED_PRO_VERSION') ? COOKED_PRO_VERSION : null;
         self::$previous_pro_version = get_option( 'cooked_pro_settings_version', '1.0.0' );
-
-        if ( !self::$cooked_settings_saved ) {
-            $stored_settings = get_option( 'cooked_settings', false );
-
-            if ( ! is_array( $stored_settings ) ) {
-                update_option( 'cooked_settings', Cooked_Settings::build_settings() );
-            }
-
-            update_option( 'cooked_settings_saved', true );
-            self::$cooked_settings_saved = true;
-        }
 
         // Only run updates if version has changed
         if ( self::needs_update() ) {
@@ -88,6 +71,25 @@ class Cooked_Updates {
         }
 
         self::maybe_flush_queued_rewrite_rules();
+    }
+
+    /**
+     * Save default settings once, from the admin, without the cooked_get_settings filter.
+     *
+     * @return void
+     */
+    public static function maybe_backfill_settings() {
+        if ( get_option( 'cooked_settings_saved', false ) ) {
+            return;
+        }
+
+        $stored_settings = get_option( 'cooked_settings', false );
+
+        if ( ! is_array( $stored_settings ) ) {
+            update_option( 'cooked_settings', Cooked_Settings::build_settings() );
+        }
+
+        update_option( 'cooked_settings_saved', true );
     }
 
     /**

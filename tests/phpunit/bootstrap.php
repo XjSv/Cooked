@@ -326,8 +326,19 @@ function paginate_links( $args = '' ) {
 /**
  * User stubs
  */
-function set_transient( $transient, $value, $expiration = 0 ) { return true; }
-function get_transient( $transient ) { return false; }
+function set_transient( $transient, $value, $expiration = 0 ) {
+    if ( isset( $GLOBALS['_cooked_test_transients'] ) && is_array( $GLOBALS['_cooked_test_transients'] ) ) {
+        $GLOBALS['_cooked_test_transients'][ $transient ] = $value;
+        $GLOBALS['_cooked_test_transient_sets'][] = $transient;
+    }
+    return true;
+}
+function get_transient( $transient ) {
+    if ( isset( $GLOBALS['_cooked_test_transients'] ) && is_array( $GLOBALS['_cooked_test_transients'] ) && array_key_exists( $transient, $GLOBALS['_cooked_test_transients'] ) ) {
+        return $GLOBALS['_cooked_test_transients'][ $transient ];
+    }
+    return false;
+}
 function delete_transient( $transient ) { return true; }
 
 /**
@@ -391,6 +402,7 @@ function get_term_link( $term, $taxonomy = '' ) {
     return 'http://example.com/term/' . $slug . '/';
 }
 function get_terms( $args = [], $deprecated = '' ) {
+    $GLOBALS['_cooked_test_get_terms_calls'] = isset( $GLOBALS['_cooked_test_get_terms_calls'] ) ? $GLOBALS['_cooked_test_get_terms_calls'] + 1 : 1;
     $taxonomy = is_array( $args ) && isset( $args['taxonomy'] ) ? $args['taxonomy'] : $deprecated;
     $terms = [];
     foreach ( isset( $GLOBALS['_cooked_test_terms'] ) ? $GLOBALS['_cooked_test_terms'] : [] as $term ) {
@@ -436,6 +448,7 @@ class WP_Query {
     public $query = [];
 
     public function __construct( $query = '' ) {
+        $GLOBALS['_cooked_test_query_count'] = isset( $GLOBALS['_cooked_test_query_count'] ) ? $GLOBALS['_cooked_test_query_count'] + 1 : 1;
         $this->query_vars = is_array( $query ) ? $query : [];
         $this->query = $this->query_vars;
         $GLOBALS['_cooked_test_last_query'] = $this->query_vars;
@@ -558,7 +571,10 @@ function update_user_meta( $user_id, $meta_key, $meta_value, $prev_value = '' ) 
     $GLOBALS['_cooked_test_user_meta'][ $user_id ][ $meta_key ] = $meta_value;
     return true;
 }
-function get_posts( $args = [] ) { return isset( $GLOBALS['_cooked_test_get_posts'] ) ? $GLOBALS['_cooked_test_get_posts'] : []; }
+function get_posts( $args = [] ) {
+    $GLOBALS['_cooked_test_get_posts_calls'] = isset( $GLOBALS['_cooked_test_get_posts_calls'] ) ? $GLOBALS['_cooked_test_get_posts_calls'] + 1 : 1;
+    return isset( $GLOBALS['_cooked_test_get_posts'] ) ? $GLOBALS['_cooked_test_get_posts'] : [];
+}
 function wp_delete_post( $postid = 0, $force_delete = false ) {
     $GLOBALS['_cooked_test_deleted_posts'][] = (int) $postid;
     return true;
@@ -611,6 +627,7 @@ function wp_nonce_field( $action = -1, $name = '_wpnonce', $referer = true, $ech
 function wp_doing_ajax() { return false; }
 function wp_doing_cron() { return false; }
 function is_admin() { return ! empty( $GLOBALS['_cooked_test_is_admin'] ); }
+function is_front_page() { return ! empty( $GLOBALS['_cooked_test_is_front_page'] ); }
 function is_page( $page = '' ) { return ! empty( $GLOBALS['_cooked_test_is_page'] ); }
 function is_singular( $post_types = '' ) { return ! empty( $GLOBALS['_cooked_test_is_singular'] ); }
 function is_feed() { return ! empty( $GLOBALS['_cooked_test_is_feed'] ); }
@@ -779,8 +796,15 @@ function locate_template( $template_names, $load = false, $require_once = true, 
     return '';
 }
 
-function wp_suspend_cache_addition( $suspend = true ) {
-    return true;
+function wp_suspend_cache_addition( $suspend = null ) {
+    if ( ! isset( $GLOBALS['_cooked_test_suspend_cache'] ) ) {
+        $GLOBALS['_cooked_test_suspend_cache'] = false;
+    }
+    $GLOBALS['_cooked_test_suspend_cache_calls'][] = $suspend;
+    if ( is_bool( $suspend ) ) {
+        $GLOBALS['_cooked_test_suspend_cache'] = $suspend;
+    }
+    return $GLOBALS['_cooked_test_suspend_cache'];
 }
 
 function wp_reset_query() {}

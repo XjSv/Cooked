@@ -82,6 +82,11 @@ class Cooked_Shortcodes {
             'cooked-recipe-list',
             'cooked-recipe-card',
             'cooked-related-recipes',
+            'cooked-categories',
+            'cooked-cuisines',
+            'cooked-cooking-methods',
+            'cooked-diets',
+            'cooked-tags',
         ];
 
         // Only process for Cooked shortcodes

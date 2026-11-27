@@ -24,6 +24,10 @@ class Cooked_Migration {
     }
 
     public static function init() {
+        if ( ! is_admin() || wp_doing_ajax() ) {
+            return;
+        }
+
         // Check for recipes from Cooked Classic and display an "Update" notice
         $old_recipes = self::get_cooked_classic_recipes();
 
@@ -95,6 +99,14 @@ class Cooked_Migration {
 
     public static function get_cooked_classic_recipes() {
         $classic_recipes = get_transient('cooked_classic_recipes');
+
+        if ( 'complete' === $classic_recipes ) {
+            return 'complete';
+        }
+
+        if ( is_array( $classic_recipes ) && ! empty( $classic_recipes ) ) {
+            return $classic_recipes;
+        }
 
         if (empty($classic_recipes) && $classic_recipes != 'complete') {
 

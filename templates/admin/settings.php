@@ -42,6 +42,7 @@
         <div id="cooked_recipe_settings" class="cooked-settings-form-wrapper">
 
                 <input type="hidden" name="cooked_settings_saved" value="true" />
+                <input type="hidden" name="cooked_settings_tab" id="cooked_settings_tab" value="<?php echo esc_attr( (string) array_key_first( $cooked_settings_tabs_fields ) ); ?>" />
 
                 <?php settings_fields( 'cooked_settings_group' ); ?>
 

@@ -6,7 +6,7 @@ if ( !is_array( $recipe ) ) return false;
 
 $recipe_array = $recipe;
 $recipe_post = get_post( $recipe['id'] );
-$recipe_settings = Cooked_Recipes::get( $recipe['id'], true );
+$recipe_settings = Cooked_Recipes::card_settings( $recipe );
 $recipe_classes = !$recipe_classes ? apply_filters( 'cooked_single_recipe_classes', [ 'cooked-recipe', 'has-post-thumbnail' ], $recipe ) : apply_filters( 'cooked_single_recipe_classes', $recipe_classes, $recipe );
 $recipe = $recipe_array;
 

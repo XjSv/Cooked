@@ -626,7 +626,14 @@ var cookedSortableTouchHandler = function(event) {
         if ($_CookedSettingsTabs.length) {
             var CookedSettingsTabHash = window.location.hash;
             var $_CookedSettingsTab = $_CookedSettingsTabs.find('li'),
-                $_CookedSettingsTabOffset = $_CookedSettingsTabs.offset().top - 32; // 32px for the admin bar
+                $_CookedSettingsTabOffset = $_CookedSettingsTabs.offset().top - 32, // 32px for the admin bar
+                $_CookedSettingsTabInput = $('#cooked_settings_tab');
+
+            function cookedRememberSettingsTab( tab ) {
+                if ( $_CookedSettingsTabInput.length && tab ) {
+                    $_CookedSettingsTabInput.val( tab );
+                }
+            }
 
             $(window).on('load scroll',function() {
                 var scroll = $(window).scrollTop();
@@ -660,6 +667,8 @@ var cookedSortableTouchHandler = function(event) {
                 $('#cooked-settings-tab-content-'+activeTab).show();
             }
 
+            cookedRememberSettingsTab( activeTab );
+
             $_CookedSettingsTab.on('click',function(e) {
                 $('.tab-content').hide();
                 var thisTab = $(this).find('a');
@@ -669,6 +678,7 @@ var cookedSortableTouchHandler = function(event) {
                 var activeTab = thisTab.attr('href');
                 activeTab = activeTab.split('#');
                 activeTab = activeTab[1];
+                cookedRememberSettingsTab( activeTab );
 
                 if ( activeTab == 'migration' ) {
                     $_CookedRecipeSettingsSubmit.hide();

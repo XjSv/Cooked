@@ -89,7 +89,7 @@ class Cooked_Admin_Enqueues {
                 $screen = get_current_screen();
                 $post_type = $screen->post_type;
 
-                if ($hook != 'post-new.php' && $hook != 'post.php' && $hook != 'index.php' && $hook != 'edit.php' || $hook === 'post-new.php' && $post_type === 'cp_recipe' || $hook === 'post.php' && $post_type === 'cp_recipe' || $hook === 'edit.php' && $post_type === 'cp_recipe' || $hook === 'index.php' || $hook === 'widgets.php'):
+                if ($hook != 'post-new.php' && $hook != 'post.php' && $hook != 'index.php' && $hook != 'edit.php' || $hook === 'post-new.php' && $post_type === 'cp_recipe' || $hook === 'post.php' && $post_type === 'cp_recipe' || $hook === 'edit.php' && $post_type === 'cp_recipe' || $hook === 'widgets.php'):
                     $enqueue = true;
                     add_thickbox();
                 else:

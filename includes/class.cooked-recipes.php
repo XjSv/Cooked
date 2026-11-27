@@ -319,7 +319,10 @@ class Cooked_Recipes {
     public static function card( $rid, $width = false, $hide_image = false, $hide_title = false, $hide_excerpt = false, $hide_author = false, $style = false ) {
         global $_cooked_settings;
 
-        $recipe = self::get( $rid, true );
+        $recipe = self::card_settings( $rid );
+        if ( is_array( $rid ) && isset( $recipe['id'] ) ) {
+            $rid = $recipe['id'];
+        }
         $style_class = $style ? ' cooked-recipe-card-' . esc_attr($style) : '';
 
         $width = !$width ? '100%' : $width;
@@ -774,17 +777,46 @@ class Cooked_Recipes {
             $recipe_args = apply_filters( 'cooked_recipe_public_query_filters', $recipe_args );
         endif;
 
-        wp_suspend_cache_addition(true);
+        $per_page = isset( $recipe_args['posts_per_page'] ) ? (int) $recipe_args['posts_per_page'] : 0;
+        $suspend_cache = ( -1 === $per_page || $per_page > 200 );
+        $suspend_cache = (bool) apply_filters( 'cooked_suspend_cache_during_list', $suspend_cache, $recipe_args );
 
-        ob_start();
-        $recipes = Cooked_Recipes::get( $recipe_args );
-        ( $theme_template_override = locate_template( 'recipe-list.php')) ? load_template( $theme_template_override, false ) : load_template( COOKED_DIR . 'templates/front/recipe-list.php', false );
-        wp_reset_postdata();
-        Cooked_Settings::reset();
+        if ( $suspend_cache ) {
+            wp_suspend_cache_addition( true );
+        }
 
-        wp_suspend_cache_addition(false);
+        try {
+            ob_start();
+            $recipes = Cooked_Recipes::get( $recipe_args );
+            ( $theme_template_override = locate_template( 'recipe-list.php')) ? load_template( $theme_template_override, false ) : load_template( COOKED_DIR . 'templates/front/recipe-list.php', false );
+            wp_reset_postdata();
+            Cooked_Settings::reset();
 
-        return ob_get_clean();
+            return ob_get_clean();
+        } finally {
+            if ( $suspend_cache ) {
+                wp_suspend_cache_addition( false );
+            }
+        }
+    }
+
+    /**
+     * Recipe data for a card.
+     *
+     * List rows from get() already include get_settings() output. A partial
+     * array or an ID is loaded again.
+     *
+     * @param array|int $recipe Recipe row or ID.
+     * @return array|null
+     */
+    public static function card_settings( $recipe ) {
+        if ( is_array( $recipe ) && isset( $recipe['id'], $recipe['author'] ) ) {
+            return $recipe;
+        }
+
+        $id = is_array( $recipe ) && isset( $recipe['id'] ) ? $recipe['id'] : $recipe;
+
+        return self::get( $id, true );
     }
 
     public static function list_style_grid($atts = []) {
@@ -1159,18 +1191,52 @@ class Cooked_Recipes {
                 'imperial' => __( 'US Customary', 'cooked' ),
             ];
             $current_label = $labels[ $active ];
-            echo '<span class="cooked-measurement-system"><span class="cooked-measurement-system-icon"><i class="cooked-icon cooked-icon-measuring-cup"></i></span>';
-                echo '<strong class="cooked-meta-title">' . esc_html__( 'Units', 'cooked' ) . '</strong>';
-                echo '<a aria-label="' . esc_attr( $current_label ) . '" href="#">' . esc_html( $current_label ) . '</a>';
-                echo '<label for="cooked-measurement-system-changer" class="screen-reader-text">' . esc_html__( 'Measurement System', 'cooked' ) . '</label>';
-                echo '<select id="cooked-measurement-system-changer" name="measurement_system" class="cooked-measurement-system-changer">';
-                    foreach ( $labels as $system => $label ):
-                        $value = ( $system === $authored ) ? '' : $system;
-                        echo '<option value="' . esc_attr( $value ) . '"' . ( $active === $system ? ' selected="selected"' : '' ) . '>' . esc_html( $label ) . '</option>';
-                    endforeach;
-                echo '</select>';
-            echo '</span>';
+            $options = [];
+            foreach ( $labels as $system => $label ) {
+                $options[] = [
+                    'value'    => ( $system === $authored ) ? '' : $system,
+                    'label'    => $label,
+                    'selected' => $active === $system,
+                ];
+            }
+            self::measurement_system_control( [
+                'label'   => $current_label,
+                'options' => $options,
+                'id'      => 'cooked-measurement-system-changer',
+                'name'    => 'measurement_system',
+            ] );
         endif;
+    }
+
+    /**
+     * Measurement switcher markup shared by a recipe and the shopping list.
+     *
+     * Leave local unset on a recipe. The recipe script reloads the page from that select.
+     * A local control sets data-cooked-units="local" and stays on the page.
+     *
+     * @since 1.17.0
+     * @param array $args label, options (value, label, selected), id, name, local.
+     */
+    public static function measurement_system_control( $args ) {
+        $current = isset( $args['label'] ) ? $args['label'] : '';
+        $options = ( isset( $args['options'] ) && is_array( $args['options'] ) ) ? $args['options'] : [];
+        $id      = isset( $args['id'] ) ? $args['id'] : '';
+        $name    = isset( $args['name'] ) ? $args['name'] : 'measurement_system';
+        $local   = ! empty( $args['local'] );
+
+        echo '<span class="cooked-measurement-system"' . ( $local ? ' data-cooked-units="local"' : '' ) . '><span class="cooked-measurement-system-icon"><i class="cooked-icon cooked-icon-measuring-cup"></i></span>';
+        echo '<strong class="cooked-meta-title">' . esc_html__( 'Units', 'cooked' ) . '</strong>';
+        echo '<a aria-label="' . esc_attr( $current ) . '" href="#">' . esc_html( $current ) . '</a>';
+        echo '<label' . ( $id ? ' for="' . esc_attr( $id ) . '"' : '' ) . ' class="screen-reader-text">' . esc_html__( 'Measurement System', 'cooked' ) . '</label>';
+        echo '<select' . ( $id ? ' id="' . esc_attr( $id ) . '"' : '' ) . ' name="' . esc_attr( $name ) . '" class="cooked-measurement-system-changer">';
+        foreach ( $options as $option ) {
+            $value    = isset( $option['value'] ) ? $option['value'] : '';
+            $label    = isset( $option['label'] ) ? $option['label'] : '';
+            $selected = ! empty( $option['selected'] );
+            echo '<option value="' . esc_attr( $value ) . '"' . ( $selected ? ' selected="selected"' : '' ) . '>' . esc_html( $label ) . '</option>';
+        }
+        echo '</select>';
+        echo '</span>';
     }
 
     public static function serving_size_switcher( $servings ) {
@@ -1541,7 +1607,8 @@ class Cooked_Recipes {
             endif;
 
             if ( in_array( 'cp_recipe_category', $_cooked_settings['recipe_taxonomies']) ):
-                $terms_array = Cooked_Settings::terms_array( 'cp_recipe_category', false, __('No categories','cooked'), true, true, false );
+                $grouped_terms = Cooked_Settings::terms_by_parent( 'cp_recipe_category', true, __('No categories','cooked') );
+                $terms_array = $grouped_terms['parents'];
                 if ( !empty($terms_array) ):
                     echo '<span class="cooked-tax-column">';
                         echo '<span class="cooked-tax-column-title">' . esc_html__('Categories','cooked') . '</span>';
@@ -1549,18 +1616,18 @@ class Cooked_Recipes {
                             echo ( $view_all_recipes_url ? '<a href="' . esc_url( $view_all_recipes_url ) . '">' . esc_html__( 'All Categories','cooked' ) . '</a>' : '' );
                             foreach ( $terms_array as $key => $val ):
                                 if ( $key ):
-                                    $term = get_term( $key );
+                                    $term = Cooked_Settings::browse_term( $grouped_terms, $key );
                                     $term_link = ( !empty($term) ? get_term_link( $term ) : false );
-                                    $term_name = apply_filters( 'cooked_term_name', $term->name, $term->ID, $term->taxonomy );
+                                    $term_name = ( !empty($term) ? apply_filters( 'cooked_term_name', $term->name, $term->term_id, $term->taxonomy ) : '' );
                                     echo ( $term_link ? ( isset($active_taxonomy) && $active_taxonomy == $val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url($term_link) . '">' . wp_kses_post($term_name) . '</a>' . ( isset($active_taxonomy) && $active_taxonomy == $val ? '</strong>' : '' ) : '' );
                                     $total_taxonomies++;
-                                    $sub_terms_array = Cooked_Settings::terms_array( 'cp_recipe_category', false, false, true, false, $key );
+                                    $sub_terms_array = isset( $grouped_terms['children'][ (int) $key ] ) ? $grouped_terms['children'][ (int) $key ] : [];
                                     if ( !empty($sub_terms_array) ):
                                         foreach ( $sub_terms_array as $sub_key => $sub_val ):
                                             if ( $sub_key ):
-                                                $sub_term = get_term( $sub_key );
+                                                $sub_term = Cooked_Settings::browse_term( $grouped_terms, $sub_key );
                                                 $sub_term_link = ( !empty($sub_term) ? get_term_link( $sub_term ) : false );
-                                                $sub_term_name = apply_filters( 'cooked_term_name', $sub_term->name, $sub_term->ID, $sub_term->taxonomy );
+                                                $sub_term_name = ( !empty($sub_term) ? apply_filters( 'cooked_term_name', $sub_term->name, $sub_term->term_id, $sub_term->taxonomy ) : '' );
                                                 echo ( $sub_term_link ? '<span class="cooked-tax-sub-item">' . ( isset($active_taxonomy) && $active_taxonomy == $sub_val ? '<strong><i class="cooked-icon cooked-icon-angle-right"></i>&nbsp;&nbsp;' : '' ) . '<a href="' . esc_url($sub_term_link) . '">' . wp_kses_post($sub_term_name) . '</a>' . ( isset($active_taxonomy) && $active_taxonomy == $sub_val ? '</strong>' : '' ) . '</span>' : '' );
                                                 $total_taxonomies++;
                                             endif;

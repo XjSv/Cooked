@@ -42,9 +42,16 @@ class Cooked_Settings {
      */
     private static $pages = [];
 
+    /**
+     * Whether the current tabs_fields() call should build page and term option lists.
+     *
+     * @var bool
+     */
+    private static $include_setting_options = true;
+
     public function __construct() {
-        add_filter( 'admin_init', [&$this, 'init'] );
-        add_filter( 'init', [&$this, 'init'] );
+        add_action( 'admin_init', [&$this, 'init'] );
+        add_action( 'init', [&$this, 'init'] );
         add_action( 'init', static function () {
             self::$ready = true;
             self::$cache = [];
@@ -55,6 +62,7 @@ class Cooked_Settings {
         add_action( 'save_post', [&$this, 'browse_page_saved'], 10, 1 );
         add_action( 'admin_notices', [ &$this, 'cooked_settings_saved_admin_notice' ] );
         add_action( 'admin_notices', [ &$this, 'browse_page_missing_notice' ] );
+        add_filter( 'wp_redirect', [ __CLASS__, 'redirect_to_active_tab' ] );
     }
 
     /**
@@ -67,6 +75,15 @@ class Cooked_Settings {
     public static function flush_cache() {
         self::$cache = [];
         self::$pages = [];
+    }
+
+    /**
+     * Whether tabs_fields() is building select options for the settings screen.
+     *
+     * @return bool
+     */
+    public static function includes_setting_options() {
+        return self::$include_setting_options;
     }
 
     public function browse_page_saved( $post_id ) {
@@ -111,7 +128,7 @@ class Cooked_Settings {
 
     // Add this new method to handle settings sanitization.
     public static function sanitize_settings($settings) {
-        $cooked_tabs_fields = self::tabs_fields();
+        $cooked_tabs_fields = self::tabs_fields( false );
 
         // Process each field
         foreach ($cooked_tabs_fields as $tab) {
@@ -150,6 +167,38 @@ class Cooked_Settings {
         }
 
         return $settings;
+    }
+
+    /**
+     * Keep the settings screen on the tab that was open when the form was saved.
+     *
+     * options.php redirects to the referer, which does not include the URL hash.
+     *
+     * @param string $location Redirect target.
+     * @return string
+     */
+    public static function redirect_to_active_tab( $location ) {
+        // phpcs:disable WordPress.Security.NonceVerification.Missing -- options.php verified the settings nonce before this redirect.
+        $option_page = isset( $_POST['option_page'] ) ? sanitize_key( wp_unslash( $_POST['option_page'] ) ) : '';
+        $tab         = isset( $_POST['cooked_settings_tab'] ) ? sanitize_key( wp_unslash( $_POST['cooked_settings_tab'] ) ) : '';
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
+
+        if ( 'cooked_settings_group' !== $option_page || '' === $tab ) {
+            return $location;
+        }
+
+        if ( false === strpos( (string) $location, 'page=cooked_settings' ) ) {
+            return $location;
+        }
+
+        $tabs = self::tabs_fields( false );
+        if ( ! isset( $tabs[ $tab ] ) ) {
+            return $location;
+        }
+
+        $location = preg_replace( '/#.*$/', '', (string) $location );
+
+        return $location . '#' . $tab;
     }
 
     function cooked_settings_saved_admin_notice() {
@@ -226,7 +275,7 @@ class Cooked_Settings {
         }
 
         // Get defaults for fields that are not set yet.
-        $cooked_tabs_fields = self::tabs_fields();
+        $cooked_tabs_fields = self::tabs_fields( false );
 
         if ( isset($cooked_tabs_fields) && !empty($cooked_tabs_fields) ) {
             foreach ( $cooked_tabs_fields as $tab ) {
@@ -332,9 +381,17 @@ class Cooked_Settings {
         return wp_kses( implode( ', ', $parts ), [] );
     }
 
-    public static function tabs_fields() {
-        $pages_array = self::pages_array( __('Choose a page...','cooked'), __('No pages','cooked') );
-        $categories_array = self::terms_array( 'cp_recipe_category', __('No default', 'cooked'), __('No categories', 'cooked') );
+    public static function tabs_fields( $include_options = true ) {
+        $previous = self::$include_setting_options;
+        self::$include_setting_options = (bool) $include_options;
+
+        if ( $include_options ) {
+            $pages_array = self::pages_array( __('Choose a page...','cooked'), __('No pages','cooked') );
+            $categories_array = self::terms_array( 'cp_recipe_category', __('No default', 'cooked'), __('No categories', 'cooked') );
+        } else {
+            $pages_array = [];
+            $categories_array = [];
+        }
         $recipes_per_page_array = self::per_page_array();
         $recipe_archive_slug = sanitize_title_with_dashes( __( 'Recipe Archive', 'cooked' ) );
         $recipe_archive_url = home_url( '/' . $recipe_archive_slug . '/' );
@@ -354,7 +411,7 @@ class Cooked_Settings {
             }
         }
 
-        return apply_filters('cooked_settings_tabs_fields', [
+        $tabs = apply_filters('cooked_settings_tabs_fields', [
             'recipe_settings' => [
                 'name' => __('General', 'cooked'),
                 'icon' => 'gear',
@@ -664,7 +721,13 @@ class Cooked_Settings {
                     ]
                 ]
             ]
-        ], $pages_array, $categories_array);
+        ], $pages_array, $categories_array );
+
+        try {
+            return $tabs;
+        } finally {
+            self::$include_setting_options = $previous;
+        }
     }
 
     public static function per_page_array() {
@@ -741,6 +804,110 @@ class Cooked_Settings {
         }
 
         return apply_filters( 'cooked_settings_' . $term . '_array', $terms_array );
+    }
+
+    /**
+     * Load one taxonomy and group it the way the browse columns do.
+     *
+     * Parents are top-level terms. Children are included only when their parent
+     * is in that parent list. Both lists pass through cooked_settings_{taxonomy}_array.
+     *
+     * @param string     $taxonomy   Taxonomy name.
+     * @param bool       $hide_empty Whether to hide empty terms.
+     * @param string|false $none_text Label used when there are no parent terms.
+     * @return array
+     */
+    public static function terms_by_parent( $taxonomy, $hide_empty = true, $none_text = false ) {
+        $terms = get_terms( [
+            'taxonomy'   => $taxonomy,
+            'hide_empty' => $hide_empty,
+            'pad_counts' => (bool) $hide_empty,
+        ] );
+
+        if ( is_wp_error( $terms ) || ! is_array( $terms ) ) {
+            $terms = [];
+        }
+
+        $objects = [];
+        $parent_objects = [];
+        $child_objects = [];
+
+        foreach ( $terms as $term ) {
+            if ( ! is_object( $term ) || empty( $term->term_id ) ) {
+                continue;
+            }
+
+            $term_id = (int) $term->term_id;
+            $parent_id = isset( $term->parent ) ? (int) $term->parent : 0;
+            $objects[ $term_id ] = $term;
+
+            if ( 0 === $parent_id ) {
+                $parent_objects[ $term_id ] = $term;
+            } else {
+                if ( ! isset( $child_objects[ $parent_id ] ) ) {
+                    $child_objects[ $parent_id ] = [];
+                }
+                $child_objects[ $parent_id ][ $term_id ] = $term;
+            }
+        }
+
+        if ( empty( $parent_objects ) && $none_text ) {
+            $parents = apply_filters( 'cooked_settings_' . $taxonomy . '_array', [ 0 => $none_text ] );
+        } else {
+            $parents = self::filter_term_name_list( $taxonomy, $parent_objects );
+        }
+        $children = [];
+
+        foreach ( $child_objects as $parent_id => $group ) {
+            if ( ! isset( $parents[ $parent_id ] ) ) {
+                continue;
+            }
+            $children[ $parent_id ] = self::filter_term_name_list( $taxonomy, $group );
+        }
+
+        return [
+            'parents'  => $parents,
+            'children' => $children,
+            'objects'  => $objects,
+        ];
+    }
+
+    /**
+     * @param string $taxonomy Taxonomy name.
+     * @param array  $terms    Term objects keyed by term ID.
+     * @return array
+     */
+    private static function filter_term_name_list( $taxonomy, $terms ) {
+        $list = [];
+
+        foreach ( $terms as $term_id => $term ) {
+            $list[ $term_id ] = $term->name;
+        }
+
+        return apply_filters( 'cooked_settings_' . $taxonomy . '_array', $list );
+    }
+
+    /**
+     * Term object for a browse column, including IDs a filter added to the name list.
+     *
+     * @param array $grouped Result from terms_by_parent().
+     * @param int   $term_id Term ID.
+     * @return object|null
+     */
+    public static function browse_term( $grouped, $term_id ) {
+        $term_id = (int) $term_id;
+
+        if ( isset( $grouped['objects'][ $term_id ] ) && is_object( $grouped['objects'][ $term_id ] ) ) {
+            return $grouped['objects'][ $term_id ];
+        }
+
+        $term = get_term( $term_id );
+
+        if ( ! $term || is_wp_error( $term ) ) {
+            return null;
+        }
+
+        return $term;
     }
 
     public static function field_radio( $field_name, $options ) {

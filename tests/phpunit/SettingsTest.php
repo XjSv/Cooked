@@ -139,6 +139,46 @@ class SettingsTest extends TestCase {
         );
     }
 
+    public function test_redirect_keeps_the_saved_settings_tab() {
+        $_POST['option_page']         = 'cooked_settings_group';
+        $_POST['cooked_settings_tab'] = 'design';
+
+        $location = Cooked_Settings::redirect_to_active_tab(
+            'http://example.com/wp-admin/admin.php?page=cooked_settings&settings-updated=true'
+        );
+
+        unset( $_POST['option_page'], $_POST['cooked_settings_tab'] );
+
+        $this->assertSame(
+            'http://example.com/wp-admin/admin.php?page=cooked_settings&settings-updated=true#design',
+            $location
+        );
+    }
+
+    public function test_redirect_ignores_an_unknown_settings_tab() {
+        $_POST['option_page']         = 'cooked_settings_group';
+        $_POST['cooked_settings_tab'] = 'not-a-tab';
+
+        $location = 'http://example.com/wp-admin/admin.php?page=cooked_settings&settings-updated=true';
+        $result   = Cooked_Settings::redirect_to_active_tab( $location );
+
+        unset( $_POST['option_page'], $_POST['cooked_settings_tab'] );
+
+        $this->assertSame( $location, $result );
+    }
+
+    public function test_redirect_ignores_other_option_pages() {
+        $_POST['option_page']         = 'general';
+        $_POST['cooked_settings_tab'] = 'design';
+
+        $location = 'http://example.com/wp-admin/options-general.php?settings-updated=true';
+        $result   = Cooked_Settings::redirect_to_active_tab( $location );
+
+        unset( $_POST['option_page'], $_POST['cooked_settings_tab'] );
+
+        $this->assertSame( $location, $result );
+    }
+
     public function test_prefix_dark_mode_css_respects_auto_scope_filter() {
         update_option('cooked_settings', ['dark_mode' => 'auto']);
 
